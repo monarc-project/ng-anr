@@ -1,0 +1,19 @@
+{
+  "name": "ng_anr",
+  "version": "1.0.0",
+  "description": "MONARC Shared RISK ANALYSIS (ANR) AngularJS Module",
+  "main": "index.js",
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "ssh://gogs@rhea.netlor.fr:2222/monarc/ng_anr.git"
+  },
+  "dependencies": {
+
+  },
+  "devDependencies": {
+
+  },
+  "author": "Netlor SAS",
+  "license": "Copyright"
+}
