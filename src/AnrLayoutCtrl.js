@@ -1,17 +1,17 @@
 (function () {
 
     angular
-        .module('BackofficeApp')
-        .controller('BackofficeKbModelsDetailsCtrl', [
+        .module('AnrModule')
+        .controller('AnrLayoutCtrl', [
             '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettext', 'gettextCatalog', 'TableHelperService',
             'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope',
-            BackofficeKbModelsDetailsCtrl
+            AnrLayoutCtrl
         ]);
 
     /**
-     * BO > KB > MODELS > MODEL DETAILS (ANR)
+     * ANR MAIN LAYOUT CONTROLLER
      */
-    function BackofficeKbModelsDetailsCtrl($scope, toastr, $mdMedia, $mdDialog, gettext, gettextCatalog,
+    function AnrLayoutCtrl($scope, toastr, $mdMedia, $mdDialog, gettext, gettextCatalog,
                                            TableHelperService, ModelService, ObjlibService, AnrService, $stateParams,
                                            $rootScope) {
         var self = this;
