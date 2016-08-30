@@ -1,0 +1,204 @@
+<div class="md-padding" ng-cloak layout="column" ng-controller="BackofficeAnrObjectInstanceCtrl">
+    <div layout="row" layout-align="space-around start">
+        <div flex="20" ng-if="instance">
+            <h2>{{ object.name1 }}</h2>
+
+            <p>{{ object.label1 }}</p>
+        </div>
+
+        <div flex="20" ng-if="!instance">
+            <md-progress-circular md-indeterminate="true"></md-progress-circular>
+        </div>
+
+        <md-card flex="70">
+            <md-card-content layout="column" layout-gt-md="row" flex layout-wrap>
+                <div flex="33" layout="column" layout-gt-md="row" layout-align="space-between">
+                    <div flex="33" class="bold txtright" translate>Confidentiality:&nbsp;</div>
+                    <div flex="65" translate>Inherited</div>
+                </div>
+
+                <div flex="33" layout="column" layout-gt-md="row" layout-align="space-between">
+                    <div flex="33" class="bold txtright" translate>Integrity:&nbsp;</div>
+                    <div flex="65" translate>Inherited</div>
+                </div>
+
+                <div flex="33" layout="column" layout-gt-md="row" layout-align="space-between">
+                    <div flex="33" class="bold txtright" translate>Availability:&nbsp;</div>
+                    <div flex="65" translate>Inherited</div>
+                </div>
+            </md-card-content>
+        </md-card>
+
+        <md-fab-speed-dial md-open="false" md-direction="down" class="md-fling md-fab-top-right">
+            <md-fab-trigger>
+                <md-button aria-label="menu" class="md-fab">
+                    <md-icon>menu</md-icon>
+                    <md-tooltip md-direction="left">{{ 'Object actions' | translate }}</md-tooltip>
+                </md-button>
+            </md-fab-trigger>
+
+            <md-fab-actions>
+                <md-button aria-label="{{ 'Edit instance settings' | translate }}" class="md-fab md-raised md-mini" ng-click="editInstanceDetails($event)">
+                    <md-icon>edit</md-icon>
+                    <md-tooltip md-direction="left">{{ 'Edit instance settings' | translate }}</md-tooltip>
+                </md-button>
+
+                <md-button aria-label="{{ 'Detach' | translate }}" class="md-fab md-raised md-mini" ng-click="detachInstance($event)">
+                    <md-icon>content_cut</md-icon>
+                    <md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip>
+                </md-button>
+            </md-fab-actions>
+        </md-fab-speed-dial>
+    </div>
+
+
+
+    <md-card>
+        <md-tabs md-dynamic-height md-border-bottom>
+            <md-tab label="{{ 'General information' | translate }}">
+                <md-progress-circular ng-if="!instance.id"></md-progress-circular>
+
+                <div class="md-padding" ng-if="instance.id">
+                    <p class="md-title" translate>This asset is attached to the following parents</p>
+
+                    <p ng-if="instance.parent == null">This asset has no parents.</p>
+
+                    <ul class="md-treeview" ng-if="instance.parent != null">
+                        <li class="md-treeview-root">
+                            <a ui-sref="main.kb_mgmt.models.details.instance({instId: instance.id})"><md-icon>place</md-icon> {{ object.name1 }}</a>
+                            <ul>
+                                <li ng-repeat="node in [instance.parent]"
+                                    ng-class="{'md-treeview-branch': node.children && node.children.length > 0}"
+                                    ng-include="'objlibs.tree_item_template.html'"></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </md-tab>
+
+            <md-tab label="{{ 'Risks table' | translate }}">
+                <div ng-include="'views/partials/risk_sheet.html'" ng-if="sheet_risk"></div>
+
+                <div ng-if="!instance.risks || !instance.risks.length" class="md-padding">
+                    <em>{{ 'There is no AMV link for this instance, so the risks table is empty.' | translate }}</em>
+                </div>
+
+                <table class="md-html-table" ng-if="!sheet_risk && instance.risks.length > 0">
+                    <thead>
+                    <tr>
+                        <th colspan="3"><p translate>Impact</p></th>
+                        <th rowspan="2"><p translate>Threat</p></th>
+                        <th rowspan="2"><p translate>Prob.</p></th>
+                        <th rowspan="2"><p translate>Vulnerability</p></th>
+                        <th rowspan="2"><p translate>Qualif.</p></th>
+                        <th colspan="3"><p translate>Risk</p></th>
+                        <th rowspan="2"><p translate>Observation</p></th>
+                        <th rowspan="2"><p translate>T</p></th>
+                        <th rowspan="2"><p translate>Target risk</p></th>
+                        <th rowspan="2"><p translate>Actions</p></th>
+                    </tr>
+                    <tr>
+                        <th>C</th>
+                        <th>I</th>
+                        <th>D</th>
+                        <th>C</th>
+                        <th>I</th>
+                        <th>D</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr ng-repeat="risk in instance.risks">
+                        <td>{{risk.c_impact}}</td>
+                        <td>{{risk.i_impact}}</td>
+                        <td>{{risk.d_impact}}</td>
+                        <td>{{risk.threatDescription1}}</td>
+                        <td inline-edit="risk.threatRate" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></td>
+                        <td>{{risk.vulnDescription1}}</td>
+                        <td inline-edit="risk.vulnerabilityRate" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></td>
+                        <td ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc"
+                            ng-class="{'green': risk.c_risk > 0 && risk.c_risk < scales.thresholds.min, 'orange': risk.c_risk >= scales.thresholds.min && risk.c_risk < scales.thresholds.max, 'red': risk.c_risk >= scales.thresholds.max}">{{risk.c_risk}}</td>
+                        <td ng-disabled="!risk.i_risk_enabled" class="tbl-risk-calc"
+                            ng-class="{'green': risk.i_risk > 0 && risk.i_risk < scales.thresholds.min, 'orange': risk.i_risk >= scales.thresholds.min && risk.i_risk < scales.thresholds.max, 'red': risk.i_risk >= scales.thresholds.max}">{{risk.i_risk}}</td>
+                        <td ng-disabled="!risk.d_risk_enabled" class="tbl-risk-calc"
+                            ng-class="{'green': risk.d_risk > 0 && risk.d_risk < scales.thresholds.min, 'orange': risk.d_risk >= scales.thresholds.min && risk.d_risk < scales.thresholds.max, 'red': risk.d_risk >= scales.thresholds.max}">{{risk.d_risk}}</td>
+                        <td inline-edit="risk.comment" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="{{ 'Click to type...' | translate }}" inline-edit-on-click></td>
+                        <td>-</td>
+                        <td>{{risk.target}}</td>
+                        <td><md-button class="md-icon-button" ng-click="openRiskSheet(risk)">
+                            <md-tooltip>{{ 'Open risk sheet' | translate }}</md-tooltip>
+                            <md-icon>open_in_new</md-icon>
+                        </md-button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-tab>
+
+            <md-tab label="{{ 'OP risks table' | translate }}">
+                <p class="md-title md-padding" translate>{{ instance.oprisks.length || 0 }} operational risk(s)</p>
+
+                <div ng-include="'views/partials/oprisk_sheet.html'" ng-if="opsheet_risk"></div>
+
+                <table class="md-html-table" ng-if="!opsheet_risk">
+                    <thead>
+                    <tr>
+                        <th rowspan="3" translate>Risk description</th>
+                        <th colspan="7" translate>NET</th>
+                        <th rowspan="3" translate>Observation</th>
+                        <th rowspan="3">T</th>
+                        <th rowspan="3" translate>Target risk</th>
+                        <th rowspan="3" translate>Actions</th>
+                    </tr>
+
+                    <tr>
+                        <th rowspan="2" translate>Prob.</th>
+                        <th colspan="5" translate>Impact</th>
+                        <th rowspan="2" translate>Calculated risk</th>
+                    </tr>
+
+                    <tr>
+                        <th>R</th>
+                        <th>O</th>
+                        <th>L</th>
+                        <th>F</th>
+                        <th>P</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr ng-repeat="risk in instance.oprisks">
+                        <td>{{ risk.description }}</td>
+                        <td>{{ risk.prob }}</td>
+                        <td>{{ risk.r }}</td>
+                        <td>{{ risk.o }}</td>
+                        <td>{{ risk.l }}</td>
+                        <td>{{ risk.f }}</td>
+                        <td>{{ risk.p }}</td>
+                        <td>{{ risk.risk }}</td>
+                        <td>{{ risk.comment }}</td>
+                        <td>{{ risk.t }}</td>
+                        <td>{{ risk.target }}</td>
+                        <td><md-button class="md-icon-button" ng-click="openOpRiskSheet(risk.id)">
+                            <md-tooltip>{{ 'Open risk sheet' | translate }}</md-tooltip>
+                            <md-icon>open_in_new</md-icon>
+                        </md-button></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-tab>
+        </md-tabs>
+    </md-card>
+</div>
+
+<script type="text/ng-template" id="objlibs.tree_item_template.html">
+    <a ui-sref="main.kb_mgmt.info_risk.object({objectId: node.id})"><md-icon>{{ node.children && node.children.length > 0 ? 'add': 'note' }}</md-icon> {{ node.name1 }}</a>
+    <md-button class="md-icon-button"><md-icon>arrow_upward</md-icon></md-button>
+    <md-button class="md-icon-button"><md-icon>arrow_downward</md-icon></md-button>
+    <md-button class="md-icon-button" ng-click="deleteCompositionItem($event, node)"><md-icon>delete</md-icon></md-button>
+
+    <ul ng-if="node.children && node.children.length > 0">
+        <li ng-repeat="node in node.children"
+            ng-class="{'md-treeview-branch': node.children && node.children.length > 0}"
+            ng-include="'objlibs.tree_item_template.html'"></li>
+    </ul>
+</script>

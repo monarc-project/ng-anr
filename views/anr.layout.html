@@ -1,0 +1,166 @@
+<div flex ng-controller="BackofficeKbModelsDetailsCtrl">
+    <div layout="column" layout-align="center center" ng-if="!model" flex class="md-padding">
+        <md-progress-circular md-indeterminate="true"></md-progress-circular>
+    </div>
+
+    <div layout="column" ng-if="model" class="md-padding-left md-padding-right">
+        <h2>{{ ::model.label1 }}</h2>
+
+        <md-card>
+            <md-tabs md-border-bottom="true" md-dynamic-height>
+                <md-tab label="{{ 'Risk analysis' | translate }}">
+                    <div layout="row" class="md-padding">
+                        <div flex="20" layout="column">
+                            <md-button ui-sref="main.kb_mgmt.models.details({modelId: model.id})" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ 'Risk analysis overview' | translate }}</md-button>
+
+                            <p class="md-subheader" translate>Risk analysis</p>
+                            <md-input-container class="md-block">
+                                <md-icon>search</md-icon>
+                                <label translate>Search an instance...</label>
+                                <input type="text" ng-model="filter.instance">
+                            </md-input-container>
+
+                            <div class="angular-ui-tree" ui-tree="insTreeCallbacks">
+                                <ol class="no-list-style" ui-tree-nodes="" ng-model="anr_obj_instances_data" id="inst-tree-root">
+                                    <li ng-repeat="node in anr_obj_instances_data" ui-tree-node ng-include="'tree_node_renderer.html'"></li>
+                                </ol>
+                            </div>
+
+                            <p></p>
+
+                            <p class="md-subheader" translate>Objects library</p>
+                            <div layout="row" layout-align="center center">
+                                <md-input-container class="md-block" flex>
+                                    <md-icon>search</md-icon>
+                                    <label translate>Search an object...</label>
+                                    <input type="text" ng-model="filter.library">
+                                </md-input-container>
+                                <md-button class="md-icon-button" ng-click="addObject($event)"><md-icon>add</md-icon></md-button>
+                            </div>
+
+                            <div class="angular-ui-tree" ui-tree="libTreeCallbacks">
+                                <ol class="no-list-style" ui-tree-nodes="" ng-model="anr_obj_library_data" id="objlib-tree-root">
+                                    <li ng-repeat="node in anr_obj_library_data" ui-tree-node ng-include="'tree_node_renderer.html'"></li>
+                                </ol>
+                            </div>
+
+                        </div>
+
+                        <div flex ui-view="anr"></div>
+                    </div>
+
+                </md-tab>
+
+                <md-tab label="{{ 'Evaluation scales' | translate }}">
+                    <div class="md-padding-left md-padding-right" layout="column">
+                        <div layout="row">
+                            <h4><span translate>Impacts scale:</span> [
+                                <span class="small text-blue" inline-edit="scales.impacts.min" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> -
+                                <span class="small text-blue" inline-edit="scales.impacts.max" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> ]
+                            </h4>
+                        </div>
+
+                        <div class="horz-expanding-table">
+                            <table class="md-html-table">
+                                <thead>
+                                <tr>
+                                    <th></th>
+                                    <th ng-repeat="type in scales_types">{{ type.label1 }}</th>
+                                    <th><span inline-edit="newColumnName" inline-edit-callback="onCreateNewColumn(newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ 'New column name' | translate }}"></span></th>
+                                </tr>
+                                </thead>
+
+                                <tbody>
+                                <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)">
+                                    <th>{{ i }}</th>
+                                    <td ng-repeat="type in scales_types"><span inline-edit="comms.impact[i][type.id].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <h4><span translate>Threats scale:</span> [
+                            <span class="small text-blue" inline-edit="scales.threats.min" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> -
+                            <span class="small text-blue" inline-edit="scales.threats.max" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> ]
+                        </h4>
+
+                        <ul class="no-list-style">
+                            <li ng-repeat="i in range(scales.threats.min, scales.threats.max)">{{i}}. <span inline-edit="comms.threat[i].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+                        </ul>
+
+                        <h4><span translate>Vulnerabilities scale:</span> [
+                            <span class="small text-blue" inline-edit="scales.vulns.min" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> -
+                            <span class="small text-blue" inline-edit="scales.vulns.max" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> ]
+                        </h4>
+
+                        <ul class="no-list-style">
+                            <li ng-repeat="i in range(scales.vulns.min, scales.vulns.max)">{{i}}. <span inline-edit="comms.vuln[i].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+                        </ul>
+
+                        <h4 translate>Thresholds</h4>
+
+                        <div layout="row">
+                            <div layout="column" flex="50">
+                                <h5 translate>Max risks thresholds</h5>
+                                <div layout="row" layout-align="start center">
+                                    <div class="anr-scales-demo-block green"></div>
+                                    <md-input-container>
+                                        <input type="number" min="0" max="128" ng-model="thresholds.thresholds.min" aria-label="min" />
+                                    </md-input-container>
+                                </div>
+
+                                <div layout="row" layout-align="start center">
+                                    <div class="anr-scales-demo-block orange"></div>
+                                    <md-input-container>
+                                        <input type="number" min="0" max="128" ng-model="thresholds.thresholds.max" aria-label="max" />
+                                    </md-input-container>
+                                </div>
+                            </div>
+
+                            <div layout="column" flex="50">
+                                <h5 translate>Max ROLF thresholds</h5>
+                                <div layout="row" layout-align="start center">
+                                    <div class="anr-scales-demo-block green"></div>
+                                    <md-input-container>
+                                        <input type="number" min="0" max="128" ng-model="thresholds.rolf_thresholds.min" aria-label="min" />
+                                    </md-input-container>
+                                </div>
+
+                                <div layout="row" layout-align="start center">
+                                    <div class="anr-scales-demo-block orange"></div>
+                                    <md-input-container>
+                                        <input type="number" min="0" max="128" ng-model="thresholds.rolf_thresholds.max" aria-label="max" />
+                                    </md-input-container>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </md-tab>
+            </md-tabs>
+        </md-card>
+    </div>
+</div>
+
+
+<script type="text/ng-template" id="tree_node_renderer.html">
+    <div ui-tree-handle layout="row" layout-align="start center">
+        <md-button class="md-icon-button" ng-click="toggle(this)" ng-if="node.type == 'libcat' || node.__children__.length > 0" ng-disabled="node.__children__.length == 0" data-nodrag>
+            <md-icon>{{ (collapsed || node.__children__.length == 0) ? 'expand_less' : 'expand_more' }}</md-icon>
+        </md-button>
+
+        <md-button class="md-icon-button" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})" ng-if="node.type == 'inst'" data-nodrag>
+            <md-icon>class</md-icon>
+        </md-button>
+
+        <md-button class="md-icon-button" ui-sref="main.kb_mgmt.models.details.object({objectId: node.id})" ng-if="node.type == 'lib'" data-nodrag>
+            <md-icon>class</md-icon>
+        </md-button>
+
+        <p ng-class="{'bold': node.type == 'inst' && node.id == anr_selected_instance_id}">{{ node.label1 }}</p>
+    </div>
+
+    <ol class="no-list-style" ui-tree-nodes="" ng-model="node.__children__" ng-show="!collapsed">
+        <li ng-repeat="node in node.__children__" ui-tree-node ng-include="'tree_node_renderer.html'" ng-show="visible(node)"></li>
+    </ol>
+</script>

@@ -1,0 +1,156 @@
+<md-tabs md-dynamic-height>
+    <md-tab label="{{ 'General information' | translate }}">
+        <div class="md-padding">
+            <md-button class="md-primary md-raised" ng-click="editAnrInfo($event)">{{ 'Edit risk analysis details' | translate }}</md-button>
+
+            <h4 translate>Calculation of risk / Thresholds - Information Risks</h4>
+
+            <div layout="row">
+                <table class="tbl-risk-calc">
+                    <tbody>
+                    <tr>
+                        <th></th>
+                        <th ng-repeat="v in info_risk_columns">{{v}}</th>
+                    </tr>
+                    <tr ng-repeat="i in info_risk_rows">
+                        <th>{{i}}</th>
+                        <td ng-class="{'green': v*i <= thresholds.thresholds.min, 'orange': v*i <= thresholds.thresholds.max && v*i > thresholds.thresholds.min, 'red': v*i > thresholds.thresholds.max}"
+                            ng-repeat="v in info_risk_columns">{{v*i}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="anr-formula-container">
+                    <div class="anr-formula">
+                        <span class="green">R</span> = I x ( M x V )
+                    </div>
+                    <p class="md-caption">{{ 'R: Risk, I: Impact, M: Threat, V: Vulnerability' | translate }}</p>
+                </div>
+            </div>
+
+            <h4 translate>Calculation of risk / Thresholds - Operational Risks</h4>
+
+            <div layout="row" layout-align="start center">
+                <p class="anr-table-sidetitle" translate>Impact</p>
+                <table class="tbl-risk-calc">
+                    <tbody>
+                    <tr>
+                        <td></td>
+                        <td colspan="{{scales.threats.max - scales.threats.min + 1 }}" class="anr-table-toptitle" translate>Probability</td>
+                    </tr>
+                    <tr>
+                        <th></th>
+                        <th ng-repeat="p in range(scales.threats.min, scales.threats.max)">{{p}}</th>
+                    </tr>
+                    <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)">
+                        <th>{{i}}</th>
+                        <td ng-repeat="p in range(scales.threats.min, scales.threats.max)"
+                            ng-class="{'green': p*i <= thresholds.rolf_thresholds.min, 'orange': p*i <= thresholds.rolf_thresholds.max && p*i > thresholds.rolf_thresholds.min, 'red': p*i > thresholds.rolf_thresholds.max}">{{i*p}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <div class="anr-formula-container">
+                    <div class="anr-formula">
+                        <span class="green">R</span> = I x P
+                    </div>
+
+                    <p class="md-caption">{{ 'R: Risk, I: Impact, P: Probability' | translate }}</p>
+                </div>
+            </div>
+
+        </div>
+    </md-tab>
+
+    <md-tab label="{{ 'Risks table' | translate }}">
+        <p>&nbsp;</p>
+        <table class="md-html-table">
+            <thead>
+            <tr>
+                <th colspan="3"><p translate>Impact</p></th>
+                <th rowspan="2"><p translate>Threat</p></th>
+                <th rowspan="2"><p translate>Prob.</p></th>
+                <th rowspan="2"><p translate>Vulnerability</p></th>
+                <th rowspan="2"><p translate>Qualif.</p></th>
+                <th colspan="3"><p translate>Risk</p></th>
+                <th rowspan="2"><p translate>Observation</p></th>
+                <th rowspan="2"><p translate>T</p></th>
+                <th rowspan="2"><p translate>Target risk</p></th>
+            </tr>
+            <tr>
+                <th>C</th>
+                <th>I</th>
+                <th>D</th>
+                <th>C</th>
+                <th>I</th>
+                <th>D</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr>
+                <td>-1</td>
+                <td>-1</td>
+                <td>-1</td>
+                <td>Récupération de supports recyclés ou mis au rebut</td>
+                <td>-</td>
+                <td>La mise au rebut n'est pas correctement assurée</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+            </tr>
+            </tbody>
+        </table>
+    </md-tab>
+
+    <md-tab label="{{ 'OP risks table' | translate }}">
+        <p class="md-title md-padding" translate>{{ object.oprisks.length || 0 }} operational risk(s)</p>
+
+        <table class="md-html-table">
+            <thead>
+            <tr>
+                <th rowspan="3" translate>Risk description</th>
+                <th colspan="7" translate>NET</th>
+                <th rowspan="3" translate>Observation</th>
+                <th rowspan="3">T</th>
+                <th rowspan="3" translate>Target risk</th>
+            </tr>
+
+            <tr>
+                <th rowspan="2" translate>Prob.</th>
+                <th colspan="5" translate>Impact</th>
+                <th rowspan="2" translate>Calculated risk</th>
+            </tr>
+
+            <tr>
+                <th>R</th>
+                <th>O</th>
+                <th>L</th>
+                <th>F</th>
+                <th>P</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr ng-repeat="risk in object.oprisks">
+                <td>{{ risk.description }}</td>
+                <td>{{ risk.prob }}</td>
+                <td>{{ risk.r }}</td>
+                <td>{{ risk.o }}</td>
+                <td>{{ risk.l }}</td>
+                <td>{{ risk.f }}</td>
+                <td>{{ risk.p }}</td>
+                <td>{{ risk.risk }}</td>
+                <td>{{ risk.comment }}</td>
+                <td>{{ risk.t }}</td>
+                <td>{{ risk.target }}</td>
+            </tr>
+            </tbody>
+        </table>
+
+    </md-tab>
+</md-tabs>
