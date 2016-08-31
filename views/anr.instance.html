@@ -134,7 +134,7 @@
                 </table>
             </md-tab>
 
-            <md-tab label="{{ 'OP risks table' | translate }}">
+            <md-tab label="{{ 'OP risks table' | translate }}" ng-if="instance.asset.type == 1">
                 <p class="md-title md-padding" translate>{{ instance.oprisks.length || 0 }} operational risk(s)</p>
 
                 <div ng-include="'views/partials/oprisk_sheet.html'" ng-if="opsheet_risk"></div>
