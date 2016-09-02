@@ -74,6 +74,9 @@
                 'update': {
                     method: 'PUT'
                 },
+                'patch': {
+                    method: 'PATCH'
+                },
                 'query': {
                     isArray: false
                 }
@@ -83,6 +86,9 @@
             {
                 'update': {
                     method: 'PUT'
+                },
+                'patch': {
+                    method: 'PATCH'
                 },
                 'query': {
                     isArray: false
@@ -187,6 +193,10 @@
             new self.ScalesTypesResource({anrId: anr_id, anr: anr_id, scale: scale_id, label1: label1, isHidden: false, isSys: false, implicitPosition: 1}).$save(success, error);
         };
 
+        var patchScaleType = function (anr_id, scale_type_id, data, success, error) {
+            self.ScalesTypesResource.patch({anrId: anr_id, scaleTypeId: scale_type_id}, data, success, error);
+        };
+
         // Scales comments
         var getScaleComments = function (anr_id, type) {
             return self.ScalesCommentResource.query({anrId: anr_id, scaleId: type}).$promise;
@@ -217,6 +227,7 @@
             updateScale: updateScale,
             getScalesTypes: getScalesTypes,
             createScaleType: createScaleType,
+            patchScaleType: patchScaleType,
             getScaleComments: getScaleComments,
             createScaleComment: createScaleComment,
             updateScaleComment: updateScaleComment,

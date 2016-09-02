@@ -321,6 +321,12 @@
             $scope.newColumnName = null;
         };
 
+        $scope.setImpactVisibility = function (id, visible) {
+            AnrService.patchScaleType($scope.model.anr.id, id, {isHidden: visible ? 0 : 1}, function () {
+                $scope.updateScales();
+            });
+        };
+
         $scope.editAnrInfo = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 

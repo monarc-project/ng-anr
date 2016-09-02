@@ -59,13 +59,14 @@
                                 <span class="small text-blue" inline-edit="scales.impacts.max" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> ]
                             </h4>
                         </div>
+                        <md-switch ng-model="display.show_hidden_impacts">{{ 'Show hidden impacts' }}</md-switch>
 
                         <div class="horz-expanding-table">
                             <table class="md-html-table">
                                 <thead>
                                 <tr>
                                     <th></th>
-                                    <th ng-repeat="type in scales_types">{{ type.label1 }}</th>
+                                    <th ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">{{ type.label1 }} <md-button class="md-icon-button" ng-click="setImpactVisibility(type.id, !!type.isHidden)"><md-icon>{{ type.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></th>
                                     <th><span inline-edit="newColumnName" inline-edit-callback="onCreateNewColumn(newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ 'New column name' | translate }}"></span></th>
                                 </tr>
                                 </thead>
@@ -73,7 +74,7 @@
                                 <tbody>
                                 <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)">
                                     <th>{{ i }}</th>
-                                    <td ng-repeat="type in scales_types"><span inline-edit="comms.impact[i][type.id].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></td>
+                                    <td ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types"><span inline-edit="comms.impact[i][type.id].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></td>
                                 </tr>
                                 </tbody>
                             </table>
