@@ -1,0 +1,108 @@
+<md-dialog class="dialog-width">
+    <form name="measureForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 ng-if="!instance.id" translate>Add a new instance</h2>
+                <h2 ng-if="instance.id" translate>Update instance "{{instance.label1}}" details</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div layout="row">
+                    <div layout="column">
+                        <h4 translate>Impact</h4>
+                        <p>&nbsp;</p>
+
+                        <md-input-container>
+                            <label translate>Confidentiality</label>
+                            <md-select ng-model="impact.c">
+                                <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
+                                <md-option value="2">2</md-option>
+                                <md-option value="3">3</md-option>
+                                <md-option value="4">4</md-option>
+                                <md-option value="5">5</md-option>
+                            </md-select>
+                        </md-input-container>
+
+                        <md-input-container>
+                            <label translate>Integrity</label>
+                            <md-select ng-model="impact.i">
+                                <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
+                                <md-option value="2">2</md-option>
+                                <md-option value="3">3</md-option>
+                                <md-option value="4">4</md-option>
+                                <md-option value="5">5</md-option>
+                            </md-select>
+                        </md-input-container>
+
+                        <md-input-container>
+                            <label translate>Availability</label>
+                            <md-select ng-model="impact.d">
+                                <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
+                                <md-option value="2">2</md-option>
+                                <md-option value="3">3</md-option>
+                                <md-option value="4">4</md-option>
+                                <md-option value="5">5</md-option>
+                            </md-select>
+                        </md-input-container>
+                    </div>
+
+                    <div layout="column">
+                        <h4 translate>Consequences</h4>
+
+                        <div layout="row">
+                            <div layout="column" ng-repeat="col in instance.consequences">
+                                <p>{{ col.label1 }} <md-button class="md-icon-button" ng-click="setConsequenceVisibility(col.id, !!col.isHidden)"><md-icon>{{ col.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></p>
+                                <md-input-container>
+                                    <label translate>Confidentiality</label>
+                                    <md-select ng-model="consequences[col.id].c">
+                                        <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
+                                        <md-option value="2">2</md-option>
+                                        <md-option value="3">3</md-option>
+                                        <md-option value="4">4</md-option>
+                                        <md-option value="5">5</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <md-input-container>
+                                    <label translate>Integrity</label>
+                                    <md-select ng-model="consequences[col.id].i">
+                                        <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
+                                        <md-option value="2">2</md-option>
+                                        <md-option value="3">3</md-option>
+                                        <md-option value="4">4</md-option>
+                                        <md-option value="5">5</md-option>
+                                    </md-select>
+                                </md-input-container>
+
+                                <md-input-container>
+                                    <label translate>Availability</label>
+                                    <md-select ng-model="consequences[col.id].d">
+                                        <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
+                                        <md-option value="2">2</md-option>
+                                        <md-option value="3">3</md-option>
+                                        <md-option value="4">4</md-option>
+                                        <md-option value="5">5</md-option>
+                                    </md-select>
+                                </md-input-container>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="create()" ng-disabled="measureForm.$error.required" class="md-accent md-hue-3">
+                {{ (measure.id > 0 ? 'Update' : 'Create') | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

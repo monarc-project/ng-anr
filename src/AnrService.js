@@ -105,6 +105,19 @@
                 }
             });
 
+        self.InstancesConsequencesResource = $resource('/api/anr/:anrId/instances-consequences/:consId', { anrId: '@anrId', consId: '@consId' },
+            {
+                'update': {
+                    method: 'PUT'
+                },
+                'patch': {
+                    method: 'PATCH'
+                },
+                'query': {
+                    isArray: false
+                }
+            });
+
 
         // ANRs
         var patchAnr = function (anr_id, fields, success, error) {;
@@ -214,6 +227,14 @@
             return self.ScalesCommentResource.update({anrId: anr_id, scaleId: scale_id, commentId: comment_id}, params, success, error);
         };
 
+        // Instances (unforeseen) consequences
+        var getInstancesConsequences = function (anr_id) {
+            return self.InstancesConsequencesResource.query({anrId: anr_id}).$promise;
+        };
+
+        var patchInstanceConsequence = function (anr_id, cons_id, data, success, error) {
+            self.InstancesConsequencesResource.patch({anrId: anr_id, consId: cons_id}, data, success, error);
+        };
 
 
         return {
@@ -225,9 +246,11 @@
 
             getScales: getScales,
             updateScale: updateScale,
+
             getScalesTypes: getScalesTypes,
             createScaleType: createScaleType,
             patchScaleType: patchScaleType,
+
             getScaleComments: getScaleComments,
             createScaleComment: createScaleComment,
             updateScaleComment: updateScaleComment,
@@ -238,12 +261,17 @@
             addInstance: addInstance,
             updateInstance: updateInstance,
             moveInstance: moveInstance,
+
             getInstanceRisk: getInstanceRisk,
             updateInstanceRisk: updateInstanceRisk,
             patchInstanceRisk: patchInstanceRisk,
+
             getInstanceOpRisk: getInstanceOpRisk,
             updateInstanceOpRisk: updateInstanceOpRisk,
             patchInstanceOpRisk: patchInstanceOpRisk,
+
+            getInstancesConsequences: getInstancesConsequences,
+            patchInstanceConsequence: patchInstanceConsequence
         };
     }
 
