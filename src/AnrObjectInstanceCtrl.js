@@ -138,6 +138,8 @@
 
 
     function CreateInstanceDialogCtrl($scope, $mdDialog, AnrService, instance) {
+        $scope.instance = instance;
+
         $scope.cancel = function () {
             $mdDialog.cancel();
         };
