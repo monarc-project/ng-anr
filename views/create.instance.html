@@ -52,10 +52,14 @@
                     </div>
 
                     <div layout="column">
-                        <h4 translate>Consequences</h4>
+                        <div layout="row">
+                            <h4 translate>Consequences</h4>
+                            <span flex></span>
+                            <md-switch ng-model="display.hidden" ng-true-value="true" ng-false-value="false">{{ 'Show hidden consequences' | translate }}</md-switch>
+                        </div>
 
                         <div layout="row">
-                            <div layout="column" ng-repeat="col in instance.consequences">
+                            <div layout="column" ng-repeat="col in instance.consequences" ng-if="!col.isHidden || display.hidden">
                                 <p>{{ col.scaleImpactTypeDescription1 }} <md-button class="md-icon-button" ng-click="setConsequenceVisibility(col.id, !!col.isHidden)"><md-icon>{{ col.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></p>
                                 <md-input-container>
                                     <label translate>Confidentiality</label>

@@ -145,7 +145,7 @@
         };
 
         $scope.setConsequenceVisibility = function (id, visible) {
-            AnrService.patchInstanceConsequence($scope.model.anr.id, id, {isHidden: visible ? 0 : 1}, function () {
+            AnrService.patchInstanceConsequence($scope.instance.anr.id, id, {isHidden: visible ? 0 : 1}, function () {
                 for (var i = 0; i < $scope.instance.consequences.length; ++i) {
                     if ($scope.instance.consequences[i].id == id) {
                         $scope.instance.consequences[i].isHidden = !visible;
