@@ -448,7 +448,7 @@
                     var comm = data.comments[i];
 
                     if (isImpact) {
-                        obj[comm.val][comm.scaleTypeImpact.id] = comm;
+                        obj[comm.val][comm.scaleImpactType.id] = comm;
                     } else {
                         obj[comm.val] = comm;
                     }
