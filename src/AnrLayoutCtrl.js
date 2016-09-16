@@ -266,7 +266,7 @@
                         for (var j in newValue.impact[i]) {
                             if (oldValue.impact[i][j] !== undefined && oldValue.impact[i][j].comment1 != newValue.impact[i][j].comment1) {
                                 if (newValue.impact[i][j].id == null) {
-                                    AnrService.createScaleComment($scope.model.anr.id, $scope.scales.impacts.id, i, newValue.impact[i][j].comment1, newValue.impact[i][j].scaleTypeImpact, update);
+                                    AnrService.createScaleComment($scope.model.anr.id, $scope.scales.impacts.id, i, newValue.impact[i][j].comment1, newValue.impact[i][j].scaleImpactType, update);
                                 } else {
                                     AnrService.updateScaleComment($scope.model.anr.id, $scope.scales.impacts.id, newValue.impact[i][j].id, newValue.impact[i][j], update);
                                 }
@@ -414,7 +414,7 @@
                             $scope.comms.impact[i][$scope.scales_types[j].id] = {
                                 id: null,
                                 comment1: null,
-                                scaleTypeImpact: $scope.scales_types[j].id
+                                scaleImpactType: $scope.scales_types[j].id
                             };
                         }
                     }
