@@ -167,7 +167,7 @@
 
                     <tbody>
                     <tr ng-repeat="risk in instance.oprisks">
-                        <td>{{ risk.description }}</td>
+                        <td>{{ risk.description1 }}</td>
                         <td>{{ risk.prob }}</td>
                         <td>{{ risk.r }}</td>
                         <td>{{ risk.o }}</td>
@@ -178,7 +178,7 @@
                         <td>{{ risk.comment }}</td>
                         <td>{{ risk.t }}</td>
                         <td>{{ risk.target }}</td>
-                        <td><md-button class="md-icon-button" ng-click="openOpRiskSheet(risk.id)">
+                        <td><md-button class="md-icon-button" ng-click="openOpRiskSheet(risk)">
                             <md-tooltip>{{ 'Open risk sheet' | translate }}</md-tooltip>
                             <md-icon>open_in_new</md-icon>
                         </md-button></td>
@@ -192,9 +192,6 @@
 
 <script type="text/ng-template" id="objlibs.tree_item_template.html">
     <a ui-sref="main.kb_mgmt.info_risk.object({objectId: node.id})"><md-icon>{{ node.children && node.children.length > 0 ? 'add': 'note' }}</md-icon> {{ node.name1 }}</a>
-    <md-button class="md-icon-button"><md-icon>arrow_upward</md-icon></md-button>
-    <md-button class="md-icon-button"><md-icon>arrow_downward</md-icon></md-button>
-    <md-button class="md-icon-button" ng-click="deleteCompositionItem($event, node)"><md-icon>delete</md-icon></md-button>
 
     <ul ng-if="node.children && node.children.length > 0">
         <li ng-repeat="node in node.children"

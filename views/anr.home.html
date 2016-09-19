@@ -67,7 +67,6 @@
         <table class="md-html-table">
             <thead>
             <tr>
-                <th colspan="3"><p translate>Impact</p></th>
                 <th rowspan="2"><p translate>Threat</p></th>
                 <th rowspan="2"><p translate>Prob.</p></th>
                 <th rowspan="2"><p translate>Vulnerability</p></th>
@@ -81,34 +80,28 @@
                 <th>C</th>
                 <th>I</th>
                 <th>D</th>
-                <th>C</th>
-                <th>I</th>
-                <th>D</th>
             </tr>
             </thead>
 
             <tbody>
-            <tr>
-                <td>-1</td>
-                <td>-1</td>
-                <td>-1</td>
-                <td>Récupération de supports recyclés ou mis au rebut</td>
+            <tr ng-repeat="risk in model.anr.risks">
+                <td>{{ risk.threat.label1 }}</td>
+                <td>{{ risk.threatRate }}</td>
+                <td>{{ risk.vulnerability.label1 }}</td>
+                <td>{{ risk.vulnerabilityRate }}</td>
+                <td>{{ risk.riskC }}</td>
+                <td>{{ risk.riskI }}</td>
+                <td>{{ risk.riskD }}</td>
+                <td>{{ risk.comment }}</td>
                 <td>-</td>
-                <td>La mise au rebut n'est pas correctement assurée</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
-                <td>-</td>
+                <td>{{ risk.cacheTargetedRisk }}</td>
             </tr>
             </tbody>
         </table>
     </md-tab>
 
     <md-tab label="{{ 'OP risks table' | translate }}">
-        <p class="md-title md-padding" translate>{{ object.oprisks.length || 0 }} operational risk(s)</p>
+        <p class="md-title md-padding" translate>{{ model.anr.risksop.length || 0 }} operational risk(s)</p>
 
         <table class="md-html-table">
             <thead>
@@ -136,18 +129,18 @@
             </thead>
 
             <tbody>
-            <tr ng-repeat="risk in object.oprisks">
-                <td>{{ risk.description }}</td>
-                <td>{{ risk.prob }}</td>
-                <td>{{ risk.r }}</td>
-                <td>{{ risk.o }}</td>
-                <td>{{ risk.l }}</td>
-                <td>{{ risk.f }}</td>
-                <td>{{ risk.p }}</td>
-                <td>{{ risk.risk }}</td>
+            <tr ng-repeat="risk in model.anr.risksop">
+                <td>{{ risk.riskCacheDescription1 }}</td>
+                <td>{{ risk.netProb }}</td>
+                <td>{{ risk.netR }}</td>
+                <td>{{ risk.netO }}</td>
+                <td>{{ risk.netL }}</td>
+                <td>{{ risk.netF }}</td>
+                <td>{{ risk.netP }}</td>
+                <td>{{ risk.cacheNetRisk }}</td>
                 <td>{{ risk.comment }}</td>
-                <td>{{ risk.t }}</td>
-                <td>{{ risk.target }}</td>
+                <td>-</td>
+                <td>{{ risk.cacheTargetedRisk }}</td>
             </tr>
             </tbody>
         </table>

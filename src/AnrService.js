@@ -216,12 +216,12 @@
         };
 
         var createScaleComment = function (anr_id, scale_id, row, comment, type_impact_id, success, error) {
-            new self.ScalesCommentResource({anrId: anr_id, scaleId: scale_id, val: row, scaleTypeImpact: type_impact_id, comment1: comment}).$save(success, error);
+            new self.ScalesCommentResource({anrId: anr_id, scaleId: scale_id, val: row, scaleImpactType: type_impact_id, comment1: comment}).$save(success, error);
         };
 
         var updateScaleComment = function (anr_id, scale_id, comment_id, params, success, error) {
-            if (params.scaleTypeImpact && params.scaleTypeImpact.id) {
-                params.scaleTypeImpact = params.scaleTypeImpact.id;
+            if (params.scaleImpactType && params.scaleImpactType.id) {
+                params.scaleImpactType = params.scaleImpactType.id;
             }
 
             return self.ScalesCommentResource.update({anrId: anr_id, scaleId: scale_id, commentId: comment_id}, params, success, error);
