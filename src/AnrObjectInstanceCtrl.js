@@ -24,6 +24,16 @@
 
         $scope.updateInstance = function () {
             AnrService.getInstance($scope.model.anr.id, $stateParams.instId).then(function (data) {
+                // Filter out C/I/D consequences
+                var validCons = [];
+                for (var i = 0; i < data.consequences.length; ++i) {
+                    if (data.consequences[i].scaleImpactType > 3) {
+                        validCons.push(data.consequences[i]);
+                    }
+                }
+
+                data.consequences = validCons;
+
                 $scope.instance = data;
                 isInstanceLoading = false;
             });
