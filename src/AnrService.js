@@ -156,8 +156,8 @@
             new self.InstanceResource({object: object_id, parent: parent_id, position: position, anrId: anr_id}).$save(success, error);
         };
 
-        var updateInstance = function (instance, success, error) {
-            new self.InstanceResource(instance).$save(success, error);
+        var updateInstance = function (anr_id, instance, success, error) {
+            self.InstanceResource.update({anrId: anr_id, instId: instance.id}, instance, success, error);
         };
 
         var moveInstance = function (anr_id, instance_id, parent_id, position, success, error) {

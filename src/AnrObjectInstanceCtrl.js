@@ -97,7 +97,7 @@
                 }
             })
                 .then(function (instance) {
-                    if (objlib && objlib.id) {
+                    if (instance && instance.anr) {
                         AnrService.updateInstance($scope.instance.anr.id, instance, function () {
                             toastr.success(gettext("The instance details have been updated"), gettext("Update successful"));
                         });
@@ -143,6 +143,10 @@
         $scope.cancel = function () {
             $mdDialog.cancel();
         };
+
+        $scope.create = function () {
+            $mdDialog.hide($scope.instance);
+        }
 
         $scope.setConsequenceVisibility = function (id, visible) {
             AnrService.patchInstanceConsequence($scope.instance.anr.id, id, {isHidden: visible ? 0 : 1}, function () {
