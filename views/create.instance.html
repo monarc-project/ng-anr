@@ -59,11 +59,11 @@
                         </div>
 
                         <div layout="row">
-                            <div layout="column" ng-repeat="col in instance.consequences" ng-if="!col.isHidden || display.hidden">
+                            <div layout="column" ng-repeat="(idx, col) in instance.consequences" ng-if="!col.isHidden || display.hidden">
                                 <p>{{ col.scaleImpactTypeDescription1 }} <md-button class="md-icon-button" ng-click="setConsequenceVisibility(col.id, !!col.isHidden)"><md-icon>{{ col.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></p>
                                 <md-input-container>
                                     <label translate>Confidentiality</label>
-                                    <md-select ng-model="consequences[col.id].c_risk">
+                                    <md-select ng-model="instance.consequences[idx].c_risk">
                                         <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
                                         <md-option value="2">2</md-option>
                                         <md-option value="3">3</md-option>
@@ -74,7 +74,7 @@
 
                                 <md-input-container>
                                     <label translate>Integrity</label>
-                                    <md-select ng-model="consequences[col.id].i_risk">
+                                    <md-select ng-model="instance.consequences[idx].i_risk">
                                         <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
                                         <md-option value="2">2</md-option>
                                         <md-option value="3">3</md-option>
@@ -85,7 +85,7 @@
 
                                 <md-input-container>
                                     <label translate>Availability</label>
-                                    <md-select ng-model="consequences[col.id].d_risk">
+                                    <md-select ng-model="instance.consequences[idx].d_risk">
                                         <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
                                         <md-option value="2">2</md-option>
                                         <md-option value="3">3</md-option>
