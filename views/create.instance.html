@@ -63,7 +63,7 @@
                                 <p>{{ col.scaleImpactTypeDescription1 }} <md-button class="md-icon-button" ng-click="setConsequenceVisibility(col.id, !!col.isHidden)"><md-icon>{{ col.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></p>
                                 <md-input-container>
                                     <label translate>Confidentiality</label>
-                                    <md-select ng-model="consequences[col.id].c">
+                                    <md-select ng-model="consequences[col.id].c_risk">
                                         <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
                                         <md-option value="2">2</md-option>
                                         <md-option value="3">3</md-option>
@@ -74,7 +74,7 @@
 
                                 <md-input-container>
                                     <label translate>Integrity</label>
-                                    <md-select ng-model="consequences[col.id].i">
+                                    <md-select ng-model="consequences[col.id].i_risk">
                                         <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
                                         <md-option value="2">2</md-option>
                                         <md-option value="3">3</md-option>
@@ -85,7 +85,7 @@
 
                                 <md-input-container>
                                     <label translate>Availability</label>
-                                    <md-select ng-model="consequences[col.id].d">
+                                    <md-select ng-model="consequences[col.id].d_risk">
                                         <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
                                         <md-option value="2">2</md-option>
                                         <md-option value="3">3</md-option>
