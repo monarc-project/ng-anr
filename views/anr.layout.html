@@ -157,11 +157,11 @@
             <md-icon>reorder</md-icon>
         </md-button>
 
-        <p class="md-tree-link" ng-class="{'bold': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.project.anr.object({objectId: node.id})" ng-if="node.type == 'libcat'" data-nodrag>{{ node.label1 }}</p>
-        <p class="md-tree-link" ng-class="{'bold': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.project.anr.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'FO'" data-nodrag>{{ node.label1 }}</p>
-        <p class="md-tree-link" ng-class="{'bold': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.project.anr.instance({instId: node.id})" ng-if="node.type == 'inst' && OFFICE_MODE == 'FO'" data-nodrag>{{ node.label1 }}</p>
-        <p class="md-tree-link" ng-class="{'bold': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.kb_mgmt.models.details.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'BO'" data-nodrag>{{ node.label1 }}</p>
-        <p class="md-tree-link" ng-class="{'bold': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})" ng-if="node.type == 'inst' && OFFICE_MODE == 'BO'" data-nodrag>{{ node.label1 }}</p>
+        <p flex class="md-tree-link" ng-class="{'bold': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.project.anr.object({objectId: node.id})" ng-if="node.type == 'libcat'" data-nodrag>{{ node.label1 }}</p>
+        <p flex class="md-tree-link" ng-class="{'bold': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.project.anr.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'FO'" data-nodrag>{{ node.label1 }}</p>
+        <p flex class="md-tree-link" ng-class="{'bold': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.project.anr.instance({instId: node.id})" ng-if="node.type == 'inst' && OFFICE_MODE == 'FO'" data-nodrag>{{ node.label1 }}</p>
+        <p flex class="md-tree-link" ng-class="{'bold': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.kb_mgmt.models.details.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'BO'" data-nodrag>{{ node.label1 }}</p>
+        <p flex class="md-tree-link" ng-class="{'bold': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})" ng-if="node.type == 'inst' && OFFICE_MODE == 'BO'" data-nodrag>{{ node.label1 }}</p>
     </div>
 
     <ol class="no-list-style" ui-tree-nodes="" ng-model="node.__children__" ng-show="!collapsed">
