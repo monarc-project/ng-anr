@@ -67,16 +67,18 @@
         <table class="md-html-table">
             <thead>
             <tr>
-                <th rowspan="2"><p translate>Threat</p></th>
-                <th rowspan="2"><p translate>Prob.</p></th>
-                <th rowspan="2"><p translate>Vulnerability</p></th>
-                <th rowspan="2"><p translate>Qualif.</p></th>
-                <th colspan="3"><p translate>Risk</p></th>
-                <th rowspan="2"><p translate>Observation</p></th>
+                <th colspan="2"><p translate>Threat</p></th>
+                <th colspan="3"><p translate>Vulnerability</p></th>
+                <th colspan="3"><p translate>Current risk</p></th>
                 <th rowspan="2"><p translate>T</p></th>
                 <th rowspan="2"><p translate>Target risk</p></th>
             </tr>
             <tr>
+                <th translate>Label</th>
+                <th translate>Prob.</th>
+                <th translate>Label</th>
+                <th translate>Measures set</th>
+                <th translate>Qualif.</th>
                 <th>C</th>
                 <th>I</th>
                 <th>D</th>
@@ -88,12 +90,13 @@
                 <td>{{ risk.threat.label1 }}</td>
                 <td>{{ risk.threatRate }}</td>
                 <td>{{ risk.vulnerability.label1 }}</td>
+                <td>{{ risk.comment }}</td>
                 <td>{{ risk.vulnerabilityRate }}</td>
                 <td>{{ risk.riskC }}</td>
                 <td>{{ risk.riskI }}</td>
                 <td>{{ risk.riskD }}</td>
-                <td>{{ risk.comment }}</td>
-                <td>-</td>
+
+                <td><span class="green-dot" ng-if="risk.t"></span></td>
                 <td>{{ risk.cacheTargetedRisk }}</td>
             </tr>
             </tbody>
