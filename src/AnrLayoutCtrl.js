@@ -239,13 +239,13 @@
         $scope.$watch('scales', function (newValue, oldValue) {
             if ($scope.model && $scope.model.anr && scaleWatchSetup) {
                 if (oldValue.impacts.min != newValue.impacts.min || oldValue.impacts.max != newValue.impacts.max) {
-                    AnrService.updateScale($scope.model.anr.id, 'impact', newValue.impacts.min, newValue.impacts.max);
+                    AnrService.updateScale($scope.model.anr.id, $scope.scales.impacts.id, newValue.impacts.min, newValue.impacts.max);
                 }
                 if (oldValue.threats.min != newValue.threats.min || oldValue.threats.max != newValue.threats.max) {
-                    AnrService.updateScale($scope.model.anr.id, 'threat', newValue.threats.min, newValue.threats.max);
+                    AnrService.updateScale($scope.model.anr.id, $scope.scales.threats.id, newValue.threats.min, newValue.threats.max);
                 }
                 if (oldValue.vulns.min != newValue.vulns.min || oldValue.vulns.max != newValue.vulns.max) {
-                    AnrService.updateScale($scope.model.anr.id, 'vulnerability', newValue.vulns.min, newValue.vulns.max);
+                    AnrService.updateScale($scope.model.anr.id, $scope.scales.vulns.id, newValue.vulns.min, newValue.vulns.max);
                 }
             }
 
