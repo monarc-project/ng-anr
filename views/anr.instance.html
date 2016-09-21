@@ -176,9 +176,9 @@
                         <td>{{ risk.p }}</td>
                         <td>{{ risk.risk }}</td>
                         <td>{{ risk.comment }}</td>
-                        <td>{{ risk.t }}</td>
+                        <td class="txtcenter"><div style="display:inline-block" class="green-dot" ng-if="risk.t"></div></td>
                         <td>{{ risk.target }}</td>
-                        <td><md-button class="md-icon-button" ng-click="openOpRiskSheet(risk)">
+                        <td class="txtcenter"><md-button class="md-icon-button" ng-click="openOpRiskSheet(risk)">
                             <md-tooltip>{{ 'Open risk sheet' | translate }}</md-tooltip>
                             <md-icon>open_in_new</md-icon>
                         </md-button></td>
