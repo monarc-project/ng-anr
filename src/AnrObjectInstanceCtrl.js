@@ -3,7 +3,7 @@
     angular
         .module('AnrModule')
         .controller('AnrObjectInstanceCtrl', [
-            '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettext', 'gettextCatalog', '$state', 'TableHelperService',
+            '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$state', 'TableHelperService',
             'ModelService', 'ObjlibService', '$stateParams', 'AnrService', '$rootScope', '$timeout',
             AnrObjectInstanceCtrl
         ]);
@@ -11,7 +11,7 @@
     /**
      * ANR > OBJECT INSTANCE
      */
-    function AnrObjectInstanceCtrl($scope, toastr, $mdMedia, $mdDialog, gettext, gettextCatalog, $state,
+    function AnrObjectInstanceCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state,
                                             TableHelperService, ModelService, ObjlibService, $stateParams, AnrService,
                                             $rootScope, $timeout) {
 
@@ -109,7 +109,7 @@
                 .then(function (instance) {
                     if (instance && instance.anr) {
                         AnrService.updateInstance($scope.instance.anr.id, instance, function () {
-                            toastr.success(gettext("The instance details have been updated"), gettext("Update successful"));
+                            toastr.success(gettextCatalog.getString("The instance details have been updated"), gettextCatalog.getString("Update successful"));
                         });
                     }
                 });
@@ -117,12 +117,12 @@
 
         $scope.detachInstance = function (ev) {
             var confirm = $mdDialog.confirm()
-                .title(gettext('Are you sure you want to detach this instance?'))
-                .textContent(gettext('This instance and all its children will be removed from the risk analysis. This operation cannot be undone.'))
+                .title(gettextCatalog.getString('Are you sure you want to detach this instance?'))
+                .textContent(gettextCatalog.getString('This instance and all its children will be removed from the risk analysis. This operation cannot be undone.'))
                 .ariaLabel('Detach instance')
                 .targetEvent(ev)
-                .ok(gettext('Detach'))
-                .cancel(gettext('Cancel'));
+                .ok(gettextCatalog.getString('Detach'))
+                .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
                 AnrService.deleteInstance($scope.model.anr.id, $stateParams.instId, function () {
                     $scope.updateInstances();
@@ -133,13 +133,13 @@
 
         $scope.saveRiskSheet = function (sheet) {
             AnrService.updateInstanceRisk($scope.instance.anr.id, sheet.id, sheet, function () {
-                toastr.success(gettext('The risk sheet changes have been saved successfully'), gettext('Save successful'));
+                toastr.success(gettextCatalog.getString('The risk sheet changes have been saved successfully'), gettextCatalog.getString('Save successful'));
             })
         };
 
         $scope.saveOpRiskSheet = function (sheet) {
             AnrService.updateInstanceOpRisk($scope.instance.anr.id, sheet.id, sheet, function () {
-                toastr.success(gettext('The operational risk sheet changes have been saved successfully'), gettext('Save successful'));
+                toastr.success(gettextCatalog.getString('The operational risk sheet changes have been saved successfully'), gettextCatalog.getString('Save successful'));
             })
         };
     }

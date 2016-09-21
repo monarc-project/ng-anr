@@ -3,7 +3,7 @@
     angular
         .module('AnrModule')
         .controller('AnrLayoutCtrl', [
-            '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettext', 'gettextCatalog', 'TableHelperService',
+            '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
             'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope',
             AnrLayoutCtrl
         ]);
@@ -11,9 +11,8 @@
     /**
      * ANR MAIN LAYOUT CONTROLLER
      */
-    function AnrLayoutCtrl($scope, toastr, $mdMedia, $mdDialog, gettext, gettextCatalog,
-                                           TableHelperService, ModelService, ObjlibService, AnrService, $stateParams,
-                                           $rootScope) {
+    function AnrLayoutCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService, ModelService,
+                           ObjlibService, AnrService, $stateParams, $rootScope) {
         var self = this;
 
         $scope.updateModel = function () {
@@ -342,7 +341,7 @@
             })
                 .then(function (anr) {
                     AnrService.patchAnr($scope.model.anr.id, anr, function () {
-                        toastr.success(gettext("The risk analysis details have been updated"), gettext("Update successful"));
+                        toastr.success(gettextCatalog.getString("The risk analysis details have been updated"), gettextCatalog.getString("Update successful"));
                     });
                 });
         };
@@ -489,7 +488,7 @@
         $scope.createAttachedObject = function () {
             $scope.objLibDialog = $mdDialog;
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'toastr', 'gettext', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', CreateObjlibDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', CreateObjlibDialogCtrl],
                 templateUrl: '/views/dialogs/create.objlibs.html',
                 clickOutsideToClose: true,
                 locals: {
