@@ -15,6 +15,12 @@
                            ObjlibService, AnrService, $stateParams, $rootScope) {
         var self = this;
 
+        // Called by ObjectCtrl when an object has been modified
+        $rootScope.hookUpdateObjlib = function () {
+            $scope.updateInstances();
+            $scope.updateObjectsLibrary();
+        };
+
         $scope.updateModel = function () {
             ModelService.getModel($stateParams.modelId).then(function (data) {
                 $scope.model = data;
