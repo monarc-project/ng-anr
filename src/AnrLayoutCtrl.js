@@ -357,12 +357,13 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$q', 'ObjlibService', 'AnrService', 'anr_id', AddObjectDialogCtrl],
+                controller: ['$scope', '$mdDialog', '$q', 'ObjlibService', 'AnrService', '$parentScope', 'anr_id', AddObjectDialogCtrl],
                 templateUrl: '/views/dialogs/add.objlib.html',
                 targetEvent: ev,
                 clickOutsideToClose: true,
                 fullscreen: useFullScreen,
                 locals: {
+                    '$parentScope': $scope,
                     anr_id: $scope.model.anr.id
                 }
             })
@@ -483,7 +484,7 @@
         };
     }
 
-    function AddObjectDialogCtrl($scope, $mdDialog, $q, ObjlibService, AnrService, anr_id) {
+    function AddObjectDialogCtrl($scope, $mdDialog, $q, ObjlibService, AnrService, $parentScope, anr_id) {
         $scope.objectSearchText = '';
         $scope.categorySearchText = '';
 
@@ -517,7 +518,7 @@
                     }
 
                     AnrService.addNewObjectToLibrary(anr_id, objlib, function (data) {
-
+                        $parentScope.updateObjectsLibrary();
                     });
                 }
             });
