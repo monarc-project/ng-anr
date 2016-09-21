@@ -491,16 +491,17 @@
             object: null
         };
 
-        $scope.createAttachedObject = function () {
+        $scope.createAttachedObject = function (ev, objlib) {
             $scope.objLibDialog = $mdDialog;
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', CreateObjlibDialogCtrl],
                 templateUrl: '/views/dialogs/create.objlibs.html',
                 clickOutsideToClose: true,
+                targetEvent: ev,
                 locals: {
                     mode: 'anr',
                     objLibDialog: $scope,
-                    objlib: null
+                    objlib: objlib
                 }
             }).then(function (objlib) {
                 if (objlib) {
