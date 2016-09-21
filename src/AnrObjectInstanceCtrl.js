@@ -18,7 +18,7 @@
         $scope.instance = {};
 
         $rootScope.anr_selected_instance_id = $stateParams.instId;
-
+        $rootScope.anr_selected_object_id = null;
 
         var isInstanceLoading = true;
 
