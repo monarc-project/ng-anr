@@ -88,6 +88,10 @@
         };
 
         $scope.libTreeCallbacks = {
+            beforeDrag: function (scopeDrag) {
+                return scopeDrag.$modelValue.type != 'libcat';
+            },
+
             accept: function (sourceNodeScope, destNodeScope, destIndex) {
                 return sourceNodeScope.$id == destNodeScope.$id;
             },
