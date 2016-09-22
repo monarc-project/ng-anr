@@ -63,10 +63,10 @@
         $scope.visible = function (item) {
             if (item.type == 'lib') {
                 return !($scope.filter.library && $scope.filter.library.length > 0 &&
-                    item.label1.toLowerCase().indexOf($scope.filter.library.toLowerCase()) == -1);
+                    item.name1.toLowerCase().indexOf($scope.filter.library.toLowerCase()) == -1);
             } else if (item.type == 'inst') {
                 return !($scope.filter.instance && $scope.filter.instance.length > 0 &&
-                item.label1.toLowerCase().indexOf($scope.filter.instance.toLowerCase()) == -1);
+                item.name1.toLowerCase().indexOf($scope.filter.instance.toLowerCase()) == -1);
             }
 
             return true;
@@ -149,7 +149,7 @@
                 $scope.anr_obj_instances_data = [];
 
                 var recurseFillTree = function (instance) {
-                    var output = {id: instance.id, type: 'inst', label1: instance.label1, __children__: []};
+                    var output = {id: instance.id, type: 'inst', name1: instance.name1, __children__: []};
 
                     if (instance.child && instance.child.length > 0) {
                         for (var i = 0; i < instance.child.length; ++i) {
