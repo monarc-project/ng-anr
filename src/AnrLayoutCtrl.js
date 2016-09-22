@@ -371,6 +371,7 @@
                     if (objlib && objlib.id) {
                         AnrService.addExistingObjectToLibrary($scope.model.anr.id, objlib.id, function () {
                             $scope.updateObjectsLibrary();
+                            toastr.success(gettextCatalog.getString("The object has been added to the library."), gettextCatalog.getString("Object added successfully"))
                         });
                     }
                 });

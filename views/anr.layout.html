@@ -22,6 +22,10 @@
                             </md-input-container>
 
                             <div class="angular-ui-tree" ui-tree="insTreeCallbacks">
+                                <div layout="row" layout-align="center center" ng-if="!anr_obj_instances_data || anr_obj_instances_data.length == 0">
+                                    <md-progress-circular md-diameter="24"></md-progress-circular>
+                                </div>
+
                                 <ol class="no-list-style" ui-tree-nodes="" ng-model="anr_obj_instances_data" id="inst-tree-root">
                                     <li ng-repeat="node in anr_obj_instances_data" ui-tree-node ng-include="'tree_node_renderer.html'"></li>
                                 </ol>
@@ -40,6 +44,9 @@
                             </div>
 
                             <div class="angular-ui-tree" ui-tree="libTreeCallbacks">
+                                <div layout="row" layout-align="center center" ng-if="!anr_obj_library_data || anr_obj_library_data.length == 0">
+                                    <md-progress-circular md-diameter="24"></md-progress-circular>
+                                </div>
                                 <ol class="no-list-style" ui-tree-nodes="" ng-model="anr_obj_library_data" id="objlib-tree-root">
                                     <li ng-repeat="node in anr_obj_library_data" ui-tree-node ng-include="'tree_node_renderer.html'"></li>
                                 </ol>
