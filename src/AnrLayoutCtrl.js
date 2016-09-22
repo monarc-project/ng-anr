@@ -98,7 +98,7 @@
                 } else {
                     // Make a copy of the item from the library tree to the inst tree
                     var copy = angular.copy(e.source.nodeScope.$modelValue);
-                    copy.type = 'inst';
+                    e.source.nodeScope.$modelValue.type = 'inst';
                     e.source.nodesScope.$modelValue.push(copy);
 
                     // Also, tell the server to instantiate the object
