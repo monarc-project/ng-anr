@@ -324,11 +324,12 @@
             setTimeout(function () { commsWatchSetup = true; }, 1000);
         }, true);
 
+        $scope.newColumn = { name: null };
         $scope.onCreateNewColumn = function (newValue) {
             AnrService.createScaleType($scope.model.anr.id, $scope.scales.impacts.id, newValue, function () {
                 $scope.updateScales();
+                $scope.newColumn.name = null;
             });
-            $scope.newColumnName = null;
         };
 
         $scope.setImpactVisibility = function (id, visible) {
