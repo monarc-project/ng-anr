@@ -24,6 +24,7 @@
         $scope.updateModel = function () {
             ModelService.getModel($stateParams.modelId).then(function (data) {
                 $scope.model = data;
+                $rootScope.anr_id = data.anr.id;
 
                 thresholdsWatchSetup = false;
                 $scope.thresholds = {

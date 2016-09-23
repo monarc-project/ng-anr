@@ -135,6 +135,10 @@
             }, error);
         };
 
+        var removeObjectFromLibrary = function (anr_id, object_id, success, error) {
+            self.LibraryResource.delete({anrId: anr_id, objectId: object_id}, success, error);
+        };
+
         var getObjectsLibrary = function (anr_id) {
             return self.LibraryResource.query({anrId: anr_id}).$promise;
         };
@@ -242,6 +246,7 @@
 
             addExistingObjectToLibrary: addExistingObjectToLibrary,
             addNewObjectToLibrary: addNewObjectToLibrary,
+            removeObjectFromLibrary: removeObjectFromLibrary,
             getObjectsLibrary: getObjectsLibrary,
 
             getScales: getScales,
