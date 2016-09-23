@@ -46,7 +46,7 @@
         $scope.anr_obj_instances_data = [];
         $scope.anr_obj_library_data = [];
 
-        // As our controller are static in this zone, we must go through the rootScope to update the selected instance
+        // As our controllers are static in this zone, we must go through the rootScope to update the selected instance
         // ID from the child controller (AnrObjectInstanceCtrl)
         $rootScope.anr_selected_instance_id = $stateParams.instId;
         $rootScope.anr_selected_object_id = $stateParams.objectId;
