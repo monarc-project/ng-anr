@@ -343,7 +343,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'anr', CreateAnrDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'ConfigService', 'anr', CreateAnrDialogCtrl],
                 templateUrl: '/views/dialogs/create.anr.html',
                 targetEvent: ev,
                 clickOutsideToClose: true,
@@ -472,7 +472,10 @@
 
     }
 
-    function CreateAnrDialogCtrl($scope, $mdDialog, anr) {
+    function CreateAnrDialogCtrl($scope, $mdDialog, ConfigService, anr) {
+        $scope.languages = ConfigService.getLanguages();
+        $scope.language = ConfigService.getDefaultLanguageIndex();
+        
         if (anr != undefined && anr != null) {
             $scope.anr = anr;
         } else {
