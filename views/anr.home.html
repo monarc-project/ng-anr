@@ -63,8 +63,13 @@
     </md-tab>
 
     <md-tab label="{{ 'Risks table' | translate }}">
-        <p>&nbsp;</p>
-        <table class="md-html-table">
+        <p class="md-title md-padding" translate>{{ model.anr.risks.length || 0 }} risk(s)</p>
+
+        <div ng-if="!model.anr.risks || !model.anr.risks" class="md-padding">
+            <em>{{ 'There are no risks for this risk analysis.' | translate }}</em>
+        </div>
+
+        <table class="md-html-table" ng-if="model.anr.risks.length > 0">
             <thead>
             <tr>
                 <th colspan="2"><p translate>Threat</p></th>
@@ -106,7 +111,11 @@
     <md-tab label="{{ 'OP risks table' | translate }}">
         <p class="md-title md-padding" translate>{{ model.anr.risksop.length || 0 }} operational risk(s)</p>
 
-        <table class="md-html-table">
+        <div ng-if="!model.anr.risksop || !model.anr.risksop" class="md-padding">
+            <em>{{ 'There are no operational risks for this risk analysis.' | translate }}</em>
+        </div>
+
+        <table class="md-html-table" ng-if="model.anr.risksop.length > 0">
             <thead>
             <tr>
                 <th rowspan="3" translate>Risk description</th>

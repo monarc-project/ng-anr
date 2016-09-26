@@ -139,7 +139,11 @@
 
                 <div ng-include="'views/partials/oprisk_sheet.html'" ng-if="opsheet_risk"></div>
 
-                <table class="md-html-table" ng-if="!opsheet_risk">
+                <div ng-if="!instance.oprisks || !instance.oprisks.length" class="md-padding">
+                    <em>{{ 'There are no operational risks for this instance, so the operational risks table is empty.' | translate }}</em>
+                </div>
+
+                <table class="md-html-table" ng-if="!opsheet_risk && instance.oprisks.length > 0">
                     <thead>
                     <tr>
                         <th rowspan="3" translate>Risk description</th>
