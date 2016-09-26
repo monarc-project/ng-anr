@@ -10,7 +10,7 @@
             <md-tabs md-border-bottom="true" md-dynamic-height>
                 <md-tab label="{{ 'Risk analysis' | translate }}">
                     <div layout="row" class="md-padding">
-                        <div layout="column" resizable r-directions="['right']">
+                        <div layout="column" style="min-width:250px" resizable r-directions="['right']">
                             <md-button ui-sref="main.kb_mgmt.models.details({modelId: model.id})" ng-if="OFFICE_MODE == 'BO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ model.anr.label1 }}</md-button>
                             <md-button ui-sref="main.project.anr({modelId: model.id})" ng-if="OFFICE_MODE == 'FO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ 'Risk analysis overview' | translate }}</md-button>
 
