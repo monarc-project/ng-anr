@@ -14,42 +14,58 @@
                             <md-button ui-sref="main.kb_mgmt.models.details({modelId: model.id})" ng-if="OFFICE_MODE == 'BO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ model.anr.label1 }}</md-button>
                             <md-button ui-sref="main.project.anr({modelId: model.id})" ng-if="OFFICE_MODE == 'FO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ 'Risk analysis overview' | translate }}</md-button>
 
-                            <md-subheader class="md-no-sticky">{{ 'Risk analysis' | translate }}</md-subheader>
-                            <md-input-container class="md-block">
-                                <md-icon>search</md-icon>
-                                <label translate>Search an instance...</label>
-                                <input type="text" ng-model="filter.instance">
-                            </md-input-container>
-
-                            <div class="angular-ui-tree" ui-tree="insTreeCallbacks">
-                                <div layout="row" layout-align="center center" ng-if="!anr_obj_instances_data || anr_obj_instances_data.length == 0">
-                                    <md-progress-circular md-diameter="24"></md-progress-circular>
+                            <md-subheader class="md-no-sticky md-small-subheader">
+                                <div layout="row" layout-align="space-between center">
+                                    <div translate>Risk analysis</div>
+                                    <md-button class="md-icon-button" ng-click="uiState.hideInstances = !uiState.hideInstances"><md-icon>{{ uiState.hideInstances ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
                                 </div>
+                            </md-subheader>
 
-                                <ol class="no-list-style" ui-tree-nodes="" ng-model="anr_obj_instances_data" id="inst-tree-root">
-                                    <li ng-repeat="node in anr_obj_instances_data" ui-tree-node ng-include="'tree_node_renderer.html'"></li>
-                                </ol>
+                            <div layout="column" ng-hide="uiState.hideInstances">
+                                <md-input-container class="md-block">
+                                    <md-icon>search</md-icon>
+                                    <label translate>Search an instance...</label>
+                                    <input type="text" ng-model="filter.instance">
+                                </md-input-container>
+
+                                <div class="angular-ui-tree" ui-tree="insTreeCallbacks">
+                                    <div layout="row" layout-align="center center" ng-if="!anr_obj_instances_data || anr_obj_instances_data.length == 0">
+                                        <md-progress-circular md-diameter="24"></md-progress-circular>
+                                    </div>
+
+                                    <ol class="no-list-style" ui-tree-nodes="" ng-model="anr_obj_instances_data" id="inst-tree-root">
+                                        <li ng-repeat="node in anr_obj_instances_data" ui-tree-node ng-include="'tree_node_renderer.html'"></li>
+                                    </ol>
+                                </div>
                             </div>
 
                             <p></p>
 
-                            <md-subheader class="md-no-sticky">{{ 'Objects library' | translate }}</md-subheader>
-                            <div layout="row" layout-align="center center">
-                                <md-input-container class="md-block" flex>
-                                    <md-icon>search</md-icon>
-                                    <label translate>Search an object...</label>
-                                    <input type="text" ng-model="filter.library">
-                                </md-input-container>
-                                <md-button class="md-icon-button" ng-click="addObject($event)"><md-icon>add</md-icon></md-button>
-                            </div>
-
-                            <div class="angular-ui-tree" ui-tree="libTreeCallbacks">
-                                <div layout="row" layout-align="center center" ng-if="!anr_obj_library_data || anr_obj_library_data.length == 0">
-                                    <md-progress-circular md-diameter="24"></md-progress-circular>
+                            <md-subheader class="md-no-sticky md-small-subheader">
+                                <div layout="row" layout-align="space-between center">
+                                    <div translate>Objects library</div>
+                                    <md-button class="md-icon-button" ng-click="uiState.hideLibrary = !uiState.hideLibrary"><md-icon>{{ uiState.hideLibrary ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
                                 </div>
-                                <ol class="no-list-style" ui-tree-nodes="" ng-model="anr_obj_library_data" id="objlib-tree-root">
-                                    <li ng-repeat="node in anr_obj_library_data" ui-tree-node ng-include="'tree_node_renderer.html'"></li>
-                                </ol>
+                            </md-subheader>
+
+                            <div layout="column" ng-hide="uiState.hideLibrary">
+                                <div layout="row" layout-align="center center">
+                                    <md-input-container class="md-block" flex>
+                                        <md-icon>search</md-icon>
+                                        <label translate>Search an object...</label>
+                                        <input type="text" ng-model="filter.library">
+                                    </md-input-container>
+                                    <md-button class="md-icon-button" ng-click="addObject($event)"><md-icon>add</md-icon></md-button>
+                                </div>
+
+                                <div class="angular-ui-tree" ui-tree="libTreeCallbacks">
+                                    <div layout="row" layout-align="center center" ng-if="!anr_obj_library_data || anr_obj_library_data.length == 0">
+                                        <md-progress-circular md-diameter="24"></md-progress-circular>
+                                    </div>
+                                    <ol class="no-list-style" ui-tree-nodes="" ng-model="anr_obj_library_data" id="objlib-tree-root">
+                                        <li ng-repeat="node in anr_obj_library_data" ui-tree-node ng-include="'tree_node_renderer.html'"></li>
+                                    </ol>
+                                </div>
                             </div>
 
                         </div>
