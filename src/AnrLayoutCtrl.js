@@ -519,6 +519,8 @@
                 controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', CreateObjlibDialogCtrl],
                 templateUrl: '/views/dialogs/create.objlibs.html',
                 clickOutsideToClose: true,
+                preserveScope: true,
+                scope: $parentScope,
                 targetEvent: ev,
                 locals: {
                     mode: 'anr',
