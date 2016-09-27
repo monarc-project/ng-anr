@@ -92,9 +92,9 @@
 
             <tbody>
             <tr ng-repeat="risk in model.anr.risks">
-                <td>{{ risk.threat.label1 }}</td>
+                <td>{{ risk.threat[_langField('label')] }}</td>
                 <td>{{ risk.threatRate }}</td>
-                <td>{{ risk.vulnerability.label1 }}</td>
+                <td>{{ risk.vulnerability[_langField('label')] }}</td>
                 <td>{{ risk.comment }}</td>
                 <td>{{ risk.vulnerabilityRate }}</td>
                 <td>{{ risk.riskC }}</td>

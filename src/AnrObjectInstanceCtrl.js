@@ -101,6 +101,8 @@
                 controller: ['$scope', '$mdDialog', 'AnrService', 'instance', CreateInstanceDialogCtrl],
                 templateUrl: '/views/anr/create.instance.html',
                 targetEvent: ev,
+                preserveScope: true,
+                scope: $scope,
                 clickOutsideToClose: true,
                 fullscreen: useFullScreen,
                 locals: {

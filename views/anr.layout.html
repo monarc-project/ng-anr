@@ -4,15 +4,15 @@
     </div>
 
     <div layout="column" ng-if="model" md-theme="light" class="md-padding-left md-padding-right">
-        <h2>{{ ::model.label1 }}</h2>
+        <h2>{{ ::model[_langField('label')] }}</h2>
 
         <md-card>
             <md-tabs md-border-bottom="true" md-dynamic-height>
                 <md-tab label="{{ 'Risk analysis' | translate }}">
                     <div layout="row" class="md-padding">
                         <div layout="column" resizable r-directions="['right']">
-                            <md-button ui-sref="main.kb_mgmt.models.details({modelId: model.id})" ng-if="OFFICE_MODE == 'BO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ model.anr.label1 }}</md-button>
-                            <md-button ui-sref="main.project.anr({modelId: model.id})" ng-if="OFFICE_MODE == 'FO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ model.anr.label1 }}</md-button>
+                            <md-button ui-sref="main.kb_mgmt.models.details({modelId: model.id})" ng-if="OFFICE_MODE == 'BO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ model.anr[_langField('label')] }}</md-button>
+                            <md-button ui-sref="main.project.anr({modelId: model.id})" ng-if="OFFICE_MODE == 'FO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ model.anr[_langField('label')] }}</md-button>
 
                             <md-subheader class="md-no-sticky md-small-subheader">
                                 <div layout="row" layout-align="space-between center">
@@ -85,14 +85,14 @@
                                 <span class="small text-blue" inline-edit="scales.impacts.max" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> ]
                             </h4>
                         </div>
-                        <md-switch ng-model="display.show_hidden_impacts">{{ 'Show hidden impacts' }}</md-switch>
+                        <md-switch ng-model="display.show_hidden_impacts">{{ 'Show hidden impacts' | translate }}</md-switch>
 
                         <div class="horz-expanding-table">
                             <table class="md-html-table">
                                 <thead>
                                 <tr>
                                     <th></th>
-                                    <th ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">{{ type.label1 }} <md-button class="md-icon-button" ng-click="setImpactVisibility(type.id, !!type.isHidden)"><md-icon>{{ type.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></th>
+                                    <th ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">{{ type[_langField('label')] }} <md-button class="md-icon-button" ng-click="setImpactVisibility(type.id, !!type.isHidden)"><md-icon>{{ type.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></th>
                                     <th><span inline-edit="newColumn.name" inline-edit-callback="onCreateNewColumn(newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ 'New column name' | translate }}"></span></th>
                                 </tr>
                                 </thead>
@@ -178,11 +178,11 @@
 
         <div class="md-tree-unwrap-button" ng-if="!(node.type == 'libcat' || node.__children__.length > 0)">&nbsp;</div>
 
-        <p flex class="md-tree-link" ng-click="toggle(this)" ng-if="node.type == 'libcat'">{{ node.label1 }}</p>
-        <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.project.anr.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'FO'">{{ node.name1 }}</p>
-        <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.project.anr.instance({instId: node.id})" ng-if="node.type == 'inst' && OFFICE_MODE == 'FO'">{{ node.name1 }}</p>
-        <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.kb_mgmt.models.details.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'BO'">{{ node.name1 }}</p>
-        <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})" ng-if="node.type == 'inst' && OFFICE_MODE == 'BO'">{{ node.name1 }}</p>
+        <p flex class="md-tree-link" ng-click="toggle(this)" ng-if="node.type == 'libcat'">{{ node[_langField('label')] }}</p>
+        <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.project.anr.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'FO'">{{ node[_langField('name')] }}</p>
+        <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.project.anr.instance({instId: node.id})" ng-if="node.type == 'inst' && OFFICE_MODE == 'FO'">{{ node[_langField('name')] }}</p>
+        <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.kb_mgmt.models.details.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'BO'">{{ node[_langField('name')] }}</p>
+        <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})" ng-if="node.type == 'inst' && OFFICE_MODE == 'BO'">{{ node[_langField('name')] }}</p>
 
         <md-icon ng-if="node.scope == 2" style="font-size: 15px; padding-top: 5px;">share</md-icon>
     </div>

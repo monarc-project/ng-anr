@@ -356,6 +356,8 @@
                 controller: ['$scope', '$mdDialog', 'ConfigService', 'anr', CreateAnrDialogCtrl],
                 templateUrl: '/views/dialogs/create.anr.html',
                 targetEvent: ev,
+                preserveScope: true,
+                scope: $scope,
                 clickOutsideToClose: true,
                 fullscreen: useFullScreen,
                 locals: {
@@ -376,6 +378,8 @@
                 controller: ['$scope', '$mdDialog', '$q', 'ObjlibService', 'AnrService', '$parentScope', 'anr_id', AddObjectDialogCtrl],
                 templateUrl: '/views/dialogs/add.objlib.html',
                 targetEvent: ev,
+                preserveScope: true,
+                scope: $scope,
                 clickOutsideToClose: true,
                 fullscreen: useFullScreen,
                 locals: {

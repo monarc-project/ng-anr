@@ -1,9 +1,9 @@
 <div class="md-padding" ng-cloak layout="column" ng-controller="AnrObjectInstanceCtrl">
     <div layout="row" layout-align="space-around start">
         <div flex="20" ng-if="instance">
-            <h2>{{ object.name1 }}</h2>
+            <h2>{{ object[_langField('name')] }}</h2>
 
-            <p>{{ object.label1 }}</p>
+            <p>{{ object[_langField('label')] }}</p>
         </div>
 
         <md-card flex="85">
@@ -63,7 +63,7 @@
 
                     <ul class="md-treeview" ng-if="instance.parent != null">
                         <li class="md-treeview-root">
-                            <a ui-sref="main.kb_mgmt.models.details.instance({instId: instance.id})"><md-icon>place</md-icon> {{ object.name1 }}</a>
+                            <a ui-sref="main.kb_mgmt.models.details.instance({instId: instance.id})"><md-icon>place</md-icon> {{ object[_langField('name')] }}</a>
                             <ul>
                                 <li ng-repeat="node in [instance.parent]"
                                     ng-class="{'md-treeview-branch': node.children && node.children.length > 0}"
@@ -169,7 +169,7 @@
 
                     <tbody>
                     <tr ng-repeat="risk in instance.oprisks">
-                        <td>{{ risk.description1 }}</td>
+                        <td>{{ risk[_langField('description')] }}</td>
                         <td>{{ risk.prob }}</td>
                         <td>{{ risk.r }}</td>
                         <td>{{ risk.o }}</td>
@@ -193,7 +193,7 @@
 </div>
 
 <script type="text/ng-template" id="objlibs.tree_item_template.html">
-    <a ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>{{ node.children && node.children.length > 0 ? 'add': 'note' }}</md-icon> {{ node.name1 }}</a>
+    <a ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>{{ node.children && node.children.length > 0 ? 'add': 'note' }}</md-icon> {{ node[_langField('name')] }}</a>
 
     <ul ng-if="node.children && node.children.length > 0">
         <li ng-repeat="node in node.children"
