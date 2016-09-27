@@ -28,7 +28,7 @@
                                     <input type="text" ng-model="filter.instance"  flex="80">
                                 </md-input-container>
 
-                                <div class="angular-ui-tree" ui-tree="insTreeCallbacks">
+                                <div class="angular-ui-tree" ui-tree="insTreeCallbacks" data-drag-delay="100">
                                     <div layout="row" layout-align="center center" ng-if="!anr_obj_instances_data">
                                         <md-progress-circular md-diameter="24"></md-progress-circular>
                                     </div>
@@ -56,7 +56,7 @@
                                     <md-button class="md-icon-button" ng-click="addObject($event)"><md-icon>add</md-icon></md-button>
                                 </div>
 
-                                <div class="angular-ui-tree" ui-tree="libTreeCallbacks">
+                                <div class="angular-ui-tree" ui-tree="libTreeCallbacks" data-drag-delay="100">
                                     <div layout="row" layout-align="center center" ng-if="!anr_obj_library_data">
                                         <md-progress-circular md-diameter="24"></md-progress-circular>
                                     </div>
@@ -174,15 +174,11 @@
 
         <div class="md-tree-unwrap-button" ng-if="!(node.type == 'libcat' || node.__children__.length > 0)">&nbsp;</div>
 
-        <md-button class="md-icon-button reorder-button" ng-if="node.type != 'libcat'">
-            <md-icon>reorder</md-icon>
-        </md-button>
-
-        <p flex class="md-tree-link" ng-click="toggle(this)" ng-if="node.type == 'libcat'" data-nodrag>{{ node.label1 }}</p>
-        <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.project.anr.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'FO'" data-nodrag>{{ node.name1 }}</p>
-        <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.project.anr.instance({instId: node.id})" ng-if="node.type == 'inst' && OFFICE_MODE == 'FO'" data-nodrag>{{ node.name1 }}</p>
-        <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.kb_mgmt.models.details.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'BO'" data-nodrag>{{ node.name1 }}</p>
-        <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})" ng-if="node.type == 'inst' && OFFICE_MODE == 'BO'" data-nodrag>{{ node.name1 }}</p>
+        <p flex class="md-tree-link" ng-click="toggle(this)" ng-if="node.type == 'libcat'">{{ node.label1 }}</p>
+        <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.project.anr.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'FO'">{{ node.name1 }}</p>
+        <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.project.anr.instance({instId: node.id})" ng-if="node.type == 'inst' && OFFICE_MODE == 'FO'">{{ node.name1 }}</p>
+        <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.kb_mgmt.models.details.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'BO'">{{ node.name1 }}</p>
+        <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})" ng-if="node.type == 'inst' && OFFICE_MODE == 'BO'">{{ node.name1 }}</p>
 
         <md-icon ng-if="node.scope == 2" style="font-size: 15px; padding-top: 5px;">share</md-icon>
     </div>
