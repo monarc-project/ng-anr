@@ -6,10 +6,6 @@
             <p>{{ object.label1 }}</p>
         </div>
 
-        <div flex="20" ng-if="!instance">
-            <md-progress-circular md-indeterminate="true"></md-progress-circular>
-        </div>
-
         <md-card flex="85">
             <md-card-content layout="column" layout-gt-md="row" flex layout-wrap>
                 <div flex="33" layout="column" layout-gt-md="row" layout-align="space-between">
@@ -56,7 +52,9 @@
     <md-card>
         <md-tabs md-dynamic-height md-border-bottom>
             <md-tab label="{{ 'General information' | translate }}">
-                <md-progress-circular ng-if="!instance.id"></md-progress-circular>
+                <div layout="row" layout-align="center center" class="md-padding" ng-if="!instance.id">
+                    <md-progress-circular></md-progress-circular>
+                </div>
 
                 <div class="md-padding" ng-if="instance.id">
                     <p class="md-title" translate>This asset is attached to the following parents</p>
