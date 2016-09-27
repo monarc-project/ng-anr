@@ -44,8 +44,8 @@
          * Risk analysis
          */
         // Tree
-        $scope.anr_obj_instances_data = [];
-        $scope.anr_obj_library_data = [];
+        $scope.anr_obj_instances_data = null;
+        $scope.anr_obj_library_data = null;
 
         // As our controllers are static in this zone, we must go through the rootScope to update the selected instance
         // ID from the child controller (AnrObjectInstanceCtrl)
@@ -475,7 +475,7 @@
     function CreateAnrDialogCtrl($scope, $mdDialog, ConfigService, anr) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = ConfigService.getDefaultLanguageIndex();
-        
+
         if (anr != undefined && anr != null) {
             $scope.anr = anr;
         } else {

@@ -29,7 +29,7 @@
                                 </md-input-container>
 
                                 <div class="angular-ui-tree" ui-tree="insTreeCallbacks">
-                                    <div layout="row" layout-align="center center" ng-if="!anr_obj_instances_data || anr_obj_instances_data.length == 0">
+                                    <div layout="row" layout-align="center center" ng-if="!anr_obj_instances_data">
                                         <md-progress-circular md-diameter="24"></md-progress-circular>
                                     </div>
 
@@ -59,7 +59,7 @@
                                 </div>
 
                                 <div class="angular-ui-tree" ui-tree="libTreeCallbacks">
-                                    <div layout="row" layout-align="center center" ng-if="!anr_obj_library_data || anr_obj_library_data.length == 0">
+                                    <div layout="row" layout-align="center center" ng-if="!anr_obj_library_data">
                                         <md-progress-circular md-diameter="24"></md-progress-circular>
                                     </div>
                                     <ol class="no-list-style" ui-tree-nodes="" ng-model="anr_obj_library_data" id="objlib-tree-root">
