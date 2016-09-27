@@ -12,7 +12,7 @@
                     <div layout="row" class="md-padding">
                         <div layout="column" resizable r-directions="['right']">
                             <md-button ui-sref="main.kb_mgmt.models.details({modelId: model.id})" ng-if="OFFICE_MODE == 'BO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ model.anr.label1 }}</md-button>
-                            <md-button ui-sref="main.project.anr({modelId: model.id})" ng-if="OFFICE_MODE == 'FO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ 'Risk analysis overview' | translate }}</md-button>
+                            <md-button ui-sref="main.project.anr({modelId: model.id})" ng-if="OFFICE_MODE == 'FO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ model.anr.label1 }}</md-button>
 
                             <md-subheader class="md-no-sticky md-small-subheader">
                                 <div layout="row" layout-align="space-between center">
@@ -21,14 +21,18 @@
                                 </div>
                             </md-subheader>
 
+                            <div layout="row" layout-align="center center">
+                                <md-button style="font-size: 12px; margin:0; padding: 0;" ng-click="unwrapAll()">{{ 'Expand all' | translate }}</md-button> /
+                                <md-button style="font-size: 12px; margin:0; padding: 0;" ng-click="wrapAll()">{{ 'Wrap all' | translate }}</md-button>
+                            </div>
+
                             <div layout="column" ng-hide="uiState.hideInstances" resizable r-directions="['bottom']">
-                                <md-input-container class="md-block">
+                                <md-input-container md-no-float class="md-block" style="margin: 0; margin-bottom: 8px">
                                     <md-icon>search</md-icon>
-                                    <label translate>Search an instance...</label>
-                                    <input type="text" ng-model="filter.instance"  flex="80">
+                                    <input type="text" ng-model="filter.instance" placeholder="{{ 'Search an instance...' | translate }}" flex="80">
                                 </md-input-container>
 
-                                <div class="angular-ui-tree" ui-tree="insTreeCallbacks" data-drag-delay="100">
+                                <div class="angular-ui-tree" ui-tree="insTreeCallbacks" data-drag-delay="100" id="insTree">
                                     <div layout="row" layout-align="center center" ng-if="!anr_obj_instances_data">
                                         <md-progress-circular md-diameter="24"></md-progress-circular>
                                     </div>

@@ -57,6 +57,16 @@
             library: ''
         };
 
+        $scope.wrapAll = function () {
+            var scope = angular.element(document.getElementById('insTree')).scope();
+            scope.$broadcast('angular-ui-tree:collapse-all');
+        };
+
+        $scope.unwrapAll = function () {
+            var scope = angular.element(document.getElementById('insTree')).scope();
+            scope.$broadcast('angular-ui-tree:expand-all');
+        };
+
         $scope.toggle = function (scope) {
             scope.toggle();
         }
