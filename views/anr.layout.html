@@ -10,7 +10,7 @@
             <md-tabs md-border-bottom="true" md-dynamic-height>
                 <md-tab label="{{ 'Risk analysis' | translate }}">
                     <div layout="row" class="md-padding">
-                        <div layout="column" style="min-width:250px" resizable r-directions="['right']">
+                        <div layout="column" resizable r-directions="['right']">
                             <md-button ui-sref="main.kb_mgmt.models.details({modelId: model.id})" ng-if="OFFICE_MODE == 'BO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ model.anr.label1 }}</md-button>
                             <md-button ui-sref="main.project.anr({modelId: model.id})" ng-if="OFFICE_MODE == 'FO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ 'Risk analysis overview' | translate }}</md-button>
 
@@ -21,7 +21,7 @@
                                 </div>
                             </md-subheader>
 
-                            <div layout="column" ng-hide="uiState.hideInstances">
+                            <div layout="column" ng-hide="uiState.hideInstances" resizable r-directions="['bottom']">
                                 <md-input-container class="md-block">
                                     <md-icon>search</md-icon>
                                     <label translate>Search an instance...</label>
@@ -39,16 +39,14 @@
                                 </div>
                             </div>
 
-                            <p></p>
-
-                            <md-subheader class="md-no-sticky md-small-subheader">
+                            <md-subheader class="md-no-sticky md-small-subheader" style="z-index: 8">
                                 <div layout="row" layout-align="space-between center">
                                     <div translate>Objects library</div>
                                     <md-button class="md-icon-button" ng-click="uiState.hideLibrary = !uiState.hideLibrary"><md-icon>{{ uiState.hideLibrary ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
                                 </div>
                             </md-subheader>
 
-                            <div layout="column" ng-hide="uiState.hideLibrary">
+                            <div layout="column" ng-hide="uiState.hideLibrary" style="background:white; z-index: 10">
                                 <div layout="row" layout-align="center center">
                                     <md-input-container class="md-block" flex>
                                         <md-icon>search</md-icon>
@@ -70,7 +68,7 @@
 
                         </div>
 
-                        <div flex ui-view="anr"></div>
+                        <div flex ui-view="anr" style="background:white; z-index: 15; margin-left: 8px;"></div>
                     </div>
 
                 </md-tab>
