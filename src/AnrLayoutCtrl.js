@@ -84,6 +84,10 @@
         };
 
         $scope.insTreeCallbacks = {
+            accept: function (sourceNodeScope, destNodeScope, destIndex) {
+                return (sourceNodeScope.$modelValue.type != 'libcat');
+            },
+
             dropped: function (e) {
                 if (e.source.nodesScope.$treeScope.$id == e.dest.nodesScope.$treeScope.$id) {
                     var obj = e.source.nodeScope.$modelValue;
@@ -100,16 +104,22 @@
 
         $scope.libTreeCallbacks = {
             beforeDrag: function (scopeDrag) {
-                return scopeDrag.$modelValue.type != 'libcat';
+                return (scopeDrag.$modelValue.type != 'libcat' || scopeDrag.$modelValue.depth == 0);
             },
 
             accept: function (sourceNodeScope, destNodeScope, destIndex) {
-                return sourceNodeScope.$id == destNodeScope.$id;
+                return (sourceNodeScope.$treeScope.$id == destNodeScope.$treeScope.$id
+                    && sourceNodeScope.$modelValue.depth == 0
+                    && destNodeScope.$parent.$type == 'uiTree');
             },
 
             dropped: function (e) {
                 if (e.source.nodesScope.$treeScope.$id == e.dest.nodesScope.$treeScope.$id) {
-                    return false;
+                    // We moved something locally inside the objects library (a first-level node), patch it
+                    AnrService.patchLibraryObject($scope.model.anr.id, e.source.nodeScope.$modelValue.id, function () {
+                        $scope.updateObjectsLibrary();
+                    });
+                    return true;
                 } else {
                     // Make a copy of the item from the library tree to the inst tree
                     var copy = angular.copy(e.source.nodeScope.$modelValue);
@@ -131,12 +141,12 @@
             $scope.anr_obj_library_data = [];
 
             AnrService.getObjectsLibrary($scope.model.anr.id).then(function (data) {
-                var recurseFillTree = function (category) {
-                    var output = {id: category.id, type: 'libcat', label1: category.label1, __children__: []};
+                var recurseFillTree = function (category, depth) {
+                    var output = {id: category.id, type: 'libcat', label1: category.label1, depth: depth, __children__: []};
 
                     if (category.child && category.child.length > 0) {
                         for (var i = 0; i < category.child.length; ++i) {
-                            output.__children__.push(recurseFillTree(category.child[i]));
+                            output.__children__.push(recurseFillTree(category.child[i], depth + 1));
                         }
                     }
 
@@ -154,7 +164,7 @@
 
                 for (var v = 0; v < data.categories.length; ++v) {
                     var cat = data.categories[v];
-                    $scope.anr_obj_library_data.push(recurseFillTree(cat));
+                    $scope.anr_obj_library_data.push(recurseFillTree(cat, 0));
                 }
             });
         };

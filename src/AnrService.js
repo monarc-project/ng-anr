@@ -27,7 +27,10 @@
                 },
                 'query': {
                     isArray: false
-                }
+                },
+                'patch': {
+                    method: 'PATCH'
+                },
             });
 
         self.InstanceResource = $resource('/api/anr/:anrId/instances/:instId', { anrId: '@anrId', instId: '@instId' },
@@ -143,6 +146,10 @@
             return self.LibraryResource.query({anrId: anr_id}).$promise;
         };
 
+        var patchLibraryObject = function (anr_id, object_id, obj, success, error) {
+            self.LibraryResource.patch({anrId: anr_id, objectId: object_id}, obj, success, error);
+        };
+
         // Instances
         var getInstances = function (anr_id) {
             return self.InstanceResource.query({anrId: anr_id}).$promise;
@@ -248,6 +255,7 @@
             addNewObjectToLibrary: addNewObjectToLibrary,
             removeObjectFromLibrary: removeObjectFromLibrary,
             getObjectsLibrary: getObjectsLibrary,
+            patchLibraryObject: patchLibraryObject,
 
             getScales: getScales,
             updateScale: updateScale,
