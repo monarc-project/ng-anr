@@ -376,7 +376,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', '$q', 'ObjlibService', 'AnrService', '$parentScope', 'anr_id', AddObjectDialogCtrl],
-                templateUrl: '/views/dialogs/add.objlib.html',
+                templateUrl: '/views/anr/add.objlib.html',
                 targetEvent: ev,
                 preserveScope: true,
                 scope: $scope,
@@ -521,7 +521,7 @@
             $scope.objLibDialog = $mdDialog;
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', CreateObjlibDialogCtrl],
-                templateUrl: '/views/dialogs/create.objlibs.html',
+                templateUrl: '/views/anr/create.objlibs.html',
                 clickOutsideToClose: true,
                 preserveScope: true,
                 scope: $parentScope,
