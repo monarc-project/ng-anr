@@ -1,0 +1,247 @@
+<md-dialog class="dialog-width">
+    <form name="objlibForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 ng-if="!objlib.id" translate>Add a new object</h2>
+                <h2 ng-if="objlib.id" translate>Update object "{{objlib[_langField('label')]}}" information</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-subheader>{{ 'Labels and descriptions' | translate }}</md-subheader>
+
+                <md-input-container class="md-block" flex>
+                    <label translate>Language</label>
+                    <md-icon>language</md-icon>
+                    <md-select ng-model="language" ng-change="switchLanguage()">
+                        <md-option ng-repeat="(lang_idx, lang) in languages" value="{{ lang_idx }}">{{ lang }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block" flex>
+                    <label translate>Name</label>
+                    <md-icon>label</md-icon>
+                    <input ng-model="objlib['name' + language ]" name="name" required>
+                    <div ng-messages="objlibForm.name.$error">
+                        <div ng-message="required">{{ 'The name may not be empty' | translate }}</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container class="md-block" flex>
+                    <label translate>Label</label>
+                    <md-icon>label</md-icon>
+                    <input ng-model="objlib['label' + language ]" name="label" required>
+                    <div ng-messages="objlibForm.label.$error">
+                        <div ng-message="required">{{ 'The label may not be empty' | translate }}</div>
+                    </div>
+                </md-input-container>
+
+                <md-subheader>{{ 'General information' | translate }}</md-subheader>
+
+                <md-input-container class="md-block" layout="row" flex>
+                    <label translate>Scope</label>
+                    <md-icon>view_list</md-icon>
+                    <md-select ng-model="objlib.scope">
+                        <md-option value="1">{{ 'Local' | translate }}</md-option>
+                        <md-option value="2">{{ 'Global' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block" layout="row" flex>
+                    <label translate>Mode</label>
+                    <md-icon>view_list</md-icon>
+                    <md-select ng-model="objlib.mode">
+                        <md-option value="0">{{ 'Generic' | translate }}</md-option>
+                        <md-option value="1">{{ 'Specific' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block" layout="row" ng-if="mode=='anr'" flex>
+                    <label translate>Maximum unavailability (days)</label>
+                    <md-icon>power_settings_new</md-icon>
+                    <input ng-model="objlib.disponibility">
+                </md-input-container>
+
+                <md-input-container class="md-block" layout="row" ng-if="mode=='anr_inst'" flex>
+                    <label translate>Confidentiality</label>
+                    <md-icon>https</md-icon>
+                    <md-select ng-model="objlib.c">
+                        <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
+                        <md-option value="0">0</md-option>
+                        <md-option value="1">1</md-option>
+                        <md-option value="2">2</md-option>
+                        <md-option value="3">3</md-option>
+                        <md-option value="4">4</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block" layout="row" ng-if="mode=='anr_inst'" flex>
+                    <label translate>Integrity</label>
+                    <md-icon>assessment</md-icon>
+                    <md-select ng-model="objlib.i">
+                        <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
+                        <md-option value="0">0</md-option>
+                        <md-option value="1">1</md-option>
+                        <md-option value="2">2</md-option>
+                        <md-option value="3">3</md-option>
+                        <md-option value="4">4</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block" layout="row" ng-if="mode=='anr_inst'" flex>
+                    <label translate>Availability</label>
+                    <md-icon>done</md-icon>
+                    <md-select ng-model="objlib.d">
+                        <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
+                        <md-option value="0">0</md-option>
+                        <md-option value="1">1</md-option>
+                        <md-option value="2">2</md-option>
+                        <md-option value="3">3</md-option>
+                        <md-option value="4">4</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <div class="md-block" layout="column" flex>
+                    <div layout="row" layout-align="center center">
+                        <md-icon style="margin-right: 8px;">class</md-icon>
+                        <md-autocomplete
+                                flex
+                                required
+                                md-no-cache="true"
+                                md-selected-item="objlib.asset"
+                                md-search-text="assetSearchText"
+                                md-selected-item-change="selectedAssetItemChange(item)"
+                                md-items="item in queryAssetSearch(assetSearchText)"
+                                md-item-text="item.code + ' - ' + item[_langField('label')]"
+                                md-min-length="0"
+                                md-input-name="asset"
+                                md-floating-label="{{ 'Asset' | translate }}">
+                            <md-item-template>
+                                <span md-highlight-text="assetSearchText" md-highlight-flags="^i">{{ item.code }} - {{ item[_langField('label')] }} ({{ specificityStr(item.mode) }})</span>
+                            </md-item-template>
+
+                            <md-not-found>
+                                {{ 'No asset matching your search was found' | translate }}
+                            </md-not-found>
+
+                            <div ng-messages="objlibForm.asset.$error">
+                                <div ng-message="required">{{ 'You must select an asset' | translate }}</div>
+                            </div>
+                        </md-autocomplete>
+                        <md-button class="md-icon-button" ng-show="objlib.asset.id > 0" ng-click="objlib.asset = null"><md-icon>close</md-icon></md-button>
+                    </div>
+                </div>
+
+                <div class="md-block" layout="column" flex>
+                    <div layout="row" layout-align="center center">
+                        <md-icon style="margin-right: 8px;">class</md-icon>
+                        <md-autocomplete
+                                flex
+                                required
+                                md-no-cache="true"
+                                md-selected-item="objlib.category"
+                                md-search-text="categorySearchText"
+                                md-selected-item-change="selectedCategoryItemChange(item)"
+                                md-items="item in queryCategorySearch(categorySearchText)"
+                                md-item-text="item[_langField('label')]"
+                                md-min-length="0"
+                                md-input-name="category"
+                                md-floating-label="{{ 'Category' | translate }}">
+                            <md-item-template>
+                                <span md-highlight-text="categorySearchText" md-highlight-flags="^i">{{ item[_langField('label')] }}</span>
+                            </md-item-template>
+
+                            <md-not-found>
+                                {{ 'No category matching your search was found' | translate }}
+                                <md-button ng-click="createCategory($event, categorySearchText)">{{ 'Create this category' | translate }}</md-button>
+                            </md-not-found>
+
+                            <div ng-messages="objlibForm.category.$error">
+                                <div ng-message="required">{{ 'You must select a category' | translate }}</div>
+                            </div>
+                        </md-autocomplete>
+                        <md-button class="md-icon-button" ng-if="objlib.category.id" ng-click="editCategory($event, objlib.category)"><md-icon>edit</md-icon></md-button>
+                        <md-button class="md-icon-button" ng-if="!objlib.category.id" ng-click="createCategory($event, categorySearchText)"><md-icon>add</md-icon></md-button>
+                    </div>
+                </div>
+
+                <div class="md-block" layout="column" flex>
+                    <div layout="row">
+                        <md-icon style="margin-right: 8px;">class</md-icon>
+                        <md-autocomplete
+                                flex
+                                md-no-cache="true"
+                                md-selected-item="objlib.rolfTag"
+                                md-search-text="tagSearchText"
+                                md-selected-item-change="selectedTagItemChange(item)"
+                                md-items="item in queryTagSearch(tagSearchText)"
+                                md-item-text="item[_langField('label')]"
+                                md-min-length="0"
+                                md-input-name="tag"
+                                md-floating-label="{{ 'ROLF Tag' | translate }}">
+                            <md-item-template>
+                                <span md-highlight-text="tagSearchText" md-highlight-flags="^i">{{ item[_langField('label')] }}</span>
+                            </md-item-template>
+
+                            <md-not-found>
+                                {{ 'No ROLF tag matching your search was found' | translate }}
+                            </md-not-found>
+                        </md-autocomplete>
+                    </div>
+                </div>
+
+                <md-input-container class="md-block" flex>
+                    <label translate>Location</label>
+                    <md-icon>reorder</md-icon>
+                    <md-select ng-model="objlib.implicitPosition">
+                        <md-option value="1">{{ 'at the beginning' | translate }}</md-option>
+                        <md-option value="2">{{ 'in the end' | translate }}</md-option>
+                        <md-option value="3">{{ 'after...' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <div class="md-block" layout="column" flex style="margin-bottom: 8px" ng-show="objlib.implicitPosition == 3">
+                    <div layout="row">
+                        <md-icon style="margin-right: 8px;">class</md-icon>
+                        <md-autocomplete
+                                flex
+                                md-no-cache="true"
+                                md-selected-item="objlib.previous"
+                                md-search-text="categoryPreviousSearchText"
+                                md-selected-item-change="selectedPreviousCatItemChange(item)"
+                                md-items="item in queryCategorySearch(categoryPreviousSearchText)"
+                                md-item-text="item[_langField('label')]"
+                                md-min-length="0"
+                                placeholder="{{ 'Previous category...' | translate }}">
+                            <md-item-template>
+                                <span md-highlight-text="categoryPreviousSearchText" md-highlight-flags="^i">{{ item[_langField('label')] }}</span>
+                            </md-item-template>
+
+                            <md-not-found>
+                                {{ 'No category matching your search was found' | translate }}
+                            </md-not-found>
+
+                        </md-autocomplete>
+                    </div>
+                </div>
+
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="create()" ng-disabled="objlibForm.$error.required" type="submit" class="md-accent md-hue-3">
+                {{ (objlib.id > 0 ? 'Update' : 'Create') | translate }}
+            </md-button>
+            <md-button ng-if="!objlib.id" ng-click="createAndContinue()" ng-disabled="objlibForm.$error.required" class="md-accent md-hue-3">
+                {{ 'Create and continue' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

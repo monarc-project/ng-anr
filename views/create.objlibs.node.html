@@ -1,0 +1,86 @@
+<md-dialog class="dialog-width">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 ng-if="!component.id" translate>Add a new component to object</h2>
+                <h2 ng-if="component.id" translate>Update component information</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div class="md-block" layout="column" flex style="margin-bottom: 8px">
+                    <div layout="row">
+                        <md-icon style="margin-right: 8px;">class</md-icon>
+                        <md-autocomplete
+                                flex
+                                md-no-cache="true"
+                                md-selected-item="component.child"
+                                md-search-text="objectSearchText"
+                                md-selected-item-change="selectedObjectChange(item)"
+                                md-items="item in queryObjectSearch(objectSearchText)"
+                                md-item-text="item[_langField('name')]"
+                                md-min-length="0"
+                                placeholder="{{ 'Component' | translate }}">
+                            <md-item-template>
+                                <span md-highlight-text="objectSearchText" md-highlight-flags="^i">{{ item[_langField('name')] }}</span>
+                            </md-item-template>
+
+                            <md-not-found>
+                                {{ 'No component matching your search was found' | translate }}
+                            </md-not-found>
+
+                        </md-autocomplete>
+                    </div>
+                </div>
+
+                <md-input-container class="md-block" flex>
+                    <label translate>Location</label>
+                    <md-icon>reorder</md-icon>
+                    <md-select ng-model="component.implicitPosition">
+                        <md-option value="1">{{ 'at the beginning' | translate }}</md-option>
+                        <md-option value="2">{{ 'in the end' | translate }}</md-option>
+                        <md-option value="3">{{ 'after...' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <div class="md-block" layout="column" flex style="margin-bottom: 8px" ng-show="component.implicitPosition == 3">
+                    <div layout="row">
+                        <md-icon style="margin-right: 8px;">class</md-icon>
+                        <md-autocomplete
+                                flex
+                                md-no-cache="true"
+                                md-selected-item="component.previous"
+                                md-search-text="componentPreviousSearchText"
+                                md-selected-item-change="selectedPreviousItemChange(item)"
+                                md-items="item in queryComponentSearch(componentPreviousSearchText)"
+                                md-item-text="item[_langField('name')]"
+                                md-min-length="0"
+                                placeholder="{{ 'Previous component...' | translate }}">
+                            <md-item-template>
+                                <span md-highlight-text="componentPreviousSearchText" md-highlight-flags="^i">{{ item[_langField('name')] }}</span>
+                            </md-item-template>
+
+                            <md-not-found>
+                                {{ 'No component matching your search was found' | translate }}
+                            </md-not-found>
+
+                        </md-autocomplete>
+                    </div>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="create()" class="md-accent md-hue-3">
+                {{ (component.id > 0 ? 'Update' : 'Add') | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
