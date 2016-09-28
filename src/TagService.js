@@ -1,7 +1,7 @@
 (function () {
 
     angular
-        .module('BackofficeApp')
+        .module('AnrModule')
         .factory('TagService', [ '$resource', 'MassDeleteService', TagService ]);
 
     function TagService($resource, MassDeleteService) {

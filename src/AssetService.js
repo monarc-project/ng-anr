@@ -1,7 +1,7 @@
 (function () {
 
     angular
-        .module('BackofficeApp')
+        .module('AnrModule')
         .factory('AssetService', [ '$resource', 'MassDeleteService', AssetService ]);
 
     function AssetService($resource, MassDeleteService) {
