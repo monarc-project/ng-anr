@@ -576,6 +576,9 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
     display: block;
 }
 
+.monarc-wizard.step-bullet.white, .monarc-wizard.step-line span.white {
+    background-color: #607D8B;
+}
 .monarc-wizard.step-bullet.green, .monarc-wizard.step-line span.green {
     background-color: #4CAF50;
 }

@@ -24,7 +24,10 @@
                     <span class="{{ subStep.done ? step.color : '' }}" flex></span>
                 </div>
             </div>
-            <img ng-if="OFFICE_MODE == 'FO'" src="img/monarc.png" />
+
+            <div class="monarc-wizard step-bullet white" layout="row" layout-align="center center">
+                <img ng-if="OFFICE_MODE == 'FO'" src="img/monarc.png" style="width: 80%" />
+            </div>
         </div>
 
         <md-card>
