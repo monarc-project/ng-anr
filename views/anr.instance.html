@@ -75,7 +75,7 @@
             </md-tab>
 
             <md-tab label="{{ 'Risks table' | translate }}">
-                <div ng-include="'views/partials/risk_sheet.html'" ng-if="sheet_risk"></div>
+                <div ng-include="'views/anr/risk_sheet.html'" ng-if="sheet_risk"></div>
 
                 <div ng-if="!instance.risks || !instance.risks.length" class="md-padding">
                     <em>{{ 'There is no AMV link for this instance, so the risks table is empty.' | translate }}</em>
@@ -135,7 +135,7 @@
             <md-tab label="{{ 'OP risks table' | translate }}" ng-if="instance.asset.type == 1">
                 <p class="md-title md-padding" translate>{{ instance.oprisks.length || 0 }} operational risk(s)</p>
 
-                <div ng-include="'views/partials/oprisk_sheet.html'" ng-if="opsheet_risk"></div>
+                <div ng-include="'views/anr/oprisk_sheet.html'" ng-if="opsheet_risk"></div>
 
                 <div ng-if="!instance.oprisks || !instance.oprisks.length" class="md-padding">
                     <em>{{ 'There are no operational risks for this instance, so the operational risks table is empty.' | translate }}</em>
