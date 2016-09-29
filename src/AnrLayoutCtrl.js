@@ -116,7 +116,7 @@
             dropped: function (e) {
                 if (e.source.nodesScope.$treeScope.$id == e.dest.nodesScope.$treeScope.$id) {
                     // We moved something locally inside the objects library (a first-level node), patch it
-                    AnrService.patchLibraryObject($scope.model.anr.id, e.source.nodeScope.$modelValue.id, function () {
+                    AnrService.patchLibraryCategory($scope.model.anr.id, e.source.nodeScope.$modelValue.id, {position: e.dest.index}, function () {
                         $scope.updateObjectsLibrary();
                     });
                     return true;

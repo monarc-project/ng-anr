@@ -33,6 +33,19 @@
                 },
             });
 
+        self.LibraryCategoryResource = $resource('/api/anr/:anrId/library-category/:catId', { anrId: '@anrId', catId: '@catId' },
+            {
+                'update': {
+                    method: 'PUT'
+                },
+                'query': {
+                    isArray: false
+                },
+                'patch': {
+                    method: 'PATCH'
+                },
+            });
+
         self.InstanceResource = $resource('/api/anr/:anrId/instances/:instId', { anrId: '@anrId', instId: '@instId' },
             {
                 'update': {
@@ -150,6 +163,10 @@
             self.LibraryResource.patch({anrId: anr_id, objectId: object_id}, obj, success, error);
         };
 
+        var patchLibraryCategory = function (anr_id, cat_id, obj, success, error) {
+            self.LibraryCategoryResource.patch({anrId: anr_id, catId: cat_id}, obj, success, error);
+        };
+
         // Instances
         var getInstances = function (anr_id) {
             return self.InstanceResource.query({anrId: anr_id}).$promise;
@@ -256,6 +273,7 @@
             removeObjectFromLibrary: removeObjectFromLibrary,
             getObjectsLibrary: getObjectsLibrary,
             patchLibraryObject: patchLibraryObject,
+            patchLibraryCategory: patchLibraryCategory,
 
             getScales: getScales,
             updateScale: updateScale,
