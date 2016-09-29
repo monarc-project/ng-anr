@@ -546,3 +546,73 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
     top: 0;
     margin-left: -8px;
 }
+
+/** MONARC METHOD WIZARD */
+.monarc-wizard, .monarc-wizard span {
+    transition: background-color 0.5s;
+    cursor: pointer;
+}
+.monarc-wizard.step-bullet {
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    background-color: #9E9E9E;
+}
+
+.monarc-wizard.step-line {
+    min-width: 30px;
+    height: 32px;
+    flex-direction: row;
+    -webkit-box-orient: horizontal;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    align-content: center;
+}
+.monarc-wizard.step-line span {
+    height: 4px;
+    min-width: 30px;
+    background-color: #9E9E9E;
+    display: block;
+}
+
+.monarc-wizard.step-bullet.green, .monarc-wizard.step-line span.green {
+    background-color: #4CAF50;
+}
+.monarc-wizard.step-bullet.green:hover, .monarc-wizard.step-line:hover span.green {
+    background-color: #A5D6A7;
+}
+
+.monarc-wizard.step-bullet.blue, .monarc-wizard.step-line span.blue {
+    background-color: #03A9F4;
+}
+.monarc-wizard.step-bullet.blue:hover, .monarc-wizard.step-line:hover span.blue {
+    background-color: #81D4FA;
+}
+
+.monarc-wizard.step-bullet.yellow, .monarc-wizard.step-line span.yellow {
+    background-color: #FFEB3B;
+}
+.monarc-wizard.step-bullet.yellow:hover, .monarc-wizard.step-line:hover span.yellow {
+    background-color: #FFF59D;
+}
+
+.monarc-wizard.step-bullet.red, .monarc-wizard.step-line span.red {
+    background-color: #F44336;
+}
+.monarc-wizard.step-bullet.red:hover, .monarc-wizard.step-line:hover span.red {
+    background-color: #EF9A9A;
+}
+
+.md-monarc-tooltip .md-content {
+    font-size: 12px;
+    font-weight: normal;
+    height: auto;
+    background-color: rgba(0, 0, 0, 0.87) !important;
+}
+
+
+.md-monarc-tooltip .txt-blue { color: #90CAF9; }
+.md-monarc-tooltip .txt-green { color: #A5D6A7; }
+.md-monarc-tooltip .txt-yellow { color: #FFF59D; }
+.md-monarc-tooltip .txt-red { color: #EF9A9A; }

@@ -43,6 +43,67 @@
         /**
          * Risk analysis
          */
+        // Progress
+        $scope.methodProgress = [
+            {
+                color: 'green',
+                label: gettextCatalog.getString("Context setup"),
+                deliverable: gettextCatalog.getString("Context validation"),
+                steps: [
+                    {label: gettextCatalog.getString("Risks analysis context"), done: true},
+                    {label: gettextCatalog.getString("Trends evaluation, threats evaluation, synthesis"), done: true},
+                    {label: gettextCatalog.getString("Risks management context"), done: true},
+                    {label: gettextCatalog.getString("Evaluation, acceptance and impact criterias setup"), done: true},
+                ]
+            },
+            {
+                color: 'blue',
+                label: gettextCatalog.getString("Context modeling"),
+                deliverable: gettextCatalog.getString("Model validation"),
+                steps: [
+                    {label: gettextCatalog.getString("Identification of assets, vulnerabilities and impacts assessment"), done: true},
+                    {label: gettextCatalog.getString("Synthesis of assets / impacts"), done: true},
+                ]
+            },
+            {
+                color: 'yellow',
+                label: gettextCatalog.getString("Risks evaluation and treatment"),
+                deliverable: gettextCatalog.getString("Final report"),
+                steps: [
+                    {label: gettextCatalog.getString("Risks estimation, evaluation and processing"), done: true},
+                    {label: gettextCatalog.getString("Risk treatment plan management"), done: false},
+                ]
+            },
+            {
+                color: 'red',
+                label: gettextCatalog.getString("Implementation and monitoring"),
+                deliverable: null,
+                steps: [
+                    {label: gettextCatalog.getString("Management of the implementation of the risk treatment plan"), done: false},
+                ]
+            }
+        ];
+
+        $scope.getMethodTextColor = function (step, subStep) {
+            if (subStep.done) {
+                return 'txt-' + step.color;
+            } else {
+                return '';
+            }
+        };
+
+        $scope.isMethodStepComplete = function (step) {
+            var complete = true;
+            for (var i = 0; i < step.steps.length; ++i) {
+                if (!step.steps[i].done) {
+                    complete = false;
+                    break;
+                }
+            }
+
+            return complete;
+        };
+
         // Tree
         $scope.anr_obj_instances_data = null;
         $scope.anr_obj_library_data = null;
