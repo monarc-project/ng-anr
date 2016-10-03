@@ -1,7 +1,7 @@
 (function () {
 
     angular
-        .module('BackofficeApp')
+        .module('AnrModule')
         .factory('RiskService', [ '$resource', 'MassDeleteService', RiskService ]);
 
     function RiskService($resource, MassDeleteService) {

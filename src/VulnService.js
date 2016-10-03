@@ -1,7 +1,7 @@
 (function () {
 
     angular
-        .module('BackofficeApp')
+        .module('AnrModule')
         .factory('VulnService', [ '$resource', 'MassDeleteService', VulnService ]);
 
     function VulnService($resource, MassDeleteService) {

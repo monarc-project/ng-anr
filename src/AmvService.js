@@ -1,7 +1,7 @@
 (function () {
 
     angular
-        .module('BackofficeApp')
+        .module('AnrModule')
         .factory('AmvService', [ '$resource', 'MassDeleteService', AmvService ]);
 
     function AmvService($resource, MassDeleteService) {

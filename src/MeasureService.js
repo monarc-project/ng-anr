@@ -1,7 +1,7 @@
 (function () {
 
     angular
-        .module('BackofficeApp')
+        .module('AnrModule')
         .factory('MeasureService', [ '$resource', 'MassDeleteService', MeasureService ]);
 
     function MeasureService($resource, MassDeleteService) {

@@ -1,7 +1,7 @@
 (function () {
 
     angular
-        .module('BackofficeApp')
+        .module('AnrModule')
         .factory('CategoryService', [ '$resource', CategoryService ]);
 
     function CategoryService($resource) {

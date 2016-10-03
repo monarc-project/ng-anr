@@ -1,7 +1,7 @@
 (function () {
 
     angular
-        .module('BackofficeApp')
+        .module('AnrModule')
         .factory('ThreatService', [ '$resource', 'MassDeleteService', ThreatService ]);
 
     function ThreatService($resource, MassDeleteService) {
