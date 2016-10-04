@@ -2,6 +2,11 @@
     white-space: pre-wrap
 }
 
+.table-fab-top-2 {
+    margin-right: 72px;
+    margin-top: 64px;
+}
+
 .md-toolbar-pad {
     padding-top: 46px !important;
     padding-bottom: 46px !important;
@@ -270,6 +275,17 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 }
 
 .md-upload-dropbox.dragover {
+    background: #607D8B;
+    color: white;
+}
+
+.md-upload-dropbox-dark {
+    background: #333333;
+    text-align: center;
+    cursor: pointer;
+    color: white;
+}
+.md-upload-dropbox-dark.dragover {
     background: #607D8B;
     color: white;
 }

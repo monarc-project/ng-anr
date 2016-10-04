@@ -39,6 +39,13 @@
                 <md-icon>add</md-icon>
             </md-button>
 
+            <md-button class="md-fab md-accent md-fab-top-right table-fab-top-2" aria-label="{{ 'Import asset' | translate }}" ng-click="importAsset($event)">
+                <md-tooltip md-direction="left">
+                    {{ 'Import asset' | translate }}
+                </md-tooltip>
+                <md-icon>file_download</md-icon>
+            </md-button>
+
             <md-table-container flex>
                 <table md-table md-row-select multiple ng-model="assets.selected" md-progress="assets.promise">
                     <thead md-head md-order="assets.query.order" md-on-reorder="updateAssets">
@@ -360,5 +367,186 @@
                                  md-total="{{amvs.items.count}}" md-on-paginate="updateAmvs" md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
         </md-tab>
 
+
+        <md-tab label="{{ 'Tags' | translate }}" md-on-select="selectTagsTab()" md-on-deselect="deselectTagsTab()">
+            <md-toolbar class="md-table-toolbar md-default"
+                        ng-hide="tags.selected.length || tags.filter.show">
+                <div class="md-toolbar-tools">
+                    <h2 class="md-title" translate>Tags</h2>
+
+                    <div flex></div>
+                    <md-button class="md-icon-button" ng-click="tags.filter.show = true">
+                        <md-icon>search</md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-toolbar class="md-table-toolbar md-default"
+                        ng-show="tags.filter.show && !tags.selected.length">
+                <div class="md-toolbar-tools">
+                    <md-icon>search</md-icon>
+                    <form flex name="tags.filter.form">
+                        <input type="text" ng-model="tags.query.filter"
+                               ng-model-options="tags.filter.options" placeholder="{{ 'Search...' | translate }}">
+                    </form>
+                    <md-button class="md-icon-button" ng-click="removeTagsFilter()">
+                        <md-icon>close</md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-toolbar class="md-table-toolbar alternate" ng-show="tags.selected.length">
+                <div class="md-toolbar-tools" layout-align="space-between center">
+                    <div>{{tags.selected.length}} {{tags.selected.length > 1 ? 'items' : 'item'}} selected
+                    </div>
+                    <md-button class="md-icon-button" ng-click="deleteTagMass($event)">
+                        <md-icon>delete</md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-button class="md-fab md-accent md-fab-top-right table-fab-top" aria-label="{{ 'New tag' | translate }}"
+                       ng-click="createNewTag($event)">
+                <md-tooltip md-direction="left">
+                    {{ 'New tag' | translate }}
+                </md-tooltip>
+                <md-icon>add</md-icon>
+            </md-button>
+
+            <md-table-container flex>
+                <table md-table md-row-select multiple ng-model="tags.selected" md-progress="tags.promise">
+                    <thead md-head md-order="tags.query.order" md-on-reorder="updateTags">
+                    <tr md-row>
+                        <th md-column md-order-by="code"><span translate>Code</span></th>
+                        <th md-column md-order-by="label1"><span translate>Label</span></th>
+                        <th md-column><span translate>Actions</span></th>
+                    </tr>
+                    </thead>
+
+                    <tbody md-body>
+                    <tr md-row md-select="tag" md-select-id="id"
+                        ng-repeat="tag in tags.items.tags">
+                        <td md-cell>{{ tag.code }}</td>
+                        <td md-cell>{{ tag[_langField('label')] }}</td>
+                        <td md-cell>
+                            <md-button class="md-icon-button" ng-click="editTag($event, tag)">
+                                <md-icon>edit</md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button" ng-click="deleteTag($event, tag)">
+                                <md-icon>delete</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+
+            <md-table-pagination md-limit="tags.query.limit" md-limit-options="[20, 30, 50, 100]"
+                                 md-page="tags.query.page"
+                                 md-total="{{tags.items.count}}" md-on-paginate="updateTags"
+                                 md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
+        </md-tab>
+
+        <md-tab label="{{ 'Risks' | translate }}" md-on-select="selectRisksTab()" md-on-deselect="deselectRisksTab()">
+            <md-toolbar class="md-table-toolbar md-default"
+                        ng-hide="risks.selected.length || risks.filter.show">
+                <div class="md-toolbar-tools">
+                    <h2 class="md-title" translate>Risks</h2>
+
+                    <div flex></div>
+                    <md-button class="md-icon-button" ng-click="risks.filter.show = true">
+                        <md-icon>search</md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-toolbar class="md-table-toolbar md-default"
+                        ng-show="risks.filter.show && !risks.selected.length">
+                <div class="md-toolbar-tools">
+                    <md-icon>search</md-icon>
+                    <form flex name="risks.filter.form">
+                        <input type="text" ng-model="risks.query.filter"
+                               ng-model-options="risks.filter.options" placeholder="{{ 'Search...' | translate }}">
+                    </form>
+                    <md-button class="md-icon-button" ng-click="removeRisksFilter()">
+                        <md-icon>close</md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-toolbar class="md-table-toolbar alternate" ng-show="risks.selected.length">
+                <div class="md-toolbar-tools" layout-align="space-between center">
+                    <div>{{risks.selected.length}} {{risks.selected.length > 1 ? 'items' : 'item'}} selected
+                    </div>
+                    <md-button class="md-icon-button" ng-click="deleteRiskMass($event)">
+                        <md-icon>delete</md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <div layout="row" class="md-padding-left" layout-align="space-around center">
+                <p class="md-padding-right" translate>Filter:</p>
+
+                <md-select ng-model="risk_category_filter" aria-label="{{ 'Category' | translate }}" placeholder="{{ 'Category' | translate }}" class="md-padding-right" flex>
+                    <md-option value="0">{{ 'All categories' | translate }}</md-option>
+                    <md-option ng-repeat="cat in risk_categories" ng-value="cat.id">{{ cat[_langField('label')] }}</md-option>
+                </md-select>
+
+                <md-select ng-model="risk_tag_filter" aria-label="{{ 'Asset type' | translate }}" placeholder="{{ 'Asset type' | translate }}" flex>
+                    <md-option value="0">{{ 'All tags' | translate }}</md-option>
+                    <md-option ng-repeat="tag in risk_tags" ng-value="tag.id">{{ tag.code }} ({{ tag[_langField('label')] }})</md-option>
+                </md-select>
+
+                <md-button class="md-icon-button" ng-click="resetRisksFilters()">
+                    <md-tooltip>{{ 'Reset filters' | translate }}</md-tooltip>
+                    <md-icon>settings_backup_restore</md-icon>
+                </md-button>
+            </div>
+
+            <md-button class="md-fab md-accent md-fab-top-right table-fab-top-withactions" aria-label="{{ 'New risk' | translate }}"
+                       ng-click="createNewRisk($event)">
+                <md-tooltip md-direction="left">
+                    {{ 'New risk' | translate }}
+                </md-tooltip>
+                <md-icon>add</md-icon>
+            </md-button>
+
+            <md-table-container flex>
+                <table md-table md-row-select multiple ng-model="risks.selected" md-progress="risks.promise">
+                    <thead md-head md-order="risks.query.order" md-on-reorder="updateRisks">
+                    <tr md-row>
+                        <th md-column><span translate>Categories</span></th>
+                        <th md-column><span translate>Tags</span></th>
+                        <th md-column md-order-by="code"><span translate>Code</span></th>
+                        <th md-column md-order-by="label1"><span translate>Label</span></th>
+                        <th md-column><span translate>Actions</span></th>
+                    </tr>
+                    </thead>
+
+                    <tbody md-body>
+                    <tr md-row md-select="risk" md-select-id="id"
+                        ng-repeat="risk in risks.items.risks">
+                        <td md-cell><md-chips readonly="true" ng-model="risk.categories"><md-chip-template>{{$chip.code}}</md-chip-template></md-chips></td>
+                        <td md-cell><md-chips readonly="true" ng-model="risk.tags"><md-chip-template>{{$chip.code}}</md-chip-template></md-chips></td>
+                        <td md-cell>{{ risk.code }}</td>
+                        <td md-cell>{{ risk[_langField('label')] }}</td>
+                        <td md-cell>
+                            <md-button class="md-icon-button" ng-click="editRisk($event, risk)">
+                                <md-icon>edit</md-icon>
+                            </md-button>
+                            <md-button class="md-icon-button" ng-click="deleteRisk($event, risk)">
+                                <md-icon>delete</md-icon>
+                            </md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+
+            <md-table-pagination md-limit="risks.query.limit" md-limit-options="[20, 30, 50, 100]"
+                                 md-page="risks.query.page"
+                                 md-total="{{risks.items.count}}" md-on-paginate="updateRisks"
+                                 md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
+        </md-tab>
     </md-tabs>
 </div>

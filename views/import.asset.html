@@ -1,0 +1,109 @@
+<md-dialog class="dialog-width">
+    <form name="measureForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Asset import center</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div ng-if="dialog_mode == null">
+                    <p translate>You may import an asset:</p>
+                    <ul>
+                        <li translate>from a file (<b>warning:</b> You may only import an asset from a file if the source software version is compatible with yours),</li>
+                        <li translate>from MONARC library: you can access the MONARC database directly to benefit from latest CASES team changes.</li>
+                    </ul>
+                </div>
+
+                <div layout="row" ng-show="dialog_mode == null">
+                    <md-button flex ng-click="dialog_mode = 'file'" class="md-raised">Import from file</md-button>
+                    <md-button flex ng-click="dialog_mode = 'common'" class="md-raised">Import from MONARC library</md-button>
+                </div>
+
+                <div ng-if="dialog_mode == 'file'">
+                    <div ngf-drop ngf-select ng-repeat="i in range(0, file_range)" ng-model="file[i]" class="md-upload-dropbox md-upload-dropbox-dark md-padding md-whiteframe-3dp"
+                         ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-allow-dir="false">
+                        <div ng-if="file[i].name">{{ file[i].name }}</div>
+                        <div ng-if="!file[i].name">{{ 'Drop your exported file in this zone, or click here to select a file' | translate }}</div>
+                    </div>
+                    <div layout="row" layout-align="end center">
+                        <md-button ng-click="upgradeFileRange()"><md-icon>add</md-icon> {{ 'Add another file' | translate }}</md-button>
+                        <md-button><md-icon>file_download</md-icon> {{ 'Import files' | translate }}</md-button>
+                    </div>
+                </div>
+
+                <div ng-if="dialog_mode == 'common'">
+                    <p class="md-title">List of common MONARC assets</p>
+                    <table class="md-html-table">
+                        <thead>
+                        <tr>
+                            <th translate>Type</th>
+                            <th translate>Code</th>
+                            <th translate>Label</th>
+                            <th translate>Description</th>
+                            <th translate>Actions</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr ng-repeat="i in range(0, 3)">
+                            <td>Secondaire</td>
+                            <td>BAT_LOC</td>
+                            <td>Locaux, bâtiments</td>
+                            <td>Bâtiment principal, salle serveur, etc</td>
+                            <td class="txtcenter"><md-button ng-click="openAssetDetails(i)" class="md-icon-button"><md-icon>open_in_new</md-icon></md-button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div ng-if="dialog_mode == 'asset_details'">
+                    <div layout="row" layout-align="start center">
+                        <md-button class="md-icon-button"><md-icon>arrow_back</md-icon></md-button>
+                        <p class="md-title">BAT_LOC - Locaux, bâtiments</p>
+                    </div>
+
+                    <p><strong translate>Type:</strong> Secondaire</p>
+                    <p>Bâtiment principal, salle serveur, etc.</p>
+
+                    <md-button class="md-raised md-primary">{{ 'Import this asset' | translate }}</md-button>
+
+                    <p class="md-title" translate>List of AMV links</p>
+
+                    <table class="md-html-table">
+                        <thead>
+                        <tr>
+                            <th translate>Threat</th>
+                            <th translate>Vulnerability</th>
+                            <th translate>Measure 1</th>
+                            <th translate>Measure 2</th>
+                            <th translate>Measure 3</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr ng-repeat="i in range(0, 3)">
+                            <td>MD14 - Usurpation de droits</td>
+                            <td>581 - Organisation inadaptée</td>
+                            <td>8.2.1 - Classification des informations</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
