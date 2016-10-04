@@ -68,7 +68,7 @@
 
                 <md-subheader>{{ 'Specific models links' | translate }}</md-subheader>
 
-                <md-input-container class="md-block" layout="row" flex>
+                <md-input-container class="md-block" layout="row" ng-if="models && models.length > 0" flex>
                     <label translate>Models</label>
                     <md-icon>class</md-icon>
                     <md-select multiple ng-model="asset.models">
