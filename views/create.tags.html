@@ -1,0 +1,53 @@
+<md-dialog class="dialog-width">
+    <form name="tagForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 ng-if="!tag.id" translate>Add a new tag</h2>
+                <h2 ng-if="tag.id" translate>Update tag information</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-input-container class="md-block" flex>
+                    <label translate>Language</label>
+                    <md-icon>language</md-icon>
+                    <md-select ng-model="language">
+                        <md-option ng-repeat="(lang_idx, lang) in languages" value="{{ lang_idx }}">{{ lang }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block" flex>
+                    <label translate>Label</label>
+                    <md-icon>label</md-icon>
+                    <input ng-model="tag['label' + language ]" name="label" required>
+                    <div ng-messages="tagForm.label.$error">
+                        <div ng-message="required">{{ 'The label may not be empty' | translate }}</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container class="md-block" flex>
+                    <label translate>Code</label>
+                    <md-icon>reorder</md-icon>
+                    <input ng-model="tag.code" required name="code">
+
+                    <div ng-messages="tagForm.code.$error">
+                        <div ng-message="required">{{ 'The code may not be empty' | translate }}</div>
+                    </div>
+                </md-input-container>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="create()" ng-disabled="tagForm.$error.required" type="submit" class="md-accent md-hue-3">
+                {{ (tag.id > 0 ? 'Update' : 'Create') | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -1,0 +1,108 @@
+<md-dialog class="dialog-width">
+    <form name="riskForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 ng-if="!risk.id" translate>Add a new risk</h2>
+                <h2 ng-if="risk.id" translate>Update risk information</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-input-container class="md-block" flex>
+                    <label translate>Language</label>
+                    <md-icon>language</md-icon>
+                    <md-select ng-model="language">
+                        <md-option ng-repeat="(lang_idx, lang) in languages" value="{{ lang_idx }}">{{ lang }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block" flex>
+                    <label translate>Label</label>
+                    <md-icon>label</md-icon>
+                    <input ng-model="risk['label' + language ]" name="label" required>
+                    <div ng-messages="riskForm.label.$error">
+                        <div ng-message="required">{{ 'The label may not be empty' | translate }}</div>
+                    </div>
+                </md-input-container>
+
+                <md-input-container class="md-block" flex>
+                    <label translate>Description</label>
+                    <md-icon>subject</md-icon>
+                    <textarea ng-model="risk['description' + language]" rows="4"></textarea>
+                </md-input-container>
+
+                <md-input-container class="md-block" flex>
+                    <label translate>Code</label>
+                    <md-icon>reorder</md-icon>
+                    <input ng-model="risk.code" name="code" required>
+
+                    <div ng-messages="riskForm.code.$error">
+                        <div ng-message="required">{{ 'The code may not be empty' | translate }}</div>
+                    </div>
+                </md-input-container>
+
+                <md-chips ng-model="risk.categories"
+                          required
+                          md-autocomplete-snap
+                          md-require-match="true">
+                    <md-autocomplete
+                            md-selected-item="selectedCategoryItem"
+                            md-search-text="categorySearchText"
+                            md-items="item in queryCategorySearch(categorySearchText)"
+                            md-item-text="item.code"
+                            md-min-length="0"
+                            md-no-cache="true"
+                            placeholder="{{ 'Add categories...' | translate }}">
+                        <span md-highlight-text="categorySearchText"><b>{{ item.code }}</b> - {{ item[_langField('label')] }}</span>
+                    </md-autocomplete>
+
+                    <md-chip-template>
+                        <span>
+                            <strong>{{$chip[_langField('label')]}}</strong>
+                            <em>{{$chip.code}}</em>
+                        </span>
+                    </md-chip-template>
+                </md-chips>
+
+                <md-chips ng-model="risk.tags"
+                          md-autocomplete-snap
+                          required
+                          md-require-match="true">
+                    <md-autocomplete flex
+                                     md-selected-item="selectedTagItem"
+                                     md-search-text="tagSearchText"
+                                     md-items="item in queryTagSearch(tagSearchText)"
+                                     md-item-text="item.code"
+                                     md-min-length="0"
+                                     md-no-cache="true"
+                                     placeholder="{{ 'Add tags...' | translate }}">
+                        <span md-highlight-text="tagSearchText">{{ item.code }} - {{ item[_langField('label')] }}</span>
+                    </md-autocomplete>
+
+                    <md-chip-template>
+                        <span>
+                            <strong>{{$chip.code}}</strong>
+                            <em>{{$chip[_langField('label')]}}</em>
+                        </span>
+                    </md-chip-template>
+                </md-chips>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="create()" ng-disabled="riskForm.$error.required || risk.categories.length == 0" type="submit" class="md-accent md-hue-3">
+                {{ (risk.id > 0 ? 'Update' : 'Create') | translate }}
+            </md-button>
+            <md-button ng-click="createAndContinue()" ng-if="!risk.id" ng-disabled="riskForm.$error.required" class="md-accent md-hue-3">
+                {{ 'Create and continue' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

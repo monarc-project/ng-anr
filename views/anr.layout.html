@@ -25,7 +25,7 @@
                 </div>
             </div>
 
-            <div class="monarc-wizard step-bullet white" layout="row" layout-align="center center">
+            <div ng-if="OFFICE_MODE == 'FO'" class="monarc-wizard step-bullet white" layout="row" layout-align="center center">
                 <img ng-if="OFFICE_MODE == 'FO'" src="img/monarc.png" style="width: 80%" />
             </div>
         </div>
@@ -185,8 +185,11 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
+                </md-tab>
+
+                <md-tab label="{{ 'Knowledge base' | translate }}" ng-if="OFFICE_MODE == 'FO'">
+                    <div ng-include="'views/anr/anr.kbmgmt.html'"></div>
                 </md-tab>
             </md-tabs>
         </md-card>

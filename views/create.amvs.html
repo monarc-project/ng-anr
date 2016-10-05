@@ -1,0 +1,168 @@
+<md-dialog class="dialog-width">
+    <form name="amvForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 ng-if="!amv.id" translate>Add a new AMV link</h2>
+                <h2 ng-if="amv.id" translate>Update AMV link</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <md-autocomplete
+                        flex
+                        required
+                        md-selected-item="amv.asset"
+                        md-search-text="assetSearchText"
+                        md-selected-item-change="selectedAssetItemChange(item)"
+                        md-items="item in queryAssetSearch(assetSearchText)"
+                        md-item-text="item.code + ' - ' + item[_langField('label')]"
+                        md-delay="300"
+                        md-min-length="0"
+                        md-input-name="asset"
+                        md-floating-label="{{ 'Asset' | translate }}">
+                    <md-item-template>
+                        <span md-highlight-text="assetSearchText" md-highlight-flags="^i">{{ item.code }} - {{ item[_langField('label')] }}</span>
+                    </md-item-template>
+
+                    <md-not-found>
+                        {{ 'No asset matching your search was found' | translate }}
+                    </md-not-found>
+
+                    <div ng-messages="amvForm.asset.$error">
+                        <div ng-message="required">{{ 'You must select an asset' | translate }}</div>
+                    </div>
+                </md-autocomplete>
+
+                <md-autocomplete
+                        flex
+                        required
+                        md-selected-item="amv.threat"
+                        md-search-text="threatSearchText"
+                        md-selected-item-change="selectedThreatItemChange(item)"
+                        md-items="item in queryThreatSearch(threatSearchText)"
+                        md-item-text="item.code + ' - ' + item[_langField('label')]"
+                        md-delay="300"
+                        md-min-length="0"
+                        md-input-name="threat"
+                        md-floating-label="{{ 'Threat' | translate }}">
+                    <md-item-template>
+                        <span md-highlight-text="assetSearchText" md-highlight-flags="^i">{{ item.code }} - {{ item[_langField('label')] }}</span>
+                    </md-item-template>
+
+                    <md-not-found>
+                        {{ 'No threat matching your search was found' | translate }}
+                    </md-not-found>
+
+                    <div ng-messages="amvForm.threat.$error">
+                        <div ng-message="required">{{ 'You must select a threat' | translate }}</div>
+                    </div>
+                </md-autocomplete>
+
+                <md-autocomplete
+                        flex
+                        required
+                        md-selected-item="amv.vulnerability"
+                        md-search-text="vulnSearchText"
+                        md-selected-item-change="selectedVulnItemChange(item)"
+                        md-items="item in queryVulnSearch(vulnSearchText)"
+                        md-item-text="item.code + ' - ' + item[_langField('label')]"
+                        md-delay="300"
+                        md-min-length="0"
+                        md-input-name="vulnerability"
+                        md-floating-label="{{ 'Vulnerability' | translate }}">
+                    <md-item-template>
+                        <span md-highlight-text="vulnSearchText" md-highlight-flags="^i">{{ item.code }} - {{ item[_langField('label')] }}</span>
+                    </md-item-template>
+
+                    <md-not-found>
+                        {{ 'No vulnerability matching your search was found' | translate }}
+                    </md-not-found>
+
+                    <div ng-messages="amvForm.vulnerability.$error">
+                        <div ng-message="required">{{ 'You must select a vulnerability' | translate }}</div>
+                    </div>
+                </md-autocomplete>
+
+                <md-autocomplete
+                        flex
+                        md-selected-item="amv.measure1"
+                        md-search-text="m1SearchText"
+                        md-selected-item-change="selectedMeasureItemChange(1, item)"
+                        md-items="item in queryMeasureSearch(m1SearchText)"
+                        md-item-text="item.code + ' (' + item[_langField('description')] + ')'"
+                        md-delay="300"
+                        md-min-length="0"
+                        md-floating-label="{{ 'First measure' | translate }}">
+                    <md-item-template>
+                        <span md-highlight-text="m1SearchText" md-highlight-flags="^i">{{ item.code }} ({{ item[_langField('description')] }})</span>
+                    </md-item-template>
+
+                    <md-not-found>
+                        {{ 'No measure matching your search was found' | translate }}
+                    </md-not-found>
+                </md-autocomplete>
+
+                <md-autocomplete
+                        flex
+                        md-selected-item="amv.measure2"
+                        md-search-text="m2SearchText"
+                        md-selected-item-change="selectedMeasureItemChange(2, item)"
+                        md-items="item in queryMeasureSearch(m2SearchText)"
+                        md-item-text="item.code + ' (' + item[_langField('description')] + ')'"
+                        md-delay="300"
+                        md-min-length="0"
+                        md-floating-label="{{ 'Second measure' | translate }}">
+                    <md-item-template>
+                        <span md-highlight-text="m2SearchText" md-highlight-flags="^i">{{ item.code }} ({{ item[_langField('description')] }})</span>
+                    </md-item-template>
+
+                    <md-not-found>
+                        {{ 'No measure matching your search was found' | translate }}
+                    </md-not-found>
+                </md-autocomplete>
+
+                <md-autocomplete
+                        flex
+                        md-selected-item="amv.measure3"
+                        md-search-text="m3SearchText"
+                        md-selected-item-change="selectedMeasureItemChange(3, item)"
+                        md-items="item in queryMeasureSearch(m3SearchText)"
+                        md-item-text="item.code + ' (' + item[_langField('description')] + ')'"
+                        md-delay="300"
+                        md-min-length="0"
+                        md-floating-label="{{ 'Third measure' | translate }}">
+                    <md-item-template>
+                        <span md-highlight-text="m3SearchText" md-highlight-flags="^i">{{ item.code }} ({{ item[_langField('description')] }})</span>
+                    </md-item-template>
+
+                    <md-not-found>
+                        {{ 'No measure matching your search was found' | translate }}
+                    </md-not-found>
+                </md-autocomplete>
+
+                <md-input-container class="md-block" layout="row" flex>
+                    <label translate>Audit order</label>
+                    <md-select ng-model="amv.position">
+                        <md-option ng-value="1">{{ 'in the end' | translate }}</md-option>
+                        <md-option ng-value="2">{{ 'at the beginning' | translate }}</md-option>
+                        <md-option ng-value="3">{{ 'after' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="create()" ng-disabled="amvForm.$error.required" type="submit" class="md-accent md-hue-3">
+                {{ (amv.id > 0 ? 'Update' : 'Create') | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
