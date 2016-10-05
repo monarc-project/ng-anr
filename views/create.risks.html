@@ -57,7 +57,7 @@
                             md-min-length="0"
                             md-no-cache="true"
                             placeholder="{{ 'Add categories...' | translate }}">
-                        <span md-highlight-text="categorySearchText"><b>{{ item.code }}</b> - {{ item[_langField('label')] }}</span>
+                        <span md-highlight-text="categorySearchText">{{ item.code }} - {{ item[_langField('label')] }}</span>
                     </md-autocomplete>
 
                     <md-chip-template>
