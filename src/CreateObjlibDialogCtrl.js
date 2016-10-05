@@ -51,6 +51,8 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
             controller: ['$scope', '$mdDialog', '$q', 'toastr', 'gettextCatalog', 'ConfigService', 'ObjlibService', 'catName', CreateObjlibCategoryDialogCtrl],
             templateUrl: '/views/anr/create.objlibs.categories.html',
             clickOutsideToClose: true,
+            preserveScope: true,
+            scope: $scope,
             locals: {
                 'catName': catName
             }
