@@ -330,6 +330,15 @@
 
         $scope.$watch('scales', function (newValue, oldValue) {
             if ($scope.model && $scope.model.anr && scaleWatchSetup) {
+                if (newValue.impacts.min > newValue.impacts.max) newValue.impacts.min = newValue.impacts.max;
+                if (newValue.impacts.max < newValue.impacts.min) newValue.impacts.max = newValue.impacts.min;
+
+                if (newValue.threats.min > newValue.threats.max) newValue.threats.min = newValue.threats.max;
+                if (newValue.threats.max < newValue.threats.min) newValue.threats.max = newValue.threats.min;
+
+                if (newValue.vulns.min > newValue.vulns.max) newValue.vulns.min = newValue.vulns.max;
+                if (newValue.vulns.max < newValue.vulns.min) newValue.vulns.max = newValue.vulns.min;
+
                 if (oldValue.impacts.min != newValue.impacts.min || oldValue.impacts.max != newValue.impacts.max) {
                     AnrService.updateScale($scope.model.anr.id, $scope.scales.impacts.id, newValue.impacts.min, newValue.impacts.max);
                 }
@@ -546,7 +555,7 @@
                 for (var i = 0; i < data.comments.length; ++i) {
                     var comm = data.comments[i];
 
-                    if (isImpact) {
+                    if (isImpact && obj[comm.val]) {
                         obj[comm.val][comm.scaleImpactType.id] = comm;
                     } else {
                         obj[comm.val] = comm;
