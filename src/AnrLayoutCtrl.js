@@ -613,6 +613,7 @@
 
                     AnrService.addNewObjectToLibrary(anr_id, objlib, function (data) {
                         $parentScope.updateObjectsLibrary();
+                        $state.transitionTo('main.kb_mgmt.models.details.object', {objectId: objlib.id});
                     });
                 }
             });
