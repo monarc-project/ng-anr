@@ -136,37 +136,16 @@
                     </div>
                 </div>
 
-                <div class="md-block" layout="column" flex>
-                    <div layout="row" layout-align="center center">
-                        <md-icon style="margin-right: 8px;">class</md-icon>
-                        <md-autocomplete
-                                flex
-                                required
-                                md-no-cache="true"
-                                md-selected-item="objlib.category"
-                                md-search-text="categorySearchText"
-                                md-selected-item-change="selectedCategoryItemChange(item)"
-                                md-items="item in queryCategorySearch(categorySearchText)"
-                                md-item-text="item[_langField('label')]"
-                                md-min-length="0"
-                                md-input-name="category"
-                                md-floating-label="{{ 'Category' | translate }}">
-                            <md-item-template>
-                                <span md-highlight-text="categorySearchText" md-highlight-flags="^i">{{ item[_langField('label')] }}</span>
-                            </md-item-template>
-
-                            <md-not-found>
-                                {{ 'No category matching your search was found' | translate }}
-                                <md-button ng-click="createCategory($event, categorySearchText)">{{ 'Create this category' | translate }}</md-button>
-                            </md-not-found>
-
-                            <div ng-messages="objlibForm.category.$error">
-                                <div ng-message="required">{{ 'You must select a category' | translate }}</div>
-                            </div>
-                        </md-autocomplete>
-                        <md-button class="md-icon-button" ng-if="objlib.category.id" ng-click="editCategory($event, objlib.category)"><md-icon>edit</md-icon></md-button>
-                        <md-button class="md-icon-button" ng-if="!objlib.category.id" ng-click="createCategory($event, categorySearchText)"><md-icon>add</md-icon></md-button>
-                    </div>
+                <div layout="row" layout-align="center center">
+                    <md-input-container class="md-block" flex>
+                        <md-icon>class</md-icon>
+                        <label translate>Category</label>
+                        <md-select required ng-model="objlib.category">
+                            <md-option ng-repeat="cat in categories" ng-value="cat.id">{{ cat[_langField('label')] }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-button class="md-icon-button" ng-if="objlib.category" ng-click="editCategory($event, objlib.category)"><md-icon>edit</md-icon></md-button>
+                    <md-button class="md-icon-button" ng-click="createCategory($event, categorySearchText)"><md-icon>add</md-icon></md-button>
                 </div>
 
                 <div class="md-block" layout="column" flex>

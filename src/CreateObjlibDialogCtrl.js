@@ -3,9 +3,14 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
     $scope.languages = ConfigService.getLanguages();
     $scope.language = ConfigService.getDefaultLanguageIndex();
     $scope.assetSearchText = '';
+    $scope.categories = [];
 
     if (objlib != undefined && objlib != null) {
         $scope.objlib = objlib;
+
+        if ($scope.objlib.category) {
+            $scope.objlib.category = $scope.objlib.category.id;
+        }
     } else {
         $scope.objlib = {
             mode: 0,
@@ -22,6 +27,32 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
             previous: null
         };
     }
+
+    ObjlibService.getObjlibsCats().then(function (x) {
+        // Recursively build items
+        var buildItemRecurse = function (children, parentPath) {
+            var output = [];
+
+            for (var i = 0; i < children.length; ++i) {
+                var child = children[i];
+
+                if (parentPath != "") {
+                    child[$scope._langField('label')] = parentPath + " >> " + child[$scope._langField('label')];
+                }
+
+                output.push(child);
+
+                if (child.child && child.child.length > 0) {
+                    var child_output = buildItemRecurse(child.child, child[$scope._langField('label')]);
+                    output = output.concat(child_output);
+                }
+            }
+
+            return output;
+        };
+
+        $scope.categories = buildItemRecurse(x.categories, "");
+    });
 
     $scope.specificityStr = function (type) {
         switch (type) {
@@ -88,7 +119,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
     };
 
     $scope.editCategory = function (ev, cat) {
-        ObjlibService.getObjlibCat(cat.id).then(function (cat) {
+        ObjlibService.getObjlibCat(cat).then(function (cat) {
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', '$q', 'toastr', 'gettextCatalog', 'ConfigService', 'ObjlibService', 'catName', 'category', CreateObjlibCategoryDialogCtrl],
                 templateUrl: '/views/anr/create.objlibs.categories.html',
@@ -206,6 +237,8 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
     $scope.implicitPosition = null;
     $scope.showConfirmDeletion = false;
 
+    // Categories list is inherited from the parent dialog controller, as the scope is shared between both
+
     if (category != undefined && category != null) {
         $scope.category = category;
 
@@ -249,35 +282,6 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
 
         $mdDialog.hide($scope.category);
     };
-
-
-
-    ObjlibService.getObjlibsCats().then(function (x) {
-        // Recursively build items
-        var buildItemRecurse = function (children, parentPath) {
-            var output = [];
-
-            for (var i = 0; i < children.length; ++i) {
-                var child = children[i];
-
-                if (parentPath != "") {
-                    child[$scope._langField('label')] = parentPath + " >> " + child[$scope._langField('label')];
-                }
-
-                output.push(child);
-
-                if (child.child && child.child.length > 0) {
-                    var child_output = buildItemRecurse(child.child, child[$scope._langField('label')]);
-                    output = output.concat(child_output);
-                }
-            }
-
-            return output;
-        };
-
-        $scope.categories = buildItemRecurse(x.categories, "");
-    });
-
 
     $scope.updateCategoryChildren = function () {
         ObjlibService.getObjlibsCats({lock: true, parentId: $scope.category.parent ? $scope.category.parent : 0}).then(function (x) {

@@ -604,9 +604,6 @@
                 }
             }).then(function (objlib) {
                 if (objlib) {
-                    if (objlib.category) {
-                        objlib.category = objlib.category.id;
-                    }
                     if (objlib.asset) {
                         objlib.asset = objlib.asset.id;
                     }
