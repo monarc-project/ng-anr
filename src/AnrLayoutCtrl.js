@@ -488,6 +488,7 @@
                     // here since we don't have proper backend endpoints.
 
                     scaleWatchSetup = false;
+                    commsWatchSetup = false;
                     if (scale.type == "impact") {
                         $scope.scales.impacts = scale;
                     } else if (scale.type == "threat") {
