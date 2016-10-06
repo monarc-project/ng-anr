@@ -199,8 +199,6 @@
 
 
         $scope.updateObjectsLibrary = function () {
-            $scope.anr_obj_library_data = [];
-
             AnrService.getObjectsLibrary($scope.model.anr.id).then(function (data) {
                 var recurseFillTree = function (category, depth) {
                     var output = {id: category.id, type: 'libcat', label1: category.label1, depth: depth, __children__: []};
@@ -223,10 +221,12 @@
                     return output;
                 };
 
+                var lib_data = [];
                 for (var v = 0; v < data.categories.length; ++v) {
                     var cat = data.categories[v];
-                    $scope.anr_obj_library_data.push(recurseFillTree(cat, 0));
+                    lib_data.push(recurseFillTree(cat, 0));
                 }
+                $scope.anr_obj_library_data = lib_data;
             });
         };
 
@@ -446,7 +446,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$q', 'ObjlibService', 'AnrService', '$parentScope', 'anr_id', AddObjectDialogCtrl],
+                controller: ['$scope', '$mdDialog', '$q', '$state', 'ObjlibService', 'AnrService', '$parentScope', 'anr_id', AddObjectDialogCtrl],
                 templateUrl: '/views/anr/add.objlib.html',
                 targetEvent: ev,
                 preserveScope: true,
@@ -579,7 +579,7 @@
         };
     }
 
-    function AddObjectDialogCtrl($scope, $mdDialog, $q, ObjlibService, AnrService, $parentScope, anr_id) {
+    function AddObjectDialogCtrl($scope, $mdDialog, $q, $state, ObjlibService, AnrService, $parentScope, anr_id) {
         $scope.objectSearchText = '';
         $scope.categorySearchText = '';
 
