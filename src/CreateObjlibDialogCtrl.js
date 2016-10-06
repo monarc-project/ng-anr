@@ -58,10 +58,6 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
             }
         })
             .then(function (category) {
-                if (category.previous) {
-                    category.previous = category.previous.id;
-                }
-
                 ObjlibService.createObjlibCat(category,
                     function (cat) {
                         // Set the created category on the object
@@ -212,6 +208,10 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
 
     if (category != undefined && category != null) {
         $scope.category = category;
+
+        if ($scope.category.parent) {
+            $scope.category.parent = $scope.category.parent.id;
+        }
     } else {
         $scope.category = {
             parent: null,
@@ -247,76 +247,41 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
             $scope.category.position = -$scope.implicitPosition;
         }
 
-        if ($scope.category.parent) {
-            $scope.category.parent = $scope.category.parent.id;
-        }
-
-        if ($scope.category.previous) {
-            $scope.category.previous = $scope.category.previous.id;
-        }
-
         $mdDialog.hide($scope.category);
     };
 
-    $scope.queryCategorySearch = function (query) {
-        var q = $q.defer();
 
-        ObjlibService.getObjlibsCats({filter: query}).then(function (x) {
-            if (x && x.categories) {
-                // Recursively build items
-                var buildItemRecurse = function (children, depth) {
-                    var output = [];
 
-                    for (var i = 0; i < children.length; ++i) {
-                        var child = children[i];
+    ObjlibService.getObjlibsCats().then(function (x) {
+        // Recursively build items
+        var buildItemRecurse = function (children, parentPath) {
+            var output = [];
 
-                        for (var j = 0; j < depth; ++j) {
-                            child.label1 = " >> " + child.label1;
-                        }
+            for (var i = 0; i < children.length; ++i) {
+                var child = children[i];
 
-                        output.push(child);
+                if (parentPath != "") {
+                    child[$scope._langField('label')] = parentPath + " >> " + child[$scope._langField('label')];
+                }
 
-                        if (child.child && child.child.length > 0) {
-                            var child_output = buildItemRecurse(child.child, depth + 1);
-                            output = output.concat(child_output);
-                        }
-                    }
+                output.push(child);
 
-                    return output;
-                };
-
-                q.resolve(buildItemRecurse(x.categories, 0));
-            } else {
-                q.reject();
+                if (child.child && child.child.length > 0) {
+                    var child_output = buildItemRecurse(child.child, child[$scope._langField('label')]);
+                    output = output.concat(child_output);
+                }
             }
-        }, function (x) {
-            q.reject(x);
+
+            return output;
+        };
+
+        $scope.categories = buildItemRecurse(x.categories, "");
+    });
+
+
+    $scope.updateCategoryChildren = function () {
+        ObjlibService.getObjlibsCats({lock: true, parentId: $scope.category.parent ? $scope.category.parent : 0}).then(function (x) {
+            $scope.childrenCategories = x.categories;
         });
-
-        return q.promise;
-    };
-
-    $scope.queryCategoryChildrenSearch = function (query) {
-        var q = $q.defer();
-
-        ObjlibService.getObjlibsCats({filter: query, lock: true, parentId: $scope.category.parent ? $scope.category.parent.id : 0}).then(function (x) {
-            if (x && x.categories) {
-                q.resolve(x.categories);
-            } else {
-                q.reject();
-            }
-        }, function (x) {
-            q.reject(x);
-        });
-
-        return q.promise;
-    };
-
-    $scope.selectedParentCatItemChange = function (item) {
-        $scope.category.parent = item;
-    };
-
-    $scope.selectedPreviousCatItemChange = function (item) {
-        $scope.category.previous = item;
     };
 }

@@ -29,35 +29,19 @@
                     </div>
                 </md-input-container>
 
-                <div class="md-block" layout="column" flex style="margin-bottom: 8px">
-                    <div layout="row">
-                        <md-icon style="margin-right: 8px;">class</md-icon>
-                        <md-autocomplete
-                                flex
-                                md-no-cache="true"
-                                md-selected-item="category.parent"
-                                md-search-text="categoryParentSearchText"
-                                md-selected-item-change="selectedParentCatItemChange(item)"
-                                md-items="item in queryCategorySearch(categoryParentSearchText)"
-                                md-item-text="item[_langField('label')]"
-                                md-min-length="0"
-                                placeholder="{{ 'Parent category (leave empty for root)' | translate }}">
-                            <md-item-template>
-                                <span md-highlight-text="categoryParentSearchText" md-highlight-flags="^i">{{ item[_langField('label')] }}</span>
-                            </md-item-template>
-
-                            <md-not-found>
-                                {{ 'No category matching your search was found' | translate }}
-                            </md-not-found>
-
-                        </md-autocomplete>
-                    </div>
-                </div>
+                <md-input-container class="md-block">
+                    <md-icon>class</md-icon>
+                    <label translate>Parent category</label>
+                    <md-select ng-model="category.parent" md-on-close="updateCategoryChildren()" required>
+                        <md-option ng-value="null">{{ 'Root (none)' | translate }}</md-option>
+                        <md-option ng-repeat="cat in categories" ng-value="cat.id">{{ cat[_langField('label')] }}</md-option>
+                    </md-select>
+                </md-input-container>
 
                 <md-input-container class="md-block" flex>
                     <label translate>Location</label>
                     <md-icon>reorder</md-icon>
-                    <md-select ng-model="category.implicitPosition" name="position" required>
+                    <md-select ng-model="category.implicitPosition" name="position" md-on-close="updateCategoryChildren()" required>
                         <md-option value="1">{{ 'at the beginning' | translate }}</md-option>
                         <md-option value="2">{{ 'in the end' | translate }}</md-option>
                         <md-option value="3">{{ 'after...' | translate }}</md-option>
@@ -67,30 +51,13 @@
                     </div>
                 </md-input-container>
 
-                <div class="md-block" layout="column" flex style="margin-bottom: 8px" ng-show="category.implicitPosition == 3">
-                    <div layout="row">
-                        <md-icon style="margin-right: 8px;">class</md-icon>
-                        <md-autocomplete
-                                flex
-                                md-no-cache="true"
-                                md-selected-item="category.previous"
-                                md-search-text="categoryPreviousSearchText"
-                                md-selected-item-change="selectedPreviousCatItemChange(item)"
-                                md-items="item in queryCategoryChildrenSearch(categoryPreviousSearchText)"
-                                md-item-text="item[_langField('label')]"
-                                md-min-length="0"
-                                placeholder="{{ 'Previous category...' | translate }}">
-                            <md-item-template>
-                                <span md-highlight-text="categoryPreviousSearchText" md-highlight-flags="^i">{{ item[_langField('label')] }}</span>
-                            </md-item-template>
-
-                            <md-not-found>
-                                {{ 'No category matching your search was found' | translate }}
-                            </md-not-found>
-
-                        </md-autocomplete>
-                    </div>
-                </div>
+                <md-input-container class="md-block" ng-show="category.implicitPosition == 3">
+                    <md-icon>class</md-icon>
+                    <label translate>Previous category</label>
+                    <md-select ng-model="category.previous">
+                        <md-option ng-repeat="cat in childrenCategories" ng-value="cat.id">{{ cat[_langField('label')] }}</md-option>
+                    </md-select>
+                </md-input-container>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
