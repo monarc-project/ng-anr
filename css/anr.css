@@ -535,7 +535,7 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
 .rg-top span, .rg-bottom span {
     border-width: 1px 0;
     left: 0;
-    margin: 16px 0 0 0;
+    margin: 2px 0 0 0;
     width: 100%;
     height: 6px;
 }
