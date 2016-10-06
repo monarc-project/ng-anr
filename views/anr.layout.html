@@ -35,9 +35,6 @@
                 <md-tab label="{{ 'Risk analysis' | translate }}">
                     <div layout="row" class="md-padding">
                         <div layout="column" resizable r-directions="['right']">
-                            <md-button ui-sref="main.kb_mgmt.models.details({modelId: model.id})" ng-if="OFFICE_MODE == 'BO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ model.anr[_langField('label')] }}</md-button>
-                            <md-button ui-sref="main.project.anr({modelId: model.id})" ng-if="OFFICE_MODE == 'FO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ model.anr[_langField('label')] }}</md-button>
-
                             <md-subheader class="md-no-sticky md-small-subheader">
                                 <div layout="row" layout-align="space-between center">
                                     <div translate>Risk analysis</div>
@@ -55,6 +52,9 @@
                                     <md-icon>search</md-icon>
                                     <input type="text" ng-model="filter.instance" placeholder="{{ 'Search an instance...' | translate }}" flex="80">
                                 </md-input-container>
+
+                                <md-button ui-sref="main.kb_mgmt.models.details({modelId: model.id})" ng-if="OFFICE_MODE == 'BO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ model.anr[_langField('label')] }}</md-button>
+                                <md-button ui-sref="main.project.anr({modelId: model.id})" ng-if="OFFICE_MODE == 'FO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ model.anr[_langField('label')] }}</md-button>
 
                                 <div class="angular-ui-tree" ui-tree="insTreeCallbacks" data-drag-delay="150" id="insTree">
                                     <div layout="row" layout-align="center center" ng-if="!anr_obj_instances_data">
