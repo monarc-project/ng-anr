@@ -1,7 +1,8 @@
 <md-tabs md-dynamic-height>
     <md-tab label="{{ 'General information' | translate }}">
         <div class="md-padding">
-            <md-button class="md-primary md-raised" ng-click="editAnrInfo($event)">{{ 'Edit risk analysis details' | translate }}</md-button>
+            <md-button ng-click="editAnrInfo($event)"><md-icon>edit</md-icon> {{ 'Edit risk analysis details' | translate }}</md-button>
+            <md-button ng-click="exportAnr($event)"><md-icon>save</md-icon> {{ 'Export risk analysis' | translate }}</md-button>
 
             <h4 translate>Calculation of risk / Thresholds - Information Risks</h4>
 

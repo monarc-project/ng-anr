@@ -118,6 +118,30 @@
                 });
         };
 
+        $scope.exportInstance = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'mode', ExportInstanceDialog],
+                templateUrl: '/views/dialogs/export.objlibs.html',
+                targetEvent: ev,
+                preserveScope: true,
+                scope: $scope,
+                clickOutsideToClose: true,
+                fullscreen: useFullScreen,
+                locals: {
+                    mode: 'instance'
+                }
+            })
+                .then(function (exports) {
+                    $http.post('/api/instances-export', {id: $scope.instance.id, password: exports.password, assessments: exports.assessments}).then(function (data) {
+                        DownloadService.downloadBlob(data.data, 'instance.bin');
+                        toastr.success(gettextCatalog.getString('The instance has been exported successfully.'), gettextCatalog.getString('Export successful'));
+                    })
+                });
+        };
+
+
         $scope.detachInstance = function (ev) {
             var confirm = $mdDialog.confirm()
                 .title(gettextCatalog.getString('Are you sure you want to detach this instance?'))
@@ -148,7 +172,21 @@
     }
 
 
+    function ExportInstanceDialog($scope, $mdDialog, mode) {
+        $scope.mode = mode;
+        $scope.export = {
+            password: null
+        };
 
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.export = function() {
+            $mdDialog.hide($scope.export);
+        };
+
+    }
 
     function CreateInstanceDialogCtrl($scope, $mdDialog, AnrService, instance) {
         $scope.instance = instance;

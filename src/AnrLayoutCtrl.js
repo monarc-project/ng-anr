@@ -3,7 +3,7 @@
     angular
         .module('AnrModule')
         .controller('AnrLayoutCtrl', [
-            '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
+            '$scope', 'toastr', '$http', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
             'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope',
             AnrLayoutCtrl
         ]);
@@ -11,7 +11,7 @@
     /**
      * ANR MAIN LAYOUT CONTROLLER
      */
-    function AnrLayoutCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService, ModelService,
+    function AnrLayoutCtrl($scope, toastr, $http, $mdMedia, $mdDialog, gettextCatalog, TableHelperService, ModelService,
                            ObjlibService, AnrService, $stateParams, $rootScope) {
         var self = this;
 
@@ -555,6 +555,30 @@
             });
         };
 
+
+        $scope.exportAnr = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'mode', ExportAnrDialog],
+                templateUrl: '/views/dialogs/export.objlibs.html',
+                targetEvent: ev,
+                preserveScope: true,
+                scope: $scope,
+                clickOutsideToClose: true,
+                fullscreen: useFullScreen,
+                locals: {
+                    mode: 'anr'
+                }
+            })
+                .then(function (exports) {
+                    $http.post('/api/anr-export', {id: $scope.model.anr.id, password: exports.password, assessments: exports.assessments}).then(function (data) {
+                        DownloadService.downloadBlob(data.data, 'anr.bin');
+                        toastr.success(gettextCatalog.getString('The risk analysis has been exported successfully.'), gettextCatalog.getString('Export successful'));
+                    })
+                });
+        };
+
     }
 
     function CreateAnrDialogCtrl($scope, $mdDialog, ConfigService, anr) {
@@ -686,4 +710,19 @@
         };
     }
 
+    function ExportAnrDialog($scope, $mdDialog, mode) {
+        $scope.mode = mode;
+        $scope.export = {
+            password: null
+        };
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.export = function() {
+            $mdDialog.hide($scope.export);
+        };
+
+    }
 })();
