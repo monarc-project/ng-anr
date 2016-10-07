@@ -41,8 +41,8 @@
         $scope.updateModel();
 
         $scope.clearSelectedInstAndObj = function () {
-            $scope.anr_selected_instance_id = null;
-            $scope.anr_selected_object_id = null;
+            $rootScope.anr_selected_instance_id = null;
+            $rootScope.anr_selected_object_id = null;
         }
 
         /**
