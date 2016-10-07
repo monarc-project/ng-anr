@@ -39,7 +39,7 @@
                     <md-tooltip md-direction="left">{{ 'Edit instance settings' | translate }}</md-tooltip>
                 </md-button>
 
-                <md-button aria-label="{{ 'Export instance' | translate }}" class="md-fab md-raised md-mini" ng-click="exportInstance($event)">
+                <md-button ng-disabled="isSafari()" aria-label="{{ 'Export instance' | translate }}" class="md-fab md-raised md-mini" ng-click="exportInstance($event)">
                     <md-icon>save</md-icon>
                     <md-tooltip md-direction="left">{{ 'Export instance' | translate }}</md-tooltip>
                 </md-button>
