@@ -42,7 +42,7 @@
                                 </div>
                             </md-subheader>
 
-                            <div layout="row" layout-align="center center">
+                            <div layout="row" layout-align="center center" ng-hide="uiState.hideInstances">
                                 <md-button style="font-size: 12px; margin:0; padding: 0;" ng-click="unwrapAll()">{{ 'Expand all' | translate }}</md-button> /
                                 <md-button style="font-size: 12px; margin:0; padding: 0;" ng-click="wrapAll()">{{ 'Wrap all' | translate }}</md-button>
                             </div>
