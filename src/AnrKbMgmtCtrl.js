@@ -166,7 +166,7 @@
 
             AssetService.getAsset(asset.id).then(function (assetData) {
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'asset', CreateAssetDialogCtrl],
+                    controller: ['$scope', '$mdDialog', 'mdSelectMenu', 'ModelService', 'ConfigService', 'asset', CreateAssetDialogCtrl],
                     templateUrl: '/views/anr/create.assets.html',
                     targetEvent: ev,
                     preserveScope: true,
@@ -353,7 +353,7 @@
 
             ThreatService.getThreat(threat.id).then(function (threatData) {
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', '$q', 'ModelService', 'ThreatService', 'ConfigService', 'threat', CreateThreatDialogCtrl],
+                    controller: ['$scope', '$mdDialog', 'mdSelectMenu', '$q', 'ModelService', 'ThreatService', 'ConfigService', 'threat', CreateThreatDialogCtrl],
                     templateUrl: '/views/anr/create.threats.html',
                     targetEvent: ev,
                     preserveScope: true,
@@ -534,7 +534,7 @@
 
             VulnService.getVuln(vuln.id).then(function (vulnData) {
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'vuln', CreateVulnDialogCtrl],
+                    controller: ['$scope', '$mdDialog', 'mdSelectMenu', 'ModelService', 'ConfigService', 'vuln', CreateVulnDialogCtrl],
                     templateUrl: '/views/anr/create.vulns.html',
                     targetEvent: ev,
                     preserveScope: true,
