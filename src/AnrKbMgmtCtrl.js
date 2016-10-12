@@ -3,7 +3,7 @@
     angular
         .module('AnrModule')
         .controller('AnrKbMgmtCtrl', [
-            '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
+            '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'mdSelectMenu', 'gettextCatalog', 'TableHelperService',
             'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'TagService', 'RiskService',
             'CategoryService', '$state', '$timeout',
             AnrKbMgmtCtrl
@@ -163,8 +163,9 @@
 
         $scope.editAsset = function (ev, asset) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
+            $scope.controls = [];//hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
             AssetService.getAsset(asset.id).then(function (assetData) {
+                $scope.controls = [{}];//hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
                 $mdDialog.show({
                     controller: ['$scope', '$mdDialog', 'mdSelectMenu', 'ModelService', 'ConfigService', 'asset', CreateAssetDialogCtrl],
                     templateUrl: '/views/anr/create.assets.html',
@@ -350,8 +351,9 @@
 
         $scope.editThreat = function (ev, threat) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
+            $scope.controls = [];//hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
             ThreatService.getThreat(threat.id).then(function (threatData) {
+                $scope.controls = [{}];//hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
                 $mdDialog.show({
                     controller: ['$scope', '$mdDialog', 'mdSelectMenu', '$q', 'ModelService', 'ThreatService', 'ConfigService', 'threat', CreateThreatDialogCtrl],
                     templateUrl: '/views/anr/create.threats.html',
@@ -531,8 +533,9 @@
 
         $scope.editVuln = function (ev, vuln) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
+            $scope.controls = [];//hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
             VulnService.getVuln(vuln.id).then(function (vulnData) {
+                $scope.controls = [{}];//hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
                 $mdDialog.show({
                     controller: ['$scope', '$mdDialog', 'mdSelectMenu', 'ModelService', 'ConfigService', 'vuln', CreateVulnDialogCtrl],
                     templateUrl: '/views/anr/create.vulns.html',
