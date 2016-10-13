@@ -3,7 +3,7 @@
     angular
         .module('AnrModule')
         .controller('AnrKbMgmtCtrl', [
-            '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'mdSelectMenu', 'gettextCatalog', 'TableHelperService',
+            '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
             'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'TagService', 'RiskService',
             'CategoryService', '$state', '$timeout',
             AnrKbMgmtCtrl
