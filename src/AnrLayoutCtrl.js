@@ -190,11 +190,14 @@
                     // Make a copy of the item from the library tree to the inst tree
                     var copy = angular.copy(e.source.nodeScope.$modelValue);
                     e.source.nodeScope.$modelValue.type = 'inst';
+                    e.source.nodeScope.$modelValue.disableclick = true;
+
                     e.source.nodesScope.$modelValue.push(copy);
 
                     // Also, tell the server to instantiate the object
                     AnrService.addInstance($scope.model.anr.id, copy.id, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
                         $scope.updateInstances();
+                        e.source.nodeScope.$modelValue.disableclick = false;
                     });
 
                     return true;

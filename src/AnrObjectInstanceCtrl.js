@@ -142,7 +142,7 @@
         };
 
 
-        $scope.detachInstance = function (ev) {
+        $scope.detachInstance = function (ev,linkedId) {
             var confirm = $mdDialog.confirm()
                 .title(gettextCatalog.getString('Are you sure you want to detach this instance?'))
                 .textContent(gettextCatalog.getString('This instance and all its children will be removed from the risk analysis. This operation cannot be undone.'))
@@ -151,7 +151,7 @@
                 .ok(gettextCatalog.getString('Detach'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-                AnrService.deleteInstance($scope.model.anr.id, $stateParams.instId, function () {
+                AnrService.deleteInstance($scope.model.anr.id, linkedId == undefined?$stateParams.instId:linkedId, function () {
                     $scope.updateInstances();
                 });
                 $state.transitionTo('main.kb_mgmt.models.details', {modelId: $scope.model.id});

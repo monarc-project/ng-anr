@@ -64,18 +64,27 @@
                 <div class="md-padding" ng-if="instance.id">
                     <p class="md-title" translate>This asset is attached to the following parents</p>
 
-                    <p ng-if="instance.parent == null" translate>This asset has no parents.</p>
+                    <p ng-if="instance.assets.length <= 0" translate>This asset has no parents.</p>
 
-                    <ul class="md-treeview" ng-if="instance.parent != null">
-                        <li class="md-treeview-root">
-                            <a ui-sref="main.kb_mgmt.models.details.instance({instId: instance.id})"><md-icon>place</md-icon> {{ object[_langField('name')] }}</a>
-                            <ul>
-                                <li ng-repeat="node in [instance.parent]"
-                                    ng-class="{'md-treeview-branch': node.children && node.children.length > 0}"
-                                    ng-include="'objlibs.tree_item_template.html'"></li>
-                            </ul>
-                        </li>
-                    </ul>
+
+                    <table md-table ng-if="instance.assets.length > 0">
+                        <thead md-head>
+                            <tr md-row>
+                                <th md-column><span translate>Active parent</span></th>
+                                <th md-column><span translate>Actions</span></th>
+                            </tr>
+                        </thead>
+                        <tbody md-body>
+                            <tr md-row ng-repeat="node in instance.assets">
+                                <td md-cell>{{ node[_langField('name')] }}</td>
+                                <td md-cell>
+                                    <a aria-title="{{ node[_langField('name')] }}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></a>
+                                    <a aria-title="{{ 'Detach' | translate }}" ng-click="detachInstance($event,node.id)""><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></a>
+                                     <!--"-->
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </md-tab>
 
@@ -211,3 +220,4 @@
             ng-include="'objlibs.tree_item_template.html'"></li>
     </ul>
 </script>
+

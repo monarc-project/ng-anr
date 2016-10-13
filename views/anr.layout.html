@@ -208,9 +208,9 @@
 
         <p flex class="md-tree-link" ng-click="toggle(this)" ng-if="node.type == 'libcat'"><strong>{{ node[_langField('label')] }}</strong></p>
         <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.project.anr.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'FO'">{{ node[_langField('name')] }}</p>
-        <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.project.anr.instance({instId: node.id})" ng-if="node.type == 'inst' && OFFICE_MODE == 'FO'">{{ node[_langField('name')] }}</p>
+        <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.project.anr.instance({instId: node.id})" ng-if=" ! node.disableclick && node.type == 'inst' && OFFICE_MODE == 'FO'">{{ node[_langField('name')] }}</p>
         <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.kb_mgmt.models.details.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'BO'">{{ node[_langField('name')] }}</p>
-        <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})" ng-if="node.type == 'inst' && OFFICE_MODE == 'BO'">{{ node[_langField('name')] }}</p>
+        <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})" ng-if=" ! node.disableclick && node.type == 'inst' && OFFICE_MODE == 'BO'">{{ node[_langField('name')] }}</p>
     </div>
 
     <ol class="no-list-style" ui-tree-nodes="" ng-model="node.__children__" ng-show="!collapsed">
