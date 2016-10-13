@@ -72,30 +72,32 @@
                 <div class="md-block" layout="column" flex>
                     <div layout="row" layout-align="center center">
                         <md-icon style="margin-right: 8px;">class</md-icon>
-                        <md-autocomplete
-                                flex
-                                required
-                                md-input-name="theme"
-                                md-no-cache="true"
-                                md-selected-item="threat.theme"
-                                md-search-text="themeSearchText"
-                                md-items="item in queryThemeSearch(themeSearchText)"
-                                md-item-text="item[_langField('label')]"
-                                md-min-length="0"
-                                md-selected-item-change="selectedThemeItemChange(item)"
-                                md-floating-label="{{ 'Theme' | translate }}">
-                            <md-item-template>
-                                <span md-highlight-text="themeSearchText" md-highlight-flags="^i">{{ item[_langField('label')] }}</span>
-                            </md-item-template>
+                        <div ng-repeat="control in controls" class="w100">
+                            <md-autocomplete
+                                    flex
+                                    required
+                                    md-input-name="theme"
+                                    md-no-cache="true"
+                                    md-selected-item="threat.theme"
+                                    md-search-text="themeSearchText"
+                                    md-items="item in queryThemeSearch(themeSearchText)"
+                                    md-item-text="item[_langField('label')]"
+                                    md-min-length="0"
+                                    md-selected-item-change="selectedThemeItemChange(item)"
+                                    md-floating-label="{{ 'Theme' | translate }}">
+                                <md-item-template>
+                                    <span md-highlight-text="themeSearchText" md-highlight-flags="^i">{{ item[_langField('label')] }}</span>
+                                </md-item-template>
 
-                            <md-not-found>
-                                {{ 'No theme matching your search was found' | translate }}
-                                <md-button ng-click="createTheme(themeSearchText)">{{ 'Create this theme' | translate }}</md-button>
-                            </md-not-found>
-                            <div ng-messages="threatForm.theme.$error">
-                                <div ng-message="required">{{ 'The theme may not be empty' | translate }}</div>
-                            </div>
-                        </md-autocomplete>
+                                <md-not-found>
+                                    {{ 'No theme matching your search was found' | translate }}
+                                    <md-button ng-click="createTheme(themeSearchText)">{{ 'Create this theme' | translate }}</md-button>
+                                </md-not-found>
+                                <div ng-messages="threatForm.theme.$error">
+                                    <div ng-message="required">{{ 'The theme may not be empty' | translate }}</div>
+                                </div>
+                            </md-autocomplete>
+                        </div>
 
                         <md-button class="md-icon-button" ng-click="theme_edit=threat.theme" ng-show="threat.theme.id">
                             <md-icon>edit</md-icon>
@@ -136,7 +138,7 @@
                         <div ng-message="required">{{ 'The code may not be empty' | translate }}</div>
                     </div>
                 </md-input-container>
-                
+
                 <md-input-container layout="row">
                     <md-checkbox ng-model="threat.c" class="md-primary">C</md-checkbox>
                     <md-checkbox ng-model="threat.i" class="md-primary">I</md-checkbox>
@@ -148,9 +150,11 @@
                 <md-input-container class="md-block" layout="row" ng-if="models && models.length > 0" flex>
                     <label translate>Models</label>
                     <md-icon>class</md-icon>
-                    <md-select multiple ng-model="threat.models">
-                        <md-option ng-repeat="availModel in models" value="{{ availModel.id }}">{{ availModel[_langField('label')] }}</md-option>
-                    </md-select>
+                    <div ng-repeat="control in controls">
+                        <md-select multiple ng-model="threat.models">
+                            <md-option ng-repeat="availModel in models" value="{{ availModel.id }}">{{ availModel[_langField('label')] }}</md-option>
+                        </md-select>
+                    </div>
                 </md-input-container>
 
                 <md-checkbox ng-model="threat.trend" ng-true-value="'1'" ng-false-value="'0'">{{ 'Force AMVs links to follow trends' | translate }}</md-checkbox>

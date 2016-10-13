@@ -641,3 +641,5 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
 .md-monarc-tooltip .txt-green { color: #A5D6A7; }
 .md-monarc-tooltip .txt-yellow { color: #FFF59D; }
 .md-monarc-tooltip .txt-red { color: #EF9A9A; }
+
+.w100{ width: 100%; }
