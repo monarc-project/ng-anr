@@ -127,10 +127,15 @@
                             ng-class="{'green': risk.i_risk > 0 && risk.i_risk < scales.thresholds.min, 'orange': risk.i_risk >= scales.thresholds.min && risk.i_risk < scales.thresholds.max, 'red': risk.i_risk >= scales.thresholds.max}">{{ risk.i_risk_enabled ? risk.i_risk : '' }}</td>
                         <td ng-disabled="!risk.d_risk_enabled" class="tbl-risk-calc"
                             ng-class="{'green': risk.d_risk > 0 && risk.d_risk < scales.thresholds.min, 'orange': risk.d_risk >= scales.thresholds.min && risk.d_risk < scales.thresholds.max, 'red': risk.d_risk >= scales.thresholds.max}">{{ risk.d_risk_enabled ? risk.d_risk : '' }}</td>
-                        <td layout="row" layout-align="center center"><md-button class="md-icon-button" ng-click="openRiskSheet(risk)">
-                            <md-tooltip>{{ 'Open risk sheet' | translate }}</md-tooltip>
-                            <md-icon>open_in_new</md-icon>
-                        </md-button><span class="green-dot" ng-if="risk.t"></span></td>
+                        <td>
+                            <div layout="row" layout-align="center center">
+                                <md-button class="md-icon-button" ng-click="openRiskSheet(risk)">
+                                    <md-tooltip>{{ 'Open risk sheet' | translate }}</md-tooltip>
+                                    <md-icon>open_in_new</md-icon>
+                                </md-button>
+                                <span class="green-dot" ng-if="risk.t"></span>
+                            </div>
+                        </td>
                         <td class="txtcenter">{{risk.target_risk}}</td>
                     </tr>
                     </tbody>
