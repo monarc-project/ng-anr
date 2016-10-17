@@ -723,7 +723,7 @@
             ObjlibService.getObjlibs({
                 filter: query,
                 category: $scope.objlib.category.id,
-                model_id: $stateParams.modelId,
+                model: $stateParams.modelId,
                 lock: true
             }).then(function (x) {
                 if (x && x.objects) {
