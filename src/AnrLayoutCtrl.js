@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrLayoutCtrl', [
             '$scope', 'toastr', '$http', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
-            'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location',
+            'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state',
             AnrLayoutCtrl
         ]);
 
@@ -12,7 +12,7 @@
      * ANR MAIN LAYOUT CONTROLLER
      */
     function AnrLayoutCtrl($scope, toastr, $http, $mdMedia, $mdDialog, gettextCatalog, TableHelperService, ModelService,
-                           ObjlibService, AnrService, $stateParams, $rootScope, $location) {
+                           ObjlibService, AnrService, $stateParams, $rootScope, $location, $state) {
         var self = this;
 
         // Called by ObjectCtrl when an object has been modified
@@ -208,7 +208,7 @@
         };
 
 
-        $scope.updateObjectsLibrary = function (gotofirst) {
+        $scope.updateObjectsLibrary = function (gotofirst, callback) {
             AnrService.getObjectsLibrary($scope.model.anr.id).then(function (data) {
                 var recurseFillTree = function (category, depth) {
                     var output = {id: category.id, type: 'libcat', label1: category.label1, depth: depth, __children__: []};
@@ -249,6 +249,10 @@
                     else{
                         $location.path('/backoffice/kb/models/'+$stateParams.modelId);
                     }
+                }
+
+                if(callback != undefined){
+                    callback.call();
                 }
             });
         };
@@ -478,7 +482,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$q', '$state', 'ObjlibService', 'AnrService', '$parentScope', 'anr_id', '$stateParams', AddObjectDialogCtrl],
+                controller: ['$scope', '$mdDialog', '$q', '$state', 'ObjlibService', 'AnrService', '$parentScope', 'anr_id', '$stateParams', '$location', AddObjectDialogCtrl],
                 templateUrl: '/views/anr/add.objlib.html',
                 targetEvent: ev,
                 preserveScope: true,
@@ -493,8 +497,10 @@
                 .then(function (objlib) {
                     if (objlib && objlib.id) {
                         AnrService.addExistingObjectToLibrary($scope.model.anr.id, objlib.id, function () {
-                            $scope.updateObjectsLibrary();
-                            toastr.success(gettextCatalog.getString("The object has been added to the library."), gettextCatalog.getString("Object added successfully"))
+                            $scope.updateObjectsLibrary(false, function(){
+                                $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+objlib.id);
+                            });
+                            toastr.success(gettextCatalog.getString("The object has been added to the library."), gettextCatalog.getString("Object added successfully"));
                         });
                     }
                 });
@@ -636,7 +642,7 @@
         };
     }
 
-    function AddObjectDialogCtrl($scope, $mdDialog, $q, $state, ObjlibService, AnrService, $parentScope, anr_id, $stateParams) {
+    function AddObjectDialogCtrl($scope, $mdDialog, $q, $state, ObjlibService, AnrService, $parentScope, anr_id, $stateParams, $location) {
         $scope.objectSearchText = '';
         $scope.categorySearchText = '';
 
