@@ -675,8 +675,9 @@
                     }
 
                     AnrService.addNewObjectToLibrary(anr_id, objlib, function (data) {
-                        $parentScope.updateObjectsLibrary();
-                        $state.transitionTo('main.kb_mgmt.models.details.object', {objectId: objlib.id});
+                        $parentScope.updateObjectsLibrary(false, function(){
+                            $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+data.id);
+                        });
                     }, function () {
                         // An error occurred, re-show the dialog
                         $scope.createAttachedObject(null, objlib);
