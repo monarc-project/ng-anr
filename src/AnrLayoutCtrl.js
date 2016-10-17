@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrLayoutCtrl', [
             '$scope', 'toastr', '$http', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
-            'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope',
+            'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location',
             AnrLayoutCtrl
         ]);
 
@@ -12,13 +12,13 @@
      * ANR MAIN LAYOUT CONTROLLER
      */
     function AnrLayoutCtrl($scope, toastr, $http, $mdMedia, $mdDialog, gettextCatalog, TableHelperService, ModelService,
-                           ObjlibService, AnrService, $stateParams, $rootScope) {
+                           ObjlibService, AnrService, $stateParams, $rootScope, $location) {
         var self = this;
 
         // Called by ObjectCtrl when an object has been modified
-        $rootScope.hookUpdateObjlib = function () {
+        $rootScope.hookUpdateObjlib = function (gotofirst) {
             $scope.updateInstances();
-            $scope.updateObjectsLibrary();
+            $scope.updateObjectsLibrary(gotofirst);
         };
 
         $scope.updateModel = function () {
@@ -208,7 +208,7 @@
         };
 
 
-        $scope.updateObjectsLibrary = function () {
+        $scope.updateObjectsLibrary = function (gotofirst) {
             AnrService.getObjectsLibrary($scope.model.anr.id).then(function (data) {
                 var recurseFillTree = function (category, depth) {
                     var output = {id: category.id, type: 'libcat', label1: category.label1, depth: depth, __children__: []};
@@ -225,6 +225,9 @@
                             obj.type = 'lib';
                             obj.__children__ = [];
                             output.__children__.push(obj);
+                            if($scope.first_object == null){
+                                $scope.first_object = obj;
+                            }
                         }
                     }
 
@@ -232,11 +235,21 @@
                 };
 
                 var lib_data = [];
+                $scope.first_object = null;
                 for (var v = 0; v < data.categories.length; ++v) {
                     var cat = data.categories[v];
                     lib_data.push(recurseFillTree(cat, 0));
                 }
                 $scope.anr_obj_library_data = lib_data;
+
+                if(gotofirst != undefined && gotofirst){
+                    if($scope.first_object != null){
+                        $location.path('/backoffice/kb/models/'+$stateParams.modelId+'/object/'+$scope.first_object.id);
+                    }
+                    else{
+                        $location.path('/backoffice/kb/models/'+$stateParams.modelId);
+                    }
+                }
             });
         };
 
