@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrObjectInstanceCtrl', [
             '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$state', 'TableHelperService',
-            'ModelService', 'ObjlibService', '$stateParams', 'AnrService', '$rootScope', '$timeout',
+            'ModelService', 'ObjlibService', '$stateParams', 'AnrService', '$rootScope', '$timeout', '$location',
             AnrObjectInstanceCtrl
         ]);
 
@@ -13,7 +13,7 @@
      */
     function AnrObjectInstanceCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state,
                                             TableHelperService, ModelService, ObjlibService, $stateParams, AnrService,
-                                            $rootScope, $timeout) {
+                                            $rootScope, $timeout, $location) {
 
         $scope.instance = {};
 
@@ -169,6 +169,14 @@
                 toastr.success(gettextCatalog.getString('The operational risk sheet changes have been saved successfully'), gettextCatalog.getString('Save successful'));
             })
         };
+
+        $scope.showObjectInLibrary = function (objid) {
+            $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+objid);
+            if($rootScope.hookUpdateObjlib != undefined){
+                $rootScope.hookUpdateObjlib();
+            }
+
+        }
     }
 
 

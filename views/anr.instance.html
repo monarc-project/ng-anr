@@ -62,7 +62,7 @@
                 </div>
 
                 <div class="md-padding" ng-if="instance.id">
-                    <a aria-title="{{ 'See object in the library' | translate }}" ui-sref="main.kb_mgmt.models.details.object({objectId: instance.object.id})"><md-icon>folder_open</md-icon>{{ 'See object in the library' | translate }}</a>
+                    <a aria-title="{{ 'See object in the library' | translate }}" href="javascript:void(0);" ng-click="showObjectInLibrary(instance.object.id);"><md-icon>folder_open</md-icon>{{ 'See object in the library' | translate }}</a>
 
                     <p class="md-title" translate>This asset is attached to the following parents</p>
 
