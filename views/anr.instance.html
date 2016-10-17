@@ -62,6 +62,8 @@
                 </div>
 
                 <div class="md-padding" ng-if="instance.id">
+                    <a aria-title="{{ 'See object in the library' | translate }}" ui-sref="main.kb_mgmt.models.details.object({objectId: instance.object.id})"><md-icon>folder_open</md-icon>{{ 'See object in the library' | translate }}</a>
+
                     <p class="md-title" translate>This asset is attached to the following parents</p>
 
                     <p ng-if="instance.assets.length <= 0" translate>This asset has no parents.</p>
@@ -78,7 +80,7 @@
                             <tr md-row ng-repeat="node in instance.assets">
                                 <td md-cell>{{ node[_langField('name')] }}</td>
                                 <td md-cell>
-                                    <a aria-title="{{ node[_langField('name')] }}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></a>
+                                    <a aria-title="{{ node[_langField('name')] }}" ui-sref="main.kb_mgmt.models.details.object({instId: node.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></a>
                                     <a aria-title="{{ 'Detach' | translate }}" ng-click="detachInstance($event,node.id)""><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></a>
                                      <!--"-->
                                 </td>
