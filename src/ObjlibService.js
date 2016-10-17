@@ -130,7 +130,11 @@
             self.RiskResource.patch({riskId: id}, params, success, error);
         };
 
+        self.AnrObjectsService = $resource('/api/anr/:anrId/objects', {}, {'query': {isArray: false}});//on utilisera que query
 
+        var getObjectsOfAnr = function(anrid, params, success, error){
+            return self.AnrObjectsService.query({anrId: anrid}, params, success, error);
+        }
 
         return {
             getObjlibs: getObjlibs,
@@ -154,6 +158,9 @@
             getRisk: getRisk,
             updateRisk: updateRisk,
             patchRisk: patchRisk,
+
+            getObjectsOfAnr: getObjectsOfAnr,
+
         };
     }
 
