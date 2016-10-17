@@ -456,7 +456,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ConfigService', 'anr', CreateAnrDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'ConfigService', 'anr', '$stateParams', CreateAnrDialogCtrl],
                 templateUrl: '/views/dialogs/create.anr.html',
                 targetEvent: ev,
                 preserveScope: true,
@@ -478,7 +478,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$q', '$state', 'ObjlibService', 'AnrService', '$parentScope', 'anr_id', AddObjectDialogCtrl],
+                controller: ['$scope', '$mdDialog', '$q', '$state', 'ObjlibService', 'AnrService', '$parentScope', 'anr_id', '$stateParams', AddObjectDialogCtrl],
                 templateUrl: '/views/anr/add.objlib.html',
                 targetEvent: ev,
                 preserveScope: true,
@@ -614,7 +614,7 @@
 
     }
 
-    function CreateAnrDialogCtrl($scope, $mdDialog, ConfigService, anr) {
+    function CreateAnrDialogCtrl($scope, $mdDialog, ConfigService, anr, $stateParams) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = ConfigService.getDefaultLanguageIndex();
 
@@ -636,7 +636,7 @@
         };
     }
 
-    function AddObjectDialogCtrl($scope, $mdDialog, $q, $state, ObjlibService, AnrService, $parentScope, anr_id) {
+    function AddObjectDialogCtrl($scope, $mdDialog, $q, $state, ObjlibService, AnrService, $parentScope, anr_id, $stateParams) {
         $scope.objectSearchText = '';
         $scope.categorySearchText = '';
 
@@ -648,7 +648,7 @@
         $scope.createAttachedObject = function (ev, objlib) {
             $scope.objLibDialog = $mdDialog;
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', CreateObjlibDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', '$stateParams', CreateObjlibDialogCtrl],
                 templateUrl: '/views/anr/create.objlibs.html',
                 clickOutsideToClose: true,
                 preserveScope: true,
@@ -723,6 +723,7 @@
             ObjlibService.getObjlibs({
                 filter: query,
                 category: $scope.objlib.category.id,
+                model_id: $stateParams.modelId,
                 lock: true
             }).then(function (x) {
                 if (x && x.objects) {
