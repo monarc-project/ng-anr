@@ -181,10 +181,12 @@
 
             dropped: function (e) {
                 if (e.source.nodesScope.$treeScope.$id == e.dest.nodesScope.$treeScope.$id) {
-                    // We moved something locally inside the objects library (a first-level node), patch it
-                    AnrService.patchLibraryCategory($scope.model.anr.id, e.source.nodeScope.$modelValue.id, {position: e.dest.index}, function () {
-                        $scope.updateObjectsLibrary();
-                    });
+                    if(e.source.nodeScope.$modelValue.type == 'libcat'){//si on bouge un objet, ça n'a pas d'intérêt de patcher les catégories
+                        // We moved something locally inside the objects library (a first-level node), patch it
+                        AnrService.patchLibraryCategory($scope.model.anr.id, e.source.nodeScope.$modelValue.id, {position: e.dest.index}, function () {
+                            $scope.updateObjectsLibrary();
+                        });
+                    }
                     return true;
                 } else {
                     // Make a copy of the item from the library tree to the inst tree
