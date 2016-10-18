@@ -22,6 +22,7 @@
         $scope.instmode = 'inst';
 
         var isInstanceLoading = true;
+        var tmpCurrentTab = $scope.ToolsAnrService.currentTab;
 
         $scope.updateInstance = function () {
             AnrService.getInstance($scope.model.anr.id, $stateParams.instId).then(function (data) {
@@ -36,6 +37,9 @@
                 data.consequences = validCons;
 
                 $scope.instance = data;
+                if(data.asset.type == 1 && tmpCurrentTab == 2){
+                    $scope.ToolsAnrService.currentTab = tmpCurrentTab;
+                }
                 isInstanceLoading = false;
             });
         };
