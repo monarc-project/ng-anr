@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrLayoutCtrl', [
             '$scope', 'toastr', '$http', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
-            'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', 'ToolsAnrService',
+            'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
             AnrLayoutCtrl
         ]);
 
@@ -12,7 +12,7 @@
      * ANR MAIN LAYOUT CONTROLLER
      */
     function AnrLayoutCtrl($scope, toastr, $http, $mdMedia, $mdDialog, gettextCatalog, TableHelperService, ModelService,
-                           ObjlibService, AnrService, $stateParams, $rootScope, $location, ToolsAnrService) {
+                           ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService) {
         var self = this;
 
         $scope.ToolsAnrService = ToolsAnrService;
@@ -210,7 +210,7 @@
         };
 
 
-        $scope.updateObjectsLibrary = function (gotofirst) {
+        $scope.updateObjectsLibrary = function (gotofirst, callback) {
             AnrService.getObjectsLibrary($scope.model.anr.id).then(function (data) {
                 var recurseFillTree = function (category, depth) {
                     var output = {id: category.id, type: 'libcat', label1: category.label1, depth: depth, __children__: []};
@@ -251,6 +251,10 @@
                     else{
                         $location.path('/backoffice/kb/models/'+$stateParams.modelId);
                     }
+                }
+
+                if(callback != undefined){
+                    callback.call();
                 }
             });
         };
@@ -480,7 +484,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$q', '$state', 'ObjlibService', 'AnrService', '$parentScope', 'anr_id', '$stateParams', AddObjectDialogCtrl],
+                controller: ['$scope', '$mdDialog', '$q', '$state', 'ObjlibService', 'AnrService', '$parentScope', 'anr_id', '$stateParams', '$location', AddObjectDialogCtrl],
                 templateUrl: '/views/anr/add.objlib.html',
                 targetEvent: ev,
                 preserveScope: true,
@@ -495,8 +499,10 @@
                 .then(function (objlib) {
                     if (objlib && objlib.id) {
                         AnrService.addExistingObjectToLibrary($scope.model.anr.id, objlib.id, function () {
-                            $scope.updateObjectsLibrary();
-                            toastr.success(gettextCatalog.getString("The object has been added to the library."), gettextCatalog.getString("Object added successfully"))
+                            $scope.updateObjectsLibrary(false, function(){
+                                $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+objlib.id);
+                            });
+                            toastr.success(gettextCatalog.getString("The object has been added to the library."), gettextCatalog.getString("Object added successfully"));
                         });
                     }
                 });
@@ -638,7 +644,7 @@
         };
     }
 
-    function AddObjectDialogCtrl($scope, $mdDialog, $q, $state, ObjlibService, AnrService, $parentScope, anr_id, $stateParams) {
+    function AddObjectDialogCtrl($scope, $mdDialog, $q, $state, ObjlibService, AnrService, $parentScope, anr_id, $stateParams, $location) {
         $scope.objectSearchText = '';
         $scope.categorySearchText = '';
 
@@ -671,8 +677,9 @@
                     }
 
                     AnrService.addNewObjectToLibrary(anr_id, objlib, function (data) {
-                        $parentScope.updateObjectsLibrary();
-                        $state.transitionTo('main.kb_mgmt.models.details.object', {objectId: objlib.id});
+                        $parentScope.updateObjectsLibrary(false, function(){
+                            $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+data.id);
+                        });
                     }, function () {
                         // An error occurred, re-show the dialog
                         $scope.createAttachedObject(null, objlib);
@@ -724,7 +731,7 @@
 
             ObjlibService.getObjlibs({
                 filter: query,
-                category: $scope.objlib.category.id,
+                category: $scope.objlib.category ? $scope.objlib.category.id : null,
                 model: $stateParams.modelId,
                 lock: true
             }).then(function (x) {
