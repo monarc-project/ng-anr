@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrLayoutCtrl', [
             '$scope', 'toastr', '$http', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
-            'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state',
+            'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
             AnrLayoutCtrl
         ]);
 
@@ -12,8 +12,10 @@
      * ANR MAIN LAYOUT CONTROLLER
      */
     function AnrLayoutCtrl($scope, toastr, $http, $mdMedia, $mdDialog, gettextCatalog, TableHelperService, ModelService,
-                           ObjlibService, AnrService, $stateParams, $rootScope, $location, $state) {
+                           ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService) {
         var self = this;
+
+        $scope.ToolsAnrService = ToolsAnrService;
 
         // Called by ObjectCtrl when an object has been modified
         $rootScope.hookUpdateObjlib = function (gotofirst) {
