@@ -55,10 +55,7 @@
             <label translate>Reduce vulnerability by</label>
             <md-icon>trending_down</md-icon>
             <md-select ng-model="sheet_risk.reductionAmount">
-                <md-option ng-value="0">0</md-option>
-                <md-option ng-value="1">1</md-option>
-                <md-option ng-value="2">2</md-option>
-                <md-option ng-value="3">3</md-option>
+                <md-option ng-repeat="i in reducAmount" ng-value="{{ i }}">{{ i }}</md-option>
             </md-select>
         </md-input-container>
 
