@@ -4,7 +4,7 @@
         .factory('ToolsAnrService', [ ToolsAnrService ]);
 
     function ToolsAnrService() {
-    	this.currentTab = 1;
+    	this.currentTab = 0;
 
     	this.setCurrentTab = function(i){
             this.currentTab = i;
