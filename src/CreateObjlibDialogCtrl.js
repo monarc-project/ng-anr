@@ -92,7 +92,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
                 ObjlibService.createObjlibCat(category,
                     function (cat) {
                         // Set the created category on the object
-                        ObjlibService.getObjlibCat(cat.id).then(function (new_category) {
+                        ObjlibService.getObjlibCat(cat.categ.id).then(function (new_category) {
                             $scope.objlib.category = new_category;
 
                             // Display the dialog again
@@ -141,7 +141,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
                             }
 
                             toastr.success(gettextCatalog.getString('The category "{{categoryLabel}}" has been updated successfully.',
-                                {categoryLabel: category.label1}), gettextCatalog.getString('Update successful'));
+                                {categoryLabel: category[$scope._langField('label')]}), gettextCatalog.getString('Update successful'));
                         }
                     );
                 }, function () {
