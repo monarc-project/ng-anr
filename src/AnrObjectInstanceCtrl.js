@@ -82,6 +82,17 @@
 
         $scope.openRiskSheet = function (risk) {
             $scope.sheet_risk = risk;
+
+            var reducAmount = [];
+            if($scope.scales.vulns != undefined){
+                for(var i = $scope.scales.vulns.min; i <= $scope.scales.vulns.max; i++){
+                    reducAmount.push(i);
+                    if(risk.vulnerabilityRate != '-1' && i == risk.vulnerabilityRate){
+                        break;
+                    }
+                }
+            }
+            $scope.reducAmount = reducAmount;
         };
 
         $scope.resetSheet = function () {

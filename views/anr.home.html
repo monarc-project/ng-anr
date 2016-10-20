@@ -93,17 +93,17 @@
 
             <tbody>
             <tr ng-repeat="risk in model.anr.risks">
-                <td>{{ risk.threat[_langField('label')] }}</td>
+                <td>{{ risk[_langField('threatDesciption')] }}</td>
                 <td>{{ risk.threatRate }}</td>
-                <td>{{ risk.vulnerability[_langField('label')] }}</td>
+                <td>{{ risk[_langField('vulnDescription')] }}</td>
                 <td>{{ risk.comment }}</td>
                 <td>{{ risk.vulnerabilityRate }}</td>
-                <td>{{ risk.riskC }}</td>
-                <td>{{ risk.riskI }}</td>
-                <td>{{ risk.riskD }}</td>
+                <td>{{ risk.c_risk }}</td>
+                <td>{{ risk.i_risk }}</td>
+                <td>{{ risk.d_risk }}</td>
 
                 <td><span class="green-dot" ng-if="risk.t"></span></td>
-                <td>{{ risk.cacheTargetedRisk }}</td>
+                <td>{{ risk.target_risk }}</td>
             </tr>
             </tbody>
         </table>

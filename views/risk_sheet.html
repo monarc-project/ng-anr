@@ -25,15 +25,15 @@
         </tr>
         <tr>
             <td class="bold txtright" translate>Measure #1:</td>
-            <td>{{ sheet_risk.measure1.code }} - {{ sheet_risk.measure1[_langField('label')] }}</td>
+            <td>{{ sheet_risk.measure1.code }} - {{ sheet_risk.measure1[_langField('description')] }}</td>
         </tr>
         <tr>
             <td class="bold txtright" translate>Measure #2:</td>
-            <td>{{ sheet_risk.measure2.code }} - {{ sheet_risk.measure2[_langField('label')] }}</td>
+            <td>{{ sheet_risk.measure2.code }} - {{ sheet_risk.measure2[_langField('description')] }}</td>
         </tr>
         <tr>
             <td class="bold txtright" translate>Measure #3:</td>
-            <td>{{ sheet_risk.measure3.code }} - {{ sheet_risk.measure3[_langField('label')] }}</td>
+            <td>{{ sheet_risk.measure3.code }} - {{ sheet_risk.measure3[_langField('description')] }}</td>
         </tr>
         </tbody>
     </table>
@@ -55,10 +55,7 @@
             <label translate>Reduce vulnerability by</label>
             <md-icon>trending_down</md-icon>
             <md-select ng-model="sheet_risk.reductionAmount">
-                <md-option ng-value="0">0</md-option>
-                <md-option ng-value="1">1</md-option>
-                <md-option ng-value="2">2</md-option>
-                <md-option ng-value="3">3</md-option>
+                <md-option ng-repeat="i in reducAmount" ng-value="{{ i }}">{{ i }}</md-option>
             </md-select>
         </md-input-container>
 
