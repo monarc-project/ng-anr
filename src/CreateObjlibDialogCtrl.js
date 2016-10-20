@@ -239,23 +239,6 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
 
     // Categories list is inherited from the parent dialog controller, as the scope is shared between both
 
-    if (category != undefined && category != null) {
-        $scope.category = category;
-
-        if ($scope.category.parent) {
-            $scope.category.parent = $scope.category.parent.id;
-        }
-    } else {
-        $scope.category = {
-            parent: null,
-            implicitPosition: null,
-            position: null,
-            label1: catName,
-            label2: '',
-            label3: '',
-            label4: '',
-        };
-    }
 
     $scope.destroy = function() {
         $scope.showConfirmDeletion = true;
@@ -288,4 +271,26 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
             $scope.childrenCategories = x.categories;
         });
     };
+
+    if (category != undefined && category != null) {
+        $scope.category = category;
+
+        if ($scope.category.parent) {
+            $scope.category.parent = $scope.category.parent.id;
+
+            if(category.previous){
+                $scope.updateCategoryChildren();
+            }
+        }
+    } else {
+        $scope.category = {
+            parent: null,
+            implicitPosition: null,
+            position: null,
+            label1: catName,
+            label2: '',
+            label3: '',
+            label4: '',
+        };
+    }
 }
