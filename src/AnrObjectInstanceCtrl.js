@@ -158,9 +158,14 @@
 
 
         $scope.detachInstance = function (ev, instance) {
+            var onrecord = false;
+            if(instance == undefined){
+                instance = $scope.instance;
+                onrecord = true;
+            }
             InstancesService.detach($scope, ev, instance.id, function(){
                 $scope.instance.instances.splice($scope.instance.instances.indexOf(instance), 1);
-            });
+            }, onrecord);
         };
 
 
