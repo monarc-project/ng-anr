@@ -25,7 +25,7 @@
                                 <p>{{ col.scaleImpactTypeDescription1 }} <md-button class="md-icon-button" ng-click="setConsequenceVisibility(col.id, !!col.isHidden)"><md-icon>{{ col.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></p>
                                 <md-input-container>
                                     <label translate>Confidentiality</label>
-                                    <md-select ng-model="instance.consequences[idx].c_risk">
+                                    <md-select ng-model="instance.consequences[idx].c_risk" ng-change="calculeImpact('c')">
                                         <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
                                         <md-option value="2">2</md-option>
                                         <md-option value="3">3</md-option>
@@ -36,7 +36,7 @@
 
                                 <md-input-container>
                                     <label translate>Integrity</label>
-                                    <md-select ng-model="instance.consequences[idx].i_risk">
+                                    <md-select ng-model="instance.consequences[idx].i_risk" ng-change="calculeImpact('i')">
                                         <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
                                         <md-option value="2">2</md-option>
                                         <md-option value="3">3</md-option>
@@ -47,7 +47,7 @@
 
                                 <md-input-container>
                                     <label translate>Availability</label>
-                                    <md-select ng-model="instance.consequences[idx].d_risk">
+                                    <md-select ng-model="instance.consequences[idx].d_risk" ng-change="calculeImpact('d')">
                                         <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
                                         <md-option value="2">2</md-option>
                                         <md-option value="3">3</md-option>
@@ -62,39 +62,18 @@
                     <div layout="column">
                         <h4 translate>Impact</h4>
                         <p style="height: 54px;">&nbsp;</p>
-
-                        <md-input-container>
-                            <label translate>Confidentiality</label>
-                            <md-select ng-model="impact.c">
-                                <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
-                                <md-option value="2">2</md-option>
-                                <md-option value="3">3</md-option>
-                                <md-option value="4">4</md-option>
-                                <md-option value="5">5</md-option>
-                            </md-select>
-                        </md-input-container>
-
-                        <md-input-container>
-                            <label translate>Integrity</label>
-                            <md-select ng-model="impact.i">
-                                <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
-                                <md-option value="2">2</md-option>
-                                <md-option value="3">3</md-option>
-                                <md-option value="4">4</md-option>
-                                <md-option value="5">5</md-option>
-                            </md-select>
-                        </md-input-container>
-
-                        <md-input-container>
-                            <label translate>Availability</label>
-                            <md-select ng-model="impact.d">
-                                <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
-                                <md-option value="2">2</md-option>
-                                <md-option value="3">3</md-option>
-                                <md-option value="4">4</md-option>
-                                <md-option value="5">5</md-option>
-                            </md-select>
-                        </md-input-container>
+                            <md-input-container>
+                                <label translate>Confidentiality</label>
+                                <input type="text" ng-value="calculeImpact('c')" disabled />
+                            </md-input-container>
+                            <md-input-container>
+                                <label translate>Integrity</label>
+                                <input type="text" ng-value="calculeImpact('i')" disabled />
+                            </md-input-container>
+                            <md-input-container>
+                                <label translate>Availability</label>
+                                <input type="text" ng-value="calculeImpact('d')" disabled />
+                            </md-input-container>
                     </div>
                 </div>
             </div>

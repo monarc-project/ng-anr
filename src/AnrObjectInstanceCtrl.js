@@ -224,6 +224,18 @@
                 }
             });
         };
+
+        $scope.calculeImpact = function(type){
+            var values = [];
+            for(i=0; i< $scope.instance.consequences.length; i++){
+                var cons = $scope.instance.consequences[i];
+                if( ! cons.is_hidden ){
+                    values.push(parseInt(cons[type+'_risk']));
+                }
+            }
+
+            return $scope.instance[type] = Math.max.apply(null, values);
+        }
     }
 
 })();
