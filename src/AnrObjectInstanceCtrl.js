@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrObjectInstanceCtrl', [
             '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$state', 'TableHelperService',
-            'ModelService', 'ObjlibService', '$stateParams', 'AnrService', '$rootScope', '$timeout', '$location',
+            'ModelService', 'ObjlibService', '$stateParams', 'AnrService', '$rootScope', '$timeout', '$location', 'InstancesService',
             AnrObjectInstanceCtrl
         ]);
 
@@ -13,7 +13,7 @@
      */
     function AnrObjectInstanceCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state,
                                             TableHelperService, ModelService, ObjlibService, $stateParams, AnrService,
-                                            $rootScope, $timeout, $location) {
+                                            $rootScope, $timeout, $location, InstancesService) {
 
         $scope.instance = {};
 
@@ -146,21 +146,13 @@
         };
 
 
-        $scope.detachInstance = function (ev,linkedId) {
-            var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to detach this instance?'))
-                .textContent(gettextCatalog.getString('This instance and all its children will be removed from the risk analysis. This operation cannot be undone.'))
-                .ariaLabel('Detach instance')
-                .targetEvent(ev)
-                .ok(gettextCatalog.getString('Detach'))
-                .cancel(gettextCatalog.getString('Cancel'));
-            $mdDialog.show(confirm).then(function() {
-                AnrService.deleteInstance($scope.model.anr.id, linkedId == undefined?$stateParams.instId:linkedId, function () {
-                    $scope.updateInstances();
-                });
-                $state.transitionTo('main.kb_mgmt.models.details', {modelId: $scope.model.id});
+        $scope.detachInstance = function (ev, instance) {
+            InstancesService.detach($scope, ev, instance.id, function(){
+                $scope.instance.instances.splice($scope.instance.instances.indexOf(instance), 1);
             });
         };
+
+
 
         $scope.saveRiskSheet = function (sheet) {
             AnrService.updateInstanceRisk($scope.instance.anr.id, sheet.id, sheet, function () {

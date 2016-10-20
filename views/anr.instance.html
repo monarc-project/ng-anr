@@ -66,10 +66,10 @@
 
                     <p class="md-title" translate>This asset is attached to the following parents</p>
 
-                    <p ng-if="instance.assets.length <= 0" translate>This asset has no parents.</p>
+                    <p ng-if="instance.instances.length <= 0" translate>This asset has no parents.</p>
 
 
-                    <table md-table ng-if="instance.assets.length > 0">
+                    <table md-table ng-if="instance.instances.length > 0">
                         <thead md-head>
                             <tr md-row>
                                 <th md-column><span translate>Active parent</span></th>
@@ -77,11 +77,11 @@
                             </tr>
                         </thead>
                         <tbody md-body>
-                            <tr md-row ng-repeat="node in instance.assets">
+                            <tr md-row ng-repeat="node in instance.instances">
                                 <td md-cell>{{ node[_langField('name')] }}</td>
                                 <td md-cell>
-                                    <a aria-title="{{ node[_langField('name')] }}" ui-sref="main.kb_mgmt.models.details.object({instId: node.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></a>
-                                    <a aria-title="{{ 'Detach' | translate }}" ng-click="detachInstance($event,node.id)""><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></a>
+                                    <a aria-title="{{ node[_langField('name')] }}" ng-if="instance.id != node.id" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></a>
+                                    <a aria-title="{{ 'Detach' | translate }}" ng-if="instance.id != node.id" ng-click="detachInstance($event,node)""><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></a>
                                      <!--"-->
                                 </td>
                             </tr>
