@@ -104,8 +104,8 @@
                     <div class="md-padding-left md-padding-right" layout="column">
                         <div layout="row">
                             <h4><span translate>Impacts scale:</span> [
-                                <span class="small text-blue" inline-edit="scales.impacts.min" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> -
-                                <span class="small text-blue" inline-edit="scales.impacts.max" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> ]
+                                <span class="small text-blue" inline-edit-group="anr_scales" inline-edit="scales.impacts.min" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> -
+                                <span class="small text-blue" inline-edit-group="anr_scales" inline-edit="scales.impacts.max" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> ]
                             </h4>
                         </div>
                         <md-switch ng-model="display.show_hidden_impacts">{{ 'Show hidden impacts' | translate }}</md-switch>
@@ -113,39 +113,43 @@
                         <div class="horz-expanding-table">
                             <table class="md-html-table">
                                 <thead>
-                                <tr>
-                                    <th></th>
-                                    <th ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">{{ type[_langField('label')] }} <md-button class="md-icon-button md-primary" ng-click="setImpactVisibility(type.id, !!type.isHidden)"><md-icon>{{ type.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></th>
-                                    <th><span inline-edit="newColumn.name" inline-edit-callback="onCreateNewColumn(newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ 'New column name' | translate }}"></span></th>
-                                </tr>
+                                    <tr>
+                                        <th></th>
+                                        <th ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">{{ type[_langField('label')] }} <md-button class="md-icon-button md-primary" ng-click="setImpactVisibility(type.id, !!type.isHidden)"><md-icon>{{ type.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></th>
+                                        <th><span inline-edit="newColumn.name" inline-edit-callback="onCreateNewColumn(newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ 'New column name' | translate }}"></span></th>
+                                    </tr>
                                 </thead>
 
-                                <tbody>
-                                <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)">
-                                    <th>{{ i }}</th>
-                                    <td ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types"><span inline-edit="comms.impact[i][type.id].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></td>
-                                </tr>
+                                <tbody ng-if="scales.impacts.min != scales.impacts.max && scales.impacts.max > 0">
+                                    <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)">
+                                        <th>{{ i }}</th>
+                                        <td ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types"><span inline-edit-group="anr_scales_tab" inline-edit="comms.impact[i][type.id].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <h4><span translate>Threats scale:</span> [
-                            <span class="small text-blue" inline-edit="scales.threats.min" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> -
-                            <span class="small text-blue" inline-edit="scales.threats.max" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> ]
-                        </h4>
+                        <div ng-if="scales.threats.min != scales.threats.max && scales.threats.max > 0">
+                            <h4><span translate>Threats scale:</span> [
+                                <span class="small text-blue" inline-edit-group="anr_threat" inline-edit="scales.threats.min" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> -
+                                <span class="small text-blue" inline-edit-group="anr_threat" inline-edit="scales.threats.max" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> ]
+                            </h4>
 
-                        <ul class="no-list-style">
-                            <li ng-repeat="i in range(scales.threats.min, scales.threats.max)">{{i}}. <span class="large" inline-edit="comms.threat[i].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
-                        </ul>
+                            <ul class="no-list-style">
+                                <li ng-repeat="(idx,i) in range(scales.threats.min, scales.threats.max)">{{i}}. <span class="large" inline-edit-position="{{idx}}" inline-edit-group="anr_threat_txt" inline-edit="comms.threat[i].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+                            </ul>
+                        </div>
 
-                        <h4><span translate>Vulnerabilities scale:</span> [
-                            <span class="small text-blue" inline-edit="scales.vulns.min" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> -
-                            <span class="small text-blue" inline-edit="scales.vulns.max" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> ]
-                        </h4>
+                        <div ng-if="scales.vulns.min != scales.vulns.max && scales.vulns.max > 0">
+                            <h4><span translate>Vulnerabilities scale:</span> [
+                                <span class="small text-blue" inline-edit-group="anr_vul" inline-edit="scales.vulns.min" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> -
+                                <span class="small text-blue" inline-edit-group="anr_vul" inline-edit="scales.vulns.max" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> ]
+                            </h4>
 
-                        <ul class="no-list-style">
-                            <li ng-repeat="i in range(scales.vulns.min, scales.vulns.max)">{{i}}. <span class="large" inline-edit="comms.vuln[i].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
-                        </ul>
+                            <ul class="no-list-style">
+                                <li ng-repeat="(idx,i) in range(scales.vulns.min, scales.vulns.max)">{{i}}. <span class="large" inline-edit-position="{{idx}}" inline-edit-group="anr_vul_txt" inline-edit="comms.vuln[i].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+                            </ul>
+                        </div>
 
                         <h4 translate>Thresholds</h4>
 

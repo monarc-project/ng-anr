@@ -131,10 +131,10 @@
                         <td>{{risk.i_impact}}</td>
                         <td>{{risk.d_impact}}</td>
                         <td>{{risk.threatDescription1}}</td>
-                        <td inline-edit="risk.threatRate" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></td>
+                        <td inline-edit-group="anr_instance" inline-edit="risk.threatRate" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></td>
                         <td>{{risk.vulnDescription1}}</td>
-                        <td inline-edit="risk.comment" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="{{ 'Click to type...' | translate }}" inline-edit-on-click></td>
-                        <td inline-edit="risk.vulnerabilityRate" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></td>
+                        <td inline-edit-group="anr_instance" inline-edit="risk.comment" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="{{ 'Click to type...' | translate }}" inline-edit-on-click inline-edit-textarea></td>
+                        <td inline-edit-group="anr_instance" inline-edit="risk.vulnerabilityRate" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></td>
                         <td ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc"
                             ng-class="{'green': risk.c_risk > 0 && risk.c_risk < scales.thresholds.min, 'orange': risk.c_risk >= scales.thresholds.min && risk.c_risk < scales.thresholds.max, 'red': risk.c_risk >= scales.thresholds.max}">{{ risk.c_risk_enabled ? risk.c_risk : '' }}</td>
                         <td ng-disabled="!risk.i_risk_enabled" class="tbl-risk-calc"
