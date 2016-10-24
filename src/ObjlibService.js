@@ -133,7 +133,8 @@
         self.AnrObjectsService = $resource('/api/anr/:anrId/objects', {}, {'query': {isArray: false}});//on utilisera que query
 
         var getObjectsOfAnr = function(anrid, params, success, error){
-            return self.AnrObjectsService.query({anrId: anrid}, params, success, error);
+            params.anrId = anrid;
+            return self.AnrObjectsService.query(params, success, error);
         }
 
         return {
