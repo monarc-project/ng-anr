@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrObjectInstanceCtrl', [
             '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$state', 'TableHelperService',
-            'ModelService', 'ObjlibService', '$stateParams', 'AnrService', '$rootScope', '$timeout', '$location', 'InstancesService',
+            'ModelService', 'ObjlibService', '$stateParams', 'AnrService', '$rootScope', '$timeout', '$location', 'InstanceService',
             AnrObjectInstanceCtrl
         ]);
 
@@ -13,7 +13,7 @@
      */
     function AnrObjectInstanceCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state,
                                             TableHelperService, ModelService, ObjlibService, $stateParams, AnrService,
-                                            $rootScope, $timeout, $location, InstancesService) {
+                                            $rootScope, $timeout, $location, InstanceService) {
 
         $scope.instance = {};
 
@@ -163,7 +163,7 @@
                 instance = $scope.instance;
                 onrecord = true;
             }
-            InstancesService.detach($scope, ev, instance.id, function(){
+            InstanceService.detach($scope, ev, instance.id, function(){
                 $scope.instance.instances.splice($scope.instance.instances.indexOf(instance), 1);
             }, onrecord);
         };

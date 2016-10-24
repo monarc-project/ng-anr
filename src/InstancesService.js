@@ -1,4 +1,4 @@
-angular.module('AnrModule').service('InstancesService', ['$mdDialog', '$state', 'gettextCatalog', 'AnrService', function($mdDialog, $state, gettextCatalog, AnrService ){
+angular.module('AnrModule').service('InstanceService', ['$mdDialog', '$state', 'gettextCatalog', 'AnrService', function($mdDialog, $state, gettextCatalog, AnrService ){
 	this.detach = function($scope, ev, iid, successCallback, gotoanr){
 		var confirm = $mdDialog.confirm()
 		    .title(gettextCatalog.getString('Are you sure you want to detach this instance?'))
