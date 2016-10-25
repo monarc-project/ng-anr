@@ -391,12 +391,15 @@
                         $scope.updateScaleComments($scope.scales.impacts.id);
                     };
 
+                    console.log(newValue);
+
                     // Find which cell changed
                     for (var i in newValue.impact) {
                         for (var j in newValue.impact[i]) {
-                            if (oldValue.impact[i][j] !== undefined && oldValue.impact[i][j].comment1 != newValue.impact[i][j].comment1) {
-                                if (newValue.impact[i][j].id == null) {
-                                    AnrService.createScaleComment($scope.model.anr.id, $scope.scales.impacts.id, i, newValue.impact[i][j].comment1, newValue.impact[i][j].scaleImpactType, update);
+                            console.log(j);
+                            if (oldValue.impact[i][j] !== undefined && (!oldValue.impact[i][j] || oldValue.impact[i][j][$scope._langField('comment')] != newValue.impact[i][j][$scope._langField('comment')])) {
+                                if (!newValue.impact[i][j] || newValue.impact[i][j].id == null) {
+                                    AnrService.createScaleComment($scope.model.anr.id, $scope.scales.impacts.id, i, newValue.impact[i][j][$scope._langField('comment')], newValue.impact[i][j].scaleImpactType, update);
                                 } else {
                                     AnrService.updateScaleComment($scope.model.anr.id, $scope.scales.impacts.id, newValue.impact[i][j].id, newValue.impact[i][j], update);
                                 }
@@ -412,9 +415,9 @@
 
                     // Find which line changed
                     for (var i in newValue.threat) {
-                        if (oldValue.threat[i] !== undefined && newValue.threat[i].comment1 != oldValue.threat[i].comment1) {
+                        if (oldValue.threat[i] !== undefined && newValue.threat[i][$scope._langField('comment')] != oldValue.threat[i][$scope._langField('comment')]) {
                             if (newValue.threat[i].id == null) {
-                                AnrService.createScaleComment($scope.model.anr.id, $scope.scales.threats.id, i, newValue.threat[i].comment1, undefined, update);
+                                AnrService.createScaleComment($scope.model.anr.id, $scope.scales.threats.id, i, newValue.threat[i][$scope._langField('comment')], undefined, update);
                             } else {
                                 AnrService.updateScaleComment($scope.model.anr.id, $scope.scales.threats.id, newValue.threat[i].id, newValue.threat[i], update);
                             }
@@ -429,9 +432,9 @@
 
                     // Find which line changed
                     for (var i in newValue.vuln) {
-                        if (oldValue.vuln[i] !== undefined && newValue.vuln[i].comment1 != oldValue.vuln[i].comment1) {
+                        if (oldValue.vuln[i] !== undefined && newValue.vuln[i][$scope._langField('comment')] != oldValue.vuln[i][$scope._langField('comment')]) {
                             if (newValue.vuln[i].id == null) {
-                                AnrService.createScaleComment($scope.model.anr.id, $scope.scales.vulns.id, i, newValue.vuln[i].comment1, undefined, update);
+                                AnrService.createScaleComment($scope.model.anr.id, $scope.scales.vulns.id, i, newValue.vuln[i][$scope._langField('comment')], undefined, update);
                             } else {
                                 AnrService.updateScaleComment($scope.model.anr.id, $scope.scales.vulns.id, newValue.vuln[i].id, newValue.vuln[i], update);
                             }
@@ -440,8 +443,9 @@
                 }
             }
 
-            // Debounce the watch by 1 second
-            setTimeout(function () { commsWatchSetup = true; }, 1000);
+            // Debounce the watch by 2 seconds (FIXME: watch get set back to true while other values are still loading,
+            // causing unwanted calls to the backend)
+            setTimeout(function () { commsWatchSetup = true; }, 2000);
         }, true);
 
         $scope.newColumn = { name: null };
@@ -528,7 +532,10 @@
                         for (var j =  $scope.scales.threats.min; j < $scope.scales.threats.max; ++j) {
                             $scope.comms.threat[j] = {
                                 id: null,
-                                comment1: null
+                                comment1: null,
+                                comment2: null,
+                                comment3: null,
+                                comment4: null,
                             };
                         }
                     } else if (scale.type == "vulnerability") {
@@ -537,7 +544,10 @@
                         for (var j =  $scope.scales.vulns.min; j < $scope.scales.vulns.max; ++j) {
                             $scope.comms.vuln[j] = {
                                 id: null,
-                                comment1: null
+                                comment1: null,
+                                comment2: null,
+                                comment3: null,
+                                comment4: null,
                             };
                         }
                     }
@@ -554,11 +564,15 @@
                             $scope.comms.impact[i][$scope.scales_types[j].id] = {
                                 id: null,
                                 comment1: null,
+                                comment2: null,
+                                comment3: null,
+                                comment4: null,
                                 scaleImpactType: $scope.scales_types[j].id
                             };
                         }
                     }
 
+                    console.log($scope.comms);
 
                     // Then we finally load the actual comments for each section
                     $scope.updateScaleComments($scope.scales.impacts.id);
@@ -589,7 +603,7 @@
 
                     if (isImpact && obj[comm.val]) {
                         obj[comm.val][comm.scaleImpactType.id] = comm;
-                    } else {
+                    } else if (!isImpact) {
                         obj[comm.val] = comm;
                     }
                 }

@@ -123,7 +123,7 @@
                                 <tbody ng-if="scales.impacts.min != scales.impacts.max && scales.impacts.max > 0">
                                     <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)">
                                         <th>{{ i }}</th>
-                                        <td ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types"><span inline-edit-group="anr_scales_tab" inline-edit="comms.impact[i][type.id].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></td>
+                                        <td ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types"><span inline-edit-group="anr_scales_tab" inline-edit="comms.impact[i][type.id][_langField('comment')]" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></td>
                                     </tr>
                                 </tbody>
                             </table>
