@@ -123,7 +123,7 @@
                                 <tbody ng-if="scales.impacts.min != scales.impacts.max && scales.impacts.max > 0">
                                     <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)">
                                         <th>{{ i }}</th>
-                                        <td ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types"><span inline-edit-group="anr_scales_tab" inline-edit="comms.impact[i][type.id][_langField('comment')]" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></td>
+                                        <td ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types"><span inline-edit-group="anr_scales_tab" inline-edit="comms.impact[i][type.id][_langField('comment')]" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}" class="preserve-newlines"></span></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -136,7 +136,7 @@
                             </h4>
 
                             <ul class="no-list-style">
-                                <li ng-repeat="(idx,i) in range(scales.threats.min, scales.threats.max)">{{i}}. <span class="large" inline-edit-position="{{idx}}" inline-edit-group="anr_threat_txt" inline-edit="comms.threat[i].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+                                <li ng-repeat="(idx,i) in range(scales.threats.min, scales.threats.max)">{{i}}. <span class="large preserve-newlines" inline-edit-position="{{idx}}" inline-edit-group="anr_threat_txt" inline-edit="comms.threat[i].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
                             </ul>
                         </div>
 
@@ -147,7 +147,7 @@
                             </h4>
 
                             <ul class="no-list-style">
-                                <li ng-repeat="(idx,i) in range(scales.vulns.min, scales.vulns.max)">{{i}}. <span class="large" inline-edit-position="{{idx}}" inline-edit-group="anr_vul_txt" inline-edit="comms.vuln[i].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+                                <li ng-repeat="(idx,i) in range(scales.vulns.min, scales.vulns.max)">{{i}}. <span class="large preserve-newlines" inline-edit-position="{{idx}}" inline-edit-group="anr_vul_txt" inline-edit="comms.vuln[i].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
                             </ul>
                         </div>
 
