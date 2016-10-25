@@ -391,12 +391,9 @@
                         $scope.updateScaleComments($scope.scales.impacts.id);
                     };
 
-                    console.log(newValue);
-
                     // Find which cell changed
                     for (var i in newValue.impact) {
                         for (var j in newValue.impact[i]) {
-                            console.log(j);
                             if (oldValue.impact[i][j] !== undefined && (!oldValue.impact[i][j] || oldValue.impact[i][j][$scope._langField('comment')] != newValue.impact[i][j][$scope._langField('comment')])) {
                                 if (!newValue.impact[i][j] || newValue.impact[i][j].id == null) {
                                     AnrService.createScaleComment($scope.model.anr.id, $scope.scales.impacts.id, i, newValue.impact[i][j][$scope._langField('comment')], newValue.impact[i][j].scaleImpactType, update);
@@ -571,8 +568,6 @@
                             };
                         }
                     }
-
-                    console.log($scope.comms);
 
                     // Then we finally load the actual comments for each section
                     $scope.updateScaleComments($scope.scales.impacts.id);
