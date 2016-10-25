@@ -71,11 +71,9 @@
                 <md-input-container class="md-block" layout="row" ng-if="models && models.length > 0" flex>
                     <label translate>Models</label>
                     <md-icon>class</md-icon>
-                    <div ng-repeat="control in controls">
-                        <md-select multiple ng-model="asset.models">
-                            <md-option ng-repeat="availModel in models" ng-value="availModel.id">{{ availModel[_langField('label')] }}</md-option>
-                        </md-select>
-                    </div>
+                    <md-select multiple ng-model="asset.models">
+                        <md-option ng-repeat="availModel in models" ng-value="availModel.id">{{ availModel[_langField('label')] }}</md-option>
+                    </md-select>
                 </md-input-container>
 
                 <md-input-container class="md-block">
