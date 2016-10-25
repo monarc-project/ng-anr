@@ -465,8 +465,8 @@
                 controller: ['$scope', '$mdDialog', 'ConfigService', 'anr', '$stateParams', CreateAnrDialogCtrl],
                 templateUrl: '/views/dialogs/create.anr.html',
                 targetEvent: ev,
-                preserveScope: true,
-                scope: $scope,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: true,
                 fullscreen: useFullScreen,
                 locals: {
@@ -487,8 +487,8 @@
                 controller: ['$scope', '$mdDialog', '$q', '$state', 'ObjlibService', 'AnrService', '$parentScope', 'anr_id', '$stateParams', '$location', AddObjectDialogCtrl],
                 templateUrl: '/views/anr/add.objlib.html',
                 targetEvent: ev,
-                preserveScope: true,
-                scope: $scope,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: true,
                 fullscreen: useFullScreen,
                 locals: {
@@ -604,8 +604,8 @@
                 controller: ['$scope', '$mdDialog', 'mode', ExportAnrDialog],
                 templateUrl: '/views/dialogs/export.objlibs.html',
                 targetEvent: ev,
-                preserveScope: true,
-                scope: $scope,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: true,
                 fullscreen: useFullScreen,
                 locals: {
@@ -659,7 +659,7 @@
                 controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', '$stateParams', CreateObjlibDialogCtrl],
                 templateUrl: '/views/anr/create.objlibs.html',
                 clickOutsideToClose: true,
-                preserveScope: true,
+                preserveScope: false,
                 scope: $parentScope,
                 targetEvent: ev,
                 locals: {

@@ -116,8 +116,8 @@
                 controller: ['$scope', '$mdDialog', 'AnrService', 'instance', CreateInstanceDialogCtrl],
                 templateUrl: '/views/anr/create.instance.html',
                 targetEvent: ev,
-                preserveScope: true,
-                scope: $scope,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: true,
                 fullscreen: useFullScreen,
                 locals: {
@@ -140,8 +140,8 @@
                 controller: ['$scope', '$mdDialog', 'mode', ExportInstanceDialog],
                 templateUrl: '/views/dialogs/export.objlibs.html',
                 targetEvent: ev,
-                preserveScope: true,
-                scope: $scope,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: true,
                 fullscreen: useFullScreen,
                 locals: {
