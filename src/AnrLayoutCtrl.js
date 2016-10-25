@@ -448,14 +448,14 @@
         $scope.newColumn = { name: null };
         $scope.onCreateNewColumn = function (newValue) {
             AnrService.createScaleType($scope.model.anr.id, $scope.scales.impacts.id, newValue, function () {
-                $scope.updateScales();
+                $scope.updateScaleTypes();
                 $scope.newColumn.name = null;
             });
         };
 
         $scope.setImpactVisibility = function (id, visible) {
             AnrService.patchScaleType($scope.model.anr.id, id, {isHidden: visible ? 0 : 1}, function () {
-                $scope.updateScales();
+                $scope.updateScaleTypes();
             });
         };
 
@@ -550,32 +550,36 @@
                     }
                 }
 
-                AnrService.getScalesTypes($scope.model.anr.id).then(function (data) {
-                    $scope.scales_types = data.types;
-
-                    // Same as above, setup placeholder comments structures
-                    for (var i = $scope.scales.impacts.min; i < $scope.scales.impacts.max; ++i) {
-                        $scope.comms.impact[i] = {};
-
-                        for (var j = 0; j < $scope.scales_types.length; ++j) {
-                            $scope.comms.impact[i][$scope.scales_types[j].id] = {
-                                id: null,
-                                comment1: null,
-                                comment2: null,
-                                comment3: null,
-                                comment4: null,
-                                scaleImpactType: $scope.scales_types[j].id
-                            };
-                        }
-                    }
-
-                    // Then we finally load the actual comments for each section
-                    $scope.updateScaleComments($scope.scales.impacts.id);
-                    $scope.updateScaleComments($scope.scales.threats.id);
-                    $scope.updateScaleComments($scope.scales.vulns.id);
-                });
+                $scope.updateScaleTypes();
             });
 
+        };
+
+        $scope.updateScaleTypes = function () {
+            AnrService.getScalesTypes($scope.model.anr.id).then(function (data) {
+                $scope.scales_types = data.types;
+
+                // Same as above, setup placeholder comments structures
+                for (var i = $scope.scales.impacts.min; i < $scope.scales.impacts.max; ++i) {
+                    $scope.comms.impact[i] = {};
+
+                    for (var j = 0; j < $scope.scales_types.length; ++j) {
+                        $scope.comms.impact[i][$scope.scales_types[j].id] = {
+                            id: null,
+                            comment1: null,
+                            comment2: null,
+                            comment3: null,
+                            comment4: null,
+                            scaleImpactType: $scope.scales_types[j].id
+                        };
+                    }
+                }
+
+                // Then we finally load the actual comments for each section
+                $scope.updateScaleComments($scope.scales.impacts.id);
+                $scope.updateScaleComments($scope.scales.threats.id);
+                $scope.updateScaleComments($scope.scales.vulns.id);
+            });
         };
 
         $scope.updateScaleComments = function (scale_id) {
