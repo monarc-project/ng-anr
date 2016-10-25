@@ -83,9 +83,10 @@
                             <tr md-row ng-repeat="node in instance.instances">
                                 <td md-cell>{{ node[_langField('name')] }}</td>
                                 <td md-cell>
-                                    <a aria-title="{{ node[_langField('name')] }}" ng-if="instance.id != node.id" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></a>
-                                    <a aria-title="{{ 'Detach' | translate }}" ng-if="instance.id != node.id" ng-click="detachInstance($event,node)""><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></a>
+                                    <md-button class="md-icon-button" aria-title="{{ node[_langField('name')] }}" ng-if="instance.id != node.id" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></md-button>
+                                    <md-button class="md-icon-button" aria-title="{{ 'Detach' | translate }}" ng-if="instance.id != node.id" ng-click="detachInstance($event,node)""><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></md-button>
                                      <!--"-->
+                                     <em ng-if="instance.id == node.id">{{'(Current instance)' | translate}}</em>
                                 </td>
                             </tr>
                         </tbody>
