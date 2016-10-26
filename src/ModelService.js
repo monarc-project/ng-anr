@@ -17,16 +17,6 @@
                 }
             });
 
-        self.ModelObjectResource = $resource('/api/models/:modelId/objects/:objectId', { modelId: '@modelId', objectId: '@objectId' },
-            {
-                'update': {
-                    method: 'PUT'
-                },
-                'query': {
-                    isArray: false
-                }
-            });
-
         var getModels = function (params) {
             return self.ModelResource.query(params).$promise;
         };
