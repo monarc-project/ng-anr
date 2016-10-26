@@ -680,7 +680,7 @@
                 templateUrl: '/views/anr/create.objlibs.html',
                 clickOutsideToClose: true,
                 preserveScope: false,
-                scope: $parentScope,
+                scope: $parentScope.$new(),
                 targetEvent: ev,
                 locals: {
                     mode: 'anr',
