@@ -1,6 +1,6 @@
 <div class="md-padding" ng-cloak layout="column" ng-controller="AnrObjectInstanceCtrl">
     <div layout="row" layout-align="space-around start">
-        <div flex="20" ng-if="instance" class="active-inst">
+        <div flex ng-if="instance" class="active-inst">
             <h2>
                 <md-icon ng-if="instance.object.scope == 2" style="color: #F57C00">share</md-icon>
                 {{ instance[_langField('name')] }}
@@ -9,20 +9,20 @@
             <p>{{ instance[_langField('label')] }}</p>
         </div>
 
-        <md-card flex="85">
-            <md-card-content layout="column" layout-gt-md="row" flex layout-wrap>
-                <div flex="33" layout="column" layout-gt-md="row" layout-align="space-between">
-                    <div class="bold txtright" translate>Confidentiality:&nbsp;</div>
+        <md-card flex-gt-md="85">
+            <md-card-content layout="column" layout-gt-md="row" flex-gt-md layout-wrap>
+                <div flex-gt-md="33" layout="column" layout-gt-md="row" layout-align="space-between">
+                    <div class="bold" ng-class="{'txtright': $mdMedia('gt-md')}" translate>Confidentiality:&nbsp;</div>
                     <div flex translate>Inherited</div>
                 </div>
 
-                <div flex="33" layout="column" layout-gt-md="row" layout-align="space-between">
-                    <div class="bold txtright" translate>Integrity:&nbsp;</div>
+                <div flex-gt-md="33" layout="column" layout-gt-md="row" layout-align="space-between">
+                    <div class="bold" ng-class="{'txtright': $mdMedia('gt-md')}" translate>Integrity:&nbsp;</div>
                     <div flex translate>Inherited</div>
                 </div>
 
-                <div flex="33" layout="column" layout-gt-md="row" layout-align="space-between">
-                    <div class="bold txtright" translate>Availability:&nbsp;</div>
+                <div flex-gt-md="33" layout="column" layout-gt-md="row" layout-align="space-between">
+                    <div class="bold" ng-class="{'txtright': $mdMedia('gt-md')}" translate>Availability:&nbsp;</div>
                     <div flex translate>Inherited</div>
                 </div>
             </md-card-content>
