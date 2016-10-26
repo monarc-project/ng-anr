@@ -45,7 +45,7 @@
                 <md-input-container class="md-block" layout="row" flex>
                     <label translate>Scope</label>
                     <md-icon>view_list</md-icon>
-                    <md-select ng-model="objlib.scope">
+                    <md-select ng-model="objlib.scope" ng-disabled="objlib.id">
                         <md-option value="1">{{ 'Local' | translate }}</md-option>
                         <md-option value="2">{{ 'Global' | translate }}</md-option>
                     </md-select>
@@ -111,6 +111,7 @@
                         <md-autocomplete
                                 flex
                                 required
+                                ng-disabled="objlib.id"
                                 md-no-cache="true"
                                 md-selected-item="objlib.asset"
                                 md-search-text="assetSearchText"
@@ -132,7 +133,7 @@
                                 <div ng-message="required">{{ 'You must select an asset' | translate }}</div>
                             </div>
                         </md-autocomplete>
-                        <md-button class="md-icon-button" ng-show="objlib.asset.id > 0" ng-click="objlib.asset = null"><md-icon>close</md-icon></md-button>
+                        <md-button class="md-icon-button" ng-show="objlib.asset.id > 0 && !objlib.id" ng-click="objlib.asset = null"><md-icon>close</md-icon></md-button>
                     </div>
                 </div>
 

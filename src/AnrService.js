@@ -238,6 +238,10 @@
             self.ScalesTypesResource.patch({anrId: anr_id, scaleTypeId: scale_type_id}, data, success, error);
         };
 
+        var deleteScaleType = function (anr_id, scale_type_id, success, error) {
+            self.ScalesTypesResource.delete({anrId: anr_id, scaleTypeId: scale_type_id}, success, error);
+        };
+
         // Scales comments
         var getScaleComments = function (anr_id, type) {
             return self.ScalesCommentResource.query({anrId: anr_id, scaleId: type}).$promise;
@@ -281,6 +285,7 @@
             getScalesTypes: getScalesTypes,
             createScaleType: createScaleType,
             patchScaleType: patchScaleType,
+            deleteScaleType: deleteScaleType,
 
             getScaleComments: getScaleComments,
             createScaleComment: createScaleComment,
