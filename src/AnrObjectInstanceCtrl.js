@@ -165,6 +165,7 @@
             }
             InstanceService.detach($scope, ev, instance.id, function(){
                 $scope.instance.instances.splice($scope.instance.instances.indexOf(instance), 1);
+                $scope.updateModel();
             }, onrecord);
         };
 
