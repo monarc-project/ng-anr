@@ -108,6 +108,8 @@
             </tbody>
         </table>
     </md-tab>
+    <ng-include src="'views/anr/_table_risks_op.html'"></ng-include>
+
 
     <md-tab label="{{ 'OP risks table' | translate }}">
         <p class="md-title md-padding" translate>{{ model.anr.risksop.length || 0 }} operational risk(s)</p>
@@ -143,7 +145,7 @@
 
             <tbody>
             <tr ng-repeat="risk in model.anr.risksop">
-                <td>{{ risk.riskCacheDescription1 }}</td>
+                <td>{{ risk[_langField('description')] }}</td>
                 <td>{{ risk.netProb }}</td>
                 <td>{{ risk.netR }}</td>
                 <td>{{ risk.netO }}</td>

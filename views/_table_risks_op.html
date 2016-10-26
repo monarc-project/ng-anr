@@ -1,0 +1,78 @@
+<md-tab label="{{ 'OP risks table' | translate }}">
+    <p class="md-title md-padding" translate>{{ oprisks.length || 0 }} operational risk(s)</p>
+
+    <div ng-include="'views/anr/oprisk_sheet.html'" ng-if="opsheet_risk"></div>
+
+    <div ng-if="!oprisks || !oprisks.length" class="md-padding">
+        <em ng-if="instmode == 'inst' ">{{ 'There are no operational risks for this instance, so the operational risks table is empty.' | translate }}</em>
+        <em ng-if="instmode == 'anr' ">{{ 'There are no operational risks for this risk analysis.' | translate }}</em>
+        <em ng-if="instmode == 'obj' ">{{ 'There are no operational risks for this object.' | translate }}</em>
+    </div>
+
+    <table class="md-html-table" ng-if="!opsheet_risk && oprisks.length > 0">
+        <thead>
+        <tr>
+            <th rowspan="3" translate>Risk description</th>
+            <th ng-if="model.showRolfBrut" colspan="7" translate>RAW</th>
+            <th colspan="7" translate>NET</th>
+            <th rowspan="3" translate>Observation</th>
+            <th rowspan="3">T</th>
+            <th rowspan="3" translate>Target risk</th>
+            <th rowspan="3" translate>Actions</th>
+        </tr>
+
+        <tr>
+            <th rowspan="2" translate ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">Prob.</th>
+            <th colspan="5" translate ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">Impact</th>
+            <th rowspan="2" translate ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">Calculated risk</th>
+
+            <th rowspan="2" translate>Prob.</th>
+            <th colspan="5" translate>Impact</th>
+            <th rowspan="2" translate>Calculated risk</th>
+        </tr>
+
+        <tr>
+            <th ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">R</th>
+            <th ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">O</th>
+            <th ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">L</th>
+            <th ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">F</th>
+            <th ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">P</th>
+
+            <th>R</th>
+            <th>O</th>
+            <th>L</th>
+            <th>F</th>
+            <th>P</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="risk in oprisks">
+            <td>{{ risk[_langField('description')] }}</td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.brutProb }}</td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.brutR }}</td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.brutO }}</td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.brutL }}</td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.brutF }}</td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.brutP }}</td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.cacheBrutRisk }}</td>
+            <td>{{ risk.netProb }}</td>
+            <td>{{ risk.netR }}</td>
+            <td>{{ risk.netO }}</td>
+            <td>{{ risk.netL }}</td>
+            <td>{{ risk.netF }}</td>
+            <td>{{ risk.netP }}</td>
+            <td>{{ risk.cacheNetRisk }}</td>
+            <td>{{ risk.comment }}</td>
+            <td class="txtcenter"><div style="display:inline-block" class="green-dot" ng-if="risk.t"></div></td>
+            <td>{{ risk.cacheTargetedRisk }}</td>
+            <td class="txtcenter">
+                <md-button ng-if=" instmode != 'obj' " class="md-icon-button" ng-click="openOpRiskSheet(risk)">
+                    <md-tooltip>{{ 'Open risk sheet' | translate }} - {{instmode}}</md-tooltip>
+                    <md-icon>open_in_new</md-icon>
+                </md-button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</md-tab>

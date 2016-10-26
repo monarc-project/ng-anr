@@ -156,81 +156,8 @@
                     </tbody>
                 </table>
             </md-tab>
+            <ng-include src="'views/anr/_table_risks_op.html'" ng-if="instance.asset.type == 1"></ng-include>
 
-            <md-tab label="{{ 'OP risks table' | translate }}" ng-if="instance.asset.type == 1">
-                <p class="md-title md-padding" translate>{{ instance.oprisks.length || 0 }} operational risk(s)</p>
-
-                <div ng-include="'views/anr/oprisk_sheet.html'" ng-if="opsheet_risk"></div>
-
-                <div ng-if="!instance.oprisks || !instance.oprisks.length" class="md-padding">
-                    <em>{{ 'There are no operational risks for this instance, so the operational risks table is empty.' | translate }}</em>
-                </div>
-
-                <table class="md-html-table" ng-if="!opsheet_risk && instance.oprisks.length > 0">
-                    <thead>
-                    <tr>
-                        <th rowspan="3" translate>Risk description</th>
-                        <th ng-if="model.showRolfBrut" colspan="7" translate>RAW</th>
-                        <th colspan="7" translate>NET</th>
-                        <th rowspan="3" translate>Observation</th>
-                        <th rowspan="3">T</th>
-                        <th rowspan="3" translate>Target risk</th>
-                        <th rowspan="3" translate>Actions</th>
-                    </tr>
-
-                    <tr>
-                        <th rowspan="2" translate ng-if="model.showRolfBrut">Prob.</th>
-                        <th colspan="5" translate ng-if="model.showRolfBrut">Impact</th>
-                        <th rowspan="2" translate ng-if="model.showRolfBrut">Calculated risk</th>
-
-                        <th rowspan="2" translate>Prob.</th>
-                        <th colspan="5" translate>Impact</th>
-                        <th rowspan="2" translate>Calculated risk</th>
-                    </tr>
-
-                    <tr>
-                        <th ng-if="model.showRolfBrut">R</th>
-                        <th ng-if="model.showRolfBrut">O</th>
-                        <th ng-if="model.showRolfBrut">L</th>
-                        <th ng-if="model.showRolfBrut">F</th>
-                        <th ng-if="model.showRolfBrut">P</th>
-
-                        <th>R</th>
-                        <th>O</th>
-                        <th>L</th>
-                        <th>F</th>
-                        <th>P</th>
-                    </tr>
-                    </thead>
-
-                    <tbody>
-                    <tr ng-repeat="risk in instance.oprisks">
-                        <td>{{ risk[_langField('description')] }}</td>
-                        <td ng-if="model.showRolfBrut">{{ risk.brutProb }}</td>
-                        <td ng-if="model.showRolfBrut">{{ risk.brutR }}</td>
-                        <td ng-if="model.showRolfBrut">{{ risk.brutO }}</td>
-                        <td ng-if="model.showRolfBrut">{{ risk.brutL }}</td>
-                        <td ng-if="model.showRolfBrut">{{ risk.brutF }}</td>
-                        <td ng-if="model.showRolfBrut">{{ risk.brutP }}</td>
-                        <td ng-if="model.showRolfBrut">{{ risk.cacheBrutRisk }}</td>
-                        <td>{{ risk.netProb }}</td>
-                        <td>{{ risk.netR }}</td>
-                        <td>{{ risk.netO }}</td>
-                        <td>{{ risk.netL }}</td>
-                        <td>{{ risk.netF }}</td>
-                        <td>{{ risk.netP }}</td>
-                        <td>{{ risk.cacheNetRisk }}</td>
-                        <td>{{ risk.comment }}</td>
-                        <td class="txtcenter"><div style="display:inline-block" class="green-dot" ng-if="risk.t"></div></td>
-                        <td>{{ risk.cacheTargetedRisk }}</td>
-                        <td class="txtcenter"><md-button class="md-icon-button" ng-click="openOpRiskSheet(risk)">
-                            <md-tooltip>{{ 'Open risk sheet' | translate }}</md-tooltip>
-                            <md-icon>open_in_new</md-icon>
-                        </md-button></td>
-                    </tr>
-                    </tbody>
-                </table>
-            </md-tab>
         </md-tabs>
     </md-card>
 </div>

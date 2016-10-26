@@ -41,6 +41,11 @@
                     $scope.ToolsAnrService.currentTab = tmpCurrentTab;
                 }
                 isInstanceLoading = false;
+
+                $scope.oprisks = [];
+                if($scope.instance.asset.type == 1){
+                    $scope.oprisks = $scope.instance.oprisks;//for the _table_risks_op.html partial
+                }
             });
         };
         $scope.updateInstance();

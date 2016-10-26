@@ -37,15 +37,27 @@
                 $scope.updateInstances();
                 $scope.updateObjectsLibrary();
                 $scope.updateScales();
+
+                $scope.oprisks = $scope.model.anr.risksop;//for the _table_risks_op.html partial
+
             });
         };
 
         $scope.updateModel();
+        $scope.instmode = 'anr';
 
         $scope.clearSelectedInstAndObj = function () {
             $rootScope.anr_selected_instance_id = null;
             $rootScope.anr_selected_object_id = null;
         }
+
+        $scope.openOpRiskSheet = function (risk) {
+            $scope.opsheet_risk = risk;
+        };
+
+        $scope.resetOpSheet = function () {
+            $scope.opsheet_risk = undefined;
+        };
 
         /**
          * Risk analysis
