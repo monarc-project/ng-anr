@@ -458,6 +458,13 @@
                 $scope.updateScaleTypes();
             });
         };
+        
+        $scope.deleteCustomScaleType = function (id) {
+            AnrService.deleteScaleType($scope.model.anr.id, id, function () {
+                toastr.success(gettextCatalog.getString("The impact scale type has been deleted successfully."), gettextCatalog.getString("Scale type deleted"));
+                $scope.updateScaleTypes();
+            });
+        };
 
         $scope.editAnrInfo = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));

@@ -115,7 +115,7 @@
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        <th ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">{{ type[_langField('label')] }} <md-button class="md-icon-button md-primary" ng-click="setImpactVisibility(type.id, !!type.isHidden)"><md-icon>{{ type.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></th>
+                                        <th ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">{{ type[_langField('label')] }} <md-button class="md-icon-button md-primary" ng-if="type.type == 'CUS'" ng-click="deleteCustomScaleType(type.id)"><md-icon>delete</md-icon></md-button> <md-button class="md-icon-button md-primary" ng-if="type.type != 'CUS'" ng-click="setImpactVisibility(type.id, !!type.isHidden)"><md-icon>{{ type.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></th>
                                         <th><span inline-edit="newColumn.name" inline-edit-callback="onCreateNewColumn(newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ 'New column name' | translate }}"></span></th>
                                     </tr>
                                 </thead>
