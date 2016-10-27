@@ -1,0 +1,65 @@
+<div class="md-padding-left md-padding-right">
+    <h3 layout="row" layout-align="start center"><md-button class="md-icon-button" ng-click="resetOpSheet()"><md-icon>arrow_back</md-icon></md-button> <span translate>Operational risk sheet</span></h3>
+
+    <p><b>{{ opsheet_risk.rolfRisk.code }} - {{ opsheet_risk.rolfRisk[_langField('label')] }}</b></p>
+
+    <table class="md-html-table">
+        <tbody>
+        <tr>
+            <td></td>
+            <td translate>Prob.</td>
+            <td>R</td>
+            <td>O</td>
+            <td>L</td>
+            <td>F</td>
+            <td>P</td>
+            <td translate>Calculated risk</td>
+        </tr>
+
+        <tr>
+            <td translate>NET</td>
+            <td>{{ opsheet_risk.netProb }}</td>
+            <td>{{ opsheet_risk.netR }}</td>
+            <td>{{ opsheet_risk.netO }}</td>
+            <td>{{ opsheet_risk.netL }}</td>
+            <td>{{ opsheet_risk.netF }}</td>
+            <td>{{ opsheet_risk.netP }}</td>
+            <td>-</td>
+        </tr>
+
+        <tr>
+            <td translate>Target</td>
+            <td inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedProb" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
+            <td inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedR" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
+            <td inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedO" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
+            <td inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedL" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
+            <td inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedF" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
+            <td inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedP" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
+            <td>-</td>
+        </tr>
+        </tbody>
+    </table>
+
+    <form class="md-padding">
+        <md-input-container class="md-block">
+            <label translate>Observation</label>
+            <md-icon>visibility</md-icon>
+            <textarea ng-model="opsheet_risk.comment" rows="3"></textarea>
+        </md-input-container>
+        <md-input-container class="md-block">
+            <label translate>Processing type</label>
+            <md-icon>widgets</md-icon>
+            <md-select ng-model="opsheet_risk.kindOfMeasure">
+                <md-option ng-value="5">{{ 'Not processed' | translate }}</md-option>
+                <md-option ng-value="1">{{ 'Reduction' | translate }}</md-option>
+                <md-option ng-value="2">{{ 'Denied' | translate }}</md-option>
+                <md-option ng-value="3">{{ 'Accepted' | translate }}</md-option>
+                <md-option ng-value="4">{{ 'Shared' | translate }}</md-option>
+            </md-select>
+        </md-input-container>
+
+        <div layout="row" layout-align="end center">
+            <md-button class="md-raised md-primary" ng-click="saveOpRiskSheet(opsheet_risk)">{{ 'Save changes' | translate }}</md-button>
+        </div>
+    </form>
+</div>
