@@ -420,6 +420,9 @@ div.ng-inline-edit input, div.ng-inline-edit textarea {
 .angular-ui-tree {
     min-height: 30px;
 }
+.angular-ui-tree-nodes .angular-ui-tree-nodes {
+    padding-left: 8px;
+}
 
 /** Material Design Overrides */
 body {
