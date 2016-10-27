@@ -1390,14 +1390,6 @@
             $scope.dialog_mode = 'asset_details';
         };
 
-        $scope.range = function (x,y) {
-            var out = [];
-            for (var i = x; i <= y; ++i) {
-                out.push(i);
-            }
-            return out;
-        };
-
         $scope.cancel = function() {
             $mdDialog.cancel();
         };

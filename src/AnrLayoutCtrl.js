@@ -301,19 +301,6 @@
 
         };
 
-
-        /**
-         * Evaluation scales
-         */
-        $scope.range = function (min, max) {
-            var array = [];
-            for (var v = min; v <= max; ++v) {
-                array.push(v);
-            }
-
-            return array;
-        };
-
         $scope.inlineNumberValidator = function (val) {
             return (parseInt(val) == val);
         };
@@ -470,7 +457,7 @@
                 $scope.updateScaleTypes();
             });
         };
-        
+
         $scope.deleteCustomScaleType = function (id) {
             AnrService.deleteScaleType($scope.model.anr.id, id, function () {
                 toastr.success(gettextCatalog.getString("The impact scale type has been deleted successfully."), gettextCatalog.getString("Scale type deleted"));
