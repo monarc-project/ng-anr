@@ -231,6 +231,12 @@
             AnrService.patchInstanceConsequence($scope.instance.anr.id, id, {isHidden: visible ? 0 : 1}, function () {
                 for (var i = 0; i < $scope.instance.consequences.length; ++i) {
                     if ($scope.instance.consequences[i].id == id) {
+                        $scope.instance.consequences[i]['c_risk'] = -1;//pour le recalcul
+                        $scope.calculeImpact('c');
+                        $scope.instance.consequences[i]['i_risk'] = -1;//pour le recalcul
+                        $scope.calculeImpact('i');
+                        $scope.instance.consequences[i]['d_risk'] = -1;//pour le recalcul
+                        $scope.calculeImpact('d');
                         $scope.instance.consequences[i].isHidden = !visible;
                         break;
                     }
