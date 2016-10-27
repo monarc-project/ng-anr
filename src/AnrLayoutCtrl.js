@@ -16,6 +16,21 @@
         var self = this;
 
         $scope.ToolsAnrService = ToolsAnrService;
+        $scope.GlobalResizeMenuSize = "";
+        $scope.GlobalResizeMenuContentHide = false;
+        var minWidthMenu = 80;
+
+        $scope.$on("angular-resizable.resizeEnd", function (event, args) {
+            if(args.id != undefined && args.id == 'global-resize-menu' && parseInt(args.width) <= minWidthMenu){
+                $scope.GlobalResizeMenuSize = 0;
+            }
+        });
+        $scope.$on("angular-resizable.resizing", function (event, args) {
+            if(args.id != undefined && args.id == 'global-resize-menu'){
+                $scope.GlobalResizeMenuContentHide = (parseInt(args.width) <= minWidthMenu);
+                $scope.GlobalResizeMenuSize = args.width;
+            }
+        });
 
         // Called by ObjectCtrl when an object has been modified
         $rootScope.hookUpdateObjlib = function (gotofirst) {
