@@ -22,7 +22,7 @@
             <td>{{ opsheet_risk.netL }}</td>
             <td>{{ opsheet_risk.netF }}</td>
             <td>{{ opsheet_risk.netP }}</td>
-            <td>-</td>
+            <td>{{ opsheet_risk.cacheNetRisk }}</td>
         </tr>
 
         <tr>
@@ -33,7 +33,7 @@
             <td class="small" inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedL" inline-edit-placeholder="-" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
             <td class="small" inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedF" inline-edit-placeholder="-" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
             <td class="small" inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedP" inline-edit-placeholder="-" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
-            <td>-</td>
+            <td>{{ opsheet_risk.cacheTargetedRisk }}</td>
         </tr>
         </tbody>
     </table>
