@@ -13,14 +13,13 @@
         <md-dialog-content>
             <div class="md-dialog-content">
                 <div layout="row">
-                    <div layout="column">
-                        <div layout="row">
-                            <h4 translate>Consequences</h4>
-                            <span flex></span>
-                            <md-switch style="margin-right:15px;" ng-model="display.hidden" ng-true-value="true" ng-false-value="false">{{ 'Show hidden consequences' | translate }}</md-switch>
+                    <div layout="column" style="flex-grow: 1; margin-right: 20px;">
+                        <div layout="row" style="align-items: center;">
+                            <h4 translate style="flex-grow: 1;">Consequences</h4>
+                            <md-switch style="margin:0px; height: auto; line-height: auto;" ng-model="display.hidden" ng-true-value="true" ng-false-value="false">{{ 'Show hidden consequences' | translate }}</md-switch>
                         </div>
-                        <div layout="row">
-                            <div layout="column" ng-repeat="(idx, col) in instance.consequences" ng-if="!col.isHidden || display.hidden">
+                        <div layout="row" style="border: 1px solid #DFDFDF; padding: 1em;">
+                            <div layout="column" ng-repeat="(idx, col) in instance.consequences" ng-if="!col.isHidden || (display.hidden && col.locallyTouched) ">
                                 <p>{{ col.scaleImpactTypeDescription1 }} <md-button class="md-icon-button" ng-click="setConsequenceVisibility(col.id, !!col.isHidden)"><md-icon>{{ col.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></p>
                                 <md-input-container>
                                     <label translate>Confidentiality</label>
@@ -48,10 +47,12 @@
                             </div>
                         </div>
                     </div>
-                    <span flex></span>
                     <div layout="column">
-                        <h4 translate>Impact</h4>
-                        <p style="height: 54px;">&nbsp;</p>
+                        <div layout="row">
+                            <h4 translate>Impact</h4>
+                        </div>
+                        <div layout="column" style="border: 1px solid #DFDFDF; padding: 1em;">
+                            <p style="height: 54px;">&nbsp;</p>
                             <md-input-container>
                                 <label translate>Confidentiality</label>
                                 <input type="text" ng-value="calculeImpact('c')" disabled />
@@ -64,6 +65,7 @@
                                 <label translate>Availability</label>
                                 <input type="text" ng-value="calculeImpact('d')" disabled />
                             </md-input-container>
+                        </div>
                     </div>
                 </div>
             </div>
