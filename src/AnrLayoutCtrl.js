@@ -20,7 +20,6 @@
         $scope.GlobalResizeMenuContentHide = false;
         var minWidthMenu = 80;
 
-        // TEST THOMAS
         $scope.$on("angular-resizable.resizeEnd", function (event, args) {
             if(args.id != undefined && args.id == 'global-resize-menu' && parseInt(args.width) <= minWidthMenu){
                 $scope.GlobalResizeMenuSize = 0;
