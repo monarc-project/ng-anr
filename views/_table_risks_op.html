@@ -1,7 +1,7 @@
 <md-tab label="{{ 'OP risks table' | translate }}">
     <p class="md-title md-padding" translate>{{ oprisks.length || 0 }} operational risk(s)</p>
 
-    <div ng-include="'views/anr/oprisk_sheet.html'" ng-if="opsheet_risk"></div>
+    <div ng-include="'views/anr/_oprisk_sheet.html'" ng-if="opsheet_risk"></div>
 
     <div ng-if="!oprisks || !oprisks.length" class="md-padding">
         <em ng-if="instmode == 'inst' ">{{ 'There are no operational risks for this instance, so the operational risks table is empty.' | translate }}</em>
