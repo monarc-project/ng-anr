@@ -352,7 +352,7 @@
             }
 
             $scope.updateInfoRiskColumns();
-            $scope.info_risk_rows = $scope.range($scope.scales.impacts.min, $scope.scales.impacts.max);
+            $scope.info_risk_rows = $rootScope.range($scope.scales.impacts.min, $scope.scales.impacts.max);
             thresholdsWatchSetup = true;
         }, true);
 
