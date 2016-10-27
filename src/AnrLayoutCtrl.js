@@ -490,19 +490,22 @@
         $scope.addObject = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-            $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$q', '$state', 'ObjlibService', 'AnrService', '$parentScope', 'anr_id', '$stateParams', '$location', AddObjectDialogCtrl],
-                templateUrl: '/views/anr/add.objlib.html',
-                targetEvent: ev,
-                preserveScope: false,
-                scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: true,
-                fullscreen: useFullScreen,
-                locals: {
-                    '$parentScope': $scope,
-                    anr_id: $scope.model.anr.id
-                }
-            })
+
+
+                $mdDialog.show({
+                    controller: ['$scope', '$mdDialog', '$q', '$state', 'ObjlibService', 'AnrService', '$stateParams', '$location', '$parentScope', 'anr_id', 'categories',  AddObjectDialogCtrl],
+                    templateUrl: '/views/anr/add.objlib.html',
+                    targetEvent: ev,
+                    preserveScope: false,
+                    scope: $scope.$dialogScope.$new(),
+                    clickOutsideToClose: true,
+                    fullscreen: useFullScreen,
+                    locals: {
+                        '$parentScope': $scope,
+                        anr_id: $scope.model.anr.id,
+                        categories: $scope.categories
+                    }
+                })
                 .then(function (objlib) {
                     if (objlib && objlib.id) {
                         AnrService.addExistingObjectToLibrary($scope.model.anr.id, objlib.id, function () {
@@ -513,6 +516,7 @@
                         });
                     }
                 });
+           // });
         };
 
         $scope.updateScales = function () {
@@ -663,13 +667,45 @@
         };
     }
 
-    function AddObjectDialogCtrl($scope, $mdDialog, $q, $state, ObjlibService, AnrService, $parentScope, anr_id, $stateParams, $location) {
-        $scope.objectSearchText = '';
-        $scope.categorySearchText = '';
-
+    function AddObjectDialogCtrl($scope, $mdDialog, $q, $state, ObjlibService, AnrService, $stateParams, $location, $parentScope, anr_id, categories) {
         $scope.objlib = {
             category: null,
             object: null
+        };
+
+        $scope.loadCategs = function(){
+            $scope.categories = [];
+            ObjlibService.getObjlibsCats().then(function (x) {
+                // Recursively build items
+                var buildItemRecurse = function (children, parentPath) {
+                    var output = [];
+
+                    for (var i = 0; i < children.length; ++i) {
+                        var child = children[i];
+
+                        if (parentPath != "") {
+                            child[$scope._langField('label')] = parentPath + " >> " + child[$scope._langField('label')];
+                        }
+
+                        output.push(child);
+
+                        if (child.child && child.child.length > 0) {
+                            var child_output = buildItemRecurse(child.child, child[$scope._langField('label')]);
+                            output = output.concat(child_output);
+                        }
+                    }
+
+                    return output;
+                };
+
+                $scope.categories = buildItemRecurse(x.categories, "");
+            });
+        };
+
+        $scope.selected_categ = {id: null};
+
+        $scope.changeCateg = function(){
+            $scope.objlib.category = {id: $scope.selected_categ.id};
         };
 
         $scope.createAttachedObject = function (ev, objlib) {

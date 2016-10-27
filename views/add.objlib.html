@@ -13,33 +13,14 @@
             <div class="md-dialog-content" layout="column" layout-align="center center">
                 <p translate>Pick an existing object from the knowledge base</p>
 
-                <div class="md-block" layout="column" flex>
-                    <div layout="row" layout-align="center center">
-                        <md-icon style="margin-right: 8px;">class</md-icon>
-                        <md-autocomplete
-                                flex
-                                style="min-width: 500px"
-                                md-no-cache="true"
-                                md-selected-item="objlib.category"
-                                md-search-text="categorySearchText"
-                                md-selected-item-change="selectedCategoryItemChange(item)"
-                                md-items="item in queryCategorySearch(categorySearchText)"
-                                md-item-text="item[_langField('label')]"
-                                md-min-length="0"
-                                placeholder="{{ 'Select a category' | translate }}"
-                        <md-item-template>
-                            <span md-highlight-text="categorySearchText"
-                                  md-highlight-flags="^i">{{ item[_langField('label')] }}</span>
-                        </md-item-template>
-
-                        <md-not-found>
-                            {{ 'No category matching your search was found' | translate }}
-                            <md-button ng-click="createCategory($event, categorySearchText)">{{ 'Create this category' | translate }}
-                            </md-button>
-                        </md-not-found>
-                        </md-autocomplete>
-                    </div>
-                </div>
+                <md-input-container class="md-block" style="width: 62%;" flex>
+                    <md-icon>class</md-icon>
+                    {{counter.val}}
+                    <label translate>Category</label>
+                    <md-select ng-model="selected_categ.id" md-on-open="loadCategs()" ng-change="changeCateg()">
+                        <md-option ng-repeat="cat in categories" ng-value="cat.id">{{ cat[_langField('label')] }}</md-option>
+                    </md-select>
+                </md-input-container>
 
                 <div class="md-block" layout="column" style="margin-bottom: 8px">
                     <div layout="row">
