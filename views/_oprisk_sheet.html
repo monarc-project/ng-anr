@@ -1,7 +1,5 @@
 <div class="md-padding-left md-padding-right">
-    <h3 layout="row" layout-align="start center"><md-button class="md-icon-button" ng-click="resetOpSheet()"><md-icon>arrow_back</md-icon></md-button> <span translate>Operational risk sheet</span></h3>
-
-    <p><b>{{ opsheet_risk.rolfRisk.code }} - {{ opsheet_risk.rolfRisk[_langField('label')] }}</b></p>
+    <h3 layout="row" layout-align="start center"><md-button class="md-icon-button" ng-click="resetOpSheet()"><md-icon>arrow_back</md-icon></md-button> <span translate>Operational risk sheet</span> - {{ opsheet_risk[_langField('description')] }}</h3>
 
     <table class="md-html-table">
         <tbody>
@@ -29,12 +27,12 @@
 
         <tr>
             <td translate>Target</td>
-            <td inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedProb" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
-            <td inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedR" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
-            <td inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedO" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
-            <td inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedL" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
-            <td inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedF" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
-            <td inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedP" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
+            <td class="small" inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedProb" inline-edit-placeholder="-" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
+            <td class="small" inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedR" inline-edit-placeholder="-" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
+            <td class="small" inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedO" inline-edit-placeholder="-" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
+            <td class="small" inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedL" inline-edit-placeholder="-" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
+            <td class="small" inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedF" inline-edit-placeholder="-" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
+            <td class="small" inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedP" inline-edit-placeholder="-" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
             <td>-</td>
         </tr>
         </tbody>

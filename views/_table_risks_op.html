@@ -56,14 +56,14 @@
             <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.brutF }}</td>
             <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.brutP }}</td>
             <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.cacheBrutRisk }}</td>
-            <td>{{ risk.netProb }}</td>
-            <td>{{ risk.netR }}</td>
-            <td>{{ risk.netO }}</td>
-            <td>{{ risk.netL }}</td>
-            <td>{{ risk.netF }}</td>
-            <td>{{ risk.netP }}</td>
+            <td class="small" inline-edit-group="anr_risk_op" inline-edit="risk.netProb" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="-" inline-edit-on-click></td>
+            <td class="small" inline-edit-group="anr_risk_op" inline-edit="risk.netR" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="-" inline-edit-on-click></td>
+            <td class="small" inline-edit-group="anr_risk_op" inline-edit="risk.netO" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="-" inline-edit-on-click></td>
+            <td class="small" inline-edit-group="anr_risk_op" inline-edit="risk.netL" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="-" inline-edit-on-click></td>
+            <td class="small" inline-edit-group="anr_risk_op" inline-edit="risk.netF" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="-" inline-edit-on-click></td>
+            <td class="small" inline-edit-group="anr_risk_op" inline-edit="risk.netP" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="-" inline-edit-on-click></td>
             <td>{{ risk.cacheNetRisk }}</td>
-            <td>{{ risk.comment }}</td>
+            <td inline-edit-group="anr_risk_op" inline-edit="risk.comment" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="Click to type..." inline-edit-on-click inline-edit-textarea></td>
             <td class="txtcenter"><div style="display:inline-block" class="green-dot" ng-if="risk.t"></div></td>
             <td>{{ risk.cacheTargetedRisk }}</td>
             <td class="txtcenter">
