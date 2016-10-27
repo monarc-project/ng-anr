@@ -34,65 +34,66 @@
             <md-tabs md-border-bottom="true" md-dynamic-height>
                 <md-tab label="{{ 'Risk analysis' | translate }}">
                     <div layout="row" class="md-padding">
-                        <div layout="column" resizable r-directions="['right']">
-                            <md-subheader class="md-no-sticky md-small-subheader">
-                                <div layout="row" layout-align="space-between center">
-                                    <div translate>Risk analysis</div>
-                                    <md-button class="md-icon-button" ng-click="uiState.hideInstances = !uiState.hideInstances"><md-icon>{{ uiState.hideInstances ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
-                                </div>
-                            </md-subheader>
-
-                            <div layout="row" layout-align="center center" ng-hide="uiState.hideInstances">
-                                <md-button style="font-size: 12px; margin:0; padding: 0;" ng-click="unwrapAll()">{{ 'Expand all' | translate }}</md-button> /
-                                <md-button style="font-size: 12px; margin:0; padding: 0;" ng-click="wrapAll()">{{ 'Wrap all' | translate }}</md-button>
-                            </div>
-
-                            <div layout="column" ng-hide="uiState.hideInstances" resizable r-directions="['bottom']">
-                                <md-input-container md-no-float class="md-block" style="margin: 0; margin-bottom: 8px">
-                                    <md-icon>search</md-icon>
-                                    <input type="text" ng-model="filter.instance" placeholder="{{ 'Search an instance...' | translate }}" flex="80">
-                                </md-input-container>
-
-                                <md-button ui-sref="main.kb_mgmt.models.details({modelId: model.id})" ng-click="clearSelectedInstAndObj();" ng-if="OFFICE_MODE == 'BO'" style="margin:0 0 8px 0; text-align:left" ng-class="{'active-inst': anr_selected_object_id == null && anr_selected_instance_id == null}"><md-icon>home</md-icon> {{ model.anr[_langField('label')] }}</md-button>
-                                <md-button ui-sref="main.project.anr({modelId: model.id})" ng-if="OFFICE_MODE == 'FO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ model.anr[_langField('label')] }}</md-button>
-
-                                <div class="angular-ui-tree" ui-tree="insTreeCallbacks" data-drag-delay="150" id="insTree">
-                                    <div layout="row" layout-align="center center" ng-if="!anr_obj_instances_data">
-                                        <md-progress-circular md-diameter="24"></md-progress-circular>
+                        <div layout="column" resizable r-directions="['right']" id="global-resize-menu" r-width="GlobalResizeMenuSize">
+                            <div ng-hide="GlobalResizeMenuContentHide">
+                                <md-subheader class="md-no-sticky md-small-subheader">
+                                    <div layout="row" layout-align="space-between center">
+                                        <div translate>Risk analysis</div>
+                                        <md-button class="md-icon-button" ng-click="uiState.hideInstances = !uiState.hideInstances"><md-icon>{{ uiState.hideInstances ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
                                     </div>
+                                </md-subheader>
 
-                                    <ol class="no-list-style" ui-tree-nodes="" ng-model="anr_obj_instances_data" id="inst-tree-root">
-                                        <li ng-repeat="node in anr_obj_instances_data" ui-tree-node ng-include="'tree_node_renderer.html'"></li>
-                                    </ol>
+                                <div layout="row" layout-align="center center" ng-hide="uiState.hideInstances">
+                                    <md-button style="font-size: 12px; margin:0; padding: 0;" ng-click="unwrapAll()">{{ 'Expand all' | translate }}</md-button> /
+                                    <md-button style="font-size: 12px; margin:0; padding: 0;" ng-click="wrapAll()">{{ 'Wrap all' | translate }}</md-button>
                                 </div>
-                            </div>
 
-                            <md-subheader class="md-no-sticky md-small-subheader" style="z-index: 8">
-                                <div layout="row" layout-align="space-between center">
-                                    <div translate>Objects library</div>
-                                    <md-button class="md-icon-button" ng-click="uiState.hideLibrary = !uiState.hideLibrary"><md-icon>{{ uiState.hideLibrary ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
-                                </div>
-                            </md-subheader>
-
-                            <div layout="column" ng-hide="uiState.hideLibrary" style="background:white; z-index: 10">
-                                <div layout="row" layout-align="center center">
-                                    <md-input-container class="md-block" md-no-float flex  style="margin: 0; margin-bottom: 8px">
+                                <div layout="column" ng-hide="uiState.hideInstances" resizable r-directions="['bottom']">
+                                    <md-input-container md-no-float class="md-block" style="margin: 0; margin-bottom: 8px">
                                         <md-icon>search</md-icon>
-                                        <input type="text" ng-model="filter.library" placeholder="{{ 'Search an object...' | translate }}">
+                                        <input type="text" ng-model="filter.instance" placeholder="{{ 'Search an instance...' | translate }}" flex="80">
                                     </md-input-container>
-                                    <md-button class="md-icon-button" ng-click="addObject($event)"><md-icon>add</md-icon></md-button>
+
+                                    <md-button ui-sref="main.kb_mgmt.models.details({modelId: model.id})" ng-click="clearSelectedInstAndObj();" ng-if="OFFICE_MODE == 'BO'" style="margin:0 0 8px 0; text-align:left" ng-class="{'active-inst': anr_selected_object_id == null && anr_selected_instance_id == null}"><md-icon>home</md-icon> {{ model.anr[_langField('label')] }}</md-button>
+                                    <md-button ui-sref="main.project.anr({modelId: model.id})" ng-if="OFFICE_MODE == 'FO'" style="margin:0 0 8px 0;"><md-icon>home</md-icon> {{ model.anr[_langField('label')] }}</md-button>
+
+                                    <div class="angular-ui-tree" ui-tree="insTreeCallbacks" data-drag-delay="150" id="insTree">
+                                        <div layout="row" layout-align="center center" ng-if="!anr_obj_instances_data">
+                                            <md-progress-circular md-diameter="24"></md-progress-circular>
+                                        </div>
+
+                                        <ol class="no-list-style" ui-tree-nodes="" ng-model="anr_obj_instances_data" id="inst-tree-root">
+                                            <li ng-repeat="node in anr_obj_instances_data" ui-tree-node ng-include="'tree_node_renderer.html'"></li>
+                                        </ol>
+                                    </div>
                                 </div>
 
-                                <div class="angular-ui-tree" ui-tree="libTreeCallbacks" data-drag-delay="150">
-                                    <div layout="row" layout-align="center center" ng-if="!anr_obj_library_data">
-                                        <md-progress-circular md-diameter="24"></md-progress-circular>
+                                <md-subheader class="md-no-sticky md-small-subheader" style="z-index: 8">
+                                    <div layout="row" layout-align="space-between center">
+                                        <div translate>Objects library</div>
+                                        <md-button class="md-icon-button" ng-click="uiState.hideLibrary = !uiState.hideLibrary"><md-icon>{{ uiState.hideLibrary ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
                                     </div>
-                                    <ol class="no-list-style" ui-tree-nodes="" ng-model="anr_obj_library_data" id="objlib-tree-root">
-                                        <li ng-repeat="node in anr_obj_library_data" ui-tree-node ng-include="'tree_node_renderer.html'"></li>
-                                    </ol>
+                                </md-subheader>
+
+                                <div layout="column" ng-hide="uiState.hideLibrary" style="background:white; z-index: 10">
+                                    <div layout="row" layout-align="center center">
+                                        <md-input-container class="md-block" md-no-float flex  style="margin: 0; margin-bottom: 8px">
+                                            <md-icon>search</md-icon>
+                                            <input type="text" ng-model="filter.library" placeholder="{{ 'Search an object...' | translate }}">
+                                        </md-input-container>
+                                        <md-button class="md-icon-button" ng-click="addObject($event)"><md-icon>add</md-icon></md-button>
+                                    </div>
+
+                                    <div class="angular-ui-tree" ui-tree="libTreeCallbacks" data-drag-delay="150">
+                                        <div layout="row" layout-align="center center" ng-if="!anr_obj_library_data">
+                                            <md-progress-circular md-diameter="24"></md-progress-circular>
+                                        </div>
+                                        <ol class="no-list-style" ui-tree-nodes="" ng-model="anr_obj_library_data" id="objlib-tree-root">
+                                            <li ng-repeat="node in anr_obj_library_data" ui-tree-node ng-include="'tree_node_renderer.html'"></li>
+                                        </ol>
+                                    </div>
                                 </div>
                             </div>
-
                         </div>
 
                         <div flex ui-view="anr" style="background:white; z-index: 15; margin-left: 8px;"></div>
