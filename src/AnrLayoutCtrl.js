@@ -739,6 +739,8 @@
                 }
             }).then(function (objlib) {
                 if (objlib) {
+                    var copy = angular.copy(objlib);
+
                     if (objlib.asset) {
                         objlib.asset = objlib.asset.id;
                     }
@@ -752,7 +754,7 @@
                         });
                     }, function () {
                         // An error occurred, re-show the dialog
-                        $scope.createAttachedObject(null, objlib);
+                        $scope.createAttachedObject(null, copy);
                     });
                 }
             });
