@@ -1,1 +1,1 @@
-angular.module('AnrModule', []);
+angular.module('AnrModule', ['angularResizable']);
