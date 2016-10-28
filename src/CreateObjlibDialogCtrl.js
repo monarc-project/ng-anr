@@ -75,6 +75,11 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
 
     $scope.selectedAssetItemChange = function (item) {
         $scope.objlib.asset = item;
+
+        if (!item || item.type != 1) {
+            // Only primary assets can have a ROLF Tag set
+            $scope.objlib.rolfTag = null;
+        }
     };
 
     $scope.createCategory = function (ev, catName) {

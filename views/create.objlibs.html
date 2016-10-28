@@ -154,6 +154,7 @@
                         <md-icon style="margin-right: 8px;">class</md-icon>
                         <md-autocomplete
                                 flex
+                                ng-disabled="!objlib.asset || objlib.asset.type != 1"
                                 md-no-cache="true"
                                 md-selected-item="objlib.rolfTag"
                                 md-search-text="tagSearchText"
