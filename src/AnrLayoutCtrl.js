@@ -397,7 +397,6 @@
         }, true);
 
         $scope.$watch('comms', function (newValue, oldValue) {
-            console.log('comms update');
             if (commsWatchSetup) {
                 var smthChanged = false;
 
