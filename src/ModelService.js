@@ -17,6 +17,8 @@
                 }
             });
 
+        self.ModelDuplicationResource = $resource('/api/models-duplication');
+
         var getModels = function (params) {
             return self.ModelResource.query(params).$promise;
         };
@@ -37,12 +39,17 @@
             self.ModelResource.delete({modelId: id}, success, error);
         };
 
+        var duplicateModel = function (id, success, error) {
+            new self.ModelDuplicationResource({'model': id}).$save(success, error);
+        };
+
         return {
             getModels: getModels,
             getModel: getModel,
             createModel: createModel,
             deleteModel: deleteModel,
-            updateModel: updateModel
+            updateModel: updateModel,
+            duplicateModel: duplicateModel
         };
     }
 
