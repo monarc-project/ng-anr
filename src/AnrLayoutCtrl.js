@@ -397,6 +397,7 @@
         }, true);
 
         $scope.$watch('comms', function (newValue, oldValue) {
+            console.log('comms update');
             if (commsWatchSetup) {
                 var smthChanged = false;
 
@@ -408,7 +409,7 @@
                     // Find which cell changed
                     for (var i in newValue.impact) {
                         for (var j in newValue.impact[i]) {
-                            if (oldValue.impact[i][j] !== undefined && (!oldValue.impact[i][j] || oldValue.impact[i][j][$scope._langField('comment')] != newValue.impact[i][j][$scope._langField('comment')])) {
+                            if (!oldValue.impact[i][j] || oldValue.impact[i][j] !== undefined && (!oldValue.impact[i][j] || oldValue.impact[i][j][$scope._langField('comment')] != newValue.impact[i][j][$scope._langField('comment')])) {
                                 if (!newValue.impact[i][j] || newValue.impact[i][j].id == null) {
                                     AnrService.createScaleComment($scope.model.anr.id, $scope.scales.impacts.id, i, newValue.impact[i][j][$scope._langField('comment')], newValue.impact[i][j].scaleImpactType, update);
                                 } else {
@@ -426,7 +427,7 @@
 
                     // Find which line changed
                     for (var i in newValue.threat) {
-                        if (oldValue.threat[i] !== undefined && newValue.threat[i][$scope._langField('comment')] != oldValue.threat[i][$scope._langField('comment')]) {
+                        if (!oldValue.threat[i] || oldValue.threat[i] !== undefined && newValue.threat[i][$scope._langField('comment')] != oldValue.threat[i][$scope._langField('comment')]) {
                             if (newValue.threat[i].id == null) {
                                 AnrService.createScaleComment($scope.model.anr.id, $scope.scales.threats.id, i, newValue.threat[i][$scope._langField('comment')], undefined, update);
                             } else {
@@ -443,7 +444,7 @@
 
                     // Find which line changed
                     for (var i in newValue.vuln) {
-                        if (oldValue.vuln[i] !== undefined && newValue.vuln[i][$scope._langField('comment')] != oldValue.vuln[i][$scope._langField('comment')]) {
+                        if (!oldValue.vuln[i] || oldValue.vuln[i] !== undefined && newValue.vuln[i][$scope._langField('comment')] != oldValue.vuln[i][$scope._langField('comment')]) {
                             if (newValue.vuln[i].id == null) {
                                 AnrService.createScaleComment($scope.model.anr.id, $scope.scales.vulns.id, i, newValue.vuln[i][$scope._langField('comment')], undefined, update);
                             } else {
