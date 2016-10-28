@@ -17,26 +17,20 @@
             </md-card>
 
             <p class="md-title" translate>This object has the following instances in the risk analysis:</p>
-            <table class="md-html-table">
-                <thead>
-                <tr>
-                    <th translate>Active parent</th>
-                    <th style="width: 120px" translate>Actions</th>
+
+            <table md-table>
+                <thead md-head>
+                <tr md-row>
+                    <th md-column><span translate>Active parent</span></th>
+                    <th md-column><span translate>Actions</span></th>
                 </tr>
                 </thead>
-
-                <tbody>
-                <tr>
-                    <td>A &gt; B &gt; C</td>
-                    <td layout="row" layout-align="center center">
-                        <md-button class="md-icon-button">
-                            <md-tooltip>{{ 'Open instance' | translate }}</md-tooltip>
-                            <md-icon>open_in_new</md-icon>
-                        </md-button>
-                        <md-button class="md-icon-button">
-                            <md-tooltip>{{ 'Detach instance' | translate }}</md-tooltip>
-                            <md-icon>content_cut</md-icon>
-                        </md-button>
+                <tbody md-body>
+                <tr md-row ng-repeat="node in object.replicas">
+                    <td md-cell>{{ node[_langField('name')] }}</td>
+                    <td md-cell>
+                        <md-button class="md-icon-button" aria-title="{{ node[_langField('name')] }}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})" ng-click="cancel()"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></md-button>
+                        <md-button class="md-icon-button" aria-title="{{ 'Detach' | translate }}" ng-click="detachInstance($event,node)""><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></md-button>
                     </td>
                 </tr>
                 </tbody>
