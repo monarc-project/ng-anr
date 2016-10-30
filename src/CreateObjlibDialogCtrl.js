@@ -8,7 +8,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
     if (objlib != undefined && objlib != null) {
         $scope.objlib = objlib;
 
-        if ($scope.objlib.category) {
+        if ($scope.objlib.category && $scope.objlib.category.id) {
             $scope.objlib.category = $scope.objlib.category.id;
         }
     } else {
