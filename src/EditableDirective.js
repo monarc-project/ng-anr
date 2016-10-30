@@ -70,7 +70,7 @@ angular.module('AnrModule').directive('editable', function(){
 				edited: false,
 				model: modelCtrl.model,
 				name: scope.name,
-				type: attrs.editType
+				type: attrs.editType && attrs.editType != "" ? attrs.editType : 'text'
 			}
 
 			editableCtrl.addField(scope.field);
