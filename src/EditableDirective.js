@@ -56,9 +56,9 @@ angular.module('AnrModule').directive('editable', function(){
 		require: ['^^editable', '^^editModel'],
 		restrict: 'A',
 		template: '<span ng-if="! field.edited">{{field.model[field.name]}}</span>\
-							<input ng-if="field.edited && field.type == \'text\'" type="text" ng-model="field.model[field.name]"  escape="cancelEdition()"  action="saveEdition" autofocus/>\
-							<input ng-if="field.edited && field.type == \'number\'" type="number" ng-model="field.model[field.name]"  escape="cancelEdition()" action="saveEdition" autofocus/>\
-							<textarea ng-if="field.edited && field.type == \'textarea\'" ng-model="field.model[field.name]" escape="cancelEdition()" action="saveEdition" autofocus></textarea>',
+							<input ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'text\'" type="text" ng-model="field.model[field.name]"  escape="cancelEdition()"  action="saveEdition" autofocus/>\
+							<input ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'number\'" type="number" ng-model="field.model[field.name]"  escape="cancelEdition()" action="saveEdition" autofocus/>\
+							<textarea ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'textarea\'" ng-model="field.model[field.name]" escape="cancelEdition()" action="saveEdition" autofocus></textarea>',
 		scope: {
 			name: '@editField'
 		},
@@ -93,6 +93,7 @@ angular.module('AnrModule').directive('editable', function(){
 			scope.cancelEdition = function(){
 				scope.field.model[scope.field.name] = scope.field.initialValue;
 				scope.field.edited = false;
+				scope.field.error = false;
 			}
 
 			scope.saveEdition = function(direction){
