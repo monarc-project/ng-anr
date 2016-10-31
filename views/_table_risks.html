@@ -7,7 +7,7 @@
     <md-progress-circular md-indeterminate="true"></md-progress-circular>
 </div>
 
-<md-button ng-if="instmode == 'anr'">
+<md-button ng-if="instmode == 'anr' && !sheet_risk">
     <md-icon>save</md-icon>
     {{ 'Export to CSV' | translate }}
 </md-button>
