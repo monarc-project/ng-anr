@@ -29,7 +29,7 @@ angular.module('AnrModule').directive('editable', function(){
 						else{//next
 							next_position = current_pos + 1 < this.fields.length ? current_pos + 1 : 0;
 						}
-						this.fields[next_position].edited = true;
+						this.fields[next_position].edit();
 					}
 				}
 				else{
@@ -63,42 +63,46 @@ angular.module('AnrModule').directive('editable', function(){
 			name: '@editField'
 		},
 		link: function(scope, element, attrs, ctrls){
-			editableCtrl = ctrls[0];
-			modelCtrl = ctrls[1];
+			scope.editableCtrl = ctrls[0];
+			scope.modelCtrl = ctrls[1];
 
 			scope.field = {
 				edited: false,
-				model: modelCtrl.model,
+				model: scope.modelCtrl.model,
 				name: scope.name,
-				type: attrs.editType && attrs.editType != "" ? attrs.editType : 'text'
+				type: attrs.editType && attrs.editType != "" ? attrs.editType : 'text',
+				edit: function(){
+					this.edited = true;
+					this.initialValue = this.model[this.name];
+				},
+				cancel: function(){
+					this.model[this.name] = this.initialValue;
+					this.edited = false;
+					this.error = false;
+				}
 			}
 
-			editableCtrl.addField(scope.field);
+			scope.editableCtrl.addField(scope.field);
 
-			var handler_click = function(){
+			element.on('click', function(){
 				if( ! scope.field.edited ){
 					scope.$apply(function(){
 						scope.startEdition();
 					});
 				}
-			}
-
-			element.on('click', handler_click);
+			});
 
 			scope.startEdition = function(){
-				scope.field.edited = true;
-				scope.field.initialValue = scope.field.model[scope.field.name];
-			}
+				scope.field.edit();
+			};
 
 			scope.cancelEdition = function(){
-				scope.field.model[scope.field.name] = scope.field.initialValue;
-				scope.field.edited = false;
-				scope.field.error = false;
-			}
+				scope.field.cancel();
+			};
 
 			scope.saveEdition = function(direction){
-				editableCtrl.saveChange(scope.field, direction);
-			}
+					scope.editableCtrl.saveChange(scope.field, direction);
+			};
 		}
 	}
 }]).directive('escape', function(){
