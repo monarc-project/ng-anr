@@ -1,8 +1,6 @@
 angular.module('AnrModule').directive('editable', function(){
 	return{
 		restrict: 'A',
-		transclude: true,
-		template: '<div ng-transclude></div>',
 		scope: {
 			callback: '='
 		},
