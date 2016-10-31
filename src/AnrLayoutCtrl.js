@@ -3,7 +3,7 @@
     angular
         .module('AnrModule')
         .controller('AnrLayoutCtrl', [
-            '$scope', 'toastr', '$http', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'TableHelperService',
+            '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'TableHelperService',
             'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
             AnrLayoutCtrl
         ]);
@@ -11,7 +11,7 @@
     /**
      * ANR MAIN LAYOUT CONTROLLER
      */
-    function AnrLayoutCtrl($scope, toastr, $http, $mdMedia, $mdDialog, $timeout, gettextCatalog, TableHelperService, ModelService,
+    function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, TableHelperService, ModelService,
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService) {
         var self = this;
 
@@ -80,7 +80,7 @@
             $scope.opsheet_risk = undefined;
         };
 
-        $scope.$watch('model.anr.risks', function (newValue, oldValue) {
+        /*$scope.$watch('model.anr.risks', function (newValue, oldValue) {
             if (!isModelLoading && oldValue !== undefined) {
                 for (var i = 0; i < newValue.length; ++i) {
                     var newItem = angular.copy(newValue[i]);
@@ -89,8 +89,6 @@
                     delete newItem.$$hashKey;
 
                     if (!angular.equals(newItem, oldItem)) {
-
-                        console.log("new=", newItem, "old=", oldItem);
                         // This risk changed, update it
                         AnrService.updateInstanceRisk($scope.model.anr.id, newItem.id, newItem);
                     }
@@ -99,7 +97,7 @@
                 // Update the whole table
                 $timeout(function () { $scope.updateModel(true); }, 500);
             }
-        }, true);
+        }, true);*/
 
         /**
          * Risk analysis
@@ -398,7 +396,23 @@
             thresholdsWatchSetup = true;
         }, true);
 
-        $scope.$watch('scales', function (newValue, oldValue) {
+        $scope.onImpactScaleChanged = function (model, value) {
+            if (model.min > model.max) model.min = model.max;
+            if (model.max < model.min) model.max = model.min;
+
+            $scope.scales.impacts.min = model.min;
+            $scope.scales.impacts.max = model.max;
+
+            var promise = $q.defer();
+            AnrService.updateScale($scope.model.anr.id, $scope.scales.impacts.id, model.min, model.max, function () {
+                $q.resolve();
+            }, function () {
+                $q.reject();
+            });
+            return promise;
+        };
+
+        /*$scope.$watch('scales', function (newValue, oldValue) {
             if ($scope.model && $scope.model.anr && scaleWatchSetup) {
                 if (newValue.impacts.min > newValue.impacts.max) newValue.impacts.min = newValue.impacts.max;
                 if (newValue.impacts.max < newValue.impacts.min) newValue.impacts.max = newValue.impacts.min;
@@ -421,9 +435,9 @@
             }
 
             scaleWatchSetup = true;
-        }, true);
+        }, true);*/
 
-        $scope.$watch('comms', function (newValue, oldValue) {
+        /*$scope.$watch('comms', function (newValue, oldValue) {
             if (commsWatchSetup) {
                 var smthChanged = false;
 
@@ -484,7 +498,7 @@
             // Debounce the watch by 2 seconds (FIXME: watch get set back to true while other values are still loading,
             // causing unwanted calls to the backend)
             setTimeout(function () { commsWatchSetup = true; }, 2000);
-        }, true);
+        }, true);*/
 
         $scope.newColumn = { name: null };
         $scope.onCreateNewColumn = function (newValue) {

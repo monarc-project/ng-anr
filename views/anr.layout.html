@@ -103,10 +103,10 @@
 
                 <md-tab label="{{ 'Evaluation scales' | translate }}">
                     <div class="md-padding-left md-padding-right" layout="column">
-                        <div layout="row">
-                            <h4><span translate>Impacts scale:</span> [
-                                <span class="small text-blue" inline-edit-group="anr_scales" inline-edit="scales.impacts.min" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> -
-                                <span class="small text-blue" inline-edit-group="anr_scales" inline-edit="scales.impacts.max" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> ]
+                        <div editable callback="onImpactScaleChanged" layout="row">
+                            <h4 edit-model="scales.impacts"><span translate>Impacts scale:</span> [
+                                <span class="text-blue" edit-field="min"></span> -
+                                <span class="text-blue" edit-field="max"></span> ]
                             </h4>
                         </div>
                         <md-switch ng-model="display.show_hidden_impacts">{{ 'Show hidden impacts' | translate }}</md-switch>
