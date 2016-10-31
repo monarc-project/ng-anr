@@ -1,0 +1,62 @@
+<div ng-include="'views/anr/_risk_sheet.html'" ng-if="sheet_risk"></div>
+
+<div ng-if="risks && risks.length === 0" class="md-padding">
+    <em>{{ 'There is no AMV link for this instance, so the risks table is empty.' | translate }}</em>
+</div>
+<div ng-if="risks === undefined" class="md-padding">
+    <md-progress-circular md-indeterminate="true"></md-progress-circular>
+</div>
+
+<table editable callback="onRisksTableEdited" class="md-html-table" ng-if="!sheet_risk && risks.length > 0">
+    <thead>
+    <tr>
+        <th colspan="3"><p translate>Impact</p></th>
+        <th colspan="2"><p translate>Threat</p></th>
+        <th colspan="3"><p translate>Vulnerability</p></th>
+        <th colspan="3"><p translate>Current risk</p></th>
+        <th rowspan="2"><p translate>T</p></th>
+        <th rowspan="2"><p translate>Target risk</p></th>
+    </tr>
+    <tr>
+        <th>C</th>
+        <th>I</th>
+        <th>D</th>
+        <th translate>Label</th>
+        <th translate>Prob.</th>
+        <th translate>Label</th>
+        <th translate>Measures set</th>
+        <th translate>Qualif.</th>
+        <th>C</th>
+        <th>I</th>
+        <th>D</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr ng-repeat="risk in risks" edit-model="risk">
+        <td>{{risk.c_impact}}</td>
+        <td>{{risk.i_impact}}</td>
+        <td>{{risk.d_impact}}</td>
+        <td>{{::risk[_langField('threatDescription')]}}</td>
+        <td edit-field="threatRate" edit-type="number"></td>
+        <td>{{::risk[_langField('vulnDescription')]}}</td>
+        <td edit-field="comment" edit-type="textarea"></td>
+        <td edit-field="vulnerabilityRate" edit-type="number"></td>
+        <td ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc"
+            ng-class="{'green': risk.c_risk > 0 && risk.c_risk < scales.thresholds.min, 'orange': risk.c_risk >= scales.thresholds.min && risk.c_risk < scales.thresholds.max, 'red': risk.c_risk >= scales.thresholds.max}">{{ risk.c_risk_enabled ? risk.c_risk : '' }}</td>
+        <td ng-disabled="!risk.i_risk_enabled" class="tbl-risk-calc"
+            ng-class="{'green': risk.i_risk > 0 && risk.i_risk < scales.thresholds.min, 'orange': risk.i_risk >= scales.thresholds.min && risk.i_risk < scales.thresholds.max, 'red': risk.i_risk >= scales.thresholds.max}">{{ risk.i_risk_enabled ? risk.i_risk : '' }}</td>
+        <td ng-disabled="!risk.d_risk_enabled" class="tbl-risk-calc"
+            ng-class="{'green': risk.d_risk > 0 && risk.d_risk < scales.thresholds.min, 'orange': risk.d_risk >= scales.thresholds.min && risk.d_risk < scales.thresholds.max, 'red': risk.d_risk >= scales.thresholds.max}">{{ risk.d_risk_enabled ? risk.d_risk : '' }}</td>
+        <td>
+            <div layout="row" layout-align="center center">
+                <a class="pointer" title="{{ ::('Open risk sheet' | translate) }}" ng-click="openRiskSheet(risk)">
+                    <md-icon>open_in_new</md-icon>
+                </a>
+                <span class="green-dot" ng-if="risk.t"></span>
+            </div>
+        </td>
+        <td class="txtcenter">{{risk.target_risk}}</td>
+    </tr>
+    </tbody>
+</table>

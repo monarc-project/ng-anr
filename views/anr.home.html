@@ -64,49 +64,7 @@
     </md-tab>
 
     <md-tab label="{{ 'Risks table' | translate }}">
-        <p class="md-title md-padding" translate>{{ model.anr.risks.length || 0 }} risk(s)</p>
-
-        <div ng-if="!model.anr.risks || !model.anr.risks" class="md-padding">
-            <em>{{ 'There are no risks for this risk analysis.' | translate }}</em>
-        </div>
-
-        <table class="md-html-table" ng-if="model.anr.risks.length > 0">
-            <thead>
-            <tr>
-                <th colspan="2"><p translate>Threat</p></th>
-                <th colspan="3"><p translate>Vulnerability</p></th>
-                <th colspan="3"><p translate>Current risk</p></th>
-                <th rowspan="2"><p translate>T</p></th>
-                <th rowspan="2"><p translate>Target risk</p></th>
-            </tr>
-            <tr>
-                <th translate>Label</th>
-                <th translate>Prob.</th>
-                <th translate>Label</th>
-                <th translate>Measures set</th>
-                <th translate>Qualif.</th>
-                <th>C</th>
-                <th>I</th>
-                <th>D</th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <tr ng-repeat="risk in model.anr.risks">
-                <td>{{ risk[_langField('threatDesciption')] }}</td>
-                <td>{{ risk.threatRate }}</td>
-                <td>{{ risk[_langField('vulnDescription')] }}</td>
-                <td>{{ risk.comment }}</td>
-                <td>{{ risk.vulnerabilityRate }}</td>
-                <td>{{ risk.c_risk }}</td>
-                <td>{{ risk.i_risk }}</td>
-                <td>{{ risk.d_risk }}</td>
-
-                <td><span class="green-dot" ng-if="risk.t"></span></td>
-                <td>{{ risk.target_risk }}</td>
-            </tr>
-            </tbody>
-        </table>
+        <ng-include src="'views/anr/_table_risks.html'"></ng-include>
     </md-tab>
     <ng-include src="'views/anr/_table_risks_op.html'"></ng-include>
 </md-tabs>

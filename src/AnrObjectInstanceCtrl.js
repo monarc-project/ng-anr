@@ -24,6 +24,8 @@
         var isInstanceLoading = true;
         var tmpCurrentTab = $scope.ToolsAnrService.currentTab;
 
+        $scope.risks = undefined;
+
         $scope.updateInstance = function () {
             AnrService.getInstance($scope.model.anr.id, $stateParams.instId).then(function (data) {
                 // Filter out C/I/D consequences
@@ -46,26 +48,19 @@
                 if($scope.instance.asset.type == 1){
                     $scope.oprisks = $scope.instance.oprisks;//for the _table_risks_op.html partial
                 }
+
+                $scope.risks = $scope.instance.risks; // for the _table_risks.html partial
             });
         };
         $scope.updateInstance();
 
-        $scope.$watch('instance.risks', function (newValue, oldValue) {
-            if (!isInstanceLoading && oldValue !== undefined) {
-                for (var i = 0; i < newValue.length; ++i) {
-                    var newItem = newValue[i];
-                    var oldItem = oldValue[i];
+        $scope.onRisksTableEdited = function (model, name) {
+            // This risk changed, update it
+            AnrService.updateInstanceRisk($scope.model.anr.id, model.id, model);
 
-                    if (!angular.equals(newItem, oldItem)) {
-                        // This risk changed, update it
-                        AnrService.updateInstanceRisk($scope.model.anr.id, newItem.id, newItem);
-                    }
-                }
-
-                // Update the whole table
-                $timeout($scope.updateInstance, 500);
-            }
-        }, true);
+            // Update the whole table
+            $timeout($scope.updateInstance, 500);
+        };
 
         $scope.$watch('instance.oprisks', function (newValue, oldValue) {
             if (!isInstanceLoading && oldValue !== undefined) {
