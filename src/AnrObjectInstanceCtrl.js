@@ -54,22 +54,13 @@
         };
         $scope.updateInstance();
 
-        $scope.$watch('instance.risks', function (newValue, oldValue) {
-            if (!isInstanceLoading && oldValue !== undefined) {
-                for (var i = 0; i < newValue.length; ++i) {
-                    var newItem = newValue[i];
-                    var oldItem = oldValue[i];
+        $scope.onRisksTableEdited = function (model, name) {
+            // This risk changed, update it
+            AnrService.updateInstanceRisk($scope.model.anr.id, model.id, model);
 
-                    if (!angular.equals(newItem, oldItem)) {
-                        // This risk changed, update it
-                        AnrService.updateInstanceRisk($scope.model.anr.id, newItem.id, newItem);
-                    }
-                }
-
-                // Update the whole table
-                $timeout($scope.updateInstance, 500);
-            }
-        }, true);
+            // Update the whole table
+            $timeout($scope.updateInstance, 500);
+        };
 
         $scope.$watch('instance.oprisks', function (newValue, oldValue) {
             if (!isInstanceLoading && oldValue !== undefined) {

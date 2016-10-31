@@ -2,6 +2,11 @@
     white-space: pre-wrap
 }
 
+
+.pointer {
+    cursor: pointer;
+}
+
 .table-fab-top-2 {
     margin-right: 72px;
     margin-top: 64px;
