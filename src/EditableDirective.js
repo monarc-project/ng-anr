@@ -15,6 +15,8 @@ angular.module('AnrModule').directive('editable', function(){
 			this.callback = $scope.callback;
 
 			this.saveChange = function(field, direction){
+				field.error = false;
+
 				if( $attrs.forceCallback == undefined && field.initialValue == field.model[field.name]){//inutile d'appeler la callback
 					field.cancel();
 					if(direction != undefined){
@@ -23,21 +25,31 @@ angular.module('AnrModule').directive('editable', function(){
 					return true;
 				}
 
-				if( this.callback.call(null, field.model, field.name) ){//gestion des erreurs
+
+				var result = this.callback.call(null, field.model, field.name);
+
+				if(result.then == undefined){
+					this.handleCallbackReturn(result, field, direction);
+				}
+				else{
+					var self = this;
+					result.then(function(){	 self.handleCallbackReturn(true, field, direction);}, function(){ self.handleCallbackReturn(false, field, direction);} );
+				}
+				return true;
+			};
+
+			this.handleCallbackReturn = function(success, field, direction){
+				if( success ){//gestion des erreurs
 					field.error = false;
 					field.edited = false;
 
 					if(direction != undefined){
 						this.moveEdition(field, direction);
 					}
-					return true;
 				}
 				else{
 					field.error = true;
-					return false;
 				}
-
-				return true;
 			};
 
 			this.moveEdition = function(field, direction){
