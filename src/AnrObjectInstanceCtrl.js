@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrObjectInstanceCtrl', [
             '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$state', 'TableHelperService',
-            'ModelService', 'ObjlibService', '$stateParams', 'AnrService', '$rootScope', '$timeout', '$location', 'InstanceService',
+            'ModelService', 'ObjlibService', '$stateParams', 'AnrService', '$rootScope', '$timeout', '$location', 'InstanceService', '$q',
             AnrObjectInstanceCtrl
         ]);
 
@@ -13,7 +13,7 @@
      */
     function AnrObjectInstanceCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state,
                                             TableHelperService, ModelService, ObjlibService, $stateParams, AnrService,
-                                            $rootScope, $timeout, $location, InstanceService) {
+                                            $rootScope, $timeout, $location, InstanceService, $q) {
 
         $scope.instance = {};
 
@@ -62,22 +62,22 @@
             $timeout($scope.updateInstance, 500);
         };
 
-        $scope.$watch('instance.oprisks', function (newValue, oldValue) {
-            if (!isInstanceLoading && oldValue !== undefined) {
-                for (var i = 0; i < newValue.length; ++i) {
-                    var newItem = newValue[i];
-                    var oldItem = oldValue[i];
+        // $scope.$watch('instance.oprisks', function (newValue, oldValue) {
+        //     if (!isInstanceLoading && oldValue !== undefined) {
+        //         for (var i = 0; i < newValue.length; ++i) {
+        //             var newItem = newValue[i];
+        //             var oldItem = oldValue[i];
 
-                    if (!angular.equals(newItem, oldItem)) {
-                        // This OP risk changed, update it
-                        AnrService.updateInstanceOpRisk($scope.model.anr.id, newItem.id, newItem);
-                    }
-                }
+        //             if (!angular.equals(newItem, oldItem)) {
+        //                 // This OP risk changed, update it
+        //                 AnrService.updateInstanceOpRisk($scope.model.anr.id, newItem.id, newItem);
+        //             }
+        //         }
 
-                // Update the whole table
-                $timeout($scope.updateInstance, 500);
-            }
-        }, true);
+        //         // Update the whole table
+        //         $timeout($scope.updateInstance, 500);
+        //     }
+        // }, true);
 
 
         $scope.openRiskSheet = function (risk) {
@@ -190,6 +190,16 @@
                 $rootScope.hookUpdateObjlib();
             }
 
+        }
+
+        $scope.changeRiskOp = function(riskOp, attr){
+            var result = $q.defer();
+            AnrService.updateInstanceOpRisk($scope.model.anr.id, riskOp.id, riskOp, function(data){
+                result.resolve(true);
+            }, function(error){
+                result.reject(false);
+            });
+            return result.promise;
         }
     }
 

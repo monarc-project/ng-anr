@@ -9,7 +9,7 @@
         <em ng-if="instmode == 'obj' ">{{ 'There are no operational risks for this object.' | translate }}</em>
     </div>
 
-    <table class="md-html-table" ng-if="!opsheet_risk && oprisks.length > 0">
+    <table class="md-html-table inputs-as-number" ng-if="!opsheet_risk && oprisks.length > 0" editable callback="changeRiskOp">
         <thead>
         <tr>
             <th rowspan="3" translate>Risk description</th>
@@ -47,23 +47,23 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="risk in oprisks">
+        <tr ng-repeat="risk in oprisks" edit-model="risk">
             <td>{{ risk[_langField('description')] }}</td>
-            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.brutProb }}</td>
-            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.brutR }}</td>
-            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.brutO }}</td>
-            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.brutL }}</td>
-            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.brutF }}</td>
-            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.brutP }}</td>
-            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">{{ risk.cacheBrutRisk }}</td>
-            <td class="small" inline-edit-group="anr_risk_op" inline-edit="risk.netProb" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="-" inline-edit-on-click></td>
-            <td class="small" inline-edit-group="anr_risk_op" inline-edit="risk.netR" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="-" inline-edit-on-click></td>
-            <td class="small" inline-edit-group="anr_risk_op" inline-edit="risk.netO" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="-" inline-edit-on-click></td>
-            <td class="small" inline-edit-group="anr_risk_op" inline-edit="risk.netL" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="-" inline-edit-on-click></td>
-            <td class="small" inline-edit-group="anr_risk_op" inline-edit="risk.netF" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="-" inline-edit-on-click></td>
-            <td class="small" inline-edit-group="anr_risk_op" inline-edit="risk.netP" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="-" inline-edit-on-click></td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutProb"></td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutR"></td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutO"></td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutL"></td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutF"></td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutP"></td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="cacheBrutRisk"></td>
+            <td class="small" edit-field="netProb"></td>
+            <td class="small" edit-field="netR"></td>
+            <td class="small" edit-field="netO"></td>
+            <td class="small" edit-field="netL"></td>
+            <td class="small" edit-field="netF"></td>
+            <td class="small" edit-field="netP"></td>
             <td>{{ risk.cacheNetRisk }}</td>
-            <td inline-edit-group="anr_risk_op" inline-edit="risk.comment" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-placeholder="Click to type..." inline-edit-on-click inline-edit-textarea></td>
+            <td edit-field="comment" edit-type="textarea"></td>
             <td class="txtcenter"><div style="display:inline-block" class="green-dot" ng-if="risk.t"></div></td>
             <td>{{ risk.cacheTargetedRisk }}</td>
             <td class="txtcenter">
