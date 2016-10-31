@@ -27,7 +27,6 @@ angular.module('AnrModule').directive('editable', function(){
 					field.error = false;
 					field.edited = false;
 
-
 					if(direction != undefined){
 						this.moveEdition(field, direction);
 					}
