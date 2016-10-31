@@ -7,10 +7,16 @@
     <md-progress-circular md-indeterminate="true"></md-progress-circular>
 </div>
 
+<md-button ng-if="instmode == 'anr' && !sheet_risk">
+    <md-icon>save</md-icon>
+    {{ 'Export to CSV' | translate }}
+</md-button>
+
 <table editable callback="onRisksTableEdited" class="md-html-table" ng-if="!sheet_risk && risks.length > 0">
     <thead>
     <tr>
         <th colspan="3"><p translate>Impact</p></th>
+        <th rowspan="2"><p translate>Asset</p></th>
         <th colspan="2"><p translate>Threat</p></th>
         <th colspan="3"><p translate>Vulnerability</p></th>
         <th colspan="3"><p translate>Current risk</p></th>
@@ -37,6 +43,7 @@
         <td>{{risk.c_impact}}</td>
         <td>{{risk.i_impact}}</td>
         <td>{{risk.d_impact}}</td>
+        <td>{{::risk[_langField('assetDescription')]}}</td>
         <td>{{::risk[_langField('threatDescription')]}}</td>
         <td edit-field="threatRate" edit-type="number"></td>
         <td>{{::risk[_langField('vulnDescription')]}}</td>
