@@ -4,9 +4,9 @@ angular.module('AnrModule').directive('editable', function(){
 		transclude: true,
 		template: '<div ng-transclude></div>',
 		scope: {
-			callback: '=',
+			callback: '='
 		},
-		controller: ['$scope', function($scope){
+		controller: ['$scope', '$attrs', function($scope, $attrs){
 			this.fields = [];
 			this.addField = function(field){
 				this.fields.push(field);
@@ -15,27 +15,43 @@ angular.module('AnrModule').directive('editable', function(){
 			this.callback = $scope.callback;
 
 			this.saveChange = function(field, direction){
+				if( $attrs.forceCallback == undefined && field.initialValue == field.model[field.name]){//inutile d'appeler la callback
+					field.cancel();
+					if(direction != undefined){
+						this.moveEdition(field, direction);
+					}
+					return true;
+				}
+
 				if( this.callback.call(null, field.model, field.name) ){//gestion des erreurs
 					field.error = false;
 					field.edited = false;
 
 
 					if(direction != undefined){
-						var current_pos = this.fields.indexOf(field);
-						var next_position = 0;
-						if(direction == 'prev'){
-							next_position = current_pos - 1 >= 0 ? current_pos - 1 : this.fields.length - 1;
-						}
-						else{//next
-							next_position = current_pos + 1 < this.fields.length ? current_pos + 1 : 0;
-						}
-						this.fields[next_position].edit();
+						this.moveEdition(field, direction);
 					}
+					return true;
 				}
 				else{
 					field.error = true;
+					return false;
 				}
-			}
+
+				return true;
+			};
+
+			this.moveEdition = function(field, direction){
+				var current_pos = this.fields.indexOf(field);
+				var next_position = 0;
+				if(direction == 'prev'){
+					next_position = current_pos - 1 >= 0 ? current_pos - 1 : this.fields.length - 1;
+				}
+				else{//next
+					next_position = current_pos + 1 < this.fields.length ? current_pos + 1 : 0;
+				}
+				this.fields[next_position].edit();
+			};
 		}]
 	}
 }).directive('editModel', ['$parse', function($parse){
