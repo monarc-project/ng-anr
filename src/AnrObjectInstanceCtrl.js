@@ -24,6 +24,8 @@
         var isInstanceLoading = true;
         var tmpCurrentTab = $scope.ToolsAnrService.currentTab;
 
+        $scope.risks = undefined;
+
         $scope.updateInstance = function () {
             AnrService.getInstance($scope.model.anr.id, $stateParams.instId).then(function (data) {
                 // Filter out C/I/D consequences
@@ -46,6 +48,8 @@
                 if($scope.instance.asset.type == 1){
                     $scope.oprisks = $scope.instance.oprisks;//for the _table_risks_op.html partial
                 }
+
+                $scope.risks = $scope.instance.risks; // for the _table_risks.html partial
             });
         };
         $scope.updateInstance();

@@ -3,7 +3,7 @@
     angular
         .module('AnrModule')
         .controller('AnrLayoutCtrl', [
-            '$scope', 'toastr', '$http', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
+            '$scope', 'toastr', '$http', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'TableHelperService',
             'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
             AnrLayoutCtrl
         ]);
@@ -11,7 +11,7 @@
     /**
      * ANR MAIN LAYOUT CONTROLLER
      */
-    function AnrLayoutCtrl($scope, toastr, $http, $mdMedia, $mdDialog, gettextCatalog, TableHelperService, ModelService,
+    function AnrLayoutCtrl($scope, toastr, $http, $mdMedia, $mdDialog, $timeout, gettextCatalog, TableHelperService, ModelService,
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService) {
         var self = this;
 
@@ -19,6 +19,7 @@
         $scope.GlobalResizeMenuSize = "";
         $scope.GlobalResizeMenuContentHide = false;
         var minWidthMenu = 80;
+        var isModelLoading = false;
 
         $scope.$on("angular-resizable.resizeEnd", function (event, args) {
             if(args.id != undefined && args.id == 'global-resize-menu' && parseInt(args.width) <= minWidthMenu){
@@ -38,7 +39,8 @@
             $scope.updateObjectsLibrary(gotofirst);
         };
 
-        $scope.updateModel = function () {
+        $scope.updateModel = function (justCore) {
+            isModelLoading = true;
             ModelService.getModel($stateParams.modelId).then(function (data) {
                 $scope.model = data;
                 $rootScope.anr_id = data.anr.id;
@@ -49,12 +51,16 @@
                     rolf_thresholds: {min: $scope.model.anr.seuilRolf1, max: $scope.model.anr.seuilRolf2}
                 }
 
-                $scope.updateInstances();
-                $scope.updateObjectsLibrary();
-                $scope.updateScales();
+                if (!justCore) {
+                    $scope.updateInstances();
+                    $scope.updateObjectsLibrary();
+                    $scope.updateScales();
+                }
 
-                $scope.oprisks = $scope.model.anr.risksop;//for the _table_risks_op.html partial
+                $scope.oprisks = $scope.model.anr.risksop; // for the _table_risks_op.html partial
+                $scope.risks = $scope.model.anr.risks; // for the _table_risks.html partial
 
+                isModelLoading = false;
             });
         };
 
@@ -73,6 +79,27 @@
         $scope.resetOpSheet = function () {
             $scope.opsheet_risk = undefined;
         };
+
+        $scope.$watch('model.anr.risks', function (newValue, oldValue) {
+            if (!isModelLoading && oldValue !== undefined) {
+                for (var i = 0; i < newValue.length; ++i) {
+                    var newItem = angular.copy(newValue[i]);
+                    var oldItem = oldValue[i];
+
+                    delete newItem.$$hashKey;
+
+                    if (!angular.equals(newItem, oldItem)) {
+
+                        console.log("new=", newItem, "old=", oldItem);
+                        // This risk changed, update it
+                        AnrService.updateInstanceRisk($scope.model.anr.id, newItem.id, newItem);
+                    }
+                }
+
+                // Update the whole table
+                $timeout(function () { $scope.updateModel(true); }, 500);
+            }
+        }, true);
 
         /**
          * Risk analysis
