@@ -153,7 +153,7 @@
                         </div>
 
                         <div ng-if="scales.vulns.min != scales.vulns.max && scales.vulns.max > 0" editable callback="onVulnCommChanged">
-                            <ul class="no-list-style" edit-model>
+                            <ul class="no-list-style" edit-model="comms">
                                 <li ng-repeat="(idx,i) in range(scales.vulns.min, scales.vulns.max)">{{i}}. <span edit-field="{{ _langField('comment') }}" edit-localmodel="comms.vuln[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
                             </ul>
                         </div>
