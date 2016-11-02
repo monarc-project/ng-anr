@@ -15,7 +15,8 @@ angular.module('AnrModule').directive('editable', function(){
 			this.saveChange = function(field, direction){
 				field.error = false;
 
-				if( $attrs.forceCallback == undefined && field.initialValue == field.model[field.name]){//inutile d'appeler la callback
+				if( $attrs.forceCallback == undefined && field.initialValue == field.editedValue){
+					// value didn't change, don't call callback
 					field.cancel();
 					if(direction != undefined){
 						this.moveEdition(field, direction);
@@ -24,6 +25,7 @@ angular.module('AnrModule').directive('editable', function(){
 				}
 
 
+				field.model[field.name] = field.editedValue;
 				var result = this.callback.call(null, field.model, field.name);
 
 				if(result.then == undefined){
@@ -81,9 +83,9 @@ angular.module('AnrModule').directive('editable', function(){
 		require: ['^^editable', '^^editModel'],
 		restrict: 'A',
 		template: '<span ng-if="! field.edited">{{field.model[field.name]}}</span>\
-							<input class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'text\'" type="text" ng-model="field.model[field.name]"  escape="cancelEdition()"  action="saveEdition" autofocus/>\
-							<input class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'number\'" type="number" ng-model="field.model[field.name]"  escape="cancelEdition()" action="saveEdition" autofocus/>\
-							<textarea class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'textarea\'" ng-model="field.model[field.name]" escape="cancelEdition()" action="saveEdition" autofocus></textarea>',
+							<input class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'text\'" type="text" ng-model="field.editedValue"  escape="cancelEdition()"  action="saveEdition" autofocus/>\
+							<input class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'number\'" type="number" ng-model="field.editedValue"  escape="cancelEdition()" action="saveEdition" autofocus/>\
+							<textarea class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'textarea\'" ng-model="field.editedValue" escape="cancelEdition()" action="saveEdition" autofocus></textarea>',
 		scope: {
 			name: '@editField'
 		},
@@ -96,9 +98,11 @@ angular.module('AnrModule').directive('editable', function(){
 				model: scope.modelCtrl.model,
 				name: scope.name,
 				type: attrs.editType && attrs.editType != "" ? attrs.editType : 'text',
+				editedValue: null,
 				edit: function(){
 					this.edited = true;
 					this.initialValue = this.model[this.name];
+					this.editedValue = angular.copy(this.model[this.name]);
 				},
 				cancel: function(){
 					this.model[this.name] = this.initialValue;
