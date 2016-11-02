@@ -98,11 +98,12 @@ angular.module('AnrModule').directive('editable', function(){
 
 			scope.field = {
 				edited: false,
-				model: scope.localmodel ? scope.localmodel : scope.modelCtrl.model,
+				model: scope.localmodel !== undefined ? scope.localmodel : scope.modelCtrl.model,
 				name: scope.name,
 				type: attrs.editType && attrs.editType != "" ? attrs.editType : 'text',
 				editedValue: null,
 				edit: function(){
+					console.log(scope.localmodel);
 					this.edited = true;
 					this.initialValue = this.model[this.name];
 					this.editedValue = angular.copy(this.model[this.name]);
