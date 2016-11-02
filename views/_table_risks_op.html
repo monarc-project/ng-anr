@@ -8,7 +8,6 @@
         <em ng-if="instmode == 'anr' ">{{ 'There are no operational risks for this risk analysis.' | translate }}</em>
         <em ng-if="instmode == 'obj' ">{{ 'There are no operational risks for this object.' | translate }}</em>
     </div>
-
     <table class="md-html-table inputs-as-number" ng-if="!opsheet_risk && oprisks.length > 0" editable callback="changeRiskOp">
         <thead>
         <tr>
@@ -55,17 +54,18 @@
             <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutL"></td>
             <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutF"></td>
             <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutP"></td>
-            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " >{{risk.cacheBrutRisk}}</td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " class="tbl-risk-calc"
+                ng-class="{'green': risk.cacheBrutRisk > 0 && risk.cacheBrutRisk < thresholds.rolf_thresholds.min, 'orange': risk.cacheBrutRisk >= thresholds.rolf_thresholds.min && risk.cacheBrutRisk < thresholds.rolf_thresholds.max, 'red': risk.cacheBrutRisk >= thresholds.rolf_thresholds.max}">{{risk.cacheBrutRisk}}</td>
             <td class="small" edit-field="netProb"></td>
             <td class="small" edit-field="netR"></td>
             <td class="small" edit-field="netO"></td>
             <td class="small" edit-field="netL"></td>
             <td class="small" edit-field="netF"></td>
             <td class="small" edit-field="netP"></td>
-            <td>{{ risk.cacheNetRisk }}</td>
+            <td class="tbl-risk-calc" ng-class="{'green': risk.cacheNetRisk > 0 && risk.cacheNetRisk < thresholds.rolf_thresholds.min, 'orange': risk.cacheNetRisk >= thresholds.rolf_thresholds.min && risk.cacheNetRisk < thresholds.rolf_thresholds.max, 'red': risk.cacheNetRisk >= thresholds.rolf_thresholds.max}">{{ risk.cacheNetRisk }}</td>
             <td edit-field="comment" edit-type="textarea"></td>
             <td class="txtcenter"><div style="display:inline-block" class="green-dot" ng-if="risk.t"></div></td>
-            <td>{{ risk.cacheTargetedRisk }}</td>
+            <td class="tbl-risk-calc" ng-class="{'green': risk.cacheTargetedRisk > 0 && risk.cacheTargetedRisk < thresholds.rolf_thresholds.min, 'orange': risk.cacheTargetedRisk >= thresholds.rolf_thresholds.min && risk.cacheTargetedRisk < thresholds.rolf_thresholds.max, 'red': risk.cacheTargetedRisk >= thresholds.rolf_thresholds.max}">{{ risk.cacheTargetedRisk }}</td>
             <td class="txtcenter">
                 <md-button ng-if=" instmode != 'obj' " class="md-icon-button" ng-click="openOpRiskSheet(risk)">
                     <md-tooltip>{{ 'Open risk sheet' | translate }} - {{instmode}}</md-tooltip>
