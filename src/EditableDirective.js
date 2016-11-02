@@ -155,7 +155,6 @@ angular.module('AnrModule').directive('editable', function(){
 			};
 
 			scope.$on('$destroy', function() {
-				console.log('destroy');
 				scope.editableCtrl.destroyField(scope.field);
 			});
 		}
