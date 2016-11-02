@@ -381,9 +381,9 @@
         };
 
         $scope.scales = {
-            impacts: {min: '0', max: '3'},
-            threats: {min: '0', max: '4'},
-            vulns: {min: '0', max: '3'},
+            impacts: {min: 0, max: 3},
+            threats: {min: 0, max: 4},
+            vulns: {min: 0, max: 3},
         };
 
         $scope.comms = {
@@ -665,6 +665,19 @@
             $timeout($scope.updateInstance, 500);
 
             return promise;
+        };
+
+        $scope.changeRiskOp = function(riskOp, attr){
+            var result = $q.defer();
+            AnrService.updateInstanceOpRisk($scope.model.anr.id, riskOp.id, riskOp, function(risk){
+                riskOp.cacheBrutRisk = risk.cacheBrutRisk;
+                riskOp.cacheNetRisk = risk.cacheNetRisk;
+                riskOp.cacheTargetedRisk = risk.cacheTargetedRisk;
+                result.resolve(true);
+            }, function(error){
+                result.reject(false);
+            });
+            return result.promise;
         };
 
 

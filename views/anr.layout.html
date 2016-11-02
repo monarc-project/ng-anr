@@ -140,7 +140,7 @@
 
                         <div ng-if="scales.threats.min != scales.threats.max && scales.threats.max > 0" editable callback="onThreatCommChanged">
                             <ul class="no-list-style" edit-model="comms">
-                                <li ng-repeat="(idx,i) in range(scales.threats.min, scales.threats.max)">{{i}}. <span edit-field="{{ _langField('comment') }}" edit-localmodel="comms.threat[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+                                <li ng-repeat="i in range(scales.threats.min, scales.threats.max)">{{i}}. <span edit-field="{{ _langField('comment') }}" edit-localmodel="comms.threat[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
                             </ul>
                         </div>
 
@@ -154,7 +154,7 @@
 
                         <div ng-if="scales.vulns.min != scales.vulns.max && scales.vulns.max > 0" editable callback="onVulnCommChanged">
                             <ul class="no-list-style" edit-model="comms">
-                                <li ng-repeat="(idx,i) in range(scales.vulns.min, scales.vulns.max)">{{i}}. <span edit-field="{{ _langField('comment') }}" edit-localmodel="comms.vuln[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+                                <li ng-repeat="i in range(scales.vulns.min, scales.vulns.max)">{{i}}. <span edit-field="{{ _langField('comment') }}" edit-localmodel="comms.vuln[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
                             </ul>
                         </div>
 

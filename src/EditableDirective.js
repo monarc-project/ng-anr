@@ -8,7 +8,11 @@ angular.module('AnrModule').directive('editable', function(){
 			this.fields = [];
 			this.addField = function(field){
 				this.fields.push(field);
-			}
+			};
+
+			this.destroyField = function (field) {
+				this.fields.splice(this.fields.indexOf(field), 1);
+			};
 
 			this.callback = $scope.callback;
 
@@ -149,6 +153,11 @@ angular.module('AnrModule').directive('editable', function(){
 			scope.saveEdition = function(direction){
 					scope.editableCtrl.saveChange(scope.field, direction);
 			};
+
+			scope.$on('$destroy', function() {
+				console.log('destroy');
+				scope.editableCtrl.destroyField(scope.field);
+			});
 		}
 	}
 }]).directive('escape', function(){
@@ -182,7 +191,7 @@ angular.module('AnrModule').directive('editable', function(){
       	}
 
         if ( element.prop('tagName').toLowerCase() == "textarea" && ((event.which === 13 && event.ctrlKey) || (event.which === 13 && event.metaKey))) {
-          triggerValidation();
+           	triggerValidation();
         }
         else if(element.prop('tagName').toLowerCase() != "textarea" && event.which === 13){
       		triggerValidation();

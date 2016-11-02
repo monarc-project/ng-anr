@@ -166,19 +166,6 @@
             }
 
         }
-
-        $scope.changeRiskOp = function(riskOp, attr){
-            var result = $q.defer();
-            AnrService.updateInstanceOpRisk($scope.model.anr.id, riskOp.id, riskOp, function(risk){
-                riskOp.cacheBrutRisk = risk.cacheBrutRisk;
-                riskOp.cacheNetRisk = risk.cacheNetRisk;
-                riskOp.cacheTargetedRisk = risk.cacheTargetedRisk;
-                result.resolve(true);
-            }, function(error){
-                result.reject(false);
-            });
-            return result.promise;
-        }
     }
 
 
