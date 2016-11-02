@@ -25,7 +25,7 @@
                                     <label translate>Confidentiality</label>
                                     <md-select ng-model="instance.consequences[idx].c_risk" ng-change="calculeImpact('c')">
                                         <md-option value="-1">{{ 'Unknown' | translate }}</md-option>
-                                        <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val">{{val}}</md-option>
+                                        <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val" title="{{scaleCommCache[1][val]}}">{{val}}</md-option>
                                     </md-select>
                                 </md-input-container>
 
@@ -33,7 +33,7 @@
                                     <label translate>Integrity</label>
                                     <md-select ng-model="instance.consequences[idx].i_risk" ng-change="calculeImpact('i')">
                                         <md-option value="-1">{{ 'Unknown' | translate }}</md-option>
-                                        <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val">{{val}}</md-option>
+                                        <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val" title="{{scaleCommCache[2][val]}}">{{val}}</md-option>
                                     </md-select>
                                 </md-input-container>
 
@@ -41,7 +41,7 @@
                                     <label translate>Availability</label>
                                     <md-select ng-model="instance.consequences[idx].d_risk" ng-change="calculeImpact('d')">
                                         <md-option value="-1">{{ 'Unknown' | translate }}</md-option>
-                                        <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val">{{val}}</md-option>
+                                        <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val" title="{{scaleCommCache[3][val]}}">{{val}}</md-option>
                                     </md-select>
                                 </md-input-container>
                             </div>
