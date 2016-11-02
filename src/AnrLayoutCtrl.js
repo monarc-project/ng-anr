@@ -415,15 +415,12 @@
             thresholdsWatchSetup = true;
         }, true);
 
-        $scope.onImpactScaleChanged = function (model, value) {
+        var updateScale = function(id, model) {
             if (model.min > model.max) model.min = model.max;
             if (model.max < model.min) model.max = model.min;
 
-            $scope.scales.impacts.min = model.min;
-            $scope.scales.impacts.max = model.max;
-
             var promise = $q.defer();
-            AnrService.updateScale($scope.model.anr.id, $scope.scales.impacts.id, model.min, model.max, function () {
+            AnrService.updateScale($scope.model.anr.id, id, model.min, model.max, function () {
                 $q.resolve();
             }, function () {
                 $q.reject();
@@ -431,30 +428,21 @@
             return promise;
         };
 
-        /*$scope.$watch('scales', function (newValue, oldValue) {
-            if ($scope.model && $scope.model.anr && scaleWatchSetup) {
-                if (newValue.impacts.min > newValue.impacts.max) newValue.impacts.min = newValue.impacts.max;
-                if (newValue.impacts.max < newValue.impacts.min) newValue.impacts.max = newValue.impacts.min;
+        $scope.onImpactScaleChanged = function (model, value) {
+            return updateScale($scope.scales.impacts.id, model);
+        };
 
-                if (newValue.threats.min > newValue.threats.max) newValue.threats.min = newValue.threats.max;
-                if (newValue.threats.max < newValue.threats.min) newValue.threats.max = newValue.threats.min;
+        $scope.onThreatScaleChanged = function (model, value) {
+            return updateScale($scope.scales.threats.id, model);
+        };
 
-                if (newValue.vulns.min > newValue.vulns.max) newValue.vulns.min = newValue.vulns.max;
-                if (newValue.vulns.max < newValue.vulns.min) newValue.vulns.max = newValue.vulns.min;
+        $scope.onVulnScaleChanged = function (model, value) {
+            return updateScale($scope.scales.vulns.id, model);
+        };
 
-                if (oldValue.impacts.min != newValue.impacts.min || oldValue.impacts.max != newValue.impacts.max) {
-                    AnrService.updateScale($scope.model.anr.id, $scope.scales.impacts.id, newValue.impacts.min, newValue.impacts.max);
-                }
-                if (oldValue.threats.min != newValue.threats.min || oldValue.threats.max != newValue.threats.max) {
-                    AnrService.updateScale($scope.model.anr.id, $scope.scales.threats.id, newValue.threats.min, newValue.threats.max);
-                }
-                if (oldValue.vulns.min != newValue.vulns.min || oldValue.vulns.max != newValue.vulns.max) {
-                    AnrService.updateScale($scope.model.anr.id, $scope.scales.vulns.id, newValue.vulns.min, newValue.vulns.max);
-                }
-            }
+        $scope.onImpactCommChanged = function (model, value) {
 
-            scaleWatchSetup = true;
-        }, true);*/
+        };
 
         /*$scope.$watch('comms', function (newValue, oldValue) {
             if (commsWatchSetup) {
@@ -607,9 +595,15 @@
                     scaleWatchSetup = false;
                     commsWatchSetup = false;
                     if (scale.type == "impact") {
-                        $scope.scales.impacts = scale;
+                        $scope.scales.impacts.min = scale.min;
+                        $scope.scales.impacts.max = scale.max;
+                        $scope.scales.impacts.type = scale.type;
+                        $scope.scales.impacts.id = scale.id;
                     } else if (scale.type == "threat") {
-                        $scope.scales.threats = scale;
+                        $scope.scales.threats.min = scale.min;
+                        $scope.scales.threats.max = scale.max;
+                        $scope.scales.threats.type = scale.type;
+                        $scope.scales.threats.id = scale.id;
 
                         for (var j =  $scope.scales.threats.min; j < $scope.scales.threats.max; ++j) {
                             $scope.comms.threat[j] = {
@@ -621,7 +615,10 @@
                             };
                         }
                     } else if (scale.type == "vulnerability") {
-                        $scope.scales.vulns = scale;
+                        $scope.scales.vulns.min = scale.min;
+                        $scope.scales.vulns.max = scale.max;
+                        $scope.scales.vulns.type = scale.type;
+                        $scope.scales.vulns.id = scale.id;
 
                         for (var j =  $scope.scales.vulns.min; j < $scope.scales.vulns.max; ++j) {
                             $scope.comms.vuln[j] = {
@@ -713,7 +710,7 @@
                         if (!$scope.scaleCommCache[comm.scaleImpactType.type]) {
                             $scope.scaleCommCache[comm.scaleImpactType.type] = {};
                         }
-                        
+
                         $scope.scaleCommCache[comm.scaleImpactType.type][comm.val] = comm[$scope._langField('comment')];
                     } else if (!isImpact) {
                         obj[comm.val] = comm;
