@@ -667,6 +667,10 @@
             });
         };
 
+
+        $scope.scaleCommCache = {1: {}, 2: {}, 3: {}}; // C/I/D, type
+        $scope.threatCommCache = {};
+        
         $scope.updateScaleComments = function (scale_id) {
             commsWatchSetup = false;
             AnrService.getScaleComments($scope.model.anr.id, scale_id).then(function (data) {
@@ -682,13 +686,19 @@
                     isImpact = true;
                 }
 
+
                 for (var i = 0; i < data.comments.length; ++i) {
                     var comm = data.comments[i];
 
                     if (isImpact && obj[comm.val]) {
                         obj[comm.val][comm.scaleImpactType.id] = comm;
+                        $scope.scaleCommCache[comm.scaleImpactType.type][comm.val] = comm[$scope._langField('comment')];
                     } else if (!isImpact) {
                         obj[comm.val] = comm;
+
+                        if (scale_id == $scope.scales.threats.id) {
+                            $scope.threatCommCache[comm.val] = comm[$scope._langField('comment')];
+                        }
                     }
                 }
             });

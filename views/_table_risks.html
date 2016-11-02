@@ -40,12 +40,12 @@
 
     <tbody>
     <tr ng-repeat="risk in risks" edit-model="risk">
-        <td>{{risk.c_impact}}</td>
-        <td>{{risk.i_impact}}</td>
-        <td>{{risk.d_impact}}</td>
+        <td title="{{ scaleCommCache[1][risk.c_impact] }}">{{risk.c_impact}}</td>
+        <td title="{{ scaleCommCache[2][risk.i_impact] }}">{{risk.i_impact}}</td>
+        <td title="{{ scaleCommCache[3][risk.d_impact] }}">{{risk.d_impact}}</td>
         <td>{{::risk[_langField('assetDescription')]}}</td>
         <td>{{::risk[_langField('threatDescription')]}}</td>
-        <td edit-field="threatRate" edit-type="number"></td>
+        <td edit-field="threatRate" edit-type="number" title="{{threatCommCache[risk.threatRate]}}"></td>
         <td>{{::risk[_langField('vulnDescription')]}}</td>
         <td edit-field="comment" edit-type="textarea"></td>
         <td edit-field="vulnerabilityRate" edit-type="number"></td>
