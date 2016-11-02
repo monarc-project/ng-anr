@@ -653,6 +653,10 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
 .w100{ width: 100%; }
 
 
+.edit-field-placeholder {
+    color: #666666;
+    font-style: italic;
+}
 .inputs-as-number input.edit-field{
     width: 25px !important;
 }
