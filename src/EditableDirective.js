@@ -78,7 +78,7 @@ angular.module('AnrModule').directive('editable', function(){
 		}]
 	}
 
-}]).directive('editField', ['$parse', function($parse){
+}]).directive('editField', ['$parse', '$timeout', function($parse, $timeout){
 	return {
 		require: ['^^editable', '^^editModel'],
 		restrict: 'A',
@@ -104,16 +104,17 @@ angular.module('AnrModule').directive('editable', function(){
 					this.initialValue = this.model[this.name];
 					this.editedValue = angular.copy(this.model[this.name]);
 
-					setTimeout(function () {
+					$timeout(function () {
 						// Find and focus the input element
 						for (var i in element[0].childNodes) {
 							var e = element[0].childNodes[i];
 							if (e.nodeName == "INPUT" || e.nodeName == "TEXTAREA") {
 								e.focus();
+								e.select();
 								break;
 							}
 						}
-					}, 1);
+					});
 
 
 				},
