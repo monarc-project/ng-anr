@@ -49,14 +49,14 @@
         <tbody>
         <tr ng-repeat="risk in oprisks" edit-model="risk">
             <td>{{ risk[_langField('description')] }}</td>
-            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutProb"></td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutProb" title="{{threatCommCache[risk.brutProb]}}"></td>
             <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutR" title="{{scaleCommCache[4][risk.brutR]}}"></td>
             <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutO" title="{{scaleCommCache[5][risk.brutO]}}"></td>
             <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutL" title="{{scaleCommCache[6][risk.brutL]}}"></td>
             <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutF" title="{{scaleCommCache[7][risk.brutF]}}"></td>
             <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutP" title="{{scaleCommCache[8][risk.brutP]}}"></td>
             <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " >{{risk.cacheBrutRisk}}</td>
-            <td class="small" edit-field="netProb"></td>
+            <td class="small" edit-field="netProb" title="threatCommCache[risk.netProb]"></td>
             <td class="small" edit-field="netR" title="{{scaleCommCache[4][risk.netR]}}"></td>
             <td class="small" edit-field="netO" title="{{scaleCommCache[5][risk.netO]}}"></td>
             <td class="small" edit-field="netL" title="{{scaleCommCache[6][risk.netL]}}"></td>
