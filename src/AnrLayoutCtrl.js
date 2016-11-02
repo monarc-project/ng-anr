@@ -684,7 +684,7 @@
         };
 
 
-        $scope.scaleCommCache = {1: {}, 2: {}, 3: {}}; // C/I/D, type
+        $scope.scaleCommCache = {}; // C/I/D, type
         $scope.threatCommCache = {};
         $scope.vulnsCommCache = {};
         
@@ -709,6 +709,11 @@
 
                     if (isImpact && obj[comm.val]) {
                         obj[comm.val][comm.scaleImpactType.id] = comm;
+
+                        if (!$scope.scaleCommCache[comm.scaleImpactType.type]) {
+                            $scope.scaleCommCache[comm.scaleImpactType.type] = {};
+                        }
+                        
                         $scope.scaleCommCache[comm.scaleImpactType.type][comm.val] = comm[$scope._langField('comment')];
                     } else if (!isImpact) {
                         obj[comm.val] = comm;
