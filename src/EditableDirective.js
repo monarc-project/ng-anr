@@ -8,14 +8,19 @@ angular.module('AnrModule').directive('editable', function(){
 			this.fields = [];
 			this.addField = function(field){
 				this.fields.push(field);
-			}
+			};
+
+			this.destroyField = function (field) {
+				this.fields.splice(this.fields.indexOf(field), 1);
+			};
 
 			this.callback = $scope.callback;
 
 			this.saveChange = function(field, direction){
 				field.error = false;
 
-				if( $attrs.forceCallback == undefined && field.initialValue == field.model[field.name]){//inutile d'appeler la callback
+				if( $attrs.forceCallback == undefined && field.initialValue == field.editedValue){
+					// value didn't change, don't call callback
 					field.cancel();
 					if(direction != undefined){
 						this.moveEdition(field, direction);
@@ -24,6 +29,7 @@ angular.module('AnrModule').directive('editable', function(){
 				}
 
 
+				field.model[field.name] = field.editedValue;
 				var result = this.callback.call(null, field.model, field.name);
 
 				if(result.then == undefined){
@@ -76,16 +82,19 @@ angular.module('AnrModule').directive('editable', function(){
 		}]
 	}
 
-}]).directive('editField', ['$parse', function($parse){
+}]).directive('editField', ['$parse', '$timeout', function($parse, $timeout){
 	return {
 		require: ['^^editable', '^^editModel'],
 		restrict: 'A',
 		template: '<span ng-if="! field.edited">{{field.model[field.name]}}</span>\
-							<input class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'text\'" type="text" ng-model="field.model[field.name]"  escape="cancelEdition()"  action="saveEdition" autofocus/>\
-							<input class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'number\'" type="number" ng-model="field.model[field.name]"  escape="cancelEdition()" action="saveEdition" autofocus/>\
-							<textarea class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'textarea\'" ng-model="field.model[field.name]" escape="cancelEdition()" action="saveEdition" autofocus></textarea>',
+							<span class="edit-field-placeholder" ng-if="!field.model[field.name] && !field.edited && placeholder">{{ placeholder }}</span>\
+							<input class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'text\'" type="text" ng-model="field.editedValue"  escape="cancelEdition()"  action="saveEdition" autofocus/>\
+							<input class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'number\'" type="number" ng-model="field.editedValue"  escape="cancelEdition()" action="saveEdition" autofocus/>\
+							<textarea class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'textarea\'" ng-model="field.editedValue" escape="cancelEdition()" action="saveEdition" autofocus></textarea>',
 		scope: {
-			name: '@editField'
+			name: '@editField',
+			localmodel: '=editLocalmodel',
+			placeholder: '@editPlaceholder'
 		},
 		link: function(scope, element, attrs, ctrls){
 			scope.editableCtrl = ctrls[0];
@@ -93,12 +102,28 @@ angular.module('AnrModule').directive('editable', function(){
 
 			scope.field = {
 				edited: false,
-				model: scope.modelCtrl.model,
+				model: scope.localmodel !== undefined ? scope.localmodel : scope.modelCtrl.model,
 				name: scope.name,
 				type: attrs.editType && attrs.editType != "" ? attrs.editType : 'text',
+				editedValue: null,
 				edit: function(){
 					this.edited = true;
 					this.initialValue = this.model[this.name];
+					this.editedValue = angular.copy(this.model[this.name]);
+
+					$timeout(function () {
+						// Find and focus the input element
+						for (var i in element[0].childNodes) {
+							var e = element[0].childNodes[i];
+							if (e.nodeName == "INPUT" || e.nodeName == "TEXTAREA") {
+								e.focus();
+								e.select();
+								break;
+							}
+						}
+					});
+
+
 				},
 				cancel: function(){
 					this.model[this.name] = this.initialValue;
@@ -128,6 +153,10 @@ angular.module('AnrModule').directive('editable', function(){
 			scope.saveEdition = function(direction){
 					scope.editableCtrl.saveChange(scope.field, direction);
 			};
+
+			scope.$on('$destroy', function() {
+				scope.editableCtrl.destroyField(scope.field);
+			});
 		}
 	}
 }]).directive('escape', function(){
@@ -161,7 +190,7 @@ angular.module('AnrModule').directive('editable', function(){
       	}
 
         if ( element.prop('tagName').toLowerCase() == "textarea" && ((event.which === 13 && event.ctrlKey) || (event.which === 13 && event.metaKey))) {
-          triggerValidation();
+           	triggerValidation();
         }
         else if(element.prop('tagName').toLowerCase() != "textarea" && event.which === 13){
       		triggerValidation();

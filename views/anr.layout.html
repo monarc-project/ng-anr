@@ -112,7 +112,7 @@
                         <md-switch ng-model="display.show_hidden_impacts">{{ 'Show hidden impacts' | translate }}</md-switch>
 
                         <div class="horz-expanding-table">
-                            <table class="md-html-table">
+                            <table editable callback="onImpactCommChanged" class="md-html-table">
                                 <thead>
                                     <tr>
                                         <th></th>
@@ -122,33 +122,39 @@
                                 </thead>
 
                                 <tbody ng-if="scales.impacts.min != scales.impacts.max && scales.impacts.max > 0">
-                                    <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)">
+                                <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)" edit-model="comms.impact[i]">
                                         <th>{{ i }}</th>
-                                        <td ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types"><span inline-edit-group="anr_scales_tab" inline-edit="comms.impact[i][type.id][_langField('comment')]" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}" class="preserve-newlines"></span></td>
+                                        <td ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types" edit-field="{{ _langField('comment') }}" edit-localmodel="comms.impact[i][type.id]" edit-type="textarea"></td>
                                     </tr>
                                 </tbody>
                             </table>
                         </div>
 
-                        <div ng-if="scales.threats.min != scales.threats.max && scales.threats.max > 0">
-                            <h4><span translate>Threats scale:</span> [
-                                <span class="small text-blue" inline-edit-group="anr_threat" inline-edit="scales.threats.min" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> -
-                                <span class="small text-blue" inline-edit-group="anr_threat" inline-edit="scales.threats.max" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> ]
-                            </h4>
 
-                            <ul class="no-list-style">
-                                <li ng-repeat="(idx,i) in range(scales.threats.min, scales.threats.max)">{{i}}. <span class="large preserve-newlines" inline-edit-position="{{idx}}" inline-edit-group="anr_threat_txt" inline-edit="comms.threat[i].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+                        <div editable callback="onThreatScaleChanged" layout="row">
+                            <h4 edit-model="scales.threats"><span translate>Threats scale:</span> [
+                                <span class="text-blue" edit-field="min"></span> -
+                                <span class="text-blue" edit-field="max"></span> ]
+                            </h4>
+                        </div>
+
+                        <div ng-if="scales.threats.min != scales.threats.max && scales.threats.max > 0" editable callback="onThreatCommChanged">
+                            <ul class="no-list-style" edit-model="comms">
+                                <li ng-repeat="i in range(scales.threats.min, scales.threats.max)">{{i}}. <span edit-field="{{ _langField('comment') }}" edit-localmodel="comms.threat[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
                             </ul>
                         </div>
 
-                        <div ng-if="scales.vulns.min != scales.vulns.max && scales.vulns.max > 0">
-                            <h4><span translate>Vulnerabilities scale:</span> [
-                                <span class="small text-blue" inline-edit-group="anr_vul" inline-edit="scales.vulns.min" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> -
-                                <span class="small text-blue" inline-edit-group="anr_vul" inline-edit="scales.vulns.max" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-validation="inlineNumberValidator(newValue)" inline-edit-on-click></span> ]
-                            </h4>
 
-                            <ul class="no-list-style">
-                                <li ng-repeat="(idx,i) in range(scales.vulns.min, scales.vulns.max)">{{i}}. <span class="large preserve-newlines" inline-edit-position="{{idx}}" inline-edit-group="anr_vul_txt" inline-edit="comms.vuln[i].comment1" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-textarea inline-edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+                        <div editable callback="onVulnScaleChanged" layout="row">
+                            <h4 edit-model="scales.vulns"><span translate>Vulnerabilities scale:</span> [
+                                <span class="text-blue" edit-field="min"></span> -
+                                <span class="text-blue" edit-field="max"></span> ]
+                            </h4>
+                        </div>
+
+                        <div ng-if="scales.vulns.min != scales.vulns.max && scales.vulns.max > 0" editable callback="onVulnCommChanged">
+                            <ul class="no-list-style" edit-model="comms">
+                                <li ng-repeat="i in range(scales.vulns.min, scales.vulns.max)">{{i}}. <span edit-field="{{ _langField('comment') }}" edit-localmodel="comms.vuln[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
                             </ul>
                         </div>
 
