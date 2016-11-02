@@ -1,7 +1,6 @@
 <div class="md-padding-left md-padding-right">
     <h3 layout="row" layout-align="start center"><md-button class="md-icon-button" ng-click="resetOpSheet()"><md-icon>arrow_back</md-icon></md-button> <span translate>Operational risk sheet</span> - {{ opsheet_risk[_langField('description')] }}</h3>
-
-    <table class="md-html-table">
+    <table class="md-html-table" editable callback="changeRiskOp">
         <tbody>
         <tr>
             <td></td>
@@ -22,18 +21,18 @@
             <td>{{ opsheet_risk.netL }}</td>
             <td>{{ opsheet_risk.netF }}</td>
             <td>{{ opsheet_risk.netP }}</td>
-            <td>{{ opsheet_risk.cacheNetRisk }}</td>
+            <td class="tbl-risk-calc" ng-class="{'green': opsheet_risk.cacheNetRisk > 0 && opsheet_risk.cacheNetRisk < thresholds.rolf_thresholds.min, 'orange': opsheet_risk.cacheNetRisk >= thresholds.rolf_thresholds.min && opsheet_risk.cacheNetRisk < thresholds.rolf_thresholds.max, 'red': opsheet_risk.cacheNetRisk >= thresholds.rolf_thresholds.max}">{{ opsheet_risk.cacheNetRisk }}</td>
         </tr>
 
-        <tr>
+        <tr edit-model="opsheet_risk">
             <td translate>Target</td>
-            <td class="small" inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedProb" inline-edit-placeholder="-" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
-            <td class="small" inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedR" inline-edit-placeholder="-" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
-            <td class="small" inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedO" inline-edit-placeholder="-" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
-            <td class="small" inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedL" inline-edit-placeholder="-" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
-            <td class="small" inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedF" inline-edit-placeholder="-" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
-            <td class="small" inline-edit-group="oprisk_target" inline-edit="opsheet_risk.targetedP" inline-edit-placeholder="-" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click></td>
-            <td>{{ opsheet_risk.cacheTargetedRisk }}</td>
+            <td class="small" edit-field="targetedProb"></td>
+            <td class="small" edit-field="targetedR"></td>
+            <td class="small" edit-field="targetedO"></td>
+            <td class="small" edit-field="targetedL"></td>
+            <td class="small" edit-field="targetedF"></td>
+            <td class="small" edit-field="targetedP"></td>
+            <td class="tbl-risk-calc" ng-class="{'green': opsheet_risk.cacheTargetedRisk > 0 && opsheet_risk.cacheTargetedRisk < thresholds.rolf_thresholds.min, 'orange': opsheet_risk.cacheTargetedRisk >= thresholds.rolf_thresholds.min && opsheet_risk.cacheTargetedRisk < thresholds.rolf_thresholds.max, 'red': opsheet_risk.cacheTargetedRisk >= thresholds.rolf_thresholds.max}">{{ opsheet_risk.cacheTargetedRisk }}</td>
         </tr>
         </tbody>
     </table>
