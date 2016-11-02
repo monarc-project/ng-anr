@@ -667,9 +667,26 @@
             });
         };
 
+        $scope.onRisksTableEdited = function (model, name) {
+            var promise = $q.defer();
 
-        $scope.scaleCommCache = {1: {}, 2: {}, 3: {}}; // C/I/D, type
+            // This risk changed, update it
+            AnrService.updateInstanceRisk($scope.model.anr.id, model.id, model, function () {
+                promise.resolve();
+            }, function () {
+                promise.reject();
+            });
+
+            // Update the whole table
+            $timeout($scope.updateInstance, 500);
+
+            return promise;
+        };
+
+
+        $scope.scaleCommCache = {}; // C/I/D, type
         $scope.threatCommCache = {};
+        $scope.vulnsCommCache = {};
         
         $scope.updateScaleComments = function (scale_id) {
             commsWatchSetup = false;
@@ -692,12 +709,19 @@
 
                     if (isImpact && obj[comm.val]) {
                         obj[comm.val][comm.scaleImpactType.id] = comm;
+
+                        if (!$scope.scaleCommCache[comm.scaleImpactType.type]) {
+                            $scope.scaleCommCache[comm.scaleImpactType.type] = {};
+                        }
+                        
                         $scope.scaleCommCache[comm.scaleImpactType.type][comm.val] = comm[$scope._langField('comment')];
                     } else if (!isImpact) {
                         obj[comm.val] = comm;
 
                         if (scale_id == $scope.scales.threats.id) {
                             $scope.threatCommCache[comm.val] = comm[$scope._langField('comment')];
+                        } else if (scale_id == $scope.scales.vulns.id) {
+                            $scope.vulnsCommCache[comm.val] = comm[$scope._langField('comment')];
                         }
                     }
                 }

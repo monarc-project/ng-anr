@@ -54,32 +54,6 @@
         };
         $scope.updateInstance();
 
-        $scope.onRisksTableEdited = function (model, name) {
-            // This risk changed, update it
-            AnrService.updateInstanceRisk($scope.model.anr.id, model.id, model);
-
-            // Update the whole table
-            $timeout($scope.updateInstance, 500);
-        };
-
-        // $scope.$watch('instance.oprisks', function (newValue, oldValue) {
-        //     if (!isInstanceLoading && oldValue !== undefined) {
-        //         for (var i = 0; i < newValue.length; ++i) {
-        //             var newItem = newValue[i];
-        //             var oldItem = oldValue[i];
-
-        //             if (!angular.equals(newItem, oldItem)) {
-        //                 // This OP risk changed, update it
-        //                 AnrService.updateInstanceOpRisk($scope.model.anr.id, newItem.id, newItem);
-        //             }
-        //         }
-
-        //         // Update the whole table
-        //         $timeout($scope.updateInstance, 500);
-        //     }
-        // }, true);
-
-
         $scope.openRiskSheet = function (risk) {
             $scope.sheet_risk = risk;
 
@@ -113,7 +87,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'AnrService', 'instance', 'scales', CreateInstanceDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'AnrService', 'instance', 'scales', 'scaleCommCache', CreateInstanceDialogCtrl],
                 templateUrl: '/views/anr/create.instance.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -122,7 +96,8 @@
                 fullscreen: useFullScreen,
                 locals: {
                     instance: $scope.instance,
-                    scales: $scope.scales
+                    scales: $scope.scales,
+                    scaleCommCache: $scope.scaleCommCache
                 }
             })
                 .then(function (instance) {
@@ -223,9 +198,10 @@
 
     }
 
-    function CreateInstanceDialogCtrl($scope, $mdDialog, AnrService, instance, scales) {
+    function CreateInstanceDialogCtrl($scope, $mdDialog, AnrService, instance, scales, scaleCommCache) {
         $scope.instance = instance;
         $scope.scales = scales;
+        $scope.scaleCommCache = scaleCommCache;
 
         $scope.cancel = function () {
             $mdDialog.cancel();
