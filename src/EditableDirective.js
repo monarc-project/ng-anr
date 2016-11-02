@@ -103,6 +103,19 @@ angular.module('AnrModule').directive('editable', function(){
 					this.edited = true;
 					this.initialValue = this.model[this.name];
 					this.editedValue = angular.copy(this.model[this.name]);
+
+					setTimeout(function () {
+						// Find and focus the input element
+						for (var i in element[0].childNodes) {
+							var e = element[0].childNodes[i];
+							if (e.nodeName == "INPUT" || e.nodeName == "TEXTAREA") {
+								e.focus();
+								break;
+							}
+						}
+					}, 1);
+
+
 				},
 				cancel: function(){
 					this.model[this.name] = this.initialValue;
