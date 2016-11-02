@@ -87,7 +87,8 @@ angular.module('AnrModule').directive('editable', function(){
 							<input class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'number\'" type="number" ng-model="field.editedValue"  escape="cancelEdition()" action="saveEdition" autofocus/>\
 							<textarea class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'textarea\'" ng-model="field.editedValue" escape="cancelEdition()" action="saveEdition" autofocus></textarea>',
 		scope: {
-			name: '@editField'
+			name: '@editField',
+			localmodel: '=editLocalmodel'
 		},
 		link: function(scope, element, attrs, ctrls){
 			scope.editableCtrl = ctrls[0];
@@ -95,7 +96,7 @@ angular.module('AnrModule').directive('editable', function(){
 
 			scope.field = {
 				edited: false,
-				model: scope.modelCtrl.model,
+				model: scope.localmodel ? scope.localmodel : scope.modelCtrl.model,
 				name: scope.name,
 				type: attrs.editType && attrs.editType != "" ? attrs.editType : 'text',
 				editedValue: null,
