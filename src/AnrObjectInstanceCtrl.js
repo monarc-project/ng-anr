@@ -194,10 +194,10 @@
 
         $scope.changeRiskOp = function(riskOp, attr){
             var result = $q.defer();
-            AnrService.updateInstanceOpRisk($scope.model.anr.id, riskOp.id, riskOp, function(data){
-                riskOp.cacheBrutRisk = data.riskOp.cacheBrutRisk;
-                riskOp.cacheNetRisk = data.riskOp.cacheNetRisk;
-                riskOp.cacheTargetedRisk = data.riskOp.cacheTargetedRisk;
+            AnrService.updateInstanceOpRisk($scope.model.anr.id, riskOp.id, riskOp, function(risk){
+                riskOp.cacheBrutRisk = risk.cacheBrutRisk;
+                riskOp.cacheNetRisk = risk.cacheNetRisk;
+                riskOp.cacheTargetedRisk = risk.cacheTargetedRisk;
                 result.resolve(true);
             }, function(error){
                 result.reject(false);
