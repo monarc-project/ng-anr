@@ -67,7 +67,12 @@ angular.module('AnrModule').directive('editable', function(){
 				}
 
 				while (!this.fields[next_position].shown) {
-					next_position = next_position + 1 < this.fields.length ? next_position + 1 : 0;
+					if(direction == 'prev'){
+						next_position = next_position - 1 >= 0 ? next_position - 1 : this.fields.length - 1;
+					}
+					else{//next
+						next_position = next_position + 1 < this.fields.length ? next_position + 1 : 0;
+					}
 				}
 
 				this.fields[next_position].edit();
