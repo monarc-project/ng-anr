@@ -103,6 +103,7 @@
                 .then(function (instance) {
                     if (instance && instance.anr) {
                         AnrService.updateInstance($scope.instance.anr.id, instance, function () {
+                            $scope.updateInstance();
                             toastr.success(gettextCatalog.getString("The instance details have been updated"), gettextCatalog.getString("Update successful"));
                         });
                     }
@@ -165,7 +166,11 @@
                 $rootScope.hookUpdateObjlib();
             }
 
-        }
+        };
+
+        $scope.$on('risks-table-edited', function () {
+            $scope.updateInstance();
+        });
     }
 
 

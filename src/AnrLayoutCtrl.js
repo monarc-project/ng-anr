@@ -658,12 +658,12 @@
             // This risk changed, update it
             AnrService.updateInstanceRisk($scope.model.anr.id, model.id, model, function () {
                 promise.resolve();
+
+                // Update the current instance risks table, if we're watching one
+                $scope.$broadcast('risks-table-edited');
             }, function () {
                 promise.reject();
             });
-
-            // Update the whole table
-            $timeout($scope.updateInstance, 500);
 
             return promise;
         };
