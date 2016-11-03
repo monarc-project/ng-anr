@@ -65,6 +65,11 @@ angular.module('AnrModule').directive('editable', function(){
 				else{//next
 					next_position = current_pos + 1 < this.fields.length ? current_pos + 1 : 0;
 				}
+
+				while (!this.fields[next_position].shown) {
+					next_position = next_position + 1 < this.fields.length ? next_position + 1 : 0;
+				}
+
 				this.fields[next_position].edit();
 			};
 		}]
@@ -95,7 +100,8 @@ angular.module('AnrModule').directive('editable', function(){
 			name: '@editField',
 			localmodel: '=editLocalmodel',
 			placeholder: '@editPlaceholder',
-			class: '@editClass'
+			class: '@editClass',
+			show: "=ngShow"
 		},
 		link: function(scope, element, attrs, ctrls){
 			scope.editableCtrl = ctrls[0];
@@ -103,6 +109,7 @@ angular.module('AnrModule').directive('editable', function(){
 
 			scope.field = {
 				edited: false,
+				shown: scope.show,
 				model: scope.localmodel !== undefined ? scope.localmodel : scope.modelCtrl.model,
 				name: scope.name,
 				type: attrs.editType && attrs.editType != "" ? attrs.editType : 'text',
@@ -134,6 +141,10 @@ angular.module('AnrModule').directive('editable', function(){
 			}
 
 			scope.editableCtrl.addField(scope.field);
+
+			scope.$watch('show', function (newValue) {
+				scope.field.shown = newValue;
+			})
 
 			element.on('click', function(){
 				if( ! scope.field.edited ){
