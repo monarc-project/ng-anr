@@ -173,6 +173,10 @@
         $scope.$on('risks-table-edited', function () {
             $scope.updateInstance();
         });
+
+        $scope.$on('scales-impacts-type-changed', function () {
+            $scope.updateInstance();
+        })
     }
 
 

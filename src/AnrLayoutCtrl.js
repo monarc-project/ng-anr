@@ -99,25 +99,6 @@
             $scope.opsheet_risk = undefined;
         };
 
-        /*$scope.$watch('model.anr.risks', function (newValue, oldValue) {
-            if (!isModelLoading && oldValue !== undefined) {
-                for (var i = 0; i < newValue.length; ++i) {
-                    var newItem = angular.copy(newValue[i]);
-                    var oldItem = oldValue[i];
-
-                    delete newItem.$$hashKey;
-
-                    if (!angular.equals(newItem, oldItem)) {
-                        // This risk changed, update it
-                        AnrService.updateInstanceRisk($scope.model.anr.id, newItem.id, newItem);
-                    }
-                }
-
-                // Update the whole table
-                $timeout(function () { $scope.updateModel(true); }, 500);
-            }
-        }, true);*/
-
         /**
          * Risk analysis
          */
@@ -494,12 +475,14 @@
             AnrService.createScaleType($scope.model.anr.id, $scope.scales.impacts.id, newValue, function () {
                 $scope.updateScaleTypes();
                 $scope.newColumn.name = null;
+                $scope.$broadcast('scales-impacts-type-changed');
             });
         };
 
         $scope.setImpactVisibility = function (id, visible) {
             AnrService.patchScaleType($scope.model.anr.id, id, {isHidden: visible ? 0 : 1}, function () {
                 $scope.updateScaleTypes();
+                $scope.$broadcast('scales-impacts-type-changed');
             });
         };
 
@@ -507,6 +490,7 @@
             AnrService.deleteScaleType($scope.model.anr.id, id, function () {
                 toastr.success(gettextCatalog.getString("The impact scale type has been deleted successfully."), gettextCatalog.getString("Scale type deleted"));
                 $scope.updateScaleTypes();
+                $scope.$broadcast('scales-impacts-type-changed');
             });
         };
 
