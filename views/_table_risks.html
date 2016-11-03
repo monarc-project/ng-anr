@@ -82,11 +82,11 @@
         <td title="{{ scaleCommCache[1][risk.c_impact] }}">{{risk.c_impact}}</td>
         <td title="{{ scaleCommCache[2][risk.i_impact] }}">{{risk.i_impact}}</td>
         <td title="{{ scaleCommCache[3][risk.d_impact] }}">{{risk.d_impact}}</td>
-        <td>{{::risk[_langField('assetDescription')]}}</td>
-        <td>{{::risk[_langField('threatDescription')]}}</td>
+        <td class="preserve-newlines" >{{::risk[_langField('assetDescription')]}}</td>
+        <td class="preserve-newlines" >{{::risk[_langField('threatDescription')]}}</td>
         <td edit-field="threatRate" edit-type="number" title="{{threatCommCache[risk.threatRate]}}"></td>
-        <td>{{::risk[_langField('vulnDescription')]}}</td>
-        <td edit-field="comment" edit-type="textarea"></td>
+        <td class="preserve-newlines">{{::risk[_langField('vulnDescription')]}}</td>
+        <td class="preserve-newlines" edit-field="comment" edit-type="textarea"></td>
         <td edit-field="vulnerabilityRate" edit-type="number" title="{{vulnsCommCache[risk.vulnerabilityRate]}}"></td>
         <td ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc"
             ng-class="{'green': risk.c_risk > 0 && risk.c_risk < thresholds.thresholds.min, 'orange': risk.c_risk >= thresholds.thresholds.min && risk.c_risk < thresholds.thresholds.max, 'red': risk.c_risk >= thresholds.thresholds.max}">{{ risk.c_risk_enabled ? risk.c_risk : '' }}</td>

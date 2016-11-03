@@ -47,7 +47,7 @@
 
         <tbody>
         <tr ng-repeat="risk in oprisks" edit-model="risk">
-            <td>{{ risk[_langField('description')] }}</td>
+            <td class="preserve-newlines">{{ risk[_langField('description')] }}</td>
             <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutProb" title="{{threatCommCache[risk.brutProb]}}"></td>
             <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutR" title="{{scaleCommCache[4][risk.brutR]}}"></td>
             <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutO" title="{{scaleCommCache[5][risk.brutO]}}"></td>
@@ -63,7 +63,7 @@
             <td class="small" edit-field="netF" title="{{scaleCommCache[7][risk.netF]}}"></td>
             <td class="small" edit-field="netP" title="{{scaleCommCache[8][risk.netP]}}"></td>
             <td class="tbl-risk-calc" ng-class="{'green': risk.cacheNetRisk > 0 && risk.cacheNetRisk < thresholds.rolf_thresholds.min, 'orange': risk.cacheNetRisk >= thresholds.rolf_thresholds.min && risk.cacheNetRisk < thresholds.rolf_thresholds.max, 'red': risk.cacheNetRisk >= thresholds.rolf_thresholds.max}">{{ risk.cacheNetRisk }}</td>
-            <td edit-field="comment" edit-type="textarea"></td>
+            <td class="preserve-newlines" edit-field="comment" edit-type="textarea"></td>
             <td class="txtcenter"><div style="display:inline-block" class="green-dot" ng-if="risk.t"></div></td>
             <td class="tbl-risk-calc" ng-class="{'green': risk.cacheTargetedRisk > 0 && risk.cacheTargetedRisk < thresholds.rolf_thresholds.min, 'orange': risk.cacheTargetedRisk >= thresholds.rolf_thresholds.min && risk.cacheTargetedRisk < thresholds.rolf_thresholds.max, 'red': risk.cacheTargetedRisk >= thresholds.rolf_thresholds.max}">{{ risk.cacheTargetedRisk }}</td>
             <td class="txtcenter">

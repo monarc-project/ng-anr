@@ -86,7 +86,7 @@ angular.module('AnrModule').directive('editable', function(){
 	return {
 		require: ['^^editable', '^^editModel'],
 		restrict: 'A',
-		template: '<span ng-if="! field.edited">{{field.model[field.name]}}</span>\
+		template: '<span ng-class="class" ng-if="! field.edited">{{field.model[field.name]}}</span>\
 							<span class="edit-field-placeholder" ng-if="!field.model[field.name] && !field.edited && placeholder">{{ placeholder }}</span>\
 							<input class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'text\'" type="text" ng-model="field.editedValue"  escape="cancelEdition()"  action="saveEdition" autofocus/>\
 							<input class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'number\'" type="number" ng-model="field.editedValue"  escape="cancelEdition()" action="saveEdition" autofocus/>\
@@ -94,7 +94,8 @@ angular.module('AnrModule').directive('editable', function(){
 		scope: {
 			name: '@editField',
 			localmodel: '=editLocalmodel',
-			placeholder: '@editPlaceholder'
+			placeholder: '@editPlaceholder',
+			class: '@editClass'
 		},
 		link: function(scope, element, attrs, ctrls){
 			scope.editableCtrl = ctrls[0];

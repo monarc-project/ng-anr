@@ -124,7 +124,7 @@
                                 <tbody ng-if="scales.impacts.min != scales.impacts.max && scales.impacts.max > 0">
                                 <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)" edit-model="comms.impact[i]">
                                         <th>{{ i }}</th>
-                                        <td ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types" edit-field="{{ _langField('comment') }}" edit-localmodel="comms.impact[i][type.id]" edit-type="textarea"></td>
+                                        <td class="preserve-newlines" ng-if="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types" edit-field="{{ _langField('comment') }}" edit-localmodel="comms.impact[i][type.id]" edit-type="textarea"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -140,7 +140,7 @@
 
                         <div ng-if="scales.threats.min != scales.threats.max && scales.threats.max > 0" editable callback="onThreatCommChanged">
                             <ul class="no-list-style" edit-model="comms">
-                                <li ng-repeat="i in range(scales.threats.min, scales.threats.max)">{{i}}. <span edit-field="{{ _langField('comment') }}" edit-localmodel="comms.threat[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+                                <li ng-repeat="i in range(scales.threats.min, scales.threats.max)">{{i}}. <span edit-field="{{ _langField('comment') }}" edit-type="textarea" edit-class="preserve-newlines" edit-localmodel="comms.threat[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
                             </ul>
                         </div>
 
@@ -154,7 +154,7 @@
 
                         <div ng-if="scales.vulns.min != scales.vulns.max && scales.vulns.max > 0" editable callback="onVulnCommChanged">
                             <ul class="no-list-style" edit-model="comms">
-                                <li ng-repeat="i in range(scales.vulns.min, scales.vulns.max)">{{i}}. <span edit-field="{{ _langField('comment') }}" edit-localmodel="comms.vuln[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+                                <li ng-repeat="i in range(scales.vulns.min, scales.vulns.max)">{{i}}. <span edit-field="{{ _langField('comment') }}" edit-type="textarea"  edit-class="preserve-newlines" edit-localmodel="comms.vuln[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
                             </ul>
                         </div>
 
