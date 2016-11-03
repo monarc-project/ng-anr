@@ -19,8 +19,8 @@
                             <md-switch style="margin:0px; height: auto; line-height: auto;" ng-model="display.hidden" ng-true-value="true" ng-false-value="false">{{ 'Show hidden consequences' | translate }}</md-switch>
                         </div>
                         <div layout="row" style="border: 1px solid #DFDFDF; padding: 1em;">
-                            <div layout="column" ng-repeat="(idx, col) in instance.consequences" ng-if="!col.isHidden || (display.hidden && col.locallyTouched) ">
-                                <p>{{ col.scaleImpactTypeDescription1 }} <md-button class="md-icon-button" ng-click="setConsequenceVisibility(col.id, !!col.isHidden)"><md-icon>{{ col.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></p>
+                            <div layout="column" ng-repeat="(idx, col) in instance.consequences" ng-if="!col.isHidden || display.hidden">
+                                <p>{{ col[_langField('scaleImpactTypeDescription')] }} <md-button class="md-icon-button" ng-click="setConsequenceVisibility(col.id, !!col.isHidden)"><md-icon>{{ col.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></p>
                                 <md-input-container>
                                     <label translate>Confidentiality</label>
                                     <md-select ng-model="instance.consequences[idx].c_risk" ng-change="calculeImpact('c')">
