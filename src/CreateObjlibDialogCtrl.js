@@ -84,13 +84,14 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
 
     $scope.createCategory = function (ev, catName) {
         $mdDialog.show({
-            controller: ['$scope', '$mdDialog', '$q', 'toastr', 'gettextCatalog', 'ConfigService', 'ObjlibService', 'catName', CreateObjlibCategoryDialogCtrl],
+            controller: ['$scope', '$mdDialog', '$q', 'toastr', 'gettextCatalog', 'ConfigService', 'ObjlibService', 'categories', 'catName', CreateObjlibCategoryDialogCtrl],
             templateUrl: '/views/anr/create.objlibs.categories.html',
             clickOutsideToClose: true,
             preserveScope: false,
             scope: $scope.$dialogScope.$new(),
             locals: {
-                'catName': catName
+                'catName': catName,
+                'categories': $scope.categories
             }
         })
             .then(function (category) {
@@ -126,12 +127,13 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
     $scope.editCategory = function (ev, cat) {
         ObjlibService.getObjlibCat(cat).then(function (cat) {
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$q', 'toastr', 'gettextCatalog', 'ConfigService', 'ObjlibService', 'catName', 'category', CreateObjlibCategoryDialogCtrl],
+                controller: ['$scope', '$mdDialog', '$q', 'toastr', 'gettextCatalog', 'ConfigService', 'ObjlibService', 'categories', 'catName', 'category', CreateObjlibCategoryDialogCtrl],
                 templateUrl: '/views/anr/create.objlibs.categories.html',
                 clickOutsideToClose: true,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 locals: {
+                    'categories': $scope.categories,
                     'catName': null,
                     'category': cat
                 }
@@ -236,13 +238,12 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
     }
 }
 
-function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCatalog, ConfigService, ObjlibService, catName, category) {
+function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCatalog, ConfigService, ObjlibService, categories, catName, category) {
     $scope.languages = ConfigService.getLanguages();
     $scope.language = ConfigService.getDefaultLanguageIndex();
     $scope.implicitPosition = null;
     $scope.showConfirmDeletion = false;
-
-    // Categories list is inherited from the parent dialog controller, as the scope is shared between both
+    $scope.categories = categories;
 
 
     $scope.destroy = function() {

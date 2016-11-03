@@ -8,9 +8,9 @@
 </div>
 
 
-<div layout-gt-lg="row" layout="column" layout-align="center center">
+<div layout-gt-lg="row" layout="column" layout-align="center center" ng-if="instmode == 'anr' && !sheet_risk">
     <md-card>
-        <md-button ng-if="instmode == 'anr' && !sheet_risk">
+        <md-button>
             <md-icon>save</md-icon>
             {{ 'Export to CSV' | translate }}
         </md-button>
