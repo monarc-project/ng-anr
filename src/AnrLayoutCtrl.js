@@ -273,6 +273,7 @@
                     AnrService.addInstance($scope.model.anr.id, copy.id, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
                         $scope.updateInstances();
                         e.source.nodeScope.$modelValue.disableclick = false;
+                        $scope.$broadcast('object-instancied', {oid: copy.id});
                     });
 
                     return true;
@@ -684,7 +685,7 @@
         $scope.scaleCommCache = {}; // C/I/D, type
         $scope.threatCommCache = {};
         $scope.vulnsCommCache = {};
-        
+
         $scope.updateScaleComments = function (scale_id) {
             commsWatchSetup = false;
             AnrService.getScaleComments($scope.model.anr.id, scale_id).then(function (data) {
