@@ -283,10 +283,9 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
 
         if ($scope.category.parent) {
             $scope.category.parent = $scope.category.parent.id;
-
-            if(category.previous){
-                $scope.updateCategoryChildren();
-            }
+        }
+        if (category.previous) {
+            $scope.updateCategoryChildren();
         }
     } else {
         $scope.category = {
