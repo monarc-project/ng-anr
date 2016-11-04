@@ -97,7 +97,7 @@
             <md-tab label="{{ 'Risks table' | translate }}">
                 <ng-include src="'views/anr/_table_risks.html'"></ng-include>
             </md-tab>
-            <ng-include src="'views/anr/_table_risks_op.html'" ng-if="instance.asset.type == 1"></ng-include>
+            <ng-include src="'views/anr/_table_risks_op.html'" ng-show="instance.asset.type == 1"></ng-include>
 
         </md-tabs>
     </md-card>
