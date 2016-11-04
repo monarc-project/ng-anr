@@ -413,6 +413,10 @@
             AnrService.updateScale($scope.model.anr.id, id, model.min, model.max, function () {
                 $scope.$broadcast('scale-changed');
 
+                // Reload comments
+                $scope.updateScaleComments(id);
+
+                // Reload risk sheet in case ranges impact it
                 if ($scope.sheet_risk) {
                     $scope.updateModel(true, function () {
                         $scope.openRiskSheet($scope.sheet_risk);
@@ -701,6 +705,16 @@
                     isImpact = true;
                 }
 
+                // Reset comments for this scale
+                if (!isImpact) {
+                    for (var i = 0; i < obj.length; ++i) {
+                        obj[i].id = null;
+                        obj[i].comment1 = null;
+                        obj[i].comment2 = null;
+                        obj[i].comment3 = null;
+                        obj[i].comment4 = null;
+                    }
+                }
 
                 for (var i = 0; i < data.comments.length; ++i) {
                     var comm = data.comments[i];
@@ -719,7 +733,7 @@
                         $scope.scaleCommCache[comm.scaleImpactType.type][comm.val] = comm[$scope._langField('comment')];
                     } else if (!isImpact) {
                         if (!obj[comm.val]) {
-                            //obj[comm.val] = comm;
+                            obj[comm.val] = comm;
                         } else {
                             obj[comm.val].id = comm.id;
                             obj[comm.val].comment1 = comm.comment1;
