@@ -22,21 +22,21 @@
                             <div layout="column" ng-repeat="(idx, col) in instance.consequences" ng-if="!col.isHidden || display.hidden">
                                 <p>{{ col[_langField('scaleImpactTypeDescription')] }} <md-button class="md-icon-button" ng-click="setConsequenceVisibility(col.id, !!col.isHidden)"><md-icon>{{ col.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></p>
                                 <md-input-container style="margin: 8px 0">
-                                    <md-select ng-model="instance.consequences[idx].c_risk" ng-disabled="col.isHidden" aria-label="C">
+                                    <md-select ng-model="instance.consequences[idx].c_risk" ng-disabled="col.isHidden" aria-label="C" title="{{scaleCommCache[col.scaleImpactType][instance.consequences[idx].c_risk]}}">
                                         <md-option value="-1">{{ 'Unknown' | translate }}</md-option>
                                         <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val" title="{{scaleCommCache[col.scaleImpactType][val]}}">{{val}}</md-option>
                                     </md-select>
                                 </md-input-container>
 
                                 <md-input-container style="margin: 8px 0">
-                                    <md-select ng-model="instance.consequences[idx].i_risk" ng-disabled="col.isHidden" aria-label="I">
+                                    <md-select ng-model="instance.consequences[idx].i_risk" ng-disabled="col.isHidden" aria-label="I" title="{{scaleCommCache[col.scaleImpactType][instance.consequences[idx].i_risk]}}">
                                         <md-option value="-1">{{ 'Unknown' | translate }}</md-option>
                                         <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val" title="{{scaleCommCache[col.scaleImpactType][val]}}">{{val}}</md-option>
                                     </md-select>
                                 </md-input-container>
 
                                 <md-input-container style="margin: 8px 0">
-                                    <md-select ng-model="instance.consequences[idx].d_risk" ng-disabled="col.isHidden" aria-label="D">
+                                    <md-select ng-model="instance.consequences[idx].d_risk" ng-disabled="col.isHidden" aria-label="D" title="{{scaleCommCache[col.scaleImpactType][instance.consequences[idx].d_risk]}}">
                                         <md-option value="-1">{{ 'Unknown' | translate }}</md-option>
                                         <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val" title="{{scaleCommCache[col.scaleImpactType][val]}}">{{val}}</md-option>
                                     </md-select>
