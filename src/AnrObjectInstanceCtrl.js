@@ -26,7 +26,7 @@
 
         $scope.risks = undefined;
 
-        $scope.updateInstance = function () {
+        $scope.updateInstance = function (cb) {
             AnrService.getInstance($scope.model.anr.id, $stateParams.instId).then(function (data) {
                 // Filter out C/I/D consequences
                 var validCons = [];
@@ -50,38 +50,13 @@
                 }
 
                 $scope.risks = $scope.instance.risks; // for the _table_risks.html partial
+
+                if (cb) {
+                    cb();
+                }
             });
         };
         $scope.updateInstance();
-
-        $scope.openRiskSheet = function (risk) {
-            $scope.sheet_risk = risk;
-
-            var reducAmount = [];
-            if($scope.scales.vulns != undefined){
-                for(var i = $scope.scales.vulns.min; i <= $scope.scales.vulns.max; i++){
-                    reducAmount.push(i);
-                    if(risk.vulnerabilityRate != '-1' && i == risk.vulnerabilityRate){
-                        break;
-                    }
-                }
-            }
-            $scope.reducAmount = reducAmount;
-        };
-
-        $scope.resetSheet = function () {
-            $scope.sheet_risk = undefined;
-        };
-
-
-        $scope.openOpRiskSheet = function (risk) {
-            $scope.opsheet_risk = risk;
-        };
-
-        $scope.resetOpSheet = function () {
-            $scope.opsheet_risk = undefined;
-        };
-
 
         $scope.editInstanceDetails = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
@@ -176,7 +151,15 @@
 
         $scope.$on('scales-impacts-type-changed', function () {
             $scope.updateInstance();
-        })
+        });
+
+        $scope.$on('scale-changed', function () {
+            $scope.updateInstance(function () {
+                if ($scope.sheet_risk) {
+                    $scope.openRiskSheet($scope.sheet_risk);
+                }
+            })
+        });
     }
 
 

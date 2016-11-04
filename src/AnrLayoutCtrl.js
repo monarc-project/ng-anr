@@ -39,7 +39,7 @@
             $scope.updateObjectsLibrary(gotofirst);
         };
 
-        $scope.updateModel = function (justCore) {
+        $scope.updateModel = function (justCore, cb) {
             isModelLoading = true;
             ModelService.getModel($stateParams.modelId).then(function (data) {
                 $scope.model = data;
@@ -61,6 +61,10 @@
                 $scope.risks = $scope.model.anr.risks; // for the _table_risks.html partial
 
                 isModelLoading = false;
+
+                if (cb) {
+                    cb();
+                }
             });
         };
 
@@ -408,6 +412,14 @@
 
             var promise = $q.defer();
             AnrService.updateScale($scope.model.anr.id, id, model.min, model.max, function () {
+                $scope.$broadcast('scale-changed');
+
+                if ($scope.sheet_risk) {
+                    $scope.updateModel(true, function () {
+                        $scope.openRiskSheet($scope.sheet_risk);
+                    });
+                }
+
                 $q.resolve();
             }, function () {
                 $q.reject();
