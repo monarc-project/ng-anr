@@ -82,10 +82,10 @@
         <td title="{{ scaleCommCache[1][risk.c_impact] }}">{{risk.c_impact}}</td>
         <td title="{{ scaleCommCache[2][risk.i_impact] }}">{{risk.i_impact}}</td>
         <td title="{{ scaleCommCache[3][risk.d_impact] }}">{{risk.d_impact}}</td>
-        <td class="preserve-newlines" >{{::risk[_langField('assetDescription')]}}</td>
-        <td class="preserve-newlines" >{{::risk[_langField('threatDescription')]}}</td>
+        <td class="preserve-newlines" title="{{::risk[_langField('assetDescription')]}}">{{::risk[_langField('assetLabel')]}}</td>
+        <td class="preserve-newlines" title="{{::risk[_langField('threatDescription')]}}">{{::risk[_langField('threatLabel')]}}</td>
         <td edit-field="threatRate" edit-type="number" edit-filter="dashnull" title="{{threatCommCache[risk.threatRate]}}"></td>
-        <td class="preserve-newlines">{{::risk[_langField('vulnDescription')]}}</td>
+        <td class="preserve-newlines" title="{{::risk[_langField('vulnDescription')]}}">{{::risk[_langField('vulnLabel')]}}</td>
         <td class="preserve-newlines" edit-field="comment" edit-type="textarea"></td>
         <td edit-field="vulnerabilityRate" edit-type="number" edit-filter="dashnull" title="{{vulnsCommCache[risk.vulnerabilityRate]}}"></td>
         <td ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc"
