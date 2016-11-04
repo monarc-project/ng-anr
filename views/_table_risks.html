@@ -102,7 +102,8 @@
                 <span class="green-dot" ng-if="risk.t"></span>
             </div>
         </td>
-        <td class="txtcenter">{{risk.target_risk}}</td>
+        <td class="txtcenter tbl-risk-calc"
+            ng-class="{'green': risk.target_risk > 0 && risk.target_risk < thresholds.thresholds.min, 'orange': risk.target_risk >= thresholds.thresholds.min && risk.target_risk < thresholds.thresholds.max, 'red': risk.target_risk >= thresholds.thresholds.max}">{{risk.target_risk}}</td>
     </tr>
     </tbody>
 </table>
