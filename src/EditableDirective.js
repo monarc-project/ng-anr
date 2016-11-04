@@ -124,7 +124,7 @@ angular.module('AnrModule').directive('editable', function(){
 
 			scope.field = {
 				edited: false,
-				shown: scope.show,
+				shown: true,
 				model: scope.localmodel !== undefined ? scope.localmodel : scope.modelCtrl.model,
 				name: scope.name,
 				type: attrs.editType && attrs.editType != "" ? attrs.editType : 'text',
@@ -155,10 +155,20 @@ angular.module('AnrModule').directive('editable', function(){
 				}
 			}
 
+			// Set the initial shown state after DOM is set
+			$timeout(function () {
+				scope.field.shown = !element.hasClass('ng-hide');
+			});
+
 			scope.editableCtrl.addField(scope.field);
 
 			scope.$watch('show', function (newValue) {
-				scope.field.shown = newValue;
+				if (newValue != scope.shown) {
+					// Watch runs BEFORE the ng-hide class is applied on the element
+					$timeout(function () {
+						scope.field.shown = !element.hasClass('ng-hide');
+					});
+				}
 			})
 
 			element.on('click', function(){
