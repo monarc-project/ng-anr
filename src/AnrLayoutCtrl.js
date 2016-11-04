@@ -208,6 +208,10 @@
         };
 
         $scope.insTreeCallbacks = {
+            beforeDrag: function (scopeDrag) {
+                return (!scopeDrag.$modelValue.component);
+            },
+
             accept: function (sourceNodeScope, destNodeScope, destIndex) {
                 return (sourceNodeScope.$modelValue.type != 'libcat');
             },
@@ -228,7 +232,7 @@
 
         $scope.libTreeCallbacks = {
             beforeDrag: function (scopeDrag) {
-                return (scopeDrag.$modelValue.type != 'libcat' || scopeDrag.$modelValue.depth == 0) && (!scopeDrag.$modelValue.component);
+                return (scopeDrag.$modelValue.type != 'libcat' || scopeDrag.$modelValue.depth == 0);
             },
 
             accept: function (sourceNodeScope, destNodeScope, destIndex) {
@@ -324,7 +328,7 @@
 
                 var recurseFillTree = function (instance) {
                     var output = {id: instance.id, type: 'inst', scope: instance.scope, name1: instance.name1,
-                        name2: instance.name2, name3: instance.name3, name4: instance.name4, component: !!instance.component,
+                        name2: instance.name2, name3: instance.name3, name4: instance.name4, component: instance.level > 1,
                         __children__: []};
 
                     if (instance.child && instance.child.length > 0) {
