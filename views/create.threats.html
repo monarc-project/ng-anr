@@ -97,6 +97,9 @@
                             </div>
                         </md-autocomplete>
 
+                        <md-button class="md-icon-button" ng-click="createTheme(themeSearchText)" ng-show="!threat.theme.id">
+                            <md-icon>add</md-icon>
+                        </md-button>
                         <md-button class="md-icon-button" ng-click="theme_edit=threat.theme" ng-show="threat.theme.id">
                             <md-icon>edit</md-icon>
                         </md-button>
