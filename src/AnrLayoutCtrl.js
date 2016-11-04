@@ -266,7 +266,8 @@
         $scope.updateObjectsLibrary = function (gotofirst, callback) {
             AnrService.getObjectsLibrary($scope.model.anr.id).then(function (data) {
                 var recurseFillTree = function (category, depth) {
-                    var output = {id: category.id, type: 'libcat', label1: category.label1, depth: depth, __children__: []};
+                    var output = {id: category.id, type: 'libcat', label1: category.label1, label2: category.label2,
+                        label3: category.label3, label4: category.label4, depth: depth, __children__: []};
 
                     if (category.child && category.child.length > 0) {
                         for (var i = 0; i < category.child.length; ++i) {
@@ -315,9 +316,11 @@
         $scope.updateInstances = function () {
             AnrService.getInstances($scope.model.anr.id).then(function (data) {
                 $scope.anr_obj_instances_data = [];
+                $scope.instanceCache = {};
 
                 var recurseFillTree = function (instance) {
-                    var output = {id: instance.id, type: 'inst', scope: instance.scope, name1: instance.name1, __children__: []};
+                    var output = {id: instance.id, type: 'inst', scope: instance.scope, name1: instance.name1,
+                        name2: instance.name2, name3: instance.name3, name4: instance.name4, __children__: []};
 
                     if (instance.child && instance.child.length > 0) {
                         for (var i = 0; i < instance.child.length; ++i) {
@@ -330,6 +333,8 @@
                             output.__children__.push(instance.objects[i]);
                         }
                     }
+
+                    $scope.instanceCache[instance.id] = instance;
 
                     return output;
                 };
