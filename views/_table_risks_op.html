@@ -48,24 +48,24 @@
         <tbody>
         <tr ng-repeat="risk in oprisks" edit-model="risk">
             <td class="preserve-newlines">{{ risk[_langField('description')] }}</td>
-            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutProb" title="{{threatCommCache[risk.brutProb]}}"></td>
-            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutR" title="{{scaleCommCache[4][risk.brutR]}}"></td>
-            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutO" title="{{scaleCommCache[5][risk.brutO]}}"></td>
-            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutL" title="{{scaleCommCache[6][risk.brutL]}}"></td>
-            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutF" title="{{scaleCommCache[7][risk.brutF]}}"></td>
-            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " edit-field="brutP" title="{{scaleCommCache[8][risk.brutP]}}"></td>
-            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') " class="tbl-risk-calc"
-                ng-class="{'green': risk.cacheBrutRisk > 0 && risk.cacheBrutRisk < thresholds.rolf_thresholds.min, 'orange': risk.cacheBrutRisk >= thresholds.rolf_thresholds.min && risk.cacheBrutRisk < thresholds.rolf_thresholds.max, 'red': risk.cacheBrutRisk >= thresholds.rolf_thresholds.max}">{{risk.cacheBrutRisk}}</td>
-            <td class="small" edit-field="netProb" title="threatCommCache[risk.netProb]"></td>
-            <td class="small" edit-field="netR" title="{{scaleCommCache[4][risk.netR]}}"></td>
-            <td class="small" edit-field="netO" title="{{scaleCommCache[5][risk.netO]}}"></td>
-            <td class="small" edit-field="netL" title="{{scaleCommCache[6][risk.netL]}}"></td>
-            <td class="small" edit-field="netF" title="{{scaleCommCache[7][risk.netF]}}"></td>
-            <td class="small" edit-field="netP" title="{{scaleCommCache[8][risk.netP]}}"></td>
-            <td class="tbl-risk-calc" ng-class="{'green': risk.cacheNetRisk > 0 && risk.cacheNetRisk < thresholds.rolf_thresholds.min, 'orange': risk.cacheNetRisk >= thresholds.rolf_thresholds.min && risk.cacheNetRisk < thresholds.rolf_thresholds.max, 'red': risk.cacheNetRisk >= thresholds.rolf_thresholds.max}">{{ risk.cacheNetRisk }}</td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr')" edit-filter="dashnull" edit-field="brutProb" title="{{threatCommCache[risk.brutProb]}}"></td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr')" edit-filter="dashnull" edit-field="brutR" title="{{scaleCommCache[4][risk.brutR]}}"></td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr')" edit-filter="dashnull" edit-field="brutO" title="{{scaleCommCache[5][risk.brutO]}}"></td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr')" edit-filter="dashnull" edit-field="brutL" title="{{scaleCommCache[6][risk.brutL]}}"></td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr')" edit-filter="dashnull" edit-field="brutF" title="{{scaleCommCache[7][risk.brutF]}}"></td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr')" edit-filter="dashnull" edit-field="brutP" title="{{scaleCommCache[8][risk.brutP]}}"></td>
+            <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr')" class="tbl-risk-calc"
+                ng-class="{'green': risk.cacheBrutRisk > 0 && risk.cacheBrutRisk < thresholds.rolf_thresholds.min, 'orange': risk.cacheBrutRisk >= thresholds.rolf_thresholds.min && risk.cacheBrutRisk < thresholds.rolf_thresholds.max, 'red': risk.cacheBrutRisk >= thresholds.rolf_thresholds.max}">{{risk.cacheBrutRisk|dashnull}}</td>
+            <td class="small" edit-field="netProb" edit-filter="dashnull" title="threatCommCache[risk.netProb]"></td>
+            <td class="small" edit-field="netR" edit-filter="dashnull" title="{{scaleCommCache[4][risk.netR]}}"></td>
+            <td class="small" edit-field="netO" edit-filter="dashnull" title="{{scaleCommCache[5][risk.netO]}}"></td>
+            <td class="small" edit-field="netL" edit-filter="dashnull" title="{{scaleCommCache[6][risk.netL]}}"></td>
+            <td class="small" edit-field="netF" edit-filter="dashnull" title="{{scaleCommCache[7][risk.netF]}}"></td>
+            <td class="small" edit-field="netP" edit-filter="dashnull" title="{{scaleCommCache[8][risk.netP]}}"></td>
+            <td class="tbl-risk-calc" ng-class="{'green': risk.cacheNetRisk > 0 && risk.cacheNetRisk < thresholds.rolf_thresholds.min, 'orange': risk.cacheNetRisk >= thresholds.rolf_thresholds.min && risk.cacheNetRisk < thresholds.rolf_thresholds.max, 'red': risk.cacheNetRisk >= thresholds.rolf_thresholds.max}">{{ risk.cacheNetRisk|dashnull }}</td>
             <td class="preserve-newlines" edit-field="comment" edit-type="textarea"></td>
             <td class="txtcenter"><div style="display:inline-block" class="green-dot" ng-if="risk.t"></div></td>
-            <td class="tbl-risk-calc" ng-class="{'green': risk.cacheTargetedRisk > 0 && risk.cacheTargetedRisk < thresholds.rolf_thresholds.min, 'orange': risk.cacheTargetedRisk >= thresholds.rolf_thresholds.min && risk.cacheTargetedRisk < thresholds.rolf_thresholds.max, 'red': risk.cacheTargetedRisk >= thresholds.rolf_thresholds.max}">{{ risk.cacheTargetedRisk }}</td>
+            <td class="tbl-risk-calc" ng-class="{'green': risk.cacheTargetedRisk > 0 && risk.cacheTargetedRisk < thresholds.rolf_thresholds.min, 'orange': risk.cacheTargetedRisk >= thresholds.rolf_thresholds.min && risk.cacheTargetedRisk < thresholds.rolf_thresholds.max, 'red': risk.cacheTargetedRisk >= thresholds.rolf_thresholds.max}">{{ risk.cacheTargetedRisk|dashnull }}</td>
             <td class="txtcenter">
                 <md-button ng-if=" instmode != 'obj' " class="md-icon-button" ng-click="openOpRiskSheet(risk)">
                     <md-tooltip>{{ 'Open risk sheet' | translate }} - {{instmode}}</md-tooltip>
