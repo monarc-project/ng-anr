@@ -446,7 +446,10 @@
             var promise = $q.defer();
 
             AnrService.updateScaleComment($scope.model.anr.id, model_id, row_id, model, function () {
+                $scope.updateScaleComments(model_id);
                 promise.resolve();
+                /*console.log(model.scaleImpactType);
+                $scope.scaleCommCache[model.scaleImpactType][model.val] = model[$scope._langField('comment')];*/
             }, function () {
                 promise.reject();
             });
@@ -458,6 +461,7 @@
             var promise = $q.defer();
 
             AnrService.createScaleComment($scope.model.anr.id, model_id, row_id, comment, impactType, function () {
+                $scope.updateScaleComments(model_id);
                 promise.resolve();
             }, function () {
                 promise.reject();

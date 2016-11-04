@@ -21,50 +21,38 @@
                         <div layout="row" style="border: 1px solid #DFDFDF; padding: 1em;">
                             <div layout="column" ng-repeat="(idx, col) in instance.consequences" ng-if="!col.isHidden || display.hidden">
                                 <p>{{ col[_langField('scaleImpactTypeDescription')] }} <md-button class="md-icon-button" ng-click="setConsequenceVisibility(col.id, !!col.isHidden)"><md-icon>{{ col.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></p>
-                                <md-input-container>
-                                    <label translate>Confidentiality</label>
-                                    <md-select ng-model="instance.consequences[idx].c_risk" ng-change="calculeImpact('c')" ng-disabled="col.isHidden">
+                                <md-input-container style="margin: 8px 0">
+                                    <md-select ng-model="instance.consequences[idx].c_risk" ng-disabled="col.isHidden" aria-label="C">
                                         <md-option value="-1">{{ 'Unknown' | translate }}</md-option>
-                                        <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val" title="{{scaleCommCache[1][val]}}">{{val}}</md-option>
+                                        <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val" title="{{scaleCommCache[col.scaleImpactType][val]}}">{{val}}</md-option>
                                     </md-select>
                                 </md-input-container>
 
-                                <md-input-container>
-                                    <label translate>Integrity</label>
-                                    <md-select ng-model="instance.consequences[idx].i_risk" ng-change="calculeImpact('i')" ng-disabled="col.isHidden">
+                                <md-input-container style="margin: 8px 0">
+                                    <md-select ng-model="instance.consequences[idx].i_risk" ng-disabled="col.isHidden" aria-label="I">
                                         <md-option value="-1">{{ 'Unknown' | translate }}</md-option>
-                                        <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val" title="{{scaleCommCache[2][val]}}">{{val}}</md-option>
+                                        <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val" title="{{scaleCommCache[col.scaleImpactType][val]}}">{{val}}</md-option>
                                     </md-select>
                                 </md-input-container>
 
-                                <md-input-container>
-                                    <label translate>Availability</label>
-                                    <md-select ng-model="instance.consequences[idx].d_risk" ng-change="calculeImpact('d')" ng-disabled="col.isHidden">
+                                <md-input-container style="margin: 8px 0">
+                                    <md-select ng-model="instance.consequences[idx].d_risk" ng-disabled="col.isHidden" aria-label="D">
                                         <md-option value="-1">{{ 'Unknown' | translate }}</md-option>
-                                        <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val" title="{{scaleCommCache[3][val]}}">{{val}}</md-option>
+                                        <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val" title="{{scaleCommCache[col.scaleImpactType][val]}}">{{val}}</md-option>
                                     </md-select>
                                 </md-input-container>
                             </div>
                         </div>
                     </div>
                     <div layout="column">
-                        <div layout="row">
-                            <h4 translate>Impact</h4>
-                        </div>
+                        <h4 translate>Impact</h4>
                         <div layout="column" style="border: 1px solid #DFDFDF; padding: 1em;">
                             <p style="height: 54px;">&nbsp;</p>
-                            <md-input-container>
-                                <label translate>Confidentiality</label>
-                                <input type="text" ng-value="calculeImpact('c')" disabled />
-                            </md-input-container>
-                            <md-input-container>
-                                <label translate>Integrity</label>
-                                <input type="text" ng-value="calculeImpact('i')" disabled />
-                            </md-input-container>
-                            <md-input-container>
-                                <label translate>Availability</label>
-                                <input type="text" ng-value="calculeImpact('d')" disabled />
-                            </md-input-container>
+                            <p>
+                                {{ 'Confidentiality' | translate }}<br /> <b>{{ calculeImpact('c') }}</b><br style="line-height: 24px" />
+                                {{ 'Integrity' | translate }}<br /> <b>{{ calculeImpact('i') }}</b><br style="line-height: 24px" />
+                                {{ 'Availability' | translate }}<br /> <b>{{ calculeImpact('d') }}</b>
+                            </p>
                         </div>
                     </div>
                 </div>
