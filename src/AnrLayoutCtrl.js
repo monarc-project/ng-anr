@@ -331,13 +331,7 @@
                             output.__children__.push(recurseFillTree(instance.child[i]));
                         }
                     }
-
-                    if (instance.objects && instance.objects.length > 0) {
-                        for (var i = 0; i < instance.objects.length; ++i) {
-                            output.__children__.push(instance.objects[i]);
-                        }
-                    }
-
+                    
                     $scope.instanceCache[instance.id] = instance;
 
                     return output;
