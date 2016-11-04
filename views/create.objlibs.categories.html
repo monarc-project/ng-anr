@@ -42,9 +42,9 @@
                     <label translate>Location</label>
                     <md-icon>reorder</md-icon>
                     <md-select ng-model="category.implicitPosition" name="position" md-on-close="updateCategoryChildren()" required>
-                        <md-option value="1">{{ 'at the beginning' | translate }}</md-option>
-                        <md-option value="2">{{ 'in the end' | translate }}</md-option>
-                        <md-option value="3">{{ 'after...' | translate }}</md-option>
+                        <md-option ng-value="1">{{ 'at the beginning' | translate }}</md-option>
+                        <md-option ng-value="2">{{ 'in the end' | translate }}</md-option>
+                        <md-option ng-value="3">{{ 'after...' | translate }}</md-option>
                     </md-select>
                     <div ng-messages="objlibsCategoryForm.position.$error">
                         <div ng-message="required">{{ 'You must select a location' | translate }}</div>
