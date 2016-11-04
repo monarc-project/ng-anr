@@ -17,6 +17,7 @@
                     <md-icon>class</md-icon>
                     <label translate>Category</label>
                     <md-select flex ng-model="selected_categ.id" md-on-open="loadCategs()" ng-change="changeCateg()">
+                        <md-option ng-value="-1">{{ 'Uncategorized' | translate }}</md-option>
                         <md-option ng-repeat="cat in categories" ng-value="cat.id">{{ cat[_langField('label')] }}</md-option>
                     </md-select>
                 </md-input-container>
