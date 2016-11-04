@@ -49,9 +49,9 @@
                         <div layout="column" style="border: 1px solid #DFDFDF; padding: 1em;">
                             <p style="height: 54px;">&nbsp;</p>
                             <p>
-                                {{ 'Confidentiality' | translate }}<br /> <b>{{ calculeImpact('c') }}</b><br style="line-height: 24px" />
-                                {{ 'Integrity' | translate }}<br /> <b>{{ calculeImpact('i') }}</b><br style="line-height: 24px" />
-                                {{ 'Availability' | translate }}<br /> <b>{{ calculeImpact('d') }}</b>
+                                <span title="{{scaleCommCache[1][calculeImpact('c')]}}">{{ 'Confidentiality' | translate }}<br /> <b>{{ calculeImpact('c') }}</b><br style="line-height: 24px" /></span>
+                                <span title="{{scaleCommCache[2][calculeImpact('i')]}}">{{ 'Integrity' | translate }}<br /> <b>{{ calculeImpact('i') }}</b><br style="line-height: 24px" /></span>
+                                <span title="{{scaleCommCache[3][calculeImpact('d')]}}">{{ 'Availability' | translate }}<br /> <b>{{ calculeImpact('d') }}</b></span>
                             </p>
                         </div>
                     </div>
