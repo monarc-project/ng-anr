@@ -147,14 +147,14 @@
                 <div layout="row">
                     <md-input-container class="md-block" layout="row" flex>
                         <label translate>Audit order</label>
-                        <md-select ng-model="amv.position">
-                            <md-option ng-value="1">{{ 'in the end' | translate }}</md-option>
-                            <md-option ng-value="2">{{ 'at the beginning' | translate }}</md-option>
-                            <md-option ng-value="3">{{ 'after...' | translate }}</md-option>
+                        <md-select ng-model="amv.implicitPosition">
+                            <md-option value="1">{{ 'at the beginning' | translate }}</md-option>
+                            <md-option value="2">{{ 'in the end' | translate }}</md-option>
+                            <md-option value="3">{{ 'after...' | translate }}</md-option>
                         </md-select>
                     </md-input-container>
 
-                    <md-select ng-model="amv.previous" ng-if="amv.position == 3" flex>
+                    <md-select ng-model="amv.previous" ng-if="amv.implicitPosition == 3" flex>
                         <md-option ng-repeat="link in asset_amvs" ng-value="link.id">{{ link.position }} - {{ link.asset.code }} x {{ link.threat.code }} x {{ link.vulnerability.code }}</md-option>
                     </md-select>
                 </div>
