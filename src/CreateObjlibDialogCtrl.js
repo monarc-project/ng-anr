@@ -64,7 +64,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
     $scope.queryAssetSearch = function (query) {
         var q = $q.defer();
 
-        AssetService.getAssets({filter: query}).then(function (x) {
+        AssetService.getAssets({filter: query, order: $scope._langField('label')}).then(function (x) {
             q.resolve(x.assets);
         }, function (x) {
             q.reject(x);
