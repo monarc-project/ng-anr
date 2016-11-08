@@ -110,7 +110,7 @@
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 fullscreen: useFullScreen,
             }).then(function (asset) {
 
@@ -126,7 +126,7 @@
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
                     'asset': asset
@@ -170,7 +170,7 @@
                     targetEvent: ev,
                     preserveScope: false,
                     scope: $scope.$dialogScope.$new(),
-                    clickOutsideToClose: true,
+                    clickOutsideToClose: false,
                     fullscreen: useFullScreen,
                     locals: {
                         'asset': assetData
@@ -312,7 +312,7 @@
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
                     'threat': threat
@@ -356,7 +356,7 @@
                     targetEvent: ev,
                     preserveScope: false,
                     scope: $scope.$dialogScope.$new(),
-                    clickOutsideToClose: true,
+                    clickOutsideToClose: false,
                     fullscreen: useFullScreen,
                     locals: {
                         'threat': threatData
@@ -499,7 +499,7 @@
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
                     'vuln': vuln
@@ -536,7 +536,7 @@
                     targetEvent: ev,
                     preserveScope: false,
                     scope: $scope.$dialogScope.$new(),
-                    clickOutsideToClose: true,
+                    clickOutsideToClose: false,
                     fullscreen: useFullScreen,
                     locals: {
                         'vuln': vulnData
@@ -674,7 +674,7 @@
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
                     'measure': measure
@@ -705,7 +705,7 @@
                     targetEvent: ev,
                     preserveScope: false,
                     scope: $scope.$dialogScope.$new(),
-                    clickOutsideToClose: true,
+                    clickOutsideToClose: false,
                     fullscreen: useFullScreen,
                     locals: {
                         'measure': measureData
@@ -837,7 +837,7 @@
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
                     'amv': amv
@@ -888,7 +888,7 @@
                     targetEvent: ev,
                     preserveScope: false,
                     scope: $scope.$dialogScope.$new(),
-                    clickOutsideToClose: true,
+                    clickOutsideToClose: false,
                     fullscreen: useFullScreen,
                     locals: {
                         'amv': amvData
@@ -1010,7 +1010,7 @@
                 controller: ['$scope', '$mdDialog', 'ConfigService', 'tag', CreateTagDialogCtrl],
                 templateUrl: '/views/anr/create.tags.html',
                 targetEvent: ev,
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
                     'tag': tag
@@ -1039,7 +1039,7 @@
                     controller: ['$scope', '$mdDialog', 'ConfigService', 'tag', CreateTagDialogCtrl],
                     templateUrl: '/views/anr/create.tags.html',
                     targetEvent: ev,
-                    clickOutsideToClose: true,
+                    clickOutsideToClose: false,
                     fullscreen: useFullScreen,
                     locals: {
                         'tag': tagData
@@ -1175,7 +1175,7 @@
                 controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'CategoryService', 'TagService', 'risk', CreateRiskDialogCtrl],
                 templateUrl: '/views/anr/create.risks.html',
                 targetEvent: ev,
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
                     'risk': risk
@@ -1227,7 +1227,7 @@
                     controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'CategoryService', 'TagService', 'risk', CreateRiskDialogCtrl],
                     templateUrl: '/views/anr/create.risks.html',
                     targetEvent: ev,
-                    clickOutsideToClose: true,
+                    clickOutsideToClose: false,
                     fullscreen: useFullScreen,
                     locals: {
                         'risk': riskData

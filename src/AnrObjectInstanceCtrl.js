@@ -78,7 +78,7 @@
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
                     instance: $scope.instance,
@@ -105,7 +105,7 @@
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
                     mode: 'instance'

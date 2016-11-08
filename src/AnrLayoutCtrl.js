@@ -540,7 +540,7 @@
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
                     anr: $scope.model.anr
@@ -564,7 +564,7 @@
                     targetEvent: ev,
                     preserveScope: false,
                     scope: $scope.$dialogScope.$new(),
-                    clickOutsideToClose: true,
+                    clickOutsideToClose: false,
                     fullscreen: useFullScreen,
                     locals: {
                         '$parentScope': $scope,
@@ -781,7 +781,7 @@
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
                     mode: 'anr'
@@ -865,7 +865,7 @@
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', '$stateParams', CreateObjlibDialogCtrl],
                 templateUrl: '/views/anr/create.objlibs.html',
-                clickOutsideToClose: true,
+                clickOutsideToClose: false,
                 preserveScope: false,
                 scope: $parentScope.$new(),
                 targetEvent: ev,
