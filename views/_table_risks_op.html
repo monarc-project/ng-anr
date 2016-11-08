@@ -74,10 +74,9 @@
             <td class="txtcenter"><div style="display:inline-block" class="green-dot" ng-if="risk.t"></div></td>
             <td class="tbl-risk-calc" ng-class="{'green': risk.cacheTargetedRisk > 0 && risk.cacheTargetedRisk < thresholds.rolf_thresholds.min, 'orange': risk.cacheTargetedRisk >= thresholds.rolf_thresholds.min && risk.cacheTargetedRisk < thresholds.rolf_thresholds.max, 'red': risk.cacheTargetedRisk >= thresholds.rolf_thresholds.max}">{{ risk.cacheTargetedRisk|dashnull }}</td>
             <td class="txtcenter" ng-if=" instmode != 'obj' ">
-                <md-button class="md-icon-button" ng-click="openOpRiskSheet(risk)">
-                    <md-tooltip>{{ 'Open risk sheet' | translate }} - {{instmode}}</md-tooltip>
+                <a href="javascript:;" ng-click="openOpRiskSheet(risk)" title="{{ 'Open risk sheet' | translate }} - {{instmode}}">
                     <md-icon>open_in_new</md-icon>
-                </md-button>
+                </a>
             </td>
         </tr>
         </tbody>

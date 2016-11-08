@@ -79,7 +79,7 @@
 
     <tbody>
     <tr ng-repeat="risk in risks" edit-model="risk">
-        <td ng-if="instance.asset.type == 1" title="{{instanceCache[risk.instance].completePath}}">{{instanceCache[risk.instance][_langField('name')]}}</td>
+        <td ng-if="instance.asset.type == 1" title="{{::instanceCache[risk.instance].completePath}}">{{::instanceCache[risk.instance][_langField('name')]}}</td>
         <td title="{{ scaleCommCache[1][risk.c_impact] }}">{{risk.c_impact}}</td>
         <td title="{{ scaleCommCache[2][risk.i_impact] }}">{{risk.i_impact}}</td>
         <td title="{{ scaleCommCache[3][risk.d_impact] }}">{{risk.d_impact}}</td>
