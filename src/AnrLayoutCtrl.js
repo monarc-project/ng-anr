@@ -251,7 +251,7 @@
 
         $scope.libTreeCallbacks = {
             beforeDrag: function (scopeDrag) {
-                return (scopeDrag.$modelValue.type != 'libcat' || scopeDrag.$modelValue.depth == 0);
+                return (scopeDrag.$modelValue.type != 'libcat' || scopeDrag.$modelValue.depth == 0) && (scopeDrag.$modelValue.id > 0);
             },
 
             accept: function (sourceNodeScope, destNodeScope, destIndex) {
