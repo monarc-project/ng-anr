@@ -292,9 +292,9 @@
                                  md-total="{{measures.items.count}}" md-on-paginate="updateMeasures" md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
         </md-tab>
 
-        <md-tab label="{{ 'AMVs' | translate }}" md-on-select="selectAmvsTab()" md-on-deselect="deselectAmvsTab()">
+        <md-tab label="{{ 'Risks' | translate }}" md-on-select="selectAmvsTab()" md-on-deselect="deselectAmvsTab()">
             <div layout="row" layout-align="start center" class="md-padding" ng-if="!amvs.selected.length">
-                <h2 class="md-title md-padding-right md-padding-left" translate>AMVs links</h2>
+                <h2 class="md-title md-padding-right md-padding-left" translate>Risks</h2>
 
                 <form flex name="amvs.filter.form">
                     <md-input-container class="md-block md-padding-left md-padding-right">
@@ -323,9 +323,9 @@
                 </div>
             </md-toolbar>
 
-            <md-button class="md-fab md-accent md-fab-top-right table-fab-top" aria-label="{{ 'New AMV link' | translate }}" ng-click="createNewAmv($event)">
+            <md-button class="md-fab md-accent md-fab-top-right table-fab-top" aria-label="{{ 'New risk' | translate }}" ng-click="createNewAmv($event)">
                 <md-tooltip md-direction="left">
-                    {{ 'New AMV link' | translate }}
+                    {{ 'New risk' | translate }}
                 </md-tooltip>
                 <md-icon>add</md-icon>
             </md-button>

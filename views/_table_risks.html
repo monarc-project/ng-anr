@@ -1,7 +1,7 @@
 <div ng-include="'views/anr/_risk_sheet.html'" ng-if="sheet_risk"></div>
 
 <div ng-if="risks && risks.length === 0" class="md-padding">
-    <em>{{ 'There is no AMV link for this instance, so the risks table is empty.' | translate }}</em>
+    <em>{{ 'There are no risks for this instance, so the risks table is empty.' | translate }}</em>
 </div>
 <div ng-if="risks === undefined" class="md-padding">
     <md-progress-circular md-indeterminate="true"></md-progress-circular>
