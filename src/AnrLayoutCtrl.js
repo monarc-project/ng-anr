@@ -5,6 +5,7 @@
         .controller('AnrLayoutCtrl', [
             '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'TableHelperService',
             'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
+            '$transitions',
             AnrLayoutCtrl
         ]);
 
@@ -12,7 +13,8 @@
      * ANR MAIN LAYOUT CONTROLLER
      */
     function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, TableHelperService, ModelService,
-                           ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService) {
+                           ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
+                           $transitions) {
         var self = this;
 
         $scope.ToolsAnrService = ToolsAnrService;
@@ -20,6 +22,10 @@
         $scope.GlobalResizeMenuContentHide = false;
         var minWidthMenu = 80;
         var isModelLoading = false;
+
+        $transitions.onBefore({}, function (evt) {
+            $scope.resetSheet();
+        });
 
         $scope.$on("angular-resizable.resizeEnd", function (event, args) {
             if(args.id != undefined && args.id == 'global-resize-menu' && parseInt(args.width) <= minWidthMenu){
