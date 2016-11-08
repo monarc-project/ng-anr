@@ -16,6 +16,7 @@
                                             $rootScope, $timeout, $location, InstanceService, $q) {
 
         $scope.instance = {};
+        $scope.resetSheet();
 
         $rootScope.anr_selected_instance_id = $stateParams.instId;
         $rootScope.anr_selected_object_id = null;
