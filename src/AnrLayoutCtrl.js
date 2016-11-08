@@ -23,7 +23,7 @@
         var minWidthMenu = 80;
         var isModelLoading = false;
 
-        $transitions.onBefore({}, function (evt) {
+        $transitions.onBefore({}, function () {
             $scope.resetSheet();
         });
 
