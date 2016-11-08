@@ -339,16 +339,20 @@
                 $scope.anr_obj_instances_data = [];
                 $scope.instanceCache = {};
 
-                var recurseFillTree = function (instance) {
+                var recurseFillTree = function (instance, parentPath) {
                     var output = {id: instance.id, type: 'inst', scope: instance.scope, name1: instance.name1,
                         name2: instance.name2, name3: instance.name3, name4: instance.name4, component: instance.level > 1,
                         __children__: []};
 
+                    var parentPathPlusOne = parentPath ? (parentPath + " > " + instance[$scope._langField('name')]) : instance[$scope._langField('name')];
+
                     if (instance.child && instance.child.length > 0) {
                         for (var i = 0; i < instance.child.length; ++i) {
-                            output.__children__.push(recurseFillTree(instance.child[i]));
+                            output.__children__.push(recurseFillTree(instance.child[i], parentPathPlusOne));
                         }
                     }
+
+                    instance.completePath = parentPathPlusOne;
 
                     $scope.instanceCache[instance.id] = instance;
 
@@ -461,8 +465,6 @@
             AnrService.updateScaleComment($scope.model.anr.id, model_id, row_id, model, function () {
                 $scope.updateScaleComments(model_id);
                 promise.resolve();
-                /*console.log(model.scaleImpactType);
-                $scope.scaleCommCache[model.scaleImpactType][model.val] = model[$scope._langField('comment')];*/
             }, function () {
                 promise.reject();
             });
