@@ -282,12 +282,17 @@
         };
 
         // ANR risks
-        var getInstanceRisks = function (anr_id, inst_id) {
-            return self.AnrRisksResource.query({anrId: anr_id, instId: inst_id}).$promise;
+        var getInstanceRisks = function (anr_id, inst_id, params) {
+            var query = angular.copy(params);
+            query.anrId = anr_id;
+            query.instId = inst_id;
+            return self.AnrRisksResource.query(query).$promise;
         };
 
-        var getAnrRisks = function (anr_id) {
-            return self.AnrRisksResource.query({anrId: anr_id}).$promise;
+        var getAnrRisks = function (anr_id, params) {
+            var query = angular.copy(params);
+            query.anrId = anr_id;
+            return self.AnrRisksResource.query(query).$promise;
         };
 
 

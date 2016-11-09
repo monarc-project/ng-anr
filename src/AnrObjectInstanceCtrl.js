@@ -60,7 +60,7 @@
         $scope.updateInstance();
 
         $scope.updateInstanceRisks = function () {
-            AnrService.getInstanceRisks($scope.model.anr.id, $scope.instance.id).then(function(data) {
+            AnrService.getInstanceRisks($scope.model.anr.id, $scope.instance.id, $scope.risks_filters).then(function(data) {
                 if (!$scope.risks) {
                     $scope.risks = data; // for the _table_risks.html partial
                 } else {
@@ -76,6 +76,10 @@
             });
 
         };
+
+        $scope.$on('risks-table-filters-changed', function () {
+            $scope.updateInstanceRisks();
+        });
 
         $scope.editInstanceDetails = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));

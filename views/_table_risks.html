@@ -4,45 +4,74 @@
     <em>{{ 'There are no risks for this instance, so the risks table is empty.' | translate }}</em>
 </div>
 
-<div layout-gt-lg="row" layout="column" layout-align="center center" ng-if="instmode == 'anr' && !sheet_risk">
+<div layout-gt-lg="row" layout="column" layout-align="center center" ng-if="(instmode == 'anr' || instmode == 'inst') && !sheet_risk">
     <md-card>
-        <md-button>
-            <md-icon>save</md-icon>
-            {{ 'Export to CSV' | translate }}
-        </md-button>
-    </md-card>
+        <md-card-content layout="column" layout-align="center center">
+            <div layout="row" layout-align="center center">
+                {{ 'Risk threshold (on max CID)' | translate }}&nbsp;
+                <md-radio-group ng-model="risks_filters.thresholds" layout="row" class="md-primary">
+                    <md-radio-button ng-value="1"><div class="tbl-risk-calc anr-scales-demo-block green"></div></md-radio-button>
+                    <md-radio-button ng-value="2"><div class="tbl-risk-calc anr-scales-demo-block orange"></div></md-radio-button>
+                    <md-radio-button ng-value="3"><div class="tbl-risk-calc anr-scales-demo-block red"></div></md-radio-button>
+                </md-radio-group>
 
-    <md-card>
-        <md-card-content layout="row" layout-align="center center">
-            {{ 'Risk threshold (on max CID)' | translate }}&nbsp;
-            <md-radio-group ng-model="risks_filters.thresholds" layout="row" class="md-primary">
-                <md-radio-button ng-value="1"><div class="tbl-risk-calc anr-scales-demo-block green"></div></md-radio-button>
-                <md-radio-button ng-value="2"><div class="tbl-risk-calc anr-scales-demo-block orange"></div></md-radio-button>
-                <md-radio-button ng-value="3"><div class="tbl-risk-calc anr-scales-demo-block red"></div></md-radio-button>
-            </md-radio-group>
+                &nbsp;
 
-            &nbsp;
+                <md-input-container style="margin: 0 0">
+                    <label translate>Keywords</label>
+                    <input ng-model="risks_filters.keywords">
+                </md-input-container>
 
-            <md-input-container style="margin: 0 0">
-                <label translate>Keywords</label>
-                <input ng-model="risks_filters.keywords">
-            </md-input-container>
+                &nbsp;
 
-            &nbsp;
+                <md-input-container style="margin: 0 0; min-width: 120px;">
+                    <label translate>Processing type</label>
+                    <md-select ng-model="risks_filters.kindOfMeasure">
+                        <md-option ng-value="null">{{ 'All (unfiltered)' | translate }}</md-option>
+                        <md-option ng-value="5">{{ 'Not processed' | translate }}</md-option>
+                        <md-option ng-value="1">{{ 'Reduction' | translate }}</md-option>
+                        <md-option ng-value="2">{{ 'Denied' | translate }}</md-option>
+                        <md-option ng-value="3">{{ 'Accepted' | translate }}</md-option>
+                        <md-option ng-value="4">{{ 'Shared' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
 
-            <md-input-container style="margin: 0 0; min-width: 120px;">
-                <label translate>Processing type</label>
-                <md-select ng-model="risks_filters.kindOfMeasure">
-                    <md-option ng-value="null">{{ 'All (unfiltered)' | translate }}</md-option>
-                    <md-option ng-value="5">{{ 'Not processed' | translate }}</md-option>
-                    <md-option ng-value="1">{{ 'Reduction' | translate }}</md-option>
-                    <md-option ng-value="2">{{ 'Denied' | translate }}</md-option>
-                    <md-option ng-value="3">{{ 'Accepted' | translate }}</md-option>
-                    <md-option ng-value="4">{{ 'Shared' | translate }}</md-option>
-                </md-select>
-            </md-input-container>
+                <md-button class="md-icon-button"><md-icon>search</md-icon><md-tooltip>{{ 'Filter table' | translate }}</md-tooltip></md-button>
+                <md-button class="md-icon-button"><md-icon>settings_backup_restore</md-icon><md-tooltip>{{ 'Reset filter' | translate }}</md-tooltip></md-button>
+            </div>
 
-            <md-button>{{ 'Filter' | translate }}</md-button>
+            <div layout="row" layout-align="center center" layout-fill>
+                <md-input-container>
+                    <label translate>Sort</label>
+                    <md-select ng-model="risks_filters.order">
+                        <md-option value="instance">{{ 'Instance' | translate }}</md-option>
+                        <md-option value="c_impact">{{ 'C Impact' | translate }}</md-option>
+                        <md-option value="i_impact">{{ 'I Impact' | translate }}</md-option>
+                        <md-option value="d_impact">{{ 'D Impact' | translate }}</md-option>
+                        <md-option value="threat">{{ 'Threat' | translate }}</md-option>
+                        <md-option value="threatRate">{{ 'Threat probability' | translate }}</md-option>
+                        <md-option value="vulnerability">{{ 'Vulnerability' | translate }}</md-option>
+                        <md-option value="vulnerabilityRate">{{ 'Vulnerability qualification' | translate }}</md-option>
+                        <md-option value="maxRisk">{{ 'MAX risk' | translate }}</md-option>
+                        <md-option value="targetRisk">{{ 'Target risk' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container>
+                    <label translate>Sort direction</label>
+                    <md-select ng-model="risks_filters.order_direction">
+                        <md-option value="asc">{{ 'Ascending' | translate }}</md-option>
+                        <md-option value="desc">{{ 'Descending' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <span flex></span>
+
+                <md-button>
+                    <md-icon>save</md-icon>
+                    {{ 'Export to CSV' | translate }}
+                </md-button>
+            </div>
         </md-card-content>
     </md-card>
 </div>
@@ -51,59 +80,63 @@
     <md-progress-circular md-indeterminate="true"></md-progress-circular>
 </div>
 
-<table editable callback="onRisksTableEdited" class="md-html-table" ng-if="!sheet_risk && risks.length > 0">
-    <thead>
-    <tr>
-        <th rowspan="2"><p translate>Instance</p></th>
-        <th colspan="3"><p translate>Impact</p></th>
-        <th colspan="2"><p translate>Threat</p></th>
-        <th colspan="3"><p translate>Vulnerability</p></th>
-        <th colspan="3"><p translate>Current risk</p></th>
-        <th rowspan="2"><p translate>T</p></th>
-        <th rowspan="2"><p translate>Target risk</p></th>
-    </tr>
-    <tr>
-        <th>C</th>
-        <th>I</th>
-        <th>D</th>
-        <th translate>Label</th>
-        <th translate>Prob.</th>
-        <th translate>Label</th>
-        <th translate>Measures set</th>
-        <th translate>Qualif.</th>
-        <th>C</th>
-        <th>I</th>
-        <th>D</th>
-    </tr>
-    </thead>
+<div ng-show="!sheet_risk && risks.length > 0">
+    <p class="md-subhead md-padding" translate>{{ risks.length }} risks</p>
 
-    <tbody>
-    <tr ng-repeat="risk in risks" edit-model="risk">
-        <td title="{{::instanceCache[risk.instance].completePath}}">{{::instanceCache[risk.instance][_langField('name')]}}</td>
-        <td title="{{ scaleCommCache[1][risk.c_impact] }}">{{risk.c_impact}}</td>
-        <td title="{{ scaleCommCache[2][risk.i_impact] }}">{{risk.i_impact}}</td>
-        <td title="{{ scaleCommCache[3][risk.d_impact] }}">{{risk.d_impact}}</td>
-        <td class="preserve-newlines" title="{{::risk[_langField('threatDescription')]}}">{{::risk[_langField('threatLabel')]}}</td>
-        <td edit-field="threatRate" edit-type="number" edit-filter="dashnull" title="{{threatCommCache[risk.threatRate]}}"></td>
-        <td class="preserve-newlines" title="{{::risk[_langField('vulnDescription')]}}">{{::risk[_langField('vulnLabel')]}}</td>
-        <td class="preserve-newlines" edit-field="comment" edit-type="textarea"></td>
-        <td edit-field="vulnerabilityRate" edit-type="number" edit-filter="dashnull" title="{{vulnsCommCache[risk.vulnerabilityRate]}}"></td>
-        <td ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc"
-            ng-class="{'green': risk.c_risk > 0 && risk.c_risk < thresholds.thresholds.min, 'orange': risk.c_risk >= thresholds.thresholds.min && risk.c_risk < thresholds.thresholds.max, 'red': risk.c_risk >= thresholds.thresholds.max}">{{ risk.c_risk_enabled ? (risk.c_risk | dashnull) : '' }}</td>
-        <td ng-disabled="!risk.i_risk_enabled" class="tbl-risk-calc"
-            ng-class="{'green': risk.i_risk > 0 && risk.i_risk < thresholds.thresholds.min, 'orange': risk.i_risk >= thresholds.thresholds.min && risk.i_risk < thresholds.thresholds.max, 'red': risk.i_risk >= thresholds.thresholds.max}">{{ risk.i_risk_enabled ? (risk.i_risk | dashnull) : '' }}</td>
-        <td ng-disabled="!risk.d_risk_enabled" class="tbl-risk-calc"
-            ng-class="{'green': risk.d_risk > 0 && risk.d_risk < thresholds.thresholds.min, 'orange': risk.d_risk >= thresholds.thresholds.min && risk.d_risk < thresholds.thresholds.max, 'red': risk.d_risk >= thresholds.thresholds.max}">{{ risk.d_risk_enabled ? (risk.d_risk | dashnull) : '' }}</td>
-        <td>
-            <div layout="row" layout-align="center center">
-                <a class="pointer" title="{{ ::('Open risk sheet' | translate) }}" ng-click="openRiskSheet(risk)">
-                    <md-icon>open_in_new</md-icon>
-                </a>
-                <span class="green-dot" ng-if="risk.t"></span>
-            </div>
-        </td>
-        <td class="txtcenter tbl-risk-calc"
-            ng-class="{'green': risk.target_risk > 0 && risk.target_risk < thresholds.thresholds.min, 'orange': risk.target_risk >= thresholds.thresholds.min && risk.target_risk < thresholds.thresholds.max, 'red': risk.target_risk >= thresholds.thresholds.max}">{{risk.target_risk | dashnull}}</td>
-    </tr>
-    </tbody>
-</table>
+    <table editable callback="onRisksTableEdited" class="md-html-table">
+        <thead>
+        <tr>
+            <th rowspan="2"><p translate>Instance</p></th>
+            <th colspan="3"><p translate>Impact</p></th>
+            <th colspan="2"><p translate>Threat</p></th>
+            <th colspan="3"><p translate>Vulnerability</p></th>
+            <th colspan="3"><p translate>Current risk</p></th>
+            <th rowspan="2"><p translate>T</p></th>
+            <th rowspan="2"><p translate>Target risk</p></th>
+        </tr>
+        <tr>
+            <th>C</th>
+            <th>I</th>
+            <th>D</th>
+            <th translate>Label</th>
+            <th translate>Prob.</th>
+            <th translate>Label</th>
+            <th translate>Measures set</th>
+            <th translate>Qualif.</th>
+            <th>C</th>
+            <th>I</th>
+            <th>D</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr ng-repeat="risk in risks" edit-model="risk">
+            <td title="{{::instanceCache[risk.instance].completePath}}">{{::instanceCache[risk.instance][_langField('name')]}}</td>
+            <td title="{{ scaleCommCache[1][risk.c_impact] }}">{{risk.c_impact}}</td>
+            <td title="{{ scaleCommCache[2][risk.i_impact] }}">{{risk.i_impact}}</td>
+            <td title="{{ scaleCommCache[3][risk.d_impact] }}">{{risk.d_impact}}</td>
+            <td class="preserve-newlines" title="{{::risk[_langField('threatDescription')]}}">{{::risk[_langField('threatLabel')]}}</td>
+            <td edit-field="threatRate" edit-type="number" edit-filter="dashnull" title="{{threatCommCache[risk.threatRate]}}"></td>
+            <td class="preserve-newlines" title="{{::risk[_langField('vulnDescription')]}}">{{::risk[_langField('vulnLabel')]}}</td>
+            <td class="preserve-newlines" edit-field="comment" edit-type="textarea"></td>
+            <td edit-field="vulnerabilityRate" edit-type="number" edit-filter="dashnull" title="{{vulnsCommCache[risk.vulnerabilityRate]}}"></td>
+            <td ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc"
+                ng-class="{'green': risk.c_risk > 0 && risk.c_risk < thresholds.thresholds.min, 'orange': risk.c_risk >= thresholds.thresholds.min && risk.c_risk < thresholds.thresholds.max, 'red': risk.c_risk >= thresholds.thresholds.max}">{{ risk.c_risk_enabled ? (risk.c_risk | dashnull) : '' }}</td>
+            <td ng-disabled="!risk.i_risk_enabled" class="tbl-risk-calc"
+                ng-class="{'green': risk.i_risk > 0 && risk.i_risk < thresholds.thresholds.min, 'orange': risk.i_risk >= thresholds.thresholds.min && risk.i_risk < thresholds.thresholds.max, 'red': risk.i_risk >= thresholds.thresholds.max}">{{ risk.i_risk_enabled ? (risk.i_risk | dashnull) : '' }}</td>
+            <td ng-disabled="!risk.d_risk_enabled" class="tbl-risk-calc"
+                ng-class="{'green': risk.d_risk > 0 && risk.d_risk < thresholds.thresholds.min, 'orange': risk.d_risk >= thresholds.thresholds.min && risk.d_risk < thresholds.thresholds.max, 'red': risk.d_risk >= thresholds.thresholds.max}">{{ risk.d_risk_enabled ? (risk.d_risk | dashnull) : '' }}</td>
+            <td>
+                <div layout="row" layout-align="center center">
+                    <a class="pointer" title="{{ ::('Open risk sheet' | translate) }}" ng-click="openRiskSheet(risk)">
+                        <md-icon>open_in_new</md-icon>
+                    </a>
+                    <span class="green-dot" ng-if="risk.t"></span>
+                </div>
+            </td>
+            <td class="txtcenter tbl-risk-calc"
+                ng-class="{'green': risk.target_risk > 0 && risk.target_risk < thresholds.thresholds.min, 'orange': risk.target_risk >= thresholds.thresholds.min && risk.target_risk < thresholds.thresholds.max, 'red': risk.target_risk >= thresholds.thresholds.max}">{{risk.target_risk | dashnull}}</td>
+        </tr>
+        </tbody>
+    </table>
+</div>

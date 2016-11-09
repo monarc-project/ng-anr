@@ -28,6 +28,7 @@
 
         $transitions.onBefore({}, function () {
             $scope.resetSheet();
+            $scope.resetRisksFilters();
         });
 
         $scope.$on("angular-resizable.resizeEnd", function (event, args) {
@@ -77,11 +78,8 @@
             });
         };
 
-        $scope.updateModel();
-        $scope.instmode = 'anr';
-
         $scope.updateAnrRisksTable = function (cb) {
-            AnrService.getAnrRisks($scope.model.anr.id).then(function (data) {
+            AnrService.getAnrRisks($scope.model.anr.id, $scope.risks_filters).then(function (data) {
                 if (!$scope.risks || $scope.risks.length != data.length) {
                     $scope.risks = data; // for the _table_risks.html partial
                 } else {
@@ -100,6 +98,28 @@
                 }
             });
         };
+
+        $scope.resetRisksFilters = function () {
+            $scope.risks_filters = {
+                order: 'maxRisk',
+                order_direction: 'desc'
+            };
+        };
+
+        $scope.resetRisksFilters();
+        $scope.updateModel();
+        $scope.instmode = 'anr';
+
+        $scope.$watchGroup(['risks_filters.order', 'risks_filters.order_direction'], function (newValue, oldValue) {
+            if (newValue != oldValue) {
+                if ($state.current.name == "main.kb_mgmt.models.details") {
+                    $scope.updateAnrRisksTable();
+                } else {
+                    $scope.$broadcast('risks-table-filters-changed');
+                }
+            }
+        });
+
 
         $scope.clearSelectedInstAndObj = function () {
             $rootScope.anr_selected_instance_id = null;
