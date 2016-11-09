@@ -3,10 +3,6 @@
 <div ng-if="risks && risks.length === 0" class="md-padding">
     <em>{{ 'There are no risks for this instance, so the risks table is empty.' | translate }}</em>
 </div>
-<div ng-if="risks === undefined" class="md-padding">
-    <md-progress-circular md-indeterminate="true"></md-progress-circular>
-</div>
-
 
 <div layout-gt-lg="row" layout="column" layout-align="center center" ng-if="instmode == 'anr' && !sheet_risk">
     <md-card>
@@ -49,6 +45,10 @@
             <md-button>{{ 'Filter' | translate }}</md-button>
         </md-card-content>
     </md-card>
+</div>
+
+<div ng-if="risks === undefined" class="md-padding" layout="row" layout-align="center center">
+    <md-progress-circular md-indeterminate="true"></md-progress-circular>
 </div>
 
 <table editable callback="onRisksTableEdited" class="md-html-table" ng-if="!sheet_risk && risks.length > 0">
