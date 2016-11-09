@@ -969,7 +969,7 @@
                 filter: query,
                 category: $scope.objlib.category ? $scope.objlib.category.id : null,
                 model: $stateParams.modelId,
-                lock: true
+                lock: false
             }).then(function (x) {
                 if (x && x.objects) {
                     q.resolve(x.objects);
