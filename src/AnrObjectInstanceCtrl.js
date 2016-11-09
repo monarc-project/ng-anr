@@ -132,23 +132,7 @@
                 $scope.updateModel();
             }, onrecord);
         };
-
-
-
-        $scope.saveRiskSheet = function (sheet) {
-            AnrService.updateInstanceRisk($scope.instance.anr.id, sheet.id, sheet, function () {
-                $scope.updateInstance();
-                toastr.success(gettextCatalog.getString('The risk sheet changes have been saved successfully'), gettextCatalog.getString('Save successful'));
-            })
-        };
-
-        $scope.saveOpRiskSheet = function (sheet) {
-            AnrService.updateInstanceOpRisk($scope.instance.anr.id, sheet.id, sheet, function () {
-                $scope.updateInstance();
-                toastr.success(gettextCatalog.getString('The operational risk sheet changes have been saved successfully'), gettextCatalog.getString('Save successful'));
-            })
-        };
-
+        
         $scope.showObjectInLibrary = function (objid) {
             $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+objid);
             if($rootScope.hookUpdateObjlib != undefined){

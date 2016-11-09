@@ -122,6 +122,22 @@
             $scope.opsheet_risk = undefined;
         };
 
+
+        $scope.saveRiskSheet = function (sheet) {
+            AnrService.updateInstanceRisk($scope.instance.anr.id, sheet.id, sheet, function () {
+                $scope.updateInstance();
+                toastr.success(gettextCatalog.getString('The risk sheet changes have been saved successfully'), gettextCatalog.getString('Save successful'));
+            })
+        };
+
+        $scope.saveOpRiskSheet = function (sheet) {
+            AnrService.updateInstanceOpRisk($scope.instance.anr.id, sheet.id, sheet, function () {
+                $scope.updateInstance();
+                toastr.success(gettextCatalog.getString('The operational risk sheet changes have been saved successfully'), gettextCatalog.getString('Save successful'));
+            })
+        };
+
+
         /**
          * Risk analysis
          */
