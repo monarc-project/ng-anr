@@ -82,7 +82,7 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                    instance: $scope.instance,
+                    instance: angular.copy($scope.instance),
                     scales: $scope.scales,
                     scaleCommCache: $scope.scaleCommCache
                 }
@@ -132,7 +132,7 @@
                 $scope.updateModel();
             }, onrecord);
         };
-        
+
         $scope.showObjectInLibrary = function (objid) {
             $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+objid);
             if($rootScope.hookUpdateObjlib != undefined){
