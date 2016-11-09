@@ -80,9 +80,9 @@
         $scope.updateModel();
         $scope.instmode = 'anr';
 
-        $scope.updateAnrRisksTable = function () {
+        $scope.updateAnrRisksTable = function (cb) {
             AnrService.getAnrRisks($scope.model.anr.id).then(function (data) {
-                if (!$scope.risks || $scope.risks.length != $scope.model.anr.risks.length) {
+                if (!$scope.risks || $scope.risks.length != data.length) {
                     $scope.risks = data; // for the _table_risks.html partial
                 } else {
                     // patch up only if we already have a risks table
@@ -90,9 +90,13 @@
                     // table callback, and do a full refresh otherwise
                     for (var i = 0; i < $scope.risks.length; ++i) {
                         for (var j in $scope.risks[i]) {
-                            $scope.risks[i][j] = $scope.model.anr.risks[i][j];
+                            $scope.risks[i][j] = data[i][j];
                         }
                     }
+                }
+
+                if (cb) {
+                    cb();
                 }
             });
         };
@@ -133,7 +137,7 @@
         $scope.saveRiskSheet = function (sheet) {
             AnrService.updateInstanceRisk($scope.model.anr.id, sheet.id, sheet, function () {
                 $scope.$broadcast('risks-table-edited');
-                $scope.updateModel(true);
+                $scope.updateAnrRisksTable();
                 toastr.success(gettextCatalog.getString('The risk sheet changes have been saved successfully'), gettextCatalog.getString('Save successful'));
             })
         };
@@ -141,7 +145,7 @@
         $scope.saveOpRiskSheet = function (sheet) {
             AnrService.updateInstanceOpRisk($scope.model.anr.id, sheet.id, sheet, function () {
                 $scope.$broadcast('risks-table-edited');
-                $scope.updateModel(true);
+                $scope.updateAnrRisksTable();
                 toastr.success(gettextCatalog.getString('The operational risk sheet changes have been saved successfully'), gettextCatalog.getString('Save successful'));
             })
         };
@@ -304,7 +308,7 @@
 
                     // Also, tell the server to instantiate the object
                     AnrService.addInstance($scope.model.anr.id, copy.id, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
-                        $scope.updateModel(true);
+                        $scope.updateAnrRisksTable();
                         $scope.updateInstances();
                         e.source.nodeScope.$modelValue.disableclick = false;
                         $scope.$broadcast('object-instancied', {oid: copy.id});
@@ -467,7 +471,7 @@
 
                 // Reload risk sheet in case ranges impact it
                 if ($scope.sheet_risk) {
-                    $scope.updateModel(true, function () {
+                    $scope.updateAnrRisksTable(function () {
                         $scope.openRiskSheet($scope.sheet_risk);
                     });
                 }
@@ -723,7 +727,7 @@
             AnrService.updateInstanceRisk($scope.model.anr.id, model.id, model, function () {
                 promise.resolve(true);
 
-                $scope.updateModel(true);
+                $scope.updateAnrRisksTable();
 
                 // Update the current instance risks table, if we're watching one
                 $scope.$broadcast('risks-table-edited');
