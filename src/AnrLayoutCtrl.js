@@ -65,7 +65,7 @@
 
                 $scope.oprisks = $scope.model.anr.risksop; // for the _table_risks_op.html partial
 
-                if (!$scope.risks) {
+                if (!$scope.risks || $scope.risks.length != $scope.model.anr.risks.length) {
                     $scope.risks = $scope.model.anr.risks; // for the _table_risks.html partial
                 } else {
                     // patch up only if we already have a risks table
@@ -297,6 +297,7 @@
 
                     // Also, tell the server to instantiate the object
                     AnrService.addInstance($scope.model.anr.id, copy.id, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
+                        $scope.updateModel(true);
                         $scope.updateInstances();
                         e.source.nodeScope.$modelValue.disableclick = false;
                         $scope.$broadcast('object-instancied', {oid: copy.id});
