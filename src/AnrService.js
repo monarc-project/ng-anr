@@ -20,6 +20,19 @@
                 }
             });
 
+        self.AnrRisksResource = $resource('/api/anr/:anrId/risks/:instId', { anrId: '@anrId', instId: '@instId' },
+            {
+                'update': {
+                    method: 'PUT'
+                },
+                'patch': {
+                    method: 'PATCH'
+                },
+                'query': {
+                    isArray: true
+                }
+            });
+
         self.LibraryResource = $resource('/api/anr/:anrId/library/:objectId', { anrId: '@anrId', objectId: '@objectId' },
             {
                 'update': {
@@ -268,6 +281,15 @@
             self.InstancesConsequencesResource.patch({anrId: anr_id, consId: cons_id}, data, success, error);
         };
 
+        // ANR risks
+        var getInstanceRisks = function (anr_id, inst_id) {
+            return self.AnrRisksResource.query({anrId: anr_id, instId: inst_id}).$promise;
+        };
+
+        var getAnrRisks = function (anr_id) {
+            return self.AnrRisksResource.query({anrId: anr_id}).$promise;
+        };
+
 
         return {
             patchAnr: patchAnr,
@@ -298,6 +320,7 @@
             updateInstance: updateInstance,
             moveInstance: moveInstance,
 
+            getInstanceRisks: getInstanceRisks,
             getInstanceRisk: getInstanceRisk,
             updateInstanceRisk: updateInstanceRisk,
             patchInstanceRisk: patchInstanceRisk,
@@ -307,7 +330,10 @@
             patchInstanceOpRisk: patchInstanceOpRisk,
 
             getInstancesConsequences: getInstancesConsequences,
-            patchInstanceConsequence: patchInstanceConsequence
+            patchInstanceConsequence: patchInstanceConsequence,
+            
+            getAnrRisks: getAnrRisks,
+
         };
     }
 

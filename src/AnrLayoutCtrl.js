@@ -61,6 +61,7 @@
                 }
 
                 if (!justCore) {
+                    $scope.updateAnrRisksTable();
                     $scope.updateInstances();
                     $scope.updateObjectsLibrary();
                     $scope.updateScales();
@@ -68,6 +69,19 @@
 
                 $scope.oprisks = $scope.model.anr.risksop; // for the _table_risks_op.html partial
 
+                isModelLoading = false;
+
+                if (cb) {
+                    cb();
+                }
+            });
+        };
+
+        $scope.updateModel();
+        $scope.instmode = 'anr';
+
+        $scope.updateAnrRisksTable = function () {
+            AnrService.getAnrRisks($scope.model.anr.id).then(function (data) {
                 if (!$scope.risks || $scope.risks.length != $scope.model.anr.risks.length) {
                     $scope.risks = $scope.model.anr.risks; // for the _table_risks.html partial
                 } else {
@@ -80,18 +94,8 @@
                         }
                     }
                 }
-
-
-                isModelLoading = false;
-
-                if (cb) {
-                    cb();
-                }
             });
         };
-
-        $scope.updateModel();
-        $scope.instmode = 'anr';
 
         $scope.clearSelectedInstAndObj = function () {
             $rootScope.anr_selected_instance_id = null;
