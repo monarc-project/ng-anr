@@ -147,10 +147,10 @@
                 <div layout="row">
                     <md-input-container class="md-block" layout="row" flex>
                         <label translate>Audit order</label>
-                        <md-select ng-model="amv.implicitPosition">
-                            <md-option value="1">{{ 'at the beginning' | translate }}</md-option>
-                            <md-option value="2">{{ 'in the end' | translate }}</md-option>
-                            <md-option value="3">{{ 'after...' | translate }}</md-option>
+                        <md-select ng-model="amv.implicitPosition" required>
+                            <md-option ng-value="1">{{ 'at the beginning' | translate }}</md-option>
+                            <md-option ng-value="2">{{ 'in the end' | translate }}</md-option>
+                            <md-option ng-value="3">{{ 'after...' | translate }}</md-option>
                         </md-select>
                     </md-input-container>
 
