@@ -2,7 +2,8 @@ angular.module('AnrModule').directive('editable', function(){
 	return{
 		restrict: 'A',
 		scope: {
-			callback: '='
+			callback: '=',
+			visibleCallback: '=visible'
 		},
 		controller: ['$scope', '$attrs', function($scope, $attrs){
 			this.fields = [];
@@ -15,6 +16,7 @@ angular.module('AnrModule').directive('editable', function(){
 			};
 
 			this.callback = $scope.callback;
+			this.visibleCallback = $scope.visibleCallback;
 
 			this.saveChange = function(field, direction){
 				field.error = false;
@@ -40,6 +42,13 @@ angular.module('AnrModule').directive('editable', function(){
 					result.then(function(){	 self.handleCallbackReturn(true, field, direction);}, function(){ self.handleCallbackReturn(false, field, direction);} );
 				}
 				return true;
+			};
+
+			this.checkVisibility = function(field){
+				if(this.visibleCallback){
+					return this.visibleCallback.call(null, field.model);
+				}
+				else return true;
 			};
 
 			this.handleCallbackReturn = function(success, field, direction){
@@ -131,11 +140,13 @@ angular.module('AnrModule').directive('editable', function(){
 			scope.editableCtrl = ctrls[0];
 			scope.modelCtrl = ctrls[1];
 
+			var model = scope.localmodel !== undefined ? scope.localmodel : scope.modelCtrl.model;
+
 			scope.field = {
 				edited: false,
-				shown: true,
-				model: scope.localmodel !== undefined ? scope.localmodel : scope.modelCtrl.model,
+				model: model,
 				name: scope.name,
+				shown: true,
 				type: attrs.editType && attrs.editType != "" ? attrs.editType : 'text',
 				editedValue: null,
 				edit: function(){
@@ -164,21 +175,15 @@ angular.module('AnrModule').directive('editable', function(){
 				}
 			}
 
-			// Set the initial shown state after DOM is set
-			$timeout(function () {
-				scope.field.shown = !element.hasClass('ng-hide');
-			});
+			scope.field.shown = scope.editableCtrl.checkVisibility(scope.field);
 
 			scope.editableCtrl.addField(scope.field);
 
 			scope.$watch('show', function (newValue) {
 				if (newValue != scope.shown) {
-					// Watch runs BEFORE the ng-hide class is applied on the element
-					$timeout(function () {
-						scope.field.shown = !element.hasClass('ng-hide');
-					});
+					scope.field.shown = scope.editableCtrl.checkVisibility(scope.field);
 				}
-			})
+			});
 
 			element.on('click', function(){
 				if( ! scope.field.edited ){

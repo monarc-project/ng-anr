@@ -15,6 +15,9 @@
     function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, TableHelperService, ModelService,
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
                            $transitions) {
+
+        $scope.display = {show_hidden_impacts: false};
+
         var self = this;
 
         $scope.ToolsAnrService = ToolsAnrService;
@@ -672,6 +675,11 @@
             AnrService.getScalesTypes($scope.model.anr.id).then(function (data) {
                 $scope.scales_types = data.types;
 
+                $scope.scales_types_by_id = {};
+                for(var i = 0 ; i<data.types.length ; ++i){
+                     $scope.scales_types_by_id[data.types[i].id] = data.types[i];
+                }
+
                 // Same as above, setup placeholder comments structures
                 for (var i = $scope.scales.impacts.min; i <= $scope.scales.impacts.max; ++i) {
                     if (!$scope.comms.impact[i]) {
@@ -699,6 +707,10 @@
                 $scope.updateScaleComments($scope.scales.vulns.id);
             });
         };
+
+        $scope.checkCommentVisibility = function(comment){
+            return ! $scope.scales_types_by_id[comment.scaleImpactType].isHidden || $scope.display.show_hidden_impacts ;
+        }
 
         $scope.onRisksTableEdited = function (model, name) {
             var promise = $q.defer();
