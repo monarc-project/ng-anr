@@ -50,18 +50,7 @@
                     $scope.oprisks = $scope.instance.oprisks;//for the _table_risks_op.html partial
                 }
 
-                if (!$scope.risks) {
-                    $scope.risks = angular.copy($scope.instance.risks); // for the _table_risks.html partial
-                } else {
-                    // patch up only if we already have a risks table
-                    // if this cause a problem, add a flag to updateInstance so that we patch only in the risks
-                    // table callback, and do a full refresh otherwise
-                    for (var i = 0; i < $scope.risks.length; ++i) {
-                        for (var j in $scope.risks[i]) {
-                            $scope.risks[i][j] = $scope.instance.risks[i][j];
-                        }
-                    }
-                }
+                $scope.updateInstanceRisks();
 
                 if (cb) {
                     cb();
@@ -69,6 +58,24 @@
             });
         };
         $scope.updateInstance();
+
+        $scope.updateInstanceRisks = function () {
+            AnrService.getInstanceRisks($scope.model.anr.id, $scope.instance.id).then(function(data) {
+                if (!$scope.risks) {
+                    $scope.risks = data; // for the _table_risks.html partial
+                } else {
+                    // patch up only if we already have a risks table
+                    // if this cause a problem, add a flag to updateInstance so that we patch only in the risks
+                    // table callback, and do a full refresh otherwise
+                    for (var i = 0; i < $scope.risks.length; ++i) {
+                        for (var j in $scope.risks[i]) {
+                            $scope.risks[i][j] = data[i][j];
+                        }
+                    }
+                }
+            });
+
+        };
 
         $scope.editInstanceDetails = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));

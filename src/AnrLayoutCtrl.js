@@ -83,7 +83,7 @@
         $scope.updateAnrRisksTable = function () {
             AnrService.getAnrRisks($scope.model.anr.id).then(function (data) {
                 if (!$scope.risks || $scope.risks.length != $scope.model.anr.risks.length) {
-                    $scope.risks = $scope.model.anr.risks; // for the _table_risks.html partial
+                    $scope.risks = data; // for the _table_risks.html partial
                 } else {
                     // patch up only if we already have a risks table
                     // if this cause a problem, add a flag to updateModel so that we patch only in the risks
