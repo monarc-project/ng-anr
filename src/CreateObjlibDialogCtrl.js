@@ -290,7 +290,7 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
     } else {
         $scope.category = {
             parent: null,
-            implicitPosition: null,
+            implicitPosition: 2,
             position: null,
             label1: catName,
             label2: '',
