@@ -324,6 +324,7 @@
                         $scope.updateInstances(function () {
                             $scope.anr_instance_tree_is_patching = false;
                         });
+                        $scope.$broadcast('instance-moved', obj.id);
                     });
 
                     return true;

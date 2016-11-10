@@ -166,6 +166,12 @@
 
         };
 
+        $scope.$on('instance-moved', function (unused, instance_id) {
+            if ($scope.instance.id == instance_id) {
+                $scope.updateInstance();
+            }
+        })
+
         $scope.$on('risks-table-edited', function () {
             $scope.updateInstance();
         });
