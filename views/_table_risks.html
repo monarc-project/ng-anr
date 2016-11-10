@@ -64,7 +64,7 @@
 
                 <span flex></span>
 
-                <md-button>
+                <md-button ng-click="exportInstanceRisks ? exportInstanceRisks() : exportAnrRisksTable()">
                     <md-icon>save</md-icon>
                     {{ 'Export to CSV' | translate }}
                 </md-button>

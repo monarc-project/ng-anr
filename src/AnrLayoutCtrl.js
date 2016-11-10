@@ -5,7 +5,7 @@
         .controller('AnrLayoutCtrl', [
             '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'TableHelperService',
             'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
-            '$transitions',
+            '$transitions', 'DownloadService',
             AnrLayoutCtrl
         ]);
 
@@ -14,7 +14,7 @@
      */
     function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, TableHelperService, ModelService,
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
-                           $transitions) {
+                           $transitions, DownloadService) {
 
         $scope.display = {show_hidden_impacts: false};
 
@@ -108,6 +108,25 @@
                 order_direction: 'desc'
             };
         };
+
+        $scope.serializeQueryString = function (obj) {
+            var str = [];
+            for (var p in obj) {
+                if (obj.hasOwnProperty(p)) {
+                    str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
+                }
+            }
+            return str.join('&');
+        };
+
+        $scope.exportAnrRisksTable = function () {
+            var params = angular.copy($scope.risks_filters);
+            params.csv = true;
+
+            $http.get("/api/anr/" + $scope.model.anr.id + "/risks?" + $scope.serializeQueryString(params)).then(function (data) {
+                DownloadService.downloadBlob(data.data, 'risks.csv');
+            });
+        }
 
         $scope.resetRisksFilters();
         $scope.updateModel();

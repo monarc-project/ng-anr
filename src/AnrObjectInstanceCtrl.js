@@ -81,6 +81,16 @@
 
         };
 
+        $scope.exportInstanceRisksTable = function () {
+            var params = angular.copy($scope.risks_filters);
+            params.csv = true;
+
+            $http.get("/api/anr/" + $scope.model.anr.id + "/risks/" + $scope.instance.id + "?" + $scope.serializeQueryString(params)).then(function (data) {
+                DownloadService.downloadBlob(data.data, 'risks.csv');
+            });
+        }
+
+
         $scope.$on('risks-table-filters-changed', function () {
             $scope.updateInstanceRisks();
         });
