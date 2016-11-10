@@ -60,8 +60,10 @@
         $scope.updateInstance();
 
         $scope.updateInstanceRisks = function () {
+            $scope.anr_risks_table_loading = true;
+
             AnrService.getInstanceRisks($scope.model.anr.id, $scope.instance.id, $scope.risks_filters).then(function(data) {
-                if (!$scope.risks) {
+                if (!$scope.risks || data.length != $scope.risks.length) {
                     $scope.risks = data; // for the _table_risks.html partial
                 } else {
                     // patch up only if we already have a risks table
@@ -73,6 +75,8 @@
                         }
                     }
                 }
+
+                $scope.anr_risks_table_loading = false;
             });
 
         };

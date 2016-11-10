@@ -79,6 +79,7 @@
         };
 
         $scope.updateAnrRisksTable = function (cb) {
+            $scope.anr_risks_table_loading = true;
             AnrService.getAnrRisks($scope.model.anr.id, $scope.risks_filters).then(function (data) {
                 if (!$scope.risks || $scope.risks.length != data.length) {
                     $scope.risks = data; // for the _table_risks.html partial
@@ -96,6 +97,8 @@
                 if (cb) {
                     cb();
                 }
+
+                $scope.anr_risks_table_loading = false;
             });
         };
 
