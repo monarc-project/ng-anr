@@ -3,7 +3,7 @@
     angular
         .module('AnrModule')
         .controller('AnrObjectInstanceCtrl', [
-            '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$state', 'TableHelperService',
+            '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$state', 'DownloadService', 'TableHelperService', '$http',
             'ModelService', 'ObjlibService', '$stateParams', 'AnrService', '$rootScope', '$timeout', '$location', 'InstanceService', '$q',
             AnrObjectInstanceCtrl
         ]);
@@ -11,8 +11,8 @@
     /**
      * ANR > OBJECT INSTANCE
      */
-    function AnrObjectInstanceCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state,
-                                            TableHelperService, ModelService, ObjlibService, $stateParams, AnrService,
+    function AnrObjectInstanceCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, DownloadService,
+                                            TableHelperService, $http, ModelService, ObjlibService, $stateParams, AnrService,
                                             $rootScope, $timeout, $location, InstanceService, $q) {
 
         $scope.instance = {};
@@ -138,7 +138,7 @@
                 }
             })
                 .then(function (exports) {
-                    $http.post('/api/instances-export', {id: $scope.instance.id, password: exports.password, assessments: exports.assessments}).then(function (data) {
+                    $http.get('/api/anr/' + $scope.model.anr.id + '/objects/' + $scope.instance.id + '/export', {id: $scope.instance.id, password: exports.password, assessments: exports.assessments}).then(function (data) {
                         DownloadService.downloadBlob(data.data, 'instance.bin');
                         toastr.success(gettextCatalog.getString('The instance has been exported successfully.'), gettextCatalog.getString('Export successful'));
                     })
