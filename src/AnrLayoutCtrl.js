@@ -29,6 +29,14 @@
         $transitions.onBefore({}, function () {
             $scope.resetSheet();
             $scope.resetRisksFilters();
+
+            $timeout(function () {
+                if (!$stateParams.instId) {
+                    $rootScope.anr_selected_instance_id = null;
+                    $rootScope.anr_selected_object_id = null;
+                }
+            });
+
         });
 
         $scope.$on("angular-resizable.resizeEnd", function (event, args) {
