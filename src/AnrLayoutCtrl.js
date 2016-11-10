@@ -268,6 +268,7 @@
         // Tree
         $scope.anr_obj_instances_data = null;
         $scope.anr_obj_library_data = null;
+        $scope.anr_instance_tree_is_patching = false;
 
         // As our controllers are static in this zone, we must go through the rootScope to update the selected instance
         // ID from the child controller (AnrObjectInstanceCtrl)
@@ -307,7 +308,7 @@
 
         $scope.insTreeCallbacks = {
             beforeDrag: function (scopeDrag) {
-                return (!scopeDrag.$modelValue.component);
+                return (!scopeDrag.$modelValue.component) && !$scope.anr_instance_tree_is_patching;
             },
 
             accept: function (sourceNodeScope, destNodeScope, destIndex) {
@@ -317,8 +318,12 @@
             dropped: function (e) {
                 if (e.source.nodesScope.$treeScope.$id == e.dest.nodesScope.$treeScope.$id) {
                     var obj = e.source.nodeScope.$modelValue;
+
+                    $scope.anr_instance_tree_is_patching = true;
                     AnrService.moveInstance($scope.model.anr.id, obj.id, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
-                        $scope.updateInstances();
+                        $scope.updateInstances(function () {
+                            $scope.anr_instance_tree_is_patching = false;
+                        });
                     });
 
                     return true;
@@ -330,7 +335,7 @@
 
         $scope.libTreeCallbacks = {
             beforeDrag: function (scopeDrag) {
-                return (scopeDrag.$modelValue.type != 'libcat' || scopeDrag.$modelValue.depth == 0) && (scopeDrag.$modelValue.id > 0);
+                return (scopeDrag.$modelValue.type != 'libcat' || scopeDrag.$modelValue.depth == 0) && (scopeDrag.$modelValue.id > 0) && !$scope.anr_instance_tree_is_patching;
             },
 
             accept: function (sourceNodeScope, destNodeScope, destIndex) {
@@ -357,10 +362,14 @@
                     e.source.nodesScope.$modelValue.push(copy);
 
                     // Also, tell the server to instantiate the object
+                    $scope.anr_instance_tree_is_patching = true;
                     AnrService.addInstance($scope.model.anr.id, copy.id, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
                         $scope.updateAnrRisksTable();
-                        $scope.updateInstances();
-                        e.source.nodeScope.$modelValue.disableclick = false;
+                        $scope.updateInstances(function () {
+                            $scope.anr_instance_tree_is_patching = true;
+                            e.source.nodeScope.$modelValue.disableclick = false;
+                        });
+
                         $scope.$broadcast('object-instancied', {oid: copy.id});
                     });
 
@@ -420,7 +429,7 @@
             });
         };
 
-        $scope.updateInstances = function () {
+        $scope.updateInstances = function (cb) {
             AnrService.getInstances($scope.model.anr.id).then(function (data) {
                 $scope.anr_obj_instances_data = [];
                 $scope.instanceCache = {};
@@ -448,6 +457,10 @@
                 for (var v = 0; v < data.instances.length; ++v) {
                     var instance = data.instances[v];
                     $scope.anr_obj_instances_data.push(recurseFillTree(instance));
+                }
+
+                if (cb) {
+                    cb();
                 }
             });
 
