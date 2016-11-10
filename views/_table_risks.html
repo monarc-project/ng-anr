@@ -6,9 +6,9 @@
             <div layout="row" layout-align="center center">
                 {{ 'Risk threshold (on max CID)' | translate }}&nbsp;
                 <md-radio-group ng-model="risks_filters.thresholds" layout="row" class="md-primary">
-                    <md-radio-button ng-value="'0-' + thresholds.thresholds.min" aria-label="G"><div class="tbl-risk-calc anr-scales-demo-block green"></div></md-radio-button>
-                    <md-radio-button ng-value="thresholds.thresholds.min + '-' + thresholds.thresholds.max" aria-label="O"><div class="tbl-risk-calc anr-scales-demo-block orange"></div></md-radio-button>
-                    <md-radio-button ng-value="thresholds.thresholds.max + '-128'" aria-label="R"><div class="tbl-risk-calc anr-scales-demo-block red"></div></md-radio-button>
+                    <md-radio-button ng-value="-1" aria-label="G"><div class="tbl-risk-calc anr-scales-demo-block green"></div></md-radio-button>
+                    <md-radio-button ng-value="thresholds.thresholds.min" aria-label="O"><div class="tbl-risk-calc anr-scales-demo-block orange"></div></md-radio-button>
+                    <md-radio-button ng-value="thresholds.thresholds.max" aria-label="R"><div class="tbl-risk-calc anr-scales-demo-block red"></div></md-radio-button>
                 </md-radio-group>
 
                 &nbsp;
