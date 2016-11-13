@@ -367,7 +367,7 @@
                     AnrService.addInstance($scope.model.anr.id, copy.id, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
                         $scope.updateAnrRisksTable();
                         $scope.updateInstances(function () {
-                            $scope.anr_instance_tree_is_patching = true;
+                            $scope.anr_instance_tree_is_patching = false;
                             e.source.nodeScope.$modelValue.disableclick = false;
                         });
 
