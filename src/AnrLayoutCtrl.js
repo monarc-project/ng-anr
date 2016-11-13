@@ -133,7 +133,8 @@
             params.csv = true;
 
             $http.get("/api/anr/" + $scope.model.anr.id + "/risks?" + $scope.serializeQueryString(params)).then(function (data) {
-                DownloadService.downloadBlob(data.data, 'risks.csv');
+                var contentT = data.headers('Content-Type');
+                DownloadService.downloadBlob(data.data, 'risks.csv',contentT);
             });
         }
 
