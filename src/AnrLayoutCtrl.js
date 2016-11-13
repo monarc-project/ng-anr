@@ -113,7 +113,8 @@
         $scope.resetRisksFilters = function () {
             $scope.risks_filters = {
                 order: 'maxRisk',
-                order_direction: 'desc'
+                order_direction: 'desc',
+                thresholds: -1
             };
         };
 
