@@ -6,7 +6,7 @@
                     <input type="submit" style="position: absolute; left: -99999px">
                     <div layout="row" layout-align="center center">
                         {{ 'Risk threshold (on max ROLFP)' | translate }}&nbsp;
-                        <md-radio-group ng-model="risks_filters.thresholds" layout="row" class="md-primary">
+                        <md-radio-group ng-model="risks_op_filters.thresholds" layout="row" class="md-primary">
                             <md-radio-button ng-value="-1" aria-label="G"><div class="tbl-risk-calc anr-scales-demo-block green"></div></md-radio-button>
                             <md-radio-button ng-value="thresholds.thresholds.min" aria-label="O"><div class="tbl-risk-calc anr-scales-demo-block orange"></div></md-radio-button>
                             <md-radio-button ng-value="thresholds.thresholds.max" aria-label="R"><div class="tbl-risk-calc anr-scales-demo-block red"></div></md-radio-button>
@@ -16,14 +16,14 @@
 
                         <md-input-container style="margin: 0 0">
                             <label translate>Keywords</label>
-                            <input ng-model="risks_filters.keywords">
+                            <input ng-model="risks_op_filters.keywords">
                         </md-input-container>
 
                         &nbsp;
 
                         <md-input-container style="margin: 0 0; min-width: 120px;">
                             <label translate>Processing type</label>
-                            <md-select ng-model="risks_filters.kindOfMeasure">
+                            <md-select ng-model="risks_op_filters.kindOfMeasure">
                                 <md-option ng-value="null">{{ 'All (unfiltered)' | translate }}</md-option>
                                 <md-option ng-value="5">{{ 'Not processed' | translate }}</md-option>
                                 <md-option ng-value="1">{{ 'Reduction' | translate }}</md-option>
@@ -40,7 +40,7 @@
                     <div layout="row" layout-align="center center">
                         <md-input-container>
                             <label translate>Sort</label>
-                            <md-select ng-model="risks_filters.order">
+                            <md-select ng-model="risks_op_filters.order">
                                 <md-option value="auditOrder" ng-if="instance.asset.type != 1 && instmode == 'inst'">{{ 'Audit order' | translate }}</md-option>
                                 <md-option value="instance" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'Instance' | translate }}</md-option>
                                 <md-option value="c_impact" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'C Impact' | translate }}</md-option>
@@ -57,7 +57,7 @@
 
                         <md-input-container>
                             <label translate>Sort direction</label>
-                            <md-select ng-model="risks_filters.order_direction">
+                            <md-select ng-model="risks_op_filters.order_direction">
                                 <md-option value="asc">{{ 'Ascending' | translate }}</md-option>
                                 <md-option value="desc">{{ 'Descending' | translate }}</md-option>
                             </md-select>
