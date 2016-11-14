@@ -73,12 +73,11 @@
 
                 if (!justCore) {
                     $scope.updateAnrRisksTable();
+                    $scope.updateAnrRisksOpTable();
                     $scope.updateInstances();
                     $scope.updateObjectsLibrary();
                     $scope.updateScales();
                 }
-
-                $scope.oprisks = $scope.model.anr.risksop; // for the _table_risks_op.html partial
 
                 isModelLoading = false;
 
@@ -122,6 +121,40 @@
             };
         };
 
+        $scope.updateAnrRisksOpTable = function (cb) {
+            $scope.anr_risks_op_table_loading = true;
+            AnrService.getAnrRisksOp($scope.model.anr.id, $scope.risks_op_filters).then(function (data) {
+                if (!$scope.oprisks || $scope.oprisks.length != data.length) {
+                    $scope.oprisks_total = data.count;
+                    $scope.oprisks = data.oprisks; // for the _table_risks_op.html partial
+                } else {
+                    // patch up only if we already have a risks table
+                    // if this cause a problem, add a flag to updateModel so that we patch only in the risks
+                    // table callback, and do a full refresh otherwise
+                    for (var i = 0; i < $scope.oprisks.length; ++i) {
+                        for (var j in $scope.oprisks[i]) {
+                            $scope.oprisks[i][j] = data.oprisks[i][j];
+                        }
+                    }
+                }
+
+                if (cb) {
+                    cb();
+                }
+
+                $scope.anr_risks_op_table_loading = false;
+            });
+        };
+
+        $scope.resetRisksOpFilters = function () {
+            $scope.risks_op_filters = {
+                order: 'maxRisk',
+                order_direction: 'desc',
+                thresholds: -1,
+                page: 1
+            };
+        };
+
         $scope.serializeQueryString = function (obj) {
             var str = [];
             for (var p in obj) {
@@ -143,6 +176,7 @@
         }
 
         $scope.resetRisksFilters();
+        $scope.resetRisksOpFilters();
         $scope.updateModel();
         $scope.instmode = 'anr';
 

@@ -26,6 +26,7 @@
         var tmpCurrentTab = $scope.ToolsAnrService.currentTab;
 
         $scope.risks = undefined;
+        $scope.oprisks = undefined;
 
         $scope.updateInstance = function (cb) {
             AnrService.getInstance($scope.model.anr.id, $stateParams.instId).then(function (data) {
@@ -51,6 +52,7 @@
                 }
 
                 $scope.updateInstanceRisks();
+                $scope.updateInstanceRisksOp();
 
                 if (cb) {
                     cb();
@@ -84,6 +86,38 @@
 
         $scope.exportInstanceRisksTable = function () {
             var params = angular.copy($scope.risks_filters);
+            params.csv = true;
+
+            $http.get("/api/anr/" + $scope.model.anr.id + "/risks/" + $scope.instance.id + "?" + $scope.serializeQueryString(params)).then(function (data) {
+                DownloadService.downloadBlob(data.data, 'risks.csv');
+            });
+        }
+
+        $scope.updateInstanceRisksOp = function () {
+            $scope.anr_risks_op_table_loading = true;
+
+            AnrService.getInstanceRisksOp($scope.model.anr.id, $scope.instance.id, $scope.risks_op_filters).then(function(data) {
+                if (!$scope.oprisks || data.length != $scope.oprisks.length) {
+                    $scope.oprisks_total = data.count;
+                    $scope.oprisks = data.oprisks; // for the _table_risks_op.html partial
+                } else {
+                    // patch up only if we already have a risks table
+                    // if this cause a problem, add a flag to updateInstance so that we patch only in the risks
+                    // table callback, and do a full refresh otherwise
+                    for (var i = 0; i < $scope.oprisks.length; ++i) {
+                        for (var j in $scope.oprisks[i]) {
+                            $scope.oprisks[i][j] = data.oprisks[i][j];
+                        }
+                    }
+                }
+
+                $scope.anr_risks_op_table_loading = false;
+            });
+
+        };
+
+        $scope.exportInstanceRisksOpTable = function () {
+            var params = angular.copy($scope.risks_op_filters);
             params.csv = true;
 
             $http.get("/api/anr/" + $scope.model.anr.id + "/risks/" + $scope.instance.id + "?" + $scope.serializeQueryString(params)).then(function (data) {
