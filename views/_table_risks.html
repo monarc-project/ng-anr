@@ -66,7 +66,7 @@
 
                     <span flex></span>
 
-                    <md-button ng-click="exportInstanceRisks ? exportInstanceRisks() : exportAnrRisksTable()">
+                    <md-button ng-if="instmode == 'anr'" ng-click="exportInstanceRisks ? exportInstanceRisks() : exportAnrRisksTable()">
                         <md-icon>save</md-icon>
                         {{ 'Export to CSV' | translate }}
                     </md-button>
