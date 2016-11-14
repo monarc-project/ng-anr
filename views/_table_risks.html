@@ -87,8 +87,12 @@
 
 <div ng-show="!sheet_risk && risks.length > 0">
     <div layout="row" layout-align="start center">
-        <p class="md-subhead md-padding" translate>{{ risks.length }} risks</p>
+        <p class="md-subhead md-padding" translate>{{ risks_total }} risks</p>
         <md-progress-circular md-diameter="20" ng-if="anr_risks_table_loading"></md-progress-circular>
+        <span flex></span>
+        <md-select ng-model="risks_filters.page" md-on-close="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()">
+            <md-option ng-repeat="i in range(1, ceil(risks_total / 50))" ng-value="i"><span translate>Page {{ i }}</span></md-option>
+        </md-select>
     </div>
 
     <table editable callback="onRisksTableEdited" class="md-html-table">
@@ -147,4 +151,10 @@
         </tr>
         </tbody>
     </table>
+
+    <div layout="row" layout-align="end center">
+        <md-select ng-model="risks_filters.page" md-on-close="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()">
+            <md-option ng-repeat="i in range(1, ceil(risks_total / 50))" ng-value="i"><span translate>Page {{ i }}</span></md-option>
+        </md-select>
+    </div>
 </div>

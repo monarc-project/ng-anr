@@ -29,7 +29,7 @@
                     method: 'PATCH'
                 },
                 'query': {
-                    isArray: true
+                    isArray: false
                 }
             });
 

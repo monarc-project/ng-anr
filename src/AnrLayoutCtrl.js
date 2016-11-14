@@ -39,6 +39,8 @@
 
         });
 
+        $scope.ceil = Math.ceil;
+
         $scope.$on("angular-resizable.resizeEnd", function (event, args) {
             if(args.id != undefined && args.id == 'global-resize-menu' && parseInt(args.width) <= minWidthMenu){
                 $scope.GlobalResizeMenuSize = 0;
@@ -90,14 +92,15 @@
             $scope.anr_risks_table_loading = true;
             AnrService.getAnrRisks($scope.model.anr.id, $scope.risks_filters).then(function (data) {
                 if (!$scope.risks || $scope.risks.length != data.length) {
-                    $scope.risks = data; // for the _table_risks.html partial
+                    $scope.risks_total = data.count;
+                    $scope.risks = data.risks; // for the _table_risks.html partial
                 } else {
                     // patch up only if we already have a risks table
                     // if this cause a problem, add a flag to updateModel so that we patch only in the risks
                     // table callback, and do a full refresh otherwise
                     for (var i = 0; i < $scope.risks.length; ++i) {
                         for (var j in $scope.risks[i]) {
-                            $scope.risks[i][j] = data[i][j];
+                            $scope.risks[i][j] = data.risks[i][j];
                         }
                     }
                 }
@@ -114,7 +117,8 @@
             $scope.risks_filters = {
                 order: 'maxRisk',
                 order_direction: 'desc',
-                thresholds: -1
+                thresholds: -1,
+                page: 1
             };
         };
 

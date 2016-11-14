@@ -64,14 +64,15 @@
 
             AnrService.getInstanceRisks($scope.model.anr.id, $scope.instance.id, $scope.risks_filters).then(function(data) {
                 if (!$scope.risks || data.length != $scope.risks.length) {
-                    $scope.risks = data; // for the _table_risks.html partial
+                    $scope.risks_total = data.count;
+                    $scope.risks = data.risks; // for the _table_risks.html partial
                 } else {
                     // patch up only if we already have a risks table
                     // if this cause a problem, add a flag to updateInstance so that we patch only in the risks
                     // table callback, and do a full refresh otherwise
                     for (var i = 0; i < $scope.risks.length; ++i) {
                         for (var j in $scope.risks[i]) {
-                            $scope.risks[i][j] = data[i][j];
+                            $scope.risks[i][j] = data.risks[i][j];
                         }
                     }
                 }
