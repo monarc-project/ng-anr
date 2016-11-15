@@ -5,7 +5,7 @@
                 <form ng-submit="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()">
                     <input type="submit" style="position: absolute; left: -99999px">
                     <div layout="row" layout-align="center center">
-                        {{ 'Risk threshold (on max ROLFP)' | translate }}&nbsp;
+                        {{ 'Risk threshold (on max NET risk)' | translate }}&nbsp;
                         <md-radio-group ng-model="risks_op_filters.thresholds" layout="row" class="md-primary">
                             <md-radio-button ng-value="-1" aria-label="G"><div class="tbl-risk-calc anr-scales-demo-block green"></div></md-radio-button>
                             <md-radio-button ng-value="thresholds.thresholds.min" aria-label="O"><div class="tbl-risk-calc anr-scales-demo-block orange"></div></md-radio-button>
