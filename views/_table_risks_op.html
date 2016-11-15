@@ -33,8 +33,8 @@
                             </md-select>
                         </md-input-container>
 
-                        <md-button class="md-icon-button" ng-click="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()"><md-icon>search</md-icon><md-tooltip>{{ 'Filter table' | translate }}</md-tooltip></md-button>
-                        <md-button class="md-icon-button" ng-click="resetRisksFilters(); updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()"><md-icon>settings_backup_restore</md-icon><md-tooltip>{{ 'Reset filter' | translate }}</md-tooltip></md-button>
+                        <md-button class="md-icon-button" ng-click="updateInstanceRisksOp ? updateInstanceRisksOp() : updateAnrRisksOpTable()"><md-icon>search</md-icon><md-tooltip>{{ 'Filter table' | translate }}</md-tooltip></md-button>
+                        <md-button class="md-icon-button" ng-click="resetRisksOpFilters(); updateInstanceRisksOp ? updateInstanceRisksOp() : updateAnrRisksOpTable()"><md-icon>settings_backup_restore</md-icon><md-tooltip>{{ 'Reset filter' | translate }}</md-tooltip></md-button>
                     </div>
 
                     <div layout="row" layout-align="center center">
@@ -87,8 +87,8 @@
     <div ng-include="'views/anr/_oprisk_sheet.html'" ng-if="opsheet_risk"></div>
 
     <div ng-if="!oprisks || !oprisks.length" class="md-padding">
-        <em ng-if="instmode == 'inst' ">{{ 'There are no operational risks for this instance, so the operational risks table is empty.' | translate }}</em>
-        <em ng-if="instmode == 'anr' ">{{ 'There are no operational risks for this risk analysis.' | translate }}</em>
+        <em ng-if="instmode == 'inst' ">{{ 'There are no operational risks for this instance, or the filters gave no results.' | translate }}</em>
+        <em ng-if="instmode == 'anr' ">{{ 'There are no operational risks for this risk analysis, or the filters gave no results.' | translate }}</em>
         <em ng-if="instmode == 'obj' ">{{ 'There are no operational risks for this object.' | translate }}</em>
     </div>
 
