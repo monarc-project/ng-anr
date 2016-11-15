@@ -84,15 +84,6 @@
 
         };
 
-        $scope.exportInstanceRisksTable = function () {
-            var params = angular.copy($scope.risks_filters);
-            params.csv = true;
-
-            $http.get("/api/anr/" + $scope.model.anr.id + "/risks/" + $scope.instance.id + "?" + $scope.serializeQueryString(params)).then(function (data) {
-                DownloadService.downloadBlob(data.data, 'risks.csv');
-            });
-        }
-
         $scope.updateInstanceRisksOp = function () {
             $scope.anr_risks_op_table_loading = true;
 
@@ -115,16 +106,6 @@
             });
 
         };
-
-        $scope.exportInstanceRisksOpTable = function () {
-            var params = angular.copy($scope.risks_op_filters);
-            params.csv = true;
-
-            $http.get("/api/anr/" + $scope.model.anr.id + "/risks/" + $scope.instance.id + "?" + $scope.serializeQueryString(params)).then(function (data) {
-                DownloadService.downloadBlob(data.data, 'risks.csv');
-            });
-        }
-
 
         $scope.$on('risks-table-filters-changed', function () {
             $scope.updateInstanceRisks();
