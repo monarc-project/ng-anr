@@ -195,6 +195,7 @@
             if (newValue != oldValue) {
                 if ($state.current.name == "main.kb_mgmt.models.details") {
                     $scope.updateAnrRisksTable();
+                    $scope.updateAnrRisksOpTable();
                 } else {
                     $scope.$broadcast('risks-table-filters-changed');
                 }
@@ -246,7 +247,7 @@
         $scope.saveOpRiskSheet = function (sheet) {
             AnrService.updateInstanceOpRisk($scope.model.anr.id, sheet.id, sheet, function () {
                 $scope.$broadcast('risks-table-edited');
-                $scope.updateAnrRisksTable();
+                $scope.updateAnrRisksOpTable();
                 toastr.success(gettextCatalog.getString('The operational risk sheet changes have been saved successfully'), gettextCatalog.getString('Save successful'));
             })
         };
@@ -417,6 +418,7 @@
                     $scope.anr_instance_tree_is_patching = true;
                     AnrService.addInstance($scope.model.anr.id, copy.id, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
                         $scope.updateAnrRisksTable();
+                        $scope.updateAnrRisksOpTable();
                         $scope.updateInstances(function () {
                             $scope.anr_instance_tree_is_patching = false;
                             e.source.nodeScope.$modelValue.disableclick = false;
