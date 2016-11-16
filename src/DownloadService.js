@@ -3,7 +3,7 @@
 (function () {
 
     angular
-        .module('BackofficeApp')
+        .module('AnrModule')
         .factory('DownloadService', [ DownloadService ]);
 
     function DownloadService() {
