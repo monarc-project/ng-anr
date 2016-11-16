@@ -5,7 +5,7 @@
         .controller('AnrLayoutCtrl', [
             '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'TableHelperService',
             'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
-            '$transitions', 'DownloadService',
+            '$transitions', 'DownloadService', '$mdPanel',
             AnrLayoutCtrl
         ]);
 
@@ -14,7 +14,7 @@
      */
     function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, TableHelperService, ModelService,
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
-                           $transitions, DownloadService) {
+                           $transitions, DownloadService, $mdPanel) {
 
         $scope.display = {show_hidden_impacts: false};
 
@@ -296,6 +296,17 @@
                 ]
             }
         ];
+
+        $scope.getStepProgress = function (step) {
+            var progress = 0;
+            for (var i = 0; i < step.steps.length; ++i) {
+                if (step.steps[i].done) {
+                    ++progress;
+                }
+            }
+
+            return progress;
+        };
 
         $scope.getMethodTextColor = function (step, subStep) {
             if (subStep.done) {
@@ -959,6 +970,38 @@
                 });
         };
 
+        $scope.showMethodBox = function (stepNum, step, ev) {
+            var position = $mdPanel.newPanelPosition()
+                .relativeTo('.method-menu-step-' + stepNum)
+                .addPanelPosition($mdPanel.xPosition.ALIGN_START, $mdPanel.yPosition.BELOW);
+
+            var animation = $mdPanel.newPanelAnimation();
+            animation.withAnimation($mdPanel.animation.FADE);
+
+            var config = {
+                animation: animation,
+                controller: ['mdPanelRef', '$scope', 'step', MonarcMethodBoxCtrl],
+                templateUrl: 'monarc-method.tmpl.html', // inlined in anr.layout.html
+                locals: {
+                    'step': step
+                },
+                position: position,
+                zIndex: 10,
+                openFrom: ev,
+                escapeToClose: true,
+                clickOutsideToClose: true,
+                focusOnOpen: false,
+                hasBackdrop: false,
+            };
+
+            $mdPanel.open(config);
+        }
+    }
+
+    // Dialogs
+
+    function MonarcMethodBoxCtrl(mdPanelRef, $scope, step) {
+        $scope.step = step;
     }
 
     function CreateAnrDialogCtrl($scope, $mdDialog, ConfigService, anr, $stateParams) {

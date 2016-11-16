@@ -637,11 +637,19 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
     background-color: #EF9A9A;
 }
 
-.md-monarc-tooltip .md-content {
-    font-size: 12px;
-    font-weight: normal;
-    height: auto;
-    background-color: rgba(0, 0, 0, 0.87) !important;
+md-progress-linear.blue .md-bar {
+    background: #03A9F4;
+}
+md-progress-linear.yellow .md-bar {
+    background: #FFEB3B;
+}
+
+.md-monarc-method-box {
+    min-width: 400px;
+    border: 1px solid #DDDDDD;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.9);
+    box-shadow: 2px 3px 3px rgba(0,0,0,0.25);
 }
 
 
