@@ -90,7 +90,7 @@
         $scope.updateAnrRisksTable = function (cb) {
             $scope.anr_risks_table_loading = true;
             AnrService.getAnrRisks($scope.model.anr.id, $scope.risks_filters).then(function (data) {
-                if (!$scope.risks || $scope.risks.length != data.length) {
+                if (!$scope.risks || $scope.risks.length != data.risks.length) {
                     $scope.risks_total = data.count;
                     $scope.risks = data.risks; // for the _table_risks.html partial
                 } else {
@@ -124,7 +124,7 @@
         $scope.updateAnrRisksOpTable = function (cb) {
             $scope.anr_risks_op_table_loading = true;
             AnrService.getAnrRisksOp($scope.model.anr.id, $scope.risks_op_filters).then(function (data) {
-                if (!$scope.oprisks || $scope.oprisks.length != data.length) {
+                if (!$scope.oprisks || $scope.oprisks.length != data.oprisks.length) {
                     $scope.oprisks_total = data.count;
                     $scope.oprisks = data.oprisks; // for the _table_risks_op.html partial
                 } else {
