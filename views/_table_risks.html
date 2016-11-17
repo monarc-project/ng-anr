@@ -90,7 +90,7 @@
         <p class="md-subhead md-padding" translate>{{ risks_total }} risks</p>
         <md-progress-circular md-diameter="20" ng-if="anr_risks_table_loading"></md-progress-circular>
         <span flex></span>
-        <md-select ng-model="risks_filters.page" md-on-close="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()" ng-if="risks_total > 0">
+        <md-select ng-model="risks_filters.page" md-on-close="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()" ng-if="risks_total > 0 && (!instance || instance.asset.type == 1)">
             <md-option ng-repeat="i in range(1, ceil(risks_total / 50))" ng-value="i"><span translate>Page {{ i }}</span></md-option>
         </md-select>
     </div>
@@ -152,7 +152,7 @@
         </tbody>
     </table>
 
-    <div layout="row" layout-align="end center" ng-if="risks_total > 0">
+    <div layout="row" layout-align="end center" ng-if="risks_total > 0 && (!instance || instance.asset.type == 1)">
         <md-select ng-model="risks_filters.page" md-on-close="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()">
             <md-option ng-repeat="i in range(1, ceil(risks_total / 50))" ng-value="i"><span translate>Page {{ i }}</span></md-option>
         </md-select>

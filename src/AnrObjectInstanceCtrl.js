@@ -48,12 +48,11 @@
                 isInstanceLoading = false;
 
                 $scope.oprisks = [];
-                if($scope.instance.asset.type == 1){
-                    $scope.oprisks = $scope.instance.oprisks;//for the _table_risks_op.html partial
-                }
 
                 $scope.updateInstanceRisks();
-                $scope.updateInstanceRisksOp();
+                if ($scope.instance.asset.type == 1) {
+                    $scope.updateInstanceRisksOp();
+                }
 
                 if (cb) {
                     cb();
@@ -64,6 +63,10 @@
 
         $scope.updateInstanceRisks = function () {
             $scope.anr_risks_table_loading = true;
+
+            if ($scope.instance.asset.type == 2) {
+                $scope.risks_filters.limit = 0;
+            }
 
             AnrService.getInstanceRisks($scope.model.anr.id, $scope.instance.id, $scope.risks_filters).then(function(data) {
                 if (!$scope.risks || data.length != $scope.risks.length) {
