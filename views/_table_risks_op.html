@@ -52,7 +52,7 @@
     <div layout="row" layout-align="start center">
         <p class="md-title md-padding" ng-if="!opsheet_risk" translate>{{ oprisks_total }} operational risk(s)</p>
         <span flex></span>
-        <md-select ng-model="risks_op_filters.page" md-on-close="updateInstanceRisksOp ? updateInstanceRisksOp() : updateAnrRisksOpTable()">
+        <md-select ng-model="risks_op_filters.page" md-on-close="updateInstanceRisksOp ? updateInstanceRisksOp() : updateAnrRisksOpTable()" ng-if="oprisks_total > 0">
             <md-option ng-repeat="i in range(1, ceil(oprisks_total / 50))" ng-value="i"><span translate>Page {{ i }}</span></md-option>
         </md-select>
     </div>
@@ -140,9 +140,9 @@
         </tbody>
     </table>
 
-    <div layout="row" layout-align="end center">
+    <div layout="row" layout-align="end center" ng-if="oprisks_total > 0">
         <md-select ng-model="risks_op_filters.page" md-on-close="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()">
-            <md-option ng-repeat="i in range(1, ceil(risks_total / 50))" ng-value="i"><span translate>Page {{ i }}</span></md-option>
+            <md-option ng-repeat="i in range(1, ceil(oprisks_total / 50))" ng-value="i"><span translate>Page {{ i }}</span></md-option>
         </md-select>
     </div>
 </md-tab>
