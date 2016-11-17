@@ -192,6 +192,10 @@
             $scope.updateInstance();
         })
 
+        $scope.$on('object-instancied', function () {
+            $scope.updateInstance();
+        })
+
         $scope.$on('risks-table-edited', function () {
             $scope.updateInstance();
         });
