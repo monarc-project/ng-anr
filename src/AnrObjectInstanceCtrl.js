@@ -27,6 +27,7 @@
 
         $scope.risks = undefined;
         $scope.oprisks = undefined;
+        $scope.oprisks_total = 0;
 
         $scope.updateInstance = function (cb) {
             AnrService.getInstance($scope.model.anr.id, $stateParams.instId).then(function (data) {
