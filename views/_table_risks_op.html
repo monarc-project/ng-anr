@@ -2,7 +2,7 @@
     <div layout-gt-lg="row" layout="column" layout-align="center center" ng-if="(instmode == 'anr' || instmode == 'inst') && !opsheet_risk">
         <md-card>
             <md-card-content layout="column" layout-align="center center">
-                <form ng-submit="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()">
+                <form ng-submit="updateInstanceRisksOp ? updateInstanceRisksOp() : updateAnrRisksOpTable()">
                     <input type="submit" style="position: absolute; left: -99999px">
                     <div layout="row" layout-align="center center">
                         {{ 'Risk threshold (on max NET risk)' | translate }}&nbsp;
