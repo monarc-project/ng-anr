@@ -56,6 +56,12 @@
     </div>
 
 
+    <md-card ng-if="instance_updating">
+        <md-card-content layout="row" layout-align="center center" layout-padding>
+            <md-progress-circular></md-progress-circular>
+            <p translate>Updating risks...</p>
+        </md-card-content>
+    </md-card>
 
     <md-card>
         <md-tabs md-dynamic-height md-border-bottom md-selected="ToolsAnrService.currentTab">

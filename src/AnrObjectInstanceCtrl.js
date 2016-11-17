@@ -131,8 +131,10 @@
             })
                 .then(function (instance) {
                     if (instance && instance.anr) {
+                        $scope.instance_updating = true;
                         AnrService.updateInstance($scope.instance.anr.id, instance, function () {
                             $scope.updateInstance();
+                            $scope.instance_updating = false;
                             toastr.success(gettextCatalog.getString("The instance details have been updated"), gettextCatalog.getString("Update successful"));
                         });
                     }
