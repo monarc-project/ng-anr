@@ -5,7 +5,7 @@
         .controller('AnrLayoutCtrl', [
             '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'TableHelperService',
             'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
-            '$transitions', 'DownloadService', '$mdPanel',
+            '$transitions', 'DownloadService', '$mdPanel', '$injector',
             AnrLayoutCtrl
         ]);
 
@@ -14,7 +14,7 @@
      */
     function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, TableHelperService, ModelService,
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
-                           $transitions, DownloadService, $mdPanel) {
+                           $transitions, DownloadService, $mdPanel, $injector) {
 
         $scope.display = {show_hidden_impacts: false};
 
@@ -61,30 +61,61 @@
 
         $scope.updateModel = function (justCore, cb) {
             isModelLoading = true;
-            ModelService.getModel($stateParams.modelId).then(function (data) {
-                $scope.model = data;
-                $rootScope.anr_id = data.anr.id;
 
-                thresholdsWatchSetup = false;
-                $scope.thresholds = {
-                    thresholds: {min: $scope.model.anr.seuil1, max: $scope.model.anr.seuil2},
-                    rolf_thresholds: {min: $scope.model.anr.seuilRolf1, max: $scope.model.anr.seuilRolf2}
-                }
+            if ($scope.OFFICE_MODE == 'BO') {
+                ModelService.getModel($stateParams.modelId).then(function (data) {
+                    $scope.model = data;
+                    $rootScope.anr_id = data.anr.id;
 
-                if (!justCore) {
-                    $scope.updateAnrRisksTable();
-                    $scope.updateAnrRisksOpTable();
-                    $scope.updateInstances();
-                    $scope.updateObjectsLibrary();
-                    $scope.updateScales();
-                }
+                    thresholdsWatchSetup = false;
+                    $scope.thresholds = {
+                        thresholds: {min: $scope.model.anr.seuil1, max: $scope.model.anr.seuil2},
+                        rolf_thresholds: {min: $scope.model.anr.seuilRolf1, max: $scope.model.anr.seuilRolf2}
+                    }
 
-                isModelLoading = false;
+                    if (!justCore) {
+                        $scope.updateAnrRisksTable();
+                        $scope.updateAnrRisksOpTable();
+                        $scope.updateInstances();
+                        $scope.updateObjectsLibrary();
+                        $scope.updateScales();
+                    }
 
-                if (cb) {
-                    cb();
-                }
-            });
+                    isModelLoading = false;
+
+                    if (cb) {
+                        cb();
+                    }
+                });
+            } else {
+                var ClientAnrService = $injector.get('ClientAnrService');
+                ClientAnrService.getAnr($stateParams.modelId).then(function (data) {
+                    $scope.model = {
+                        id: null,
+                        anr: data
+                    };
+
+                    thresholdsWatchSetup = false;
+                    $scope.thresholds = {
+                        thresholds: {min: $scope.model.anr.seuil1, max: $scope.model.anr.seuil2},
+                        rolf_thresholds: {min: $scope.model.anr.seuilRolf1, max: $scope.model.anr.seuilRolf2}
+                    }
+
+                    if (!justCore) {
+                        $scope.updateAnrRisksTable();
+                        $scope.updateAnrRisksOpTable();
+                        $scope.updateInstances();
+                        $scope.updateObjectsLibrary();
+                        $scope.updateScales();
+                    }
+
+                    isModelLoading = false;
+
+                    if (cb) {
+                        cb();
+                    }
+                })
+            }
         };
 
         $scope.updateAnrRisksTable = function (cb) {
