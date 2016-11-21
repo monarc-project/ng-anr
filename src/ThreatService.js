@@ -9,7 +9,7 @@
 
         var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
 
-        self.ThreatResource = $resource('/api/' + anr + 'threats/:threatId', { threatId: '@id', urlAnrId: '@urlAnrId' },
+        self.ThreatResource = $resource('/api/' + anr + 'threats/:threatId', { threatId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {
                 'update': {
                     method: 'PUT'
@@ -21,7 +21,7 @@
                     isArray: false
                 }
             });
-        self.ThreatThemeResource = $resource('/api/' + anr + 'themes/:themeId', { themeId: '@id', urlAnrId: '@urlAnrId' },
+        self.ThreatThemeResource = $resource('/api/' + anr + 'themes/:themeId', { themeId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {
                 'update': {
                     method: 'PUT'

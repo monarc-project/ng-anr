@@ -9,7 +9,7 @@
 
         var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
 
-        self.VulnResource = $resource('/api/' + anr + 'vulnerabilities/:vulnId', { vulnId: '@id', urlAnrId: '@urlAnrId' },
+        self.VulnResource = $resource('/api/' + anr + 'vulnerabilities/:vulnId', { vulnId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {
                 'update': {
                     method: 'PUT'

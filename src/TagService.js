@@ -9,7 +9,7 @@
 
         var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
 
-        self.TagResource = $resource('/api/' + anr + 'rolf-tags/:tagId', { tagId: '@id', urlAnrId: '@urlAnrId' },
+        self.TagResource = $resource('/api/' + anr + 'rolf-tags/:tagId', { tagId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {
                 'update': {
                     method: 'PUT'

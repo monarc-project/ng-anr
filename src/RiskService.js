@@ -9,7 +9,7 @@
 
         var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
 
-        self.RiskResource = $resource('/api/' + anr + 'rolf-risks/:riskId', { riskId: '@id', urlAnrId: '@urlAnrId' },
+        self.RiskResource = $resource('/api/' + anr + 'rolf-risks/:riskId', { riskId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {
                 'update': {
                     method: 'PUT'

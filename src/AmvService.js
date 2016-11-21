@@ -9,7 +9,7 @@
 
         var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
 
-        self.AmvResource = $resource('/api/' + anr + 'amvs/:amvId', { amvId: '@id', urlAnrId: '@urlAnrId' },
+        self.AmvResource = $resource('/api/' + anr + 'amvs/:amvId', { amvId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {
                 'update': {
                     method: 'PUT'

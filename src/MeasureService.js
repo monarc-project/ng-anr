@@ -9,7 +9,7 @@
 
         var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
 
-        self.MeasureResource = $resource('/api/' + anr + 'measures/:measureId', { measureId: '@id', urlAnrId: '@urlAnrId' },
+        self.MeasureResource = $resource('/api/' + anr + 'measures/:measureId', { measureId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {
                 'update': {
                     method: 'PUT'
