@@ -2,12 +2,14 @@
 
     angular
         .module('AnrModule')
-        .factory('AmvService', [ '$resource', 'MassDeleteService', AmvService ]);
+        .factory('AmvService', [ '$resource', '$rootScope', 'MassDeleteService', AmvService ]);
 
-    function AmvService($resource, MassDeleteService) {
+    function AmvService($resource, $rootScope, MassDeleteService) {
         var self = this;
 
-        self.AmvResource = $resource('/api/amvs/:amvId', { amvId: '@id' },
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+
+        self.AmvResource = $resource('/api/' + anr + 'amvs/:amvId', { amvId: '@id', urlAnrId: '@urlAnrId' },
             {
                 'update': {
                     method: 'PUT'

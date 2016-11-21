@@ -2,12 +2,14 @@
 
     angular
         .module('AnrModule')
-        .factory('MeasureService', [ '$resource', 'MassDeleteService', MeasureService ]);
+        .factory('MeasureService', [ '$resource', '$rootScope', 'MassDeleteService', MeasureService ]);
 
-    function MeasureService($resource, MassDeleteService) {
+    function MeasureService($resource, $rootScope, MassDeleteService) {
         var self = this;
 
-        self.MeasureResource = $resource('/api/measures/:measureId', { measureId: '@id' },
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+
+        self.MeasureResource = $resource('/api/' + anr + 'measures/:measureId', { measureId: '@id', urlAnrId: '@urlAnrId' },
             {
                 'update': {
                     method: 'PUT'

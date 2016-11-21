@@ -2,12 +2,14 @@
 
     angular
         .module('AnrModule')
-        .factory('TagService', [ '$resource', 'MassDeleteService', TagService ]);
+        .factory('TagService', [ '$resource', '$rootScope', 'MassDeleteService', TagService ]);
 
-    function TagService($resource, MassDeleteService) {
+    function TagService($resource, $rootScope, MassDeleteService) {
         var self = this;
 
-        self.TagResource = $resource('/api/rolf-tags/:tagId', { tagId: '@id' },
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+
+        self.TagResource = $resource('/api/' + anr + 'rolf-tags/:tagId', { tagId: '@id', urlAnrId: '@urlAnrId' },
             {
                 'update': {
                     method: 'PUT'

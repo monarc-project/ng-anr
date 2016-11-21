@@ -2,12 +2,14 @@
 
     angular
         .module('AnrModule')
-        .factory('ThreatService', [ '$resource', 'MassDeleteService', ThreatService ]);
+        .factory('ThreatService', [ '$resource', '$rootScope', 'MassDeleteService', ThreatService ]);
 
-    function ThreatService($resource, MassDeleteService) {
+    function ThreatService($resource, $rootScope, MassDeleteService) {
         var self = this;
 
-        self.ThreatResource = $resource('/api/threats/:threatId', { threatId: '@id' },
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+
+        self.ThreatResource = $resource('/api/' + anr + 'threats/:threatId', { threatId: '@id', urlAnrId: '@urlAnrId' },
             {
                 'update': {
                     method: 'PUT'
@@ -19,7 +21,7 @@
                     isArray: false
                 }
             });
-        self.ThreatThemeResource = $resource('/api/themes/:themeId', { themeId: '@id' },
+        self.ThreatThemeResource = $resource('/api/' + anr + 'themes/:themeId', { themeId: '@id', urlAnrId: '@urlAnrId' },
             {
                 'update': {
                     method: 'PUT'

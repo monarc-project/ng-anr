@@ -2,12 +2,14 @@
 
     angular
         .module('AnrModule')
-        .factory('VulnService', [ '$resource', 'MassDeleteService', VulnService ]);
+        .factory('VulnService', [ '$resource', '$rootScope', 'MassDeleteService', VulnService ]);
 
-    function VulnService($resource, MassDeleteService) {
+    function VulnService($resource, $rootScope, MassDeleteService) {
         var self = this;
 
-        self.VulnResource = $resource('/api/vulnerabilities/:vulnId', { vulnId: '@id' },
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+
+        self.VulnResource = $resource('/api/' + anr + 'vulnerabilities/:vulnId', { vulnId: '@id', urlAnrId: '@urlAnrId' },
             {
                 'update': {
                     method: 'PUT'

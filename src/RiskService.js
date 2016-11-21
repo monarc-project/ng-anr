@@ -2,12 +2,14 @@
 
     angular
         .module('AnrModule')
-        .factory('RiskService', [ '$resource', 'MassDeleteService', RiskService ]);
+        .factory('RiskService', [ '$resource', '$rootScope', 'MassDeleteService', RiskService ]);
 
-    function RiskService($resource, MassDeleteService) {
+    function RiskService($resource, $rootScope, MassDeleteService) {
         var self = this;
 
-        self.RiskResource = $resource('/api/rolf-risks/:riskId', { riskId: '@id' },
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+
+        self.RiskResource = $resource('/api/' + anr + 'rolf-risks/:riskId', { riskId: '@id', urlAnrId: '@urlAnrId' },
             {
                 'update': {
                     method: 'PUT'

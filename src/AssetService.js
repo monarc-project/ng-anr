@@ -2,12 +2,14 @@
 
     angular
         .module('AnrModule')
-        .factory('AssetService', [ '$resource', 'MassDeleteService', AssetService ]);
+        .factory('AssetService', [ '$resource', '$rootScope', 'MassDeleteService', AssetService ]);
 
-    function AssetService($resource, MassDeleteService) {
+    function AssetService($resource, $rootScope, MassDeleteService) {
         var self = this;
 
-        self.AssetResource = $resource('/api/assets/:assetId', { assetId: '@id' },
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+
+        self.AssetResource = $resource('/api/' + anr + 'assets/:assetId', { assetId: '@id', urlAnrId: '@urlAnrId' },
             {
                 'update': {
                     method: 'PUT'
