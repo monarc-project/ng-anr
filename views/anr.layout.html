@@ -48,7 +48,7 @@
                                         <md-progress-circular md-diameter="24" ng-if="anr_instance_tree_is_patching"></md-progress-circular>
                                         <md-icon ng-if="!anr_instance_tree_is_patching">home</md-icon> &nbsp; <span>{{ model.anr[_langField('label')] }}</span> <span flex></span>
                                     </md-button>
-                                    <md-button ui-sref="main.project.anr({modelId: model.id})" ng-if="OFFICE_MODE == 'FO'" layout="row" layout-align="start center" style="margin:0 0 8px 0;">
+                                    <md-button ui-sref="main.project.anr({modelId: model.anr.id})" ng-if="OFFICE_MODE == 'FO'" layout="row" layout-align="start center" style="margin:0 0 8px 0;">
                                         <md-progress-circular md-diameter="20" ng-if="anr_instance_tree_is_patching"></md-progress-circular>
                                         <md-icon ng-if="!anr_instance_tree_is_patching">home</md-icon> &nbsp; <span>{{ model.anr[_langField('label')] }}</span>  <span flex></span>
                                     </md-button>
