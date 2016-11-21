@@ -1,0 +1,191 @@
+<div class="md-padding" ng-cloak layout="column" ng-controller="BackofficeKbInfoObjectCtrl">
+    <div layout="row" layout-align="space-around center">
+        <md-button class="md-icon-button" ui-sref="main.kb_mgmt.info_risk({tab: 'objlibs'})"><md-icon>arrow_back</md-icon></md-button>
+        <div flex ng-if="object" ng-class="{'active-obj': mode == 'anr'}">
+            <h2>
+                <md-icon ng-if="object && object.scope == 2" style="color: #F57C00">share</md-icon>
+                {{ object[_langField('name')] }}
+            </h2>
+
+            <p>{{ object[_langField('label')] }}</p>
+        </div>
+
+        <div flex ng-if="!object">
+            <md-progress-circular md-indeterminate="true"></md-progress-circular>
+        </div>
+
+        <md-fab-speed-dial md-direction="down" class="md-scale md-fab-top-right" style="margin-top: 48px">
+            <md-fab-trigger>
+                <md-button aria-label="menu" class="md-fab">
+                    <md-icon>menu</md-icon>
+                    <md-tooltip md-direction="left">{{ 'Object actions' | translate }}</md-tooltip>
+                </md-button>
+            </md-fab-trigger>
+
+            <md-fab-actions>
+                <md-button aria-label="{{ 'Add component' | translate }}" class="md-fab md-raised md-mini" ng-click="createComponent($event)">
+                    <md-icon>add_to_photos</md-icon>
+                    <md-tooltip md-direction="left">{{ 'Add component' | translate }}</md-tooltip>
+                </md-button>
+
+                <md-button aria-label="{{ 'Edit object' | translate }}" class="md-fab md-raised md-mini" ng-click="editObjlib($event, object)">
+                    <md-icon>edit</md-icon>
+                    <md-tooltip md-direction="left">{{ 'Edit object' | translate }}</md-tooltip>
+                </md-button>
+
+                <md-button aria-label="{{ 'Duplicate object' | translate }}" class="md-fab md-raised md-mini" ng-click="cloneObject($event);">
+                    <md-icon>control_point_duplicate</md-icon>
+                    <md-tooltip md-direction="left">{{ 'Duplicate object' | translate }}</md-tooltip>
+                </md-button>
+
+                <md-button aria-label="{{ 'Export object' | translate }}" class="md-fab md-raised md-mini" ng-disabled="isSafari();" ng-click="exportObject($event)">
+                    <md-icon>save</md-icon>
+                    <md-tooltip md-direction="left">{{ 'Export object' | translate }}</md-tooltip>
+                </md-button>
+
+                <md-button aria-label="{{ 'Delete object' | translate }}" class="md-fab md-raised md-mini md-warn" ng-click="deleteObject($event)">
+                    <md-icon>{{ mode == 'bdc' ? 'delete' : 'content_cut' }}</md-icon>
+                    <md-tooltip md-direction="left">{{ mode == 'bdc' ? ('Delete object' | translate) : ('Detach object' | translate) }}</md-tooltip>
+                </md-button>
+
+            </md-fab-actions>
+        </md-fab-speed-dial>
+    </div>
+
+
+    <md-card ng-if="object">
+        <md-tabs md-dynamic-height md-border-bottom md-selected="ToolsAnrService.currentTab">
+            <md-tab label="{{ 'General information' | translate }}">
+                <div class="md-padding">
+                    <div layout="row" layout-align="left center">
+                        <p class="md-title" translate>Composition</p>
+                        <md-button class="md-primary" ng-click="createComponent($event)">{{ 'Add a component' | translate }}</md-button>
+                    </div>
+
+                    <ul class="md-treeview">
+                        <li class="md-treeview-root">
+                            <a ng-if="mode == 'bdc'" ui-sref="main.kb_mgmt.info_risk.object({objectId: object.id})"><md-icon>place</md-icon> {{ object[_langField('name')] }}</a>
+                            <a ng-if="mode == 'anr'" ui-sref="main.kb_mgmt.models.details.object({objectId: object.id})"><md-icon>place</md-icon> {{ object[_langField('name')] }}</a>
+
+                            <ul>
+                                <li ng-repeat="node in composition"
+                                    ng-class="{'md-treeview-branch': node.children && node.children.length > 0}"
+                                    ng-include="'objlibs.tree_item_template.html'"></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <md-card ng-if="object.parents.length > 0">
+                        <p class="md-title" translate>In the common library, this object is a direct component of :</p>
+                        <ul>
+                            <li ng-repeat="parent in object.parents">{{parent[_langField("name")]}} ({{parent[_langField("label")]}})</li>
+                        </ul>
+                    </md-card>
+
+                    <md-card ng-if="mode == 'bdc' && object.replicas.length > 0">
+                        <p class="md-title" translate>Object replica(s) in models</p>
+                        <table md-table>
+                            <thead md-head>
+                                <tr md-row>
+                                    <th md-column><span translate>Active parent</span></th>
+                                    <th md-column><span translate>Actions</span></th>
+                                </tr>
+                            </thead>
+                            <tbody md-body>
+                                <tr md-row ng-repeat="node in object.replicas">
+                                    <td md-cell>{{ node[_langField('label')] }}</td>
+                                    <td md-cell>
+                                        <!-- <a aria-title="{{ node[_langField('name')] }}" ng-click="showInModel(node.id, object.id)"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></a> -->
+                                        <md-button class="md-icon-button" aria-title="{{ node[_langField('name')] }}" ui-sref="main.kb_mgmt.models.details.object({modelId: node.id, objectId: object.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></md-button>
+                                         <!--"-->
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </md-card>
+
+                    <md-card ng-if="mode == 'anr' && object.replicas.length > 0">
+                        <p class="md-title" translate>Object used in the risks analysis</p>
+                        <table md-table>
+                            <thead md-head>
+                                <tr md-row>
+                                    <th md-column><span translate>Active parent</span></th>
+                                    <th md-column><span translate>Actions</span></th>
+                                </tr>
+                            </thead>
+                            <tbody md-body>
+                                <tr md-row ng-repeat="node in object.replicas">
+                                    <td md-cell>{{ node[_langField('name')] }}</td>
+                                    <td md-cell>
+                                        <md-button class="md-icon-button" aria-title="{{ node[_langField('name')] }}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></md-button>
+                                        <md-button class="md-icon-button" aria-title="{{ 'Detach' | translate }}" ng-click="detachInstance($event,node)""><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></md-button>
+                                         <!--"-->
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </md-card>
+                </div>
+            </md-tab>
+
+            <md-tab label="{{ 'Risks table' | translate }}">
+                <md-card class="md-card-info" ng-if="mode == 'bdc'"><md-card-content>
+                    <p translate>You are in the knowledge base. No evaluation may be set in this space.</p>
+                </md-card-content></md-card>
+
+                <p class="md-title md-padding" translate>{{ object.risks.length }} risks</p>
+
+                <table class="md-html-table">
+                    <thead>
+                    <tr>
+                        <th rowspan="2"><p translate>Threat</p></th>
+                        <th rowspan="2"><p translate>Prob.</p></th>
+                        <th rowspan="2"><p translate>Vulnerability</p></th>
+                        <th rowspan="2"><p translate>Qualif.</p></th>
+                        <th colspan="3"><p translate>Risk</p></th>
+                        <th rowspan="2"><p translate>T</p></th>
+                        <th rowspan="2"><p translate>Target risk</p></th>
+                    </tr>
+                    <tr>
+                        <th>C</th>
+                        <th>I</th>
+                        <th>D</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr ng-repeat="risk in object.risks">
+                        <td>{{risk[_langField('threatDescription')]}}</td>
+                        <td>{{risk.threatRate}}</td>
+                        <td>{{risk[_langField('vulnDescription')]}}</td>
+                        <td>{{risk.vulnerabilityRate}}</td>
+                        <td ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc"
+                            ng-class="{'green': risk.c_risk > 0 && risk.c_risk < scales.thresholds.min, 'orange': risk.c_risk >= scales.thresholds.min && risk.c_risk < scales.thresholds.max, 'red': risk.c_risk >= scales.thresholds.max}">{{risk.c_risk_enabled ? risk.c_risk : ''}}</td>
+                        <td ng-disabled="!risk.i_risk_enabled" class="tbl-risk-calc"
+                            ng-class="{'green': risk.i_risk > 0 && risk.i_risk < scales.thresholds.min, 'orange': risk.i_risk >= scales.thresholds.min && risk.i_risk < scales.thresholds.max, 'red': risk.i_risk >= scales.thresholds.max}">{{risk.i_risk_enabled ? risk.i_risk : ''}}</td>
+                        <td ng-disabled="!risk.d_risk_enabled" class="tbl-risk-calc"
+                            ng-class="{'green': risk.d_risk > 0 && risk.d_risk < scales.thresholds.min, 'orange': risk.d_risk >= scales.thresholds.min && risk.d_risk < scales.thresholds.max, 'red': risk.d_risk >= scales.thresholds.max}">{{risk.d_risk_enabled ? risk.d_risk : ''}}</td>
+                        <td><span class="green-dot" ng-if="risk.t"></span></td>
+                        <td>{{risk.target}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-tab>
+            <ng-include src="'views/anr/_table_risks_op.html'" ng-if="object.asset.type == 1"></ng-include>
+        </md-tabs>
+    </md-card>
+</div>
+
+<script type="text/ng-template" id="objlibs.tree_item_template.html">
+    <a ng-if="mode == 'bdc'" ui-sref="main.kb_mgmt.info_risk.object({objectId: node.id})"><md-icon>{{ node.children && node.children.length > 0 ? 'add': 'note' }}</md-icon> {{ node[_langField('name')] }}</a>
+    <a ng-if="mode == 'anr'" ui-sref="main.kb_mgmt.models.details.object({objectId: node.id})"><md-icon>{{ node.children && node.children.length > 0 ? 'add': 'note' }}</md-icon> {{ node[_langField('name')] }}</a>
+    <md-button class="md-icon-button" ng-click="moveComponent(node, 'up')" ng-disabled="$index==0"><md-icon>arrow_upward</md-icon></md-button>
+    <md-button class="md-icon-button" ng-click="moveComponent(node, 'down')" ng-disabled="$index==composition.length-1"><md-icon>arrow_downward</md-icon></md-button>
+    <md-button class="md-icon-button" ng-click="deleteCompositionItem($event, node)"><md-icon>delete</md-icon></md-button>
+
+    <ul ng-if="node.children && node.children.length > 0">
+        <li ng-repeat="node in node.children"
+            ng-class="{'md-treeview-branch': node.children && node.children.length > 0}"
+            ng-include="'objlibs.tree_item_template.html'"></li>
+    </ul>
+</script>
