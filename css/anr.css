@@ -643,6 +643,9 @@ md-progress-linear.blue .md-bar {
 md-progress-linear.yellow .md-bar {
     background: #FFEB3B;
 }
+md-progress-linear.yellow .md-container {
+    background-color: #FFF9C4;
+}
 
 .md-monarc-method-box {
     min-width: 400px;
