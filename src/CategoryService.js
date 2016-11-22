@@ -2,12 +2,14 @@
 
     angular
         .module('AnrModule')
-        .factory('CategoryService', [ '$resource', CategoryService ]);
+        .factory('CategoryService', [ '$resource', '$rootScope', CategoryService ]);
 
-    function CategoryService($resource) {
+    function CategoryService($resource, $rootScope) {
         var self = this;
 
-        self.CategoryResource = $resource('/api/rolf-categories/:categoryId', { categoryId: '@id' },
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+
+        self.CategoryResource = $resource('/api/'+anr+'rolf-categories/:categoryId', { categoryId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {
                 'update': {
                     method: 'PUT'
