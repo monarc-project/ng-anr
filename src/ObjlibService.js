@@ -2,12 +2,14 @@
 
     angular
         .module('AnrModule')
-        .factory('ObjlibService', [ '$resource', '$http', ObjlibService ]);
+        .factory('ObjlibService', [ '$resource', '$rootScope', '$http', ObjlibService ]);
 
-    function ObjlibService($resource, $http) {
+    function ObjlibService($resource, $rootScope, $http) {
         var self = this;
 
-        self.ObjlibResource = $resource('/api/objects/:objlibId', { objlibId: '@id' },
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+
+        self.ObjlibResource = $resource('/api/' + anr + 'objects/:objlibId', { objlibId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {
                 'update': {
                     method: 'PUT'
@@ -45,7 +47,7 @@
             self.ObjlibResource.delete({objlibId: id}, success, error);
         };
 
-        self.ObjlibCatResource = $resource('/api/objects-categories/:objlibId', { objlibId: '@id' },
+        self.ObjlibCatResource = $resource('/api/' + anr + 'objects-categories/:objlibId', { objlibId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {
                 'update': {
                     method: 'PUT'
