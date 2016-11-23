@@ -6,8 +6,8 @@
             <form ng-submit="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()">
                 <input type="submit" style="position: absolute; left: -99999px">
                 <div layout="row" layout-align="center center">
-                    {{ 'Risk threshold (on max CID)' | translate }}&nbsp;
-                    <md-radio-group ng-model="risks_filters.thresholds" layout="row" class="md-primary">
+                    <span ng-if="instance.asset.type == 1">{{ 'Risk threshold (on max CID)' | translate }}&nbsp;</span>
+                    <md-radio-group ng-if="instance.asset.type == 1" ng-model="risks_filters.thresholds" layout="row" class="md-primary">
                         <md-radio-button ng-value="-1" aria-label="G"><div class="tbl-risk-calc anr-scales-demo-block green"></div></md-radio-button>
                         <md-radio-button ng-value="thresholds.thresholds.min" aria-label="O"><div class="tbl-risk-calc anr-scales-demo-block orange"></div></md-radio-button>
                         <md-radio-button ng-value="thresholds.thresholds.max" aria-label="R"><div class="tbl-risk-calc anr-scales-demo-block red"></div></md-radio-button>
@@ -22,7 +22,7 @@
 
                     &nbsp;
 
-                    <md-input-container style="margin: 0 0; min-width: 120px;">
+                    <md-input-container ng-if="instance.asset.type == 1" style="margin: 0 0; min-width: 120px;">
                         <label translate>Processing type</label>
                         <md-select ng-model="risks_filters.kindOfMeasure">
                             <md-option ng-value="null">{{ 'All (unfiltered)' | translate }}</md-option>
