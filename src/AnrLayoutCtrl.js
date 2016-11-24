@@ -515,13 +515,13 @@
                         if ($scope.OFFICE_MODE == 'BO') {
                             $location.path('/backoffice/kb/models/' + $stateParams.modelId + '/object/' + $scope.first_object.id);
                         } else {
-                            $location.path('/client/project/' + $stateParams.modelId + '/object/' + $scope.first_object.id);
+                            $location.path('/client/project/' + $stateParams.modelId + '/anr/object/' + $scope.first_object.id);
                         }
                     } else {
                         if ($scope.OFFICE_MODE == 'BO') {
                             $location.path('/backoffice/kb/models/' + $stateParams.modelId);
                         } else {
-                            $location.path('/client/project/' + $stateParams.modelId);
+                            $location.path('/client/project/' + $stateParams.modelId + '/anr');
                         }
                     }
                 }
