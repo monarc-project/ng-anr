@@ -154,7 +154,7 @@
                                  md-total="{{threats.items.count}}" md-on-paginate="updateThreats" md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
         </md-tab>
 
-        <md-tab label="{{ 'Vulns' | translate }}" md-on-select="selectVulnsTab()" md-on-deselect="deselectVulnsTab()">
+        <md-tab label="{{ 'Vulnerabilities' | translate }}" md-on-select="selectVulnsTab()" md-on-deselect="deselectVulnsTab()">
             <div layout="row" layout-align="start center" class="md-padding" ng-if="!vulns.selected.length">
                 <h2 class="md-title md-padding-right md-padding-left" translate>Vulnerabilties</h2>
 
