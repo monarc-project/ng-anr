@@ -510,16 +510,23 @@
                 }
                 $scope.anr_obj_library_data = lib_data;
 
-                if(gotofirst != undefined && gotofirst){
-                    if($scope.first_object != null){
-                        $location.path('/backoffice/kb/models/'+$stateParams.modelId+'/object/'+$scope.first_object.id);
-                    }
-                    else{
-                        $location.path('/backoffice/kb/models/'+$stateParams.modelId);
+                if (gotofirst != undefined && gotofirst) {
+                    if ($scope.first_object != null) {
+                        if ($scope.OFFICE_MODE == 'BO') {
+                            $location.path('/backoffice/kb/models/' + $stateParams.modelId + '/object/' + $scope.first_object.id);
+                        } else {
+                            $location.path('/client/project/' + $stateParams.modelId + '/object/' + $scope.first_object.id);
+                        }
+                    } else {
+                        if ($scope.OFFICE_MODE == 'BO') {
+                            $location.path('/backoffice/kb/models/' + $stateParams.modelId);
+                        } else {
+                            $location.path('/client/project/' + $stateParams.modelId);
+                        }
                     }
                 }
 
-                if(callback != undefined){
+                if (callback != undefined) {
                     callback.call();
                 }
             });
