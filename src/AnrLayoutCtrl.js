@@ -314,7 +314,7 @@
                 steps: [
                     {label: gettextCatalog.getString("Risks analysis context"), action: editEvalContext, done: true},
                     {label: gettextCatalog.getString("Trends evaluation, threats evaluation, synthesis"), done: true},
-                    {label: gettextCatalog.getString("Risks management context"), done: true},
+                    {label: gettextCatalog.getString("Risks management context"), action: editEvalContext, done: true},
                     {label: gettextCatalog.getString("Evaluation, acceptance and impact criterias setup"), done: true},
                 ]
             },
@@ -324,7 +324,7 @@
                 deliverable: gettextCatalog.getString("Model validation"),
                 steps: [
                     {label: gettextCatalog.getString("Identification of assets, vulnerabilities and impacts assessment"), done: true},
-                    {label: gettextCatalog.getString("Synthesis of assets / impacts"), done: true},
+                    {label: gettextCatalog.getString("Synthesis of assets / impacts"), action: editEvalContext, done: true},
                 ]
             },
             {
@@ -1251,6 +1251,8 @@
     }
 
     function MethodEditContextDialog($scope, $mdDialog, subStep) {
+        $scope.subStep = subStep;
+
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
