@@ -443,7 +443,17 @@
                 if (e.source.nodesScope.$treeScope.$id == e.dest.nodesScope.$treeScope.$id) {
                     if(e.source.nodeScope.$modelValue.type == 'libcat'){//si on bouge un objet, ça n'a pas d'intérêt de patcher les catégories
                         // We moved something locally inside the objects library (a first-level node), patch it
-                        AnrService.patchLibraryCategory($scope.model.anr.id, e.source.nodeScope.$modelValue.id, {position: e.dest.index}, function () {
+
+                        var total_categ = $scope.has_virtual_categ ? $scope.anr_obj_library_data.length - 1 : $scope.anr_obj_library_data.length;
+                        var impPos = e.dest.index == 0 ? 1 : (e.dest.index >= total_categ - 1 ? 2 : 3);
+
+                        AnrService.patchLibraryCategory($scope.model.anr.id, e.source.nodeScope.$modelValue.id, {
+                            implicitPosition: impPos,
+                            //e.dest.index starts to 0 so previous is e.dest.index + 1 - 1.
+                            //Give position instead of id because we don't have the id of the anr_object_category entity
+                            previous: impPos == 3 ? e.dest.index : null,
+                            anr: $scope.model.anr.id
+                        }, function () {
                             $scope.updateObjectsLibrary();
                         });
                     }
@@ -504,8 +514,12 @@
 
                 var lib_data = [];
                 $scope.first_object = null;
+                $scope.has_virtual_categ = false;
                 for (var v = 0; v < data.categories.length; ++v) {
                     var cat = data.categories[v];
+                    if(cat.id == -1){
+                        $scope.has_virtual_categ = true;
+                    }
                     lib_data.push(recurseFillTree(cat, 0));
                 }
                 $scope.anr_obj_library_data = lib_data;
