@@ -287,6 +287,24 @@
         /**
          * Risk analysis
          */
+        var editEvalContext = function (step) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'subStep', MethodEditContextDialog],
+                templateUrl: '/views/anr/edit.evalcontext.html',
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    subStep: step
+                }
+            }).then(function (data) {
+
+            });
+        };
+
         // Progress
         $scope.methodProgress = [
             {
@@ -294,7 +312,7 @@
                 label: gettextCatalog.getString("Context setup"),
                 deliverable: gettextCatalog.getString("Context validation"),
                 steps: [
-                    {label: gettextCatalog.getString("Risks analysis context"), done: true},
+                    {label: gettextCatalog.getString("Risks analysis context"), action: editEvalContext, done: true},
                     {label: gettextCatalog.getString("Trends evaluation, threats evaluation, synthesis"), done: true},
                     {label: gettextCatalog.getString("Risks management context"), done: true},
                     {label: gettextCatalog.getString("Evaluation, acceptance and impact criterias setup"), done: true},
@@ -1227,9 +1245,19 @@
             $mdDialog.cancel();
         };
 
-        $scope.export = function() {
+        $scope.exportAction = function() {
             $mdDialog.hide($scope.export);
         };
-
     }
+
+    function MethodEditContextDialog($scope, $mdDialog, subStep) {
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.save = function() {
+            $mdDialog.hide($scope.context);
+        };
+    }
+
 })();

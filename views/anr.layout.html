@@ -228,7 +228,12 @@
 <script type="text/ng-template" id="monarc-method.tmpl.html">
     <div layout="column" class="md-padding md-monarc-method-box">
         <h2>{{ step.label }}</h2>
-        <md-checkbox ng-model="subStep.done" ng-repeat="subStep in step.steps">{{ subStep.label }}</md-checkbox>
+
+        <div layout="row" ng-repeat="subStep in step.steps" layout-align="start top">
+            <md-checkbox ng-model="subStep.done"></md-checkbox>
+            <div class="pointer" ng-click="subStep.action(subStep)">{{ subStep.label }}</div>
+        </div>
+
         <strong ng-if="step.deliverable">{{ 'Deliverable:' | translate }} {{ step.deliverable }}</strong>
     </div>
 </script>
