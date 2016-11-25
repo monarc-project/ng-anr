@@ -760,10 +760,9 @@
         $scope.addObject = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-
-
+            if ($scope.OFFICE_MODE == 'BO') {
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', '$q', '$state', 'ObjlibService', 'AnrService', '$stateParams', '$location', '$parentScope', 'anr_id', 'categories',  AddObjectDialogCtrl],
+                    controller: ['$scope', '$mdDialog', '$q', '$state', 'ObjlibService', 'AnrService', '$stateParams', '$location', '$parentScope', 'anr_id', 'categories', AddObjectDialogCtrl],
                     templateUrl: '/views/anr/add.objlib.html',
                     targetEvent: ev,
                     preserveScope: false,
@@ -776,17 +775,19 @@
                         categories: $scope.categories
                     }
                 })
-                .then(function (objlib) {
-                    if (objlib && objlib.id) {
-                        AnrService.addExistingObjectToLibrary($scope.model.anr.id, objlib.id, function () {
-                            $scope.updateObjectsLibrary(false, function(){
-                                $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+objlib.id);
+                    .then(function (objlib) {
+                        if (objlib && objlib.id) {
+                            AnrService.addExistingObjectToLibrary($scope.model.anr.id, objlib.id, function () {
+                                $scope.updateObjectsLibrary(false, function () {
+                                    $location.path('/backoffice/kb/models/' + $scope.model.id + '/object/' + objlib.id);
+                                });
+                                toastr.success(gettextCatalog.getString("The object has been added to the library."), gettextCatalog.getString("Object added successfully"));
                             });
-                            toastr.success(gettextCatalog.getString("The object has been added to the library."), gettextCatalog.getString("Object added successfully"));
-                        });
-                    }
-                });
-           // });
+                        }
+                    });
+            } else {
+                createAttachedObject($scope, $mdDialog, AnrService, ev)
+            }
         };
 
         // C'est pas beau mais pas le choix, on doit pré-initialiser les objets pour le binding des editable
@@ -1064,11 +1065,50 @@
         };
     }
 
+    var createAttachedObject = function ($scope, $mdDialog, AnrService, ev, objlib) {
+        $scope.objLibDialog = $mdDialog;
+        $mdDialog.show({
+            controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', '$stateParams', CreateObjlibDialogCtrl],
+            templateUrl: '/views/anr/create.objlibs.html',
+            clickOutsideToClose: false,
+            preserveScope: false,
+            scope: $scope.$dialogScope.$new(),
+            targetEvent: ev,
+            locals: {
+                mode: 'anr',
+                objLibDialog: $scope,
+                objlib: objlib
+            }
+        }).then(function (objlib) {
+            if (objlib) {
+                var copy = angular.copy(objlib);
+
+                if (objlib.asset) {
+                    objlib.asset = objlib.asset.id;
+                }
+                if (objlib.rolfTag) {
+                    objlib.rolfTag = objlib.rolfTag.id;
+                }
+
+                AnrService.addNewObjectToLibrary(anr_id, objlib, function (data) {
+                    $parentScope.updateObjectsLibrary(false, function(){
+                        $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+data.id);
+                    });
+                }, function () {
+                    // An error occurred, re-show the dialog
+                    $scope.createAttachedObject(null, copy);
+                });
+            }
+        });
+    };
+
     function AddObjectDialogCtrl($scope, $mdDialog, $q, $state, ObjlibService, AnrService, $stateParams, $location, $parentScope, anr_id, categories) {
         $scope.objlib = {
             category: null,
             object: null
         };
+
+        $scope.createAttachedObject = createAttachedObject($scope, $mdDialog, AnrService, ev, objlib);
 
         $scope.loadCategs = function(){
             $scope.categories = [];
@@ -1105,42 +1145,7 @@
             $scope.objlib.category = {id: $scope.selected_categ.id};
         };
 
-        $scope.createAttachedObject = function (ev, objlib) {
-            $scope.objLibDialog = $mdDialog;
-            $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', '$stateParams', CreateObjlibDialogCtrl],
-                templateUrl: '/views/anr/create.objlibs.html',
-                clickOutsideToClose: false,
-                preserveScope: false,
-                scope: $parentScope.$new(),
-                targetEvent: ev,
-                locals: {
-                    mode: 'anr',
-                    objLibDialog: $scope,
-                    objlib: objlib
-                }
-            }).then(function (objlib) {
-                if (objlib) {
-                    var copy = angular.copy(objlib);
 
-                    if (objlib.asset) {
-                        objlib.asset = objlib.asset.id;
-                    }
-                    if (objlib.rolfTag) {
-                        objlib.rolfTag = objlib.rolfTag.id;
-                    }
-
-                    AnrService.addNewObjectToLibrary(anr_id, objlib, function (data) {
-                        $parentScope.updateObjectsLibrary(false, function(){
-                            $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+data.id);
-                        });
-                    }, function () {
-                        // An error occurred, re-show the dialog
-                        $scope.createAttachedObject(null, copy);
-                    });
-                }
-            });
-        };
 
         $scope.queryCategorySearch = function (query) {
             var q = $q.defer();
