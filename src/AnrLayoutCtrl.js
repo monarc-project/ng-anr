@@ -1108,7 +1108,9 @@
             object: null
         };
 
-        $scope.createAttachedObject = createAttachedObject($scope, $mdDialog, AnrService, ev, objlib);
+        $scope.createAttachedObject = function (ev, objlib) {
+            createAttachedObject($scope, $mdDialog, AnrService, ev, objlib);
+        }
 
         $scope.loadCategs = function(){
             $scope.categories = [];
