@@ -16,7 +16,7 @@
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
                            $transitions, DownloadService, $mdPanel, $injector) {
 
-        $scope.display = {show_hidden_impacts: false};
+        $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
 
         var self = this;
 
@@ -305,6 +305,43 @@
             });
         };
 
+        var editTrendsContext = function (step) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'QuestionService', 'subStep', MethodEditTrendsDialog],
+                templateUrl: '/views/anr/trends.evalcontext.html',
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    subStep: step
+                }
+            }).then(function (data) {
+
+            });
+        };
+
+        var selectScalesTab = function () {
+            $scope.display.anrSelectedTabIndex = 1;
+        };
+
+        var showAnrSummary = function () {
+            $state.transitionTo('main.project.anr', {modelId: $scope.model.anr.id});
+            $scope.clearSelectedInstAndObj();
+            $scope.display.anrSelectedTabIndex = 0;
+            ToolsAnrService.currentTab = 0;
+        };
+        var showAnrRisks = function () {
+            $state.transitionTo('main.project.anr', {modelId: $scope.model.anr.id});
+            $scope.clearSelectedInstAndObj();
+            $scope.display.anrSelectedTabIndex = 0;
+            ToolsAnrService.currentTab = 1;
+        };
+
+
+
         // Progress
         $scope.methodProgress = [
             {
@@ -313,9 +350,9 @@
                 deliverable: gettextCatalog.getString("Context validation"),
                 steps: [
                     {label: gettextCatalog.getString("Risks analysis context"), action: editEvalContext, done: true},
-                    {label: gettextCatalog.getString("Trends evaluation, threats evaluation, synthesis"), done: true},
+                    {label: gettextCatalog.getString("Trends evaluation, threats evaluation, synthesis"), action: editTrendsContext, done: true},
                     {label: gettextCatalog.getString("Risks management context"), action: editEvalContext, done: true},
-                    {label: gettextCatalog.getString("Evaluation, acceptance and impact criterias setup"), done: true},
+                    {label: gettextCatalog.getString("Evaluation, acceptance and impact criterias setup"), action: selectScalesTab, done: true},
                 ]
             },
             {
@@ -323,7 +360,7 @@
                 label: gettextCatalog.getString("Context modeling"),
                 deliverable: gettextCatalog.getString("Model validation"),
                 steps: [
-                    {label: gettextCatalog.getString("Identification of assets, vulnerabilities and impacts assessment"), done: true},
+                    {label: gettextCatalog.getString("Identification of assets, vulnerabilities and impacts assessment"), action: showAnrSummary, done: true},
                     {label: gettextCatalog.getString("Synthesis of assets / impacts"), action: editEvalContext, done: true},
                 ]
             },
@@ -332,7 +369,7 @@
                 label: gettextCatalog.getString("Risks evaluation and treatment"),
                 deliverable: gettextCatalog.getString("Final report"),
                 steps: [
-                    {label: gettextCatalog.getString("Risks estimation, evaluation and processing"), done: true},
+                    {label: gettextCatalog.getString("Risks estimation, evaluation and processing"), action: showAnrRisks, done: true},
                     {label: gettextCatalog.getString("Risk treatment plan management"), done: false},
                 ]
             },
@@ -1252,6 +1289,21 @@
 
     function MethodEditContextDialog($scope, $mdDialog, subStep) {
         $scope.subStep = subStep;
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.save = function() {
+            $mdDialog.hide($scope.context);
+        };
+    }
+
+    function MethodEditTrendsDialog($scope, $mdDialog, QuestionService, subStep) {
+        $scope.subStep = subStep;
+        QuestionService.getQuestions().then(function (data) {
+            $scope.questions = data.questions;
+        })
 
         $scope.cancel = function() {
             $mdDialog.cancel();
