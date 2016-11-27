@@ -1,0 +1,40 @@
+<md-dialog class="dialog-width">
+    <form name="evalContextForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>{{ subStep.label }}</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <md-tabs md-dynamic-height md-border-bottom>
+                <md-tab label="{{ 'Trends assessment' | translate }}">
+                    <md-input-container ng-repeat="question in questions">
+                        <label>{{ question['label' + model.anr.language] }}</label>
+                        <textarea ng-model="assessment[question.id]"></textarea>
+                    </md-input-container>
+                </md-tab>
+
+                <md-tab label="{{ 'Threats assessment' | translate }}">
+
+                </md-tab>
+
+                <md-tab label="{{ 'Summary' | translate }}">
+
+                </md-tab>
+            </md-tabs>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="create()" type="submit" class="md-accent md-hue-3">
+                {{ 'Update' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

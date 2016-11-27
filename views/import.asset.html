@@ -14,14 +14,14 @@
                 <div ng-if="dialog_mode == null">
                     <p translate>You may import an asset:</p>
                     <ul>
-                        <li translate>from a file (<b>warning:</b> You may only import an asset from a file if the source software version is compatible with yours),</li>
-                        <li translate>from MONARC library: you can access the MONARC database directly to benefit from latest CASES team changes.</li>
+                        <li><p translate>from a file (<b>warning:</b> You may only import an asset from a file if the source software version is compatible with yours),</p></li>
+                        <li><p translate>from MONARC library: you can access the MONARC database directly to benefit from latest CASES team changes.</p></li>
                     </ul>
                 </div>
 
                 <div layout="row" ng-show="dialog_mode == null">
-                    <md-button flex ng-click="dialog_mode = 'file'" class="md-raised">Import from file</md-button>
-                    <md-button flex ng-click="dialog_mode = 'common'" class="md-raised">Import from MONARC library</md-button>
+                    <md-button flex ng-click="dialog_mode = 'file'" class="md-raised">{{ 'Import from file' | translate }}</md-button>
+                    <md-button flex ng-click="dialog_mode = 'common'" class="md-raised">{{ 'Import from MONARC library' | translate }}</md-button>
                 </div>
 
                 <div ng-if="dialog_mode == 'file'">
@@ -30,6 +30,13 @@
                         <div ng-if="file[i].name">{{ file[i].name }}</div>
                         <div ng-if="!file[i].name">{{ 'Drop your exported file in this zone, or click here to select a file' | translate }}</div>
                     </div>
+
+                    <md-input-container class="md-block">
+                        <md-icon>vpn_key</md-icon>
+                        <label translate>Assets password (if any)</label>
+                        <input type="password">
+                    </md-input-container>
+
                     <div layout="row" layout-align="end center">
                         <md-button ng-click="upgradeFileRange()"><md-icon>add</md-icon> {{ 'Add another file' | translate }}</md-button>
                         <md-button><md-icon>file_download</md-icon> {{ 'Import files' | translate }}</md-button>

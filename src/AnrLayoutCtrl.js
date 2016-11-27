@@ -16,7 +16,7 @@
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
                            $transitions, DownloadService, $mdPanel, $injector) {
 
-        $scope.display = {show_hidden_impacts: false};
+        $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
 
         var self = this;
 
@@ -287,6 +287,61 @@
         /**
          * Risk analysis
          */
+        var editEvalContext = function (step) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'subStep', MethodEditContextDialog],
+                templateUrl: '/views/anr/edit.evalcontext.html',
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    subStep: step
+                }
+            }).then(function (data) {
+
+            });
+        };
+
+        var editTrendsContext = function (step) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'QuestionService', 'subStep', MethodEditTrendsDialog],
+                templateUrl: '/views/anr/trends.evalcontext.html',
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    subStep: step
+                }
+            }).then(function (data) {
+
+            });
+        };
+
+        var selectScalesTab = function () {
+            $scope.display.anrSelectedTabIndex = 1;
+        };
+
+        var showAnrSummary = function () {
+            $state.transitionTo('main.project.anr', {modelId: $scope.model.anr.id});
+            $scope.clearSelectedInstAndObj();
+            $scope.display.anrSelectedTabIndex = 0;
+            ToolsAnrService.currentTab = 0;
+        };
+        var showAnrRisks = function () {
+            $state.transitionTo('main.project.anr', {modelId: $scope.model.anr.id});
+            $scope.clearSelectedInstAndObj();
+            $scope.display.anrSelectedTabIndex = 0;
+            ToolsAnrService.currentTab = 1;
+        };
+
+
+
         // Progress
         $scope.methodProgress = [
             {
@@ -294,10 +349,10 @@
                 label: gettextCatalog.getString("Context setup"),
                 deliverable: gettextCatalog.getString("Context validation"),
                 steps: [
-                    {label: gettextCatalog.getString("Risks analysis context"), done: true},
-                    {label: gettextCatalog.getString("Trends evaluation, threats evaluation, synthesis"), done: true},
-                    {label: gettextCatalog.getString("Risks management context"), done: true},
-                    {label: gettextCatalog.getString("Evaluation, acceptance and impact criterias setup"), done: true},
+                    {label: gettextCatalog.getString("Risks analysis context"), action: editEvalContext, done: true},
+                    {label: gettextCatalog.getString("Trends evaluation, threats evaluation, synthesis"), action: editTrendsContext, done: true},
+                    {label: gettextCatalog.getString("Risks management context"), action: editEvalContext, done: true},
+                    {label: gettextCatalog.getString("Evaluation, acceptance and impact criterias setup"), action: selectScalesTab, done: true},
                 ]
             },
             {
@@ -305,8 +360,8 @@
                 label: gettextCatalog.getString("Context modeling"),
                 deliverable: gettextCatalog.getString("Model validation"),
                 steps: [
-                    {label: gettextCatalog.getString("Identification of assets, vulnerabilities and impacts assessment"), done: true},
-                    {label: gettextCatalog.getString("Synthesis of assets / impacts"), done: true},
+                    {label: gettextCatalog.getString("Identification of assets, vulnerabilities and impacts assessment"), action: showAnrSummary, done: true},
+                    {label: gettextCatalog.getString("Synthesis of assets / impacts"), action: editEvalContext, done: true},
                 ]
             },
             {
@@ -314,7 +369,7 @@
                 label: gettextCatalog.getString("Risks evaluation and treatment"),
                 deliverable: gettextCatalog.getString("Final report"),
                 steps: [
-                    {label: gettextCatalog.getString("Risks estimation, evaluation and processing"), done: true},
+                    {label: gettextCatalog.getString("Risks estimation, evaluation and processing"), action: showAnrRisks, done: true},
                     {label: gettextCatalog.getString("Risk treatment plan management"), done: false},
                 ]
             },
@@ -524,16 +579,23 @@
                 }
                 $scope.anr_obj_library_data = lib_data;
 
-                if(gotofirst != undefined && gotofirst){
-                    if($scope.first_object != null){
-                        $location.path('/backoffice/kb/models/'+$stateParams.modelId+'/object/'+$scope.first_object.id);
-                    }
-                    else{
-                        $location.path('/backoffice/kb/models/'+$stateParams.modelId);
+                if (gotofirst != undefined && gotofirst) {
+                    if ($scope.first_object != null) {
+                        if ($scope.OFFICE_MODE == 'BO') {
+                            $location.path('/backoffice/kb/models/' + $stateParams.modelId + '/object/' + $scope.first_object.id);
+                        } else {
+                            $location.path('/client/project/' + $stateParams.modelId + '/anr/object/' + $scope.first_object.id);
+                        }
+                    } else {
+                        if ($scope.OFFICE_MODE == 'BO') {
+                            $location.path('/backoffice/kb/models/' + $stateParams.modelId);
+                        } else {
+                            $location.path('/client/project/' + $stateParams.modelId + '/anr');
+                        }
                     }
                 }
 
-                if(callback != undefined){
+                if (callback != undefined) {
                     callback.call();
                 }
             });
@@ -767,10 +829,9 @@
         $scope.addObject = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-
-
+            if ($scope.OFFICE_MODE == 'BO') {
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', '$q', '$state', 'ObjlibService', 'AnrService', '$stateParams', '$location', '$parentScope', 'anr_id', 'categories',  AddObjectDialogCtrl],
+                    controller: ['$scope', '$mdDialog', '$q', '$state', 'ObjlibService', 'AnrService', '$stateParams', '$location', '$parentScope', 'anr_id', 'categories', AddObjectDialogCtrl],
                     templateUrl: '/views/anr/add.objlib.html',
                     targetEvent: ev,
                     preserveScope: false,
@@ -783,17 +844,19 @@
                         categories: $scope.categories
                     }
                 })
-                .then(function (objlib) {
-                    if (objlib && objlib.id) {
-                        AnrService.addExistingObjectToLibrary($scope.model.anr.id, objlib.id, function () {
-                            $scope.updateObjectsLibrary(false, function(){
-                                $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+objlib.id);
+                    .then(function (objlib) {
+                        if (objlib && objlib.id) {
+                            AnrService.addExistingObjectToLibrary($scope.model.anr.id, objlib.id, function () {
+                                $scope.updateObjectsLibrary(false, function () {
+                                    $location.path('/backoffice/kb/models/' + $scope.model.id + '/object/' + objlib.id);
+                                });
+                                toastr.success(gettextCatalog.getString("The object has been added to the library."), gettextCatalog.getString("Object added successfully"));
                             });
-                            toastr.success(gettextCatalog.getString("The object has been added to the library."), gettextCatalog.getString("Object added successfully"));
-                        });
-                    }
-                });
-           // });
+                        }
+                    });
+            } else {
+                createAttachedObject($scope, $mdDialog, AnrService, ev)
+            }
         };
 
         // C'est pas beau mais pas le choix, on doit pré-initialiser les objets pour le binding des editable
@@ -1071,11 +1134,52 @@
         };
     }
 
+    var createAttachedObject = function ($scope, $mdDialog, AnrService, ev, objlib) {
+        $scope.objLibDialog = $mdDialog;
+        $mdDialog.show({
+            controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', '$stateParams', CreateObjlibDialogCtrl],
+            templateUrl: '/views/anr/create.objlibs.html',
+            clickOutsideToClose: false,
+            preserveScope: false,
+            scope: $scope.$dialogScope.$new(),
+            targetEvent: ev,
+            locals: {
+                mode: 'anr',
+                objLibDialog: $scope,
+                objlib: objlib
+            }
+        }).then(function (objlib) {
+            if (objlib) {
+                var copy = angular.copy(objlib);
+
+                if (objlib.asset) {
+                    objlib.asset = objlib.asset.id;
+                }
+                if (objlib.rolfTag) {
+                    objlib.rolfTag = objlib.rolfTag.id;
+                }
+
+                AnrService.addNewObjectToLibrary(anr_id, objlib, function (data) {
+                    $parentScope.updateObjectsLibrary(false, function(){
+                        $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+data.id);
+                    });
+                }, function () {
+                    // An error occurred, re-show the dialog
+                    $scope.createAttachedObject(null, copy);
+                });
+            }
+        });
+    };
+
     function AddObjectDialogCtrl($scope, $mdDialog, $q, $state, ObjlibService, AnrService, $stateParams, $location, $parentScope, anr_id, categories) {
         $scope.objlib = {
             category: null,
             object: null
         };
+
+        $scope.createAttachedObject = function (ev, objlib) {
+            createAttachedObject($scope, $mdDialog, AnrService, ev, objlib);
+        }
 
         $scope.loadCategs = function(){
             $scope.categories = [];
@@ -1112,42 +1216,7 @@
             $scope.objlib.category = {id: $scope.selected_categ.id};
         };
 
-        $scope.createAttachedObject = function (ev, objlib) {
-            $scope.objLibDialog = $mdDialog;
-            $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', '$stateParams', CreateObjlibDialogCtrl],
-                templateUrl: '/views/anr/create.objlibs.html',
-                clickOutsideToClose: false,
-                preserveScope: false,
-                scope: $parentScope.$new(),
-                targetEvent: ev,
-                locals: {
-                    mode: 'anr',
-                    objLibDialog: $scope,
-                    objlib: objlib
-                }
-            }).then(function (objlib) {
-                if (objlib) {
-                    var copy = angular.copy(objlib);
 
-                    if (objlib.asset) {
-                        objlib.asset = objlib.asset.id;
-                    }
-                    if (objlib.rolfTag) {
-                        objlib.rolfTag = objlib.rolfTag.id;
-                    }
-
-                    AnrService.addNewObjectToLibrary(anr_id, objlib, function (data) {
-                        $parentScope.updateObjectsLibrary(false, function(){
-                            $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+data.id);
-                        });
-                    }, function () {
-                        // An error occurred, re-show the dialog
-                        $scope.createAttachedObject(null, copy);
-                    });
-                }
-            });
-        };
 
         $scope.queryCategorySearch = function (query) {
             var q = $q.defer();
@@ -1227,9 +1296,36 @@
             $mdDialog.cancel();
         };
 
-        $scope.export = function() {
+        $scope.exportAction = function() {
             $mdDialog.hide($scope.export);
         };
-
     }
+
+    function MethodEditContextDialog($scope, $mdDialog, subStep) {
+        $scope.subStep = subStep;
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.save = function() {
+            $mdDialog.hide($scope.context);
+        };
+    }
+
+    function MethodEditTrendsDialog($scope, $mdDialog, QuestionService, subStep) {
+        $scope.subStep = subStep;
+        QuestionService.getQuestions().then(function (data) {
+            $scope.questions = data.questions;
+        })
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.save = function() {
+            $mdDialog.hide($scope.context);
+        };
+    }
+
 })();

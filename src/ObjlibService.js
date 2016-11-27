@@ -47,7 +47,7 @@
             self.ObjlibResource.delete({objlibId: id}, success, error);
         };
 
-        self.ObjlibCatResource = $resource('/api/' + anr + 'objects-categories/:objlibId', { objlibId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
+        self.ObjlibCatResource = $resource('/api/' + anr + ($rootScope.OFFICE_MODE == 'FO' ? 'rolf' : 'objects') + '-categories/:objlibId', { objlibId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {
                 'update': {
                     method: 'PUT'
