@@ -161,6 +161,23 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
         });
     };
 
+    $scope.queryObjectSearch = function (query) {
+        var q = $q.defer();
+        
+        ObjlibService.getObjlibs({filter: query, category: $scope.objlib.category, lock: true}).then(function (x) {
+            var objFiltered = [];
+            for (var i = 0; i < x.objects.length; ++i) {
+                if (x.objects[i].id != $scope.objlib.id) {
+                    objFiltered.push(x.objects[i]);
+                }
+            }
+
+            q.resolve(objFiltered);
+        });
+
+        return q.promise;
+    }
+
     $scope.queryCategorySearch = function (query) {
         var q = $q.defer();
 
@@ -216,7 +233,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
         $scope.objlib.rolfTag = item;
     };
 
-    $scope.selectedPreviousCatItemChange = function (item) {
+    $scope.selectedPreviousObjItemChange = function (item) {
         $scope.objlib.previous = item;
     };
 
@@ -273,7 +290,7 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
     };
 
     $scope.updateCategoryChildren = function () {
-        ObjlibService.getObjlibsCats({lock: true, parentId: $scope.category.parent ? $scope.category.parent : 0}).then(function (x) {
+        ObjlibService.getObjlibsCats({lock: true, parentId: $scope.category.parent ? $scope.category.parent : 0, catid: $scope.category.id}).then(function (x) {
             $scope.childrenCategories = x.categories;
         });
     };
