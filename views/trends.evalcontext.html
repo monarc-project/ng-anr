@@ -16,25 +16,138 @@
                         <label>{{ question['label' + model.anr.language] }}</label>
                         <textarea ng-model="assessment[question.id]"></textarea>
                     </md-input-container>
+
+                    <div layout="row" layout-align="end center">
+                        <md-button ng-click="create()" type="submit" class="md-accent md-hue-3">
+                            {{ 'Update' | translate }}
+                        </md-button>
+                    </div>
                 </md-tab>
 
                 <md-tab label="{{ 'Threats assessment' | translate }}">
+                    <div class="md-padding">
+                        <div layout="row" layout-align="start center">
+                            <p class="md-subhead">{{ 'Threats analysis' | translate }} - 1/41</p>
+                            <span flex></span>
+                            <md-select ng-model="derp">
+                                <md-option ng-value="1">JLOmenaceG - JLOmenaceG</md-option>
+                                <md-option ng-value="2">MD11 - Vol de supports, de documents ou de matériel</md-option>
+                            </md-select>
+                        </div>
 
+                        <table class="md-html-table">
+                            <tbody>
+                            <tr>
+                                <td colspan="2" translate>Theme: Undefined</td>
+                            </tr>
+                            <tr>
+                                <td translate>Code: JLOmenaceG</td>
+                                <td translate>Label: JLOmenaceG</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">
+                                    {{ 'Accidental cause' | translate }}<br />
+                                    <md-checkbox>{{ 'conceivable' | translate }}</md-checkbox>
+                                </td>
+                                <td translate>Description: ...</td>
+                            </tr>
+                            <tr>
+                                <td translate>Example: ...</td>
+                            </tr>
+                            <tr>
+                                <td rowspan="2">
+                                    {{ 'Deliberate cause' | translate }}<br />
+                                    <md-checkbox>{{ 'conceivable' | translate }}</md-checkbox>
+                                </td>
+                                <td translate>Description: ...</td>
+                            </tr>
+                            <tr>
+                                <td translate>Example: ...</td>
+                            </tr>
+                            <tr>
+                                <td translate>Types of consequences</td>
+                                <td>...</td>
+                            </tr>
+                            <tr>
+                                <td translate>Comments</td>
+                                <td>
+                                    <md-input-container class="md-block">
+                                        <textarea></textarea>
+                                    </md-input-container>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td translate>Impacted criteria</td>
+                                <td>
+                                    <div layout="row" layout-align="start center">
+                                        <md-checkbox class="md-checkbox-no-bottom-margin">C</md-checkbox>
+                                        <md-checkbox class="md-checkbox-no-bottom-margin">I</md-checkbox>
+                                        <md-checkbox class="md-checkbox-no-bottom-margin">D</md-checkbox>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td translate>Trend</td>
+                                <td>
+                                    <md-radio-group ng-model="herp" layout="row">
+                                        <md-radio-button ng-value="0">-</md-radio-button>
+                                        <md-radio-button ng-value="1">n</md-radio-button>
+                                        <md-radio-button ng-value="2">+</md-radio-button>
+                                        <md-radio-button ng-value="3">++</md-radio-button>
+                                    </md-radio-group>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td translate>Probability</td>
+                                <td>
+                                    <md-select ng-model="plop">
+                                        <md-option ng-value="-1">-1</md-option>
+                                        <md-option ng-value="0">0</md-option>
+                                        <md-option ng-value="1">1</md-option>
+                                        <md-option ng-value="2">2</md-option>
+                                        <md-option ng-value="3">3</md-option>
+                                        <md-option ng-value="4">4</md-option>
+                                    </md-select>
+                                    <md-checkbox>{{ 'Force impact in the analysis' | translate }}</md-checkbox>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div layout="row" layout-align="start center">
+                        <md-button ng-click="create()" type="submit" class="md-accent md-hue-3">
+                            <md-icon>chevron_left</md-icon>
+                            {{ 'Previous' | translate }}
+                        </md-button>
+
+                        <span flex></span>
+
+                        <md-button ng-click="create()" type="submit" class="md-accent md-hue-3">
+                            {{ 'Save' | translate }}
+                        </md-button>
+
+                        <span flex></span>
+
+                        <md-button ng-click="create()" type="submit" class="md-accent md-hue-3">
+                            {{ 'Next' | translate }}
+                            <md-icon>chevron_right</md-icon>
+                        </md-button>
+                    </div>
                 </md-tab>
 
                 <md-tab label="{{ 'Summary' | translate }}">
+                    <div class="md-padding">
+                        <trix-editor angular-trix ng-model="context.text" style="min-height: 250px; border: 1px solid #AAAAAA;" class="md-padding"></trix-editor>
 
+                        <div layout="row" layout-align="end center">
+                            <md-button ng-click="create()" type="submit" class="md-accent md-hue-3">
+                                {{ 'Save' | translate }}
+                            </md-button>
+                        </div>
+                    </div>
                 </md-tab>
             </md-tabs>
         </md-dialog-content>
-        <md-dialog-actions layout="row">
-            <span flex></span>
-            <md-button ng-click="cancel()">
-                {{ 'Cancel' | translate }}
-            </md-button>
-            <md-button ng-click="create()" type="submit" class="md-accent md-hue-3">
-                {{ 'Update' | translate }}
-            </md-button>
-        </md-dialog-actions>
     </form>
 </md-dialog>

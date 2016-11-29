@@ -291,17 +291,25 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'subStep', MethodEditContextDialog],
+                controller: ['$scope', '$mdDialog', 'anr', 'subStep', MethodEditContextDialog],
                 templateUrl: '/views/anr/edit.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                    subStep: step
+                    subStep: step,
+                    anr: $scope.model.anr,
                 }
             }).then(function (data) {
+                var req = {id: $scope.model.anr.id};
+                req[step.anrField] = data.text;
 
+                var ClientAnrService = $injector.get('ClientAnrService');
+                ClientAnrService.updateAnr(req, function () {
+                    toastr.success(gettextCatalog.getString("Update successful"));
+                    $scope.updateModel(true);
+                });
             });
         };
 
@@ -349,9 +357,9 @@
                 label: gettextCatalog.getString("Context setup"),
                 deliverable: gettextCatalog.getString("Context validation"),
                 steps: [
-                    {label: gettextCatalog.getString("Risks analysis context"), action: editEvalContext, done: true},
+                    {label: gettextCatalog.getString("Risks analysis context"), action: editEvalContext, anrField: 'contextAnaRisk', done: true},
                     {label: gettextCatalog.getString("Trends evaluation, threats evaluation, synthesis"), action: editTrendsContext, done: true},
-                    {label: gettextCatalog.getString("Risks management context"), action: editEvalContext, done: true},
+                    {label: gettextCatalog.getString("Risks management context"), action: editEvalContext, anrField: 'contextGestRisk', done: true},
                     {label: gettextCatalog.getString("Evaluation, acceptance and impact criterias setup"), action: selectScalesTab, done: true},
                 ]
             },
@@ -361,7 +369,7 @@
                 deliverable: gettextCatalog.getString("Model validation"),
                 steps: [
                     {label: gettextCatalog.getString("Identification of assets, vulnerabilities and impacts assessment"), action: showAnrSummary, done: true},
-                    {label: gettextCatalog.getString("Synthesis of assets / impacts"), action: editEvalContext, done: true},
+                    {label: gettextCatalog.getString("Synthesis of assets / impacts"), action: editEvalContext, anrField: 'synthAct', done: true},
                 ]
             },
             {
@@ -1287,8 +1295,12 @@
         };
     }
 
-    function MethodEditContextDialog($scope, $mdDialog, subStep) {
+    function MethodEditContextDialog($scope, $mdDialog, anr, subStep) {
         $scope.subStep = subStep;
+
+        $scope.context = {
+            text: anr[subStep.anrField]
+        };
 
         $scope.cancel = function() {
             $mdDialog.cancel();
