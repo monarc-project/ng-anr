@@ -317,13 +317,15 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'QuestionService', 'subStep', MethodEditTrendsDialog],
+                controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'QuestionService', 'ThreatService', 'ClientAnrService', 'anr', 'subStep', MethodEditTrendsDialog],
                 templateUrl: '/views/anr/trends.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
+                    ClientAnrService: $injector.get('ClientAnrService'),
+                    anr: $scope.model.anr,
                     subStep: step
                 }
             }).then(function (data) {
@@ -1311,11 +1313,50 @@
         };
     }
 
-    function MethodEditTrendsDialog($scope, $mdDialog, QuestionService, subStep) {
+    function MethodEditTrendsDialog($scope, $mdDialog, toastr, gettextCatalog, QuestionService, ThreatService, ClientAnrService, anr, subStep) {
         $scope.subStep = subStep;
+        $scope.anr = anr;
+        $scope.display = {};
+
         QuestionService.getQuestions().then(function (data) {
             $scope.questions = data.questions;
         })
+
+        ThreatService.getThreats({limit: 0}).then(function (data) {
+            $scope.threats = data.threats;
+            $scope.display.currentThreat = 0;
+            $scope.updateThreat();
+        });
+
+        $scope.updateThreat = function () {
+            var threat = $scope.threats[$scope.display.currentThreat];
+            ThreatService.getThreat(threat.id).then(function (data) {
+                $scope.currentThreatObj = data;
+            })
+        };
+
+        $scope.previousThreat = function () {
+            $scope.display.currentThreat--;
+            $scope.updateThreat();
+        };
+
+        $scope.nextThreat = function () {
+            $scope.display.currentThreat++;
+            $scope.updateThreat();
+        };
+
+        $scope.saveThreat = function () {
+            ThreatService.updateThreat($scope.currentThreatObj, function () {
+                toastr.success(gettextCatalog.getString("Threat assessment saved successfully"));
+                $scope.updateThreat();
+            });
+        };
+
+        $scope.saveSummary = function () {
+            ClientAnrService.updateAnr({id: anr.id, synthThreat: anr.synthThreat}, function () {
+                toastr.success(gettextCatalog.getString("Threat evaluation summary saved successfully"));
+            });
+        };
 
         $scope.cancel = function() {
             $mdDialog.cancel();
