@@ -2,9 +2,9 @@
 
     angular
         .module('AnrModule')
-        .factory('AnrService', [ '$resource', 'ObjlibService', AnrService ]);
+        .factory('AnrService', [ '$resource', '$rootScope', 'ObjlibService', AnrService ]);
 
-    function AnrService($resource, ObjlibService) {
+    function AnrService($resource, $rootScope, ObjlibService) {
         var self = this;
 
         self.AnrResource = $resource('/api/anr/:anrId', { anrId: '@anrId' },
@@ -20,7 +20,9 @@
                 }
             });
 
-        self.AnrRisksResource = $resource('/api/anr/:anrId/risks/:instId', { anrId: '@anrId', instId: '@instId' },
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr" : "anr";
+
+        self.AnrRisksResource = $resource('/api/' + anr + '/:anrId/risks/:instId', { anrId: '@anrId', instId: '@instId' },
             {
                 'update': {
                     method: 'PUT'
@@ -33,7 +35,7 @@
                 }
             });
 
-        self.AnrRisksOpResource = $resource('/api/anr/:anrId/risksop/:instId', { anrId: '@anrId', instId: '@instId' },
+        self.AnrRisksOpResource = $resource('/api/' + anr + '/:anrId/risksop/:instId', { anrId: '@anrId', instId: '@instId' },
             {
                 'update': {
                     method: 'PUT'
@@ -46,7 +48,7 @@
                 }
             });
 
-        self.LibraryResource = $resource('/api/anr/:anrId/library/:objectId', { anrId: '@anrId', objectId: '@objectId' },
+        self.LibraryResource = $resource('/api/' + anr + '/:anrId/library/:objectId', { anrId: '@anrId', objectId: '@objectId' },
             {
                 'update': {
                     method: 'PUT'
@@ -59,7 +61,7 @@
                 },
             });
 
-        self.LibraryCategoryResource = $resource('/api/anr/:anrId/library-category/:catId', { anrId: '@anrId', catId: '@catId' },
+        self.LibraryCategoryResource = $resource('/api/' + anr + '/:anrId/library-category/:catId', { anrId: '@anrId', catId: '@catId' },
             {
                 'update': {
                     method: 'PUT'
@@ -72,20 +74,7 @@
                 },
             });
 
-        self.InstanceResource = $resource('/api/anr/:anrId/instances/:instId', { anrId: '@anrId', instId: '@instId' },
-            {
-                'update': {
-                    method: 'PUT'
-                },
-                'patch': {
-                    method: 'PATCH'
-                },
-                'query': {
-                    isArray: false
-                }
-            });
-
-        self.InstanceRiskResource = $resource('/api/anr/:anrId/instances-risks/:riskId', {anrId: '@anrId', riskId: '@id'},
+        self.InstanceResource = $resource('/api/' + anr + '/:anrId/instances/:instId', { anrId: '@anrId', instId: '@instId' },
             {
                 'update': {
                     method: 'PUT'
@@ -98,7 +87,7 @@
                 }
             });
 
-        self.InstanceOpRiskResource = $resource('/api/anr/:anrId/instances-oprisks/:riskId', {anrId: '@anrId', riskId: '@id'},
+        self.InstanceRiskResource = $resource('/api/' + anr + '/:anrId/instances-risks/:riskId', {anrId: '@anrId', riskId: '@id'},
             {
                 'update': {
                     method: 'PUT'
@@ -111,7 +100,7 @@
                 }
             });
 
-        self.ScalesResource = $resource('/api/anr/:anrId/scales/:scaleId', { anrId: '@anrId', scaleId: '@scaleId' },
+        self.InstanceOpRiskResource = $resource('/api/' + anr + '/:anrId/instances-oprisks/:riskId', {anrId: '@anrId', riskId: '@id'},
             {
                 'update': {
                     method: 'PUT'
@@ -124,7 +113,7 @@
                 }
             });
 
-        self.ScalesTypesResource = $resource('/api/anr/:anrId/scales-types/:scaleTypeId', { anrId: '@anrId', scaleTypeId: '@scaleTypeId' },
+        self.ScalesResource = $resource('/api/' + anr + '/:anrId/scales/:scaleId', { anrId: '@anrId', scaleId: '@scaleId' },
             {
                 'update': {
                     method: 'PUT'
@@ -137,7 +126,20 @@
                 }
             });
 
-        self.ScalesCommentResource = $resource('/api/anr/:anrId/scales/:scaleId/comments/:commentId', { anrId: '@anrId', scaleId: '@scaleId', commentId: "@commentId" },
+        self.ScalesTypesResource = $resource('/api/' + anr + '/:anrId/scales-types/:scaleTypeId', { anrId: '@anrId', scaleTypeId: '@scaleTypeId' },
+            {
+                'update': {
+                    method: 'PUT'
+                },
+                'patch': {
+                    method: 'PATCH'
+                },
+                'query': {
+                    isArray: false
+                }
+            });
+
+        self.ScalesCommentResource = $resource('/api/' + anr + '/:anrId/scales/:scaleId/comments/:commentId', { anrId: '@anrId', scaleId: '@scaleId', commentId: "@commentId" },
             {
                 'update': {
                     method: 'PUT'
@@ -147,7 +149,7 @@
                 }
             });
 
-        self.InstancesConsequencesResource = $resource('/api/anr/:anrId/instances-consequences/:consId', { anrId: '@anrId', consId: '@consId' },
+        self.InstancesConsequencesResource = $resource('/api/' + anr + '/:anrId/instances-consequences/:consId', { anrId: '@anrId', consId: '@consId' },
             {
                 'update': {
                     method: 'PUT'
