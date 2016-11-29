@@ -651,6 +651,10 @@
 
         };
 
+        $scope.openAnrToolsMenu = function ($mdOpenMenu, ev) {
+            $mdOpenMenu(ev);
+        }
+
         $scope.inlineNumberValidator = function (val) {
             return (parseInt(val) == val);
         };
