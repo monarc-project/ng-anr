@@ -328,6 +328,23 @@
                     anr: $scope.model.anr,
                     subStep: step
                 }
+            });
+        };
+
+        var editRisksContext = function (step) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'anr', 'subStep', MethodEditRisksDialog],
+                templateUrl: '/views/anr/risks.evalcontext.html',
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    subStep: step,
+                    anr: $scope.model.anr,
+                }
             }).then(function (data) {
 
             });
@@ -380,7 +397,7 @@
                 deliverable: gettextCatalog.getString("Final report"),
                 steps: [
                     {label: gettextCatalog.getString("Risks estimation, evaluation and processing"), action: showAnrRisks, done: true},
-                    {label: gettextCatalog.getString("Risk treatment plan management"), done: false},
+                    {label: gettextCatalog.getString("Risk treatment plan management"), action: editRisksContext, done: false},
                 ]
             },
             {
@@ -1303,6 +1320,18 @@
         $scope.context = {
             text: anr[subStep.anrField]
         };
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.save = function() {
+            $mdDialog.hide($scope.context);
+        };
+    }
+
+    function MethodEditRisksDialog($scope, $mdDialog, anr, subStep) {
+        $scope.subStep = subStep;
 
         $scope.cancel = function() {
             $mdDialog.cancel();
