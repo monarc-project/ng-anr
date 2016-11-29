@@ -1121,6 +1121,21 @@
 
             $mdPanel.open(config);
         }
+
+        $scope.openSnapshotTools = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', ToolsSnapshotDialog],
+                templateUrl: '/views/anr/snapshots.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen
+            });
+
+        }
     }
 
     // Dialogs
@@ -1399,5 +1414,12 @@
             $mdDialog.hide($scope.context);
         };
     }
+
+    function ToolsSnapshotDialog($scope, $mdDialog) {
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+    }
+
 
 })();
