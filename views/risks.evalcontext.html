@@ -1,0 +1,67 @@
+<md-dialog class="dialog-width">
+    <form name="evalContextForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>{{ subStep.label }}</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content class="md-padding">
+            <div ng-if="implView">
+                <div layout="row" layout-align="start center">
+                    <md-button class="md-icon-button"><md-icon>arrow_back</md-icon></md-button>
+                    Recommendation title
+                </div>
+
+                <table class="md-html-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th translate>Asset</th>
+                        <th translate>Threat</th>
+                        <th translate>Vulnerability</th>
+                        <th translate>Observation before measure</th>
+                        <th translate>Current risk</th>
+                        <th translate>Observation after measure</th>
+                        <th translate>Target risk</th>
+                        <th translate>Actions</th>
+                    </tr>
+                    </thead>
+                </table>
+            </div>
+
+            <div ng-if="!implView">
+                <md-button class="md-primary">{{ 'Reset positions' | translate }}</md-button>
+
+                <table class="md-html-table">
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th translate>Recommendation</th>
+                        <th translate>Imp.</th>
+                        <th translate>Asset</th>
+                        <th translate>Observation</th>
+                        <th translate>Current risk</th>
+                        <th translate>Target risk</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+                    <tr>
+                        <td></td>
+                        <td><a href="javascript:;" ng-click="openRecommendation()"><b>Recommendation title</b></a><br/>Recommendation description</td>
+                        <td>&bullet;&bullet;</td>
+                        <td>Gestion serveurs</td>
+                        <td>constatation</td>
+                        <td>8</td>
+                        <td>4</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>
