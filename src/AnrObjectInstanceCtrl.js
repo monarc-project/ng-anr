@@ -225,7 +225,7 @@
         };
 
         $scope.export = function() {
-            $mdDialog.hide($scope.export);
+            $mdDialog.hide($scope.exportData);
         };
 
     }

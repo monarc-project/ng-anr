@@ -1320,7 +1320,7 @@
 
     function ExportAnrDialog($scope, $mdDialog, mode) {
         $scope.mode = mode;
-        $scope.export = {
+        $scope.exportData = {
             password: null
         };
 
@@ -1328,8 +1328,8 @@
             $mdDialog.cancel();
         };
 
-        $scope.exportAction = function() {
-            $mdDialog.hide($scope.export);
+        $scope.export = function() {
+            $mdDialog.hide($scope.exportData);
         };
     }
 
