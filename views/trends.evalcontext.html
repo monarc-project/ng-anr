@@ -26,7 +26,7 @@
 
                 <md-tab label="{{ 'Threats assessment' | translate }}">
                     <div class="md-padding">
-                        <p ng-if="threats.length === 0"><em translate>{{ 'No threats are listed in your analysis.' | translate }}</em></p>
+                        <p ng-if="threats.length === 0"><em>{{ 'No threats are listed in your analysis.' | translate }}</em></p>
 
                         <div layout="row" layout-align="start center" ng-if="threats.length > 0">
                             <p class="md-subhead">{{ 'Threats analysis' | translate }} - {{ display.currentThreat + 1 }} / {{ threats.length }}</p>
