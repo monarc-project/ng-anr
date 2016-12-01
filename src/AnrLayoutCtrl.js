@@ -719,6 +719,7 @@
                 $scope.$broadcast('scale-changed');
 
                 // Reload comments
+                $scope.updateScales();
                 $scope.updateScaleComments(id);
 
                 // Reload risk sheet in case ranges impact it
@@ -970,7 +971,7 @@
         };
 
         $scope.checkCommentVisibility = function(comment){
-            return ! $scope.scales_types_by_id[comment.scaleImpactType].isHidden || $scope.display.show_hidden_impacts ;
+            return comment && ! $scope.scales_types_by_id[comment.scaleImpactType].isHidden || $scope.display.show_hidden_impacts ;
         }
 
         $scope.onRisksTableEdited = function (model, name) {
