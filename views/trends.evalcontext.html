@@ -26,53 +26,54 @@
 
                 <md-tab label="{{ 'Threats assessment' | translate }}">
                     <div class="md-padding">
-                        <div layout="row" layout-align="start center">
-                            <p class="md-subhead">{{ 'Threats analysis' | translate }} - 1/41</p>
+                        <p ng-if="threats.length === 0"><em>{{ 'No threats are listed in your analysis.' | translate }}</em></p>
+
+                        <div layout="row" layout-align="start center" ng-if="threats.length > 0">
+                            <p class="md-subhead">{{ 'Threats analysis' | translate }} - {{ display.currentThreat + 1 }} / {{ threats.length }}</p>
                             <span flex></span>
-                            <md-select ng-model="derp">
-                                <md-option ng-value="1">JLOmenaceG - JLOmenaceG</md-option>
-                                <md-option ng-value="2">MD11 - Vol de supports, de documents ou de matériel</md-option>
+                            <md-select ng-model="display.currentThreat" md-on-close="updateThreat()">
+                                <md-option ng-repeat="threat in threats" ng-value="$index">{{ threat[_langField('label')] }} - {{ threat[_langField('description')] }}</md-option>
                             </md-select>
                         </div>
 
                         <table class="md-html-table">
                             <tbody>
                             <tr>
-                                <td colspan="2" translate>Theme: Undefined</td>
+                                <td colspan="2" ><b>{{ 'Theme:' | translate }}</b> {{ currentThreatObj.theme[_langField('label')] }}</td>
                             </tr>
                             <tr>
-                                <td translate>Code: JLOmenaceG</td>
-                                <td translate>Label: JLOmenaceG</td>
+                                <td><b>{{'Code:' | translate }}</b> {{ currentThreatObj.code }}</td>
+                                <td><b>{{'Label:' | translate }}</b> {{ currentThreatObj[_langField('label')] }}</td>
                             </tr>
                             <tr>
                                 <td rowspan="2">
                                     {{ 'Accidental cause' | translate }}<br />
-                                    <md-checkbox>{{ 'conceivable' | translate }}</md-checkbox>
+                                    <md-checkbox ng-model="currentThreatObj.isAccidental" ng-true-value="1" ng-false-value="0">{{ 'conceivable' | translate }}</md-checkbox>
                                 </td>
-                                <td translate>Description: ...</td>
+                                <td><b>{{ 'Description:' | translate }}</b> {{ currentThreatObj[_langField('descAccidental')] }}</td>
                             </tr>
                             <tr>
-                                <td translate>Example: ...</td>
+                                <td><b>{{ 'Example:' | translate }}</b> {{ currentThreatObj[_langField('exAccidental')] }}</td>
                             </tr>
                             <tr>
                                 <td rowspan="2">
                                     {{ 'Deliberate cause' | translate }}<br />
-                                    <md-checkbox>{{ 'conceivable' | translate }}</md-checkbox>
+                                    <md-checkbox ng-model="currentThreatObj.isDeliberate" ng-true-value="1" ng-false-value="0">{{ 'conceivable' | translate }}</md-checkbox>
                                 </td>
-                                <td translate>Description: ...</td>
+                                <td><b>{{ 'Description:' | translate }}</b> {{ currentThreatObj[_langField('descDeliberate')] }}</td>
                             </tr>
                             <tr>
-                                <td translate>Example: ...</td>
+                                <td><b>{{ 'Example:' | translate }}</b> {{ currentThreatObj[_langField('exDeliberate')] }}</td>
                             </tr>
                             <tr>
                                 <td translate>Types of consequences</td>
-                                <td>...</td>
+                                <td>{{ currentThreatObj[_langField('typeConsequences')] }}</td>
                             </tr>
                             <tr>
                                 <td translate>Comments</td>
                                 <td>
                                     <md-input-container class="md-block">
-                                        <textarea></textarea>
+                                        <textarea ng-model="currentThreatObj.comment"></textarea>
                                     </md-input-container>
                                 </td>
                             </tr>
@@ -80,16 +81,16 @@
                                 <td translate>Impacted criteria</td>
                                 <td>
                                     <div layout="row" layout-align="start center">
-                                        <md-checkbox class="md-checkbox-no-bottom-margin">C</md-checkbox>
-                                        <md-checkbox class="md-checkbox-no-bottom-margin">I</md-checkbox>
-                                        <md-checkbox class="md-checkbox-no-bottom-margin">D</md-checkbox>
+                                        <md-checkbox ng-model="currentThreatObj.c" ng-true-value="true" ng-false-value="false" class="md-checkbox-no-bottom-margin">C</md-checkbox>
+                                        <md-checkbox ng-model="currentThreatObj.i" ng-true-value="true" ng-false-value="false" class="md-checkbox-no-bottom-margin">I</md-checkbox>
+                                        <md-checkbox ng-model="currentThreatObj.d" ng-true-value="true" ng-false-value="false" class="md-checkbox-no-bottom-margin">D</md-checkbox>
                                     </div>
                                 </td>
                             </tr>
                             <tr>
                                 <td translate>Trend</td>
                                 <td>
-                                    <md-radio-group ng-model="herp" layout="row">
+                                    <md-radio-group ng-model="currentThreatObj.trend" layout="row">
                                         <md-radio-button ng-value="0">-</md-radio-button>
                                         <md-radio-button ng-value="1">n</md-radio-button>
                                         <md-radio-button ng-value="2">+</md-radio-button>
@@ -100,7 +101,7 @@
                             <tr>
                                 <td translate>Probability</td>
                                 <td>
-                                    <md-select ng-model="plop">
+                                    <md-select ng-model="currentThreatObj.qualification">
                                         <md-option ng-value="-1">-1</md-option>
                                         <md-option ng-value="0">0</md-option>
                                         <md-option ng-value="1">1</md-option>
@@ -108,7 +109,7 @@
                                         <md-option ng-value="3">3</md-option>
                                         <md-option ng-value="4">4</md-option>
                                     </md-select>
-                                    <md-checkbox>{{ 'Force impact in the analysis' | translate }}</md-checkbox>
+                                    <md-checkbox ng-model="currentThreatObj.forceQualification">{{ 'Force impact in the analysis' | translate }}</md-checkbox>
                                 </td>
                             </tr>
                             </tbody>
@@ -116,20 +117,20 @@
                     </div>
 
                     <div layout="row" layout-align="start center">
-                        <md-button ng-click="create()" type="submit" class="md-accent md-hue-3">
+                        <md-button ng-click="previousThreat()" type="submit" class="md-accent md-hue-3" ng-disabled="threats[0].id == currentThreatObj.id">
                             <md-icon>chevron_left</md-icon>
                             {{ 'Previous' | translate }}
                         </md-button>
 
                         <span flex></span>
 
-                        <md-button ng-click="create()" type="submit" class="md-accent md-hue-3">
+                        <md-button ng-click="saveThreat()" type="submit" class="md-accent md-hue-3">
                             {{ 'Save' | translate }}
                         </md-button>
 
                         <span flex></span>
 
-                        <md-button ng-click="create()" type="submit" class="md-accent md-hue-3">
+                        <md-button ng-click="nextThreat()" type="submit" class="md-accent md-hue-3" ng-disabled="threats[threats.length - 1].id == currentThreatObj.id">
                             {{ 'Next' | translate }}
                             <md-icon>chevron_right</md-icon>
                         </md-button>
@@ -138,10 +139,10 @@
 
                 <md-tab label="{{ 'Summary' | translate }}">
                     <div class="md-padding">
-                        <trix-editor angular-trix ng-model="context.text" style="min-height: 250px; border: 1px solid #AAAAAA;" class="md-padding"></trix-editor>
+                        <trix-editor angular-trix ng-model="anr.synthThreat" style="min-height: 250px; border: 1px solid #AAAAAA;" class="md-padding"></trix-editor>
 
                         <div layout="row" layout-align="end center">
-                            <md-button ng-click="create()" type="submit" class="md-accent md-hue-3">
+                            <md-button ng-click="saveSummary()" type="submit" class="md-accent md-hue-3">
                                 {{ 'Save' | translate }}
                             </md-button>
                         </div>

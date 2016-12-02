@@ -21,6 +21,23 @@
         </div>
 
         <md-card>
+            <md-menu>
+                <md-button style="position: fixed; right: 24px; margin-top: 4px; z-index: 90" ng-show="OFFICE_MODE == 'FO'"
+                           ng-click="openAnrToolsMenu($mdOpenMenu, $event)"> {{ 'Tools' | translate }}
+                    <md-icon md-menu-origin>more_vert</md-icon>
+                </md-button>
+                <md-menu-content width="4">
+                    <md-menu-item>
+                        <md-button>{{ 'Interviews table' | translate }}</md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button>{{ 'Consultant(s)' | translate }}</md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="openSnapshotTools($event)">{{ 'Snapshots' | translate }}</md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
             <md-tabs md-border-bottom="true" md-selected="display.anrSelectedTabIndex" md-dynamic-height>
                 <md-tab label="{{ 'Risk analysis' | translate }}">
                     <div layout="row" class="md-padding">

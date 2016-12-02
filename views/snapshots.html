@@ -1,0 +1,53 @@
+<md-dialog class="dialog-width">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 translate>Snapshots</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <p class="md-subhead" translate>New snapshot</p>
+
+            <div layout="row">
+                <md-input-container>
+                    <label translate>Optional comment</label>
+                    <textarea></textarea>
+                </md-input-container>
+
+                <md-button>{{ 'Create snapshot' | translate }}</md-button>
+            </div>
+
+            <p class="md-subhead" translate>List of available snapshots</p>
+
+            <table class="md-html-table">
+                <thead>
+                <tr>
+                    <th translate>Date</th>
+                    <th translate>Author</th>
+                    <th translate>Comment</th>
+                    <th translate>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr>
+
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <span flex></span>
+        <md-button ng-click="cancel()">
+            {{ 'Cancel' | translate }}
+        </md-button>
+        <md-button ng-click="save()" type="submit" class="md-accent md-hue-3">
+            {{ 'Update' | translate }}
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

@@ -317,14 +317,33 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'QuestionService', 'subStep', MethodEditTrendsDialog],
+                controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'QuestionService', 'ThreatService', 'ClientAnrService', 'anr', 'subStep', MethodEditTrendsDialog],
                 templateUrl: '/views/anr/trends.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
+                    ClientAnrService: $injector.get('ClientAnrService'),
+                    anr: $scope.model.anr,
                     subStep: step
+                }
+            });
+        };
+
+        var editRisksContext = function (step) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'anr', 'subStep', MethodEditRisksDialog],
+                templateUrl: '/views/anr/risks.evalcontext.html',
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    subStep: step,
+                    anr: $scope.model.anr,
                 }
             }).then(function (data) {
 
@@ -378,7 +397,7 @@
                 deliverable: gettextCatalog.getString("Final report"),
                 steps: [
                     {label: gettextCatalog.getString("Risks estimation, evaluation and processing"), action: showAnrRisks, done: true},
-                    {label: gettextCatalog.getString("Risk treatment plan management"), done: false},
+                    {label: gettextCatalog.getString("Risk treatment plan management"), action: editRisksContext, done: false},
                 ]
             },
             {
@@ -646,6 +665,10 @@
 
         };
 
+        $scope.openAnrToolsMenu = function ($mdOpenMenu, ev) {
+            $mdOpenMenu(ev);
+        }
+
         $scope.inlineNumberValidator = function (val) {
             return (parseInt(val) == val);
         };
@@ -710,6 +733,7 @@
                 $scope.$broadcast('scale-changed');
 
                 // Reload comments
+                $scope.updateScales();
                 $scope.updateScaleComments(id);
 
                 // Reload risk sheet in case ranges impact it
@@ -961,7 +985,7 @@
         };
 
         $scope.checkCommentVisibility = function(comment){
-            return ! $scope.scales_types_by_id[comment.scaleImpactType].isHidden || $scope.display.show_hidden_impacts ;
+            return comment && ! $scope.scales_types_by_id[comment.scaleImpactType].isHidden || $scope.display.show_hidden_impacts ;
         }
 
         $scope.onRisksTableEdited = function (model, name) {
@@ -1111,6 +1135,21 @@
             };
 
             $mdPanel.open(config);
+        }
+
+        $scope.openSnapshotTools = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', ToolsSnapshotDialog],
+                templateUrl: '/views/anr/snapshots.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen
+            });
+
         }
     }
 
@@ -1296,7 +1335,7 @@
 
     function ExportAnrDialog($scope, $mdDialog, mode) {
         $scope.mode = mode;
-        $scope.export = {
+        $scope.exportData = {
             password: null
         };
 
@@ -1304,8 +1343,8 @@
             $mdDialog.cancel();
         };
 
-        $scope.exportAction = function() {
-            $mdDialog.hide($scope.export);
+        $scope.export = function() {
+            $mdDialog.hide($scope.exportData);
         };
     }
 
@@ -1325,11 +1364,8 @@
         };
     }
 
-    function MethodEditTrendsDialog($scope, $mdDialog, QuestionService, subStep) {
+    function MethodEditRisksDialog($scope, $mdDialog, anr, subStep) {
         $scope.subStep = subStep;
-        QuestionService.getQuestions().then(function (data) {
-            $scope.questions = data.questions;
-        })
 
         $scope.cancel = function() {
             $mdDialog.cancel();
@@ -1339,5 +1375,66 @@
             $mdDialog.hide($scope.context);
         };
     }
+
+    function MethodEditTrendsDialog($scope, $mdDialog, toastr, gettextCatalog, QuestionService, ThreatService, ClientAnrService, anr, subStep) {
+        $scope.subStep = subStep;
+        $scope.anr = anr;
+        $scope.display = {};
+
+        QuestionService.getQuestions().then(function (data) {
+            $scope.questions = data.questions;
+        })
+
+        ThreatService.getThreats({limit: 0}).then(function (data) {
+            $scope.threats = data.threats;
+            $scope.display.currentThreat = 0;
+            $scope.updateThreat();
+        });
+
+        $scope.updateThreat = function () {
+            var threat = $scope.threats[$scope.display.currentThreat];
+            ThreatService.getThreat(threat.id).then(function (data) {
+                $scope.currentThreatObj = data;
+            })
+        };
+
+        $scope.previousThreat = function () {
+            $scope.display.currentThreat--;
+            $scope.updateThreat();
+        };
+
+        $scope.nextThreat = function () {
+            $scope.display.currentThreat++;
+            $scope.updateThreat();
+        };
+
+        $scope.saveThreat = function () {
+            ThreatService.updateThreat($scope.currentThreatObj, function () {
+                toastr.success(gettextCatalog.getString("Threat assessment saved successfully"));
+                $scope.updateThreat();
+            });
+        };
+
+        $scope.saveSummary = function () {
+            ClientAnrService.updateAnr({id: anr.id, synthThreat: anr.synthThreat}, function () {
+                toastr.success(gettextCatalog.getString("Threat evaluation summary saved successfully"));
+            });
+        };
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.save = function() {
+            $mdDialog.hide($scope.context);
+        };
+    }
+
+    function ToolsSnapshotDialog($scope, $mdDialog) {
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+    }
+
 
 })();
