@@ -137,8 +137,8 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 }
 
 .md-card-crit {
-    background-color: #FFCDD2;
-    color: #B71C1C;
+    background-color: #FFCDD2 !important;
+    color: #B71C1C !important;
 }
 
 .md-html-table {

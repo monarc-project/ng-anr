@@ -22,7 +22,7 @@
 
         <md-card>
             <md-menu>
-                <md-button style="position: fixed; right: 24px; margin-top: 4px; z-index: 90" ng-show="OFFICE_MODE == 'FO'"
+                <md-button style="position: absolute; right: 24px; margin-top: 4px; z-index: 90" ng-show="OFFICE_MODE == 'FO'"
                            ng-click="openAnrToolsMenu($mdOpenMenu, $event)"> {{ 'Tools' | translate }}
                     <md-icon md-menu-origin>more_vert</md-icon>
                 </md-button>
@@ -116,6 +116,12 @@
 
                 <md-tab label="{{ 'Evaluation scales' | translate }}">
                     <div class="md-padding-left md-padding-right" layout="column">
+                        <md-card md-theme="default" class="md-card-crit" ng-if="!scalesCanChange && OFFICE_MODE == 'FO'">
+                            <md-card-content>
+                                <p translate>Some of the risks of your analysis, your library, or your trends assessment have already been assessed. This being done, you may not edit the scales values.</p>
+                            </md-card-content>
+                        </md-card>
+
                         <div editable callback="onImpactScaleChanged" layout="row">
                             <h4 edit-model="scales.impacts"><span translate>Impacts scale:</span> [
                                 <span class="text-blue" edit-field="min"></span> -
@@ -129,7 +135,7 @@
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        <th ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">{{ type[_langField('label')] }} <md-button class="md-icon-button md-warn" ng-if="type.type == 'CUS'" ng-click="deleteCustomScaleType(type.id)"><md-icon>delete</md-icon></md-button> <md-button class="md-icon-button" ng-class="{'md-primary': type.isHidden, 'md-warn': !type.isHidden}" ng-if="type.type != 'CUS'" ng-click="setImpactVisibility(type.id, !!type.isHidden)"><md-icon>{{ type.isHidden ? 'visibility' : 'visibility_off' }}</md-icon></md-button></th>
+                                        <th ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">{{ type[_langField('label')] }} <md-button class="md-icon-button md-warn" ng-if="type.type == 'CUS'" ng-click="deleteCustomScaleType(type.id)"><md-icon>delete</md-icon></md-button> <md-button class="md-icon-button" class="md-primary" ng-if="type.type != 'CUS'" ng-click="setImpactVisibility(type.id, !!type.isHidden)"><md-icon>{{ type.isHidden ? 'visibility' : 'visibility_off' }}</md-icon></md-button></th>
                                         <th><span inline-edit="newColumn.name" inline-edit-callback="onCreateNewColumn(newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ 'New column name' | translate }}"></span></th>
                                     </tr>
                                 </thead>

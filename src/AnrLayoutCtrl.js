@@ -17,6 +17,7 @@
                            $transitions, DownloadService, $mdPanel, $injector) {
 
         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
+        $scope.scalesCanChange = false;
 
         var self = this;
 
@@ -729,6 +730,12 @@
             if (model.max < model.min) model.max = model.min;
 
             var promise = $q.defer();
+
+            if (!$scope.scalesCanChange) {
+                toastr.warning(gettextCatalog.getString("You may not change scales anymore"));
+                return false;
+            }
+
             AnrService.updateScale($scope.model.anr.id, id, model.min, model.max, function () {
                 $scope.$broadcast('scale-changed');
 
@@ -914,6 +921,7 @@
 
         $scope.updateScales = function () {
             AnrService.getScales($scope.model.anr.id).then(function (data) {
+                $scope.scalesCanChange = data.canChange;
                 for (var i = 0; i < data.scales.length; ++i) {
                     var scale = data.scales[i];
 
