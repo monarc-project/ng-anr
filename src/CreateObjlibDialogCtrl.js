@@ -290,7 +290,7 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
     };
 
     $scope.updateCategoryChildren = function () {
-        ObjlibService.getObjlibsCats({lock: true, parentId: $scope.category.parent ? $scope.category.parent : 0, catid: $scope.category.id}).then(function (x) {
+        ObjlibService.getObjlibsCats({lock: true, parentId: $scope.category.parent ? $scope.category.parent : 0, catid: $scope.category.parent}).then(function (x) {
             $scope.childrenCategories = x.categories;
         });
     };
