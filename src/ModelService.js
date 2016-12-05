@@ -12,6 +12,9 @@
                 'update': {
                     method: 'PUT'
                 },
+                'patch': {
+                    method: 'PATCH'
+                },
                 'query': {
                     isArray: false
                 }
@@ -43,13 +46,18 @@
             new self.ModelDuplicationResource({'model': id}).$save(success, error);
         };
 
+        var patchModel = function (id, params, success, error) {
+            self.ModelResource.patch({modelId: id}, params, success, error);
+        };
+
         return {
             getModels: getModels,
             getModel: getModel,
             createModel: createModel,
             deleteModel: deleteModel,
             updateModel: updateModel,
-            duplicateModel: duplicateModel
+            duplicateModel: duplicateModel,
+            patchModel: patchModel
         };
     }
 
