@@ -1,15 +1,15 @@
 <div class="md-padding" ng-cloak layout="column" ng-controller="AnrObjectInstanceCtrl">
     <div layout="row" layout-align="space-around start">
         <div flex ng-if="instance" class="active-inst">
-            <h2>
+            <h2 class="no-margin">
                 <md-icon ng-if="instance.object.scope == 2" style="color: #F57C00">share</md-icon>
                 {{ instance[_langField('name')] }}
             </h2>
 
-            <p>{{ instance[_langField('label')] }}</p>
+            <span>{{ instance[_langField('label')] }}</span>
         </div>
 
-        <md-card flex-gt-md="85">
+        <md-card flex-gt-md="60" style="margin-right: 72px">
             <md-card-content layout="column" layout-gt-md="row" flex-gt-md layout-wrap>
                 <div flex-gt-md="33" layout="column" layout-gt-md="row" layout-align="space-between">
                     <div class="bold" ng-class="{'txtright': $mdMedia('gt-md')}" translate>Confidentiality:&nbsp;</div>
@@ -71,9 +71,8 @@
                 </div>
 
                 <div class="md-padding" ng-if="instance.id">
-                    <a aria-title="{{ 'See object in the library' | translate }}" href="javascript:void(0);" ng-click="showObjectInLibrary(instance.object.id);"><md-icon>folder_open</md-icon>{{ 'See object in the library' | translate }}</a>
-
-                    <p class="md-title" translate>This asset is attached to the following parents</p>
+                    <md-button aria-title="{{ 'See object in the library' | translate }}" ng-click="showObjectInLibrary(instance.object.id);"><md-icon>folder_open</md-icon> {{ 'See object in the library' | translate }}</md-button><br />
+                    <span class="md-title md-padding-left md-padding-right" translate>This asset is attached to the following parents</span>
 
                     <p ng-if="instance.instances.length <= 0" translate>This asset has no parents.</p>
 

@@ -1,11 +1,18 @@
 <div ng-include="'views/anr/_risk_sheet.html'" ng-if="sheet_risk"></div>
 
-<div layout-gt-lg="row" layout="column" layout-align="center center" ng-if="(instmode == 'anr' || instmode == 'inst') && !sheet_risk">
-    <md-card>
-        <md-card-content layout="column" layout-align="center center">
-            <form ng-submit="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()">
-                <input type="submit" style="position: absolute; left: -99999px">
-                <div layout="row" layout-align="center center">
+<div ng-if="risks === undefined" class="md-padding" layout="row" layout-align="center center">
+    <md-progress-circular md-indeterminate="true"></md-progress-circular>
+</div>
+
+<div ng-show="!sheet_risk">
+    <div layout="row" layout-align="space-between center" class="md-padding md-padding-left md-padding-right">
+        <span class="md-subhead md-padding-left" translate>{{ risks_total }} risks</span>
+        <md-progress-circular md-diameter="20" ng-if="anr_risks_table_loading"></md-progress-circular>
+
+        <md-card ng-if="(instmode == 'anr' || instmode == 'inst') && !sheet_risk">
+            <div layout="row" layout-wrap class="md-padding-left md-padding-right">
+                <form layout="row" layout-wrap layout-align="center center" class="md-padding-left md-padding-right" ng-submit="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()">
+                    <input type="submit" style="position: absolute; left: -99999px">
                     <span ng-if="instance.asset.type == 1">{{ 'Risk threshold (on max CID)' | translate }}&nbsp;</span>
                     <md-radio-group ng-if="instance.asset.type == 1" ng-model="risks_filters.thresholds" layout="row" class="md-primary">
                         <md-radio-button ng-value="-1" aria-label="G"><div class="tbl-risk-calc anr-scales-demo-block green"></div></md-radio-button>
@@ -36,9 +43,9 @@
 
                     <md-button class="md-icon-button" ng-click="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()"><md-icon>search</md-icon><md-tooltip>{{ 'Filter table' | translate }}</md-tooltip></md-button>
                     <md-button class="md-icon-button" ng-click="resetRisksFilters(); updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()"><md-icon>settings_backup_restore</md-icon><md-tooltip>{{ 'Reset filter' | translate }}</md-tooltip></md-button>
-                </div>
 
-                <div layout="row" layout-align="center center">
+                    <div style="width:1px; background:#EAEAEA;height:48px;margin-left:2px;margin-right:10px;"></div>
+
                     <md-input-container>
                         <label translate>Sort</label>
                         <md-select ng-model="risks_filters.order">
@@ -70,32 +77,20 @@
                         <md-icon>save</md-icon>
                         {{ 'Export to CSV' | translate }}
                     </md-button>
-                </div>
-            </form>
-        </md-card-content>
-    </md-card>
-</div>
+                </form>
+            </div>
+        </md-card>
 
-<div ng-if="risks === undefined" class="md-padding" layout="row" layout-align="center center">
-    <md-progress-circular md-indeterminate="true"></md-progress-circular>
-</div>
-
-
-<div ng-if="risks && risks.length === 0" class="md-padding">
-    <em>{{ 'There are no risks for this instance, or your filters returned no results.' | translate }}</em>
-</div>
-
-<div ng-show="!sheet_risk && risks.length > 0">
-    <div layout="row" layout-align="start center">
-        <p class="md-subhead md-padding" translate>{{ risks_total }} risks</p>
-        <md-progress-circular md-diameter="20" ng-if="anr_risks_table_loading"></md-progress-circular>
-        <span flex></span>
-        <md-select ng-model="risks_filters.page" md-on-close="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()" ng-if="risks_total > 0 && (!instance || instance.asset.type == 1)">
+        <md-select class="no-margin" ng-model="risks_filters.page" md-on-close="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()" ng-if="risks_total > 0 && (!instance || instance.asset.type == 1)">
             <md-option ng-repeat="i in range(1, ceil(risks_total / 50))" ng-value="i"><span translate>Page {{ i }}</span></md-option>
         </md-select>
     </div>
 
-    <table editable callback="onRisksTableEdited" class="md-html-table">
+    <div ng-if="risks && risks.length === 0" class="md-padding">
+        <em>{{ 'There are no risks for this instance, or your filters returned no results.' | translate }}</em>
+    </div>
+
+    <table editable callback="onRisksTableEdited" class="md-html-table" ng-if="risks.length > 0">
         <thead>
         <tr>
             <th rowspan="2"><p translate>Instance</p></th>

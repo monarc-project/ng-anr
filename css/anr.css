@@ -7,6 +7,20 @@
     cursor: pointer;
 }
 
+.no-padding {
+    padding: 0;
+}
+.no-margin {
+    margin: 0;
+}
+.md-button.md-icon-button {
+    margin: 0 0;
+}
+
+table.md-table tbody.md-body>tr.md-row {
+    height: 36px;
+}
+
 .table-fab-top-2 {
     margin-right: 72px;
     margin-top: 64px;
@@ -103,11 +117,11 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
     opacity: 1; }
 
 .md-padding-left {
-    padding-left: 16px;
+    padding-left: 6px;
 }
 
 .md-padding-right {
-    padding-right: 16px;
+    padding-right: 6px;
 }
 
 .clickable-rows {
@@ -430,7 +444,7 @@ h1.md-toolbar-tools {
     font-size: 18px;
 }
 .md-padding {
-    padding: 8px;
+    padding: 2px;
 }
 md-chips.md-default-theme .md-chips, md-chips .md-chips {
     box-shadow: none !important;

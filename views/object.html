@@ -1,13 +1,13 @@
-<div class="md-padding" ng-cloak layout="column" ng-controller="AnrObjectCtrl">
+<div class="md-padding" ng-cloak ng-controller="AnrObjectCtrl">
     <div layout="row" layout-align="space-around center">
         <md-button class="md-icon-button" ui-sref="main.kb_mgmt.info_risk({tab: 'objlibs'})"><md-icon>arrow_back</md-icon></md-button>
-        <div flex ng-if="object" ng-class="{'active-obj': mode == 'anr'}">
-            <h2>
+        <div flex ng-if="object" ng-class="{'active-obj': mode == 'anr'}" class="md-padding">
+            <h2 class="no-margin">
                 <md-icon ng-if="object && object.scope == 2" style="color: #F57C00">share</md-icon>
                 {{ object[_langField('name')] }}
             </h2>
 
-            <p>{{ object[_langField('label')] }}</p>
+            <span>{{ object[_langField('label')] }}</span>
         </div>
 
         <div flex ng-if="!object">
@@ -56,7 +56,7 @@
     <md-card ng-if="object">
         <md-tabs md-dynamic-height md-border-bottom md-selected="ToolsAnrService.currentTab">
             <md-tab label="{{ 'General information' | translate }}">
-                <div class="md-padding">
+                <div class="md-padding-left md-padding-right">
                     <div layout="row" layout-align="left center">
                         <p class="md-title" translate>Composition</p>
                         <md-button class="md-primary" ng-click="createComponent($event)">{{ 'Add a component' | translate }}</md-button>
@@ -75,14 +75,14 @@
                         </li>
                     </ul>
 
-                    <md-card ng-if="object.parents.length > 0">
+                    <div ng-if="object.parents.length > 0">
                         <p class="md-title" translate>In the common library, this object is a direct component of :</p>
                         <ul>
                             <li ng-repeat="parent in object.parents">{{parent[_langField("name")]}} ({{parent[_langField("label")]}})</li>
                         </ul>
-                    </md-card>
+                    </div>
 
-                    <md-card ng-if="mode == 'bdc' && object.replicas.length > 0">
+                    <div ng-if="mode == 'bdc' && object.replicas.length > 0">
                         <p class="md-title" translate>Object replica(s) in models</p>
                         <table md-table>
                             <thead md-head>
@@ -102,7 +102,7 @@
                                 </tr>
                             </tbody>
                         </table>
-                    </md-card>
+                    </div>
 
                     <md-card ng-if="mode == 'anr' && object.replicas.length > 0">
                         <p class="md-title" translate>Object used in the risks analysis</p>
@@ -129,22 +129,24 @@
             </md-tab>
 
             <md-tab label="{{ 'Risks table' | translate }}">
-                <md-card class="md-card-info" ng-if="mode == 'bdc'"><md-card-content>
-                    <p translate>You are in the knowledge base. No evaluation may be set in this space.</p>
-                </md-card-content></md-card>
-
-                <p class="md-title md-padding" translate>{{ object.risks.length }} risks</p>
+                <div layout="row" layout-align="start center" layout-fill>
+                    <p class="md-title md-padding-left" translate>{{ object.risks.length }} risks</p>
+                    <span flex></span>
+                    <md-card class="md-card-info" ng-if="mode == 'bdc'"><md-card-content>
+                        <p translate>You are in the knowledge base. No evaluation may be set in this space.</p>
+                    </md-card-content></md-card>
+                </div>
 
                 <table class="md-html-table">
                     <thead>
                     <tr>
-                        <th rowspan="2"><p translate>Threat</p></th>
-                        <th rowspan="2"><p translate>Prob.</p></th>
-                        <th rowspan="2"><p translate>Vulnerability</p></th>
-                        <th rowspan="2"><p translate>Qualif.</p></th>
-                        <th colspan="3"><p translate>Risk</p></th>
-                        <th rowspan="2"><p translate>T</p></th>
-                        <th rowspan="2"><p translate>Target risk</p></th>
+                        <th rowspan="2"><span translate>Threat</span></th>
+                        <th rowspan="2"><span translate>Prob.</span></th>
+                        <th rowspan="2"><span translate>Vulnerability</span></th>
+                        <th rowspan="2"><span translate>Qualif.</span></th>
+                        <th colspan="3"><span translate>Risk</span></th>
+                        <th rowspan="2"><span translate>T</span></th>
+                        <th rowspan="2"><span translate>Target risk</span></th>
                     </tr>
                     <tr>
                         <th>C</th>
