@@ -1160,7 +1160,24 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen
             });
+        }
 
+
+        $scope.openInterviewTools = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'ClientInterviewService', 'toastr', 'gettextCatalog', 'anr', ToolsInterviewDialog],
+                templateUrl: '/views/anr/interviews.html',
+                targetEvent: ev,
+                locals: {
+                    anr: $scope.model.anr
+                },
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen
+            });
         }
     }
 
@@ -1459,6 +1476,7 @@
             $scope.snapshotCreating = true;
             ClientSnapshotService.createSnapshot({anr: anr.id, comment: $scope.comment}, function () {
                 reloadSnapshots();
+                $scope.comment = '';
             })
         };
 
@@ -1476,6 +1494,45 @@
             ClientSnapshotService.restoreSnapshot(snapshot.anr.id, function () {
                 toastr.success(gettextCatalog.getString("Snapshot restored"));
             })
+        };
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+    }
+
+    function ToolsInterviewDialog($scope, $mdDialog, ClientInterviewService, toastr, gettextCatalog, anr) {
+        $scope.new_interview = {
+            'date': null,
+            'service': null,
+            'content': null
+        }
+
+        var reloadInterviews = function () {
+            ClientInterviewService.getInterviews({anr: anr.id}).then(function (data) {
+                $scope.interviews = data.interviews;
+                $scope.interviewCreating = false;
+            });
+        };
+
+        reloadInterviews();
+
+        $scope.createInterview = function () {
+            $scope.interviewCreating = true;
+            ClientInterviewService.createInterview({anr: anr.id, date: $scope.new_interview.date, service: $scope.new_interview.service, content: $scope.new_interview.content}, function () {
+                reloadInterviews();
+                $scope.new_interview = {};
+            })
+        };
+
+        $scope.deleteInterview = function (interview) {
+            if ($scope.confirmDelete == interview.id) {
+                ClientInterviewService.deleteInterview({anr: anr.id, id: interview.id}, function () {
+                    reloadInterviews();
+                });
+            } else {
+                $scope.confirmDelete = interview.id;
+            }
         };
 
         $scope.cancel = function() {

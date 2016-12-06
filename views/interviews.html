@@ -22,9 +22,9 @@
 
                 <tbody>
                 <tr ng-repeat="interview in interviews">
-                    <td>{{ formatDate(interview.createdAt.date) }}</td>
-                    <td>{{ interview.creator }}</td>
-                    <td>{{ interview.comment }}</td>
+                    <td>{{ interview.date }}</td>
+                    <td>{{ interview.service }}</td>
+                    <td>{{ interview.content }}</td>
                     <td layout="row" layout-align="center center">
                         <md-button ng-class="{'md-icon-button': confirmDelete != interview.id}" ng-click="deleteInterview(interview)"><md-icon>delete</md-icon> <span ng-if="confirmDelete == interview.id" translate>Confirm?</span></md-button>
                     </td>
