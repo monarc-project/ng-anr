@@ -1,0 +1,67 @@
+<md-dialog class="dialog-width">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 translate>Interviews table</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <table class="md-html-table">
+                <thead>
+                <tr>
+                    <th style="width: 20%" translate>Date</th>
+                    <th translate>Department / People</th>
+                    <th style="width: 40%" translate>Contents</th>
+                    <th translate>Actions</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr ng-repeat="interview in interviews">
+                    <td>{{ formatDate(interview.createdAt.date) }}</td>
+                    <td>{{ interview.creator }}</td>
+                    <td>{{ interview.comment }}</td>
+                    <td layout="row" layout-align="center center">
+                        <md-button ng-class="{'md-icon-button': confirmDelete != interview.id}" ng-click="deleteInterview(interview)"><md-icon>delete</md-icon> <span ng-if="confirmDelete == interview.id" translate>Confirm?</span></md-button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+
+            <p class="md-subhead" translate>New interview</p>
+
+            <div layout="column">
+                <md-input-container>
+                    <label translate>Date (July 10, 2015; Week 3; First month; ...)</label>
+                    <input type="text" ng-model="new_interview.date">
+                </md-input-container>
+
+                <md-input-container>
+                    <label translate>Department / People</label>
+                    <textarea ng-model="new_interview.service"></textarea>
+                </md-input-container>
+
+                <md-input-container>
+                    <label translate>Contents</label>
+                    <textarea ng-model="new_interview.content"></textarea>
+                </md-input-container>
+
+                <md-button ng-click="createInterview()" ng-if="!interviewCreating">{{ 'Create interview' | translate }}</md-button>
+                <md-progress-circular ng-if="interviewCreating"></md-progress-circular>
+            </div>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <span flex></span>
+        <md-button ng-click="cancel()">
+            {{ 'Cancel' | translate }}
+        </md-button>
+        <md-button ng-click="save()" type="submit" class="md-accent md-hue-3">
+            {{ 'Update' | translate }}
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>
