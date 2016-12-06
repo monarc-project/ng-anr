@@ -419,7 +419,7 @@ div.ng-inline-edit input, div.ng-inline-edit textarea {
     min-height: 30px;
 }
 .angular-ui-tree-nodes .angular-ui-tree-nodes {
-    padding-left: 8px;
+    padding-left: 12px;
 }
 
 /** Material Design Overrides */
@@ -468,10 +468,15 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
     min-height: 24px;
     width: 24px !important;
 }
-
-.md-tree-unwrap-button md-icon {
-    line-height: 22px !important;
-    font-size: 18px !important;
+.md-tree-item-spacer {
+    width: 24px;
+}
+.md-tree-global-icon {
+    min-width: 12px;
+    width: 12px;
+    font-size: 12px;
+    padding-top: 5px;
+    color: #F57C00 !important;
 }
 
 .md-tree-unwrap-button .md-ripple-container {

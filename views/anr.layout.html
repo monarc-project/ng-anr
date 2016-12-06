@@ -229,12 +229,12 @@
 <script type="text/ng-template" id="tree_node_renderer.html">
     <div ui-tree-handle layout="row" layout-align="start center">
         <md-button class="md-icon-button md-tree-unwrap-button" ng-click="toggle(this)" ng-if="node.type == 'libcat' || node.__children__.length > 0" ng-disabled="node.__children__.length == 0" data-nodrag>
-            <md-icon>{{ (collapsed || node.__children__.length == 0) ? 'expand_less' : 'expand_more' }}</md-icon>
+            {{ (collapsed || node.__children__.length == 0) ? '+' : '-' }}
         </md-button>
 
-        <div class="md-tree-unwrap-button" ng-if="!(node.type == 'libcat' || node.__children__.length > 0)">&nbsp;</div>
+        <div class="md-tree-item-spacer" ng-if="!(node.type == 'libcat' || node.__children__.length > 0)"></div>
 
-        <md-icon ng-if="node.scope == 2" style="font-size: 15px; padding-top: 5px; color: #F57C00">share</md-icon>
+        <md-icon ng-if="node.scope == 2" class="md-tree-global-icon">share</md-icon>
 
         <p flex class="md-tree-link" ng-click="toggle(this)" ng-if="node.type == 'libcat'"><strong>{{ node[_langField('label')] }}</strong></p>
         <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.project.anr.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'FO'">{{ node[_langField('name')] }}</p>
