@@ -1149,9 +1149,12 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', ToolsSnapshotDialog],
+                controller: ['$scope', '$mdDialog', 'ClientSnapshotService', 'toastr', 'gettextCatalog', 'anr', ToolsSnapshotDialog],
                 templateUrl: '/views/anr/snapshots.html',
                 targetEvent: ev,
+                locals: {
+                    anr: $scope.model.anr
+                },
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
@@ -1438,7 +1441,43 @@
         };
     }
 
-    function ToolsSnapshotDialog($scope, $mdDialog) {
+    function ToolsSnapshotDialog($scope, $mdDialog, ClientSnapshotService, toastr, gettextCatalog, anr) {
+        var reloadSnapshots = function () {
+            ClientSnapshotService.getSnapshots({anrReferenceId: anr.id}).then(function (data) {
+                $scope.snapshots = data.snapshots;
+                $scope.snapshotCreating = false;
+            });
+        };
+
+        reloadSnapshots();
+
+        $scope.formatDate = function (input) {
+            return input.substring(0, input.lastIndexOf('.'));
+        }
+
+        $scope.createSnapshot = function () {
+            $scope.snapshotCreating = true;
+            ClientSnapshotService.createSnapshot({anr: anr.id, comment: $scope.comment}, function () {
+                reloadSnapshots();
+            })
+        };
+
+        $scope.deleteSnapshot = function (snapshot) {
+            if ($scope.confirmDelete == snapshot.id) {
+                ClientSnapshotService.deleteSnapshot({id: snapshot.id}, function () {
+                    reloadSnapshots();
+                });
+            } else {
+                $scope.confirmDelete = snapshot.id;
+            }
+        };
+
+        $scope.restoreSnapshot = function (snapshot) {
+            ClientSnapshotService.restoreSnapshot(snapshot.anr.id, function () {
+                toastr.success(gettextCatalog.getString("Snapshot restored"));
+            })
+        };
+
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
