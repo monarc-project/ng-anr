@@ -1,0 +1,63 @@
+<md-dialog class="dialog-width">
+    <form name="riskForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 ng-if="!risk.id" translate>Add a new specific OP risk</h2>
+                <h2 ng-if="risk.id" translate>Update specific OP risk information</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-input-container class="md-block">
+                    <label>{{ 'Source' | translate }}</label>
+                    <md-icon>book</md-icon>
+                    <md-select ng-model="specrisk.source" flex>
+                        <md-option ng-value="1">{{ 'Use an existing risk' | translate }}</md-option>
+                        <md-option ng-value="2">{{ 'Create a new risk' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container ng-if="specrisk.source == 1" class="md-block">
+                    <label translate>Source risk</label>
+                    <md-icon>toc</md-icon>
+                    <md-select ng-model="specrisk.risk" required>
+                        <md-option ng-value="1">R1 - R1</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <div layout="column" ng-if="specrisk.source == 2">
+                    <md-input-container class="md-block">
+                        <label translate>Code</label>
+                        <md-icon>code</md-icon>
+                        <input type="text" ng-model="specrisk.code" required>
+                    </md-input-container>
+
+                    <md-input-container class="md-block">
+                        <label translate>Label</label>
+                        <md-icon>label</md-icon>
+                        <input type="text" ng-model="specrisk.label" required>
+                    </md-input-container>
+
+                    <md-input-container class="md-block">
+                        <label translate>Description</label>
+                        <md-icon>description</md-icon>
+                        <textarea ng-model="specrisk.description"></textarea>
+                    </md-input-container>
+                </div>
+
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row" layout-align="end center">
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="create()" ng-disabled="riskForm.$error.required" type="submit" class="md-accent md-hue-3">
+                {{ (risk.id > 0 ? 'Update' : 'Create') | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
