@@ -1196,6 +1196,23 @@
                 fullscreen: useFullScreen
             });
         }
+
+        $scope.createSpecRisk = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', CreateSpecRiskDialog],
+                templateUrl: '/views/anr/create.specrisk.html',
+                targetEvent: ev,
+                locals: {
+                    anr: $scope.model.anr
+                },
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen
+            });
+        }
     }
 
     // Dialogs
@@ -1560,6 +1577,16 @@
     }
 
     function CreateSpecRiskOPDialog($scope, $mdDialog) {
+        $scope.create = function () {
+            $mdDialog.hide($scope.specrisk);
+        }
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+    }
+
+    function CreateSpecRiskDialog($scope, $mdDialog) {
         $scope.create = function () {
             $mdDialog.hide($scope.specrisk);
         }
