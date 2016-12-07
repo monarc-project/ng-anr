@@ -2,12 +2,14 @@
 
     angular
         .module('AnrModule')
-        .factory('QuestionService', [ '$resource', 'gettextCatalog', QuestionService ]);
+        .factory('QuestionService', [ '$resource', '$rootScope', 'gettextCatalog', QuestionService ]);
 
-    function QuestionService($resource, gettextCatalog) {
+    function QuestionService($resource, $rootScope, gettextCatalog) {
         var self = this;
 
-        self.QuestionResource = $resource('/api/questions/:questionId', { questionId: '@id' },
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
+
+        self.QuestionResource = $resource('/api/' + anr + 'questions/:questionId', { questionId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {
                 'update': {
                     method: 'PUT'

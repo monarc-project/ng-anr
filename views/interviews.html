@@ -34,25 +34,25 @@
 
             <p class="md-subhead" translate>New interview</p>
 
-            <div layout="column">
+            <form name="interviewForm" layout="column">
                 <md-input-container>
                     <label translate>Date (July 10, 2015; Week 3; First month; ...)</label>
-                    <input type="text" ng-model="new_interview.date">
+                    <input type="text" ng-model="new_interview.date" name="date" required>
                 </md-input-container>
 
                 <md-input-container>
                     <label translate>Department / People</label>
-                    <textarea ng-model="new_interview.service"></textarea>
+                    <textarea ng-model="new_interview.service" name="service" required></textarea>
                 </md-input-container>
 
                 <md-input-container>
                     <label translate>Contents</label>
-                    <textarea ng-model="new_interview.content"></textarea>
+                    <textarea ng-model="new_interview.content" name="content" required></textarea>
                 </md-input-container>
 
-                <md-button ng-click="createInterview()" ng-if="!interviewCreating">{{ 'Create interview' | translate }}</md-button>
+                <md-button ng-click="createInterview()" ng-if="!interviewCreating" ng-disabled="interviewForm.$error.required">{{ 'Create interview' | translate }}</md-button>
                 <md-progress-circular ng-if="interviewCreating"></md-progress-circular>
-            </div>
+            </form>
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">

@@ -1529,6 +1529,8 @@
             if ($scope.confirmDelete == interview.id) {
                 ClientInterviewService.deleteInterview({anr: anr.id, id: interview.id}, function () {
                     reloadInterviews();
+                }, function () {
+                    $scope.interviewCreating = false;
                 });
             } else {
                 $scope.confirmDelete = interview.id;
