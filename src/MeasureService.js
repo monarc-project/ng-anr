@@ -7,7 +7,7 @@
     function MeasureService($resource, $rootScope, MassDeleteService) {
         var self = this;
 
-        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         self.MeasureResource = $resource('/api/' + anr + 'measures/:measureId', { measureId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {

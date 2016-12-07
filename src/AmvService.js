@@ -7,7 +7,7 @@
     function AmvService($resource, $rootScope, MassDeleteService) {
         var self = this;
 
-        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         self.AmvResource = $resource('/api/' + anr + 'amvs/:amvId', { amvId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {

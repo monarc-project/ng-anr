@@ -7,7 +7,7 @@
     function VulnService($resource, $rootScope, MassDeleteService) {
         var self = this;
 
-        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         self.VulnResource = $resource('/api/' + anr + 'vulnerabilities/:vulnId', { vulnId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {

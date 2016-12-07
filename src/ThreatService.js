@@ -7,7 +7,7 @@
     function ThreatService($resource, $rootScope, MassDeleteService) {
         var self = this;
 
-        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         self.ThreatResource = $resource('/api/' + anr + 'threats/:threatId', { threatId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {

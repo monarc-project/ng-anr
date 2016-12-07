@@ -7,7 +7,7 @@
     function RiskService($resource, $rootScope, MassDeleteService) {
         var self = this;
 
-        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         self.RiskResource = $resource('/api/' + anr + 'rolf-risks/:riskId', { riskId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {

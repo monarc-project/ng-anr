@@ -7,7 +7,7 @@
     function TagService($resource, $rootScope, MassDeleteService) {
         var self = this;
 
-        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         self.TagResource = $resource('/api/' + anr + 'rolf-tags/:tagId', { tagId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {
