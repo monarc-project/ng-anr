@@ -63,4 +63,41 @@
             <md-button class="md-raised md-primary" ng-click="saveRiskSheet(sheet_risk)">{{ 'Save changes' | translate }}</md-button>
         </div>
     </form>
+
+    <form class="md-padding" ng-if="OFFICE_MODE == 'FO'" layout="column">
+        <span class="md-subhead" translate>Create / edit recommendations</span>
+
+        <div layout="row">
+            <md-autocomplete
+                    flex
+                    md-selected-item="rec_edit.rec"
+                    md-search-text="recSearchText"
+                    md-selected-item-change="selectedRecItemChange(item)"
+                    md-items="item in queryRecSearch(recSearchText)"
+                    md-item-text="item.description"
+                    md-delay="300"
+                    md-min-length="0"
+                    md-input-name="rec"
+                    md-floating-label="{{ 'Recommendation' | translate }}">
+                <md-item-template>
+                    <span md-highlight-text="recSearchText" md-highlight-flags="^i">{{ item.description }}</span>
+                </md-item-template>
+
+                <md-not-found>
+                    {{ 'No recommendation matching your search was found' | translate }}
+                </md-not-found>
+            </md-autocomplete>
+
+            <md-button>
+                <md-icon>link</md-icon>
+                {{ 'Attach' | translate }}
+            </md-button>
+            <md-button>
+                <md-icon>add</md-icon>
+                {{ 'Create new recommendation' | translate }}
+            </md-button>
+        </div>
+
+
+    </form>
 </div>

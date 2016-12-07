@@ -7,7 +7,7 @@
     function AssetService($resource, $rootScope, MassDeleteService) {
         var self = this;
 
-        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         self.AssetResource = $resource('/api/' + anr + 'assets/:assetId', { assetId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {

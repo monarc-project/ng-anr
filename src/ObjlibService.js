@@ -7,7 +7,7 @@
     function ObjlibService($resource, $rootScope, $http) {
         var self = this;
 
-        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         self.ObjlibResource = $resource('/api/' + anr + 'objects/:objlibId', { objlibId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {
