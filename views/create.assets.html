@@ -17,7 +17,7 @@
                 <md-input-container class="md-block" flex>
                     <label translate>Language</label>
                     <md-icon>language</md-icon>
-                    <md-select ng-model="language" ng-change="switchLanguage()">
+                    <md-select ng-model="language" ng-change="switchLanguage()" ng-disabled="OFFICE_MODE == 'FO'">
                         <md-option ng-repeat="(lang_idx, lang) in languages" value="{{ lang_idx }}">{{ lang }}</md-option>
                     </md-select>
                 </md-input-container>

@@ -1320,7 +1320,7 @@
         });
 
         $scope.languages = ConfigService.getLanguages();
-        $scope.language = ConfigService.getDefaultLanguageIndex();
+        $scope.language = $scope.getAnrLanguage();
 
 
         if (asset != undefined && asset != null) {

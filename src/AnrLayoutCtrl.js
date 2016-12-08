@@ -111,6 +111,11 @@
                         updateMethodProgress();
                     }
 
+
+                    if ($rootScope.setAnrLanguage) {
+                        $rootScope.setAnrLanguage(data.language);
+                    }
+
                     isModelLoading = false;
 
                     if (cb) {
