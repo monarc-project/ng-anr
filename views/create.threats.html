@@ -146,17 +146,19 @@
                     <md-checkbox ng-model="threat.d" class="md-primary">D</md-checkbox>
                 </md-input-container>
 
-                <md-subheader>{{ 'Specific models links' | translate }}</md-subheader>
+                <div ng-if="OFFICE_MODE == 'BO'">
+                    <md-subheader>{{ 'Specific models links' | translate }}</md-subheader>
 
-                <md-input-container class="md-block" layout="row" ng-if="models && models.length > 0" flex>
-                    <label translate>Models</label>
-                    <md-icon>class</md-icon>
-                    <md-select multiple ng-disabled="threat.mode != 1" ng-model="threat.models">
-                        <md-option ng-repeat="availModel in models" value="{{ availModel.id }}">{{ availModel[_langField('label')] }}</md-option>
-                    </md-select>
-                </md-input-container>
+                    <md-input-container class="md-block" layout="row" ng-if="models && models.length > 0" flex>
+                        <label translate>Models</label>
+                        <md-icon>class</md-icon>
+                        <md-select multiple ng-disabled="threat.mode != 1" ng-model="threat.models">
+                            <md-option ng-repeat="availModel in models" value="{{ availModel.id }}">{{ availModel[_langField('label')] }}</md-option>
+                        </md-select>
+                    </md-input-container>
 
-                <md-checkbox ng-model="threat.follow" ng-disabled="threat.mode != 1" ng-true-value="'1'" ng-false-value="'0'">{{ 'Force risks to follow trends' | translate }}</md-checkbox>
+                    <md-checkbox ng-model="threat.follow" ng-disabled="threat.mode != 1" ng-true-value="'1'" ng-false-value="'0'">{{ 'Force risks to follow trends' | translate }}</md-checkbox>
+                </div>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">

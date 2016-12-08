@@ -7,7 +7,7 @@
     function CategoryService($resource, $rootScope) {
         var self = this;
 
-        var anr = $rootScope.OFFICE_MODE == "FO" ? "anr/:urlAnrId/" : "";
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         self.CategoryResource = $resource('/api/'+anr+'rolf-categories/:categoryId', { categoryId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
             {

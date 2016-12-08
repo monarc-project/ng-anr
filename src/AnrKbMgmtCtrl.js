@@ -5,7 +5,7 @@
         .controller('AnrKbMgmtCtrl', [
             '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
             'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'TagService', 'RiskService',
-            'CategoryService', '$state', '$timeout',
+            'CategoryService', '$state', '$timeout', '$rootScope',
             AnrKbMgmtCtrl
         ]);
 
@@ -14,10 +14,26 @@
      */
     function AnrKbMgmtCtrl($scope, $stateParams, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService,
                                   AssetService, ThreatService, VulnService, AmvService, MeasureService, TagService,
-                                  RiskService, CategoryService, $state, $timeout) {
+                                  RiskService, CategoryService, $state, $timeout, $rootScope) {
         $scope.tab = $stateParams.tab;
         $scope.gettext = gettextCatalog.getString;
         TableHelperService.resetBookmarks();
+
+        /**** FO ADDITIONS ****/
+        $scope.importAsset = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', ImportAssetDialogCtrl],
+                templateUrl: '/views/anr/import.asset.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+            }).then(function (asset) {
+
+            });
+        };
 
         /*
          * Global helpers
@@ -101,22 +117,6 @@
             });
         };
 
-        $scope.importAsset = function (ev) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
-            $mdDialog.show({
-                controller: ['$scope', '$mdDialog', ImportAssetDialogCtrl],
-                templateUrl: '/views/anr/import.asset.html',
-                targetEvent: ev,
-                preserveScope: false,
-                scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: false,
-                fullscreen: useFullScreen,
-            }).then(function (asset) {
-
-            });
-        };
-
         $scope.createNewAsset = function (ev, asset) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
@@ -165,7 +165,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             AssetService.getAsset(asset.id).then(function (assetData) {
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', 'mdSelectMenu', 'ModelService', 'ConfigService', 'asset', CreateAssetDialogCtrl],
+                    controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'asset', CreateAssetDialogCtrl],
                     templateUrl: '/views/anr/create.assets.html',
                     targetEvent: ev,
                     preserveScope: false,
@@ -249,6 +249,33 @@
                 case 1: return gettextCatalog.getString('Primary');
                 case 2: return gettextCatalog.getString('Secondary');
             }
+        };
+
+        $scope.exportAsset = function (ev,item) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'mode', ExportAssetDialog],
+                templateUrl: '/views/dialogs/export.objlibs.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    mode: 'asset'
+                }
+            })
+                .then(function (exports) {
+                    $http.post('/api/asset/export', {id: item.id, password: exports.password}).then(function (data) {
+                        var contentD = data.headers('Content-Disposition'),
+                            contentT = data.headers('Content-Type');
+                        contentD = contentD.substring(0,contentD.length-1).split('filename="');
+                        contentD = contentD[contentD.length-1];
+                        DownloadService.downloadBlob(data.data, contentD,contentT);
+                        toastr.success(gettextCatalog.getString('The asset has been exported successfully.'), gettextCatalog.getString('Export successful'));
+                    })
+                });
         };
 
         /*
@@ -349,9 +376,11 @@
 
         $scope.editThreat = function (ev, threat) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $scope.controls = [];//hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
             ThreatService.getThreat(threat.id).then(function (threatData) {
+                $scope.controls = [{}];//hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', 'mdSelectMenu', '$q', 'ModelService', 'ThreatService', 'ConfigService', 'threat', CreateThreatDialogCtrl],
+                    controller: ['$scope', '$mdDialog', '$q', 'ModelService', 'ThreatService', 'ConfigService', 'threat', CreateThreatDialogCtrl],
                     templateUrl: '/views/anr/create.threats.html',
                     targetEvent: ev,
                     preserveScope: false,
@@ -380,6 +409,7 @@
                                     toastr.success(gettextCatalog.getString('The threat "{{threatLabel}}" has been updated successfully.',
                                         {threatLabel: threat.label1}), gettextCatalog.getString('Update successful'));
                                 }
+                                threat.theme = themeBackup;
                             },
 
                             function () {
@@ -529,9 +559,11 @@
 
         $scope.editVuln = function (ev, vuln) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $scope.controls = [];//hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
             VulnService.getVuln(vuln.id).then(function (vulnData) {
+                $scope.controls = [{}];//hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', 'mdSelectMenu', 'ModelService', 'ConfigService', 'vuln', CreateVulnDialogCtrl],
+                    controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'vuln', CreateVulnDialogCtrl],
                     templateUrl: '/views/anr/create.vulns.html',
                     targetEvent: ev,
                     preserveScope: false,
@@ -832,7 +864,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService', 'ConfigService', '$q', 'amv', CreateAmvDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService', 'ConfigService', 'AmvService', '$q', 'amv', CreateAmvDialogCtrl],
                 templateUrl: '/views/anr/create.amvs.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -880,10 +912,16 @@
 
         $scope.editAmv = function (ev, amv) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            if(amv == null){
+                return;
+            }
+            if(amv.id!=undefined){
+                amv = amv.id;
+            }
 
-            AmvService.getAmv(amv.id).then(function (amvData) {
+            AmvService.getAmv(amv).then(function (amvData) {
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService', 'ConfigService', '$q', 'amv', CreateAmvDialogCtrl],
+                    controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService', 'ConfigService', 'AmvService', '$q', 'amv', CreateAmvDialogCtrl],
                     templateUrl: '/views/anr/create.amvs.html',
                     targetEvent: ev,
                     preserveScope: false,
@@ -929,6 +967,11 @@
                     });
             });
         };
+
+        if($stateParams.showid !== undefined){
+            $scope.editAmv(null,$stateParams.showid);
+        }
+
 
         $scope.deleteAmv = function (ev, item) {
             var confirm = $mdDialog.confirm()
@@ -976,6 +1019,429 @@
             });
         };
 
+        /*
+         * OBJECTS LIBRARY TAB
+         */
+        var objLibTabSelected = false;
+        $scope.objlibs = TableHelperService.build('name1', 20, 1, '');
+
+        if ($rootScope.objlibs_query) {
+            $scope.objlibs.query = $rootScope.objlibs_query;
+            $scope.objlibs.previousQueryOrder = $scope.objlibs.query.order;
+        }
+
+        $scope.objlib_category_filter = 0;
+        $scope.objlib_asset_filter = 0;
+        $scope.objlib_lockswitch = false;
+        $scope.objlib_assets = [];
+
+        $scope.$watchGroup(['objlib_category_filter', 'objlib_asset_filter', 'objlib_lockswitch'], function (newValue, oldValue) {
+            if ($scope.objlib_category_filter == 0) {
+                $scope.objlib_lockswitch = false;
+            }
+
+            if (objLibTabSelected) {
+                // Refresh contents
+                $scope.updateObjlibs();
+            }
+        });
+
+        $scope.objlibAssetTypeStr = function (type) {
+            if (type == 'bdc') {
+                return gettextCatalog.getString('Knowledge base');
+            } else if (type == 'anr') {
+                return gettextCatalog.getString('Risk analysis');
+            } else {
+                return type;
+            }
+        }
+
+        $scope.objlibScopeStr = function (scope) {
+            switch (scope) {
+                case 1: return gettextCatalog.getString('Local');
+                case 2: return gettextCatalog.getString('Global');
+                default: return scope;
+            }
+        }
+
+        $scope.resetObjlibsFilters = function () {
+            $scope.objlib_category_filter = 0;
+            $scope.objlib_asset_filter = 0;
+            $scope.objlib_lockswitch = false;
+        };
+
+        $scope.selectCategoryFilter = function (id) {
+            $scope.objlib_category_filter = id;
+        };
+
+        $scope.selectObjlibsTab = function () {
+            $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'objlibs'});
+            objLibTabSelected = true;
+            TableHelperService.watchSearch($scope, 'objlibs.query.filter', $scope.objlibs.query, $scope.updateObjlibs, $scope.objlibs);
+
+            // Load all assets and categories to fill the md-select dropdowns
+            AssetService.getAssets({order: '-code', limit: 0}).then(function (data) {
+                $scope.objlib_assets = data.assets;
+            });
+            $scope.updateObjlibsTabCategoriesFilter();
+        };
+
+        $scope.deselectObjlibsTab = function () {
+            objLibTabSelected = false;
+            TableHelperService.unwatchSearch($scope.objlibs);
+        };
+
+        $scope.updateObjlibsTabCategoriesFilter = function () {
+            ObjlibService.getObjlibsCats({limit: 0}).then(function (data) {
+                var buildItemRecurse = function (children, depth) {
+                    var output = [];
+
+                    for (var i = 0; i < children.length; ++i) {
+                        var child = children[i];
+
+                        for (var j = 0; j < depth; ++j) {
+                            child.label1 = " >> " + child.label1;
+                        }
+
+                        output.push(child);
+
+                        if (child.child && child.child.length > 0) {
+                            var child_output = buildItemRecurse(child.child, depth + 1);
+                            output = output.concat(child_output);
+                        }
+                    }
+
+                    return output;
+                };
+
+                $scope.objlib_categories = buildItemRecurse(data.categories, 0);
+            });
+        };
+
+        $scope.updateObjlibs = function () {
+            var query = angular.copy($scope.objlibs.query);
+            if ($scope.objlib_category_filter > 0 || $scope.objlib_category_filter == -1) {
+                query.category = $scope.objlib_category_filter;
+            }
+            if ($scope.objlib_asset_filter > 0) {
+                query.asset = $scope.objlib_asset_filter;
+            }
+            query.lock = $scope.objlib_lockswitch;
+
+            if ($scope.objlibs.previousQueryOrder != $scope.objlibs.query.order) {
+                $scope.objlibs.query.page = query.page = 1;
+                $scope.objlibs.previousQueryOrder = $scope.objlibs.query.order;
+            }
+
+            $scope.objlibs.promise = ObjlibService.getObjlibs(query);
+            $scope.objlibs.promise.then(
+                function (data) {
+                    $scope.objlibs.items = data;
+                    $rootScope.objlibs_query = $scope.objlibs.query;
+                }
+            )
+        };
+
+        $scope.removeObjlibsFilter = function () {
+            TableHelperService.removeFilter($scope.objlibs);
+        };
+
+        $scope.createNewObjlib = function (ev, objlib) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            var isUpdate = (objlib && objlib.id);
+
+            $scope.objLibDialog = $mdDialog;
+            $scope.objLibDialog.show({
+                controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', CreateObjlibDialogCtrl],
+                templateUrl: '/views/anr/create.objlibs.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    mode: 'bdc',
+                    objLibDialog: $scope,
+                    objlib: objlib
+                }
+            })
+                .then(function (objlib) {
+                    if (objlib) {
+                        var cont = objlib.cont;
+                        objlib.cont = undefined;
+
+                        var objlibBackup = angular.copy(objlib);
+
+                        if (objlib.asset) {
+                            objlib.asset = objlib.asset.id;
+                        }
+
+                        if (objlib.rolfTag) {
+                            objlib.rolfTag = objlib.rolfTag.id;
+                        }
+
+                        if (isUpdate) {
+                            if( ! objlib.implicitPosition ){
+                                objlib.implicitPosition = 2;//à la fin
+                            }
+                            ObjlibService.updateObjlib(objlib,
+                                function () {
+                                    $scope.updateObjlibs();
+                                    $scope.updateObjlibsTabCategoriesFilter();
+                                    toastr.success(gettextCatalog.getString('The object "{{objlibLabel}}" has been updated successfully.',
+                                        {objlibLabel: objlib.label1}), gettextCatalog.getString('Update successful'));
+                                },
+
+                                function () {
+                                    $scope.createNewObjlib(ev, objlibBackup);
+                                }
+                            );
+                        } else {
+                            if( ! objlib.implicitPosition ){
+                                objlib.implicitPosition = 2;//à la fin
+                            }
+                            ObjlibService.createObjlib(objlib,
+                                function () {
+                                    $scope.updateObjlibs();
+                                    $scope.updateObjlibsTabCategoriesFilter();
+                                    toastr.success(gettextCatalog.getString('The object "{{objlibLabel}}" has been created successfully.',
+                                        {objlibLabel: objlib.label1}), gettextCatalog.getString('Creation successful'));
+
+                                    if (cont) {
+                                        $scope.createNewObjlib(ev);
+                                    }
+                                },
+
+                                function () {
+                                    $scope.createNewObjlib(ev, objlibBackup);
+                                }
+                            );
+                        }
+                    }
+                }, function () {
+                    $scope.updateObjlibs();
+                    $scope.updateObjlibsTabCategoriesFilter();
+                });
+        };
+
+        $scope.editObjlib = function (ev, objlib, dontFetch) {
+            if (objlib && objlib.id) {
+                if (dontFetch) {
+                    $scope.createNewObjlib(ev, objlib);
+                } else {
+                    ObjlibService.getObjlib(objlib.id).then(function (objlibData) {
+                        $scope.createNewObjlib(ev, objlibData);
+                    });
+                }
+            } else {
+                $scope.createNewObjlib(ev, objlib);
+            }
+        };
+
+        $scope.deleteObjlib = function (ev, item) {
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Are you sure you want to delete object "{{ label }}"?',
+                    {label: item.label1}))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .targetEvent(ev)
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                ObjlibService.deleteObjlib(item.id,
+                    function () {
+                        $scope.updateObjlibs();
+                        toastr.success(gettextCatalog.getString('The object "{{label}}" has been deleted.',
+                            {label: item.label1}), gettextCatalog.getString('Deletion successful'));
+                    }
+                );
+            });
+        };
+
+        $scope.deleteObjlibMass = function (ev, item) {
+            var count = $scope.objlibs.selected.length;
+            var outpromise = null;
+
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Are you sure you want to delete the {{count}} selected object(s)?',
+                    {count: count}))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .targetEvent(ev)
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                angular.forEach($scope.objlibs.selected, function (value, key) {
+                    ObjlibService.deleteObjlib(value.id,
+                        function () {
+                            if (outpromise) {
+                                $timeout.cancel(outpromise);
+                            }
+
+                            outpromise = $timeout(function () {
+                                toastr.success(gettextCatalog.getString('{{count}} objects have been deleted.',
+                                    {count: count}), gettextCatalog.getString('Deletion successful'));
+                                $scope.updateObjlibs();
+                            }, 350);
+                        }
+                    );
+                });
+
+                $scope.objlibs.selected = [];
+
+            }, function() {
+            });
+        };
+
+
+        /// ROLF
+        /*
+         * Global helpers
+         */
+        $scope.selectTagsTab = function (tab) {
+            switch (tab) {
+                case 'categories': $scope.currentTabIndex = 0; break;
+                case 'tags': $scope.currentTabIndex = 1; break;
+                case 'risks': $scope.currentTabIndex = 2; break;
+            }
+        }
+        $scope.selectTagsTab($scope.tab);
+
+        $scope.$on('$locationChangeSuccess', function (event, newUrl) {
+            var tabName = newUrl.substring(newUrl.lastIndexOf('/') + 1);
+            $scope.tab = tabName;
+            $scope.selectTab(tabName);
+        });
+
+        /**
+         * CATEGORIES
+         */
+        $scope.categories = TableHelperService.build('label1', 10, 1, '');
+
+        $scope.updateCategories = function () {
+            $scope.categories.promise = CategoryService.getCategories($scope.categories.query);
+            $scope.categories.promise.then(
+                function (data) {
+                    $scope.categories.items = data;
+                }
+            )
+        };
+        $scope.removeCategoriesFilter = function () {
+            TableHelperService.removeFilter($scope.categories);
+        };
+
+        $scope.selectCategoriesTab = function () {
+            $state.transitionTo('main.kb_mgmt.op_risk', {'tab': 'categories'});
+            TableHelperService.watchSearch($scope, 'categories.query.filter', $scope.categories.query, $scope.updateCategories, $scope.categories);
+        };
+
+        $scope.deselectCategoriesTab = function () {
+            TableHelperService.unwatchSearch($scope.categories);
+        };
+
+
+        $scope.createNewCategory = function (ev, category) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'ConfigService', 'category', CreateCategoryDialogCtrl],
+                templateUrl: '/views/dialogs/create.categories.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    'category': category
+                }
+            })
+                .then(function (category) {
+                    CategoryService.createCategory(category,
+                        function () {
+                            $scope.updateCategories();
+                            toastr.success(gettextCatalog.getString('The category "{{categoryLabel}}" has been created successfully.',
+                                {categoryLabel: category.label1}), gettextCatalog.getString('Creation successful'));
+                        },
+
+                        function () {
+                            $scope.createNewCategory(ev, category);
+                        }
+                    );
+                });
+        };
+
+        $scope.editCategory = function (ev, category) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            CategoryService.getCategory(category.id).then(function (categoryData) {
+                $mdDialog.show({
+                    controller: ['$scope', '$mdDialog', 'ConfigService', 'category', CreateCategoryDialogCtrl],
+                    templateUrl: '/views/dialogs/create.categories.html',
+                    targetEvent: ev,
+                    preserveScope: false,
+                    scope: $scope.$dialogScope.$new(),
+                    clickOutsideToClose: false,
+                    fullscreen: useFullScreen,
+                    locals: {
+                        'category': categoryData
+                    }
+                })
+                    .then(function (category) {
+                        CategoryService.updateCategory(category,
+                            function () {
+                                $scope.updateCategories();
+                                toastr.success(gettextCatalog.getString('The category "{{categoryLabel}}" has been updated successfully.',
+                                    {categoryLabel: category.label1}), gettextCatalog.getString('Update successful'));
+                            },
+
+                            function () {
+                                $scope.editCategory(ev, category);
+                            }
+                        );
+                    });
+            });
+        };
+
+        $scope.deleteCategory = function (ev, item) {
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Are you sure you want to delete category "{{ label }}"?',
+                    {label: item.label1}))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .targetEvent(ev)
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                CategoryService.deleteCategory(item.id,
+                    function () {
+                        $scope.updateCategories();
+                        toastr.success(gettextCatalog.getString('The category "{{label}}" has been deleted.',
+                            {label: item.label1}), gettextCatalog.getString('Deletion successful'));
+                    }
+                );
+            });
+        };
+
+        $scope.deleteCategoryMass = function (ev) {
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Are you sure you want to delete the {{count}} selected category(s)?',
+                    {count: $scope.categories.selected.length}))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .targetEvent(ev)
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                angular.forEach($scope.categories.selected, function (value, key) {
+                    CategoryService.deleteCategory(value.id);
+                });
+
+                $scope.updateCategories();
+                toastr.success(gettextCatalog.getString('{{count}} categories have been deleted.',
+                    {count: $scope.categories.selected.length}), gettextCatalog.getString('Deletion successful'));
+                $scope.categories.selected = [];
+
+            }, function() {
+            });
+        };
+
 
         /**
          * TAGS
@@ -1010,6 +1476,8 @@
                 controller: ['$scope', '$mdDialog', 'ConfigService', 'tag', CreateTagDialogCtrl],
                 templateUrl: '/views/anr/create.tags.html',
                 targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
@@ -1039,6 +1507,8 @@
                     controller: ['$scope', '$mdDialog', 'ConfigService', 'tag', CreateTagDialogCtrl],
                     templateUrl: '/views/anr/create.tags.html',
                     targetEvent: ev,
+                    preserveScope: false,
+                    scope: $scope.$dialogScope.$new(),
                     clickOutsideToClose: false,
                     fullscreen: useFullScreen,
                     locals: {
@@ -1175,6 +1645,8 @@
                 controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'CategoryService', 'TagService', 'risk', CreateRiskDialogCtrl],
                 templateUrl: '/views/anr/create.risks.html',
                 targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
@@ -1227,6 +1699,8 @@
                     controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'CategoryService', 'TagService', 'risk', CreateRiskDialogCtrl],
                     templateUrl: '/views/anr/create.risks.html',
                     targetEvent: ev,
+                    preserveScope: false,
+                    scope: $scope.$dialogScope.$new(),
                     clickOutsideToClose: false,
                     fullscreen: useFullScreen,
                     locals: {
@@ -1326,21 +1800,12 @@
         if (asset != undefined && asset != null) {
             $scope.asset = asset;
             var modelsIds = [];
-
-            for (var i = 0; i < $scope.asset.models.length; ++i) {
-                if ($scope.asset.models[i].id) {
-                    modelsIds.push($scope.asset.models[i].id);
-                } else {
-                    modelsIds.push($scope.asset.models[i]);
-                }
-            }
-
             $scope.asset.models = modelsIds;
         } else {
             $scope.asset = {
                 mode: 0,
                 code: '',
-                type: 1,
+                type: 2,
                 label1: '',
                 label2: '',
                 label3: '',
@@ -1371,37 +1836,6 @@
         };
     }
 
-    function ImportAssetDialogCtrl($scope, $mdDialog) {
-        $scope.dialog_mode = null;
-        $scope.file = [];
-        $scope.file_range = 0;
-
-        $scope.upgradeFileRange = function () {
-            $scope.file_range++;
-
-            for (var i = 0; i <= $scope.file_range; ++i) {
-                if ($scope.file[i] == undefined) {
-                    $scope.file[i] = {};
-                }
-            }
-        };
-
-        $scope.openAssetDetails = function (id) {
-            $scope.dialog_mode = 'asset_details';
-        };
-
-        $scope.cancel = function() {
-            $mdDialog.cancel();
-        };
-
-        $scope.create = function() {
-            if (Object.keys($scope.assetForm.$error).length == 0) {
-                $mdDialog.hide($scope.asset);
-            }
-        };
-    }
-
-
     function CreateThreatDialogCtrl($scope, $mdDialog, $q, ModelService, ThreatService, ConfigService, threat) {
         ModelService.getModels({isGeneric:0}).then(function (data) {
             $scope.models = data.models;
@@ -1415,15 +1849,6 @@
             $scope.threat = threat;
 
             var modelsIds = [];
-
-            for (var i = 0; i < $scope.threat.models.length; ++i) {
-                if ($scope.threat.models[i].id) {
-                    modelsIds.push($scope.threat.models[i].id);
-                } else {
-                    modelsIds.push($scope.threat.models[i]);
-                }
-            }
-
             $scope.threat.models = modelsIds;
 
             $scope.threat.c = ($scope.threat.c == 1);
@@ -1589,12 +2014,26 @@
         };
     }
 
-    function CreateAmvDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService, MeasureService, ConfigService, $q, amv) {
+    function CreateAmvDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService, MeasureService, ConfigService, AmvService, $q, amv) {
         $scope.languages = ConfigService.getLanguages();
         $scope.defaultLang = ConfigService.getDefaultLanguageIndex();
 
+
+        $scope.queryAmvs = function (asset_id) {
+            AmvService.getAmvs({limit: 0, asset: asset_id, order: 'position', amvid: $scope.amv.id}).then(function (data) {
+                $scope.asset_amvs = data.amvs;
+            });
+        };
+
+
         if (amv != undefined && amv != null) {
             $scope.amv = amv;
+            if (amv.asset && amv.asset.id) {
+                $scope.queryAmvs(amv.asset.id);
+            }
+            if (amv.previous && amv.previous.id) {
+                $scope.amv.previous = $scope.amv.previous.id;
+            }
         } else {
             $scope.amv = {
                 asset: null,
@@ -1603,7 +2042,7 @@
                 measure1: null,
                 measure2: null,
                 measure3: null,
-                position: 1,
+                implicitPosition: 2,
                 status: 1
             };
         }
@@ -1611,7 +2050,7 @@
         // Asset
         $scope.queryAssetSearch = function (query) {
             var promise = $q.defer();
-            AssetService.getAssets({filter: query}).then(function (e) {
+            AssetService.getAssets({filter: query, type: 2, status: 1}).then(function (e) {
                 promise.resolve(e.assets);
             }, function (e) {
                 promise.reject(e);
@@ -1623,6 +2062,7 @@
         $scope.selectedAssetItemChange = function (item) {
             if (item) {
                 $scope.amv.asset = item;
+                $scope.queryAmvs(item.id);
             }
         }
 
@@ -1687,11 +2127,54 @@
         };
 
         $scope.create = function() {
+            if ($scope.amv.implicitPosition == 3 && !$scope.amv.previous) {
+                $scope.amv.implicitPosition = 1;
+            }
+
             $mdDialog.hide($scope.amv);
         };
     }
 
+    function ExportAssetDialog($scope, $mdDialog, mode) {
+        $scope.mode = mode;
+        $scope.exportData = {
+            password: null
+        };
 
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.export = function() {
+            $mdDialog.hide($scope.exportData);
+        };
+    }
+
+
+    function CreateCategoryDialogCtrl($scope, $mdDialog, ConfigService, category) {
+        $scope.languages = ConfigService.getLanguages();
+        $scope.language = ConfigService.getDefaultLanguageIndex();
+
+        if (category != undefined && category != null) {
+            $scope.category = category;
+        } else {
+            $scope.category = {
+                code: '',
+                label1: '',
+                label2: '',
+                label3: '',
+                label4: ''
+            };
+        }
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.create = function() {
+            $mdDialog.hide($scope.category);
+        };
+    }
 
     function CreateTagDialogCtrl($scope, $mdDialog, ConfigService, tag) {
         $scope.languages = ConfigService.getLanguages();
@@ -1814,5 +2297,4 @@
             $mdDialog.hide($scope.risk);
         };
     }
-
 })();
