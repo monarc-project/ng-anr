@@ -712,7 +712,10 @@
         $scope.$watch('thresholds', function () {
             if ($scope.model && $scope.model.anr && thresholdsWatchSetup) {
                 // This structure holds (ROLF) thresholds, as well as scales ranges
-                AnrService.patchAnr($scope.model.anr.id, {
+                var service = AnrService;
+                if ($scope.OFFICE_MODE == 'FO') { service = ClientAnrService; }
+
+                service.patchAnr($scope.model.anr.id, {
                     seuil1: $scope.thresholds.thresholds.min,
                     seuil2: $scope.thresholds.thresholds.max,
                     seuilRolf1: $scope.thresholds.rolf_thresholds.min,

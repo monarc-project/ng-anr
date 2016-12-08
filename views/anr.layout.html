@@ -8,8 +8,8 @@
             <h2 style="margin-right: 8px">{{ ::model[_langField('label')] }}</h2>
 
             <div ng-if="OFFICE_MODE == 'FO'" layout="row" layout-align="start center" ng-repeat="(idx, step) in methodProgress" flex>
-                <div class="monarc-wizard step-bullet {{ isMethodStepComplete(step) ? step.color : '' }} method-menu-step-{{idx+1}}" layout="row" layout-align="center center" ng-click="showMethodBox(idx+1, step, $event)">
-                    <p class="txtcenter">{{ idx+1 }}</p>
+                <div class="monarc-wizard step-bullet {{ isMethodStepComplete(step) ? step.color : '' }} method-menu-step-{{idx+1}}" ng-click="showMethodBox(idx+1, step, $event)">
+                    <div flex class="txtcenter">{{ idx+1 }}</div>
                 </div>
 
                 <md-progress-linear class="{{ step.color }}" md-mode="determinate" ng-value="getStepProgress(step) * 100 / step.steps.length"></md-progress-linear>
@@ -249,7 +249,7 @@
 </script>
 
 <script type="text/ng-template" id="monarc-method.tmpl.html">
-    <div layout="column" class="md-padding md-monarc-method-box">
+    <div layout="column" class="md-padding-double md-monarc-method-box">
         <h2>{{ step.label }}</h2>
 
         <div layout="row" ng-repeat="subStep in step.steps" layout-align="start top">

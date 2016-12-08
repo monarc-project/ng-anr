@@ -446,6 +446,9 @@ h1.md-toolbar-tools {
 .md-padding {
     padding: 2px;
 }
+.md-padding-double {
+    padding: 8px;
+}
 md-chips.md-default-theme .md-chips, md-chips .md-chips {
     box-shadow: none !important;
 }
@@ -601,6 +604,10 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
     width: 32px;
     height: 32px;
     background-color: #9E9E9E;
+}
+
+.monarc-wizard.step-bullet > div {
+    padding-top: 8px;
 }
 
 .monarc-wizard.step-line {
