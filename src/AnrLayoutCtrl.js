@@ -108,6 +108,7 @@
                         $scope.updateInstances();
                         $scope.updateObjectsLibrary();
                         $scope.updateScales();
+                        updateMethodProgress();
                     }
 
                     isModelLoading = false;
@@ -371,50 +372,72 @@
 
 
         // Progress
-        $scope.methodProgress = [
-            {
-                color: 'green',
-                label: gettextCatalog.getString("Context setup"),
-                deliverable: gettextCatalog.getString("Context validation"),
-                steps: [
-                    {label: gettextCatalog.getString("Risks analysis context"), action: editEvalContext, anrField: 'contextAnaRisk', done: true},
-                    {label: gettextCatalog.getString("Trends evaluation, threats evaluation, synthesis"), action: editTrendsContext, done: true},
-                    {label: gettextCatalog.getString("Risks management context"), action: editEvalContext, anrField: 'contextGestRisk', done: true},
-                    {label: gettextCatalog.getString("Evaluation, acceptance and impact criterias setup"), action: selectScalesTab, done: true},
-                ]
-            },
-            {
-                color: 'blue',
-                label: gettextCatalog.getString("Context modeling"),
-                deliverable: gettextCatalog.getString("Model validation"),
-                steps: [
-                    {label: gettextCatalog.getString("Identification of assets, vulnerabilities and impacts assessment"), action: showAnrSummary, done: true},
-                    {label: gettextCatalog.getString("Synthesis of assets / impacts"), action: editEvalContext, anrField: 'synthAct', done: true},
-                ]
-            },
-            {
-                color: 'yellow',
-                label: gettextCatalog.getString("Risks evaluation and treatment"),
-                deliverable: gettextCatalog.getString("Final report"),
-                steps: [
-                    {label: gettextCatalog.getString("Risks estimation, evaluation and processing"), action: showAnrRisks, done: true},
-                    {label: gettextCatalog.getString("Risk treatment plan management"), action: editRisksContext, done: false},
-                ]
-            },
-            {
-                color: 'red',
-                label: gettextCatalog.getString("Implementation and monitoring"),
-                deliverable: null,
-                steps: [
-                    {label: gettextCatalog.getString("Management of the implementation of the risk treatment plan"), done: false},
-                ]
+        var updateMethodProgress = function () {
+            $scope.methodProgress = [
+                {
+                    color: 'green',
+                    label: gettextCatalog.getString("Context setup"),
+                    deliverable: gettextCatalog.getString("Context validation"),
+                    steps: [
+                        {label: gettextCatalog.getString("Risks analysis context"), action: editEvalContext, anrField: 'contextAnaRisk', progressField: 'initAnrContext'},
+                        {label: gettextCatalog.getString("Trends evaluation, threats evaluation, synthesis"), action: editTrendsContext, progressField: 'initEvalContext'},
+                        {label: gettextCatalog.getString("Risks management context"), action: editEvalContext, anrField: 'contextGestRisk', progressField: 'initRiskContext'},
+                        {label: gettextCatalog.getString("Evaluation, acceptance and impact criterias setup"), action: selectScalesTab, progressField: 'initDefContext'},
+                    ]
+                },
+                {
+                    color: 'blue',
+                    label: gettextCatalog.getString("Context modeling"),
+                    deliverable: gettextCatalog.getString("Model validation"),
+                    steps: [
+                        {label: gettextCatalog.getString("Identification of assets, vulnerabilities and impacts assessment"), action: showAnrSummary, progressField: 'modelImpacts'},
+                        {label: gettextCatalog.getString("Synthesis of assets / impacts"), action: editEvalContext, anrField: 'synthAct', progressField: 'modelSummary'},
+                    ]
+                },
+                {
+                    color: 'yellow',
+                    label: gettextCatalog.getString("Risks evaluation and treatment"),
+                    deliverable: gettextCatalog.getString("Final report"),
+                    steps: [
+                        {label: gettextCatalog.getString("Risks estimation, evaluation and processing"), action: showAnrRisks, progressField: 'evalRisks'},
+                        {label: gettextCatalog.getString("Risk treatment plan management"), action: editRisksContext, progressField: 'evalPlanRisks'},
+                    ]
+                },
+                {
+                    color: 'red',
+                    label: gettextCatalog.getString("Implementation and monitoring"),
+                    deliverable: null,
+                    steps: [
+                        {label: gettextCatalog.getString("Management of the implementation of the risk treatment plan"), progressField: 'manageRisks'},
+                    ]
+                }
+            ];
+
+
+            // Update done status
+            for (var i = 0; i < $scope.methodProgress.length; ++i) {
+                for (var j = 0; j < $scope.methodProgress[i].steps.length; ++j) {
+                    var obj = $scope.methodProgress[i].steps[j];
+                    obj.done = ($scope.model.anr[obj.progressField] == 1);
+                }
             }
-        ];
+        }
+
+        $scope.setMethodStepStatus = function (field, substep, done) {
+            var obj = {id: $scope.model.anr.id};
+            obj[field] = (done ? 0 : 1);
+
+            var ClientAnrService = $injector.get('ClientAnrService');
+            ClientAnrService.updateAnr(obj, function () {
+                $scope.model.anr[field] = obj[field];
+                substep.done = (obj[field] == 1);
+            })
+        };
 
         $scope.getStepProgress = function (step) {
             var progress = 0;
             for (var i = 0; i < step.steps.length; ++i) {
-                if (step.steps[i].done) {
+                if ($scope.model.anr[step.steps[i].progressField] == 1) {
                     ++progress;
                 }
             }
@@ -423,7 +446,7 @@
         };
 
         $scope.getMethodTextColor = function (step, subStep) {
-            if (subStep.done) {
+            if ($scope.model.anr[subStep.progressField] == 1) {
                 return 'txt-' + step.color;
             } else {
                 return '';
@@ -433,7 +456,7 @@
         $scope.isMethodStepComplete = function (step) {
             var complete = true;
             for (var i = 0; i < step.steps.length; ++i) {
-                if (!step.steps[i].done) {
+                if (!$scope.model.anr[step.steps[i].progressField]) {
                     complete = false;
                     break;
                 }
@@ -1131,10 +1154,11 @@
 
             var config = {
                 animation: animation,
-                controller: ['mdPanelRef', '$scope', 'step', MonarcMethodBoxCtrl],
+                controller: ['mdPanelRef', '$scope', 'step', 'setMethodStepStatus', MonarcMethodBoxCtrl],
                 templateUrl: 'monarc-method.tmpl.html', // inlined in anr.layout.html
                 locals: {
-                    'step': step
+                    'step': step,
+                    'setMethodStepStatus': $scope.setMethodStepStatus
                 },
                 position: position,
                 zIndex: 10,
@@ -1220,7 +1244,8 @@
 
     // Dialogs
 
-    function MonarcMethodBoxCtrl(mdPanelRef, $scope, step) {
+    function MonarcMethodBoxCtrl(mdPanelRef, $scope, step, setMethodStepStatus) {
+        $scope.setMethodStepStatus = setMethodStepStatus;
         $scope.step = step;
     }
 
