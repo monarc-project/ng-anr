@@ -9,11 +9,12 @@
                 </md-button>
             </div>
         </md-toolbar>
-        <md-dialog-content>
-            <div class="md-dialog-content">
-
-                <trix-editor angular-trix ng-model="context.text" style="min-height: 250px; border: 1px solid #AAAAAA;" class="md-padding"></trix-editor>
-            </div>
+        <md-dialog-content class="md-padding">
+            <md-card md-theme="light">
+                <md-card-content>
+                    <trix-editor angular-trix ng-model="context.text" style="min-height: 250px; border: 1px solid #AAAAAA;" class="md-padding"></trix-editor>
+                </md-card-content>
+            </md-card>
         </md-dialog-content>
         <md-dialog-actions layout="row">
             <span flex></span>
