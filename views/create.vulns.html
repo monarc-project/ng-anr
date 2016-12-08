@@ -17,7 +17,7 @@
                 <md-input-container class="md-block" flex>
                     <label translate>Language</label>
                     <md-icon>language</md-icon>
-                    <md-select ng-model="language" ng-change="switchLanguage()">
+                    <md-select ng-model="language" ng-change="switchLanguage()" ng-disabled="OFFICE_MODE == 'FO'">
                         <md-option ng-repeat="(lang_idx, lang) in languages" value="{{ lang_idx }}">{{ lang }}</md-option>
                     </md-select>
                 </md-input-container>
@@ -57,19 +57,21 @@
                     </div>
                 </md-input-container>
 
-                <md-subheader>{{ 'Specific models links' | translate }}</md-subheader>
+                <div ng-if="OFFICE_MODE == 'BO'">
+                    <md-subheader>{{ 'Specific models links' | translate }}</md-subheader>
 
-                <md-input-container class="md-block" layout="row" ng-if="models && models.length > 0" flex>
-                    <label translate>Models</label>
-                    <md-icon>class</md-icon>
-                    <md-select ng-disabled="vuln.mode != 1" multiple ng-model="vuln.models">
-                        <md-option ng-repeat="availModel in models" ng-value="availModel.id">{{ availModel[_langField('label')] }}</md-option>
-                    </md-select>
-                </md-input-container>
+                    <md-input-container class="md-block" layout="row" ng-if="models && models.length > 0" flex>
+                        <label translate>Models</label>
+                        <md-icon>class</md-icon>
+                        <md-select ng-disabled="vuln.mode != 1" multiple ng-model="vuln.models">
+                            <md-option ng-repeat="availModel in models" ng-value="availModel.id">{{ availModel[_langField('label')] }}</md-option>
+                        </md-select>
+                    </md-input-container>
 
-                <md-input-container class="md-block">
-                    <md-checkbox ng-disabled="vuln.mode != 1" ng-model="vuln.follow">{{ 'Force risks to follow movement' | translate }}</md-checkbox>
-                </md-input-container>
+                    <md-input-container class="md-block">
+                        <md-checkbox ng-disabled="vuln.mode != 1" ng-model="vuln.follow">{{ 'Force risks to follow movement' | translate }}</md-checkbox>
+                    </md-input-container>
+                </div>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">

@@ -1955,15 +1955,6 @@
             $scope.vuln = vuln;
 
             var modelsIds = [];
-
-            for (var i = 0; i < $scope.vuln.models.length; ++i) {
-                if ($scope.vuln.models[i].id) {
-                    modelsIds.push($scope.vuln.models[i].id);
-                } else {
-                    modelsIds.push($scope.vuln.models[i]);
-                }
-            }
-
             $scope.vuln.models = modelsIds;
         } else {
             $scope.vuln = {

@@ -13,6 +13,7 @@
         <md-dialog-content>
             <div class="md-dialog-content" layout="column">
                 <md-autocomplete
+                        ng-if="OFFICE_MODE == 'BO'"
                         flex
                         required
                         md-selected-item="amv.asset"
@@ -36,6 +37,8 @@
                         <div ng-message="required">{{ 'You must select an asset' | translate }}</div>
                     </div>
                 </md-autocomplete>
+
+                <p ng-if="OFFICE_MODE=='FO'"><b>{{ 'Asset:' | translate }}</b> {{ amv.asset.code }} - {{ amv.asset[_langField('label')]}}</p>
 
                 <md-autocomplete
                         flex
