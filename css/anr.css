@@ -702,3 +702,8 @@ md-progress-linear.yellow .md-container {
 .md-checkbox-no-bottom-margin {
     margin-bottom: 0;
 }
+
+/* Trix buttons */
+trix-toolbar button.link, trix-toolbar button.strike, trix-toolbar button.code {
+    display: none
+}
