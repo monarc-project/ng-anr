@@ -29,8 +29,9 @@
                         <p ng-if="threats.length === 0"><em>{{ 'No threats are listed in your analysis.' | translate }}</em></p>
 
                         <div layout="row" layout-align="start center" ng-if="threats.length > 0">
-                            <p class="md-subhead">{{ 'Threats analysis' | translate }} - {{ display.currentThreat + 1 }} / {{ threats.length }}</p>
+                            <p class="md-subhead md-padding-left">{{ 'Threats analysis' | translate }} - {{ display.currentThreat + 1 }} / {{ threats.length }}</p>
                             <span flex></span>
+                            <md-progress-circular md-diameter="24" ng-if="threatLoading"></md-progress-circular>
                             <md-select ng-model="display.currentThreat" md-on-close="updateThreat()">
                                 <md-option ng-repeat="threat in threats" ng-value="$index">{{ threat[_langField('label')] }} - {{ threat[_langField('description')] }}</md-option>
                             </md-select>
@@ -139,13 +140,17 @@
 
                 <md-tab label="{{ 'Summary' | translate }}">
                     <div class="md-padding">
-                        <trix-editor angular-trix ng-model="anr.synthThreat" style="min-height: 250px; border: 1px solid #AAAAAA;" class="md-padding"></trix-editor>
+                        <md-card md-theme="light">
+                            <md-card-content>
+                                <trix-editor angular-trix ng-model="anr.synthThreat" style="min-height: 250px; border: 1px solid #AAAAAA;" class="md-padding"></trix-editor>
 
-                        <div layout="row" layout-align="end center">
-                            <md-button ng-click="saveSummary()" type="submit" class="md-accent md-hue-3">
-                                {{ 'Save' | translate }}
-                            </md-button>
-                        </div>
+                                <div layout="row" layout-align="end center">
+                                    <md-button ng-click="saveSummary()" type="submit" class="md-primary">
+                                        {{ 'Save' | translate }}
+                                    </md-button>
+                                </div>
+                            </md-card-content>
+                        </md-card>
                     </div>
                 </md-tab>
             </md-tabs>

@@ -1457,8 +1457,11 @@
         });
 
         $scope.updateThreat = function () {
+            $scope.threatLoading = true;
             var threat = $scope.threats[$scope.display.currentThreat];
+            $scope.currentThreatObj = threat;
             ThreatService.getThreat(threat.id).then(function (data) {
+                $scope.threatLoading = false;
                 $scope.currentThreatObj = data;
             })
         };
@@ -1474,7 +1477,10 @@
         };
 
         $scope.saveThreat = function () {
-            ThreatService.updateThreat($scope.currentThreatObj, function () {
+            var copy = angular.copy($scope.currentThreatObj);
+            copy.theme = copy.theme.id;
+
+            ThreatService.updateThreat(copy, function () {
                 toastr.success(gettextCatalog.getString("Threat assessment saved successfully"));
                 $scope.updateThreat();
             });
