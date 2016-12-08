@@ -736,7 +736,7 @@
             if ($scope.model && $scope.model.anr && thresholdsWatchSetup) {
                 // This structure holds (ROLF) thresholds, as well as scales ranges
                 var service = AnrService;
-                if ($scope.OFFICE_MODE == 'FO') { service = ClientAnrService; }
+                if ($scope.OFFICE_MODE == 'FO') { service = $injector.get('ClientAnrService'); }
 
                 service.patchAnr($scope.model.anr.id, {
                     seuil1: $scope.thresholds.thresholds.min,
