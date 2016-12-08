@@ -26,6 +26,7 @@
         $scope.GlobalResizeMenuContentHide = false;
         var minWidthMenu = 80;
         var isModelLoading = false;
+        var __panel = null;
 
         $transitions.onBefore({}, function () {
             $scope.resetSheet();
@@ -37,6 +38,12 @@
                     $rootScope.anr_selected_object_id = null;
                 }
             });
+
+            if (__panel) {
+                __panel.close();
+            }
+
+            $mdDialog.cancel();
 
         });
 
@@ -1170,11 +1177,12 @@
                 openFrom: ev,
                 escapeToClose: true,
                 clickOutsideToClose: true,
-                focusOnOpen: false,
+                focusOnOpen: true,
                 hasBackdrop: false,
             };
 
-            $mdPanel.open(config);
+            __panel = $mdPanel.create(config);
+            __panel.open();
         }
 
         $scope.openSnapshotTools = function (ev) {
