@@ -599,7 +599,7 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
 
 /** MONARC METHOD WIZARD */
 .monarc-wizard, .monarc-wizard span {
-    transition: background-color 0.5s;
+    transition: background-color 0.25s;
     cursor: pointer;
 }
 .monarc-wizard.step-bullet {
@@ -637,38 +637,38 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
     background-color: #4CAF50;
 }
 .monarc-wizard.step-bullet.green:hover, .monarc-wizard.step-line:hover span.green {
-    background-color: #A5D6A7;
+    background-color: #1B5E20;
 }
 
 .monarc-wizard.step-bullet.blue, .monarc-wizard.step-line span.blue {
     background-color: #03A9F4;
 }
 .monarc-wizard.step-bullet.blue:hover, .monarc-wizard.step-line:hover span.blue {
-    background-color: #81D4FA;
+    background-color: #01579B;
 }
 
 .monarc-wizard.step-bullet.yellow, .monarc-wizard.step-line span.yellow {
-    background-color: #FFEB3B;
+    background-color: #FF9800;
 }
 .monarc-wizard.step-bullet.yellow:hover, .monarc-wizard.step-line:hover span.yellow {
-    background-color: #FFF59D;
+    background-color: #E65100;
 }
 
 .monarc-wizard.step-bullet.red, .monarc-wizard.step-line span.red {
     background-color: #F44336;
 }
 .monarc-wizard.step-bullet.red:hover, .monarc-wizard.step-line:hover span.red {
-    background-color: #EF9A9A;
+    background-color: #B71C1C;
 }
 
 md-progress-linear.blue .md-bar {
     background: #03A9F4;
 }
 md-progress-linear.yellow .md-bar {
-    background: #FFEB3B;
+    background: #FF9800;
 }
 md-progress-linear.yellow .md-container {
-    background-color: #FFF9C4;
+    background-color: #FFF3E0;
 }
 
 .md-monarc-method-box {
