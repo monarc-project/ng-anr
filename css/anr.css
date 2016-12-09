@@ -710,3 +710,7 @@ md-progress-linear.yellow .md-container {
 trix-toolbar button.link, trix-toolbar button.strike, trix-toolbar button.code {
     display: none
 }
+
+.trix-margin {
+    padding: 24px;
+}
