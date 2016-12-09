@@ -50,6 +50,31 @@
             self.AssetResource.patch({assetId: id}, params, success, error);
         };
 
+        self.CommonAssetResource = $resource('/api/' + anr + 'assets/importcomm/:assetId', { assetId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
+            {
+                'update': {
+                    method: 'PUT'
+                },
+                'patch': {
+                    method: 'PATCH'
+                },
+                'query': {
+                    isArray: false
+                }
+            });
+
+        var getAssetsCommon = function (params) {
+            return self.CommonAssetResource.query(params).$promise;
+        };
+
+        var getAssetCommon = function (id) {
+            return self.CommonAssetResource.query({assetId: id}).$promise;
+        };
+
+        var importAssetCommon = function(id, success, error) {
+            new self.CommonAssetResource({asset: id}).$save(success, error);
+        };
+
         return {
             getAssets: getAssets,
             getAsset: getAsset,
@@ -57,7 +82,10 @@
             deleteAsset: deleteAsset,
             deleteMassAsset: deleteMassAsset,
             updateAsset: updateAsset,
-            patchAsset: patchAsset
+            patchAsset: patchAsset,
+            getAssetsCommon: getAssetsCommon,
+            getAssetCommon: getAssetCommon,
+            importAssetCommon: importAssetCommon,
         };
     }
 

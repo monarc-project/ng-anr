@@ -23,13 +23,16 @@
         $scope.importAsset = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', ImportAssetDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'AssetService', 'toastr', 'gettextCatalog', 'assetTypeStr', ImportAssetDialogCtrl],
                 templateUrl: '/views/anr/import.asset.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
+                locals: {
+                    'assetTypeStr': $scope.assetTypeStr
+                }
             }).then(function (asset) {
 
             });
@@ -2290,10 +2293,15 @@
     }
 
     /*** FO ***/
-    function ImportAssetDialogCtrl($scope, $mdDialog) {
+    function ImportAssetDialogCtrl($scope, $mdDialog, AssetService, toastr, gettextCatalog, assetTypeStr) {
         $scope.dialog_mode = null;
+        $scope.assetTypeStr = assetTypeStr;
         $scope.file = [];
         $scope.file_range = 0;
+
+        AssetService.getAssetsCommon({limit: 0}).then(function (data) {
+            $scope.assets = data.assets;
+        });
 
         $scope.upgradeFileRange = function () {
             $scope.file_range++;
@@ -2305,8 +2313,25 @@
             }
         };
 
-        $scope.openAssetDetails = function (id) {
+        $scope.openAssetDetails = function (asset) {
             $scope.dialog_mode = 'asset_details';
+            $scope.asset_details = asset;
+
+            AssetService.getAssetCommon(asset.id).then(function (data) {
+                $scope.asset_details = data;
+            })
+        };
+
+        $scope.closeAssetDetails = function () {
+            $scope.dialog_mode = 'common';
+        };
+
+        $scope.importAssetCommon = function () {
+            AssetService.importAssetCommon($scope.asset_details.id, function () {
+                toastr.success(gettextCatalog.getString("Asset imported successfully"));
+                $scope.dialog_mode = 'common';
+            });
+
         };
 
         $scope.cancel = function () {
