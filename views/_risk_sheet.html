@@ -72,7 +72,6 @@
                     flex
                     md-selected-item="rec_edit.rec"
                     md-search-text="recSearchText"
-                    md-selected-item-change="selectedRecItemChange(item)"
                     md-items="item in queryRecSearch(recSearchText)"
                     md-item-text="item.description"
                     md-delay="300"
@@ -80,7 +79,7 @@
                     md-input-name="rec"
                     md-floating-label="{{ 'Recommendation' | translate }}">
                 <md-item-template>
-                    <span md-highlight-text="recSearchText" md-highlight-flags="^i">{{ item.description }}</span>
+                    <span md-highlight-text="recSearchText" md-highlight-flags="^i">{{ item.code }} - {{ item.description }}</span>
                 </md-item-template>
 
                 <md-not-found>
@@ -88,16 +87,40 @@
                 </md-not-found>
             </md-autocomplete>
 
-            <md-button>
+            <md-button ng-click="attachRecommandation()" ng-disabled="!rec_edit.rec">
                 <md-icon>link</md-icon>
                 {{ 'Attach' | translate }}
             </md-button>
-            <md-button>
+            <md-button ng-click="createRecommandation($event)">
                 <md-icon>add</md-icon>
                 {{ 'Create new recommendation' | translate }}
             </md-button>
         </div>
 
+        <md-list>
+            <md-list-item class="md-3-line" ng-repeat="recommandation in recommandations">
+                <div class="md-padding-double md-list-item-text" kayout="column">
+                    <h3>#{{ recommandation.recommandation.code }} <span ng-repeat="i in range(1, recommandation.recommandation.importance)">&starf;</span></h3>
+                    <h4>{{ recommandation.recommandation.description }}</h4>
+                    <div layout="column">
+                        <b translate>Security measures:</b>
+                        <ul class="no-list-style">
+                            <li ng-repeat="measure in recommandation.measures"><b>{{ measure.code }}</b> - {{ measure[_langField('description')] }}
+                                <md-button class="md-icon-button" ng-click="detachMeasureFromRecommandation($event, recommandation, measure)">
+                                    <md-icon>delete</md-icon>
+                                </md-button>
+                            </li>
+                            <li><md-button ng-click="attachMeasureToRecommandation($event, recommandation)"><md-icon>add</md-icon> {{ 'Add a measure' | translate }}</md-button></li>
+                        </ul>
+                        <div layout="row">
+                            <md-button ng-click="detachRecommandation($event, recommandation)">{{ 'Detach' | translate }}</md-button>
+                            <md-button ng-click="editRecommandation($event, recommandation)">{{ 'Edit' | translate }}</md-button>
+                        </div>
+                    </div>
+                </div>
+                <md-divider></md-divider>
+            </md-list-item>
 
+        </md-list>
     </form>
 </div>
