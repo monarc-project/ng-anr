@@ -238,7 +238,7 @@
 
         $scope.$watchGroup(['risks_filters.order', 'risks_filters.order_direction'], function (newValue, oldValue) {
             if (newValue != oldValue) {
-                if ($state.current.name == "main.kb_mgmt.models.details") {
+                if ($state.current.name == "main.kb_mgmt.models.details" || $state.current.name == 'main.project.anr') {
                     $scope.updateAnrRisksTable();
                     $scope.updateAnrRisksOpTable();
                 } else {
