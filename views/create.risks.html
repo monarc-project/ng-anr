@@ -47,7 +47,8 @@
 
                 <md-chips ng-model="risk.categories"
                           md-autocomplete-snap
-                          md-require-match="true">
+                          md-require-match="true"
+                          ng-if="OFFICE_MODE == 'BO'">
                     <md-autocomplete
                             md-selected-item="selectedCategoryItem"
                             md-search-text="categorySearchText"

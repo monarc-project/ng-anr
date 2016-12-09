@@ -509,10 +509,9 @@
                 <table md-table md-row-select multiple ng-model="risks.selected" md-progress="risks.promise">
                     <thead md-head md-order="risks.query.order" md-on-reorder="updateRisks">
                     <tr md-row>
-                        <th md-column><span translate>Categories</span></th>
                         <th md-column><span translate>Tags</span></th>
                         <th md-column md-order-by="code"><span translate>Code</span></th>
-                        <th md-column md-order-by="label1"><span translate>Label</span></th>
+                        <th md-column md-order-by="{{ _langField('label') }}"><span translate>Label</span></th>
                         <th md-column><span translate>Actions</span></th>
                     </tr>
                     </thead>
@@ -520,7 +519,6 @@
                     <tbody md-body>
                     <tr md-row md-select="risk" md-select-id="id"
                         ng-repeat="risk in risks.items.risks">
-                        <td md-cell><md-chips readonly="true" ng-model="risk.categories"><md-chip-template>{{$chip.code}}</md-chip-template></md-chips></td>
                         <td md-cell><md-chips readonly="true" ng-model="risk.tags"><md-chip-template>{{$chip.code}}</md-chip-template></md-chips></td>
                         <td md-cell>{{ risk.code }}</td>
                         <td md-cell>{{ risk[_langField('label')] }}</td>
