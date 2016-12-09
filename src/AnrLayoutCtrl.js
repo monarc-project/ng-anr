@@ -881,6 +881,13 @@
             });
         };
 
+        $scope.deleteAnr = function (ev) {
+            $scope.deleteClientAnrGlobal(ev, $scope.model.anr, function () {
+                $state.transitionTo('main.project');
+            });
+        };
+
+
         $scope.editAnrInfo = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 

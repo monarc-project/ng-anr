@@ -2288,4 +2288,35 @@
             $mdDialog.hide($scope.risk);
         };
     }
+
+    /*** FO ***/
+    function ImportAssetDialogCtrl($scope, $mdDialog) {
+        $scope.dialog_mode = null;
+        $scope.file = [];
+        $scope.file_range = 0;
+
+        $scope.upgradeFileRange = function () {
+            $scope.file_range++;
+
+            for (var i = 0; i <= $scope.file_range; ++i) {
+                if ($scope.file[i] == undefined) {
+                    $scope.file[i] = {};
+                }
+            }
+        };
+
+        $scope.openAssetDetails = function (id) {
+            $scope.dialog_mode = 'asset_details';
+        };
+
+        $scope.cancel = function () {
+            $mdDialog.cancel();
+        };
+
+        $scope.create = function () {
+            if (Object.keys($scope.assetForm.$error).length == 0) {
+                $mdDialog.hide($scope.asset);
+            }
+        };
+    }
 })();
