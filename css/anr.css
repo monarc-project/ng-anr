@@ -314,7 +314,7 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 .tbl-risk-calc td, .tbl-risk-calc th {
     width: 25px;
     height: 25px;
-    color: white;
+    color: #333333;
     font-weight: bold;
 }
 
@@ -324,14 +324,17 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 
 .tbl-risk-calc .green, .tbl-risk-calc.green {
     background: #4CAF50;
+    color: white;
 }
 
 .tbl-risk-calc .orange, .tbl-risk-calc.orange {
     background: #FF9800;
+    color: white;
 }
 
 .tbl-risk-calc .red, .tbl-risk-calc.red {
     background: #F44336;
+    color: white;
 }
 
 .anr-scales-demo-block {
