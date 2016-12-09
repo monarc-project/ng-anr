@@ -47,8 +47,6 @@
                 }
                 isInstanceLoading = false;
 
-                $scope.oprisks = [];
-
                 $scope.updateInstanceRisks();
                 if ($scope.instance.asset.type == 1) {
                     $scope.updateInstanceRisksOp();
@@ -69,7 +67,7 @@
             }
 
             AnrService.getInstanceRisks($scope.model.anr.id, $scope.instance.id, $scope.risks_filters).then(function(data) {
-                if (!$scope.risks || data.length != $scope.risks.length) {
+                if (!$scope.risks || data.risks.length != $scope.risks.length) {
                     $scope.risks_total = data.count;
                     $scope.risks = data.risks; // for the _table_risks.html partial
                 } else {
