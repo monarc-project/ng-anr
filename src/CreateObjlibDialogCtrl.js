@@ -5,6 +5,10 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
     $scope.assetSearchText = '';
     $scope.categories = [];
 
+    if ($scope.OFFICE_MODE == 'FO') {
+        $scope.language = $scope.getAnrLanguage();
+    }
+
     if (objlib != undefined && objlib != null) {
         $scope.objlib = objlib;
 

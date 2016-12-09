@@ -121,7 +121,7 @@
                 </div>
 
 
-                <md-input-container class="md-block" layout="row" flex>
+                <md-input-container class="md-block" layout="row" ng-if="OFFICE_MODE == 'BO'" flex>
                     <label translate>Mode</label>
                     <md-icon>view_list</md-icon>
                     <md-select ng-model="threat.mode">
