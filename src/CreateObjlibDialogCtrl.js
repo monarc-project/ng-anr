@@ -266,6 +266,9 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
     $scope.showConfirmDeletion = false;
     $scope.categories = categories;
 
+    if ($scope.OFFICE_MODE == 'FO') {
+        $scope.language = $scope.getAnrLanguage();
+    }
 
     $scope.destroy = function() {
         $scope.showConfirmDeletion = true;
