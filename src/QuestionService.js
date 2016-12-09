@@ -14,6 +14,9 @@
                 'update': {
                     method: 'PUT'
                 },
+                'patch': {
+                    method: 'PATCH'
+                },
                 'query': {
                     isArray: false
                 }
@@ -33,6 +36,10 @@
 
         var updateQuestion = function (params, success, error) {
             self.QuestionResource.update(params, success, error);
+        };
+
+        var patchQuestion = function (id, params, success, error) {
+            self.QuestionResource.patch({questionId: id}, params, success, error);
         };
 
         var deleteQuestion = function (id, success, error) {
@@ -80,6 +87,7 @@
             createQuestion: createQuestion,
             deleteQuestion: deleteQuestion,
             updateQuestion: updateQuestion,
+            patchQuestion: patchQuestion,
 
             getChoices: getChoices,
             getChoice: getChoice,

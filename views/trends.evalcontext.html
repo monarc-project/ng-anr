@@ -15,13 +15,13 @@
                     <div layout="column" class="md-padding md-padding-left md-padding-right">
                         <md-input-container ng-repeat="question in questions">
                             <label>{{ question['label' + anr.language] }}</label>
-                            <textarea ng-model="assessment[question.id]" rows="3"></textarea>
+                            <textarea ng-model="question.response" rows="3"></textarea>
                         </md-input-container>
                     </div>
 
                     <div layout="row" layout-align="end center">
-                        <md-button ng-click="create()" type="submit" class="md-accent md-hue-3">
-                            {{ 'Update' | translate }}
+                        <md-button ng-click="saveQuestions()" type="submit" class="md-accent md-hue-3">
+                            {{ 'Save' | translate }}
                         </md-button>
                     </div>
                 </md-tab>

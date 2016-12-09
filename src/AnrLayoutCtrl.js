@@ -1492,8 +1492,19 @@
         $scope.display = {};
 
         QuestionService.getQuestions().then(function (data) {
-            $scope.questions = data.questions;
+            $scope.questions = angular.copy(data.questions);
+            $scope.questionsOriginal = angular.copy(data.questions);
         })
+
+        $scope.saveQuestions = function () {
+            for (var i = 0; i < $scope.questions.length; ++i) {
+                if ($scope.questions[i].response != $scope.questionsOriginal[i].response) {
+                    QuestionService.patchQuestion($scope.questions[i].id, {response: $scope.questions[i].response});
+                }
+            }
+
+            toastr.success(gettextCatalog.getString("Trends assessment saved successfully"));
+        };
 
         ThreatService.getThreats({limit: 0}).then(function (data) {
             $scope.threats = data.threats;
