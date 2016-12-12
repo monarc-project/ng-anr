@@ -43,7 +43,11 @@
         };
 
         var deleteMassAmv = function (ids, success, error) {
-            MassDeleteService.deleteMass('/api/amvs', ids, success, error);
+            if ($rootScope.OFFICE_MODE == 'FO') {
+                MassDeleteService.deleteMass('/api/client-anr/' + $rootScope.getUrlAnrId() + '/amvs', ids, success, error);
+            } else {
+                MassDeleteService.deleteMass('/api/amvs', ids, success, error);
+            }
         };
 
         var patchAmv = function (id, params, success, error) {

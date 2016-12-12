@@ -43,7 +43,11 @@
         };
 
         var deleteMassMeasure = function (ids, success, error) {
-            MassDeleteService.deleteMass('/api/measures', ids, success, error);
+            if ($rootScope.OFFICE_MODE == 'FO') {
+                MassDeleteService.deleteMass('/api/client-anr/' + $rootScope.getUrlAnrId() + '/measures', ids, success, error);
+            } else {
+                MassDeleteService.deleteMass('/api/measures', ids, success, error);
+            }
         }
 
         var patchMeasure = function (id, params, success, error) {

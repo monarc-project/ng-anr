@@ -56,7 +56,11 @@
         };
 
         var deleteMassThreat = function (ids, success, error) {
-            MassDeleteService.deleteMass('/api/threats', ids, success, error);
+            if ($rootScope.OFFICE_MODE == 'FO') {
+                MassDeleteService.deleteMass('/api/client-anr/' + $rootScope.getUrlAnrId() + '/threats', ids, success, error);
+            } else {
+                MassDeleteService.deleteMass('/api/threats', ids, success, error);
+            }
         };
 
         var patchThreat = function (id, params, success, error) {

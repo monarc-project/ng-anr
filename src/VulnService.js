@@ -43,7 +43,11 @@
         };
 
         var deleteMassVuln = function (ids, success, error) {
-            MassDeleteService.deleteMass('/api/vulnerabilities', ids, success, error);
+            if ($rootScope.OFFICE_MODE == 'FO') {
+                MassDeleteService.deleteMass('/api/client-anr/' + $rootScope.getUrlAnrId() + '/vulnerabilities', ids, success, error);
+            } else {
+                MassDeleteService.deleteMass('/api/vulnerabilities', ids, success, error);
+            }
         };
 
         var patchVuln = function (id, params, success, error) {

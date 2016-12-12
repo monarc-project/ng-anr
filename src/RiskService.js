@@ -40,7 +40,11 @@
         };
 
         var deleteMassRisk = function (ids, success, error) {
-            MassDeleteService.deleteMass('/api/rolf-risks', ids, success, error);
+            if ($rootScope.OFFICE_MODE == 'FO') {
+                MassDeleteService.deleteMass('/api/client-anr/' + $rootScope.getUrlAnrId() + '/rolf-risks', ids, success, error);
+            } else {
+                MassDeleteService.deleteMass('/api/rolf-risks', ids, success, error);
+            }
         };
 
         return {

@@ -43,7 +43,12 @@
         };
 
         var deleteMassAsset = function (ids, success, error) {
-            MassDeleteService.deleteMass('/api/assets', ids, success, error);
+            if ($rootScope.OFFICE_MODE == 'FO') {
+                MassDeleteService.deleteMass('/api/client-anr/' + $rootScope.getUrlAnrId() + '/assets', ids, success, error);
+            } else {
+                MassDeleteService.deleteMass('/api/' + anr + 'assets', ids, success, error);
+            }
+
         };
 
         var patchAsset = function (id, params, success, error) {
