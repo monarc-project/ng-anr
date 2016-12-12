@@ -401,7 +401,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'anr', 'subStep', MethodEditContextDialog],
+                controller: ['$scope', '$mdDialog', 'GuideService', 'anr', 'subStep', MethodEditContextDialog],
                 templateUrl: '/views/anr/edit.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -1598,11 +1598,22 @@
         };
     }
 
-    function MethodEditContextDialog($scope, $mdDialog, anr, subStep) {
+    function MethodEditContextDialog($scope, $mdDialog, GuideService, anr, subStep) {
         $scope.subStep = subStep;
+        $scope.guideVisible = false;
+        
+        GuideService.getGuides();
 
         $scope.context = {
             text: anr[subStep.anrField]
+        };
+
+        $scope.trixInitialize = function(e, editor) {
+            $scope.trix = editor;
+        };
+
+        $scope.insertItem = function (i) {
+            $scope.trix.insertString("Hello " + i);
         };
 
         $scope.cancel = function() {

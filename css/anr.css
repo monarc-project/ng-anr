@@ -714,3 +714,8 @@ trix-toolbar button.link, trix-toolbar button.strike, trix-toolbar button.code {
 .trix-margin {
     padding: 24px;
 }
+.trix-info-toolbar-button {
+    position: relative;
+    float: right;
+    margin-top: -8px;
+}
