@@ -119,7 +119,6 @@
                                     <td md-cell>
                                         <md-button class="md-icon-button" aria-title="{{ node[_langField('name')] }}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></md-button>
                                         <md-button class="md-icon-button" aria-title="{{ 'Detach' | translate }}" ng-click="detachInstance($event,node)""><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></md-button>
-                                         <!--"-->
                                     </td>
                                 </tr>
                             </tbody>
@@ -183,7 +182,7 @@
     <a ng-if="mode == 'anr'" ui-sref="main.kb_mgmt.models.details.object({objectId: node.id})"><md-icon>{{ node.children && node.children.length > 0 ? 'add': 'note' }}</md-icon> {{ node[_langField('name')] }}</a>
     <md-button class="md-icon-button" ng-click="moveComponent(node, 'up')" ng-disabled="$index==0"><md-icon>arrow_upward</md-icon></md-button>
     <md-button class="md-icon-button" ng-click="moveComponent(node, 'down')" ng-disabled="$index==composition.length-1"><md-icon>arrow_downward</md-icon></md-button>
-    <md-button class="md-icon-button" ng-click="deleteCompositionItem($event, node)"><md-icon>delete</md-icon></md-button>
+    <md-button class="md-icon-button" ng-click="deleteCompositionItem($event, node)"><md-icon>content_cut</md-icon></md-button>
 
     <ul ng-if="node.children && node.children.length > 0">
         <li ng-repeat="node in node.children"
