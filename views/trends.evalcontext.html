@@ -51,7 +51,7 @@
                             <tr>
                                 <td rowspan="2">
                                     {{ 'Accidental cause' | translate }}<br />
-                                    <md-checkbox ng-model="currentThreatObj.isAccidental" ng-true-value="1" ng-false-value="0">{{ 'conceivable' | translate }}</md-checkbox>
+                                    <md-checkbox ng-model="currentThreatObj.isAccidental" ng-true-value="true" ng-false-value="false">{{ 'conceivable' | translate }}</md-checkbox>
                                 </td>
                                 <td><b>{{ 'Description:' | translate }}</b> {{ currentThreatObj[_langField('descAccidental')] }}</td>
                             </tr>
@@ -61,7 +61,7 @@
                             <tr>
                                 <td rowspan="2">
                                     {{ 'Deliberate cause' | translate }}<br />
-                                    <md-checkbox ng-model="currentThreatObj.isDeliberate" ng-true-value="1" ng-false-value="0">{{ 'conceivable' | translate }}</md-checkbox>
+                                    <md-checkbox ng-model="currentThreatObj.isDeliberate" ng-true-value="true" ng-false-value="false">{{ 'conceivable' | translate }}</md-checkbox>
                                 </td>
                                 <td><b>{{ 'Description:' | translate }}</b> {{ currentThreatObj[_langField('descDeliberate')] }}</td>
                             </tr>
