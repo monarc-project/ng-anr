@@ -359,7 +359,7 @@
                 fullscreen: useFullScreen,
             }).then(function (measure_id) {
                 var RecommandationService = $injector.get('ClientRecommandationService');
-                RecommandationService.attachMeasureToRecommandation($scope.model.anr.id, recommandation.id, measure_id, function () {
+                RecommandationService.attachMeasureToRecommandation($scope.model.anr.id, recommandation.recommandation.id, measure_id, function () {
                     toastr.success(gettextCatalog.getString("Measure attached to recommendation"));
                     updateRecommandations();
                 });
