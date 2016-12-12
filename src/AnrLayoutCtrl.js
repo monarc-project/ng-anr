@@ -1601,8 +1601,37 @@
     function MethodEditContextDialog($scope, $mdDialog, GuideService, anr, subStep) {
         $scope.subStep = subStep;
         $scope.guideVisible = false;
-        
-        GuideService.getGuides();
+
+        $scope.toggleGuide = function () {
+            $scope.guideVisible = !$scope.guideVisible;
+
+            if (!$scope.guide && $scope.guideVisible) {
+                GuideService.getGuides().then(function (data) {
+                    var guide = null;
+
+                    for (var i = 0; i < data.length; ++i) {
+                        var item = data[i];
+                        if (
+                            (subStep.anrField == "contextAnaRisk" && item.type == 1) ||
+                            (subStep.anrField == "contextGestRisk" && item.type == 2) ||
+                            (subStep.anrField == "synthThreat" && item.type == 3) ||
+                            (subStep.anrField == "synthAct" && item.type == 4)
+                        ) {
+                            guide = item;
+                        }
+                    }
+
+                    if (guide && guide.isWithItems) {
+                        GuideService.getItems({order: 'position', guide: guide.id}).then(function (itemdata) {
+                            $scope.guide = guide;
+                            $scope.guide_items = itemdata;
+                        });
+                    } else {
+                        $scope.guide = guide;
+                    }
+                });
+            }
+        }
 
         $scope.context = {
             text: anr[subStep.anrField]
@@ -1613,7 +1642,7 @@
         };
 
         $scope.insertItem = function (i) {
-            $scope.trix.insertString("Hello " + i);
+            $scope.trix.insertString(i[$scope._langField('description')]);
         };
 
         $scope.cancel = function() {
