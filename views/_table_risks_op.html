@@ -66,20 +66,19 @@
             <th rowspan="3" translate>Risk description</th>
             <th ng-if="model.showRolfBrut" colspan="7" translate>RAW</th>
             <th colspan="7" translate>NET</th>
-            <th rowspan="3" translate>Observation</th>
-            <th rowspan="3">T</th>
+            <th rowspan="3" translate>Measures set</th>
+            <th rowspan="3" translate>Processing</th>
             <th rowspan="3" translate>Target risk</th>
-            <th ng-if=" instmode != 'obj' " rowspan="3" translate>Actions</th>
         </tr>
 
         <tr>
             <th rowspan="2" translate ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">Prob.</th>
             <th colspan="5" translate ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">Impact</th>
-            <th rowspan="2" translate ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">Calculated risk</th>
+            <th rowspan="2" translate ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">Current risk</th>
 
             <th rowspan="2" translate>Prob.</th>
             <th colspan="5" translate>Impact</th>
-            <th rowspan="2" translate>Calculated risk</th>
+            <th rowspan="2" translate>Current risk</th>
         </tr>
 
         <tr>
@@ -123,13 +122,10 @@
             <td class="tbl-risk-calc" ng-class="{'green': risk.cacheNetRisk > 0 && risk.cacheNetRisk < thresholds.rolf_thresholds.min, 'orange': risk.cacheNetRisk >= thresholds.rolf_thresholds.min && risk.cacheNetRisk < thresholds.rolf_thresholds.max, 'red': risk.cacheNetRisk >= thresholds.rolf_thresholds.max}">{{ risk.cacheNetRisk|dashnull }}</td>
             <td class="preserve-newlines" ng-if="instmode == 'anr' || instmode == 'inst'" edit-field="comment" edit-type="textarea"></td>
             <td class="small" ng-if="instmode == 'obj'">-</td>
-            <td class="txtcenter"><div style="display:inline-block" class="green-dot" ng-if="risk.t"></div></td>
+            <td class="txtcenter"><div style="display:inline-block" class="green-dot" ng-if="risk.t"></div> <a href="javascript:;" ng-if=" instmode != 'obj' " ng-click="openOpRiskSheet(risk)" title="{{ 'Open risk sheet' | translate }} - {{instmode}}">
+                <md-icon>open_in_new</md-icon>
+            </a></td>
             <td class="tbl-risk-calc" ng-class="{'green': risk.cacheTargetedRisk > 0 && risk.cacheTargetedRisk < thresholds.rolf_thresholds.min, 'orange': risk.cacheTargetedRisk >= thresholds.rolf_thresholds.min && risk.cacheTargetedRisk < thresholds.rolf_thresholds.max, 'red': risk.cacheTargetedRisk >= thresholds.rolf_thresholds.max}">{{ risk.cacheTargetedRisk|dashnull }}</td>
-            <td class="txtcenter" ng-if=" instmode != 'obj' ">
-                <a href="javascript:;" ng-click="openOpRiskSheet(risk)" title="{{ 'Open risk sheet' | translate }} - {{instmode}}">
-                    <md-icon>open_in_new</md-icon>
-                </a>
-            </td>
         </tr>
         </tbody>
     </table>

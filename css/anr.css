@@ -719,3 +719,13 @@ trix-toolbar button.link, trix-toolbar button.strike, trix-toolbar button.code {
     float: right;
     margin-top: -8px;
 }
+
+.big-border-all {
+    border: 2px solid grey !important;
+}
+.big-border-bottom {
+    border-bottom: 2px solid grey !important;
+}
+.big-border-left {
+    border-left: 2px solid grey !important;
+}
