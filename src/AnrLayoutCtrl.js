@@ -865,7 +865,7 @@
 
             var promise = $q.defer();
 
-            if (!$scope.scalesCanChange) {
+            if (!$scope.scalesCanChange && $scope.OFFICE_MODE == 'FO') {
                 toastr.warning(gettextCatalog.getString("You may not change scales anymore"));
                 return false;
             }
