@@ -445,7 +445,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'anr', 'subStep', MethodEditRisksDialog],
+                controller: ['$scope', '$mdDialog', 'TreatmentPlanService', 'anr', 'subStep', MethodEditRisksDialog],
                 templateUrl: '/views/anr/risks.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -1654,8 +1654,12 @@
         };
     }
 
-    function MethodEditRisksDialog($scope, $mdDialog, anr, subStep) {
+    function MethodEditRisksDialog($scope, $mdDialog, TreatmentPlanService, anr, subStep) {
         $scope.subStep = subStep;
+
+        TreatmentPlanService.getTreatmentPlans({anr: anr.id}).then(function (data) {
+            console.log(data);
+        });
 
         $scope.cancel = function() {
             $mdDialog.cancel();

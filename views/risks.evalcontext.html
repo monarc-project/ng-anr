@@ -50,14 +50,14 @@
                     </thead>
 
                     <tbody>
-                    <tr>
+                    <tr ng-repeat="rec in recommendations">
                         <td></td>
-                        <td><a href="javascript:;" ng-click="openRecommendation()"><b>Recommendation title</b></a><br/>Recommendation description</td>
-                        <td>&bullet;&bullet;</td>
-                        <td>Gestion serveurs</td>
-                        <td>constatation</td>
-                        <td>8</td>
-                        <td>4</td>
+                        <td><a href="javascript:;" ng-click="openRecommendation(rec)"><b>{{ rec.code }}</b></a><br/>{{ rec[_langField('description')] }}</td>
+                        <td><span ng-repeat="range(1, rec.importance)">&starf;</span></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
                     </tr>
                     </tbody>
                 </table>
