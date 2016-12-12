@@ -1707,22 +1707,31 @@
         };
 
         $scope.previousThreat = function () {
-            $scope.display.currentThreat--;
-            $scope.updateThreat();
+            $scope.saveThreat(function () {
+                $scope.display.currentThreat--;
+                $scope.updateThreat();
+            });
         };
 
         $scope.nextThreat = function () {
-            $scope.display.currentThreat++;
-            $scope.updateThreat();
+            $scope.saveThreat(function () {
+                $scope.display.currentThreat++;
+                $scope.updateThreat();
+            });
         };
 
-        $scope.saveThreat = function () {
+        $scope.saveThreat = function (cb) {
             var copy = angular.copy($scope.currentThreatObj);
             copy.theme = copy.theme.id;
 
             ThreatService.updateThreat(copy, function () {
                 toastr.success(gettextCatalog.getString("Threat assessment saved successfully"));
-                $scope.updateThreat();
+
+                if (cb) {
+                    cb();
+                } else {
+                    $scope.updateThreat();
+                }
             });
         };
 
