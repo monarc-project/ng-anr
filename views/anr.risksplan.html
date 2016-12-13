@@ -23,7 +23,8 @@
             <td class="preserve-newlines" edit-field="comment" edit-type="textarea"></td>
             <td edit-field="responsable"></td>
             <td edit-field="duedate"></td>
-            <td>{{ rec.counterTreated }}</td>
+            <td ng-if="rec.counterTreated == 0" translate>Coming</td>
+            <td ng-if="rec.counterTreated > 0" translate>In progress ({{rec.counterTreated}})</td>
             <td>
                 <div layout="row" layout-align="center center">
                     <md-button class="md-icon-button"><md-icon>open_in_new</md-icon></md-button>
