@@ -1,5 +1,5 @@
 <div class="md-padding" ng-controller="AnrRisksPlanSheetCtrl">
-    <md-button><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button>
+    <md-button ng-click="backToList()"><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button>
     <p class="md-title" translate>Implementation of the recommendation {{ rec.code }} - {{ rec.description }}</p>
 
     <table class="md-html-table" editable callback="onTableEdited">
