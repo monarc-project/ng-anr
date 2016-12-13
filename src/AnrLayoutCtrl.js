@@ -445,7 +445,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'TreatmentPlanService', 'anr', 'subStep', MethodEditRisksDialog],
+                controller: ['$scope', '$mdDialog', '$state', 'TreatmentPlanService', 'anr', 'subStep', MethodEditRisksDialog],
                 templateUrl: '/views/anr/risks.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -1659,12 +1659,16 @@
         };
     }
 
-    function MethodEditRisksDialog($scope, $mdDialog, TreatmentPlanService, anr, subStep) {
+    function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService, anr, subStep) {
         $scope.subStep = subStep;
 
         TreatmentPlanService.getTreatmentPlans({anr: anr.id}).then(function (data) {
-            console.log(data);
+            $scope.recommendations = data['recommandations-risks'];
         });
+
+        $scope.openRecommendation = function (rec) {
+            $state.transitionTo('main.project.anr.risksplan.sheet', {modelId: anr.id, riskId: rec.id});
+        };
 
         $scope.cancel = function() {
             $mdDialog.cancel();
