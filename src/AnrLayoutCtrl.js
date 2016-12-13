@@ -1005,7 +1005,11 @@
                 }
             })
                 .then(function (anr) {
-                    AnrService.patchAnr($scope.model.anr.id, anr, function () {
+                    var service = AnrService;
+                    if ($scope.OFFICE_MODE == 'FO') {
+                        service = $injector.get('ClientAnrService');
+                    }
+                    service.patchAnr($scope.model.anr.id, anr, function () {
                         toastr.success(gettextCatalog.getString("The risk analysis details have been updated"), gettextCatalog.getString("Update successful"));
                     });
                 });
