@@ -106,7 +106,7 @@
                     <div layout="column">
                         <b translate>Security measures:</b>
                         <ul class="no-list-style">
-                            <li ng-repeat="measure in recommandation.measures"><b>{{ measure.code }}</b> - {{ measure[_langField('description')] }}
+                            <li ng-repeat="measure in recommandation.measures"><b>{{ measure.measure.code }}</b> - {{ measure.measure[_langField('description')] }}
                                 <md-button class="md-icon-button" ng-click="detachMeasureFromRecommandation($event, recommandation, measure)">
                                     <md-icon>delete</md-icon>
                                 </md-button>

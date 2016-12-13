@@ -376,7 +376,7 @@
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
                 var RecommandationService = $injector.get('ClientRecommandationService');
-                RecommandationService.detachMeasureFromRecommandation($scope.model.anr.id, recommandation.measure.id,
+                RecommandationService.detachMeasureFromRecommandation($scope.model.anr.id, measure.id,
                     function () {
                         updateRecommandations();
                         toastr.success(gettextCatalog.getString('The measure has been detached.'),
@@ -476,6 +476,11 @@
             $scope.display.anrSelectedTabIndex = 0;
             ToolsAnrService.currentTab = 1;
         };
+        var editRiskTreatPlan = function () {
+            $state.transitionTo('main.project.anr.risksplan', {modelId: $scope.model.anr.id});
+            $scope.clearSelectedInstAndObj();
+            $scope.display.anrSelectedTabIndex = 0;
+        }
 
 
 
@@ -516,7 +521,7 @@
                     label: gettextCatalog.getString("Implementation and monitoring"),
                     deliverable: null,
                     steps: [
-                        {label: gettextCatalog.getString("Management of the implementation of the risk treatment plan"), progressField: 'manageRisks'},
+                        {label: gettextCatalog.getString("Management of the implementation of the risk treatment plan"), action: editRiskTreatPlan, progressField: 'manageRisks'},
                     ]
                 }
             ];
