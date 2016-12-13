@@ -1297,7 +1297,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ClientSnapshotService', 'toastr', 'gettextCatalog', 'anr', ToolsSnapshotDialog],
+                controller: ['$scope', '$rootScope', '$mdDialog', '$state', 'ClientSnapshotService', 'toastr', 'gettextCatalog', 'anr', ToolsSnapshotDialog],
                 templateUrl: '/views/anr/snapshots.html',
                 targetEvent: ev,
                 locals: {
@@ -1755,7 +1755,7 @@
         };
     }
 
-    function ToolsSnapshotDialog($scope, $mdDialog, ClientSnapshotService, toastr, gettextCatalog, anr) {
+    function ToolsSnapshotDialog($scope, $rootScope, $mdDialog, $state, ClientSnapshotService, toastr, gettextCatalog, anr) {
         var reloadSnapshots = function () {
             ClientSnapshotService.getSnapshots().then(function (data) {
                 $scope.snapshots = data.snapshots;
@@ -1771,7 +1771,7 @@
 
         $scope.createSnapshot = function () {
             $scope.snapshotCreating = true;
-            ClientSnapshotService.createSnapshot({anr: anr.id, comment: $scope.comment}, function () {
+            ClientSnapshotService.createSnapshot({anr: anr.id, comment: $scope.comment}, function (data) {
                 reloadSnapshots();
                 $scope.comment = '';
             })
@@ -1788,8 +1788,12 @@
         };
 
         $scope.restoreSnapshot = function (snapshot) {
-            ClientSnapshotService.restoreSnapshot(snapshot.id, function () {
+            $scope.snapshotRestoring = true;
+            ClientSnapshotService.restoreSnapshot(snapshot.id, function (data) {
                 toastr.success(gettextCatalog.getString("Snapshot restored"));
+                $state.transitionTo('main.project.anr', {modelId: data.data.id});
+                $rootScope.$broadcast('fo-anr-changed');
+                $scope.snapshotRestoring = false;
             })
         };
 

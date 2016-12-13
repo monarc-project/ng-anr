@@ -15,7 +15,7 @@
             <div layout="row">
                 <md-input-container>
                     <label translate>Optional comment</label>
-                    <textarea ng-model="comment"></textarea>
+                    <textarea ng-model="comment" ng-disabled="snapshotCreating"></textarea>
                 </md-input-container>
 
                 <md-button ng-click="createSnapshot()" ng-if="!snapshotCreating">{{ 'Create snapshot' | translate }}</md-button>
@@ -40,7 +40,8 @@
                     <td>{{ snapshot.creator }}</td>
                     <td>{{ snapshot.comment }}</td>
                     <td layout="row" layout-align="center center">
-                        <md-button class="md-icon-button" ng-click="restoreSnapshot(snapshot)"><md-icon>restore</md-icon></md-button>
+                        <md-button class="md-icon-button" ng-click="restoreSnapshot(snapshot)" ng-if="!snapshotRestoring"><md-icon>restore</md-icon></md-button>
+                        <md-progress-circular md-diameter="20" ng-if="snapshotRestoring"></md-progress-circular>
                         <md-button ng-class="{'md-icon-button': confirmDelete != snapshot.id}" ng-click="deleteSnapshot(snapshot)"><md-icon>delete</md-icon> <span ng-if="confirmDelete == snapshot.id" translate>Confirm?</span></md-button>
                     </td>
                 </tr>
