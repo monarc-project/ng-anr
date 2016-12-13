@@ -1,0 +1,33 @@
+<div class="md-padding" ng-controller="AnrRisksPlanSheetCtrl">
+    <md-button><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button>
+    <p class="md-title" translate>Implementation of the recommendation {{ rec.code }} - {{ rec.description }}</p>
+
+    <table class="md-html-table" editable callback="onTableEdited">
+        <thead>
+        <tr>
+            <th><md-icon>alarm</md-icon></th>
+            <th translate>Asset</th>
+            <th translate>Threat</th>
+            <th translate>Vulnerability</th>
+            <th translate>Observation before measure</th>
+            <th translate>Current risk</th>
+            <th translate>Observation after measure</th>
+            <th translate>Target risk</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr edit-model="measure" ng-repeat="measure in measures">
+            <td class="txtcenter"><md-icon>alarm_on</md-icon></td>
+            <td>{{ rec.asset[_langField('name')] }}</td>
+            <td>{{ rec.threat[_langField('label')] }}</td>
+            <td>{{ rec.vulnerability[_langField('label')] }}</td>
+            <td>ObservationBeforeMeasure</td>
+            <td>CurrentRisk</td>
+            <td edit-field="afterMeasure"></td>
+            <td>TargetRisk</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
