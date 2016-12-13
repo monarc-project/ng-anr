@@ -1752,7 +1752,7 @@
 
     function ToolsSnapshotDialog($scope, $mdDialog, ClientSnapshotService, toastr, gettextCatalog, anr) {
         var reloadSnapshots = function () {
-            ClientSnapshotService.getSnapshots({anrReferenceId: anr.id}).then(function (data) {
+            ClientSnapshotService.getSnapshots().then(function (data) {
                 $scope.snapshots = data.snapshots;
                 $scope.snapshotCreating = false;
             });
@@ -1783,7 +1783,7 @@
         };
 
         $scope.restoreSnapshot = function (snapshot) {
-            ClientSnapshotService.restoreSnapshot(snapshot.anr.id, function () {
+            ClientSnapshotService.restoreSnapshot(snapshot.id, function () {
                 toastr.success(gettextCatalog.getString("Snapshot restored"));
             })
         };
