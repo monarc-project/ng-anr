@@ -259,7 +259,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'mode', ExportAssetDialog],
-                templateUrl: '/views/dialogs/export.objlibs.html',
+                templateUrl: '/views/anr/export.objlibs.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
