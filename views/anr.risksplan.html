@@ -1,0 +1,36 @@
+<div class="md-padding" ng-cloak layout="column" ng-controller="AnrRisksPlanCtrl">
+    <p class="md-title" translate>Risk treatment plan management</p>
+
+    <table class="md-html-table" editable callback="onTableEdited">
+        <thead>
+        <tr>
+            <th><md-icon>alarm</md-icon></th>
+            <th translate>Recommendation</th>
+            <th translate>Imp.</th>
+            <th translate>Comment</th>
+            <th translate>Manager</th>
+            <th translate>Deadline</th>
+            <th translate>Status</th>
+            <th translate>Actions</th>
+        </tr>
+        </thead>
+
+        <tbody>
+        <tr edit-model="rec" ng-repeat="rec in recommendations">
+            <td class="txtcenter"><md-icon>alarm_on</md-icon></td>
+            <td><b>{{ rec.code }}</b><br/><span class="md-caption">{{ rec.description }}</span></td>
+            <td class="txtcenter"><span ng-repeat="i in range(1, rec.importance)">&starf;</span></td>
+            <td class="preserve-newlines" edit-field="comment" edit-type="textarea"></td>
+            <td edit-field="responsable"></td>
+            <td edit-field="duedate"></td>
+            <td>{{ rec.counterTreated }}</td>
+            <td>
+                <div layout="row" layout-align="center center">
+                    <md-button class="md-icon-button"><md-icon>open_in_new</md-icon></md-button>
+                </div>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
