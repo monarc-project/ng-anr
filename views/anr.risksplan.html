@@ -1,7 +1,7 @@
 <div class="md-padding" ng-controller="AnrRisksPlanCtrl">
     <p class="md-title" translate>Risk treatment plan management</p>
 
-    <md-button><md-icon>history</md-icon> {{ 'Open the implementation history' | translate }}</md-button>
+    <md-button ui-sref="main.project.anr.risksplan.history({modelId: model.anr.id})"><md-icon>history</md-icon> {{ 'Open the implementation history' | translate }}</md-button>
 
     <table class="md-html-table" editable callback="onTableEdited">
         <thead>
