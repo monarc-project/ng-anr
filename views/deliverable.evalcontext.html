@@ -2,7 +2,7 @@
     <form name="evalContextForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2>{{ subStep.label }}</h2>
+                <h2 translate>Deliverable</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -10,45 +10,47 @@
             </div>
         </md-toolbar>
         <md-dialog-content class="md-padding">
-            <md-input-container class="md-block">
-                <label translate>Model</label>
-                <md-select ng-model="deliverable.model">
-                    <md-option ng-value="model.id" ng-repeat="model in models">{{ model[_langField('description')] }}</md-option>
-                </md-select>
-            </md-input-container>
+            <div class="md-dialog-content">
+                <md-input-container class="md-block">
+                    <label translate>Model</label>
+                    <md-select ng-model="deliverable.model">
+                        <md-option ng-value="model.id" ng-repeat="model in models">{{ model[_langField('description')] }}</md-option>
+                    </md-select>
+                </md-input-container>
 
-            <md-input-container class="md-block">
-                <label translate>Status</label>
-                <md-select ng-model="deliverable.status">
-                    <md-option ng-value="0">{{ 'Draft' | translate}}</md-option>
-                    <md-option ng-value="1">{{ 'Final' | translate}}</md-option>
-                </md-select>
-            </md-input-container>
+                <md-input-container class="md-block">
+                    <label translate>Status</label>
+                    <md-select ng-model="deliverable.status">
+                        <md-option ng-value="0">{{ 'Draft' | translate}}</md-option>
+                        <md-option ng-value="1">{{ 'Final' | translate}}</md-option>
+                    </md-select>
+                </md-input-container>
 
-            <md-input-container class="md-block">
-                <label translate>Version</label>
-                <input ng-model="deliverable.version">
-            </md-input-container>
+                <md-input-container class="md-block">
+                    <label translate>Version</label>
+                    <input ng-model="deliverable.version">
+                </md-input-container>
 
-            <md-input-container class="md-block">
-                <label translate>Classification</label>
-                <input ng-model="deliverable.classification">
-            </md-input-container>
+                <md-input-container class="md-block">
+                    <label translate>Classification</label>
+                    <input ng-model="deliverable.classification">
+                </md-input-container>
 
-            <md-input-container class="md-block">
-                <label translate>Document name</label>
-                <input ng-model="deliverable.docname">
-            </md-input-container>
+                <md-input-container class="md-block">
+                    <label translate>Document name</label>
+                    <input ng-model="deliverable.docname">
+                </md-input-container>
 
-            <md-input-container class="md-block">
-                <label translate>Client manager(s)</label>
-                <input ng-model="deliverable.managers">
-            </md-input-container>
+                <md-input-container class="md-block">
+                    <label translate>Client manager(s)</label>
+                    <input ng-model="deliverable.managers">
+                </md-input-container>
 
-            <md-input-container class="md-block">
-                <label translate>Security consultant(s)</label>
-                <input ng-model="deliverable.consultants">
-            </md-input-container>
+                <md-input-container class="md-block">
+                    <label translate>Security consultant(s)</label>
+                    <input ng-model="deliverable.consultants">
+                </md-input-container>
+            </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
             <span flex></span>

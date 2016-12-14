@@ -534,7 +534,25 @@
                     obj.done = ($scope.model.anr[obj.progressField] == 1);
                 }
             }
-        }
+        };
+
+        $scope.openMethodDeliverable = function (step) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'step', MethodDeliverableDialog],
+                templateUrl: '/views/anr/deliverable.evalcontext.html',
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    step: step,
+                }
+            }).then(function (data) {
+
+            });
+        };
 
         $scope.setMethodStepStatus = function (field, substep, done) {
             var obj = {id: $scope.model.anr.id};
@@ -1283,11 +1301,12 @@
 
             var config = {
                 animation: animation,
-                controller: ['mdPanelRef', '$scope', 'step', 'setMethodStepStatus', MonarcMethodBoxCtrl],
+                controller: ['mdPanelRef', '$scope', 'step', 'setMethodStepStatus', 'openMethodDeliverable', MonarcMethodBoxCtrl],
                 templateUrl: 'monarc-method.tmpl.html', // inlined in anr.layout.html
                 locals: {
                     'step': step,
-                    'setMethodStepStatus': $scope.setMethodStepStatus
+                    'setMethodStepStatus': $scope.setMethodStepStatus,
+                    'openMethodDeliverable': $scope.openMethodDeliverable,
                 },
                 position: position,
                 zIndex: 10,
@@ -1418,8 +1437,9 @@
 
     // Dialogs
 
-    function MonarcMethodBoxCtrl(mdPanelRef, $scope, step, setMethodStepStatus) {
+    function MonarcMethodBoxCtrl(mdPanelRef, $scope, step, setMethodStepStatus, openMethodDeliverable) {
         $scope.setMethodStepStatus = setMethodStepStatus;
+        $scope.openMethodDeliverable = openMethodDeliverable;
         $scope.step = step;
     }
 
@@ -1905,5 +1925,15 @@
             $mdDialog.cancel();
         }
     };
+
+    function MethodDeliverableDialog($scope, $mdDialog) {
+        $scope.create = function () {
+            $mdDialog.hide(true);
+        }
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+    }
 
 })();
