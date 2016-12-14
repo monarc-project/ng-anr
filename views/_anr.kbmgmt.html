@@ -364,20 +364,11 @@
 
         <md-tab label="{{ 'Tags' | translate }}" md-on-select="selectTagsTab()" md-on-deselect="deselectTagsTab()">
             <md-toolbar class="md-table-toolbar md-default"
-                        ng-hide="tags.selected.length || tags.filter.show">
+                        ng-hide="tags.selected.length">
                 <div class="md-toolbar-tools">
                     <h2 class="md-title" translate>Tags</h2>
 
                     <div flex></div>
-                    <md-button class="md-icon-button" ng-click="tags.filter.show = true">
-                        <md-icon>search</md-icon>
-                    </md-button>
-                </div>
-            </md-toolbar>
-
-            <md-toolbar class="md-table-toolbar md-default"
-                        ng-show="tags.filter.show && !tags.selected.length">
-                <div class="md-toolbar-tools">
                     <md-icon>search</md-icon>
                     <form flex name="tags.filter.form">
                         <input type="text" ng-model="tags.query.filter"
@@ -443,20 +434,11 @@
 
         <md-tab label="{{ 'Operational Risks' | translate }}" md-on-select="selectRisksTab()" md-on-deselect="deselectRisksTab()">
             <md-toolbar class="md-table-toolbar md-default"
-                        ng-hide="risks.selected.length || risks.filter.show">
+                        ng-hide="risks.selected.length">
                 <div class="md-toolbar-tools">
                     <h2 class="md-title" translate>Risks</h2>
 
                     <div flex></div>
-                    <md-button class="md-icon-button" ng-click="risks.filter.show = true">
-                        <md-icon>search</md-icon>
-                    </md-button>
-                </div>
-            </md-toolbar>
-
-            <md-toolbar class="md-table-toolbar md-default"
-                        ng-show="risks.filter.show && !risks.selected.length">
-                <div class="md-toolbar-tools">
                     <md-icon>search</md-icon>
                     <form flex name="risks.filter.form">
                         <input type="text" ng-model="risks.query.filter"
@@ -479,12 +461,7 @@
             </md-toolbar>
 
             <div layout="row" class="md-padding-left" layout-align="space-around center">
-                <p class="md-padding-right" translate>Filter:</p>
-
-                <md-select ng-model="risk_category_filter" aria-label="{{ 'Category' | translate }}" placeholder="{{ 'Category' | translate }}" class="md-padding-right" flex>
-                    <md-option value="0">{{ 'All categories' | translate }}</md-option>
-                    <md-option ng-repeat="cat in risk_categories" ng-value="cat.id">{{ cat[_langField('label')] }}</md-option>
-                </md-select>
+                <p class="md-padding-right md-padding-left" translate>Filter:</p>
 
                 <md-select ng-model="risk_tag_filter" aria-label="{{ 'Asset type' | translate }}" placeholder="{{ 'Asset type' | translate }}" flex>
                     <md-option value="0">{{ 'All tags' | translate }}</md-option>
