@@ -25,7 +25,7 @@
                     <label translate>Source risk</label>
                     <md-icon>toc</md-icon>
                     <md-select ng-model="specrisk.risk" required>
-                        <md-option ng-value="1">R1 - R1</md-option>
+                        <md-option ng-repeat="risk in risks" ng-value="risk.id">{{ risk.code }} - {{ risk[_langField('description')] }}</md-option>
                     </md-select>
                 </md-input-container>
 

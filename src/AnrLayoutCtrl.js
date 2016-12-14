@@ -1360,7 +1360,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', CreateSpecRiskOPDialog],
+                controller: ['$scope', '$mdDialog', 'RiskService', CreateSpecRiskOPDialog],
                 templateUrl: '/views/anr/create.specriskop.html',
                 targetEvent: ev,
                 locals: {
@@ -1876,7 +1876,11 @@
         };
     }
 
-    function CreateSpecRiskOPDialog($scope, $mdDialog) {
+    function CreateSpecRiskOPDialog($scope, $mdDialog, RiskService) {
+        RiskService.getRisks({limit: 0}).then(function (data) {
+            $scope.risks = data.risks;
+        });
+
         $scope.create = function () {
             $mdDialog.hide($scope.specrisk);
         }
