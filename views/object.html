@@ -3,7 +3,7 @@
         <md-button class="md-icon-button" ui-sref="main.kb_mgmt.info_risk({tab: 'objlibs'})"><md-icon>arrow_back</md-icon></md-button>
         <div flex ng-if="object" ng-class="{'active-obj': mode == 'anr'}" class="md-padding">
             <h2 class="no-margin">
-                <md-icon ng-if="object && object.scope == 2" style="color: #F57C00">share</md-icon>
+                <md-icon ng-if="object && object.scope == 2" style="color: #F57C00">language</md-icon>
                 {{ object[_langField('name')] }}
             </h2>
 
@@ -57,10 +57,7 @@
         <md-tabs md-dynamic-height md-border-bottom md-selected="ToolsAnrService.currentTab">
             <md-tab label="{{ 'General information' | translate }}">
                 <div class="md-padding-left md-padding-right">
-                    <div layout="row" layout-align="left center">
-                        <p class="md-title" translate>Composition</p>
-                        <md-button class="md-primary" ng-click="createComponent($event)">{{ 'Add a component' | translate }}</md-button>
-                    </div>
+                    <p class="md-title" translate>Composition</p>
 
                     <ul class="md-treeview">
                         <li class="md-treeview-root">

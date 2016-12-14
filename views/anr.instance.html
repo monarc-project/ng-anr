@@ -2,7 +2,7 @@
     <div layout="row" layout-align="space-around start">
         <div flex ng-if="instance" class="active-inst">
             <h2 class="no-margin">
-                <md-icon ng-if="instance.object.scope == 2" style="color: #F57C00">share</md-icon>
+                <md-icon ng-if="instance.object.scope == 2" style="color: #F57C00">language</md-icon>
                 {{ instance[_langField('name')] }}
             </h2>
 
@@ -37,9 +37,9 @@
             </md-fab-trigger>
 
             <md-fab-actions>
-                <md-button aria-label="{{ 'Edit instance settings' | translate }}" class="md-fab md-raised md-mini" ng-click="editInstanceDetails($event)">
+                <md-button class="md-fab md-raised md-mini" ng-click="editInstanceDetails($event)">
                     <md-icon>edit</md-icon>
-                    <md-tooltip md-direction="left">{{ 'Edit instance settings' | translate }}</md-tooltip>
+                    <md-tooltip md-direction="left">{{ 'Edit impacts' | translate }}</md-tooltip>
                 </md-button>
 
                 <md-button ng-disabled="isSafari()" aria-label="{{ 'Export instance' | translate }}" class="md-fab md-raised md-mini" ng-click="exportInstance($event)">
