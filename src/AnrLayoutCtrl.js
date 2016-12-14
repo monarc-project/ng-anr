@@ -846,6 +846,11 @@
         var commsWatchSetup = false;
 
         $scope.$watch('thresholds', function () {
+            if ($scope.thresholds && ($scope.thresholds.thresholds.min < 0 || $scope.thresholds.rolf_thresholds.min < 0
+                || $scope.thresholds.thresholds.max < $scope.thresholds.thresholds.min || $scope.thresholds.rolf_thresholds.max < $scope.thresholds.rolf_thresholds.min)) {
+                return;
+            }
+
             if ($scope.model && $scope.model.anr && thresholdsWatchSetup) {
                 // This structure holds (ROLF) thresholds, as well as scales ranges
                 var service = AnrService;
