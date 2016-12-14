@@ -1,0 +1,132 @@
+<md-dialog class="dialog-width">
+    <form name="historyForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 ng-if="!recommandation.id" translate>Add a new history entry</h2>
+                <h2 ng-if="recommandation.id" translate>Update history entry information</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-input-container class="md-block">
+                    <label translate>Recommendation</label>
+                    <md-icon>toc</md-icon>
+                    <md-select ng-model="entry.recommandation">
+                        <md-option ng-repeat="rec in recommendations" ng-value="rec.id">{{ rec.code }} - {{ rec.description }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Recommendation comment</label>
+                    <md-icon>description</md-icon>
+                    <textarea rows="3" ng-model="entry.comment"></textarea>
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Deadline</label>
+                    <md-datepicker ng-model="entry.duedate" md-placeholder="{{ 'Deadline' | translate}}"></md-datepicker>
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Recommendation comment</label>
+                    <md-icon>person</md-icon>
+                    <input ng-model="entry.manager">
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Instance (object)</label>
+                    <md-icon>extension</md-icon>
+                    <input ng-model="entry.instance">
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Instantiation context</label>
+                    <md-icon>code</md-icon>
+                    <input ng-model="entry.instContext">
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Asset type</label>
+                    <md-icon>flip_to_front</md-icon>
+                    <input ng-model="entry.asset">
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Threat</label>
+                    <md-icon>turned_in</md-icon>
+                    <input ng-model="entry.threat">
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Threat value</label>
+                    <md-icon>timeline</md-icon>
+                    <md-select ng-model="entry.threatValue">
+                        <md-option ng-repeat="i in range(scales.threat.min, scales.threat.max)" ng-value="i">{{ i }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Vulnerability</label>
+                    <md-icon>track_changes</md-icon>
+                    <input ng-model="entry.threat">
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Vulnerability value before treatment</label>
+                    <md-icon>trending_down</md-icon>
+                    <md-select ng-model="entry.vulnerabilityBefore">
+                        <md-option ng-repeat="i in range(scales.vuln.min, scales.vuln.max)" ng-value="i">{{ i }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Vulnerability value after treatment</label>
+                    <md-icon>trending_up</md-icon>
+                    <input ng-model="entry.vulnerabilityAfter">
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Observation before measure</label>
+                    <md-icon>description</md-icon>
+                    <textarea rows="3" ng-model="entry.observationBefore"></textarea>
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Observation after measure</label>
+                    <md-icon>description</md-icon>
+                    <textarea rows="3" ng-model="entry.observationAfter"></textarea>
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Risk before</label>
+                    <md-icon>trending_down</md-icon>
+                    <input ng-model="entry.riskBefore">
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Risk after</label>
+                    <md-icon>trending_up</md-icon>
+                    <input ng-model="entry.riskAfter">
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Implementation comment</label>
+                    <md-icon>description</md-icon>
+                    <textarea rows="3" ng-model="entry.comment"></textarea>
+                </md-input-container>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row" layout-align="end center">
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="create()" ng-disabled="riskForm.$invalid" type="submit" class="md-accent md-hue-3">
+                {{ (recommandation.id > 0 ? 'Update' : 'Create') | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
