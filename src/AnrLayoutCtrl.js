@@ -1363,9 +1363,6 @@
                 controller: ['$scope', '$mdDialog', 'RiskService', CreateSpecRiskOPDialog],
                 templateUrl: '/views/anr/create.specriskop.html',
                 targetEvent: ev,
-                locals: {
-                    anr: $scope.model.anr
-                },
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
@@ -1377,12 +1374,9 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', CreateSpecRiskDialog],
+                controller: ['$scope', '$mdDialog', 'ThreatService', 'VulnService', CreateSpecRiskDialog],
                 templateUrl: '/views/anr/create.specrisk.html',
                 targetEvent: ev,
-                locals: {
-                    anr: $scope.model.anr
-                },
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
@@ -1890,7 +1884,15 @@
         };
     }
 
-    function CreateSpecRiskDialog($scope, $mdDialog) {
+    function CreateSpecRiskDialog($scope, $mdDialog, ThreatService, VulnService) {
+        ThreatService.getThreats({limit: 0}).then(function (data) {
+            $scope.threats = data.threats;
+        });
+
+        VulnService.getVulns({limit: 0}).then(function (data) {
+            $scope.vulns = data.vulnerabilities;
+        });
+
         $scope.create = function () {
             $mdDialog.hide($scope.specrisk);
         }
