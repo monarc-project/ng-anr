@@ -119,9 +119,9 @@
         <tbody>
         <tr ng-repeat="risk in risks" edit-model="risk">
             <td title="{{instanceCache[risk.instance].completePath}}">{{instanceCache[risk.instance][_langField('name')]}}</td>
-            <td title="{{ scaleCommCache[1][risk.c_impact] }}" class="txtcenter">{{risk.c_impact}}</td>
-            <td title="{{ scaleCommCache[2][risk.i_impact] }}" class="txtcenter">{{risk.i_impact}}</td>
-            <td title="{{ scaleCommCache[3][risk.d_impact] }}" class="txtcenter">{{risk.d_impact}}</td>
+            <td title="{{ scaleCommCache[1][risk.c_impact] }}" class="txtcenter">{{risk.c_impact|dashnull}}</td>
+            <td title="{{ scaleCommCache[2][risk.i_impact] }}" class="txtcenter">{{risk.i_impact|dashnull}}</td>
+            <td title="{{ scaleCommCache[3][risk.d_impact] }}" class="txtcenter">{{risk.d_impact|dashnull}}</td>
             <td class="preserve-newlines big-border-left" title="{{risk[_langField('threatDescription')]}}">{{risk[_langField('threatLabel')]}}</td>
             <td edit-field="threatRate" edit-type="number" edit-filter="dashnull" class="txtcenter" title="{{threatCommCache[risk.threatRate]}}"></td>
             <td class="preserve-newlines big-border-left" title="{{risk[_langField('vulnDescription')]}}">{{risk[_langField('vulnLabel')]}}</td>
