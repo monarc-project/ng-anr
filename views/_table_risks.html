@@ -119,14 +119,14 @@
         <tbody>
         <tr ng-repeat="risk in risks" edit-model="risk">
             <td title="{{instanceCache[risk.instance].completePath}}">{{instanceCache[risk.instance][_langField('name')]}}</td>
-            <td title="{{ scaleCommCache[1][risk.c_impact] }}">{{risk.c_impact}}</td>
-            <td title="{{ scaleCommCache[2][risk.i_impact] }}">{{risk.i_impact}}</td>
-            <td title="{{ scaleCommCache[3][risk.d_impact] }}">{{risk.d_impact}}</td>
+            <td title="{{ scaleCommCache[1][risk.c_impact] }}" class="txtcenter">{{risk.c_impact}}</td>
+            <td title="{{ scaleCommCache[2][risk.i_impact] }}" class="txtcenter">{{risk.i_impact}}</td>
+            <td title="{{ scaleCommCache[3][risk.d_impact] }}" class="txtcenter">{{risk.d_impact}}</td>
             <td class="preserve-newlines big-border-left" title="{{risk[_langField('threatDescription')]}}">{{risk[_langField('threatLabel')]}}</td>
-            <td edit-field="threatRate" edit-type="number" edit-filter="dashnull" title="{{threatCommCache[risk.threatRate]}}"></td>
+            <td edit-field="threatRate" edit-type="number" edit-filter="dashnull" class="txtcenter" title="{{threatCommCache[risk.threatRate]}}"></td>
             <td class="preserve-newlines big-border-left" title="{{risk[_langField('vulnDescription')]}}">{{risk[_langField('vulnLabel')]}}</td>
             <td class="preserve-newlines" edit-field="comment" edit-type="textarea"></td>
-            <td edit-field="vulnerabilityRate" edit-type="number" edit-filter="dashnull" title="{{vulnsCommCache[risk.vulnerabilityRate]}}"></td>
+            <td edit-field="vulnerabilityRate" edit-type="number" edit-filter="dashnull" class="txtcenter" title="{{vulnsCommCache[risk.vulnerabilityRate]}}"></td>
             <td ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc big-border-left"
                 ng-class="{'green': risk.c_risk > 0 && risk.c_risk < thresholds.thresholds.min, 'orange': risk.c_risk >= thresholds.thresholds.min && risk.c_risk < thresholds.thresholds.max, 'red': risk.c_risk >= thresholds.thresholds.max}">{{ risk.c_risk_enabled ? (risk.c_risk | dashnull) : '' }}</td>
             <td ng-disabled="!risk.i_risk_enabled" class="tbl-risk-calc"
