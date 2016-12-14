@@ -1465,13 +1465,13 @@
                     objlib.rolfTag = objlib.rolfTag.id;
                 }
 
-                AnrService.addNewObjectToLibrary(anr_id, objlib, function (data) {
+                AnrService.addNewObjectToLibrary($scope.model.anr.id, objlib, function (data) {
                     $parentScope.updateObjectsLibrary(false, function(){
                         $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+data.id);
                     });
                 }, function () {
                     // An error occurred, re-show the dialog
-                    $scope.createAttachedObject(null, copy);
+                    createAttachedObject($scope, $mdDialog, AnrService, ev, copy);
                 });
             }
         });
