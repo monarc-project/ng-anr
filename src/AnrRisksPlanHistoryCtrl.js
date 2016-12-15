@@ -18,6 +18,10 @@
             $state.transitionTo('main.project.anr.risksplan', {modelId: $stateParams.modelId});
         };
 
+        ClientRecommandationService.getRecommandationHistory($stateParams.modelId).then(function (data) {
+            $scope.history = data['recommandations-historics'];
+        })
+
     }
 
 })();

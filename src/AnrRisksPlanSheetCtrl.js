@@ -14,6 +14,13 @@
     function AnrRisksPlanSheetCtrl($scope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog, $state,
                                    TreatmentPlanService, ClientRecommandationService, $q) {
 
+        ClientRecommandationService.getRecommandation($stateParams.modelId, $stateParams.recId).then(function (data) {
+            $scope.rec = data;
+        });
+        ClientRecommandationService.getRecommandationRisks($stateParams.modelId, $stateParams.recId).then(function (data) {
+            $scope.risks = data['recommandations-risks'];
+        })
+        
         $scope.backToList = function () {
             $state.transitionTo('main.project.anr.risksplan', {modelId: $stateParams.modelId});
         };
@@ -36,6 +43,18 @@
             }).then(function (exports) {
 
             });
+        };
+
+        $scope.onTableEdited = function (field, name) {
+            var params = {};
+            params[name] = field[name];
+
+            ClientRecommandationService.updateRecommandationRisk($scope.model.anr.id, field.id, params, function () {
+
+            });
+            console.log(field);
+            console.log(name);
+            return true;
         };
 
     }

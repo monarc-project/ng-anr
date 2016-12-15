@@ -5,7 +5,6 @@
     <table class="md-html-table" editable callback="onTableEdited">
         <thead>
         <tr>
-            <th></th>
             <th translate>Asset</th>
             <th translate>Threat</th>
             <th translate>Vulnerability</th>
@@ -18,15 +17,14 @@
         </thead>
 
         <tbody>
-        <tr edit-model="measure" ng-repeat="measure in measures">
-            <td class="txtcenter"><md-icon>warning</md-icon></td>
-            <td>{{ rec.asset[_langField('name')] }}</td>
-            <td>{{ rec.threat[_langField('label')] }}</td>
-            <td>{{ rec.vulnerability[_langField('label')] }}</td>
-            <td>ObservationBeforeMeasure</td>
-            <td>CurrentRisk</td>
-            <td edit-field="afterMeasure"></td>
-            <td>TargetRisk</td>
+        <tr edit-model="risk" ng-repeat="risk in risks">
+            <td>{{ risk.asset[_langField('label')] }}</td>
+            <td>{{ risk.threat.code }} - {{ risk.threat[_langField('label')] }}</td>
+            <td>{{ risk.vulnerability.code }} - {{ risk.vulnerability[_langField('label')] }}</td>
+            <td>{{ risk.instanceRisk.comment }}</td>
+            <td ng-class="{'green': risk.instanceRisk.cacheMaxRisk > 0 && risk.instanceRisk.cacheMaxRisk <= thresholds.thresholds.min, 'orange': risk.instanceRisk.cacheMaxRisk > thresholds.thresholds.min && risk.instanceRisk.cacheMaxRisk <= thresholds.thresholds.max, 'red': risk.instanceRisk.cacheMaxRisk > thresholds.thresholds.max}" class="tbl-risk-calc txtcenter">{{ risk.instanceRisk.cacheMaxRisk | dashnull }}</td>
+            <td class="preserve-newlines" edit-field="commentAfter" edit-type="textarea"></td>
+            <td ng-class="{'green': risk.instanceRisk.cacheTargetedRisk > 0 && risk.instanceRisk.cacheTargetedRisk <= thresholds.thresholds.min, 'orange': risk.instanceRisk.cacheTargetedRisk > thresholds.thresholds.min && risk.instanceRisk.cacheTargetedRisk <= thresholds.thresholds.max, 'red': risk.instanceRisk.cacheTargetedRisk > thresholds.thresholds.max}" class="tbl-risk-calc txtcenter">{{ risk.instanceRisk.cacheTargetedRisk | dashnull }}</td>
             <td><md-button class="md-icon-button" ng-click="validate(measure)"><md-icon>check_circle</md-icon></md-button></td>
         </tr>
         </tbody>

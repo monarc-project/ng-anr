@@ -1700,7 +1700,7 @@
         });
 
         $scope.openRecommendation = function (rec) {
-            $state.transitionTo('main.project.anr.risksplan.sheet', {modelId: anr.id, riskId: rec.id});
+            $state.transitionTo('main.project.anr.risksplan.sheet', {modelId: anr.id, recId: rec.id});
         };
 
         $scope.cancel = function() {
