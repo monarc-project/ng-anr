@@ -987,6 +987,10 @@
                 $scope.updateScaleTypes();
                 $scope.newColumn.name = null;
                 $scope.$broadcast('scales-impacts-type-changed');
+                $timeout(function () {
+                    var scroller = document.getElementById('horiz-scrollable');
+                    scroller.scrollLeft = scroller.scrollWidth;
+                }, 0, false);
             });
         };
 
