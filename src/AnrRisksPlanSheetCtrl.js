@@ -14,6 +14,8 @@
     function AnrRisksPlanSheetCtrl($scope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog, $state,
                                    TreatmentPlanService, ClientRecommandationService, $q) {
 
+        $scope.risks = [];
+
         ClientRecommandationService.getRecommandation($stateParams.modelId, $stateParams.recId).then(function (data) {
             $scope.rec = data;
         });
