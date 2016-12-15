@@ -68,34 +68,36 @@
             self.ItemResource.delete({itemId: id}, success, error);
         };
 
+        var categoriesLabels = {};
+        var categories = [];
 
-        const categoriesLabels = {
-            1: gettextCatalog.getString("Risk analysis context"),
-            2: gettextCatalog.getString("Risk management context"),
-            3: gettextCatalog.getString("Summary assessment of trends and threats"),
-            4: gettextCatalog.getString("Summary of assets / impacts")
+        var calculateCategories = function () {
+            categoriesLabels = {
+                1: gettextCatalog.getString("Risk analysis context"),
+                2: gettextCatalog.getString("Risk management context"),
+                3: gettextCatalog.getString("Summary assessment of trends and threats"),
+                4: gettextCatalog.getString("Summary of assets / impacts")
+            }
+
+            categories = [
+                {
+                    id: 1,
+                    label: categoriesLabels[1]
+                },
+                {
+                    id: 2,
+                    label: categoriesLabels[2]
+                },
+                {
+                    id: 3,
+                    label: categoriesLabels[3]
+                },
+                {
+                    id: 4,
+                    label: categoriesLabels[4]
+                },
+            ];
         }
-
-        const categories = [
-            {
-                id: 1,
-                label: categoriesLabels[1]
-            },
-            {
-                id: 2,
-                label: categoriesLabels[2]
-            },
-            {
-                id: 3,
-                label: categoriesLabels[3]
-            },
-            {
-                id: 4,
-                label: categoriesLabels[4]
-            },
-        ];
-
-
 
         return {
             getGuides: getGuides,
@@ -110,8 +112,8 @@
             deleteItem: deleteItem,
             updateItem: updateItem,
 
-            getCategories: function () { return categories; },
-            getCategoryLabel: function (id) { return categoriesLabels[id]; }
+            getCategories: function () { calculateCategories(); return categories; },
+            getCategoryLabel: function (id) { calculateCategories(); return categoriesLabels[id]; }
         };
     }
 
