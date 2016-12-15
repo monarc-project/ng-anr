@@ -21,24 +21,23 @@
             <td>
                 <span ng-repeat="i in range(1, entry.recommandation.importance)">&starf;</span> <b>{{ entry.recommandation.code }}</b><br />
                 {{entry.recommandation.description}}<br />
-                <b translate>Comment:</b> {{ entry.recommandation.comment }}<br />
-                <b translate>Deadline:</b> {{ entry.recommandation.duedate}}<br />
-                <b translate>Manager:</b> {{ entry.recommandation.responsable}}
+                <b translate>Comment:</b> {{ entry.recoComment }}<br />
+                <b translate>Deadline:</b> {{ entry.recoDuedate }}<br />
+                <b translate>Manager:</b> {{ entry.recoResponsable }}
             </td>
             <td>
-                <b translate>Instance:</b> {{ entry.risk.instance[_langField('label')] }} ({{ entry.risk.instance.code }})<br />
-                <b translate>Asset:</b> {{ entry.risk.asset[_langField('label')] }} ({{ entry.risk.asset.code }})<br />
-                <b translate>Threat:</b> {{ entry.risk.threat[_langField('label')] }} ({{ entry.risk.threat.code }})<br />
-                <b translate>Vulnerability:</b> {{ entry.risk.vulnerability[_langField('label')] }} ({{ entry.risk.vulnerability.code }})<br />
-                <b translate>Treatment type:</b> {{ entry.risk.kindOfMeasure }}<br />
-                <b translate>Observation before measure:</b> {{ entry.risk.comment }}<br />
-                <b translate>Observation after measure:</b> {{ entry.risk.commentAfter }}
+                <b translate>Instance:</b> {{ entry.riskInstance }}<br />
+                <b translate>Asset:</b> {{ entry.riskAsset }})<br />
+                <b translate>Threat:</b> {{ entry.riskThreat }})<br />
+                <b translate>Vulnerability:</b> {{ entry.riskVul }})<br />
+                <b translate>Treatment type:</b> {{ entry.riskKindOfMeasure }}<br />
+                <b translate>Observation before measure:</b> {{ entry.riskCommentBefore }}<br />
+                <b translate>Observation after measure:</b> {{ entry.riskCommentAfter }}
             </td>
-            <td>{{ entry.comment }}</td>
-            <td>{{ entry.risk.cache_targeted_risk }}</td>
-            <td>{{ entry.risk.cache_targeted_risk - entry.risk.reduction_amount }}</td>
-            <td>
-                <md-button class="md-icon-button"><md-icon>edit</md-icon></md-button>
+            <td class="preserve-newlines">{{ entry.implComment }}</td>
+            <td class="tbl-risk-calc" ng-class="{'green': entry.riskMaxRiskBefore > 0 && entry.riskMaxRiskBefore <= thresholds.thresholds.min, 'orange': entry.riskMaxRiskBefore > thresholds.thresholds.min && entry.riskMaxRiskBefore <= thresholds.thresholds.max, 'red': entry.riskMaxRiskBefore > thresholds.thresholds.max}">{{ entry.riskMaxRiskBefore }}</td>
+            <td class="tbl-risk-calc" ng-class="{'green': entry.riskMaxRiskAfter > 0 && entry.riskMaxRiskAfter <= thresholds.thresholds.min, 'orange': entry.riskMaxRiskAfter > thresholds.thresholds.min && entry.riskMaxRiskAfter <= thresholds.thresholds.max, 'red': entry.riskMaxRiskAfter > thresholds.thresholds.max}">{{ entry.riskMaxRiskAfter }}</td>
+            <td class="txtcenter">
                 <md-button class="md-icon-button"><md-icon>delete</md-icon></md-button>
             </td>
         </tr>
