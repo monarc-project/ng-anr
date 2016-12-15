@@ -9,30 +9,39 @@
 
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
-        self.ThreatResource = $resource('/api/' + anr + 'threats/:threatId', { threatId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
-            {
-                'update': {
-                    method: 'PUT'
+        var makeResource = function () {
+            self.ThreatResource = $resource('/api/' + anr + 'threats/:threatId', {
+                    threatId: '@id',
+                    urlAnrId: $rootScope.getUrlAnrId()
                 },
-                'patch': {
-                    method: 'PATCH'
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'patch': {
+                        method: 'PATCH'
+                    },
+                    'query': {
+                        isArray: false
+                    }
+                });
+            self.ThreatThemeResource = $resource('/api/' + anr + 'themes/:themeId', {
+                    themeId: '@id',
+                    urlAnrId: $rootScope.getUrlAnrId()
                 },
-                'query': {
-                    isArray: false
-                }
-            });
-        self.ThreatThemeResource = $resource('/api/' + anr + 'themes/:themeId', { themeId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
-            {
-                'update': {
-                    method: 'PUT'
-                },
-                'patch': {
-                    method: 'PATCH'
-                },
-                'query': {
-                    isArray: false
-                }
-            });
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'patch': {
+                        method: 'PATCH'
+                    },
+                    'query': {
+                        isArray: false
+                    }
+                });
+        }
+        makeResource();
 
         // Threats
         var getThreats = function (params) {
@@ -95,6 +104,8 @@
 
 
         return {
+            makeResource: makeResource,
+            
             getThreats: getThreats,
             getThreat: getThreat,
             createThreat: createThreat,

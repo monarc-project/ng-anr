@@ -9,18 +9,24 @@
 
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
-        self.MeasureResource = $resource('/api/' + anr + 'measures/:measureId', { measureId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
-            {
-                'update': {
-                    method: 'PUT'
+        var makeResource = function () {
+            self.MeasureResource = $resource('/api/' + anr + 'measures/:measureId', {
+                    measureId: '@id',
+                    urlAnrId: $rootScope.getUrlAnrId()
                 },
-                'patch': {
-                    method: 'PATCH'
-                },
-                'query': {
-                    isArray: false
-                }
-            });
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'patch': {
+                        method: 'PATCH'
+                    },
+                    'query': {
+                        isArray: false
+                    }
+                });
+        }
+        makeResource();
 
         var getMeasures = function (params) {
             return self.MeasureResource.query(params).$promise;
@@ -55,6 +61,7 @@
         }
 
         return {
+            makeResource: makeResource,
             getMeasures: getMeasures,
             getMeasure: getMeasure,
             createMeasure: createMeasure,

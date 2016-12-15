@@ -9,18 +9,24 @@
 
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
-        self.AmvResource = $resource('/api/' + anr + 'amvs/:amvId', { amvId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
-            {
-                'update': {
-                    method: 'PUT'
+        var makeResource = function () {
+            self.AmvResource = $resource('/api/' + anr + 'amvs/:amvId', {
+                    amvId: '@id',
+                    urlAnrId: $rootScope.getUrlAnrId()
                 },
-                'patch': {
-                    method: 'PATCH'
-                },
-                'query': {
-                    isArray: false
-                }
-            });
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'patch': {
+                        method: 'PATCH'
+                    },
+                    'query': {
+                        isArray: false
+                    }
+                });
+        }
+        makeResource();
 
         var getAmvs = function (params) {
             return self.AmvResource.query(params).$promise;
@@ -55,6 +61,7 @@
         }
 
         return {
+            makeResource: makeResource,
             getAmvs: getAmvs,
             getAmv: getAmv,
             createAmv: createAmv,

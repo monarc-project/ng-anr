@@ -9,18 +9,24 @@
 
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
-        self.AssetResource = $resource('/api/' + anr + 'assets/:assetId', { assetId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
-            {
-                'update': {
-                    method: 'PUT'
+        var makeResource = function () {
+            self.AssetResource = $resource('/api/' + anr + 'assets/:assetId', {
+                    assetId: '@id',
+                    urlAnrId: $rootScope.getUrlAnrId()
                 },
-                'patch': {
-                    method: 'PATCH'
-                },
-                'query': {
-                    isArray: false
-                }
-            });
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'patch': {
+                        method: 'PATCH'
+                    },
+                    'query': {
+                        isArray: false
+                    }
+                });
+        }
+        makeResource();
 
         var getAssets = function (params) {
             return self.AssetResource.query(params).$promise;
@@ -81,6 +87,7 @@
         };
 
         return {
+            makeResource: makeResource,
             getAssets: getAssets,
             getAsset: getAsset,
             createAsset: createAsset,

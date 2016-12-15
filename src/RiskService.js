@@ -9,15 +9,21 @@
 
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
-        self.RiskResource = $resource('/api/' + anr + 'rolf-risks/:riskId', { riskId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
-            {
-                'update': {
-                    method: 'PUT'
+        var makeResource = function () {
+            self.RiskResource = $resource('/api/' + anr + 'rolf-risks/:riskId', {
+                    riskId: '@id',
+                    urlAnrId: $rootScope.getUrlAnrId()
                 },
-                'query': {
-                    isArray: false
-                }
-            });
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'query': {
+                        isArray: false
+                    }
+                });
+        }
+        makeResource();
 
         var getRisks = function (params) {
             return self.RiskResource.query(params).$promise;
@@ -48,6 +54,7 @@
         };
 
         return {
+            makeResource: makeResource,
             getRisks: getRisks,
             getRisk: getRisk,
             createRisk: createRisk,

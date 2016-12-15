@@ -9,15 +9,21 @@
 
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
-        self.TagResource = $resource('/api/' + anr + 'rolf-tags/:tagId', { tagId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
-            {
-                'update': {
-                    method: 'PUT'
+        var makeResource = function () {
+            self.TagResource = $resource('/api/' + anr + 'rolf-tags/:tagId', {
+                    tagId: '@id',
+                    urlAnrId: $rootScope.getUrlAnrId()
                 },
-                'query': {
-                    isArray: false
-                }
-            });
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'query': {
+                        isArray: false
+                    }
+                });
+        }
+        makeResource();
 
         var getTags = function (params) {
             return self.TagResource.query(params).$promise;
@@ -48,6 +54,7 @@
         };
 
         return {
+            makeResource: makeResource,
             getTags: getTags,
             getTag: getTag,
             createTag: createTag,

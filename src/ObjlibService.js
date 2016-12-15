@@ -9,15 +9,34 @@
 
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
-        self.ObjlibResource = $resource('/api/' + anr + 'objects/:objlibId', { objlibId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
-            {
-                'update': {
-                    method: 'PUT'
+        var makeResource = function () {
+            self.ObjlibResource = $resource('/api/' + anr + 'objects/:objlibId', {
+                    objlibId: '@id',
+                    urlAnrId: $rootScope.getUrlAnrId()
                 },
-                'query': {
-                    isArray: false
-                }
-            });
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'query': {
+                        isArray: false
+                    }
+                });
+
+
+            self.ObjlibCatResource = $resource('/api/' + anr + 'objects-categories/:objlibId', { objlibId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'query': {
+                        isArray: false
+                    }
+                });
+
+            self.AnrObjectsService = $resource('/api/anr/:anrId/objects', {}, {'query': {isArray: false}});//on utilisera que query
+        }
+        makeResource();
 
         var getObjlibs = function (params) {
             return self.ObjlibResource.query(params).$promise;
@@ -47,15 +66,7 @@
             self.ObjlibResource.delete({objlibId: id}, success, error);
         };
 
-        self.ObjlibCatResource = $resource('/api/' + anr + 'objects-categories/:objlibId', { objlibId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
-            {
-                'update': {
-                    method: 'PUT'
-                },
-                'query': {
-                    isArray: false
-                }
-            });
+        ////
 
         var getObjlibsCats = function (params) {
             return self.ObjlibCatResource.query(params).$promise;
@@ -132,7 +143,7 @@
             self.RiskResource.patch({riskId: id}, params, success, error);
         };
 
-        self.AnrObjectsService = $resource('/api/anr/:anrId/objects', {}, {'query': {isArray: false}});//on utilisera que query
+        ////
 
         var getObjectsOfAnr = function(anrid, params, success, error){
             params.anrId = anrid;
@@ -140,6 +151,8 @@
         }
 
         return {
+            makeResource: makeResource,
+
             getObjlibs: getObjlibs,
             getObjlib: getObjlib,
             createObjlib: createObjlib,

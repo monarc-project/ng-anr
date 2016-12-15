@@ -9,18 +9,24 @@
 
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
-        self.VulnResource = $resource('/api/' + anr + 'vulnerabilities/:vulnId', { vulnId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
-            {
-                'update': {
-                    method: 'PUT'
+        var makeResource = function () {
+            self.VulnResource = $resource('/api/' + anr + 'vulnerabilities/:vulnId', {
+                    vulnId: '@id',
+                    urlAnrId: $rootScope.getUrlAnrId()
                 },
-                'patch': {
-                    method: 'PATCH'
-                },
-                'query': {
-                    isArray: false
-                }
-            });
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'patch': {
+                        method: 'PATCH'
+                    },
+                    'query': {
+                        isArray: false
+                    }
+                });
+        }
+        makeResource();
 
         var getVulns = function (params) {
             return self.VulnResource.query(params).$promise;
@@ -55,6 +61,7 @@
         }
 
         return {
+            makeResource: makeResource,
             getVulns: getVulns,
             getVuln: getVuln,
             createVuln: createVuln,
