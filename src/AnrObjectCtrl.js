@@ -14,7 +14,7 @@
     function AnrObjectCtrl($scope, $rootScope, $timeout, $state, toastr, $mdMedia, $mdDialog, $stateParams, $http,
                                         gettextCatalog, ObjlibService, DownloadService, AnrService, InstanceService, $location, AnrObject) {
 
-        if ($state.current.name == 'main.kb_mgmt.models.details.object') {
+        if ($state.current.name == 'main.kb_mgmt.models.details.object' || $state.current.name == 'main.project.anr.object') {
             $scope.mode = 'anr';
 
             $scope.openRiskSheet = function (risk) {
@@ -151,7 +151,7 @@
                 })
             } else if ($scope.mode == 'anr') {
                 //parents is a promise
-                AnrObject.parents({anrid: $rootScope.anr_id, id: $scope.object.id}, function(parents){
+                AnrObject.parents({anrid: $scope.model.anr.id, id: $scope.object.id}, function(parents){
                     if ($scope.object.replicas.length > 0 || parents.length > 0) {
                         $scope.openDetachObjectDialog(ev, parents);
                     } else {

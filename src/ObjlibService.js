@@ -34,7 +34,7 @@
                     }
                 });
 
-            self.AnrObjectsService = $resource('/api/anr/:anrId/objects', {}, {'query': {isArray: false}});//on utilisera que query
+            self.AnrObjectsService = $resource($rootScope.OFFICE_MODE == 'FO' ? '/api/client-anr/:anrId/objects' : '/api/anr/:anrId/objects', {}, {'query': {isArray: false}});//on utilisera que query
         }
         makeResource();
 
