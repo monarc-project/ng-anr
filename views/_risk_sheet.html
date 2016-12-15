@@ -4,6 +4,10 @@
     <table class="md-html-table">
         <tbody>
         <tr>
+            <td class="bold txtright" translate>Instance:</td>
+            <td class="bold"><md-icon ng-if="instanceCache[sheet_risk.instance].scope == 2" class="md-tree-global-icon">language</md-icon>{{ instanceCache[sheet_risk.instance][_langField('label')] }}</td>
+        </tr>
+        <tr>
             <td class="bold txtright" style="width: 250px" translate>Threat:</td>
             <td>{{ sheet_risk[_langField('threatDescription')] }}</td>
         </tr>
