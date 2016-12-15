@@ -1024,7 +1024,7 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                    anr: $scope.model.anr
+                    anr: angular.copy($scope.model.anr)
                 }
             })
                 .then(function (anr) {

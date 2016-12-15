@@ -25,11 +25,11 @@
             $state.transitionTo('main.project.anr.risksplan', {modelId: $stateParams.modelId});
         };
 
-        $scope.validate = function (ev, measure) {
+        $scope.validate = function (ev, risk) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'recommendation', 'measure', ValidateMeasureDialog],
+                controller: ['$scope', '$mdDialog', 'recommendation', 'risk', ValidateMeasureDialog],
                 templateUrl: '/views/anr/validate.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -38,10 +38,12 @@
                 fullscreen: useFullScreen,
                 locals: {
                     recommendation: $scope.rec,
-                    measure: measure
+                    risk: risk
                 }
-            }).then(function (exports) {
-
+            }).then(function (impl) {
+                ClientRecommandationService.validateRecommandationRisk($scope.model.anr.id, risk.id, impl, function () {
+                    toastr.success(gettextCatalog.getString("The recommendation has been successfully validated."));
+                })
             });
         };
 
@@ -60,9 +62,13 @@
     }
 
 
-    function ValidateMeasureDialog($scope, $mdDialog, recommendation, measure) {
+    function ValidateMeasureDialog($scope, $mdDialog, recommendation, risk) {
+        $scope.rec = recommendation;
+        $scope.risk = risk;
+        $scope.impl = {comment: null};
+
         $scope.create = function () {
-            $mdDialog.hide($scope.valid);
+            $mdDialog.hide($scope.impl);
         };
 
         $scope.cancel = function () {

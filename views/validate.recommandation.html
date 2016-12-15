@@ -14,9 +14,9 @@
                 <md-card-content>
                     <p translate>You are about to validate the implementation of recommendation <b>{{rec.code}} - {{rec.description}}</b> for the following risk:</p>
                     <p>
-                        <span class="bold" translate>Asset:</span> {{rec.asset.code}} - {{rec.asset[_langField('label')]}}<br />
-                        <span class="bold" translate>Threat:</span> {{rec.threat.code}} - {{rec.threat[_langField('label')]}}<br />
-                        <span class="bold" translate>Vulnerability:</span> {{rec.vulnerability.code}} - {{rec.vulnerability[_langField('label')]}}
+                        <span class="bold" translate>Asset:</span> {{risk.asset.code}} - {{risk.asset[_langField('label')]}}<br />
+                        <span class="bold" translate>Threat:</span> {{risk.threat.code}} - {{risk.threat[_langField('label')]}}<br />
+                        <span class="bold" translate>Vulnerability:</span> {{risk.vulnerability.code}} - {{risk.vulnerability[_langField('label')]}}
                     </p>
                 </md-card-content>
             </md-card>
@@ -32,7 +32,7 @@
         <md-button ng-click="cancel()">
             {{ 'Cancel' | translate }}
         </md-button>
-        <md-button class="md-primary" ng-click="cancel()">
+        <md-button class="md-primary" ng-click="create()">
             {{ 'Validate' | translate }}
         </md-button>
     </md-dialog-actions>
