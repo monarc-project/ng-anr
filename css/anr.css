@@ -690,6 +690,8 @@ md-progress-linear.yellow .md-container {
 
 .anr-importance {
     color: #FF5722;
+    font-size: 14px;
+    font-weight: bold;
 }
 
 .edit-field-placeholder {
