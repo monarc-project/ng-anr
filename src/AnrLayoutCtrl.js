@@ -1431,7 +1431,7 @@
                 var RecommandationService = $injector.get("ClientRecommandationService");
 
                 if (rec === false) {
-                    RecommandationService.deleteRecommandation({anr: $scope.model.anr.id, id: srcRec.id}).then(function () {
+                    RecommandationService.deleteRecommandation({anr: $scope.model.anr.id, id: srcRec.id}, function () {
                         toastr.success(gettextCatalog.getString("The recommendation has been deleted successfully"));
                         updateRecommandations();
                     });
@@ -1897,11 +1897,36 @@
 
         $scope.createInterview = function () {
             $scope.interviewCreating = true;
-            ClientInterviewService.createInterview({anr: anr.id, date: $scope.new_interview.date, service: $scope.new_interview.service, content: $scope.new_interview.content}, function () {
-                reloadInterviews();
-                $scope.new_interview = {};
-            })
+
+            if ($scope.new_interview.id > 0) {
+                ClientInterviewService.updateInterview({
+                    id: $scope.new_interview.id,
+                    anr: anr.id,
+                    date: $scope.new_interview.date,
+                    service: $scope.new_interview.service,
+                    content: $scope.new_interview.content
+                }, function () {
+                    reloadInterviews();
+                    $scope.new_interview = {};
+                    $scope.interviewForm.$setPristine();
+                });
+            } else {
+                ClientInterviewService.createInterview({
+                    anr: anr.id,
+                    date: $scope.new_interview.date,
+                    service: $scope.new_interview.service,
+                    content: $scope.new_interview.content
+                }, function () {
+                    reloadInterviews();
+                    $scope.new_interview = {};
+                    $scope.interviewForm.$setPristine();
+                });
+            }
         };
+
+        $scope.editInterview = function (interview) {
+            $scope.new_interview = angular.copy(interview);
+        }
 
         $scope.deleteInterview = function (interview) {
             if ($scope.confirmDelete == interview.id) {

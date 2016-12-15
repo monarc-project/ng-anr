@@ -25,7 +25,8 @@
                     <td>{{ interview.date }}</td>
                     <td>{{ interview.service }}</td>
                     <td>{{ interview.content }}</td>
-                    <td layout="row" layout-align="center center">
+                    <td class="txtcenter">
+                        <md-button class="md-icon-button" ng-click="editInterview(interview)"><md-icon>edit</md-icon></md-button>
                         <md-button ng-class="{'md-icon-button': confirmDelete != interview.id}" ng-click="deleteInterview(interview)"><md-icon>delete</md-icon> <span ng-if="confirmDelete == interview.id" translate>Confirm?</span></md-button>
                     </td>
                 </tr>
@@ -50,7 +51,8 @@
                     <textarea ng-model="new_interview.content" name="content" required></textarea>
                 </md-input-container>
 
-                <md-button ng-click="createInterview()" ng-if="!interviewCreating" ng-disabled="interviewForm.$error.required">{{ 'Create interview' | translate }}</md-button>
+                <md-button ng-click="createInterview()" ng-if="!interviewCreating && !new_interview.id" ng-disabled="interviewForm.$error.required">{{ 'Create interview' | translate }}</md-button>
+                <md-button ng-click="createInterview()" ng-if="!interviewCreating && new_interview.id" ng-disabled="interviewForm.$error.required">{{ 'Update interview' | translate }}</md-button>
                 <md-progress-circular ng-if="interviewCreating"></md-progress-circular>
             </form>
         </div>
