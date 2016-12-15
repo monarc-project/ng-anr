@@ -1834,6 +1834,11 @@
             })
         };
 
+        $scope.openSnapshot = function (snapshot) {
+            $state.transitionTo('main.project.anr', {modelId: snapshot.anr.id});
+            $mdDialog.cancel();
+        };
+
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
