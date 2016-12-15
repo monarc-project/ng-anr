@@ -1414,6 +1414,7 @@
 
         $scope.editRecommandation = function (ev, rec) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            var srcRec = rec;
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'rec', CreateRecommandationDialog],
@@ -1428,11 +1429,19 @@
                 }
             }).then(function (rec) {
                 var RecommandationService = $injector.get("ClientRecommandationService");
-                rec.anr = $scope.model.anr.id;
-                RecommandationService.updateRecommandation(rec, function () {
-                    toastr.success(gettextCatalog.getString("The recommendation has been updated successfully"));
-                    updateRecommandations();
-                })
+
+                if (rec === false) {
+                    RecommandationService.deleteRecommandation({anr: $scope.model.anr.id, id: srcRec.id}).then(function () {
+                        toastr.success(gettextCatalog.getString("The recommendation has been deleted successfully"));
+                        updateRecommandations();
+                    });
+                } else {
+                    rec.anr = $scope.model.anr.id;
+                    RecommandationService.updateRecommandation(rec, function () {
+                        toastr.success(gettextCatalog.getString("The recommendation has been updated successfully"));
+                        updateRecommandations();
+                    });
+                }
             });
         }
     }
@@ -1926,10 +1935,19 @@
 
     function CreateRecommandationDialog($scope, $mdDialog, rec) {
         $scope.recommandation = rec;
+        $scope.deleteConfirmation = false;
+
+        $scope.delete = function () {
+            $scope.deleteConfirmation = true;
+        };
+
+        $scope.deleteConfirm = function () {
+            $mdDialog.hide(false);
+        };
 
         $scope.create = function () {
             $mdDialog.hide($scope.recommandation);
-        }
+        };
 
         $scope.cancel = function() {
             $mdDialog.cancel();
