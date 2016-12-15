@@ -463,7 +463,7 @@
             <div layout="row" class="md-padding-left" layout-align="space-around center">
                 <p class="md-padding-right md-padding-left" translate>Filter:</p>
 
-                <md-select ng-model="risk_tag_filter" aria-label="{{ 'Asset type' | translate }}" placeholder="{{ 'Asset type' | translate }}" flex>
+                <md-select ng-model="risk_tag_filter" aria-label="{{ 'Asset type' | translate }}" placeholder="{{ 'Tag' | translate }}" flex>
                     <md-option value="0">{{ 'All tags' | translate }}</md-option>
                     <md-option ng-repeat="tag in risk_tags" ng-value="tag.id">{{ tag.code }} ({{ tag[_langField('label')] }})</md-option>
                 </md-select>
