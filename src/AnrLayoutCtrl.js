@@ -1735,13 +1735,30 @@
 
         QuestionService.getQuestions().then(function (data) {
             $scope.questions = angular.copy(data.questions);
+
+            for (var i = 0; i < $scope.questions.length; ++i) {
+                var q = $scope.questions[i];
+
+                if (q.type == 2) {
+                    q.response = JSON.parse(q.response);
+                }
+            }
+
             $scope.questionsOriginal = angular.copy(data.questions);
+
+
         })
 
         $scope.saveQuestions = function () {
             for (var i = 0; i < $scope.questions.length; ++i) {
                 if ($scope.questions[i].response != $scope.questionsOriginal[i].response) {
-                    QuestionService.patchQuestion($scope.questions[i].id, {response: $scope.questions[i].response});
+                    var response = $scope.questions[i].response;
+
+                    if ($scope.questions[i].type == 2) {
+                        response = JSON.stringify(response);
+                    }
+
+                    QuestionService.patchQuestion($scope.questions[i].id, {response: response});
                 }
             }
 

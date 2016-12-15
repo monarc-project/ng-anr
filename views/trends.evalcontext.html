@@ -15,7 +15,13 @@
                     <div layout="column" class="md-padding md-padding-left md-padding-right">
                         <md-input-container ng-repeat="question in questions">
                             <label>{{ question['label' + anr.language] }}</label>
-                            <textarea ng-model="question.response" rows="3"></textarea>
+                            <textarea ng-if="question.type == 1" ng-model="question.response" rows="3"></textarea>
+                            <md-select ng-if="question.type == 2 && question.multichoice == 0" ng-model="question.response">
+                                <md-option ng-repeat="choice in question.choices" ng-value="choice.id">{{ choice[_langField('label')] }}</md-option>
+                            </md-select>
+                            <md-select ng-if="question.type == 2 && question.multichoice == 1" ng-model="question.response" multiple="true">
+                                <md-option ng-repeat="choice in question.choices" ng-value="choice.id">{{ choice[_langField('label')] }}</md-option>
+                            </md-select>
                         </md-input-container>
                     </div>
 
