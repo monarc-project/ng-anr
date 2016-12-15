@@ -10,6 +10,35 @@
     </md-toolbar>
     <md-dialog-content>
         <div class="md-dialog-content">
+            <md-button class="md-subhead" ng-click="showInterviewForm = !showInterviewForm" translate><md-icon>{{ !showInterviewForm ? 'arrow_drop_down' : 'arrow_drop_up' }}</md-icon> New interview</md-button>
+
+            <md-card ng-if="showInterviewForm">
+                <md-card-content>
+                    <form name="interviewForm" layout="column">
+                        <md-input-container>
+                            <label translate>Date (July 10, 2015; Week 3; First month; ...)</label>
+                            <input type="text" ng-model="new_interview.date" name="date" required>
+                        </md-input-container>
+
+                        <md-input-container>
+                            <label translate>Department / People</label>
+                            <textarea ng-model="new_interview.service" name="service" required></textarea>
+                        </md-input-container>
+
+                        <md-input-container>
+                            <label translate>Contents</label>
+                            <textarea ng-model="new_interview.content" name="content" required></textarea>
+                        </md-input-container>
+
+                        <div layout="row" layout-align="center center">
+                            <md-button ng-click="createInterview()" ng-if="!interviewCreating && !new_interview.id" ng-disabled="interviewForm.$error.required">{{ 'Create interview' | translate }}</md-button>
+                            <md-button ng-click="createInterview()" ng-if="!interviewCreating && new_interview.id" ng-disabled="interviewForm.$error.required">{{ 'Update interview' | translate }}</md-button>
+                            <md-progress-circular ng-if="interviewCreating"></md-progress-circular>
+                        </div>
+                    </form>
+                </md-card-content>
+            </md-card>
+
             <table class="md-html-table">
                 <thead>
                 <tr>
@@ -33,28 +62,7 @@
                 </tbody>
             </table>
 
-            <p class="md-subhead" translate>New interview</p>
 
-            <form name="interviewForm" layout="column">
-                <md-input-container>
-                    <label translate>Date (July 10, 2015; Week 3; First month; ...)</label>
-                    <input type="text" ng-model="new_interview.date" name="date" required>
-                </md-input-container>
-
-                <md-input-container>
-                    <label translate>Department / People</label>
-                    <textarea ng-model="new_interview.service" name="service" required></textarea>
-                </md-input-container>
-
-                <md-input-container>
-                    <label translate>Contents</label>
-                    <textarea ng-model="new_interview.content" name="content" required></textarea>
-                </md-input-container>
-
-                <md-button ng-click="createInterview()" ng-if="!interviewCreating && !new_interview.id" ng-disabled="interviewForm.$error.required">{{ 'Create interview' | translate }}</md-button>
-                <md-button ng-click="createInterview()" ng-if="!interviewCreating && new_interview.id" ng-disabled="interviewForm.$error.required">{{ 'Update interview' | translate }}</md-button>
-                <md-progress-circular ng-if="interviewCreating"></md-progress-circular>
-            </form>
         </div>
     </md-dialog-content>
     <md-dialog-actions layout="row">
