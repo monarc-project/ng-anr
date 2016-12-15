@@ -1782,17 +1782,27 @@
         };
 
         $scope.previousThreat = function () {
-            $scope.saveThreat(function () {
+            if ($scope.evalContextForm.$dirty) {
+                $scope.saveThreat(function () {
+                    $scope.display.currentThreat--;
+                    $scope.updateThreat();
+                });
+            } else {
                 $scope.display.currentThreat--;
                 $scope.updateThreat();
-            });
+            }
         };
 
         $scope.nextThreat = function () {
-            $scope.saveThreat(function () {
+            if ($scope.evalContextForm.$dirty) {
+                $scope.saveThreat(function () {
+                    $scope.display.currentThreat++;
+                    $scope.updateThreat();
+                });
+            } else {
                 $scope.display.currentThreat++;
                 $scope.updateThreat();
-            });
+            }
         };
 
         $scope.saveThreat = function (cb) {
