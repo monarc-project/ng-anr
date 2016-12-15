@@ -436,7 +436,7 @@ div.ng-inline-edit input, div.ng-inline-edit textarea {
     min-height: 30px;
 }
 .angular-ui-tree-nodes .angular-ui-tree-nodes {
-    padding-left: 10px;
+    padding-left: 6px;
 }
 
 /** Material Design Overrides */
@@ -498,6 +498,7 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
     width: 12px;
     font-size: 14px;
     padding-top: 5px;
+    margin-right: 4px;
     color: #F57C00 !important;
 }
 
