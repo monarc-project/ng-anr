@@ -688,6 +688,9 @@ md-progress-linear.yellow .md-container {
 
 .w100{ width: 100%; }
 
+.anr-importance {
+    color: #FF5722;
+}
 
 .edit-field-placeholder {
     color: #666666;
