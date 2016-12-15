@@ -984,13 +984,14 @@
         $scope.newColumn = { name: null };
         $scope.onCreateNewColumn = function (newValue) {
             AnrService.createScaleType($scope.model.anr.id, $scope.scales.impacts.id, newValue, function () {
-                $scope.updateScaleTypes();
+                $scope.updateScaleTypes(function () {
+                    $timeout(function () {
+                        var scroller = document.getElementById('horiz-scrollable');
+                        scroller.scrollLeft = scroller.scrollWidth;
+                    }, 0, false);
+                });
                 $scope.newColumn.name = null;
                 $scope.$broadcast('scales-impacts-type-changed');
-                $timeout(function () {
-                    var scroller = document.getElementById('horiz-scrollable');
-                    scroller.scrollLeft = scroller.scrollWidth;
-                }, 0, false);
             });
         };
 
@@ -1133,7 +1134,7 @@
 
         };
 
-        $scope.updateScaleTypes = function () {
+        $scope.updateScaleTypes = function (cb) {
             AnrService.getScalesTypes($scope.model.anr.id).then(function (data) {
                 $scope.scales_types = data.types;
 
@@ -1167,6 +1168,10 @@
                 $scope.updateScaleComments($scope.scales.impacts.id);
                 $scope.updateScaleComments($scope.scales.threats.id);
                 $scope.updateScaleComments($scope.scales.vulns.id);
+
+                if (cb) {
+                    cb();
+                }
             });
         };
 
