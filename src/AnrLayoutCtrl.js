@@ -1067,7 +1067,7 @@
                         }
                     });
             } else {
-                createAttachedObject($scope, $mdDialog, AnrService, ev)
+                createAttachedObject($scope, $mdDialog, $state, $location, $scope, AnrService, ev)
             }
         };
 
@@ -1459,7 +1459,7 @@
         };
     }
 
-    var createAttachedObject = function ($scope, $mdDialog, AnrService, ev, objlib) {
+    var createAttachedObject = function ($scope, $mdDialog, $state, $location, $parentScope, AnrService, ev, objlib) {
         $scope.objLibDialog = $mdDialog;
         $mdDialog.show({
             controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', '$stateParams', CreateObjlibDialogCtrl],
@@ -1486,11 +1486,16 @@
 
                 AnrService.addNewObjectToLibrary($scope.model.anr.id, objlib, function (data) {
                     $parentScope.updateObjectsLibrary(false, function(){
-                        $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+data.id);
+                        if ($scope.OFFICE_MODE == 'FO') {
+                            $state.transitionTo('main.project.anr.object', {modelId: $scope.model.anr.id, objectId: data.id});
+                        } else {
+                            $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+data.id);
+                        }
+
                     });
                 }, function () {
                     // An error occurred, re-show the dialog
-                    createAttachedObject($scope, $mdDialog, AnrService, ev, copy);
+                    createAttachedObject($scope, $mdDialog, $state, $location, $parentScope, AnrService, ev, copy);
                 });
             }
         });
@@ -1503,7 +1508,7 @@
         };
 
         $scope.createAttachedObject = function (ev, objlib) {
-            createAttachedObject($scope, $mdDialog, AnrService, ev, objlib);
+            createAttachedObject($scope, $mdDialog, $state, $location, $parentScope, AnrService, ev, objlib);
         }
 
         $scope.loadCategs = function(){
