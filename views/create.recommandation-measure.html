@@ -11,9 +11,24 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-select ng-model="rec.measure">
-                    <md-option ng-repeat="measure in measures" ng-value="measure.id">{{ measure.code }} - {{ measure[_langField('description')] }}</md-option>
-                </md-select>
+                <md-autocomplete
+                        flex
+                        required
+                        md-selected-item="rec.measure"
+                        md-search-text="m1SearchText"
+                        md-items="item in queryMeasureSearch(m1SearchText)"
+                        md-item-text="item.code + ' (' + item[_langField('description')] + ')'"
+                        md-delay="300"
+                        md-min-length="0"
+                        md-floating-label="{{ 'Measure' | translate }}">
+                    <md-item-template>
+                        <span md-highlight-text="m1SearchText" md-highlight-flags="^i">{{ item.code }} ({{ item[_langField('description')] }})</span>
+                    </md-item-template>
+
+                    <md-not-found>
+                        {{ 'No measure matching your search was found' | translate }}
+                    </md-not-found>
+                </md-autocomplete>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row" layout-align="end center">

@@ -350,7 +350,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'MeasureService', MeasureRecommandationAttachDialog],
+                controller: ['$scope', '$mdDialog', '$q', 'MeasureService', MeasureRecommandationAttachDialog],
                 templateUrl: '/views/anr/create.recommandation-measure.html',
                 preserveScope: false,
                 targetEvent: ev,
@@ -1954,17 +1954,26 @@
         };
     }
 
-    function MeasureRecommandationAttachDialog($scope, $mdDialog, MeasureService) {
-        MeasureService.getMeasures({limit: 0}).then(function (data) {
-            $scope.measures = data.measures;
-        });
-
+    function MeasureRecommandationAttachDialog($scope, $mdDialog, $q, MeasureService) {
         $scope.rec = {
-            measure: 0
+            measure: null
+        };
+
+        $scope.queryMeasureSearch = function (query) {
+            var promise = $q.defer();
+            MeasureService.getMeasures({filter: query}).then(function (e) {
+                promise.resolve(e.measures);
+            }, function (e) {
+                promise.reject(e);
+            });
+
+            return promise.promise;
         };
 
         $scope.create = function () {
-            $mdDialog.hide($scope.rec.measure);
+            if ($scope.rec.measure) {
+                $mdDialog.hide($scope.rec.measure.id);
+            }
         };
 
         $scope.cancel = function () {
