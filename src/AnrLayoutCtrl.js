@@ -1431,7 +1431,7 @@
                 var RecommandationService = $injector.get("ClientRecommandationService");
 
                 if (rec === false) {
-                    RecommandationService.deleteRecommandation({anr: $scope.model.anr.id, id: srcRec.id}, function () {
+                    RecommandationService.deleteRecommandation({anr: $scope.model.anr.id, id: srcRec.recommandation.id}, function () {
                         toastr.success(gettextCatalog.getString("The recommendation has been deleted successfully"));
                         updateRecommandations();
                     });
