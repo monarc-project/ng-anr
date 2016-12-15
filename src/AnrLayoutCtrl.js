@@ -1797,7 +1797,9 @@
 
         $scope.saveThreat = function (cb) {
             var copy = angular.copy($scope.currentThreatObj);
-            copy.theme = copy.theme.id;
+            if (copy.theme) {
+                copy.theme = copy.theme.id;
+            }
 
             ThreatService.updateThreat(copy, function () {
                 toastr.success(gettextCatalog.getString("Threat assessment saved successfully"));
