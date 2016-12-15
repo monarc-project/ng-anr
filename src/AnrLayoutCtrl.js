@@ -1399,8 +1399,15 @@
             }).then(function (rec) {
                 var RecommandationService = $injector.get("ClientRecommandationService");
                 rec.anr = $scope.model.anr.id;
-                RecommandationService.createRecommandation(rec, function () {
+                RecommandationService.createRecommandation(rec, function (data) {
                     toastr.success(gettextCatalog.getString("The recommendation has been created successfully"));
+
+                    var RecommandationService = $injector.get('ClientRecommandationService');
+                    RecommandationService.attachToRisk($scope.model.anr.id, data.id, $scope.sheet_risk.id, false,
+                        function () {
+                            toastr.success(gettextCatalog.getString("The recommandation has been attached to this risk."));
+                            updateRecommandations();
+                        });
                 })
             });
         }
