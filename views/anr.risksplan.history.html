@@ -19,7 +19,7 @@
         <tr ng-repeat="entry in history">
             <td>{{ entry.creator }}</td>
             <td>
-                <span ng-repeat="i in range(1, entry.recommandation.importance)">&starf;</span> <b>{{ entry.recommandation.code }}</b><br />
+                <span ng-repeat="i in range(1, entry.recommandation.importance)">&bull;</span> <b>{{ entry.recommandation.code }}</b><br />
                 {{entry.recommandation.description}}<br />
                 <b translate>Comment:</b> {{ entry.recoComment }}<br />
                 <b translate>Deadline:</b> {{ entry.recoDuedate }}<br />
