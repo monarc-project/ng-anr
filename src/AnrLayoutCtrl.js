@@ -100,7 +100,8 @@
                 ClientAnrService.getAnr($stateParams.modelId).then(function (data) {
                     $scope.model = {
                         id: null,
-                        anr: data
+                        anr: data,
+                        showRolfBrut: data.cacheModelShowRolfBrut && data.showRolfBrut,
                     };
 
                     thresholdsWatchSetup = false;
@@ -117,7 +118,6 @@
                         $scope.updateScales();
                         updateMethodProgress();
                     }
-
 
                     if ($rootScope.setAnrLanguage) {
                         $rootScope.setAnrLanguage(data.language);
@@ -219,7 +219,6 @@
                 DownloadService.downloadBlob(data.data, 'risks.csv',contentT);
             });
         }
-
 
         $scope.exportAnrRisksOpTable = function () {
             var params = angular.copy($scope.risks_filters);
