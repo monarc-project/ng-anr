@@ -4,6 +4,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
     $scope.language = ConfigService.getDefaultLanguageIndex();
     $scope.assetSearchText = '';
     $scope.categories = [];
+    var $parentScope = objLibDialog;
 
     if ($scope.OFFICE_MODE == 'FO') {
         $scope.language = $scope.getAnrLanguage();
@@ -109,7 +110,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
                             if (objLibDialog.editObjlib) {
                                 objLibDialog.editObjlib(null, $scope.objlib, true);
                             } else if (objLibDialog.createAttachedObject) {
-                                objLibDialog.createAttachedObject($scope, $mdDialog, $scope.__objlibDialog_State, $scope.__objlibDialog_Location, $scope.__objlibDialog_ParentScope, $scope.__objlibDialog_AnrService, null, $scope.objlib, true);
+                                objLibDialog.createAttachedObject($parentScope, $mdDialog, $parentScope.__objlibDialog_State, $parentScope.__objlibDialog_Location, $parentScope.__objlibDialog_ParentScope, $parentScope.__objlibDialog_AnrService, null, $scope.objlib, true);
                             }
 
 
@@ -123,7 +124,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
                 if (objLibDialog.editObjlib) {
                     objLibDialog.editObjlib(null, $scope.objlib);
                 } else if (objLibDialog.createAttachedObject) {
-                    objLibDialog.createAttachedObject(null, $scope.objlib);
+                    objLibDialog.createAttachedObject($parentScope, $mdDialog, $parentScope.__objlibDialog_State, $parentScope.__objlibDialog_Location, $parentScope.__objlibDialog_ParentScope, $parentScope.__objlibDialog_AnrService, null, $scope.objlib, true);
                 }
             });
     };
@@ -148,7 +149,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
                             if (objLibDialog.editObjlib) {
                                 objLibDialog.editObjlib(null, $scope.objlib, true);
                             } else if (objLibDialog.createAttachedObject) {
-                                objLibDialog.createAttachedObject($scope, $mdDialog, $scope.__objlibDialog_State, $scope.__objlibDialog_Location, $scope.__objlibDialog_ParentScope, $scope.__objlibDialog_AnrService, null, $scope.objlib, true);
+                                objLibDialog.createAttachedObject($parentScope, $mdDialog, $parentScope.__objlibDialog_State, $parentScope.__objlibDialog_Location, $parentScope.__objlibDialog_ParentScope, $parentScope.__objlibDialog_AnrService, null, $scope.objlib, true);
                             }
 
                             toastr.success(gettextCatalog.getString('The category "{{categoryLabel}}" has been updated successfully.',
@@ -159,7 +160,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
                     if (objLibDialog.editObjlib) {
                         objLibDialog.editObjlib(null, $scope.objlib);
                     } else if (objLibDialog.createAttachedObject) {
-                        objLibDialog.createAttachedObject(null, $scope.objlib);
+                        objLibDialog.createAttachedObject($parentScope, $mdDialog, $parentScope.__objlibDialog_State, $parentScope.__objlibDialog_Location, $parentScope.__objlibDialog_ParentScope, $parentScope.__objlibDialog_AnrService, null, $scope.objlib, true);
                     }
                 });
         });
