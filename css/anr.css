@@ -735,3 +735,66 @@ trix-toolbar button.link, trix-toolbar button.strike, trix-toolbar button.code {
 .big-border-left {
     border-left: 2px solid grey !important;
 }
+
+.md-ripple-container, .md-ripple-placed {
+    transition: none;
+}
+.md-open-menu-container.md-active {
+    opacity: 1;
+    transition: none;
+    transition-duration: 0ms;
+    /* transition: all .4s cubic-bezier(.25,.8,.25,1); */
+    /* transition-duration: 200ms; */
+}
+
+md-dialog.md-transition-in {
+    opacity: 1;
+    transition: none;
+    -webkit-transform: none;
+    transform: none;
+}
+
+/*Disable transition for fading in menu items dialog.*/
+.md-open-menu-container.md-active > md-menu-content > * {
+    opacity: 1;
+    transition: none;
+    transition-duration: 0ms;
+    transition-delay: 0ms;
+}
+.md-button
+{
+    transition: none;
+    transition-duration: 0ms;
+    transition-delay: 0ms;
+}
+md-dialog._md-transition-in {
+    transition: none;
+    transition-duration: 0ms;
+    transition-delay: 0ms;
+}
+
+md-input-container label{
+    transition: none!important;
+    transition-duration: 0ms!important;
+    transition-delay: 0ms!important;
+}
+
+
+md-slider ._md-thumb-container, ._md-focus-ring, ._md-track-fill, ._md-thumb{
+    transition: none!important;
+    transition-duration: 0ms!important;
+    transition-delay: 0ms!important;
+}
+
+md-select-menu
+{
+    transition: none!important;
+    transition-duration: 0ms!important;
+    transition-delay: 0ms!important;
+}
+md-select-menu md-content
+{
+    transition: none!important;
+    transition-duration: 0ms!important;
+    transition-delay: 0ms!important;
+}
