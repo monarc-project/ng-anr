@@ -13,8 +13,8 @@
             <div layout="row" layout-wrap class="md-padding-left md-padding-right">
                 <form layout="row" layout-wrap layout-align="center center" class="md-padding-left md-padding-right" ng-submit="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()">
                     <input type="submit" style="position: absolute; left: -99999px">
-                    <span ng-if="instance.asset.type == 1">{{ 'Risk threshold (on max CID)' | translate }}&nbsp;</span>
-                    <md-radio-group ng-if="instance.asset.type == 1" ng-model="risks_filters.thresholds" layout="row" class="md-primary">
+                    <span ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'Risk threshold (on max CID)' | translate }}&nbsp;</span>
+                    <md-radio-group ng-if="instance.asset.type == 1 || instmode =='anr'" ng-model="risks_filters.thresholds" layout="row" class="md-primary">
                         <md-radio-button ng-value="-1" aria-label="G"><div class="tbl-risk-calc anr-scales-demo-block green"></div></md-radio-button>
                         <md-radio-button ng-value="thresholds.thresholds.min" aria-label="O"><div class="tbl-risk-calc anr-scales-demo-block orange"></div></md-radio-button>
                         <md-radio-button ng-value="thresholds.thresholds.max" aria-label="R"><div class="tbl-risk-calc anr-scales-demo-block red"></div></md-radio-button>
