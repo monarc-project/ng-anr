@@ -2,6 +2,9 @@
     white-space: pre-wrap
 }
 
+.md-tab, .md-button {
+    text-transform: none;
+}
 
 .pointer {
     cursor: pointer;

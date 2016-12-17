@@ -23,23 +23,23 @@
         <md-card>
             <md-menu>
                 <md-button style="position: absolute; right: 24px; margin-top: 4px; z-index:10" ng-show="OFFICE_MODE == 'FO'"
-                           ng-click="openAnrToolsMenu($mdOpenMenu, $event)"> {{ ::('Tools' | translate) }}
+                           ng-click="openAnrToolsMenu($mdOpenMenu, $event)"> {{ 'Tools' | translate }}
                     <md-icon md-menu-origin>more_vert</md-icon>
                 </md-button>
                 <md-menu-content width="4">
                     <md-menu-item>
-                        <md-button ng-click="openInterviewTools($event)">{{ ::('Interviews table' | translate) }}</md-button>
+                        <md-button ng-click="openInterviewTools($event)">{{ 'Interviews table' | translate }}</md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button>{{ ::('Consultant(s)' | translate) }}</md-button>
+                        <md-button>{{ 'Consultant(s)' | translate }}</md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button ng-click="openSnapshotTools($event)">{{ ::('Snapshots' | translate) }}</md-button>
+                        <md-button ng-click="openSnapshotTools($event)">{{ 'Snapshots' | translate }}</md-button>
                     </md-menu-item>
                 </md-menu-content>
             </md-menu>
             <md-tabs md-border-bottom="true" md-selected="display.anrSelectedTabIndex" md-dynamic-height>
-                <md-tab label="{{ ::('Risk analysis' | translate) }}">
+                <md-tab label="{{ 'Risk analysis' | translate }}">
                     <div layout="row" class="md-padding">
                         <div layout="column" resizable r-directions="['right']" id="global-resize-menu" r-width="GlobalResizeMenuSize">
                             <div ng-hide="GlobalResizeMenuContentHide">
@@ -51,14 +51,14 @@
                                 </md-subheader>
 
                                 <div layout="row" layout-align="center center" ng-hide="uiState.hideInstances">
-                                    <md-button style="font-size: 12px; margin:0; padding: 0;" ng-click="unwrapAll()">{{ ::('Expand all' | translate) }}</md-button> /
-                                    <md-button style="font-size: 12px; margin:0; padding: 0;" ng-click="wrapAll()">{{ ::('Wrap all' | translate) }}</md-button>
+                                    <md-button style="font-size: 12px; margin:0; padding: 0;" ng-click="unwrapAll()">{{ 'Expand all' | translate }}</md-button> /
+                                    <md-button style="font-size: 12px; margin:0; padding: 0;" ng-click="wrapAll()">{{ 'Wrap all' | translate }}</md-button>
                                 </div>
 
                                 <div layout="column" ng-hide="uiState.hideInstances" resizable r-directions="['bottom']">
                                     <md-input-container md-no-float class="md-block" style="margin: 0; margin-bottom: 8px">
                                         <md-icon>search</md-icon>
-                                        <input type="text" ng-model="filter.instance" placeholder="{{ ::('Search an instance...' | translate) }}" flex="80">
+                                        <input type="text" ng-model="filter.instance" placeholder="{{ 'Search an instance...' | translate }}" flex="80">
                                     </md-input-container>
 
                                     <md-button ui-sref="main.kb_mgmt.models.details({modelId: model.id})" ng-click="clearSelectedInstAndObj();" ng-if="OFFICE_MODE == 'BO'" layout="row" layout-align="start center" style="margin:0 0 8px 0; text-align:left" ng-class="{'active-inst': anr_selected_object_id == null && anr_selected_instance_id == null}">
