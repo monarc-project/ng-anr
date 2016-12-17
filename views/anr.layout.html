@@ -76,7 +76,7 @@
                                         </div>
 
                                         <ol class="no-list-style" ui-tree-nodes="" ng-model="anr_obj_instances_data" id="inst-tree-root">
-                                            <li ng-repeat="node in anr_obj_instances_data" ui-tree-node ng-include="'tree_node_renderer.html'"></li>
+                                            <li ng-repeat="node in anr_obj_instances_data" ui-tree-node data-collapsed="{{node.__collapsed__}}" ng-include="'tree_node_renderer.html'"></li>
                                         </ol>
                                     </div>
                                 </div>
@@ -102,7 +102,7 @@
                                             <md-progress-circular md-diameter="24"></md-progress-circular>
                                         </div>
                                         <ol class="no-list-style" ui-tree-nodes="" ng-model="anr_obj_library_data" id="objlib-tree-root">
-                                            <li ng-repeat="node in anr_obj_library_data" ui-tree-node ng-include="'tree_node_renderer.html'"></li>
+                                            <li ng-repeat="node in anr_obj_library_data" ui-tree-node data-collapsed="{{node.__collapsed__}}" ng-include="'tree_node_renderer.html'"></li>
                                         </ol>
                                     </div>
                                 </div>
@@ -257,23 +257,23 @@
 
 <script type="text/ng-template" id="tree_node_renderer.html">
     <div ui-tree-handle layout="row" layout-align="start center">
-        <md-button class="md-icon-button md-tree-unwrap-button" ng-click="toggle(this)" ng-if="node.type == 'libcat' || node.__children__.length > 0" ng-disabled="node.__children__.length == 0" data-nodrag>
-            {{ (collapsed || node.__children__.length == 0) ? '+' : '-' }}
+        <md-button class="md-icon-button md-tree-unwrap-button" ng-click="toggleItemCollapsed(node)" ng-if="node.type == 'libcat' || node.__children__.length > 0" ng-disabled="node.__children__.length == 0" data-nodrag>
+            {{ (node.__collapsed__ || node.__children__.length == 0) ? '+' : '-' }}
         </md-button>
 
         <div class="md-tree-item-spacer" ng-if="!(node.type == 'libcat' || node.__children__.length > 0)"></div>
 
         <md-icon ng-if="node.scope == 2" class="md-tree-global-icon">language</md-icon>
 
-        <p flex class="md-tree-link" ng-click="toggle(this)" ng-if="node.type == 'libcat'"><strong>{{ ::node[_langField('label')] }}</strong></p>
+        <p flex class="md-tree-link" ng-click="toggleItemCollapsed(node)" ng-if="node.type == 'libcat'"><strong>{{ ::node[_langField('label')] }}</strong></p>
         <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.project.anr.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'FO'">{{ ::node[_langField('name')] }}</p>
         <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.project.anr.instance({instId: node.id})" ng-if=" ! node.disableclick && node.type == 'inst' && OFFICE_MODE == 'FO'">{{ ::node[_langField('name')] }}</p>
         <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.kb_mgmt.models.details.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'BO'">{{ ::node[_langField('name')] }}</p>
         <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})" ng-if=" ! node.disableclick && node.type == 'inst' && OFFICE_MODE == 'BO'">{{ ::node[_langField('name')] }}</p>
     </div>
 
-    <ol class="no-list-style" ui-tree-nodes="" ng-model="node.__children__" ng-show="!collapsed">
-        <li ng-repeat="node in node.__children__" ui-tree-node ng-include="'tree_node_renderer.html'" ng-show="visible(node)"></li>
+    <ol class="no-list-style" ui-tree-nodes="" ng-model="node.__children__" ng-show="!node.__collapsed__">
+        <li ng-repeat="node in node.__children__" ui-tree-node data-collapsed="{{node.__collapsed__}}" ng-include="'tree_node_renderer.html'" ng-show="visible(node)"></li>
     </ol>
 </script>
 

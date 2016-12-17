@@ -564,10 +564,21 @@
             var scope = angular.element(document.getElementById('insTree')).scope();
             scope.$broadcast('angular-ui-tree:expand-all');
         };
+        
+        $scope.toggleItemCollapsed = function (node) {
+            if (!$scope.collapseCache) {
+                $scope.collapseCache = {};
+            }
 
-        $scope.toggle = function (scope) {
-            scope.toggle();
-        }
+            if ($scope.collapseCache[node.type + node.id] !== undefined) {
+                $scope.collapseCache[node.type + node.id] = !$scope.collapseCache[node.type + node.id];
+            } else {
+                $scope.collapseCache[node.type + node.id] = false;
+            }
+
+            node.__collapsed__ = $scope.collapseCache[node.type + node.id];
+            //console.log(node.type + node.id);
+        };
 
         $scope.visible = function (item) {
             if (item.type == 'lib') {
@@ -668,9 +679,19 @@
 
         $scope.updateObjectsLibrary = function (gotofirst, callback) {
             AnrService.getObjectsLibrary($scope.model.anr.id).then(function (data) {
+                if (!$scope.collapseCache) {
+                    $scope.collapseCache = {};
+                }
+
                 var recurseFillTree = function (category, depth) {
                     var output = {id: category.id, type: 'libcat', label1: category.label1, label2: category.label2,
                         label3: category.label3, label4: category.label4, depth: depth, __children__: []};
+
+                    if ($scope.collapseCache[output.type + output.id] !== undefined) {
+                        output.__collapsed__ = $scope.collapseCache[output.type + output.id];
+                    } else {
+                        output.__collapsed__ = true;
+                    }
 
                     if (category.child && category.child.length > 0) {
                         for (var i = 0; i < category.child.length; ++i) {
@@ -682,6 +703,13 @@
                         for (var i = 0; i < category.objects.length; ++i) {
                             var obj = category.objects[i];
                             obj.type = 'lib';
+                            
+                            if ($scope.collapseCache[obj.type + obj.id] !== undefined) {
+                                obj.__collapsed__ = $scope.collapseCache[obj.type + obj.id];
+                            } else {
+                                obj.__collapsed__ = true;
+                            }
+                            
                             obj.__children__ = [];
                             output.__children__.push(obj);
                             if($scope.first_object == null){
@@ -723,7 +751,7 @@
 
                 if (!wrapAllFirstCast_Obj) {
                     $timeout(function () {
-                        $scope.wrapAllObjects();
+                        //$scope.wrapAllObjects();
                     }, 0);
                     wrapAllFirstCast_Obj = true;
                 }
@@ -738,11 +766,19 @@
             AnrService.getInstances($scope.model.anr.id).then(function (data) {
                 $scope.anr_obj_instances_data = [];
                 $scope.instanceCache = {};
+                if (!$scope.collapseCache) {
+                    $scope.collapseCache = {};
+                }
 
                 var recurseFillTree = function (instance, parentPath) {
                     var output = {id: instance.id, type: 'inst', scope: instance.scope, name1: instance.name1,
                         name2: instance.name2, name3: instance.name3, name4: instance.name4, component: instance.level > 1,
                         __children__: []};
+                    if ($scope.collapseCache[output.type + output.id] !== undefined) {
+                        output.__collapsed__ = $scope.collapseCache[output.type + output.id];
+                    } else {
+                        output.__collapsed__ = true;
+                    }
 
                     var parentPathPlusOne = parentPath ? (parentPath + " > " + instance[$scope._langField('name')]) : instance[$scope._langField('name')];
 
@@ -766,7 +802,7 @@
 
                 if (!wrapAllFirstCast_Ins) {
                     $timeout(function () {
-                        $scope.wrapAll();
+                        //$scope.wrapAll();
                     }, 0);
                     wrapAllFirstCast_Ins = true;
                 }
