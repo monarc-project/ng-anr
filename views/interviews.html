@@ -10,7 +10,7 @@
     </md-toolbar>
     <md-dialog-content>
         <div class="md-dialog-content">
-            <md-button class="md-subhead" ng-click="showInterviewForm = !showInterviewForm" translate><md-icon>{{ !showInterviewForm ? 'arrow_drop_down' : 'arrow_drop_up' }}</md-icon> New interview</md-button>
+            <md-button class="md-subhead" ng-if="!isAnrReadOnly" ng-click="showInterviewForm = !showInterviewForm" translate><md-icon>{{ !showInterviewForm ? 'arrow_drop_down' : 'arrow_drop_up' }}</md-icon> New interview</md-button>
 
             <md-card ng-if="showInterviewForm">
                 <md-card-content>
@@ -45,7 +45,7 @@
                     <th style="width: 20%" translate>Date</th>
                     <th translate>Department / People</th>
                     <th style="width: 40%" translate>Contents</th>
-                    <th translate>Actions</th>
+                    <th ng-if="!isAnrReadOnly" translate>Actions</th>
                 </tr>
                 </thead>
 
@@ -54,7 +54,7 @@
                     <td>{{ interview.date }}</td>
                     <td>{{ interview.service }}</td>
                     <td>{{ interview.content }}</td>
-                    <td class="txtcenter">
+                    <td class="txtcenter" ng-if="!isAnrReadOnly">
                         <md-button class="md-icon-button" ng-click="editInterview(interview)"><md-icon>edit</md-icon></md-button>
                         <md-button ng-class="{'md-icon-button': confirmDelete != interview.id}" ng-click="deleteInterview(interview)"><md-icon>delete</md-icon> <span ng-if="confirmDelete == interview.id" translate>Confirm?</span></md-button>
                     </td>

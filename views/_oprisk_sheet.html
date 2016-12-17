@@ -3,14 +3,14 @@
     <table class="md-html-table" editable callback="changeRiskOp">
         <tbody>
         <tr>
-            <td></td>
-            <td translate>Prob.</td>
-            <td>R</td>
-            <td>O</td>
-            <td>L</td>
-            <td>F</td>
-            <td>P</td>
-            <td translate>Calculated risk</td>
+            <th></th>
+            <th translate>Prob.</th>
+            <th>R</th>
+            <th>O</th>
+            <th>L</th>
+            <th>F</th>
+            <th>P</th>
+            <th translate>Calculated risk</th>
         </tr>
 
         <tr>
@@ -26,12 +26,12 @@
 
         <tr edit-model="opsheet_risk">
             <td translate>Target</td>
-            <td class="small" edit-field="targetedProb"></td>
-            <td class="small" edit-field="targetedR"></td>
-            <td class="small" edit-field="targetedO"></td>
-            <td class="small" edit-field="targetedL"></td>
-            <td class="small" edit-field="targetedF"></td>
-            <td class="small" edit-field="targetedP"></td>
+            <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedProb"></td>
+            <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedR"></td>
+            <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedO"></td>
+            <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedL"></td>
+            <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedF"></td>
+            <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedP"></td>
             <td class="tbl-risk-calc" ng-class="{'green': opsheet_risk.cacheTargetedRisk > 0 && opsheet_risk.cacheTargetedRisk < thresholds.rolf_thresholds.min, 'orange': opsheet_risk.cacheTargetedRisk >= thresholds.rolf_thresholds.min && opsheet_risk.cacheTargetedRisk < thresholds.rolf_thresholds.max, 'red': opsheet_risk.cacheTargetedRisk >= thresholds.rolf_thresholds.max}">{{ opsheet_risk.cacheTargetedRisk }}</td>
         </tr>
         </tbody>
@@ -41,12 +41,12 @@
         <md-input-container class="md-block">
             <label translate>Observation</label>
             <md-icon>visibility</md-icon>
-            <textarea ng-model="opsheet_risk.comment" rows="3"></textarea>
+            <textarea ng-model="opsheet_risk.comment" ng-disabled="isAnrReadOnly" rows="3"></textarea>
         </md-input-container>
         <md-input-container class="md-block">
             <label translate>Processing type</label>
             <md-icon>widgets</md-icon>
-            <md-select ng-model="opsheet_risk.kindOfMeasure">
+            <md-select ng-model="opsheet_risk.kindOfMeasure" ng-disabled="isAnrReadOnly">
                 <md-option ng-value="5">{{ 'Not processed' | translate }}</md-option>
                 <md-option ng-value="1">{{ 'Reduction' | translate }}</md-option>
                 <md-option ng-value="2">{{ 'Denied' | translate }}</md-option>
@@ -56,7 +56,7 @@
         </md-input-container>
 
         <div layout="row" layout-align="end center">
-            <md-button class="md-raised md-primary" ng-click="saveOpRiskSheet(opsheet_risk)">{{ 'Save changes' | translate }}</md-button>
+            <md-button class="md-raised md-primary" ng-disabled="isAnrReadOnly" ng-click="saveOpRiskSheet(opsheet_risk)">{{ 'Save changes' | translate }}</md-button>
         </div>
     </form>
 </div>

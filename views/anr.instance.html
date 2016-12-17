@@ -37,7 +37,7 @@
             </md-fab-trigger>
 
             <md-fab-actions>
-                <md-button class="md-fab md-raised md-mini" ng-click="editInstanceDetails($event)">
+                <md-button class="md-fab md-raised md-mini" ng-disabled="isAnrReadOnly" ng-click="editInstanceDetails($event)">
                     <md-icon>edit</md-icon>
                     <md-tooltip md-direction="left">{{ 'Edit impacts' | translate }}</md-tooltip>
                 </md-button>
@@ -47,7 +47,7 @@
                     <md-tooltip md-direction="left">{{ 'Export instance' | translate }}</md-tooltip>
                 </md-button>
 
-                <md-button aria-label="{{ 'Detach' | translate }}" class="md-fab md-raised md-mini md-warn" ng-click="detachInstance($event)">
+                <md-button aria-label="{{ 'Detach' | translate }}" ng-disabled="isAnrReadOnly" class="md-fab md-raised md-mini md-warn" ng-click="detachInstance($event)">
                     <md-icon>content_cut</md-icon>
                     <md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip>
                 </md-button>
@@ -89,7 +89,7 @@
                                 <td md-cell>{{ node[_langField('name')] }}</td>
                                 <td md-cell>
                                     <md-button class="md-icon-button" aria-title="{{ node[_langField('name')] }}" ng-if="instance.id != node.id" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></md-button>
-                                    <md-button class="md-icon-button" aria-title="{{ 'Detach' | translate }}" ng-if="instance.id != node.id" ng-click="detachInstance($event,node)""><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></md-button>
+                                    <md-button class="md-icon-button" aria-title="{{ 'Detach' | translate }}" ng-if="instance.id != node.id" ng-disabled="isAnrReadOnly" ng-click="detachInstance($event,node)""><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></md-button>
                                      <!--"-->
                                      <em ng-if="instance.id == node.id">{{'(Current instance)' | translate}}</em>
                                 </td>

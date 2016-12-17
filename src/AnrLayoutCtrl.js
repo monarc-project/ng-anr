@@ -18,6 +18,7 @@
 
         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
         $scope.scalesCanChange = false;
+        $scope.isAnrReadOnly = true;
 
         var self = this;
 
@@ -103,6 +104,8 @@
                         anr: data,
                         showRolfBrut: data.cacheModelShowRolfBrut && data.showRolfBrut,
                     };
+
+                    $scope.isAnrReadOnly = (data.rwd == 0);
 
                     thresholdsWatchSetup = false;
                     $scope.thresholds = {
@@ -646,7 +649,7 @@
 
         $scope.insTreeCallbacks = {
             beforeDrag: function (scopeDrag) {
-                return (!scopeDrag.$modelValue.component) && !$scope.anr_instance_tree_is_patching;
+                return !$scope.isAnrReadOnly && !scopeDrag.$modelValue.component && !$scope.anr_instance_tree_is_patching;
             },
 
             accept: function (sourceNodeScope, destNodeScope, destIndex) {
@@ -674,7 +677,7 @@
 
         $scope.libTreeCallbacks = {
             beforeDrag: function (scopeDrag) {
-                return (scopeDrag.$modelValue.type != 'libcat' || scopeDrag.$modelValue.depth == 0) && (scopeDrag.$modelValue.id > 0) && !$scope.anr_instance_tree_is_patching;
+                return !$scope.isAnrReadOnly && (scopeDrag.$modelValue.type != 'libcat' || scopeDrag.$modelValue.depth == 0) && (scopeDrag.$modelValue.id > 0) && !$scope.anr_instance_tree_is_patching;
             },
 
             accept: function (sourceNodeScope, destNodeScope, destIndex) {
@@ -1877,6 +1880,7 @@
             });
         };
 
+        $scope.isAnrReadOnly = !anr.rwd;
         reloadSnapshots();
 
         $scope.formatDate = function (input) {
@@ -1927,6 +1931,8 @@
             'service': null,
             'content': null
         }
+
+        $scope.isAnrReadOnly = !anr.rwd;
 
         var reloadInterviews = function () {
             ClientInterviewService.getInterviews({anr: anr.id}).then(function (data) {

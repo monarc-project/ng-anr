@@ -46,7 +46,7 @@
         <md-input-container class="md-block">
             <label translate>Processing type</label>
             <md-icon>widgets</md-icon>
-            <md-select ng-model="sheet_risk.kindOfMeasure">
+            <md-select ng-model="sheet_risk.kindOfMeasure" ng-disabled="isAnrReadOnly">
                 <md-option ng-value="5">{{ 'Not processed' | translate }}</md-option>
                 <md-option ng-value="1">{{ 'Reduction' | translate }}</md-option>
                 <md-option ng-value="2">{{ 'Denied' | translate }}</md-option>
@@ -58,13 +58,13 @@
         <md-input-container class="md-block">
             <label translate>Reduce vulnerability by</label>
             <md-icon>trending_down</md-icon>
-            <md-select ng-model="sheet_risk.reductionAmount">
+            <md-select ng-model="sheet_risk.reductionAmount" ng-disabled="isAnrReadOnly">
                 <md-option ng-repeat="i in reducAmount" ng-value="{{ i }}">{{ i }}</md-option>
             </md-select>
         </md-input-container>
 
         <div layout="row" layout-align="end center">
-            <md-button class="md-raised md-primary" ng-click="saveRiskSheet(sheet_risk)">{{ 'Save changes' | translate }}</md-button>
+            <md-button class="md-raised md-primary" ng-disabled="isAnrReadOnly" ng-click="saveRiskSheet(sheet_risk)">{{ 'Save changes' | translate }}</md-button>
         </div>
     </form>
 
@@ -75,6 +75,7 @@
             <md-autocomplete
                     flex
                     md-no-cache
+                    ng-disabled="isAnrReadOnly"
                     md-selected-item="rec_edit.rec"
                     md-search-text="recSearchText"
                     md-items="item in queryRecSearch(recSearchText)"
@@ -92,11 +93,11 @@
                 </md-not-found>
             </md-autocomplete>
 
-            <md-button ng-click="attachRecommandation()" ng-disabled="!rec_edit.rec">
+            <md-button ng-click="attachRecommandation()" ng-disabled="!rec_edit.rec || isAnrReadOnly">
                 <md-icon>link</md-icon>
                 {{ 'Attach' | translate }}
             </md-button>
-            <md-button ng-click="createRecommandation($event)">
+            <md-button ng-click="createRecommandation($event)" ng-disabled="isAnrReadOnly">
                 <md-icon>add</md-icon>
                 {{ 'Create new recommendation' | translate }}
             </md-button>

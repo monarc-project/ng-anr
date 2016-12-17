@@ -10,9 +10,9 @@
     </md-toolbar>
     <md-dialog-content>
         <div class="md-dialog-content">
-            <p class="md-subhead" translate>New snapshot</p>
+            <p class="md-subhead" ng-if="!isAnrReadOnly" translate>New snapshot</p>
 
-            <div layout="row">
+            <div layout="row" ng-if="!isAnrReadOnly">
                 <md-input-container>
                     <label translate>Optional comment</label>
                     <textarea ng-model="comment" ng-disabled="snapshotCreating"></textarea>
@@ -30,7 +30,7 @@
                     <th style="width: 20%" translate>Date</th>
                     <th translate>Author</th>
                     <th style="width: 40%" translate>Comment</th>
-                    <th translate>Actions</th>
+                    <th ng-if="!isAnrReadOnly" translate>Actions</th>
                 </tr>
                 </thead>
 
@@ -39,7 +39,7 @@
                     <td>{{ formatDate(snapshot.createdAt.date) }}</td>
                     <td>{{ snapshot.creator }}</td>
                     <td class="preserve-newlines">{{ snapshot.comment }}</td>
-                    <td class="txtcenter">
+                    <td class="txtcenter" ng-if="!isAnrReadOnly">
                         <md-button class="md-icon-button" ng-click="openSnapshot(snapshot)"><md-icon>visibility</md-icon></md-button>
                         <md-button class="md-icon-button" ng-click="restoreSnapshot(snapshot)" ng-if="!snapshotRestoring"><md-icon>restore</md-icon></md-button>
                         <md-progress-circular md-diameter="20" ng-if="snapshotRestoring"></md-progress-circular>
