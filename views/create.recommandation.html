@@ -21,9 +21,9 @@
                 <md-radio-group ng-model="recommandation.importance">
                     <md-icon>star</md-icon>
                     <label translate>Importance</label>
-                    <md-radio-button ng-value="1" class="anr-importance">&bull;</md-radio-button>
-                    <md-radio-button ng-value="2" class="anr-importance">&bull;&bull;</md-radio-button>
-                    <md-radio-button ng-value="3" class="anr-importance">&bull;&bull;&bull;</md-radio-button>
+                    <md-radio-button ng-value="1"><span class="anr-importance">&bull;</span> {{ 'Priority recommendation' | translate }}</md-radio-button>
+                    <md-radio-button ng-value="2"><span class="anr-importance">&bull;&bull;</span> {{ 'Recommendation which requires a dedicated action to solve a vulnerability or a missing best practice' | translate }}</md-radio-button>
+                    <md-radio-button ng-value="3"><span class="anr-importance">&bull;&bull;&bull;</span> {{ 'Useful information for safety, advice' | translate }}</md-radio-button>
                 </md-radio-group>
 
                 <md-input-container class="md-block">
