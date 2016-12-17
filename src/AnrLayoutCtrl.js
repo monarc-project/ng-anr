@@ -1109,7 +1109,7 @@
 
         $scope.updateScales = function () {
             AnrService.getScales($scope.model.anr.id).then(function (data) {
-                $scope.scalesCanChange = data.canChange;
+                $scope.scalesCanChange = data.canChange && $scope.model.anr.cacheModelIsScalesUpdatable;
                 for (var i = 0; i < data.scales.length; ++i) {
                     var scale = data.scales[i];
 
