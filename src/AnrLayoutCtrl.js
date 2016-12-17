@@ -280,6 +280,13 @@
             $scope.reducAmount = reducAmount;
 
             $scope._copyRecs = [];
+            $scope.updateSheetRiskTarget();
+        };
+
+        $scope.updateSheetRiskTarget = function () {
+            $scope.sheet_risk.target_c = $scope.sheet_risk.c_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
+            $scope.sheet_risk.target_i = $scope.sheet_risk.i_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
+            $scope.sheet_risk.target_d = $scope.sheet_risk.d_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
         };
 
         $scope.resetSheet = function () {
@@ -300,6 +307,7 @@
             AnrService.updateInstanceRisk($scope.model.anr.id, sheet.id, sheet, function () {
                 $scope.$broadcast('risks-table-edited');
                 $scope.updateAnrRisksTable();
+                $scope.updateSheetRiskTarget();
                 toastr.success(gettextCatalog.getString('The risk sheet changes have been saved successfully'), gettextCatalog.getString('Save successful'));
             })
         };

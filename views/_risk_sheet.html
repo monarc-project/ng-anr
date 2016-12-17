@@ -42,6 +42,47 @@
         </tbody>
     </table>
 
+    <table class="tbl-risk-calc">
+        <tbody>
+        <tr>
+            <th></th>
+            <th>C</th>
+            <th>I</th>
+            <th>D</th>
+        </tr>
+        <tr>
+            <th translate>Current risk</th>
+            <td ng-if="sheet_risk.c_risk_enabled" ng-class="{'green': sheet_risk.c_risk <= thresholds.thresholds.min, 'orange': sheet_risk.c_risk <= thresholds.thresholds.max && sheet_risk.c_risk > thresholds.thresholds.min, 'red': sheet_risk.c_risk > thresholds.thresholds.max}">
+                {{sheet_risk.c_risk}}
+            </td>
+            <td ng-if="!sheet_risk.c_risk_enabled"></td>
+            <td ng-if="sheet_risk.i_risk_enabled" ng-class="{'green': sheet_risk.i_risk <= thresholds.thresholds.min, 'orange': sheet_risk.i_risk <= thresholds.thresholds.max && sheet_risk.i_risk > thresholds.thresholds.min, 'red': sheet_risk.i_risk > thresholds.thresholds.max}">
+                {{sheet_risk.i_risk}}
+            </td>
+            <td ng-if="!sheet_risk.i_risk_enabled"></td>
+            <td ng-if="sheet_risk.d_risk_enabled" ng-class="{'green': sheet_risk.d_risk <= thresholds.thresholds.min, 'orange': sheet_risk.d_risk <= thresholds.thresholds.max && sheet_risk.d_risk > thresholds.thresholds.min, 'red': sheet_risk.d_risk > thresholds.thresholds.max}">
+                {{sheet_risk.d_risk}}
+            </td>
+            <td ng-if="!sheet_risk.d_risk_enabled"></td>
+        </tr>
+        <tr>
+            <th translate>Target risk</th>
+            <td ng-if="sheet_risk.c_risk_enabled" ng-class="{'green': sheet_risk.target_c <= thresholds.thresholds.min, 'orange': sheet_risk.target_c <= thresholds.thresholds.max && sheet_risk.target_c > thresholds.thresholds.min, 'red': sheet_risk.target_c > thresholds.thresholds.max}">
+                {{sheet_risk.target_c}}
+            </td>
+            <td ng-if="!sheet_risk.c_risk_enabled"></td>
+            <td ng-if="sheet_risk.i_risk_enabled" ng-class="{'green': sheet_risk.target_i <= thresholds.thresholds.min, 'orange': sheet_risk.target_i <= thresholds.thresholds.max && sheet_risk.target_i > thresholds.thresholds.min, 'red': sheet_risk.target_i > thresholds.thresholds.max}">
+                {{sheet_risk.target_i}}
+            </td>
+            <td ng-if="!sheet_risk.i_risk_enabled"></td>
+            <td ng-class="{'green': sheet_risk.target_d <= thresholds.thresholds.min, 'orange': sheet_risk.target_d <= thresholds.thresholds.max && sheet_risk.target_d > thresholds.thresholds.min, 'red': sheet_risk.target_d > thresholds.thresholds.max}">
+                {{sheet_risk.target_d}}
+            </td>
+            <td ng-if="!sheet_risk.d_risk_enabled"></td>
+        </tr>
+        </tbody>
+    </table>
+
     <form class="md-padding">
         <md-input-container class="md-block">
             <label translate>Processing type</label>
