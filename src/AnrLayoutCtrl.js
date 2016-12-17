@@ -334,6 +334,7 @@
             RecommandationService.attachToRisk($scope.model.anr.id, $scope.rec_edit.rec.id, $scope.sheet_risk.id, false,
                 function () {
                     toastr.success(gettextCatalog.getString("The recommandation has been attached to this risk."));
+                    $scope.rec_edit.rec = null;
                     updateRecommandations();
                 });
         };
