@@ -626,6 +626,11 @@
             scope.$broadcast('angular-ui-tree:collapse-all');
         };
 
+        $scope.wrapAllObjects = function () {
+            var scope = angular.element(document.getElementById('libTree')).scope();
+            scope.$broadcast('angular-ui-tree:collapse-all');
+        };
+
         $scope.unwrapAll = function () {
             var scope = angular.element(document.getElementById('insTree')).scope();
             scope.$broadcast('angular-ui-tree:expand-all');
@@ -787,6 +792,10 @@
                     }
                 }
 
+                $timeout(function () {
+                    $scope.wrapAllObjects();
+                }, 0);
+
                 if (callback != undefined) {
                     callback.call();
                 }
@@ -822,6 +831,10 @@
                     var instance = data.instances[v];
                     $scope.anr_obj_instances_data.push(recurseFillTree(instance));
                 }
+
+                $timeout(function () {
+                    $scope.wrapAll();
+                }, 0);
 
                 if (cb) {
                     cb();
