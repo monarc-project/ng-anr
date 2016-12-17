@@ -15,7 +15,7 @@
     function AnrKbMgmtCtrl($scope, $stateParams, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService,
                                   AssetService, ThreatService, VulnService, AmvService, MeasureService, TagService,
                                   RiskService, CategoryService, $state, $timeout, $rootScope) {
-        $scope.tab = $stateParams.tab;
+        $scope.tab = -1;
         $scope.gettext = gettextCatalog.getString;
         TableHelperService.resetBookmarks();
 
@@ -59,12 +59,13 @@
                 case 'objlibs': $scope.currentTabIndex = 5; break;
             }
         }
-        $scope.selectTab($scope.tab);
+        //$scope.selectTab($scope.tab);
 
-        $scope.$on('$locationChangeSuccess', function (event, newUrl) {
-            var tabName = newUrl.substring(newUrl.lastIndexOf('/') + 1);
-            $scope.tab = tabName;
-            $scope.selectTab(tabName);
+        $scope.$on('setup-kb-mgmt', function () {
+            if ($scope.tab == -1) {
+                $scope.tab = 0;
+                $scope.selectAssetsTab();
+            }
         });
 
         /*
@@ -75,6 +76,10 @@
         var assetsFilterWatch;
 
         $scope.selectAssetsTab = function () {
+            if ($scope.tab == -1) {
+                return;
+            }
+
             $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'assets'});
             var initAssetsFilter = true;
             assetsFilterWatch = $scope.$watch('assets.activeFilter', function() {

@@ -375,6 +375,15 @@
             });
         };
 
+        if ($scope.OFFICE_MODE == 'FO') {
+            $scope.$watch('display.anrSelectedTabIndex', function (newValue) {
+                if (newValue == 2) {
+                    // Init KB Mgmt, if needed
+                    $scope.$broadcast('setup-kb-mgmt');
+                }
+            });
+        }
+
         var selectScalesTab = function () {
             $scope.display.anrSelectedTabIndex = 1;
         };
