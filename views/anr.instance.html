@@ -13,17 +13,17 @@
             <md-card-content layout="column" layout-gt-md="row" flex-gt-md layout-wrap>
                 <div flex-gt-md="33" layout="column" layout-gt-md="row" layout-align="space-between">
                     <div class="bold" ng-class="{'txtright': $mdMedia('gt-md')}" translate>Confidentiality:&nbsp;</div>
-                    <div flex>{{ instance.c < 0 ? ('Inherited' | translate) : instance.c }} <span ng-if="instance.ch == 1 && instance.c >= 0" translate>(inherited)</span></div>
+                    <div title="{{scaleCommCache[1][instance.c]}}" flex>{{ instance.c < 0 ? ('Inherited' | translate) : instance.c }} <span ng-if="instance.ch == 1 && instance.c >= 0" translate>(inherited)</span></div>
                 </div>
 
                 <div flex-gt-md="33" layout="column" layout-gt-md="row" layout-align="space-between">
                     <div class="bold" ng-class="{'txtright': $mdMedia('gt-md')}" translate>Integrity:&nbsp;</div>
-                    <div flex>{{ instance.i < 0 ? ('Inherited' | translate) : instance.i }} <span ng-if="instance.ih == 1 && instance.i >= 0" translate>(inherited)</span></div>
+                    <div title="{{scaleCommCache[2][instance.i]}}" flex>{{ instance.i < 0 ? ('Inherited' | translate) : instance.i }} <span ng-if="instance.ih == 1 && instance.i >= 0" translate>(inherited)</span></div>
                 </div>
 
                 <div flex-gt-md="33" layout="column" layout-gt-md="row" layout-align="space-between">
                     <div class="bold" ng-class="{'txtright': $mdMedia('gt-md')}" translate>Availability:&nbsp;</div>
-                    <div flex>{{ instance.d < 0 ? ('Inherited' | translate) : instance.d }} <span ng-if="instance.dh == 1 && instance.d >= 0" translate>(inherited)</span></div>
+                    <div title="{{scaleCommCache[3][instance.d]}}" flex>{{ instance.d < 0 ? ('Inherited' | translate) : instance.d }} <span ng-if="instance.dh == 1 && instance.d >= 0" translate>(inherited)</span></div>
                 </div>
             </md-card-content>
         </md-card>
