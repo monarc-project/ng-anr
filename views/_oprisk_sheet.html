@@ -1,5 +1,5 @@
 <div class="md-padding-left md-padding-right">
-    <h3 layout="row" layout-align="start center"><md-button class="md-icon-button" ng-click="resetOpSheet()"><md-icon>arrow_back</md-icon></md-button> <span translate>Operational risk sheet</span> - {{ opsheet_risk[_langField('description')] }}</h3>
+    <h3 layout="row" layout-align="start center"><md-button class="md-icon-button" ng-click="resetOpSheet()"><md-icon>arrow_back</md-icon></md-button> <span translate>Operational risk sheet</span> - {{ opsheet_risk[_langField('label')] }}</h3>
     <table class="md-html-table" editable callback="changeRiskOp">
         <tbody>
         <tr>
@@ -14,7 +14,7 @@
         </tr>
 
         <tr>
-            <td translate>NET</td>
+            <th translate>NET</th>
             <td>{{ opsheet_risk.netProb }}</td>
             <td>{{ opsheet_risk.netR }}</td>
             <td>{{ opsheet_risk.netO }}</td>
@@ -25,7 +25,7 @@
         </tr>
 
         <tr edit-model="opsheet_risk">
-            <td translate>Target</td>
+            <th translate>Target</th>
             <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedProb"></td>
             <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedR"></td>
             <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedO"></td>
@@ -59,4 +59,6 @@
             <md-button class="md-raised md-primary" ng-disabled="isAnrReadOnly" ng-click="saveOpRiskSheet(opsheet_risk)">{{ 'Save changes' | translate }}</md-button>
         </div>
     </form>
+
+    <ng-include ng-if="OFFICE_MODE == 'FO'" ng-controller="RiskRecommendationPartialCtrl" src="'/views/anr/_risk_rec_form.html'"></ng-include>
 </div>
