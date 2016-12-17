@@ -277,7 +277,11 @@
                 }
             })
                 .then(function (exports) {
-                    $http.post('/api/objects-export', {id: $scope.object.id, password: exports.password}).then(function (data) {
+                    var url = '/api/objects-export';
+                    if ($scope.OFFICE_MODE == 'FO') {
+                        url = '/api/client-anr/' + $scope.model.anr.id + '/objects/' + $scope.object.id + '/export'
+                    }
+                    $http.post(url, {id: $scope.object.id, password: exports.password}).then(function (data) {
                         var contentD = data.headers('Content-Disposition'),
                             contentT = data.headers('Content-Type');
                         contentD = contentD.substring(0,contentD.length-1).split('filename="');

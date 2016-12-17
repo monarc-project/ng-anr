@@ -158,7 +158,13 @@
                 }
             })
                 .then(function (exports) {
-                    $http.get('/api/anr/' + $scope.model.anr.id + '/objects/' + $scope.instance.id + '/export', {id: $scope.instance.id, password: exports.password, assessments: exports.assessments}).then(function (data) {
+                    var cliAnr = '';
+                    var method = $http.get;
+                    if ($scope.OFFICE_MODE == 'FO') {
+                        cliAnr = 'client-';
+                        method = $http.post;
+                    }
+                    method('/api/'+cliAnr+'anr/' + $scope.model.anr.id + '/objects/' + $scope.instance.id + '/export', {id: $scope.instance.id, password: exports.password, assessments: exports.assessments}).then(function (data) {
                         DownloadService.downloadBlob(data.data, 'instance.bin');
                         toastr.success(gettextCatalog.getString('The instance has been exported successfully.'), gettextCatalog.getString('Export successful'));
                     })
