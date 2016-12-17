@@ -1,7 +1,7 @@
 <md-tab label="{{ 'Operational risks' | translate }}">
     <div layout="row" layout-align="space-between center">
         <p class="md-title md-padding-left" ng-if="!opsheet_risk" translate>{{ oprisks_total }} operational risks</p>
-{{ 'Operational risks' | translate }}
+
         <md-card ng-if="(instmode == 'anr' || instmode == 'inst') && !opsheet_risk">
             <div layout="row" layout-align="center center" layout-wrap>
                 <form layout="row" layout-align="center center" class="md-padding-left md-padding-right" layout-wrap ng-submit="updateInstanceRisksOp ? updateInstanceRisksOp() : updateAnrRisksOpTable()">
