@@ -213,8 +213,12 @@
         $scope.exportAnrRisksTable = function () {
             var params = angular.copy($scope.risks_filters);
             params.csv = true;
+            var anr = 'anr';
+            if ($scope.OFFICE_MODE == 'FO') {
+                anr = 'client-anr';
+            }
 
-            $http.get("/api/anr/" + $scope.model.anr.id + "/risks?" + $scope.serializeQueryString(params)).then(function (data) {
+            $http.get("/api/" + anr + "/" + $scope.model.anr.id + "/risks?" + $scope.serializeQueryString(params)).then(function (data) {
                 var contentT = data.headers('Content-Type');
                 DownloadService.downloadBlob(data.data, 'risks.csv',contentT);
             });
@@ -223,8 +227,12 @@
         $scope.exportAnrRisksOpTable = function () {
             var params = angular.copy($scope.risks_filters);
             params.csv = true;
+            var anr = 'anr';
+            if ($scope.OFFICE_MODE == 'FO') {
+                anr = 'client-anr';
+            }
 
-            $http.get("/api/anr/" + $scope.model.anr.id + "/risksop?" + $scope.serializeQueryString(params)).then(function (data) {
+            $http.get("/api/"+anr+"/" + $scope.model.anr.id + "/risksop?" + $scope.serializeQueryString(params)).then(function (data) {
                 var contentT = data.headers('Content-Type');
                 DownloadService.downloadBlob(data.data, 'risks_op.csv',contentT);
             });
