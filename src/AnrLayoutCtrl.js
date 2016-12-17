@@ -549,7 +549,7 @@
                     step: step,
                 }
             }).then(function (data) {
-
+                
             });
         };
 
@@ -1019,8 +1019,14 @@
         $scope.editAnrInfo = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
+            var controller = ['$scope', '$mdDialog', 'ConfigService', 'anr', '$stateParams', CreateAnrDialogCtrl];
+            if (CreateRiskAnalysisDialog) {
+                controller = ['$scope', '$mdDialog', 'toastr', 'gettext', 'gettextCatalog', 'ConfigService', 'ModelService',
+                    'ClientAnrService', 'anr', CreateRiskAnalysisDialog];
+            }
+
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ConfigService', 'anr', '$stateParams', CreateAnrDialogCtrl],
+                controller: controller,
                 templateUrl: '/views/dialogs/create.anr.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -1038,6 +1044,9 @@
                     }
                     service.patchAnr($scope.model.anr.id, anr, function () {
                         toastr.success(gettextCatalog.getString("The risk analysis details have been updated"), gettextCatalog.getString("Update successful"));
+                        if ($scope.OFFICE_MODE == 'FO') {
+                            $scope.model.showRolfBrut = anr.showRolfBrut;
+                        }
                     });
                 });
         };
