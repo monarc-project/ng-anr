@@ -131,7 +131,7 @@
     </table>
 
     <div layout="row" layout-align="space-between center" ng-if="!opsheet_risk">
-        <md-button ng-click="createSpecRiskOp($event)" ng-if="OFFICE_MODE == 'FO' && !isAnrReadOnly"><md-icon>add</md-icon> {{ 'Create a specific risk' | translate }}</md-button>
+        <md-button ng-click="createSpecRiskOp($event)" ng-if="OFFICE_MODE == 'FO' && !isAnrReadOnly && instmode != 'obj'"><md-icon>add</md-icon> {{ 'Create a specific risk' | translate }}</md-button>
         <md-select ng-model="risks_op_filters.page" md-on-close="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()"  ng-if="oprisks_total > 0">
             <md-option ng-repeat="i in range(1, ceil(oprisks_total / 50))" ng-value="i"><span translate>Page {{ i }}</span></md-option>
         </md-select>
