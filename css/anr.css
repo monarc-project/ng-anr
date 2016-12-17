@@ -6,6 +6,9 @@
     text-transform: none;
 }
 
+md-option {
+    height: 36px;
+}
 .pointer {
     cursor: pointer;
 }
