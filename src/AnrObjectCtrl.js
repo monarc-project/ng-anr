@@ -132,7 +132,7 @@
         };
 
         $scope.deleteObject = function (ev) {
-            if ($scope.mode == 'bdc') {
+            if ($scope.mode == 'bdc' || $scope.OFFICE_MODE == 'FO') {
                 var confirm = $mdDialog.confirm()
                     .title(gettextCatalog.getString('Delete this object?'))
                     .textContent(gettextCatalog.getString('The current object "{{ name }}" will be permanently deleted. Are you sure?',
@@ -144,7 +144,15 @@
 
                 $mdDialog.show(confirm).then(function () {
                     ObjlibService.deleteObjlib($scope.object.id, function () {
-                        $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'objlibs'});
+                        if ($scope.OFFICE_MODE == 'BO') {
+                            $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'objlibs'});
+                        } else {
+                            toastr.success(gettextCatalog.getString('The object has been successfully deleted'));
+                            if ($rootScope.hookUpdateObjlib) {
+                                $rootScope.hookUpdateObjlib();
+                            }
+                            $state.transitionTo('main.project.anr', {modelId: $stateParams.modelId});
+                        }
                     });
                 }, function () {
                     // Cancel
