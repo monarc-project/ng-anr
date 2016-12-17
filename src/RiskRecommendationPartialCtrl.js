@@ -3,12 +3,12 @@
     angular
         .module('AnrModule')
         .controller('RiskRecommendationPartialCtrl', [
-            '$scope', 'toastr', '$mdMedia', '$mdDialog', '$stateParams', 'gettextCatalog', '$state', '$q', '$attrs',
+            '$scope', '$rootScope', 'toastr', '$mdMedia', '$mdDialog', '$stateParams', 'gettextCatalog', '$state', '$q', '$attrs',
             'ClientRecommandationService',
             RiskRecommendationPartialCtrl
         ]);
 
-    function RiskRecommendationPartialCtrl($scope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog, $state,
+    function RiskRecommendationPartialCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog, $state,
                                      $q, $attrs, ClientRecommandationService) {
         var riskMode = $attrs.monarcMode; // information / operational
         var isOpRiskMode = (riskMode == 'operational');
@@ -154,6 +154,7 @@
         var updateRecommandations = function () {
             ClientRecommandationService.getRiskRecommandations($scope.model.anr.id, riskId, isOpRiskMode).then(function (data) {
                 $scope.recommandations = data['recommandations-risks'];
+                $rootScope.$broadcast('recommandations-loaded', $scope.recommandations);
             })
         };
 

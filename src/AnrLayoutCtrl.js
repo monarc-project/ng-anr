@@ -278,6 +278,8 @@
                 }
             }
             $scope.reducAmount = reducAmount;
+
+            $scope._copyRecs = [];
         };
 
         $scope.resetSheet = function () {
@@ -286,6 +288,7 @@
 
         $scope.openOpRiskSheet = function (risk) {
             $scope.opsheet_risk = risk;
+            $scope._copyRecs = [];
         };
 
         $scope.resetOpSheet = function () {
@@ -308,6 +311,10 @@
                 toastr.success(gettextCatalog.getString('The operational risk sheet changes have been saved successfully'), gettextCatalog.getString('Save successful'));
             })
         };
+
+        $scope.$on('recommandations-loaded', function (ev, recs) {
+            $scope._copyRecs = recs;
+        })
 
         /**
          * Risk analysis

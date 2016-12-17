@@ -63,6 +63,13 @@
             </md-select>
         </md-input-container>
 
+        <div layout="column" ng-if="OFFICE_MODE == 'FO'">
+            <b translate>Recommendations</b>
+            <ul class="no-list-style">
+                <li ng-repeat="rec in _copyRecs">{{ rec.recommandation.code }} <span class="anr-importance" ng-repeat="i in range(1, rec.recommandation.importance)">&bull;</span> &gt; {{ rec.recommandation.description }}</li>
+            </ul>
+        </div>
+
         <div layout="row" layout-align="end center">
             <md-button class="md-raised md-primary" ng-disabled="isAnrReadOnly" ng-click="saveRiskSheet(sheet_risk)">{{ 'Save changes' | translate }}</md-button>
         </div>
