@@ -10,6 +10,10 @@
 
     function RiskRecommendationPartialCtrl($scope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog, $state,
                                      $q, $attrs, ClientRecommandationService) {
+        var riskMode = $attrs.monarcMode; // information / operational
+        var isOpRiskMode = (riskMode == 'operational');
+        var riskId = (isOpRiskMode ? $scope.opsheet_risk.id : $scope.sheet_risk.id);
+
         $scope.createRecommandation = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
@@ -26,7 +30,7 @@
                 ClientRecommandationService.createRecommandation(rec, function (data) {
                     toastr.success(gettextCatalog.getString("The recommendation has been created successfully"));
 
-                    ClientRecommandationService.attachToRisk($scope.model.anr.id, data.id, $scope.sheet_risk.id, false,
+                    ClientRecommandationService.attachToRisk($scope.model.anr.id, data.id, riskId, isOpRiskMode,
                         function () {
                             toastr.success(gettextCatalog.getString("The recommandation has been attached to this risk."));
                             updateRecommandations();
@@ -82,7 +86,7 @@
         };
 
         $scope.attachRecommandation = function () {
-            ClientRecommandationService.attachToRisk($scope.model.anr.id, $scope.rec_edit.rec.id, $scope.sheet_risk.id, false,
+            ClientRecommandationService.attachToRisk($scope.model.anr.id, $scope.rec_edit.rec.id, riskId, isOpRiskMode,
                 function () {
                     toastr.success(gettextCatalog.getString("The recommandation has been attached to this risk."));
                     $scope.rec_edit.rec = null;
@@ -148,7 +152,7 @@
         }
 
         var updateRecommandations = function () {
-            ClientRecommandationService.getRiskRecommandations($scope.model.anr.id, $scope.sheet_risk.id, false).then(function (data) {
+            ClientRecommandationService.getRiskRecommandations($scope.model.anr.id, riskId, isOpRiskMode).then(function (data) {
                 $scope.recommandations = data['recommandations-risks'];
             })
         };
