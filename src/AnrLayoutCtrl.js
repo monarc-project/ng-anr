@@ -21,6 +21,8 @@
         $scope.isAnrReadOnly = true;
 
         var self = this;
+        var wrapAllFirstCast_Obj = false;
+        var wrapAllFirstCast_Ins = false;
 
         $scope.ToolsAnrService = ToolsAnrService;
         $scope.GlobalResizeMenuSize = "";
@@ -792,9 +794,12 @@
                     }
                 }
 
-                $timeout(function () {
-                    $scope.wrapAllObjects();
-                }, 0);
+                if (!wrapAllFirstCast_Obj) {
+                    $timeout(function () {
+                        $scope.wrapAllObjects();
+                    }, 0);
+                    wrapAllFirstCast_Obj = true;
+                }
 
                 if (callback != undefined) {
                     callback.call();
@@ -832,9 +837,12 @@
                     $scope.anr_obj_instances_data.push(recurseFillTree(instance));
                 }
 
-                $timeout(function () {
-                    $scope.wrapAll();
-                }, 0);
+                if (!wrapAllFirstCast_Ins) {
+                    $timeout(function () {
+                        $scope.wrapAll();
+                    }, 0);
+                    wrapAllFirstCast_Ins = true;
+                }
 
                 if (cb) {
                     cb();
