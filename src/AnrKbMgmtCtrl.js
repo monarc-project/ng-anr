@@ -80,7 +80,6 @@
                 return;
             }
 
-            $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'assets'});
             var initAssetsFilter = true;
             assetsFilterWatch = $scope.$watch('assets.activeFilter', function() {
                 if (initAssetsFilter) {
@@ -94,7 +93,9 @@
         };
 
         $scope.deselectAssetsTab = function () {
-            assetsFilterWatch();
+            if (assetsFilterWatch) {
+                assetsFilterWatch();
+            }
             TableHelperService.unwatchSearch($scope.assets);
         };
 
@@ -1314,11 +1315,11 @@
         }
         $scope.selectTagsTab($scope.tab);
 
-        $scope.$on('$locationChangeSuccess', function (event, newUrl) {
+        /*$scope.$on('$locationChangeSuccess', function (event, newUrl) {
             var tabName = newUrl.substring(newUrl.lastIndexOf('/') + 1);
             $scope.tab = tabName;
             $scope.selectTab(tabName);
-        });
+        });*/
 
         /**
          * CATEGORIES

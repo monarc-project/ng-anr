@@ -1821,6 +1821,11 @@
         }
 
         $scope.isAnrReadOnly = !anr.rwd;
+        $scope.showInterviewForm = false;
+
+        $scope.toggleInterviewForm = function () {
+            $scope.showInterviewForm = !$scope.showInterviewForm;
+        }
 
         var reloadInterviews = function () {
             ClientInterviewService.getInterviews({anr: anr.id}).then(function (data) {
