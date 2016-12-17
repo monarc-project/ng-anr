@@ -1311,7 +1311,12 @@
                 }
             })
                 .then(function (exports) {
-                    $http.post('/api/anr-export', {id: $scope.model.anr.id, password: exports.password, assessments: exports.assessments}).then(function (data) {
+                    var client = '';
+                    if ($scope.OFFICE_MODE == 'FO') {
+                        client = 'client-';
+                    }
+
+                    $http.post('/api/' + client + 'anr-export', {id: $scope.model.anr.id, password: exports.password, assessments: exports.assessments}).then(function (data) {
                         DownloadService.downloadBlob(data.data, 'anr.bin');
                         toastr.success(gettextCatalog.getString('The risk analysis has been exported successfully.'), gettextCatalog.getString('Export successful'));
                     })
