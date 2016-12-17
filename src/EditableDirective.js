@@ -75,7 +75,7 @@ angular.module('AnrModule').directive('editable', function(){
 					next_position = current_pos + 1 < this.fields.length ? current_pos + 1 : 0;
 				}
 
-				while (!this.fields[next_position].shown) {
+				while (!this.fields[next_position].shown && this.fields[next_position].readOnly) {
 					if(direction == 'prev'){
 						next_position = next_position - 1 >= 0 ? next_position - 1 : this.fields.length - 1;
 					}
@@ -135,6 +135,7 @@ angular.module('AnrModule').directive('editable', function(){
 			class: '@editClass',
 			show: "=ngShow",
 			filter: '@editFilter',
+			readOnly: '=editReadonly',
 		},
 		link: function(scope, element, attrs, ctrls){
 			scope.editableCtrl = ctrls[0];
@@ -149,6 +150,7 @@ angular.module('AnrModule').directive('editable', function(){
 				shown: true,
 				type: attrs.editType && attrs.editType != "" ? attrs.editType : 'text',
 				editedValue: null,
+				readOnly: scope.readOnly !== undefined ? scope.readOnly : false,
 				edit: function(){
 					this.edited = true;
 					this.initialValue = this.model[this.name];
@@ -186,7 +188,7 @@ angular.module('AnrModule').directive('editable', function(){
 			});
 
 			element.on('click', function(){
-				if( ! scope.field.edited ){
+				if( ! scope.field.edited && !scope.field.readOnly ){
 					scope.$apply(function(){
 						scope.startEdition();
 					});
