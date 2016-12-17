@@ -25,7 +25,7 @@ table.md-table tbody.md-body>tr.md-row {
     transition: 0.25s background-color;
 }
 table.md-table tbody.md-body>tr.md-row:nth-child(even) {
-    background-color: #FAFAFA;
+    background-color: rgba(1, 1, 1, 0.02);
 }
 table.md-table tbody.md-body>tr.md-row:hover {
     background-color: #F0F0F0;
