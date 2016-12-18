@@ -332,6 +332,15 @@
             return self.AnrRisksOpResource.query(query).$promise;
         };
 
+        var createInstanceRiskOp = function (anr_id, params, success, error) {
+            params.anrId = anr_id;
+            new self.AnrRisksOpResource(params).$save(success, error);
+        };
+
+        var deleteInstanceRiskOp = function (anr_id, risk_id, success, error) {
+            self.AnrRisksOpResource.delete({anrId: anr_id, instId: risk_id}, success, error);
+        };
+
 
         return {
             patchAnr: patchAnr,
@@ -371,6 +380,8 @@
             patchInstanceRisk: patchInstanceRisk,
 
             getInstanceOpRisk: getInstanceOpRisk,
+            createInstanceOpRisk: createInstanceRiskOp,
+            deleteInstanceOpRisk: deleteInstanceRiskOp,
             updateInstanceOpRisk: updateInstanceOpRisk,
             patchInstanceOpRisk: patchInstanceOpRisk,
 

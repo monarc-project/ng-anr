@@ -204,6 +204,16 @@
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen
+            }).then(function (risk) {
+                risk.instance = $stateParams.instId;
+                risk.specific = 1;
+                AnrService.createInstanceOpRisk($scope.model.anr.id, risk, function () {
+                    toastr.success(gettextCatalog.getString("The specific operational risk has been successfully created"));
+                    $scope.updateInstanceRisksOp();
+                    if ($scope.updateAnrRisksOpTable) {
+                        $scope.updateAnrRisksOpTable();
+                    }
+                });
             });
         }
 
