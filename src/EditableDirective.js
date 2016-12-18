@@ -130,6 +130,7 @@ angular.module('AnrModule').directive('editable', function(){
 		},
 		scope: {
 			name: '@editField',
+			ngName: '=editNgField',
 			localmodel: '=editLocalmodel',
 			placeholder: '@editPlaceholder',
 			class: '@editClass',
@@ -146,7 +147,7 @@ angular.module('AnrModule').directive('editable', function(){
 			scope.field = {
 				edited: false,
 				model: model,
-				name: scope.name,
+				name: scope.name ? scope.name : angular.copy(scope.ngName),
 				shown: true,
 				type: attrs.editType && attrs.editType != "" ? attrs.editType : 'text',
 				editedValue: null,
@@ -181,6 +182,13 @@ angular.module('AnrModule').directive('editable', function(){
 
 			scope.editableCtrl.addField(scope.field);
 
+			if (scope.ngName) {
+				scope.$watch('ngName', function (newValue) {
+					if (newValue != scope.name) {
+						scope.field.name = scope.ngName;
+					}
+				});
+			}
 			scope.$watch('show', function (newValue) {
 				if (newValue != scope.shown) {
 					scope.field.shown = scope.editableCtrl.checkVisibility(scope.field);
