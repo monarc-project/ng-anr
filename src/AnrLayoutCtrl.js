@@ -266,7 +266,7 @@
         }
 
         $scope.openRiskSheet = function (risk) {
-            $scope.sheet_risk = risk;
+            $scope.sheet_risk = angular.copy(risk);
 
             var reducAmount = [];
             if($scope.scales.vulns != undefined){

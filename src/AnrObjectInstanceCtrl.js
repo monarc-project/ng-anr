@@ -230,6 +230,27 @@
             });
         }
 
+        $scope.deleteSpecRisk = function (ev, risk) {
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Delete this specific risk?'))
+                .textContent(gettextCatalog.getString('The selected specific risk will be permanently deleted. Are you sure?'))
+                .targetEvent(ev)
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+
+            $mdDialog.show(confirm).then(function () {
+                AnrService.deleteInstanceRisk($scope.model.anr.id, risk.id, function () {
+                    toastr.success(gettextCatalog.getString("The specific risk has been successfully deleted"));
+                    $scope.updateInstanceRisks();
+                    if ($scope.updateAnrRisksTable) {
+                        $scope.updateAnrRisksTable();
+                    }
+                });
+            }, function () {
+                // Cancel
+            })
+        }
+
         $scope.$on('instance-moved', function (unused, instance_id) {
             $scope.updateInstance();
         })

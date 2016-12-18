@@ -135,6 +135,7 @@
                 ng-class="{'green': risk.d_risk > 0 && risk.d_risk <= thresholds.thresholds.min, 'orange': risk.d_risk > thresholds.thresholds.min && risk.d_risk <= thresholds.thresholds.max, 'red': risk.d_risk > thresholds.thresholds.max}">{{ risk.d_risk_enabled ? (risk.d_risk | dashnull) : '' }}</td>
             <td>
                 <div layout="row" layout-align="center center">
+                    <a ng-if="risk.specific == 1" class="pointer" ng-click="deleteSpecRisk($event, risk)"><md-icon>delete</md-icon></a>
                     <a class="pointer" title="{{ ('Open risk sheet' | translate) }}" ng-click="openRiskSheet(risk)">
                         <md-icon>open_in_new</md-icon>
                     </a>

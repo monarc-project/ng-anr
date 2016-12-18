@@ -315,6 +315,10 @@
             new self.AnrRisksResource(params).$save(success, error);
         };
 
+        var deleteInstanceRisk = function (anr_id, risk_id, success, error) {
+            self.AnrRisksResource.delete({anrId: anr_id, instId: risk_id}, success, error);
+        };
+
         var getInstanceRisksOp = function (anr_id, inst_id, params) {
             var query = angular.copy(params);
             query.anrId = anr_id;
@@ -362,6 +366,7 @@
             getInstanceRisksOp: getInstanceRisksOp,
             getInstanceRisk: getInstanceRisk,
             createInstanceRisk: createInstanceRisk,
+            deleteInstanceRisk: deleteInstanceRisk,
             updateInstanceRisk: updateInstanceRisk,
             patchInstanceRisk: patchInstanceRisk,
 
