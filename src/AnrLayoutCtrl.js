@@ -5,7 +5,7 @@
         .controller('AnrLayoutCtrl', [
             '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'TableHelperService',
             'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
-            '$transitions', 'DownloadService', '$mdPanel', '$injector',
+            '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService',
             AnrLayoutCtrl
         ]);
 
@@ -14,7 +14,7 @@
      */
     function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, TableHelperService, ModelService,
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
-                           $transitions, DownloadService, $mdPanel, $injector) {
+                           $transitions, DownloadService, $mdPanel, $injector, ConfigService) {
 
         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
         $scope.scalesCanChange = false;
@@ -77,6 +77,10 @@
                 ModelService.getModel($stateParams.modelId).then(function (data) {
                     $scope.model = data;
                     $rootScope.anr_id = data.anr.id;
+                    $scope.isAnrReadOnly = false;
+
+                    $scope.languages = ConfigService.getLanguages();
+                    $scope.scales.language = ConfigService.getDefaultLanguageIndex();
 
                     thresholdsWatchSetup = false;
                     $scope.thresholds = {
@@ -108,6 +112,8 @@
                     };
 
                     $scope.isAnrReadOnly = (data.rwd == 0);
+                    $scope.languages = ConfigService.getLanguages();
+                    $scope.scales.language = data.language;
 
                     thresholdsWatchSetup = false;
                     $scope.thresholds = {

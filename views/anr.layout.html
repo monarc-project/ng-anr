@@ -116,6 +116,12 @@
 
                 <md-tab label="{{ 'Evaluation scales' | translate }}">
                     <div class="md-padding-left md-padding-right" layout="column">
+                        <md-input-container ng-if="OFFICE_MODE == 'BO'">
+                            <md-icon>language</md-icon>
+                            <md-select ng-model="scales.language">
+                                <md-option ng-repeat="(idx, lang) in languages" ng-value="idx">{{ lang }}</md-option>
+                            </md-select>
+                        </md-input-container>
                         <md-card md-theme="default" class="md-card-crit" ng-if="(!scalesCanChange || !model.anr.cacheModelIsScalesUpdatable) && OFFICE_MODE == 'FO'">
                             <md-card-content>
                                 <p ng-if="model.anr.cacheModelIsScalesUpdatable" translate>Some of the risks of your analysis, your library, or your trends assessment have already been assessed. This being done, you may not edit the scales values.</p>
@@ -140,7 +146,7 @@
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        <th ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">{{ type[_langField('label')] }} <md-button class="md-icon-button md-warn" ng-if="type.type == 'CUS'" ng-click="deleteCustomScaleType(type.id)"><md-icon>delete</md-icon></md-button> <md-button class="md-icon-button" class="md-primary" ng-if="type.type != 'CUS'" ng-click="setImpactVisibility(type.id, !!type.isHidden)"><md-icon>{{ type.isHidden ? 'visibility' : 'visibility_off' }}</md-icon></md-button></th>
+                                        <th ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">{{ type['label' + scales.language] }} <md-button class="md-icon-button md-warn" ng-if="type.type == 'CUS'" ng-click="deleteCustomScaleType(type.id)"><md-icon>delete</md-icon></md-button> <md-button class="md-icon-button" class="md-primary" ng-if="type.type != 'CUS'" ng-click="setImpactVisibility(type.id, !!type.isHidden)"><md-icon>{{ type.isHidden ? 'visibility' : 'visibility_off' }}</md-icon></md-button></th>
                                         <th><span inline-edit="newColumn.name" inline-edit-callback="onCreateNewColumn(newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ 'New column name' | translate }}"></span></th>
                                     </tr>
                                 </thead>
@@ -148,7 +154,7 @@
                                 <tbody ng-if="scales.impacts.min != scales.impacts.max && scales.impacts.max > 0">
                                 <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)" edit-model="comms.impact[i]">
                                         <th>{{ i }}</th>
-                                        <td class="preserve-newlines" ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types" edit-field="{{ _langField('comment') }}" edit-localmodel="comms.impact[i][type.id]" edit-type="textarea"></td>
+                                        <td class="preserve-newlines" ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types" edit-field edit-ng-field="'comment' + scales.language" edit-localmodel="comms.impact[i][type.id]" edit-type="textarea"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -168,7 +174,7 @@
 
                         <div ng-if="scales.threats.min != scales.threats.max && scales.threats.max > 0" editable callback="onThreatCommChanged">
                             <ul class="no-list-style" edit-model="comms">
-                                <li ng-repeat="i in range(scales.threats.min, scales.threats.max)">{{i}}. <span edit-field="{{ _langField('comment') }}" edit-type="textarea" edit-class="preserve-newlines" edit-localmodel="comms.threat[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+                                <li ng-repeat="i in range(scales.threats.min, scales.threats.max)">{{i}}. <span edit-field edit-ng-field="'comment' + scales.language" edit-type="textarea" edit-class="preserve-newlines" edit-localmodel="comms.threat[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
                             </ul>
                         </div>
 
@@ -186,7 +192,7 @@
 
                         <div ng-if="scales.vulns.min != scales.vulns.max && scales.vulns.max > 0" editable callback="onVulnCommChanged">
                             <ul class="no-list-style" edit-model="comms">
-                                <li ng-repeat="i in range(scales.vulns.min, scales.vulns.max)">{{i}}. <span edit-field="{{ _langField('comment') }}" edit-type="textarea"  edit-class="preserve-newlines" edit-localmodel="comms.vuln[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+                                <li ng-repeat="i in range(scales.vulns.min, scales.vulns.max)">{{i}}. <span edit-field edit-ng-field="'comment' + scales.language" edit-type="textarea"  edit-class="preserve-newlines" edit-localmodel="comms.vuln[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
                             </ul>
                         </div>
 
