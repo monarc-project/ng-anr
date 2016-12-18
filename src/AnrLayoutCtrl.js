@@ -709,7 +709,7 @@
                             } else {
                                 obj.__collapsed__ = true;
                             }
-                            
+
                             obj.__children__ = [];
                             output.__children__.push(obj);
                             if($scope.first_object == null){
@@ -1374,34 +1374,6 @@
                 fullscreen: useFullScreen
             });
         }
-
-        $scope.createSpecRiskOp = function (ev) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
-            $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'RiskService', CreateSpecRiskOPDialog],
-                templateUrl: '/views/anr/create.specriskop.html',
-                targetEvent: ev,
-                preserveScope: false,
-                scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: false,
-                fullscreen: useFullScreen
-            });
-        }
-
-        $scope.createSpecRisk = function (ev) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
-            $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ThreatService', 'VulnService', CreateSpecRiskDialog],
-                templateUrl: '/views/anr/create.specrisk.html',
-                targetEvent: ev,
-                preserveScope: false,
-                scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: false,
-                fullscreen: useFullScreen
-            });
-        }
     }
 
     // Dialogs
@@ -1916,38 +1888,6 @@
                 $scope.confirmDelete = interview.id;
             }
         };
-
-        $scope.cancel = function() {
-            $mdDialog.cancel();
-        };
-    }
-
-    function CreateSpecRiskOPDialog($scope, $mdDialog, RiskService) {
-        RiskService.getRisks({limit: 0}).then(function (data) {
-            $scope.risks = data.risks;
-        });
-
-        $scope.create = function () {
-            $mdDialog.hide($scope.specrisk);
-        }
-
-        $scope.cancel = function() {
-            $mdDialog.cancel();
-        };
-    }
-
-    function CreateSpecRiskDialog($scope, $mdDialog, ThreatService, VulnService) {
-        ThreatService.getThreats({limit: 0}).then(function (data) {
-            $scope.threats = data.threats;
-        });
-
-        VulnService.getVulns({limit: 0}).then(function (data) {
-            $scope.vulns = data.vulnerabilities;
-        });
-
-        $scope.create = function () {
-            $mdDialog.hide($scope.specrisk);
-        }
 
         $scope.cancel = function() {
             $mdDialog.cancel();

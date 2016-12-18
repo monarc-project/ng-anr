@@ -310,6 +310,11 @@
             return self.AnrRisksResource.query(query).$promise;
         };
 
+        var createInstanceRisk = function (anr_id, params, success, error) {
+            params.anrId = anr_id;
+            new self.AnrRisksResource(params).$save(success, error);
+        };
+
         var getInstanceRisksOp = function (anr_id, inst_id, params) {
             var query = angular.copy(params);
             query.anrId = anr_id;
@@ -356,6 +361,7 @@
             getInstanceRisks: getInstanceRisks,
             getInstanceRisksOp: getInstanceRisksOp,
             getInstanceRisk: getInstanceRisk,
+            createInstanceRisk: createInstanceRisk,
             updateInstanceRisk: updateInstanceRisk,
             patchInstanceRisk: patchInstanceRisk,
 
