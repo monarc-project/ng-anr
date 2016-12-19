@@ -261,6 +261,27 @@
             })
         }
 
+        $scope.getEveryScaleComm = function (instance, val) {
+            var keys = Object.keys($scope.scaleCommCache);
+            var output = '';
+
+            for (var i = 0; i < keys.length; ++i) {
+                var key = keys[i];
+                if (key < 3) {
+                    continue;
+                }
+
+                var scaleType = $scope.scales_types[key];
+                var scaleComm = $scope.scaleCommCache[key];
+
+                if (scaleType && !scaleType.isHidden) {
+                    output = output + "\n" + scaleType[$scope._langField('label')] + " : " + scaleComm[val];
+                }
+            }
+
+            return output;
+        };
+
         $scope.$on('instance-moved', function (unused, instance_id) {
             $scope.updateInstance();
         })
