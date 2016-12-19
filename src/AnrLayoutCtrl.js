@@ -361,7 +361,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'QuestionService', 'ThreatService', 'ClientAnrService', 'anr', 'subStep', MethodEditTrendsDialog],
+                controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'QuestionService', 'ThreatService', 'ClientAnrService', 'GuideService', 'anr', 'subStep', MethodEditTrendsDialog],
                 templateUrl: '/views/anr/trends.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -1649,7 +1649,7 @@
                     }
                 });
             }
-        }
+        };
 
         $scope.context = {
             text: anr[subStep.anrField]
@@ -1692,10 +1692,39 @@
         };
     }
 
-    function MethodEditTrendsDialog($scope, $mdDialog, toastr, gettextCatalog, QuestionService, ThreatService, ClientAnrService, anr, subStep) {
+    function MethodEditTrendsDialog($scope, $mdDialog, toastr, gettextCatalog, QuestionService, ThreatService, ClientAnrService, GuideService, anr, subStep) {
         $scope.subStep = subStep;
         $scope.anr = anr;
         $scope.display = {};
+
+        $scope.guideVisible = false;
+
+        $scope.toggleGuide = function () {
+            $scope.guideVisible = !$scope.guideVisible;
+
+            if (!$scope.guide && $scope.guideVisible) {
+                GuideService.getGuides().then(function (data) {
+                    var guide = null;
+
+                    for (var i = 0; i < data.length; ++i) {
+                        var item = data[i];
+                        if (item.type == 3) {
+                            guide = item;
+                            break;
+                        }
+                    }
+
+                    if (guide && guide.isWithItems) {
+                        GuideService.getItems({order: 'position', guide: guide.id}).then(function (itemdata) {
+                            $scope.guide = guide;
+                            $scope.guide_items = itemdata;
+                        });
+                    } else {
+                        $scope.guide = guide;
+                    }
+                });
+            }
+        };
 
         QuestionService.getQuestions().then(function (data) {
             $scope.questions = angular.copy(data.questions);
