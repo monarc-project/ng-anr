@@ -480,6 +480,10 @@
         };
 
         $scope.openMethodDeliverable = function (step) {
+            if ($scope.isAnrReadOnly) {
+                return;
+            }
+
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
@@ -498,6 +502,10 @@
         };
 
         $scope.setMethodStepStatus = function (field, substep, done) {
+            if ($scope.isAnrReadOnly) {
+                return;
+            }
+
             var obj = {id: $scope.model.anr.id};
             obj[field] = (done ? 0 : 1);
 
@@ -1738,7 +1746,7 @@
         };
 
         $scope.previousThreat = function () {
-            if ($scope.evalContextForm.$dirty) {
+            if ($scope.evalContextForm.$dirty && $scope.anr.rwd >= 1) {
                 $scope.saveThreat(function () {
                     $scope.display.currentThreat--;
                     $scope.updateThreat();
@@ -1750,7 +1758,7 @@
         };
 
         $scope.nextThreat = function () {
-            if ($scope.evalContextForm.$dirty) {
+            if ($scope.evalContextForm.$dirty && $scope.anr.rwd >= 1) {
                 $scope.saveThreat(function () {
                     $scope.display.currentThreat++;
                     $scope.updateThreat();

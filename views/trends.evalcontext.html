@@ -16,18 +16,18 @@
                         <div ng-repeat="question in questions" layout="column">
                             <div class="preserve-newlines">{{ question['label' + anr.language] }}</div>
                             <md-input-container class="md-block" style="margin-top: 0">
-                                <textarea ng-if="question.type == 1" ng-model="question.response" rows="3"></textarea>
-                                <md-select ng-if="question.type == 2 && question.multichoice == 0" ng-model="question.response">
+                                <textarea ng-if="question.type == 1" ng-model="question.response" rows="3" ng-disabled="!anr.rwd"></textarea>
+                                <md-select ng-if="question.type == 2 && question.multichoice == 0" ng-disabled="!anr.rwd" ng-model="question.response">
                                     <md-option ng-repeat="choice in question.choices" ng-value="choice.id">{{ choice[_langField('label')] }}</md-option>
                                 </md-select>
-                                <md-select ng-if="question.type == 2 && question.multichoice == 1" ng-model="question.response" multiple="true">
+                                <md-select ng-if="question.type == 2 && question.multichoice == 1" ng-disabled="!anr.rwd" ng-model="question.response" multiple="true">
                                     <md-option ng-repeat="choice in question.choices" ng-value="choice.id">{{ choice[_langField('label')] }}</md-option>
                                 </md-select>
                             </md-input-container>
                         </div>
                     </div>
 
-                    <div layout="row" layout-align="end center">
+                    <div layout="row" layout-align="end center" ng-if="anr.rwd == 1">
                         <md-button ng-click="saveQuestions()" type="submit" class="md-accent md-hue-3">
                             {{ 'Save' | translate }}
                         </md-button>
@@ -60,7 +60,7 @@
                             <tr>
                                 <td rowspan="2">
                                     {{ 'Accidental cause' | translate }}<br />
-                                    <md-checkbox ng-model="currentThreatObj.isAccidental" ng-true-value="true" ng-false-value="false">{{ 'conceivable' | translate }}</md-checkbox>
+                                    <md-checkbox ng-model="currentThreatObj.isAccidental" ng-disabled="anr.rwd < 1" ng-true-value="true" ng-false-value="false">{{ 'conceivable' | translate }}</md-checkbox>
                                 </td>
                                 <td><b>{{ 'Description:' | translate }}</b> {{ currentThreatObj[_langField('descAccidental')] }}</td>
                             </tr>
@@ -70,7 +70,7 @@
                             <tr>
                                 <td rowspan="2">
                                     {{ 'Deliberate cause' | translate }}<br />
-                                    <md-checkbox ng-model="currentThreatObj.isDeliberate" ng-true-value="true" ng-false-value="false">{{ 'conceivable' | translate }}</md-checkbox>
+                                    <md-checkbox ng-model="currentThreatObj.isDeliberate" ng-disabled="anr.rwd < 1" ng-true-value="true" ng-false-value="false">{{ 'conceivable' | translate }}</md-checkbox>
                                 </td>
                                 <td><b>{{ 'Description:' | translate }}</b> {{ currentThreatObj[_langField('descDeliberate')] }}</td>
                             </tr>
@@ -85,7 +85,7 @@
                                 <td translate>Comments</td>
                                 <td>
                                     <md-input-container class="md-block">
-                                        <textarea ng-model="currentThreatObj.comment"></textarea>
+                                        <textarea ng-disabled="anr.rwd < 1" ng-model="currentThreatObj.comment"></textarea>
                                     </md-input-container>
                                 </td>
                             </tr>
@@ -102,7 +102,7 @@
                             <tr>
                                 <td translate>Trend</td>
                                 <td>
-                                    <md-radio-group ng-model="currentThreatObj.trend" layout="row">
+                                    <md-radio-group ng-model="currentThreatObj.trend" layout="row" ng-disabled="anr.rwd < 1">
                                         <md-radio-button ng-value="0">-</md-radio-button>
                                         <md-radio-button ng-value="1">n</md-radio-button>
                                         <md-radio-button ng-value="2">+</md-radio-button>
@@ -113,7 +113,7 @@
                             <tr>
                                 <td translate>Probability</td>
                                 <td>
-                                    <md-select ng-model="currentThreatObj.qualification">
+                                    <md-select ng-disabled="anr.rwd < 1" ng-model="currentThreatObj.qualification">
                                         <md-option ng-value="-1">-1</md-option>
                                         <md-option ng-value="0">0</md-option>
                                         <md-option ng-value="1">1</md-option>
@@ -121,7 +121,7 @@
                                         <md-option ng-value="3">3</md-option>
                                         <md-option ng-value="4">4</md-option>
                                     </md-select>
-                                    <md-checkbox ng-model="currentThreatObj.forceQualification">{{ 'Force impact in the analysis' | translate }}</md-checkbox>
+                                    <md-checkbox ng-disabled="anr.rwd < 1" ng-model="currentThreatObj.forceQualification">{{ 'Force impact in the analysis' | translate }}</md-checkbox>
                                 </td>
                             </tr>
                             </tbody>
@@ -137,7 +137,7 @@
 
                         <span flex></span>
 
-                        <md-button ng-click="saveThreat()" type="submit" class="md-accent md-hue-3">
+                        <md-button ng-if="anr.rwd >= 1" ng-click="saveThreat()" type="submit" class="md-accent md-hue-3">
                             {{ 'Save' | translate }}
                         </md-button>
 
@@ -156,7 +156,7 @@
                             <md-card-content>
                                 <trix-editor angular-trix ng-model="anr.synthThreat" style="min-height: 250px; border: 1px solid #AAAAAA;" class="md-padding"></trix-editor>
 
-                                <div layout="row" layout-align="end center">
+                                <div layout="row" layout-align="end center" ng-if="anr.rwd >= 1">
                                     <md-button ng-click="saveSummary()" type="submit" class="md-primary">
                                         {{ 'Save' | translate }}
                                     </md-button>

@@ -10,31 +10,8 @@
             </div>
         </md-toolbar>
         <md-dialog-content class="md-padding">
-            <div ng-if="implView">
-                <div layout="row" layout-align="start center">
-                    <md-button class="md-icon-button"><md-icon>arrow_back</md-icon></md-button>
-                    Recommendation title
-                </div>
-
-                <table class="md-html-table">
-                    <thead>
-                    <tr>
-                        <th></th>
-                        <th translate>Asset</th>
-                        <th translate>Threat</th>
-                        <th translate>Vulnerability</th>
-                        <th translate>Observation before measure</th>
-                        <th translate>Current risk</th>
-                        <th translate>Observation after measure</th>
-                        <th translate>Target risk</th>
-                        <th translate>Actions</th>
-                    </tr>
-                    </thead>
-                </table>
-            </div>
-
-            <div ng-if="!implView">
-                <md-button class="md-primary">{{ 'Reset positions' | translate }}</md-button>
+            <div>
+                <md-button class="md-primary" ng-if="anr.rwd >= 1">{{ 'Reset positions' | translate }}</md-button>
 
                 <table class="md-html-table">
                     <thead>

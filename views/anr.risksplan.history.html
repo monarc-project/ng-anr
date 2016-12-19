@@ -11,7 +11,7 @@
             <th translate>Implementation comment</th>
             <th translate>Risk before</th>
             <th translate>Risk after</th>
-            <th translate>Actions</th>
+            <th ng-if="!isAnrReadOnly" translate>Actions</th>
         </tr>
         </thead>
 
@@ -37,7 +37,7 @@
             <td class="preserve-newlines">{{ entry.implComment }}</td>
             <td class="tbl-risk-calc" ng-class="{'green': entry.riskMaxRiskBefore > 0 && entry.riskMaxRiskBefore <= thresholds.thresholds.min, 'orange': entry.riskMaxRiskBefore > thresholds.thresholds.min && entry.riskMaxRiskBefore <= thresholds.thresholds.max, 'red': entry.riskMaxRiskBefore > thresholds.thresholds.max}">{{ entry.riskMaxRiskBefore }}</td>
             <td class="tbl-risk-calc" ng-class="{'green': entry.riskMaxRiskAfter > 0 && entry.riskMaxRiskAfter <= thresholds.thresholds.min, 'orange': entry.riskMaxRiskAfter > thresholds.thresholds.min && entry.riskMaxRiskAfter <= thresholds.thresholds.max, 'red': entry.riskMaxRiskAfter > thresholds.thresholds.max}">{{ entry.riskMaxRiskAfter }}</td>
-            <td class="txtcenter">
+            <td ng-if="!isAnrReadOnly" class="txtcenter">
                 <md-button class="md-icon-button"><md-icon>delete</md-icon></md-button>
             </td>
         </tr>
