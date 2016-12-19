@@ -16,6 +16,9 @@ md-option {
 .no-padding {
     padding: 0;
 }
+.no-padding-important {
+    padding: 0 !important;
+}
 .no-margin {
     margin: 0;
 }
