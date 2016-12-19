@@ -48,6 +48,17 @@
                         isArray: false
                     }
                 });
+
+
+            self.ObjlibNodeResource = $resource($rootScope.OFFICE_MODE == 'BO' ? '/api/objects-objects/:objlibId' : '/api/client-anr/:urlAnrId/objects-objects/:objlibId', { objlibId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'query': {
+                        isArray: false
+                    }
+                });
         }
         makeResource();
 
@@ -101,15 +112,6 @@
             self.ObjlibCatResource.delete({objlibId: id}, success, error);
         };
 
-        self.ObjlibNodeResource = $resource('/api/objects-objects/:objlibId', { objlibId: '@id' },
-            {
-                'update': {
-                    method: 'PUT'
-                },
-                'query': {
-                    isArray: false
-                }
-            });
 
         var getObjlibsNodes = function (params) {
             return self.ObjlibNodeResource.query(params).$promise;
@@ -124,7 +126,11 @@
         };
 
         var moveObjlibNode = function (params, success, error) {
-            $http.put('/api/objects-objects/' + params.id, params).then(success, error);
+            if ($rootScope.OFFICE_MODE == 'BO') {
+                $http.put('/api/objects-objects/' + params.id, params).then(success, error);
+            } else {
+                $http.put('/api/client-anr/' + $rootScope.getUrlAnrId() + '/objects-objects/' + params.id, params).then(success, error);
+            }
         };
 
         var deleteObjlibNode = function (id, success, error) {
