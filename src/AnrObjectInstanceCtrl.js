@@ -185,9 +185,13 @@
         };
 
         $scope.showObjectInLibrary = function (objid) {
-            $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+objid);
-            if($rootScope.hookUpdateObjlib != undefined){
-                $rootScope.hookUpdateObjlib();
+            if ($scope.OFFICE_MODE == 'BO') {
+                $location.path('/backoffice/kb/models/' + $scope.model.id + '/object/' + objid);
+                if ($rootScope.hookUpdateObjlib != undefined) {
+                    $rootScope.hookUpdateObjlib();
+                }
+            } else {
+                $location.path('/client/project/' + $scope.model.anr.id + '/anr/object/' + objid);
             }
 
         };

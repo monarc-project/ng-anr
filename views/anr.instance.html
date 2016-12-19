@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="md-padding" ng-if="instance.id">
-                    <md-button ng-if="OFFICE_MODE == 'BO'" aria-title="{{ 'See object in the library' | translate }}" ng-click="showObjectInLibrary(instance.object.id);"><md-icon>folder_open</md-icon> {{ 'See object in the library' | translate }}</md-button><br />
+                    <md-button aria-title="{{ 'See object in the library' | translate }}" ng-click="showObjectInLibrary(instance.object.id);"><md-icon>folder_open</md-icon> {{ 'See object in the library' | translate }}</md-button><br />
                     <span class="md-title md-padding-left md-padding-right" translate>This asset is attached to the following parents</span>
 
                     <p ng-if="instance.instances.length <= 0" translate>This asset has no parents.</p>
