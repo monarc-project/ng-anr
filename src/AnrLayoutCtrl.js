@@ -1630,10 +1630,10 @@
                     for (var i = 0; i < data.length; ++i) {
                         var item = data[i];
                         if (
-                            (subStep.anrField == "contextAnaRisk" && item.type == 1) ||
-                            (subStep.anrField == "contextGestRisk" && item.type == 2) ||
-                            (subStep.anrField == "synthThreat" && item.type == 3) ||
-                            (subStep.anrField == "synthAct" && item.type == 4)
+                            (subStep.anrField == "contextAnaRisk" && item.type_id == 1) ||
+                            (subStep.anrField == "contextGestRisk" && item.type_id == 2) ||
+                            (subStep.anrField == "synthThreat" && item.type_id == 3) ||
+                            (subStep.anrField == "synthAct" && item.type_id == 4)
                         ) {
                             guide = item;
                         }
@@ -1708,7 +1708,7 @@
 
                     for (var i = 0; i < data.length; ++i) {
                         var item = data[i];
-                        if (item.type == 3) {
+                        if (item.type_id == 3) {
                             guide = item;
                             break;
                         }
