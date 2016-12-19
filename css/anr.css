@@ -225,7 +225,6 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 }
 .md-treeview li {
     position: relative;
-    padding-bottom: 10px;
 }
 .md-treeview li a {
     position: relative;
@@ -238,7 +237,6 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
     list-style: none;
 }
 .md-treeview ul li:first-child {
-    padding-top: 10px;
 }
 .md-treeview ul li:last-child {
     padding-bottom: 0;
