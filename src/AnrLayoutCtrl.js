@@ -1380,6 +1380,37 @@
                 fullscreen: useFullScreen
             });
         }
+
+
+        $scope.importObject = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'ObjlibService', 'toastr', 'gettextCatalog', 'Upload', ImportObjectDialogCtrl],
+                templateUrl: '/views/anr/import.object.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+            }).then(function (object) {
+
+            });
+        };
+
+        $scope.importInstance = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'AnrService', 'toastr', 'gettextCatalog', 'Upload', ImportInstanceDialogCtrl],
+                templateUrl: '/views/anr/import.instance.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+            }).then(function (object) {
+
+            });
+        };
     }
 
     // Dialogs
@@ -1906,6 +1937,100 @@
         }
 
         $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+    }
+
+    function ImportObjectDialogCtrl($scope, $mdDialog, ObjlibService, toastr, gettextCatalog, Upload) {
+        $scope.dialog_mode = null;
+        $scope.file = [];
+        $scope.file_range = 0;
+        $scope.import = {
+            mode: 'duplicate',
+            password: null,
+        };
+
+        $scope.uploadFile = function (file) {
+            file.upload = Upload.upload({
+                url: '/api/client-anr/' + $scope.getUrlAnrId() + '/objects/import',
+                data: {'mode': $scope.import.mode, file: file, password: $scope.import.password}
+            });
+
+            file.upload.then(function (response) {
+                toastr.success(gettextCatalog.getString("The object has been imported successfully"));
+            });
+        }
+
+        ObjlibService.getObjectsCommon({limit: 0}).then(function (data) {
+            $scope.assets = data.assets;
+        });
+
+        $scope.upgradeFileRange = function () {
+            $scope.file_range++;
+
+            for (var i = 0; i <= $scope.file_range; ++i) {
+                if ($scope.file[i] == undefined) {
+                    $scope.file[i] = {};
+                }
+            }
+        };
+
+        $scope.openObjectDetails = function (object) {
+            $scope.dialog_mode = 'object_details';
+            $scope.object_details = object;
+
+            ObjlibService.getObjectCommon(object.id).then(function (data) {
+                $scope.object_details = data;
+            })
+        };
+
+        $scope.closeObjectDetails = function () {
+            $scope.dialog_mode = 'common';
+        };
+
+        $scope.importObjectCommon = function () {
+            ObjlibService.importObjectCommon($scope.object_details.id, function () {
+                toastr.success(gettextCatalog.getString("Object imported successfully"));
+                $scope.dialog_mode = 'common';
+            });
+
+        };
+
+        $scope.cancel = function () {
+            $mdDialog.cancel();
+        };
+    }
+
+    function ImportInstanceDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload) {
+        $scope.file = [];
+        $scope.file_range = 0;
+        $scope.import = {
+            mode: 'duplicate',
+            password: null,
+        };
+
+        $scope.uploadFile = function (file) {
+            file.upload = Upload.upload({
+                url: '/api/client-anr/' + $scope.getUrlAnrId() + '/instances/import',
+                data: {'mode': $scope.import.mode, file: file, password: $scope.import.password}
+            });
+
+            file.upload.then(function (response) {
+                toastr.success(gettextCatalog.getString("The instance has been imported successfully"));
+            });
+        }
+
+        $scope.upgradeFileRange = function () {
+            $scope.file_range++;
+
+            for (var i = 0; i <= $scope.file_range; ++i) {
+                if ($scope.file[i] == undefined) {
+                    $scope.file[i] = {};
+                }
+            }
+        };
+
+        $scope.cancel = function () {
             $mdDialog.cancel();
         };
     }

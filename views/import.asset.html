@@ -93,7 +93,7 @@
                         </thead>
 
                         <tbody>
-                        <tr ng-repeat="risk in asset_details.risks">
+                        <tr ng-repeat="risk in asset_details.amvs">
                             <td>{{ risk.threat.code }} - {{ risk.threat[_langField('label')] }}</td>
                             <td>{{ risk.vulnerability.code }} - {{ risk.vulnerability[_langField('label')] }}</td>
                             <td>{{ risk.measure1.code }} - {{ risk.measure1[_langField('description')] }}</td>

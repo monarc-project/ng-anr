@@ -1,0 +1,100 @@
+<md-dialog class="dialog-width">
+    <form name="measureForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Object import center</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div ng-if="dialog_mode == null">
+                    <p translate>You may import an object:</p>
+                    <ul>
+                        <li><p translate>from a file (<b>warning:</b> You may only import an object from a file if the source software version is compatible with yours),</p></li>
+                        <li><p translate>from MONARC library: you can access the MONARC database directly to benefit from latest CASES team changes.</p></li>
+                    </ul>
+                </div>
+
+                <md-radio-group ng-model="import.mode">
+                    <label translate>Import method:</label>
+                    <md-radio-button value="duplicate">{{ 'By duplicating' }}</md-radio-button>
+                    <md-radio-button value="merge">{{ 'By merging' }}</md-radio-button>
+                </md-radio-group>
+
+                <div layout="row" ng-show="dialog_mode == null">
+                    <md-button flex ng-click="dialog_mode = 'file'" class="md-raised">{{ 'Import from file' | translate }}</md-button>
+                    <md-button flex ng-click="dialog_mode = 'common'" class="md-raised">{{ 'Import from MONARC library' | translate }}</md-button>
+                </div>
+
+                <div ng-if="dialog_mode == 'file'" layout="column">
+                    <input type="file" name="file" ngf-drop ngf-select ng-repeat="i in range(0, file_range)" ng-model="file[i]" class="md-upload-dropbox md-upload-dropbox-dark md-padding md-whiteframe-3dp"
+                         ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-allow-dir="false">
+                    </input>
+
+                    <md-input-container class="md-block">
+                        <md-icon>vpn_key</md-icon>
+                        <label translate>Objects password (if any)</label>
+                        <input ng-model="import.password" type="password">
+                    </md-input-container>
+
+                    <div layout="row" layout-align="end center">
+                        <md-button ng-click="upgradeFileRange()"><md-icon>add</md-icon> {{ 'Add another file' | translate }}</md-button>
+                        <md-button ng-click="uploadFile(file)"><md-icon>file_download</md-icon> {{ 'Import files' | translate }}</md-button>
+                    </div>
+                </div>
+
+                <div ng-if="dialog_mode == 'common'">
+                    <p class="md-title" translate>List of common MONARC objects</p>
+                    <table class="md-html-table">
+                        <thead>
+                        <tr>
+                            <th translate>Category</th>
+                            <th translate>Label</th>
+                            <th translate>Name</th>
+                            <th translate>Scope</th>
+                            <th translate>Asset</th>
+                            <th translate>Actions</th>
+                        </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr ng-repeat="object in objects">
+                            <td>{{ object.category[_langField('label')] }}</td>
+                            <td>{{ object[_langField('label')] }}</td>
+                            <td>{{ object[_langField('name')] }}</td>
+                            <td ng-if="object.scope == 1" translate>Local</td>
+                            <td ng-if="object.scope == 2" translate>Global</td>
+                            <td>{{ object.asset.code }} - {{ object.asset[_langField('label')] }}</td>
+                            <td class="txtcenter"><md-button ng-click="openObjectDetails(object)" class="md-icon-button"><md-icon>open_in_new</md-icon></md-button></td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <div ng-if="dialog_mode == 'object_details'">
+                    <div layout="row" layout-align="start center">
+                        <md-button class="md-icon-button" ng-click="closeObjectDetails()"><md-icon>arrow_back</md-icon></md-button>
+                        <p class="md-title">{{ object_details[_langField('label')] }}</p>
+                    </div>
+
+                    <p><strong translate>Scope:</strong> {{ (object.scope == 1 ? 'Local' : 'Global') | translate }}</p>
+                    <p><strong translate>Category:</strong> {{ object.category[_langField('label')] }}</p>
+                    <p><strong translate>Asset:</strong> {{object.asset.code}} - {{ object.asset[_langField('label')] }}</p>
+
+                    <md-button class="md-raised md-primary" ng-click="importObjectCommon()">{{ 'Import this object' | translate }}</md-button>
+                </div>
+            </div>
+
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

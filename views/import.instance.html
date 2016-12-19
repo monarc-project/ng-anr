@@ -1,0 +1,46 @@
+<md-dialog class="dialog-width">
+    <form name="measureForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Instance import center</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <input type="file" name="file" ngf-drop ngf-select ng-repeat="i in range(0, file_range)"
+                       ng-model="file[i]"
+                       class="md-upload-dropbox md-upload-dropbox-dark md-padding md-whiteframe-3dp"
+                       ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-allow-dir="false">
+                </input>
+
+                <md-input-container class="md-block">
+                    <md-icon>vpn_key</md-icon>
+                    <label translate>Instances password (if any)</label>
+                    <input ng-model="import.password" type="password">
+                </md-input-container>
+
+                <div layout="row" layout-align="end center">
+                    <md-button ng-click="upgradeFileRange()">
+                        <md-icon>add</md-icon>
+                        {{ 'Add another file' | translate }}
+                    </md-button>
+                    <md-button ng-click="uploadFile(file)">
+                        <md-icon>file_download</md-icon>
+                        {{ 'Import files' | translate }}
+                    </md-button>
+                </div>
+            </div>
+
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

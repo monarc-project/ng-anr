@@ -25,6 +25,19 @@
                         isArray: false
                     }
                 });
+
+            self.CommonAssetResource = $resource('/api/' + anr + 'assets/importcomm/:assetId', { assetId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'patch': {
+                        method: 'PATCH'
+                    },
+                    'query': {
+                        isArray: false
+                    }
+                });
         }
         makeResource();
 
@@ -61,18 +74,6 @@
             self.AssetResource.patch({assetId: id}, params, success, error);
         };
 
-        self.CommonAssetResource = $resource('/api/' + anr + 'assets/importcomm/:assetId', { assetId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
-            {
-                'update': {
-                    method: 'PUT'
-                },
-                'patch': {
-                    method: 'PATCH'
-                },
-                'query': {
-                    isArray: false
-                }
-            });
 
         var getAssetsCommon = function (params) {
             return self.CommonAssetResource.query(params).$promise;

@@ -35,6 +35,19 @@
                 });
 
             self.AnrObjectsService = $resource($rootScope.OFFICE_MODE == 'FO' ? '/api/client-anr/:anrId/objects' : '/api/anr/:anrId/objects', {}, {'query': {isArray: false}});//on utilisera que query
+
+            self.CommonObjectResource = $resource('/api/' + anr + 'objects/import/:objectId', { objectId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'patch': {
+                        method: 'PATCH'
+                    },
+                    'query': {
+                        isArray: false
+                    }
+                });
         }
         makeResource();
 
@@ -150,6 +163,20 @@
             return self.AnrObjectsService.query(params, success, error);
         }
 
+        ////
+
+        var getObjectsCommon = function (params) {
+            return self.CommonObjectResource.query(params).$promise;
+        };
+
+        var getAssetCommon = function (id) {
+            return self.CommonObjectResource.query({objectId: id}).$promise;
+        };
+
+        var importAssetCommon = function(id, success, error) {
+            new self.CommonObjectResource({object: id}).$save(success, error);
+        };
+
         return {
             makeResource: makeResource,
 
@@ -176,6 +203,7 @@
             patchRisk: patchRisk,
 
             getObjectsOfAnr: getObjectsOfAnr,
+            getObjectsCommon: getObjectsCommon,
 
         };
     }
