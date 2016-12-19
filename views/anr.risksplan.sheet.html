@@ -17,7 +17,7 @@
         </thead>
 
         <tbody>
-        <tr edit-model="risk" ng-repeat="risk in risks">
+        <tr edit-model="risk" ng-repeat="risk in rec_risks">
             <td>{{ risk.asset[_langField('label')] }}</td>
             <td>{{ risk.threat.code }} - {{ risk.threat[_langField('label')] }}</td>
             <td>{{ risk.vulnerability.code }} - {{ risk.vulnerability[_langField('label')] }}</td>

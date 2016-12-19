@@ -14,14 +14,18 @@
     function AnrRisksPlanSheetCtrl($scope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog, $state,
                                    TreatmentPlanService, ClientRecommandationService, $q) {
 
-        $scope.risks = [];
+        $scope.rec_risks = [];
 
-        ClientRecommandationService.getRecommandation($stateParams.modelId, $stateParams.recId).then(function (data) {
-            $scope.rec = data;
-        });
-        ClientRecommandationService.getRecommandationRisks($stateParams.modelId, $stateParams.recId).then(function (data) {
-            $scope.risks = data['recommandations-risks'];
-        })
+        var updateRecs = function () {
+            ClientRecommandationService.getRecommandation($stateParams.modelId, $stateParams.recId).then(function (data) {
+                $scope.rec = data;
+            });
+            ClientRecommandationService.getRecommandationRisks($stateParams.modelId, $stateParams.recId).then(function (data) {
+                $scope.rec_risks = data['recommandations-risks'];
+            })
+        }
+
+        updateRecs();
         
         $scope.backToList = function () {
             $state.transitionTo('main.project.anr.risksplan', {modelId: $stateParams.modelId});
@@ -45,6 +49,7 @@
             }).then(function (impl) {
                 ClientRecommandationService.validateRecommandationRisk($scope.model.anr.id, risk.id, impl, function () {
                     toastr.success(gettextCatalog.getString("The recommendation has been successfully validated."));
+                    updateRecs();
                 })
             });
         };
