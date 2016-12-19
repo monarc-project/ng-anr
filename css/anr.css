@@ -811,3 +811,8 @@ md-select-menu md-content
     transition-duration: 0ms!important;
     transition-delay: 0ms!important;
 }
+
+.specific-blue {
+    color: #2196F3;
+    font-style: italic;
+}

@@ -117,7 +117,7 @@
         </thead>
 
         <tbody>
-        <tr ng-repeat="risk in risks" edit-model="risk">
+        <tr ng-repeat="risk in risks" edit-model="risk" ng-class="{'specific-blue': risk.specific == 1}">
             <td title="{{instanceCache[risk.instance].completePath}}">{{instanceCache[risk.instance][_langField('name')]}}</td>
             <td title="{{ scaleCommCache[1][risk.c_impact] }}" class="txtcenter">{{risk.c_impact|dashnull}}</td>
             <td title="{{ scaleCommCache[2][risk.i_impact] }}" class="txtcenter">{{risk.i_impact|dashnull}}</td>
