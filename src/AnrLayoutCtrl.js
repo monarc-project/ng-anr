@@ -1838,6 +1838,7 @@
             });
         };
 
+        $scope.newSnapshot = {comment: null};
         $scope.isAnrReadOnly = !anr.rwd;
         reloadSnapshots();
 
@@ -1847,7 +1848,7 @@
 
         $scope.createSnapshot = function () {
             $scope.snapshotCreating = true;
-            ClientSnapshotService.createSnapshot({anr: anr.id, comment: $scope.comment}, function (data) {
+            ClientSnapshotService.createSnapshot({anr: anr.id, comment: $scope.newSnapshot.comment}, function (data) {
                 reloadSnapshots();
                 $scope.comment = '';
             })

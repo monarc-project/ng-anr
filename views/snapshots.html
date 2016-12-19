@@ -15,7 +15,7 @@
             <div layout="row" ng-if="!isAnrReadOnly">
                 <md-input-container>
                     <label translate>Optional comment</label>
-                    <textarea ng-model="comment" ng-disabled="snapshotCreating"></textarea>
+                    <textarea ng-model="newSnapshot.comment" ng-disabled="snapshotCreating"></textarea>
                 </md-input-container>
 
                 <md-button ng-click="createSnapshot()" ng-if="!snapshotCreating">{{ 'Create snapshot' | translate }}</md-button>
