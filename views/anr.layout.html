@@ -210,7 +210,7 @@
                                 <div layout="row" layout-align="start center">
                                     <div class="anr-scales-demo-block green"></div>
                                     <md-input-container>
-                                        <input type="number" name="thresholds_min" min="0" max="{{ thresholds.thresholds.max }}" ng-model="thresholds.thresholds.min" aria-label="min" />
+                                        <input ng-disabled="isAnrReadOnly" type="number" name="thresholds_min" min="0" max="{{ thresholds.thresholds.max }}" ng-model="thresholds.thresholds.min" aria-label="min" />
                                         <div ng-messages="thresholdsForm.thresholds_min.$error">
                                             <div ng-message="min">{{ 'This cannot be lower than zero' | translate }}</div>
                                             <div ng-message="max">{{ 'This cannot be higher than the orange threshold' | translate }}</div>
@@ -221,7 +221,7 @@
                                 <div layout="row" layout-align="start center">
                                     <div class="anr-scales-demo-block orange"></div>
                                     <md-input-container>
-                                        <input type="number" name="thresholds_max" min="{{ thresholds.thresholds.min }}" max="{{ scales.impacts.max*scales.threats.max*scales.vulns.max }}" ng-model="thresholds.thresholds.max" aria-label="max" />
+                                        <input ng-disabled="isAnrReadOnly" type="number" name="thresholds_max" min="{{ thresholds.thresholds.min }}" max="{{ scales.impacts.max*scales.threats.max*scales.vulns.max }}" ng-model="thresholds.thresholds.max" aria-label="max" />
                                         <div ng-messages="thresholdsForm.thresholds_max.$error">
                                             <div ng-message="min">{{ 'This cannot be lower than the green threshold' | translate }}</div>
                                             <div ng-message="max">{{ 'This cannot be higher than' | translate }} {{ scales.impacts.max*scales.threats.max*scales.vulns.max }}</div>
@@ -235,7 +235,7 @@
                                 <div layout="row" layout-align="start center">
                                     <div class="anr-scales-demo-block green"></div>
                                     <md-input-container>
-                                        <input type="number" name="rolf_thresholds_min" min="0" max="{{ thresholds.rolf_thresholds.max }}" ng-model="thresholds.rolf_thresholds.min" aria-label="min" />
+                                        <input ng-disabled="isAnrReadOnly" type="number" name="rolf_thresholds_min" min="0" max="{{ thresholds.rolf_thresholds.max }}" ng-model="thresholds.rolf_thresholds.min" aria-label="min" />
                                         <div ng-messages="thresholdsForm.rolf_thresholds_min.$error">
                                             <div ng-message="min">{{ 'This cannot be lower than zero' | translate }}</div>
                                             <div ng-message="max">{{ 'This cannot be higher than the orange threshold' | translate }}</div>
@@ -246,7 +246,7 @@
                                 <div layout="row" layout-align="start center">
                                     <div class="anr-scales-demo-block orange"></div>
                                     <md-input-container>
-                                        <input type="number" name="rolf_thresholds_max" min="{{ thresholds.rolf_thresholds.min }}" max="{{ scales.impacts.max*scales.threats.max*scales.vulns.max }}" ng-model="thresholds.rolf_thresholds.max" aria-label="max" />
+                                        <input ng-disabled="isAnrReadOnly" type="number" name="rolf_thresholds_max" min="{{ thresholds.rolf_thresholds.min }}" max="{{ scales.impacts.max*scales.threats.max*scales.vulns.max }}" ng-model="thresholds.rolf_thresholds.max" aria-label="max" />
                                         <div ng-messages="thresholdsForm.rolf_thresholds_max.$error">
                                             <div ng-message="min">{{ 'This cannot be lower than the green threshold' | translate }}</div>
                                             <div ng-message="max">{{ 'This cannot be higher than' | translate }} {{ scales.impacts.max*scales.threats.max*scales.vulns.max }}</div>
