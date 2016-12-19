@@ -1471,6 +1471,10 @@
                     createAttachedObject($scope, $mdDialog, $state, $location, $parentScope, AnrService, ev, copy);
                 });
             }
+        }, function () {
+            if ($scope.hookUpdateObjlib) {
+                $scope.hookUpdateObjlib();
+            }
         });
     };
 
