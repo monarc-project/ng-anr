@@ -61,8 +61,6 @@
             ClientRecommandationService.updateRecommandationRisk($scope.model.anr.id, field.id, params, function () {
 
             });
-            console.log(field);
-            console.log(name);
             return true;
         };
 

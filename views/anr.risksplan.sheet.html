@@ -25,7 +25,7 @@
             <td ng-class="{'green': risk.instanceRisk.cacheMaxRisk > 0 && risk.instanceRisk.cacheMaxRisk <= thresholds.thresholds.min, 'orange': risk.instanceRisk.cacheMaxRisk > thresholds.thresholds.min && risk.instanceRisk.cacheMaxRisk <= thresholds.thresholds.max, 'red': risk.instanceRisk.cacheMaxRisk > thresholds.thresholds.max}" class="tbl-risk-calc txtcenter">{{ risk.instanceRisk.cacheMaxRisk | dashnull }}</td>
             <td class="preserve-newlines" edit-field="commentAfter" edit-type="textarea"></td>
             <td ng-class="{'green': risk.instanceRisk.cacheTargetedRisk > 0 && risk.instanceRisk.cacheTargetedRisk <= thresholds.thresholds.min, 'orange': risk.instanceRisk.cacheTargetedRisk > thresholds.thresholds.min && risk.instanceRisk.cacheTargetedRisk <= thresholds.thresholds.max, 'red': risk.instanceRisk.cacheTargetedRisk > thresholds.thresholds.max}" class="tbl-risk-calc txtcenter">{{ risk.instanceRisk.cacheTargetedRisk | dashnull }}</td>
-            <td><md-button class="md-icon-button" ng-click="validate($event, risk)"><md-icon>check_circle</md-icon></md-button></td>
+            <td><md-button ng-if="risk.instanceRisk" class="md-icon-button" ng-click="validate($event, risk)"><md-icon>check_circle</md-icon></md-button></td>
         </tr>
         </tbody>
     </table>
