@@ -1627,8 +1627,9 @@
                 GuideService.getGuides().then(function (data) {
                     var guide = null;
 
-                    for (var i = 0; i < data.length; ++i) {
-                        var item = data[i];
+                    for (var i = 0; i < data.guides.length; ++i) {
+                        var item = data.guides[i];
+                        console.log(subStep.anrField, item.type_id);
                         if (
                             (subStep.anrField == "contextAnaRisk" && item.type_id == 1) ||
                             (subStep.anrField == "contextGestRisk" && item.type_id == 2) ||
