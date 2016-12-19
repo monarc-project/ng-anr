@@ -21,8 +21,6 @@
         $scope.isAnrReadOnly = true;
 
         var self = this;
-        var wrapAllFirstCast_Obj = false;
-        var wrapAllFirstCast_Ins = false;
 
         $scope.ToolsAnrService = ToolsAnrService;
         $scope.GlobalResizeMenuSize = "";
@@ -755,13 +753,6 @@
                     }
                 }
 
-                if (!wrapAllFirstCast_Obj) {
-                    $timeout(function () {
-                        //$scope.wrapAllObjects();
-                    }, 0);
-                    wrapAllFirstCast_Obj = true;
-                }
-
                 if (callback != undefined) {
                     callback.call();
                 }
@@ -804,13 +795,6 @@
                 for (var v = 0; v < data.instances.length; ++v) {
                     var instance = data.instances[v];
                     $scope.anr_obj_instances_data.push(recurseFillTree(instance));
-                }
-
-                if (!wrapAllFirstCast_Ins) {
-                    $timeout(function () {
-                        //$scope.wrapAll();
-                    }, 0);
-                    wrapAllFirstCast_Ins = true;
                 }
 
                 if (cb) {
