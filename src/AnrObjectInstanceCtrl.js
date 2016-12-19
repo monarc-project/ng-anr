@@ -5,6 +5,7 @@
         .controller('AnrObjectInstanceCtrl', [
             '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$state', 'DownloadService', 'TableHelperService', '$http',
             'ModelService', 'ObjlibService', '$stateParams', 'AnrService', '$rootScope', '$timeout', '$location', 'InstanceService', '$q',
+            '$sce',
             AnrObjectInstanceCtrl
         ]);
 
@@ -13,7 +14,7 @@
      */
     function AnrObjectInstanceCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, DownloadService,
                                             TableHelperService, $http, ModelService, ObjlibService, $stateParams, AnrService,
-                                            $rootScope, $timeout, $location, InstanceService, $q) {
+                                            $rootScope, $timeout, $location, InstanceService, $q, $sce) {
 
         $scope.instance = {};
         $scope.resetSheet();
@@ -265,9 +266,9 @@
             })
         }
 
-        $scope.getEveryScaleComm = function (instance, val) {
+        $scope.getEveryScaleComm = function (instance, letter) {
             var keys = Object.keys($scope.scaleCommCache);
-            var output = '';
+            var output = '<table><tbody>';
 
             for (var i = 0; i < keys.length; ++i) {
                 var key = keys[i];
@@ -275,15 +276,23 @@
                     continue;
                 }
 
-                var scaleType = $scope.scales_types[key];
+                var scaleType = $scope.scales_types[(letter == 'c' ? 1 : (letter == 'i' ? 2 : 3))];
                 var scaleComm = $scope.scaleCommCache[key];
 
                 if (scaleType && !scaleType.isHidden) {
-                    output = output + "\n" + scaleType[$scope._langField('label')] + " : " + scaleComm[val];
+                    for (var j = 0; j < instance.consequences.length; ++j) {
+                        var cons = instance.consequences[j];
+
+                        if (cons.scaleImpactType == key) {
+                            output = output + "<tr><td class='txtright bold'>" + cons[$scope._langField('scaleImpactTypeDescription')] + "</td> <td class='bold md-padding-left md-padding-right'>" + cons[letter + '_risk'] + "</td> <td>" + scaleComm[cons[letter + '_risk']] + '</td></tr>';
+                            break;
+                        }
+                    }
+
                 }
             }
 
-            return output;
+            return $sce.trustAsHtml(output + '</tbody></table>');
         };
 
         $scope.$on('instance-moved', function (unused, instance_id) {
