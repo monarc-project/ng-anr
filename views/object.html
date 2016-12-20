@@ -45,7 +45,7 @@
 
                 <md-button aria-label="{{ 'Delete object' | translate }}" class="md-fab md-raised md-mini md-warn" ng-disabled="isAnrReadOnly" ng-click="deleteObject($event)">
                     <md-icon>{{ (mode == 'bdc' || OFFICE_MODE == 'FO') ? 'delete' : 'content_cut' }}</md-icon>
-                    <md-tooltip md-direction="left">{{ mode == 'bdc' ? ('Delete object' | translate) : ('Detach object' | translate) }}</md-tooltip>
+                    <md-tooltip md-direction="left">{{ (mode == 'bdc' || OFFICE_MODE == 'FO') ? ('Delete object' | translate) : ('Detach object' | translate) }}</md-tooltip>
                 </md-button>
 
             </md-fab-actions>
