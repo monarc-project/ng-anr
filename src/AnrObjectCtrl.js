@@ -132,7 +132,7 @@
         };
 
         $scope.deleteObject = function (ev) {
-            if ($scope.mode == 'bdc' || $scope.OFFICE_MODE == 'FO') {
+            if ($scope.mode == 'bdc') {
                 var confirm = $mdDialog.confirm()
                     .title(gettextCatalog.getString('Delete this object?'))
                     .textContent(gettextCatalog.getString('The current object "{{ name }}" will be permanently deleted. Are you sure?',
@@ -163,22 +163,45 @@
                     if ($scope.object.replicas.length > 0 || parents.length > 0) {
                         $scope.openDetachObjectDialog(ev, parents);
                     } else {
+                        var title = gettextCatalog.getString('Detach this object?');
+                        var content = gettextCatalog.getString('The current object "{{ name }}" will be removed from the library. Are you sure?',
+                            {name: $scope.object.name1});
+
+                        if ($scope.OFFICE_MODE == 'FO') {
+                            title = gettextCatalog.getString('Delete this object');
+                            content = gettextCatalog.getString('The current object "{{ name }}" will be permanently deleted. Are you sure?',
+                                {name: $scope.object.name1});
+                        }
+
                         var confirm = $mdDialog.confirm()
-                            .title(gettextCatalog.getString('Detach this object?'))
-                            .textContent(gettextCatalog.getString('The current object "{{ name }}" will be removed from the library. Are you sure?',
-                                {name: $scope.object.name1}))
+                            .title(title)
+                            .textContent(content)
                             .ariaLabel(gettextCatalog.getString('Detach this object'))
                             .targetEvent(ev)
                             .ok(gettextCatalog.getString('Detach'))
                             .cancel(gettextCatalog.getString('Cancel'));
 
                         $mdDialog.show(confirm).then(function () {
-                            AnrService.removeObjectFromLibrary($rootScope.anr_id, $scope.object.id, function () {
-                                toastr.success(gettextCatalog.getString('The object has been detached from the library.'));
-                                if ($rootScope.hookUpdateObjlib) {
-                                    $rootScope.hookUpdateObjlib();
-                                }
-                            });
+                            if ($scope.OFFICE_MODE == 'FO') {
+                                ObjlibService.deleteObjlib($scope.object.id, function () {
+                                    if ($scope.OFFICE_MODE == 'BO') {
+                                        $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'objlibs'});
+                                    } else {
+                                        toastr.success(gettextCatalog.getString('The object has been successfully deleted'));
+                                        if ($rootScope.hookUpdateObjlib) {
+                                            $rootScope.hookUpdateObjlib();
+                                        }
+                                        $state.transitionTo('main.project.anr', {modelId: $stateParams.modelId});
+                                    }
+                                });
+                            } else {
+                                AnrService.removeObjectFromLibrary($rootScope.anr_id, $scope.object.id, function () {
+                                    toastr.success(gettextCatalog.getString('The object has been detached from the library.'));
+                                    if ($rootScope.hookUpdateObjlib) {
+                                        $rootScope.hookUpdateObjlib();
+                                    }
+                                });
+                            }
                         }, function () {
                             // Cancel
                         })
