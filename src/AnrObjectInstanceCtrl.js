@@ -165,7 +165,7 @@
                         cliAnr = 'client-';
                         method = $http.post;
                     }
-                    method('/api/'+cliAnr+'anr/' + $scope.model.anr.id + '/objects/' + $scope.instance.id + '/export', {id: $scope.instance.id, password: exports.password, assessments: exports.assessments}).then(function (data) {
+                    method('/api/'+cliAnr+'anr/' + $scope.model.anr.id + '/instances/' + $scope.instance.id + '/export', {id: $scope.instance.id, password: exports.password, assessments: exports.assessments}).then(function (data) {
                         DownloadService.downloadBlob(data.data, 'instance.bin');
                         toastr.success(gettextCatalog.getString('The instance has been exported successfully.'), gettextCatalog.getString('Export successful'));
                     })
