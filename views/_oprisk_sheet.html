@@ -56,6 +56,7 @@
         </md-input-container>
 
         <div layout="column" ng-if="OFFICE_MODE == 'FO'">
+            <ng-include ng-if="OFFICE_MODE == 'FO'" monarc-mode="operational" ng-controller="RiskRecommendationPartialCtrl" src="'/views/anr/_risk_rec_create_form.html'"></ng-include>
             <b translate>Recommendations</b>
             <ul class="no-list-style">
                 <li ng-repeat="rec in _copyRecs">{{ rec.recommandation.code }} <span class="anr-importance" ng-repeat="i in range(1, rec.recommandation.importance)">&bull;</span> &gt; {{ rec.recommandation.description }}</li>
