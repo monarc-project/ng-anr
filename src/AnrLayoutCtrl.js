@@ -1060,6 +1060,7 @@
                             $scope.model.showRolfBrut = anr.showRolfBrut;
                         }
                     });
+                    $scope.model.anr = anr;
                 });
         };
 
