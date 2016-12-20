@@ -20,7 +20,7 @@
                         <th translate>Recommendation</th>
                         <th translate>Imp.</th>
                         <th translate>Asset</th>
-                        <th translate>Observation</th>
+                        <th translate>Measures set</th>
                         <th translate>Current risk</th>
                         <th translate>Target risk</th>
                     </tr>
@@ -29,7 +29,7 @@
                     <tbody>
                     <tr ng-repeat="rec in recommendations">
                         <td></td>
-                        <td><a href="javascript:;" ng-click="openRecommendation(rec)"><b>{{ rec.code }}</b></a><br/>{{ rec[_langField('description')] }}</td>
+                        <td><a href="javascript:;" ng-click="openRecommendation(rec)"><b>{{ rec.code }}</b></a><br/>{{ rec.description }}</td>
                         <td><span ng-repeat="i in range(1, rec.importance)" class="anr-importance">&bull;</span></td>
                         <td class="no-padding-important">
                             <table class="md-html-table">
@@ -38,7 +38,13 @@
                                 </tr>
                             </table>
                         </td>
-                        <td>{{ rec.comment }}</td>
+                        <td>
+                            <table class="md-html-table">
+                                <tr ng-repeat="risk in rec.risks">
+                                    <td><p>{{ risk.commentAfter }}</p></td>
+                                </tr>
+                            </table>
+                        </td>
                         <td class="no-padding-important">
                             <table class="md-html-table">
                                 <tr ng-repeat="risk in rec.risks">
