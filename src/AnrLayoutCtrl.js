@@ -562,21 +562,40 @@
             library: ''
         };
 
-        $scope.wrapAll = function () {
-            var scope = angular.element(document.getElementById('insTree')).scope();
-            scope.$broadcast('angular-ui-tree:collapse-all');
+        $scope.wrapAll = function (root) {
+            if (!root) {
+                root = $scope.anr_obj_instances_data;
+            }
+
+            for (var i = 0; i < root.length; ++i) {
+                var node = $scope.anr_obj_instances_data[i];
+
+                if (node.__children__ && node.__children__.length > 0) {
+                    $scope.wrapAll(node);
+                }
+
+                node.__collapsed__ = true;
+                $scope.collapseCache['inst' + node.id] = true;
+            }
         };
 
-        $scope.wrapAllObjects = function () {
-            var scope = angular.element(document.getElementById('libTree')).scope();
-            scope.$broadcast('angular-ui-tree:collapse-all');
+        $scope.unwrapAll = function (root) {
+            if (!root) {
+                root = $scope.anr_obj_instances_data;
+            }
+
+            for (var i = 0; i < root.length; ++i) {
+                var node = $scope.anr_obj_instances_data[i];
+
+                if (node.__children__ && node.__children__.length > 0) {
+                    $scope.wrapAll(node);
+                }
+
+                node.__collapsed__ = false;
+                $scope.collapseCache['inst' + node.id] = false;
+            }
         };
 
-        $scope.unwrapAll = function () {
-            var scope = angular.element(document.getElementById('insTree')).scope();
-            scope.$broadcast('angular-ui-tree:expand-all');
-        };
-        
         $scope.toggleItemCollapsed = function (node) {
             if (!$scope.collapseCache) {
                 $scope.collapseCache = {};
