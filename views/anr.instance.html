@@ -14,7 +14,7 @@
                 <div flex-gt-md="33" layout="column" layout-gt-md="row" layout-align="space-between">
                     <div class="bold" ng-class="{'txtright': $mdMedia('gt-md')}" translate>Confidentiality:&nbsp;</div>
                     <div>
-                        <md-tooltip class="tooltip-object-header"><span ng-bind-html="instance.asset.type == 1 ? getEveryScaleComm(instance, 'c') : scaleCommCache[1][instance.c]"></span></md-tooltip>
+                        <md-tooltip class="tooltip-object-header"><span ng-if="instance.asset.type == 1" ng-bind-html="getEveryScaleComm(instance, 'c')"></span><span ng-if="instance.asset.type != 1">{{scaleCommCache[1][instance.c]}}</span></md-tooltip>
                         {{ instance.c < 0 ? ('Inherited' | translate) : instance.c }} <span ng-if="instance.ch == 1 && instance.c >= 0" translate>(inherited)</span>
                     </div>
                     <span flex></span>
@@ -23,7 +23,7 @@
                 <div flex-gt-md="33" layout="column" layout-gt-md="row" layout-align="space-between">
                     <div class="bold" ng-class="{'txtright': $mdMedia('gt-md')}" translate>Integrity:&nbsp;</div>
                     <div>
-                        <md-tooltip class="tooltip-object-header"><span ng-bind-html="instance.asset.type == 1 ? getEveryScaleComm(instance, 'i') : scaleCommCache[2][instance.i]"></span></md-tooltip>
+                        <md-tooltip class="tooltip-object-header"><span ng-if="instance.asset.type == 1" ng-bind-html="getEveryScaleComm(instance, 'i')"></span><span ng-if="instance.asset.type != 1">{{scaleCommCache[2][instance.i]}}</span></md-tooltip>
                         {{ instance.i < 0 ? ('Inherited' | translate) : instance.i }} <span ng-if="instance.ih == 1 && instance.i >= 0" translate>(inherited)</span>
                     </div>
                     <span flex></span>
@@ -32,7 +32,7 @@
                 <div flex-gt-md="33" layout="column" layout-gt-md="row" layout-align="space-between">
                     <div class="bold" ng-class="{'txtright': $mdMedia('gt-md')}" translate>Availability:&nbsp;</div>
                     <div>
-                        <md-tooltip class="tooltip-object-header"><span ng-bind-html="instance.asset.type == 1 ? getEveryScaleComm(instance, 'd') : scaleCommCache[3][instance.d]"></span></md-tooltip>
+                        <md-tooltip class="tooltip-object-header"><span ng-if="instance.asset.type == 1" ng-bind-html="getEveryScaleComm(instance, 'd')"></span><span ng-if="instance.asset.type != 1">{{scaleCommCache[3][instance.d]}}</span></md-tooltip>
                         {{ instance.d < 0 ? ('Inherited' | translate) : instance.d }} <span ng-if="instance.dh == 1 && instance.d >= 0" translate>(inherited)</span>
                     </div>
                     <span flex></span>
