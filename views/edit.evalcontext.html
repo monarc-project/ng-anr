@@ -14,7 +14,7 @@
                 <md-card-content layout="row">
                     <div flex>
                         <md-button class="trix-info-toolbar-button" ng-click="toggleGuide()"><md-icon>info</md-icon></md-button>
-                        <trix-editor angular-trix ng-model="context.text" style="min-height: 250px; border: 1px solid #AAAAAA;" trix-initialize="trixInitialize(e, editor);" class="md-padding"></trix-editor>
+                        <trix-editor angular-trix ng-model="context.text" style="min-height: 250px; min-width: 550px; border: 1px solid #AAAAAA;" trix-initialize="trixInitialize(e, editor);" class="md-padding"></trix-editor>
                     </div>
                     <md-card style="max-width: 320px;" ng-if="guideVisible">
                         <div layout="row" layout-align="center center" ng-if="guide === undefined">
@@ -22,7 +22,7 @@
                         </div>
                         <md-card-content ng-if="guide !== undefined">
                             <p class="md-title" translate>Additional information</p>
-                            <p>{{ guide[_langField('description')] }}</p>
+                            <p class="preserve-newlines">{{ guide[_langField('description')] }}</p>
                             <md-divider></md-divider>
                             <md-list>
                                 <md-list-item ng-repeat="item in guide_items" ng-click="insertItem(item)"><p>{{ item[_langField('description')] }}</p></md-list-item>
