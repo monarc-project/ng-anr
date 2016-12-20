@@ -123,10 +123,10 @@
             <td title="{{ scaleCommCache[2][risk.i_impact] }}" class="txtcenter">{{risk.i_impact|dashnull}}</td>
             <td title="{{ scaleCommCache[3][risk.d_impact] }}" class="txtcenter">{{risk.d_impact|dashnull}}</td>
             <td class="preserve-newlines big-border-left" title="{{risk[_langField('threatDescription')]}}">{{risk[_langField('threatLabel')]}}</td>
-            <td edit-readonly="isAnrReadOnly" edit-field="threatRate" edit-type="number" edit-filter="dashnull" class="txtcenter" title="{{threatCommCache[risk.threatRate]}}"></td>
+            <td edit-readonly="isAnrReadOnly" edit-field="threatRate" edit-filter="dashnull" class="txtcenter" title="{{threatCommCache[risk.threatRate]}}"></td>
             <td class="preserve-newlines big-border-left" title="{{risk[_langField('vulnDescription')]}}">{{risk[_langField('vulnLabel')]}}</td>
             <td class="preserve-newlines" edit-readonly="isAnrReadOnly" edit-field="comment" edit-type="textarea"></td>
-            <td edit-readonly="isAnrReadOnly" edit-field="vulnerabilityRate" edit-type="number" edit-filter="dashnull" class="txtcenter" title="{{vulnsCommCache[risk.vulnerabilityRate]}}"></td>
+            <td edit-readonly="isAnrReadOnly" edit-field="vulnerabilityRate" edit-filter="dashnull" class="txtcenter" title="{{vulnsCommCache[risk.vulnerabilityRate]}}"></td>
             <td ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc big-border-left"
                 ng-class="{'green': risk.c_risk > 0 && risk.c_risk <= thresholds.thresholds.min, 'orange': risk.c_risk > thresholds.thresholds.min && risk.c_risk <=thresholds.thresholds.max, 'red': risk.c_risk > thresholds.thresholds.max}">{{ risk.c_risk_enabled ? (risk.c_risk | dashnull) : '' }}</td>
             <td ng-disabled="!risk.i_risk_enabled" class="tbl-risk-calc"
