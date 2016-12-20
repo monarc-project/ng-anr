@@ -1648,7 +1648,6 @@
 
                     for (var i = 0; i < data.guides.length; ++i) {
                         var item = data.guides[i];
-                        console.log(subStep.anrField, item.type_id);
                         if (
                             (subStep.anrField == "contextAnaRisk" && item.type_id == 1) ||
                             (subStep.anrField == "contextGestRisk" && item.type_id == 2) ||
@@ -1662,7 +1661,7 @@
                     if (guide && guide.isWithItems) {
                         GuideService.getItems({order: 'position', guide: guide.id}).then(function (itemdata) {
                             $scope.guide = guide;
-                            $scope.guide_items = itemdata;
+                            $scope.guide_items = itemdata['guides-items'];
                         });
                     } else {
                         $scope.guide = guide;
@@ -1726,8 +1725,8 @@
                 GuideService.getGuides().then(function (data) {
                     var guide = null;
 
-                    for (var i = 0; i < data.length; ++i) {
-                        var item = data[i];
+                    for (var i = 0; i < data.guides.length; ++i) {
+                        var item = data.guides[i];
                         if (item.type_id == 3) {
                             guide = item;
                             break;
@@ -1737,7 +1736,7 @@
                     if (guide && guide.isWithItems) {
                         GuideService.getItems({order: 'position', guide: guide.id}).then(function (itemdata) {
                             $scope.guide = guide;
-                            $scope.guide_items = itemdata;
+                            $scope.guide_items = itemdata['guides-items'];
                         });
                     } else {
                         $scope.guide = guide;

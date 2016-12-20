@@ -160,8 +160,8 @@
                                         <trix-editor angular-trix ng-model="anr.synthThreat" style="min-height: 250px; border: 1px solid #AAAAAA;" class="md-padding"></trix-editor>
                                     </div>
 
-                                    <md-card ng-if="guideVisible">
-                                        <div layout="row" layout-align="center center" ng-if="guide === undefined">
+                                    <md-card style="max-width: 320px" ng-if="guideVisible">
+                                    <div layout="row" layout-align="center center" ng-if="guide === undefined">
                                             <md-progress-circular></md-progress-circular>
                                         </div>
                                         <md-card-content ng-if="guide !== undefined">
