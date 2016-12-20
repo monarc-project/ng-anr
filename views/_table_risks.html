@@ -143,7 +143,7 @@
                 </div>
             </td>
             <td class="txtcenter tbl-risk-calc"
-                ng-class="{'green': risk.target_risk > 0 && risk.target_risk < thresholds.thresholds.min, 'orange': risk.target_risk >= thresholds.thresholds.min && risk.target_risk < thresholds.thresholds.max, 'red': risk.target_risk >= thresholds.thresholds.max}">{{risk.target_risk | dashnull}}</td>
+                ng-class="{'green': risk.target_risk > 0 && risk.target_risk <= thresholds.thresholds.min, 'orange': risk.target_risk > thresholds.thresholds.min && risk.target_risk <= thresholds.thresholds.max, 'red': risk.target_risk > thresholds.thresholds.max}">{{risk.target_risk | dashnull}}</td>
         </tr>
         </tbody>
     </table>
