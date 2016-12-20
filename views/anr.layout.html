@@ -294,7 +294,7 @@
         <h2>{{ ::step.label }}</h2>
 
         <div layout="row" ng-repeat="subStep in step.steps" layout-align="start center">
-            <md-button class="md-icon-button" ng-click="setMethodStepStatus(subStep.progressField, subStep, subStep.done)"><md-icon>{{ ::subStep.done ? "check_box" : "check_box_outline_blank" }}</md-icon></md-button>
+            <md-button class="md-icon-button" ng-click="setMethodStepStatus(subStep.progressField, subStep, subStep.done)"><md-icon>{{ subStep.done ? "check_box" : "check_box_outline_blank" }}</md-icon></md-button>
             <div class="pointer" ng-click="subStep.action(subStep)">{{ ::subStep.label }}</div>
         </div>
 
