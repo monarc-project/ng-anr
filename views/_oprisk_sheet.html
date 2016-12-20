@@ -1,72 +1,78 @@
-<div class="md-padding-left md-padding-right">
+<div class="md-padding-left md-padding-right" layout="column">
     <h3 layout="row" layout-align="start center"><md-button class="md-icon-button" ng-click="resetOpSheet()"><md-icon>arrow_back</md-icon></md-button> <span translate>Operational risk sheet</span> - {{ opsheet_risk[_langField('label')] }}</h3>
-    <table class="md-html-table" editable callback="changeRiskOp">
-        <tbody>
-        <tr>
-            <th></th>
-            <th translate>Prob.</th>
-            <th>R</th>
-            <th>O</th>
-            <th>L</th>
-            <th>F</th>
-            <th>P</th>
-            <th translate>Calculated risk</th>
-        </tr>
 
-        <tr>
-            <th translate>NET</th>
-            <td>{{ opsheet_risk.netProb }}</td>
-            <td>{{ opsheet_risk.netR }}</td>
-            <td>{{ opsheet_risk.netO }}</td>
-            <td>{{ opsheet_risk.netL }}</td>
-            <td>{{ opsheet_risk.netF }}</td>
-            <td>{{ opsheet_risk.netP }}</td>
-            <td class="tbl-risk-calc" ng-class="{'green': opsheet_risk.cacheNetRisk > 0 && opsheet_risk.cacheNetRisk < thresholds.rolf_thresholds.min, 'orange': opsheet_risk.cacheNetRisk >= thresholds.rolf_thresholds.min && opsheet_risk.cacheNetRisk < thresholds.rolf_thresholds.max, 'red': opsheet_risk.cacheNetRisk >= thresholds.rolf_thresholds.max}">{{ opsheet_risk.cacheNetRisk }}</td>
-        </tr>
+    <div layout="row" flex>
+        <div layout="column" flex="70">
+            <table class="md-html-table" editable callback="changeRiskOp">
+                <tbody>
+                <tr>
+                    <th></th>
+                    <th translate>Prob.</th>
+                    <th>R</th>
+                    <th>O</th>
+                    <th>L</th>
+                    <th>F</th>
+                    <th>P</th>
+                    <th translate>Calculated risk</th>
+                </tr>
 
-        <tr edit-model="opsheet_risk">
-            <th translate>Target</th>
-            <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedProb"></td>
-            <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedR"></td>
-            <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedO"></td>
-            <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedL"></td>
-            <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedF"></td>
-            <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedP"></td>
-            <td class="tbl-risk-calc" ng-class="{'green': opsheet_risk.cacheTargetedRisk > 0 && opsheet_risk.cacheTargetedRisk < thresholds.rolf_thresholds.min, 'orange': opsheet_risk.cacheTargetedRisk >= thresholds.rolf_thresholds.min && opsheet_risk.cacheTargetedRisk < thresholds.rolf_thresholds.max, 'red': opsheet_risk.cacheTargetedRisk >= thresholds.rolf_thresholds.max}">{{ opsheet_risk.cacheTargetedRisk }}</td>
-        </tr>
-        </tbody>
-    </table>
+                <tr>
+                    <th translate>NET</th>
+                    <td>{{ opsheet_risk.netProb }}</td>
+                    <td>{{ opsheet_risk.netR }}</td>
+                    <td>{{ opsheet_risk.netO }}</td>
+                    <td>{{ opsheet_risk.netL }}</td>
+                    <td>{{ opsheet_risk.netF }}</td>
+                    <td>{{ opsheet_risk.netP }}</td>
+                    <td class="tbl-risk-calc" ng-class="{'green': opsheet_risk.cacheNetRisk > 0 && opsheet_risk.cacheNetRisk < thresholds.rolf_thresholds.min, 'orange': opsheet_risk.cacheNetRisk >= thresholds.rolf_thresholds.min && opsheet_risk.cacheNetRisk < thresholds.rolf_thresholds.max, 'red': opsheet_risk.cacheNetRisk >= thresholds.rolf_thresholds.max}">{{ opsheet_risk.cacheNetRisk }}</td>
+                </tr>
 
-    <form class="md-padding">
-        <md-input-container class="md-block">
-            <label translate>Observation</label>
-            <md-icon>visibility</md-icon>
-            <textarea ng-model="opsheet_risk.comment" ng-disabled="isAnrReadOnly" rows="3"></textarea>
-        </md-input-container>
-        <md-input-container class="md-block">
-            <label translate>Processing type</label>
-            <md-icon>widgets</md-icon>
-            <md-select ng-model="opsheet_risk.kindOfMeasure" ng-disabled="isAnrReadOnly">
-                <md-option ng-value="5">{{ 'Not processed' | translate }}</md-option>
-                <md-option ng-value="1">{{ 'Reduction' | translate }}</md-option>
-                <md-option ng-value="2">{{ 'Denied' | translate }}</md-option>
-                <md-option ng-value="3">{{ 'Accepted' | translate }}</md-option>
-                <md-option ng-value="4">{{ 'Shared' | translate }}</md-option>
-            </md-select>
-        </md-input-container>
+                <tr edit-model="opsheet_risk">
+                    <th translate>Target</th>
+                    <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedProb"></td>
+                    <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedR"></td>
+                    <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedO"></td>
+                    <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedL"></td>
+                    <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedF"></td>
+                    <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedP"></td>
+                    <td class="tbl-risk-calc" ng-class="{'green': opsheet_risk.cacheTargetedRisk > 0 && opsheet_risk.cacheTargetedRisk < thresholds.rolf_thresholds.min, 'orange': opsheet_risk.cacheTargetedRisk >= thresholds.rolf_thresholds.min && opsheet_risk.cacheTargetedRisk < thresholds.rolf_thresholds.max, 'red': opsheet_risk.cacheTargetedRisk >= thresholds.rolf_thresholds.max}">{{ opsheet_risk.cacheTargetedRisk }}</td>
+                </tr>
+                </tbody>
+            </table>
 
-        <div layout="column" ng-if="OFFICE_MODE == 'FO'">
+            <div layout="column" class="md-padding-left" layout-align="center top" ng-if="OFFICE_MODE == 'FO'">
+                <b translate>Recommendations</b>
+                <ul class="no-list-style">
+                    <li ng-repeat="rec in _copyRecs">{{ rec.recommandation.code }} <span class="anr-importance" ng-repeat="i in range(1, rec.recommandation.importance)">&bull;</span> &gt; {{ rec.recommandation.description }}</li>
+                </ul>
+            </div>
+
+            <ng-include ng-if="OFFICE_MODE == 'FO'" monarc-mode="operational" ng-controller="RiskRecommendationPartialCtrl" src="'/views/anr/_risk_rec_form.html'"></ng-include>
+        </div>
+
+        <form class="md-padding-left" layout="column">
+            <md-input-container class="md-block">
+                <label translate>Observation</label>
+                <md-icon>visibility</md-icon>
+                <textarea ng-model="opsheet_risk.comment" ng-disabled="isAnrReadOnly" rows="3"></textarea>
+            </md-input-container>
+            <md-input-container class="md-block">
+                <label translate>Processing type</label>
+                <md-icon>widgets</md-icon>
+                <md-select ng-model="opsheet_risk.kindOfMeasure" ng-disabled="isAnrReadOnly">
+                    <md-option ng-value="5">{{ 'Not processed' | translate }}</md-option>
+                    <md-option ng-value="1">{{ 'Reduction' | translate }}</md-option>
+                    <md-option ng-value="2">{{ 'Denied' | translate }}</md-option>
+                    <md-option ng-value="3">{{ 'Accepted' | translate }}</md-option>
+                    <md-option ng-value="4">{{ 'Shared' | translate }}</md-option>
+                </md-select>
+            </md-input-container>
+
             <ng-include ng-if="OFFICE_MODE == 'FO'" monarc-mode="operational" ng-controller="RiskRecommendationPartialCtrl" src="'/views/anr/_risk_rec_create_form.html'"></ng-include>
-            <b translate>Recommendations</b>
-            <ul class="no-list-style">
-                <li ng-repeat="rec in _copyRecs">{{ rec.recommandation.code }} <span class="anr-importance" ng-repeat="i in range(1, rec.recommandation.importance)">&bull;</span> &gt; {{ rec.recommandation.description }}</li>
-            </ul>
-        </div>
 
-        <div layout="row" layout-align="end center">
-            <md-button class="md-raised md-primary" ng-disabled="isAnrReadOnly" ng-click="saveOpRiskSheet(opsheet_risk)">{{ 'Save changes' | translate }}</md-button>
-        </div>
-    </form>
-
-    <ng-include ng-if="OFFICE_MODE == 'FO'" monarc-mode="operational" ng-controller="RiskRecommendationPartialCtrl" src="'/views/anr/_risk_rec_form.html'"></ng-include>
+            <div layout="row" layout-align="end center">
+                <md-button class="md-raised md-primary" ng-disabled="isAnrReadOnly" ng-click="saveOpRiskSheet(opsheet_risk)">{{ 'Save changes' | translate }}</md-button>
+            </div>
+        </form>
+    </div>
 </div>
