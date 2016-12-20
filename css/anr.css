@@ -277,13 +277,13 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
     border-left-width: 1px;
 }
 .md-treeview ul li:before, .md-treeview ul li:last-child>a:before, .md-treeview-solid-line.md-treeview ul li:before, .md-treeview-solid-line.md-treeview ul li:last-child>a:before {
-    border-left-style: solid;
+    border-left-style: dashed;
 }
 .md-treeview ul li>a:before {
     border-bottom-width: 1px;
 }
 .md-treeview ul li>a:before, .md-treeview-solid-line.md-treeview ul li>a:before {
-    border-bottom-style: solid;
+    border-bottom-style: dashed;
 }
 .md-treeview li>a:first-child>md-icon {
     display: inline;
@@ -291,16 +291,19 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 }
 
 .md-treeview li>button.md-icon-button {
-    vertical-align: top;
-    height: 20px;
+    vertical-align: bottom;
+    height: 24px;
     width: 26px;
+    min-height: 28px;
     padding: 0;
-    margin: 0 4px;
-    line-height: 16px;
+    padding-top: 4px;
+    margin: 0 0;
+    line-height: 0;
 }
 
 .md-treeview li > button > md-icon {
-    font-size: 18px;
+    font-size: 14px;
+    color: #2196F3;
 }
 
 /** Dropzone Area */
@@ -540,7 +543,7 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
 
 .active-obj {
     font-weight: bold;
-    color: #F57C00;
+    color: #F57C00 !important;
 }
 
 .active-inst {
