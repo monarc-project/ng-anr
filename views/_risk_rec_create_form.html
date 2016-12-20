@@ -1,0 +1,33 @@
+<div layout="column">
+    <md-button ng-click="createRecommandation($event)" ng-disabled="isAnrReadOnly">
+        <md-icon>add</md-icon>
+        {{ 'Create new recommendation' | translate }}
+    </md-button>
+
+    <div layout="row" layout-align="center center">
+        <md-autocomplete
+                flex
+                md-no-cache
+                ng-disabled="isAnrReadOnly"
+                md-selected-item="rec_edit.rec"
+                md-search-text="recSearchText"
+                md-items="item in queryRecSearch(recSearchText)"
+                md-item-text="item.description"
+                md-delay="300"
+                md-min-length="0"
+                md-input-name="rec"
+                md-floating-label="{{ 'Search a recommendation' | translate }}">
+            <md-item-template>
+                <span md-highlight-text="recSearchText" md-highlight-flags="^i">{{ item.code }} - {{ item.description }}</span>
+            </md-item-template>
+
+            <md-not-found>
+                {{ 'No recommendation matching your search was found' | translate }}
+            </md-not-found>
+        </md-autocomplete>
+
+        <md-button ng-click="attachRecommandation()" class="md-icon-button" ng-disabled="!rec_edit.rec || isAnrReadOnly">
+            <md-icon>link</md-icon>
+        </md-button>
+    </div>
+</div>

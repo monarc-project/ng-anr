@@ -1,124 +1,130 @@
 <div class="md-padding-left md-padding-right">
     <h3 layout="row" layout-align="start center"><md-button class="md-icon-button" ng-click="resetSheet()"><md-icon>arrow_back</md-icon></md-button> <span translate>Risk sheet</span></h3>
 
-    <table class="md-html-table">
-        <tbody>
-        <tr>
-            <td class="bold txtright" translate>Instance:</td>
-            <td class="bold"><md-icon ng-if="instanceCache[sheet_risk.instance].scope == 2" class="md-tree-global-icon">language</md-icon>{{ instanceCache[sheet_risk.instance].completePath }}</td>
-        </tr>
-        <tr>
-            <td class="bold txtright" style="width: 250px" translate>Asset:</td>
-            <td>{{ sheet_risk[_langField('assetLabel')] }}</td>
-        </tr>
-        <tr>
-            <td class="bold txtright" style="width: 250px" translate>Threat:</td>
-            <td>{{ sheet_risk[_langField('threatLabel')] }}</td>
-        </tr>
-        <tr>
-            <td class="bold txtright" translate>Vulnerability:</td>
-            <td>{{ sheet_risk[_langField('vulnLabel')] }}</td>
-        </tr>
-        <tr>
-            <td class="bold txtright" translate>Observations:</td>
-            <td>{{ sheet_risk.comment }}</td>
-        </tr>
-        <tr>
-            <td class="bold txtright" translate>Threat probability:</td>
-            <td>{{ sheet_risk.threatRate }}</td>
-        </tr>
-        <tr>
-            <td class="bold txtright" translate>Vulnerability qualification:</td>
-            <td>{{ sheet_risk.vulnerabilityRate }}</td>
-        </tr>
-        <tr>
-            <td class="bold txtright" translate>Measure #1:</td>
-            <td>{{ sheet_risk.measure1.code }} - {{ sheet_risk.measure1[_langField('description')] }}</td>
-        </tr>
-        <tr>
-            <td class="bold txtright" translate>Measure #2:</td>
-            <td>{{ sheet_risk.measure2.code }} - {{ sheet_risk.measure2[_langField('description')] }}</td>
-        </tr>
-        <tr>
-            <td class="bold txtright" translate>Measure #3:</td>
-            <td>{{ sheet_risk.measure3.code }} - {{ sheet_risk.measure3[_langField('description')] }}</td>
-        </tr>
-        </tbody>
-    </table>
+    <div layout="row">
+        <table class="md-html-table" flex="75">
+            <tbody>
+            <tr>
+                <td class="bold txtright" translate>Instance:</td>
+                <td class="bold"><md-icon ng-if="instanceCache[sheet_risk.instance].scope == 2" class="md-tree-global-icon">language</md-icon>{{ instanceCache[sheet_risk.instance].completePath }}</td>
+            </tr>
+            <tr>
+                <td class="bold txtright" style="width: 250px" translate>Asset:</td>
+                <td>{{ sheet_risk[_langField('assetLabel')] }}</td>
+            </tr>
+            <tr>
+                <td class="bold txtright" style="width: 250px" translate>Threat:</td>
+                <td>{{ sheet_risk[_langField('threatLabel')] }}</td>
+            </tr>
+            <tr>
+                <td class="bold txtright" translate>Vulnerability:</td>
+                <td>{{ sheet_risk[_langField('vulnLabel')] }}</td>
+            </tr>
+            <tr>
+                <td class="bold txtright" translate>Observations:</td>
+                <td>{{ sheet_risk.comment }}</td>
+            </tr>
+            <tr>
+                <td class="bold txtright" translate>Threat probability:</td>
+                <td>{{ sheet_risk.threatRate }}</td>
+            </tr>
+            <tr>
+                <td class="bold txtright" translate>Vulnerability qualification:</td>
+                <td>{{ sheet_risk.vulnerabilityRate }}</td>
+            </tr>
+            <tr>
+                <td class="bold txtright" translate>Measure #1:</td>
+                <td>{{ sheet_risk.measure1.code }} - {{ sheet_risk.measure1[_langField('description')] }}</td>
+            </tr>
+            <tr>
+                <td class="bold txtright" translate>Measure #2:</td>
+                <td>{{ sheet_risk.measure2.code }} - {{ sheet_risk.measure2[_langField('description')] }}</td>
+            </tr>
+            <tr>
+                <td class="bold txtright" translate>Measure #3:</td>
+                <td>{{ sheet_risk.measure3.code }} - {{ sheet_risk.measure3[_langField('description')] }}</td>
+            </tr>
+            </tbody>
+        </table>
 
-    <table class="tbl-risk-calc">
-        <tbody>
-        <tr>
-            <th></th>
-            <th>C</th>
-            <th>I</th>
-            <th>D</th>
-        </tr>
-        <tr>
-            <th translate>Current risk</th>
-            <td ng-if="sheet_risk.c_risk_enabled" ng-class="{'green': sheet_risk.c_risk <= thresholds.thresholds.min, 'orange': sheet_risk.c_risk <= thresholds.thresholds.max && sheet_risk.c_risk > thresholds.thresholds.min, 'red': sheet_risk.c_risk > thresholds.thresholds.max}">
-                {{sheet_risk.c_risk}}
-            </td>
-            <td ng-if="!sheet_risk.c_risk_enabled"></td>
-            <td ng-if="sheet_risk.i_risk_enabled" ng-class="{'green': sheet_risk.i_risk <= thresholds.thresholds.min, 'orange': sheet_risk.i_risk <= thresholds.thresholds.max && sheet_risk.i_risk > thresholds.thresholds.min, 'red': sheet_risk.i_risk > thresholds.thresholds.max}">
-                {{sheet_risk.i_risk}}
-            </td>
-            <td ng-if="!sheet_risk.i_risk_enabled"></td>
-            <td ng-if="sheet_risk.d_risk_enabled" ng-class="{'green': sheet_risk.d_risk <= thresholds.thresholds.min, 'orange': sheet_risk.d_risk <= thresholds.thresholds.max && sheet_risk.d_risk > thresholds.thresholds.min, 'red': sheet_risk.d_risk > thresholds.thresholds.max}">
-                {{sheet_risk.d_risk}}
-            </td>
-            <td ng-if="!sheet_risk.d_risk_enabled"></td>
-        </tr>
-        <tr>
-            <th translate>Target risk</th>
-            <td ng-if="sheet_risk.c_risk_enabled" ng-class="{'green': sheet_risk.target_c <= thresholds.thresholds.min, 'orange': sheet_risk.target_c <= thresholds.thresholds.max && sheet_risk.target_c > thresholds.thresholds.min, 'red': sheet_risk.target_c > thresholds.thresholds.max}">
-                {{sheet_risk.target_c}}
-            </td>
-            <td ng-if="!sheet_risk.c_risk_enabled"></td>
-            <td ng-if="sheet_risk.i_risk_enabled" ng-class="{'green': sheet_risk.target_i <= thresholds.thresholds.min, 'orange': sheet_risk.target_i <= thresholds.thresholds.max && sheet_risk.target_i > thresholds.thresholds.min, 'red': sheet_risk.target_i > thresholds.thresholds.max}">
-                {{sheet_risk.target_i}}
-            </td>
-            <td ng-if="!sheet_risk.i_risk_enabled"></td>
-            <td ng-class="{'green': sheet_risk.target_d <= thresholds.thresholds.min, 'orange': sheet_risk.target_d <= thresholds.thresholds.max && sheet_risk.target_d > thresholds.thresholds.min, 'red': sheet_risk.target_d > thresholds.thresholds.max}">
-                {{sheet_risk.target_d}}
-            </td>
-            <td ng-if="!sheet_risk.d_risk_enabled"></td>
-        </tr>
-        </tbody>
-    </table>
+        <div flex layout="column" layout-align="center center">
+            <table class="tbl-risk-calc">
+                <tbody>
+                <tr>
+                    <th></th>
+                    <th>C</th>
+                    <th>I</th>
+                    <th>D</th>
+                </tr>
+                <tr>
+                    <th translate>Current risk</th>
+                    <td ng-if="sheet_risk.c_risk_enabled" ng-class="{'green': sheet_risk.c_risk <= thresholds.thresholds.min, 'orange': sheet_risk.c_risk <= thresholds.thresholds.max && sheet_risk.c_risk > thresholds.thresholds.min, 'red': sheet_risk.c_risk > thresholds.thresholds.max}">
+                        {{sheet_risk.c_risk}}
+                    </td>
+                    <td ng-if="!sheet_risk.c_risk_enabled"></td>
+                    <td ng-if="sheet_risk.i_risk_enabled" ng-class="{'green': sheet_risk.i_risk <= thresholds.thresholds.min, 'orange': sheet_risk.i_risk <= thresholds.thresholds.max && sheet_risk.i_risk > thresholds.thresholds.min, 'red': sheet_risk.i_risk > thresholds.thresholds.max}">
+                        {{sheet_risk.i_risk}}
+                    </td>
+                    <td ng-if="!sheet_risk.i_risk_enabled"></td>
+                    <td ng-if="sheet_risk.d_risk_enabled" ng-class="{'green': sheet_risk.d_risk <= thresholds.thresholds.min, 'orange': sheet_risk.d_risk <= thresholds.thresholds.max && sheet_risk.d_risk > thresholds.thresholds.min, 'red': sheet_risk.d_risk > thresholds.thresholds.max}">
+                        {{sheet_risk.d_risk}}
+                    </td>
+                    <td ng-if="!sheet_risk.d_risk_enabled"></td>
+                </tr>
+                <tr>
+                    <th translate>Target risk</th>
+                    <td ng-if="sheet_risk.c_risk_enabled" ng-class="{'green': sheet_risk.target_c <= thresholds.thresholds.min, 'orange': sheet_risk.target_c <= thresholds.thresholds.max && sheet_risk.target_c > thresholds.thresholds.min, 'red': sheet_risk.target_c > thresholds.thresholds.max}">
+                        {{sheet_risk.target_c}}
+                    </td>
+                    <td ng-if="!sheet_risk.c_risk_enabled"></td>
+                    <td ng-if="sheet_risk.i_risk_enabled" ng-class="{'green': sheet_risk.target_i <= thresholds.thresholds.min, 'orange': sheet_risk.target_i <= thresholds.thresholds.max && sheet_risk.target_i > thresholds.thresholds.min, 'red': sheet_risk.target_i > thresholds.thresholds.max}">
+                        {{sheet_risk.target_i}}
+                    </td>
+                    <td ng-if="!sheet_risk.i_risk_enabled"></td>
+                    <td ng-class="{'green': sheet_risk.target_d <= thresholds.thresholds.min, 'orange': sheet_risk.target_d <= thresholds.thresholds.max && sheet_risk.target_d > thresholds.thresholds.min, 'red': sheet_risk.target_d > thresholds.thresholds.max}">
+                        {{sheet_risk.target_d}}
+                    </td>
+                    <td ng-if="!sheet_risk.d_risk_enabled"></td>
+                </tr>
+                </tbody>
+            </table>
 
-    <form class="md-padding" layout="column">
-        <md-input-container style="width: 200px">
-            <label translate>Processing type</label>
-            <md-icon>widgets</md-icon>
-            <md-select ng-model="sheet_risk.kindOfMeasure" ng-disabled="isAnrReadOnly">
-                <md-option ng-value="5">{{ 'Not processed' | translate }}</md-option>
-                <md-option ng-value="1">{{ 'Reduction' | translate }}</md-option>
-                <md-option ng-value="2">{{ 'Denied' | translate }}</md-option>
-                <md-option ng-value="3">{{ 'Accepted' | translate }}</md-option>
-                <md-option ng-value="4">{{ 'Shared' | translate }}</md-option>
-            </md-select>
-        </md-input-container>
+            <form class="md-padding" layout="column">
+                <md-input-container style="width: 200px">
+                    <label translate>Processing type</label>
+                    <md-icon>widgets</md-icon>
+                    <md-select ng-model="sheet_risk.kindOfMeasure" ng-disabled="isAnrReadOnly">
+                        <md-option ng-value="5">{{ 'Not processed' | translate }}</md-option>
+                        <md-option ng-value="1">{{ 'Reduction' | translate }}</md-option>
+                        <md-option ng-value="2">{{ 'Denied' | translate }}</md-option>
+                        <md-option ng-value="3">{{ 'Accepted' | translate }}</md-option>
+                        <md-option ng-value="4">{{ 'Shared' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
 
-        <md-input-container style="width: 200px">
-            <label translate>Reduce vulnerability by</label>
-            <md-icon>trending_down</md-icon>
-            <md-select ng-model="sheet_risk.reductionAmount" ng-disabled="isAnrReadOnly">
-                <md-option ng-repeat="i in reducAmount" ng-value="{{ i }}">{{ i }}</md-option>
-            </md-select>
-        </md-input-container>
+                <md-input-container style="width: 200px">
+                    <label translate>Reduce vulnerability by</label>
+                    <md-icon>trending_down</md-icon>
+                    <md-select ng-model="sheet_risk.reductionAmount" ng-disabled="isAnrReadOnly">
+                        <md-option ng-repeat="i in reducAmount" ng-value="{{ i }}">{{ i }}</md-option>
+                    </md-select>
+                </md-input-container>
 
-        <div layout="column" ng-if="OFFICE_MODE == 'FO'">
-            <b translate>Recommendations</b>
-            <ul class="no-list-style">
-                <li ng-repeat="rec in _copyRecs">{{ rec.recommandation.code }} <span class="anr-importance" ng-repeat="i in range(1, rec.recommandation.importance)">&bull;</span> &gt; {{ rec.recommandation.description }}</li>
-            </ul>
+                <ng-include ng-if="OFFICE_MODE == 'FO'" monarc-mode="information" ng-controller="RiskRecommendationPartialCtrl" src="'/views/anr/_risk_rec_create_form.html'"></ng-include>
+
+                <div layout="row" layout-align="center center">
+                    <md-button class="md-raised" ng-disabled="isAnrReadOnly" ng-click="saveRiskSheet(sheet_risk)">{{ 'Save' | translate }}</md-button>
+                </div>
+            </form>
         </div>
+    </div>
 
-        <div layout="row" layout-align="end center">
-            <md-button class="md-raised md-primary" ng-disabled="isAnrReadOnly" ng-click="saveRiskSheet(sheet_risk)">{{ 'Save changes' | translate }}</md-button>
-        </div>
-    </form>
+    <div layout="column" ng-if="OFFICE_MODE == 'FO'" style="margin-top: -50px">
+        <b translate>Recommendations</b>
+        <ul class="no-list-style">
+            <li ng-repeat="rec in _copyRecs">{{ rec.recommandation.code }} <span class="anr-importance" ng-repeat="i in range(1, rec.recommandation.importance)">&bull;</span> &gt; {{ rec.recommandation.description }}</li>
+        </ul>
+    </div>
 
     <ng-include ng-if="OFFICE_MODE == 'FO'" monarc-mode="information" ng-controller="RiskRecommendationPartialCtrl" src="'/views/anr/_risk_rec_form.html'"></ng-include>
 </div>

@@ -1,38 +1,6 @@
 
 <form class="md-padding" layout="column">
-    <span class="md-subhead" translate>Create / edit recommendations</span>
-
-    <div layout="row">
-        <md-autocomplete
-                flex
-                md-no-cache
-                ng-disabled="isAnrReadOnly"
-                md-selected-item="rec_edit.rec"
-                md-search-text="recSearchText"
-                md-items="item in queryRecSearch(recSearchText)"
-                md-item-text="item.description"
-                md-delay="300"
-                md-min-length="0"
-                md-input-name="rec"
-                md-floating-label="{{ 'Recommendation' | translate }}">
-            <md-item-template>
-                <span md-highlight-text="recSearchText" md-highlight-flags="^i">{{ item.code }} - {{ item.description }}</span>
-            </md-item-template>
-
-            <md-not-found>
-                {{ 'No recommendation matching your search was found' | translate }}
-            </md-not-found>
-        </md-autocomplete>
-
-        <md-button ng-click="attachRecommandation()" ng-disabled="!rec_edit.rec || isAnrReadOnly">
-            <md-icon>link</md-icon>
-            {{ 'Attach' | translate }}
-        </md-button>
-        <md-button ng-click="createRecommandation($event)" ng-disabled="isAnrReadOnly">
-            <md-icon>add</md-icon>
-            {{ 'Create new recommendation' | translate }}
-        </md-button>
-    </div>
+    <span class="md-subhead" translate>Edit recommendations</span>
 
     <md-list>
         <md-list-item class="md-3-line" ng-repeat="recommandation in recommandations">
