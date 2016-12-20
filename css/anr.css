@@ -184,6 +184,10 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
     width: 100%;
 }
 
+.md-html-table-grey {
+    border-color: #DDDDDD !important;
+}
+
 .md-errors-spacer {
     min-height: 0 !important;
 }
@@ -751,13 +755,19 @@ trix-toolbar button.link, trix-toolbar button.strike, trix-toolbar button.code {
 }
 
 .big-border-all {
-    border: 2px solid grey !important;
+    border-width: 2px !important;
+    border-style: solid !important;
+    border-color: #DDDDDD;
 }
 .big-border-bottom {
-    border-bottom: 2px solid grey !important;
+    border-bottom-width: 2px  !important;
+    border-bottom-style: solid !important;
+    border-color: #DDDDDD;
 }
 .big-border-left {
-    border-left: 2px solid grey !important;
+    border-left-width: 2px !important;
+    border-left-style: solid !important;
+    border-color: #DDDDDD;
 }
 
 .md-ripple-container, .md-ripple-placed {
