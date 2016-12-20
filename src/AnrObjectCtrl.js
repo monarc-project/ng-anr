@@ -107,7 +107,7 @@
         $scope.openDetachObjectDialog = function(ev, parents){
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'AnrService', 'ObjlibService', 'InstanceService', '$parentScope', 'parents', 'gettextCatalog', 'toastr', DetachObjectDialog],
+                controller: ['$scope', '$mdDialog', 'AnrService', 'ObjlibService', 'InstanceService', '$parentScope', 'parents', 'gettextCatalog', 'toastr', '$state', DetachObjectDialog],
                 templateUrl: '/views/anr/detach.objlibs.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -122,12 +122,22 @@
                 }
             })
             .then(function () {
-                AnrService.removeObjectFromLibrary($rootScope.anr_id, $scope.object.id, function () {
-                    toastr.success(gettextCatalog.getString('The object has been detached from the library.'));
-                    if ($rootScope.hookUpdateObjlib) {
-                        $rootScope.hookUpdateObjlib(true);//true pour retouner sur la fiche du premier objet de la bibliothèque
-                    }
-                });
+                if ($scope.OFFICE_MODE == 'FO') {
+                    ObjlibService.deleteObjlib($scope.object.id, function () {
+                        toastr.success(gettextCatalog.getString('The object has been successfully deleted'));
+                        if ($rootScope.hookUpdateObjlib) {
+                            $rootScope.hookUpdateObjlib();
+                        }
+                        $state.transitionTo('main.project.anr', {modelId: $stateParams.modelId});
+                    });
+                } else {
+                    AnrService.removeObjectFromLibrary($rootScope.anr_id, $scope.object.id, function () {
+                        toastr.success(gettextCatalog.getString('The object has been detached from the library.'));
+                        if ($rootScope.hookUpdateObjlib) {
+                            $rootScope.hookUpdateObjlib(true);//true pour retouner sur la fiche du premier objet de la bibliothèque
+                        }
+                    });
+                }
             });
         };
 
@@ -165,12 +175,12 @@
                     } else {
                         var title = gettextCatalog.getString('Detach this object?');
                         var content = gettextCatalog.getString('The current object "{{ name }}" will be removed from the library. Are you sure?',
-                            {name: $scope.object.name1});
+                            {name: $scope.object[$scope._langField('name')]});
 
                         if ($scope.OFFICE_MODE == 'FO') {
                             title = gettextCatalog.getString('Delete this object');
                             content = gettextCatalog.getString('The current object "{{ name }}" will be permanently deleted. Are you sure?',
-                                {name: $scope.object.name1});
+                                {name: $scope.object[$scope._langField('name')]});
                         }
 
                         var confirm = $mdDialog.confirm()
@@ -184,15 +194,11 @@
                         $mdDialog.show(confirm).then(function () {
                             if ($scope.OFFICE_MODE == 'FO') {
                                 ObjlibService.deleteObjlib($scope.object.id, function () {
-                                    if ($scope.OFFICE_MODE == 'BO') {
-                                        $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'objlibs'});
-                                    } else {
-                                        toastr.success(gettextCatalog.getString('The object has been successfully deleted'));
-                                        if ($rootScope.hookUpdateObjlib) {
-                                            $rootScope.hookUpdateObjlib();
-                                        }
-                                        $state.transitionTo('main.project.anr', {modelId: $stateParams.modelId});
+                                    toastr.success(gettextCatalog.getString('The object has been successfully deleted'));
+                                    if ($rootScope.hookUpdateObjlib) {
+                                        $rootScope.hookUpdateObjlib();
                                     }
+                                    $state.transitionTo('main.project.anr', {modelId: $stateParams.modelId});
                                 });
                             } else {
                                 AnrService.removeObjectFromLibrary($rootScope.anr_id, $scope.object.id, function () {
@@ -456,10 +462,20 @@
     }
 
 
-    function DetachObjectDialog($scope, $mdDialog, AnrService, ObjlibService, InstanceService, $parentScope, parents, gettextCatalog, toastr) {
+    function DetachObjectDialog($scope, $mdDialog, AnrService, ObjlibService, InstanceService, $parentScope, parents, gettextCatalog, toastr, $state) {
         $scope.object = $parentScope.object;
 
         $scope.parents = parents;
+
+        $scope.goToInstance = function (id) {
+            if ($scope.OFFICE_MODE == 'BO') {
+                $state.transitionTo("main.kb_mgmt.models.details.instance", {instId: id});
+            } else {
+                $state.transitionTo("main.project.anr.instance", {modelId: $parentScope.model.anr.id, instId: id});
+            }
+
+            $scope.cancel();
+        }
 
         $scope.detachInstance = function (ev, instance) {
             InstanceService.detach($parentScope, ev, instance.id, function(){
