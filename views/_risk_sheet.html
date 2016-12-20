@@ -6,11 +6,11 @@
         <table class="md-html-table" flex="75">
             <tbody>
             <tr>
-                <td class="bold txtright" translate>Instance:</td>
+                <td class="bold txtright" translate>Asset:</td>
                 <td class="bold"><md-icon ng-if="instanceCache[sheet_risk.instance].scope == 2" class="md-tree-global-icon">language</md-icon>{{ instanceCache[sheet_risk.instance].completePath }}</td>
             </tr>
             <tr>
-                <td class="bold txtright" style="width: 250px" translate>Asset:</td>
+                <td class="bold txtright" style="width: 250px" translate>Asset type:</td>
                 <td>{{ sheet_risk[_langField('assetLabel')] }}</td>
             </tr>
             <tr>
@@ -22,7 +22,7 @@
                 <td>{{ sheet_risk[_langField('vulnLabel')] }}</td>
             </tr>
             <tr>
-                <td class="bold txtright" translate>Observations:</td>
+                <td class="bold txtright" translate>Measures set:</td>
                 <td>{{ sheet_risk.comment }}</td>
             </tr>
             <tr>
@@ -34,15 +34,15 @@
                 <td>{{ sheet_risk.vulnerabilityRate }}</td>
             </tr>
             <tr>
-                <td class="bold txtright" translate>Measure #1:</td>
+                <td class="bold txtright" translate>Reference measure #1:</td>
                 <td>{{ sheet_risk.measure1.code }} - {{ sheet_risk.measure1[_langField('description')] }}</td>
             </tr>
             <tr>
-                <td class="bold txtright" translate>Measure #2:</td>
+                <td class="bold txtright" translate>Reference measure #2:</td>
                 <td>{{ sheet_risk.measure2.code }} - {{ sheet_risk.measure2[_langField('description')] }}</td>
             </tr>
             <tr>
-                <td class="bold txtright" translate>Measure #3:</td>
+                <td class="bold txtright" translate>Reference measure #3:</td>
                 <td>{{ sheet_risk.measure3.code }} - {{ sheet_risk.measure3[_langField('description')] }}</td>
             </tr>
             </tbody>
