@@ -25,21 +25,19 @@
                 </div>
 
                 <div ng-if="dialog_mode == 'file'">
-                    <div ngf-drop ngf-select ng-repeat="i in range(0, file_range)" ng-model="file[i]" class="md-upload-dropbox md-upload-dropbox-dark md-padding md-whiteframe-3dp"
-                         ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-allow-dir="false">
-                        <div ng-if="file[i].name">{{ file[i].name }}</div>
-                        <div ng-if="!file[i].name">{{ 'Drop your exported file in this zone, or click here to select a file' | translate }}</div>
-                    </div>
+                    <input type="file" name="file" ngf-drop ngf-select ng-repeat="i in range(0, file_range)" ng-model="file[i]" class="md-upload-dropbox md-upload-dropbox-dark md-padding md-whiteframe-3dp"
+                           ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-allow-dir="false">
+                    </input>
 
                     <md-input-container class="md-block">
                         <md-icon>vpn_key</md-icon>
                         <label translate>Assets password (if any)</label>
-                        <input type="password">
+                        <input type="import.password">
                     </md-input-container>
 
                     <div layout="row" layout-align="end center">
                         <md-button ng-click="upgradeFileRange()"><md-icon>add</md-icon> {{ 'Add another file' | translate }}</md-button>
-                        <md-button><md-icon>file_download</md-icon> {{ 'Import files' | translate }}</md-button>
+                        <md-button ng-click="uploadFile(file)"><md-icon>file_download</md-icon> {{ 'Import files' | translate }}</md-button>
                     </div>
                 </div>
 

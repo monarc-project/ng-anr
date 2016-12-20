@@ -23,7 +23,7 @@
         $scope.importAsset = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'AssetService', 'toastr', 'gettextCatalog', 'assetTypeStr', ImportAssetDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'AssetService', 'toastr', 'gettextCatalog', 'assetTypeStr', 'Upload', ImportAssetDialogCtrl],
                 templateUrl: '/views/anr/import.asset.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -2299,15 +2299,27 @@
     }
 
     /*** FO ***/
-    function ImportAssetDialogCtrl($scope, $mdDialog, AssetService, toastr, gettextCatalog, assetTypeStr) {
+    function ImportAssetDialogCtrl($scope, $mdDialog, AssetService, toastr, gettextCatalog, assetTypeStr, Upload) {
         $scope.dialog_mode = null;
         $scope.assetTypeStr = assetTypeStr;
         $scope.file = [];
         $scope.file_range = 0;
+        $scope.import = {password: null};
 
         AssetService.getAssetsCommon({limit: 0}).then(function (data) {
             $scope.assets = data.assets;
         });
+
+        $scope.uploadFile = function (file) {
+            file.upload = Upload.upload({
+                url: '/api/client-anr/' + $scope.getUrlAnrId() + '/assets/import',
+                data: {file: file, password: $scope.import.password}
+            });
+
+            file.upload.then(function (response) {
+                toastr.success(gettextCatalog.getString("The asset has been imported successfully"));
+            });
+        }
 
         $scope.upgradeFileRange = function () {
             $scope.file_range++;
