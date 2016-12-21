@@ -21,13 +21,13 @@
 
                 <md-radio-group ng-model="import.mode">
                     <label translate>Import method:</label>
-                    <md-radio-button value="duplicate">{{ 'By duplicating' }}</md-radio-button>
-                    <md-radio-button value="merge">{{ 'By merging' }}</md-radio-button>
+                    <md-radio-button value="duplicate">{{ 'By duplicating' | translate }}</md-radio-button>
+                    <md-radio-button value="merge">{{ 'By merging' | translate }}</md-radio-button>
                 </md-radio-group>
 
                 <div layout="row" ng-show="dialog_mode == null">
                     <md-button flex ng-click="dialog_mode = 'file'" class="md-raised">{{ 'Import from file' | translate }}</md-button>
-                    <md-button flex ng-click="dialog_mode = 'common'" class="md-raised">{{ 'Import from MONARC library' | translate }}</md-button>
+                    <md-button flex ng-click="openCommonList()" class="md-raised">{{ 'Import from MONARC library' | translate }}</md-button>
                 </div>
 
                 <div ng-if="dialog_mode == 'file'" layout="column">
@@ -68,7 +68,7 @@
                             <td>{{ object[_langField('name')] }}</td>
                             <td ng-if="object.scope == 1" translate>Local</td>
                             <td ng-if="object.scope == 2" translate>Global</td>
-                            <td>{{ object.asset.code }} - {{ object.asset[_langField('label')] }}</td>
+                            <td>{{ object.asset[_langField('label')] }} - {{ object.asset[_langField('description')] }}</td>
                             <td class="txtcenter"><md-button ng-click="openObjectDetails(object)" class="md-icon-button"><md-icon>open_in_new</md-icon></md-button></td>
                         </tr>
                         </tbody>
@@ -78,12 +78,12 @@
                 <div ng-if="dialog_mode == 'object_details'">
                     <div layout="row" layout-align="start center">
                         <md-button class="md-icon-button" ng-click="closeObjectDetails()"><md-icon>arrow_back</md-icon></md-button>
-                        <p class="md-title">{{ object_details[_langField('label')] }}</p>
+                        <p class="md-title">{{ object_details[_langField('name')] }} - {{ object_details[_langField('label')] }}</p>
                     </div>
 
-                    <p><strong translate>Scope:</strong> {{ (object.scope == 1 ? 'Local' : 'Global') | translate }}</p>
-                    <p><strong translate>Category:</strong> {{ object.category[_langField('label')] }}</p>
-                    <p><strong translate>Asset:</strong> {{object.asset.code}} - {{ object.asset[_langField('label')] }}</p>
+                    <p><strong translate>Scope:</strong> {{ (object_details.scope == 1 ? 'Local' : 'Global') | translate }}</p>
+                    <p><strong translate>Category:</strong> {{ object_details.category[_langField('label')] }}</p>
+                    <p><strong translate>Asset:</strong> {{ object_details.asset[_langField('label')] }}</p>
 
                     <md-button class="md-raised md-primary" ng-click="importObjectCommon()">{{ 'Import this object' | translate }}</md-button>
                 </div>

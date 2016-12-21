@@ -175,12 +175,12 @@
             return self.CommonObjectResource.query(params).$promise;
         };
 
-        var getAssetCommon = function (id) {
+        var getObjectCommon = function (id) {
             return self.CommonObjectResource.query({objectId: id}).$promise;
         };
 
-        var importAssetCommon = function(id, success, error) {
-            new self.CommonObjectResource({object: id}).$save(success, error);
+        var importObjectCommon = function(id, mode, success, error) {
+            self.CommonObjectResource.patch({objectId: id}, {object: id, mode: mode}, success, error);
         };
 
         return {
@@ -210,6 +210,8 @@
 
             getObjectsOfAnr: getObjectsOfAnr,
             getObjectsCommon: getObjectsCommon,
+            getObjectCommon: getObjectCommon,
+            importObjectCommon: importObjectCommon,
 
         };
     }

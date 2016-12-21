@@ -6,6 +6,10 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
     $scope.categories = [];
     var $parentScope = objLibDialog;
 
+    if (objLibDialog.model) {
+        $scope.model = objLibDialog.model;
+    }
+
     if ($scope.OFFICE_MODE == 'FO') {
         $scope.language = $scope.getAnrLanguage();
     }

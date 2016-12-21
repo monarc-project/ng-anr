@@ -2007,10 +2007,6 @@
             });
         }
 
-        ObjlibService.getObjectsCommon({limit: 0}).then(function (data) {
-            $scope.assets = data.assets;
-        });
-
         $scope.upgradeFileRange = function () {
             $scope.file_range++;
 
@@ -2020,6 +2016,14 @@
                 }
             }
         };
+
+        $scope.openCommonList = function () {
+            $scope.dialog_mode = 'common';
+
+            ObjlibService.getObjectsCommon({limit: 0}).then(function (data) {
+                $scope.objects = data.objects;
+            });
+        }
 
         $scope.openObjectDetails = function (object) {
             $scope.dialog_mode = 'object_details';
@@ -2035,7 +2039,7 @@
         };
 
         $scope.importObjectCommon = function () {
-            ObjlibService.importObjectCommon($scope.object_details.id, function () {
+            ObjlibService.importObjectCommon($scope.object_details.id, $scope.import.mode, function () {
                 toastr.success(gettextCatalog.getString("Object imported successfully"));
                 $scope.dialog_mode = 'common';
             });
