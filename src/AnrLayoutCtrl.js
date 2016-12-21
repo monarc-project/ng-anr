@@ -1330,7 +1330,7 @@
         $scope.showMethodBox = function (stepNum, step, ev) {
             var position = $mdPanel.newPanelPosition()
                 .relativeTo('.method-menu-step-' + stepNum)
-                .addPanelPosition($mdPanel.xPosition.ALIGN_START, $mdPanel.yPosition.BELOW);
+                .addPanelPosition(stepNum == 4 ? $mdPanel.xPosition.ALIGN_END : $mdPanel.xPosition.ALIGN_START, $mdPanel.yPosition.BELOW);
 
             var animation = $mdPanel.newPanelAnimation();
             animation.withAnimation($mdPanel.animation.FADE);
