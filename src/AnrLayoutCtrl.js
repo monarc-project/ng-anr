@@ -1645,6 +1645,7 @@
     function MethodEditContextDialog($scope, $mdDialog, GuideService, anr, subStep) {
         $scope.subStep = subStep;
         $scope.guideVisible = false;
+        $scope.isAnrReadOnly = !anr.rwd;
 
         $scope.toggleGuide = function () {
             $scope.guideVisible = !$scope.guideVisible;
@@ -1700,6 +1701,7 @@
 
     function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService, anr, subStep) {
         $scope.subStep = subStep;
+        $scope.isAnrReadOnly = !anr.rwd;
 
         TreatmentPlanService.getTreatmentPlans({anr: anr.id}).then(function (data) {
             $scope.recommendations = data['recommandations-risks'];
@@ -1722,6 +1724,7 @@
         $scope.subStep = subStep;
         $scope.anr = anr;
         $scope.display = {};
+        $scope.isAnrReadOnly = !anr.rwd;
 
         $scope.guideVisible = false;
 
