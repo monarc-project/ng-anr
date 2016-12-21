@@ -497,7 +497,7 @@
                     step: step,
                 }
             }).then(function (data) {
-                
+
             });
         };
 
@@ -614,7 +614,7 @@
         $scope.visible = function (item) {
             if (item.type == 'lib') {
                 return !($scope.filter.library && $scope.filter.library.length > 0 &&
-                    item.name1.toLowerCase().indexOf($scope.filter.library.toLowerCase()) == -1);
+                item.name1.toLowerCase().indexOf($scope.filter.library.toLowerCase()) == -1);
             } else if (item.type == 'inst') {
                 return !($scope.filter.instance && $scope.filter.instance.length > 0 &&
                 item.name1.toLowerCase().indexOf($scope.filter.instance.toLowerCase()) == -1);
@@ -658,8 +658,8 @@
 
             accept: function (sourceNodeScope, destNodeScope, destIndex) {
                 return (sourceNodeScope.$treeScope.$id == destNodeScope.$treeScope.$id
-                    && sourceNodeScope.$modelValue.depth == 0
-                    && destNodeScope.$parent.$type == 'uiTree');
+                && sourceNodeScope.$modelValue.depth == 0
+                && destNodeScope.$parent.$type == 'uiTree');
             },
 
             dropped: function (e) {
@@ -734,7 +734,7 @@
                         for (var i = 0; i < category.objects.length; ++i) {
                             var obj = category.objects[i];
                             obj.type = 'lib';
-                            
+
                             if ($scope.collapseCache[obj.type + obj.id] !== undefined) {
                                 obj.__collapsed__ = $scope.collapseCache[obj.type + obj.id];
                             } else {
@@ -1162,7 +1162,7 @@
 
                 $scope.scales_types_by_id = {};
                 for(var i = 0 ; i<data.types.length ; ++i){
-                     $scope.scales_types_by_id[data.types[i].id] = data.types[i];
+                    $scope.scales_types_by_id[data.types[i].id] = data.types[i];
                 }
 
                 // Same as above, setup placeholder comments structures
@@ -1484,12 +1484,19 @@
                     objlib.rolfTag = objlib.rolfTag.id;
                 }
 
-                AnrService.addNewObjectToLibrary($scope.model.anr.id, objlib, function (data) {
+                var anr;
+                if ($scope.model && $scope.model.anr) {
+                    anr = $scope.model.anr;
+                } else if ($parentScope && $parentScope.model && $parentScope.model.anr) {
+                    anr = $parentScope.model.anr;
+                }
+
+                AnrService.addNewObjectToLibrary(anr.id, objlib, function (data) {
                     $parentScope.updateObjectsLibrary(false, function(){
                         if ($scope.OFFICE_MODE == 'FO') {
-                            $state.transitionTo('main.project.anr.object', {modelId: $scope.model.anr.id, objectId: data.id});
+                            $state.transitionTo('main.project.anr.object', {modelId: anr.id, objectId: data.id});
                         } else {
-                            $location.path('/backoffice/kb/models/'+$scope.model.id+'/object/'+data.id);
+                            $location.path('/backoffice/kb/models/'+$parentScope.model.id+'/object/'+data.id);
                         }
 
                     });
