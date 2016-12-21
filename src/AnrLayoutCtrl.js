@@ -568,7 +568,7 @@
             }
 
             for (var i = 0; i < root.length; ++i) {
-                var node = $scope.anr_obj_instances_data[i];
+                var node = root[i];
 
                 if (node.__children__ && node.__children__.length > 0) {
                     $scope.wrapAll(node);
@@ -585,10 +585,10 @@
             }
 
             for (var i = 0; i < root.length; ++i) {
-                var node = $scope.anr_obj_instances_data[i];
+                var node = root[i];
 
                 if (node.__children__ && node.__children__.length > 0) {
-                    $scope.wrapAll(node);
+                    $scope.unwrapAll(node.__children__);
                 }
 
                 node.__collapsed__ = false;
