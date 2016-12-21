@@ -6,8 +6,8 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
     $scope.categories = [];
     var $parentScope = objLibDialog;
 
-    if (objLibDialog.model) {
-        $scope.model = objLibDialog.model;
+    if (objLibDialog.__objlibDialog_ParentScope && objLibDialog.__objlibDialog_ParentScope.model) {
+        $scope.model = objLibDialog.__objlibDialog_ParentScope.model;
     }
 
     if ($scope.OFFICE_MODE == 'FO') {
@@ -22,7 +22,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
         }
     } else {
         $scope.objlib = {
-            mode: 0,
+            mode: ($scope.model !== undefined && $scope.model.isRegulator) ? 1 : 0,
             scope: 1,
             label1: '',
             label2: '',
@@ -172,7 +172,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
 
     $scope.queryObjectSearch = function (query) {
         var q = $q.defer();
-        
+
         ObjlibService.getObjlibs({filter: query, category: $scope.objlib.category, lock: true}).then(function (x) {
             var objFiltered = [];
             for (var i = 0; i < x.objects.length; ++i) {

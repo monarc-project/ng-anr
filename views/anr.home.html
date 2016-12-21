@@ -1,7 +1,7 @@
 <md-tabs md-dynamic-height md-selected="ToolsAnrService.currentTab">
     <md-tab label="{{ 'General information' | translate }}">
         <div class="md-padding">
-            <md-button ng-disabled="isAnrReadOnly" ng-click="editAnrInfo($event)"><md-icon>edit</md-icon> {{ 'Edit risk analysis details' | translate }}</md-button>
+            <md-button ng-disabled="isAnrReadOnly" ng-if="OFFICE_MODE == 'FO'" ng-click="editAnrInfo($event)"><md-icon>edit</md-icon> {{ 'Edit risk analysis details' | translate }}</md-button>
             <md-button ng-click="exportAnr($event)" ng-disabled="isSafari()"><md-icon>save</md-icon> {{ 'Export risk analysis' | translate }}</md-button>
             <md-button ng-disabled="isAnrReadOnly" ng-click="deleteAnr($event)" ng-if="OFFICE_MODE == 'FO'"><md-icon>delete</md-icon> {{ 'Delete risk analysis' | translate }}</md-button>
 
