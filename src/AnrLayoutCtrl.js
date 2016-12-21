@@ -1057,6 +1057,7 @@
                         toastr.success(gettextCatalog.getString("The risk analysis details have been updated"), gettextCatalog.getString("Update successful"));
                         if ($scope.OFFICE_MODE == 'FO') {
                             $scope.model.showRolfBrut = anr.showRolfBrut;
+                            $rootScope.$broadcast('fo-anr-changed');
                         }
                     });
                     $scope.model.anr = anr;
