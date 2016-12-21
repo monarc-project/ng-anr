@@ -114,7 +114,14 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
                             if (objLibDialog.editObjlib) {
                                 objLibDialog.editObjlib(null, $scope.objlib, true);
                             } else if (objLibDialog.createAttachedObject) {
-                                objLibDialog.createAttachedObject($parentScope, $mdDialog, $parentScope.__objlibDialog_State, $parentScope.__objlibDialog_Location, $parentScope.__objlibDialog_ParentScope, $parentScope.__objlibDialog_AnrService, null, $scope.objlib, true);
+                                if ($scope.OFFICE_MODE == 'FO') {
+                                    objLibDialog.createAttachedObject($parentScope, $mdDialog,
+                                        $parentScope.__objlibDialog_State, $parentScope.__objlibDialog_Location,
+                                        $parentScope.__objlibDialog_ParentScope, $parentScope.__objlibDialog_AnrService,
+                                        null, $scope.objlib, true);
+                                } else {
+                                    objLibDialog.createAttachedObject(null, $scope.objlib);
+                                }
                             }
 
 

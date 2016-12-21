@@ -608,7 +608,6 @@
             }
 
             node.__collapsed__ = $scope.collapseCache[node.type + node.id];
-            //console.log(node.type + node.id);
         };
 
         $scope.visible = function (item) {
