@@ -182,6 +182,12 @@
             InstanceService.detach($scope, ev, instance.id, function(){
                 $scope.instance.instances.splice($scope.instance.instances.indexOf(instance), 1);
                 $scope.updateModel();
+
+                if ($scope.OFFICE_MODE == 'BO') {
+                    $location.path('/backoffice/kb/models/' + $scope.model.id);
+                } else {
+                    $location.path('/client/project/' + $scope.model.anr.id + '/anr');
+                }
             }, onrecord);
         };
 
