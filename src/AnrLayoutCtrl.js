@@ -487,17 +487,20 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'step', MethodDeliverableDialog],
+                controller: ['$scope', '$mdDialog', '$http', 'anr', MethodDeliverableDialog],
                 templateUrl: '/views/anr/deliverable.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                    step: step,
+                    anr: $scope.model.anr
                 }
-            }).then(function (data) {
-
+            }).then(function (deliverable) {
+                $http.post('/api/client-anr/' + $scope.model.anr.id + '/deliverable', deliverable, {responseType: "arraybuffer"}).then(function (data) {
+                    DownloadService.downloadBlob(data.data, 'deliverable.docx');
+                    toastr.success(gettextCatalog.getString('The deliverable has been generated successfully.'), gettextCatalog.getString('Generation successful'));
+                })
             });
         };
 
@@ -1986,9 +1989,23 @@
         };
     }
 
-    function MethodDeliverableDialog($scope, $mdDialog) {
-        $scope.create = function () {
-            $mdDialog.hide(true);
+    function MethodDeliverableDialog($scope, $mdDialog, $http, anr) {
+        $scope.deliverable = {
+            'version': '',
+            'status': 1,
+            'classification': '',
+            'docname': '',
+            'managers': '',
+            'consultants': '',
+        };
+
+        $http.get('/api/client-anr/' + anr.id + '/deliverable').then(function (data) {
+            $scope.models = data.data;
+            $scope.deliverable.model = data.data[0].id;
+        });
+        
+        $scope.save = function () {
+            $mdDialog.hide($scope.deliverable);
         }
 
         $scope.cancel = function() {
