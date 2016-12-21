@@ -100,7 +100,7 @@
                                             <md-icon>search</md-icon>
                                             <input type="text" ng-model="filter.library" placeholder="{{ 'Search an object...' | translate }}">
                                         </md-input-container>
-                                        <md-button class="md-icon-button" ng-click="addObject($event)"><md-icon>add</md-icon></md-button>
+                                        <md-button class="md-icon-button md-primary" ng-click="addObject($event)"><md-icon>add</md-icon></md-button>
                                     </div>
 
                                     <div class="angular-ui-tree" id="libTree" ui-tree="libTreeCallbacks" data-drag-delay="150">
@@ -152,7 +152,7 @@
                                 <thead>
                                     <tr>
                                         <th></th>
-                                        <th ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">{{ type['label' + scales.language] }} <md-button class="md-icon-button md-warn" ng-if="type.type == 'CUS' && !isAnrReadOnly" ng-click="deleteCustomScaleType(type.id)"><md-icon>delete</md-icon></md-button> <md-button class="md-icon-button" class="md-primary" ng-if="type.type != 'CUS' && !isAnrReadOnly" ng-click="setImpactVisibility(type.id, !!type.isHidden)"><md-icon>{{ type.isHidden ? 'visibility' : 'visibility_off' }}</md-icon></md-button></th>
+                                        <th ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">{{ type['label' + scales.language] }} <md-button class="md-icon-button md-warn" ng-if="type.type == 'CUS' && !isAnrReadOnly" ng-click="deleteCustomScaleType(type.id)"><md-icon>delete</md-icon></md-button> <md-button class="md-icon-button md-primary" ng-if="type.type != 'CUS' && !isAnrReadOnly" ng-click="setImpactVisibility(type.id, !!type.isHidden)"><md-icon>{{ type.isHidden ? 'visibility' : 'visibility_off' }}</md-icon></md-button></th>
                                         <th><span inline-edit="newColumn.name" inline-edit-callback="onCreateNewColumn(newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ 'New column name' | translate }}"></span></th>
                                     </tr>
                                 </thead>

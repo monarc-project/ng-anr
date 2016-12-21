@@ -18,7 +18,7 @@
                     <md-option value="1">{{ 'Show active only' | translate }}</md-option>
                 </md-select>
 
-                <md-button class="md-icon-button" ng-click="removeAssetsFilter()">
+                <md-button class="md-icon-button md-primary" ng-click="removeAssetsFilter()">
                     <md-icon>settings_backup_restore</md-icon>
                 </md-button>
             </div>
@@ -26,7 +26,7 @@
             <md-toolbar class="md-table-toolbar alternate" ng-if="assets.selected.length">
                 <div class="md-toolbar-tools md-toolbar-pad" layout-align="space-between center">
                     <div>{{assets.selected.length}} {{assets.selected.length > 1 ? 'items' : 'item'}} selected</div>
-                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button" ng-click="deleteAssetMass($event)">
+                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-warn" ng-click="deleteAssetMass($event)">
                         <md-icon>delete</md-icon>
                     </md-button>
                 </div>
@@ -61,14 +61,14 @@
 
                     <tbody md-body>
                     <tr md-row md-select="asset" md-select-id="id" ng-repeat="asset in assets.items.assets">
-                        <td md-cell><md-button class="md-icon-button" ng-click="!isAnrReadOnly && toggleAssetStatus(asset)"><md-icon>{{ asset.status ? 'done' : 'clear' }}</md-icon></md-button></td>
+                        <td md-cell><md-button class="md-icon-button md-primary" ng-click="!isAnrReadOnly && toggleAssetStatus(asset)"><md-icon>{{ asset.status ? 'done' : 'clear' }}</md-icon></md-button></td>
                         <td md-cell>{{ asset[_langField('label')] }}</td>
                         <td md-cell>{{ asset.code }}</td>
                         <td md-cell>{{ assetTypeStr(asset.type) }}</td>
                         <td md-cell>{{ asset[_langField('description')] }}</td>
                         <td md-cell ng-if="!isAnrReadOnly">
-                            <md-button class="md-icon-button" ng-click="editAsset($event, asset)"><md-icon>edit</md-icon></md-button>
-                            <md-button class="md-icon-button" ng-click="deleteAsset($event, asset)"><md-icon>delete</md-icon></md-button>
+                            <md-button class="md-icon-button md-primary" ng-click="editAsset($event, asset)"><md-icon>edit</md-icon></md-button>
+                            <md-button class="md-icon-button md-warn" ng-click="deleteAsset($event, asset)"><md-icon>delete</md-icon></md-button>
                         </td>
                     </tr>
                     </tbody>
@@ -96,7 +96,7 @@
                     <md-option value="0">{{ 'Show inactive only' | translate }}</md-option>
                     <md-option value="1">{{ 'Show active only' | translate }}</md-option>
                 </md-select>
-                <md-button class="md-icon-button" ng-click="removeThreatsFilter()">
+                <md-button class="md-icon-button md-primary" ng-click="removeThreatsFilter()">
                     <md-icon>settings_backup_restore</md-icon>
                 </md-button>
             </div>
@@ -104,7 +104,7 @@
             <md-toolbar class="md-table-toolbar alternate" ng-if="threats.selected.length">
                 <div class="md-toolbar-tools md-toolbar-pad" layout-align="space-between center">
                     <div>{{threats.selected.length}} {{threats.selected.length > 1 ? 'items' : 'item'}} selected</div>
-                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button" ng-click="deleteThreatMass($event)">
+                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-warn" ng-click="deleteThreatMass($event)">
                         <md-icon>delete</md-icon>
                     </md-button>
                 </div>
@@ -132,14 +132,14 @@
 
                     <tbody md-body>
                     <tr md-row md-select="threat" md-select-id="id" ng-repeat="threat in threats.items.threats">
-                        <td md-cell><md-button class="md-icon-button" ng-click="!isAnrReadOnly && toggleThreatStatus(threat)"><md-icon>{{ threat.status ? 'done' : 'clear' }}</md-icon></md-button></td>
+                        <td md-cell><md-button class="md-icon-button md-primary" ng-click="!isAnrReadOnly && toggleThreatStatus(threat)"><md-icon>{{ threat.status ? 'done' : 'clear' }}</md-icon></md-button></td>
                         <td md-cell>{{ threat[_langField('label')] }}</td>
                         <td md-cell>{{ threat.code }}</td>
                         <td md-cell>{{ threat.c ? 'C' : '' }}{{ threat.i ? 'I' : '' }}{{ threat.d ? 'D' : '' }}</td>
                         <td md-cell>{{ threat[_langField('description')] }}</td>
                         <td md-cell ng-if="!isAnrReadOnly">
-                            <md-button class="md-icon-button" ng-click="editThreat($event, threat)"><md-icon>edit</md-icon></md-button>
-                            <md-button class="md-icon-button" ng-click="deleteThreat($event, threat)"><md-icon>delete</md-icon></md-button>
+                            <md-button class="md-icon-button md-primary" ng-click="editThreat($event, threat)"><md-icon>edit</md-icon></md-button>
+                            <md-button class="md-icon-button md-warn" ng-click="deleteThreat($event, threat)"><md-icon>delete</md-icon></md-button>
                         </td>
                     </tr>
                     </tbody>
@@ -167,7 +167,7 @@
                     <md-option value="1">{{ 'Show active only' | translate }}</md-option>
                 </md-select>
 
-                <md-button class="md-icon-button" ng-click="removeVulnsFilter()">
+                <md-button class="md-icon-button md-primary" ng-click="removeVulnsFilter()">
                     <md-icon>settings_backup_restore</md-icon>
                 </md-button>
             </div>
@@ -175,7 +175,7 @@
             <md-toolbar class="md-table-toolbar alternate" ng-if="vulns.selected.length">
                 <div class="md-toolbar-tools md-toolbar-pad" layout-align="space-between center">
                     <div>{{vulns.selected.length}} {{vulns.selected.length > 1 ? 'items' : 'item'}} selected</div>
-                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button" ng-click="deleteVulnMass($event)">
+                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-warn" ng-click="deleteVulnMass($event)">
                         <md-icon>delete</md-icon>
                     </md-button>
                 </div>
@@ -202,13 +202,13 @@
 
                     <tbody md-body>
                     <tr md-row md-select="vuln" md-select-id="id" ng-repeat="vuln in vulns.items.vulnerabilities">
-                        <td md-cell><md-button class="md-icon-button" ng-click="!isAnrReadOnly && toggleVulnStatus(vuln)"><md-icon>{{ vuln.status ? 'done' : 'clear' }}</md-icon></md-button></td>
+                        <td md-cell><md-button class="md-icon-button md-primary" ng-click="!isAnrReadOnly && toggleVulnStatus(vuln)"><md-icon>{{ vuln.status ? 'done' : 'clear' }}</md-icon></md-button></td>
                         <td md-cell>{{ vuln[_langField('label')] }}</td>
                         <td md-cell>{{ vuln.code }}</td>
                         <td md-cell>{{ vuln[_langField('description')] }}</td>
                         <td md-cell ng-if="!isAnrReadOnly">
-                            <md-button class="md-icon-button" ng-click="editVuln($event, vuln)"><md-icon>edit</md-icon></md-button>
-                            <md-button class="md-icon-button" ng-click="deleteVuln($event, vuln)"><md-icon>delete</md-icon></md-button>
+                            <md-button class="md-icon-button md-primary" ng-click="editVuln($event, vuln)"><md-icon>edit</md-icon></md-button>
+                            <md-button class="md-icon-button md-warn" ng-click="deleteVuln($event, vuln)"><md-icon>delete</md-icon></md-button>
                         </td>
                     </tr>
                     </tbody>
@@ -236,7 +236,7 @@
                     <md-option value="1">{{ 'Show active only' | translate }}</md-option>
                 </md-select>
 
-                <md-button class="md-icon-button" ng-click="removemeasuresFilter()">
+                <md-button class="md-icon-button md-primary" ng-click="removemeasuresFilter()">
                     <md-icon>settings_backup_restore</md-icon>
                 </md-button>
             </div>
@@ -244,7 +244,7 @@
             <md-toolbar class="md-table-toolbar alternate" ng-if="measures.selected.length">
                 <div class="md-toolbar-tools md-toolbar-pad" layout-align="space-between center">
                     <div>{{measures.selected.length}} {{measures.selected.length > 1 ? 'items' : 'item'}} selected</div>
-                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button" ng-click="deleteMeasureMass($event)">
+                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-warn" ng-click="deleteMeasureMass($event)">
                         <md-icon>delete</md-icon>
                     </md-button>
                 </div>
@@ -270,12 +270,12 @@
 
                     <tbody md-body>
                     <tr md-row md-select="measure" md-select-id="id" ng-repeat="measure in measures.items.measures">
-                        <td md-cell><md-button class="md-icon-button" ng-click="!isAnrReadOnly && toggleMeasureStatus(measure)"><md-icon>{{ measure.status ? 'done' : 'clear' }}</md-icon></md-button></td>
+                        <td md-cell><md-button class="md-icon-button md-primary" ng-click="!isAnrReadOnly && toggleMeasureStatus(measure)"><md-icon>{{ measure.status ? 'done' : 'clear' }}</md-icon></md-button></td>
                         <td md-cell>{{ measure.code }}</td>
                         <td md-cell>{{ measure[_langField('description')] }}</td>
                         <td md-cell ng-if="!isAnrReadOnly">
-                            <md-button class="md-icon-button" ng-click="editMeasure($event, measure)"><md-icon>edit</md-icon></md-button>
-                            <md-button class="md-icon-button" ng-click="deleteMeasure($event, measure)"><md-icon>delete</md-icon></md-button>
+                            <md-button class="md-icon-button md-primary" ng-click="editMeasure($event, measure)"><md-icon>edit</md-icon></md-button>
+                            <md-button class="md-icon-button md-warn" ng-click="deleteMeasure($event, measure)"><md-icon>delete</md-icon></md-button>
                         </td>
                     </tr>
                     </tbody>
@@ -303,7 +303,7 @@
                     <md-option value="1">{{ 'Show active only' | translate }}</md-option>
                 </md-select>
 
-                <md-button class="md-icon-button" ng-click="removeAmvsFilter()">
+                <md-button class="md-icon-button md-primary" ng-click="removeAmvsFilter()">
                     <md-icon>settings_backup_restore</md-icon>
                 </md-button>
             </div>
@@ -311,7 +311,7 @@
             <md-toolbar class="md-table-toolbar alternate" ng-if="amvs.selected.length">
                 <div class="md-toolbar-tools md-toolbar-pad" layout-align="space-between center">
                     <div>{{amvs.selected.length}} {{amvs.selected.length > 1 ? 'items' : 'item'}} selected</div>
-                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button" ng-click="deleteAmvMass($event)">
+                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-warn" ng-click="deleteAmvMass($event)">
                         <md-icon>delete</md-icon>
                     </md-button>
                 </div>
@@ -341,7 +341,7 @@
 
                     <tbody md-body>
                     <tr md-row md-select="amv" md-select-id="id" ng-repeat="amv in amvs.items.amvs">
-                        <td md-cell><md-button class="md-icon-button" ng-click="!isAnrReadOnly && toggleAmvStatus(amv)"><md-icon>{{ amv.status ? 'done' : 'clear' }}</md-icon></md-button></td>
+                        <td md-cell><md-button class="md-icon-button md-primary" ng-click="!isAnrReadOnly && toggleAmvStatus(amv)"><md-icon>{{ amv.status ? 'done' : 'clear' }}</md-icon></md-button></td>
                         <td md-cell>{{ amv.asset.code }} - {{ amv.asset[_langField('label')] }}</td>
                         <td md-cell>{{ amv.threat.code }} - {{ amv.threat[_langField('label')] }}</td>
                         <td md-cell>{{ amv.vulnerability.code }} - {{ amv.vulnerability[_langField('label')] }}</td>
@@ -349,8 +349,8 @@
                         <td md-cell>{{ amv.measure2.code }} - {{ amv.measure2[_langField('description')] }}</td>
                         <td md-cell>{{ amv.measure3.code }} - {{ amv.measure3[_langField('description')] }}</td>
                         <td md-cell ng-if="!isAnrReadOnly">
-                            <md-button class="md-icon-button" ng-click="editAmv($event, amv)"><md-icon>edit</md-icon></md-button>
-                            <md-button class="md-icon-button" ng-click="deleteAmv($event, amv)"><md-icon>delete</md-icon></md-button>
+                            <md-button class="md-icon-button md-primary" ng-click="editAmv($event, amv)"><md-icon>edit</md-icon></md-button>
+                            <md-button class="md-icon-button md-warn" ng-click="deleteAmv($event, amv)"><md-icon>delete</md-icon></md-button>
                         </td>
                     </tr>
                     </tbody>
@@ -374,7 +374,7 @@
                         <input type="text" ng-model="tags.query.filter"
                                ng-model-options="tags.filter.options" placeholder="{{ 'Search...' | translate }}">
                     </form>
-                    <md-button class="md-icon-button" ng-click="removeTagsFilter()">
+                    <md-button class="md-icon-button md-primary" ng-click="removeTagsFilter()">
                         <md-icon>close</md-icon>
                     </md-button>
                 </div>
@@ -384,7 +384,7 @@
                 <div class="md-toolbar-tools" layout-align="space-between center">
                     <div>{{tags.selected.length}} {{tags.selected.length > 1 ? 'items' : 'item'}} selected
                     </div>
-                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button" ng-click="deleteTagMass($event)">
+                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-warn" ng-click="deleteTagMass($event)">
                         <md-icon>delete</md-icon>
                     </md-button>
                 </div>
@@ -414,10 +414,10 @@
                         <td md-cell>{{ tag.code }}</td>
                         <td md-cell>{{ tag[_langField('label')] }}</td>
                         <td md-cell ng-if="!isAnrReadOnly">
-                            <md-button class="md-icon-button" ng-click="editTag($event, tag)">
+                            <md-button class="md-icon-button md-primary" ng-click="editTag($event, tag)">
                                 <md-icon>edit</md-icon>
                             </md-button>
-                            <md-button class="md-icon-button" ng-click="deleteTag($event, tag)">
+                            <md-button class="md-icon-button md-warn" ng-click="deleteTag($event, tag)">
                                 <md-icon>delete</md-icon>
                             </md-button>
                         </td>
@@ -444,7 +444,7 @@
                         <input type="text" ng-model="risks.query.filter"
                                ng-model-options="risks.filter.options" placeholder="{{ 'Search...' | translate }}">
                     </form>
-                    <md-button class="md-icon-button" ng-click="removeRisksFilter()">
+                    <md-button class="md-icon-button md-primary" ng-click="removeRisksFilter()">
                         <md-icon>close</md-icon>
                     </md-button>
                 </div>
@@ -454,7 +454,7 @@
                 <div class="md-toolbar-tools" layout-align="space-between center">
                     <div>{{risks.selected.length}} {{risks.selected.length > 1 ? 'items' : 'item'}} selected
                     </div>
-                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button" ng-click="deleteRiskMass($event)">
+                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-warn" ng-click="deleteRiskMass($event)">
                         <md-icon>delete</md-icon>
                     </md-button>
                 </div>
@@ -468,7 +468,7 @@
                     <md-option ng-repeat="tag in risk_tags" ng-value="tag.id">{{ tag.code }} ({{ tag[_langField('label')] }})</md-option>
                 </md-select>
 
-                <md-button class="md-icon-button" ng-click="resetRisksFilters()">
+                <md-button class="md-icon-button md-primary" ng-click="resetRisksFilters()">
                     <md-tooltip>{{ 'Reset filters' | translate }}</md-tooltip>
                     <md-icon>settings_backup_restore</md-icon>
                 </md-button>
@@ -500,10 +500,10 @@
                         <td md-cell>{{ risk.code }}</td>
                         <td md-cell>{{ risk[_langField('label')] }}</td>
                         <td md-cell ng-if="!isAnrReadOnly">
-                            <md-button class="md-icon-button" ng-click="editRisk($event, risk)">
+                            <md-button class="md-icon-button md-primary" ng-click="editRisk($event, risk)">
                                 <md-icon>edit</md-icon>
                             </md-button>
-                            <md-button class="md-icon-button" ng-click="deleteRisk($event, risk)">
+                            <md-button class="md-icon-button md-warn" ng-click="deleteRisk($event, risk)">
                                 <md-icon>delete</md-icon>
                             </md-button>
                         </td>
