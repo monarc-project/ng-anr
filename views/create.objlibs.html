@@ -54,7 +54,7 @@
                 <md-input-container class="md-block" layout="row" ng-if="OFFICE_MODE == 'BO'" flex>
                     <label translate>Mode</label>
                     <md-icon>view_list</md-icon>
-                    <md-select ng-model="objlib.mode">
+                    <md-select ng-model="objlib.mode" ng-disabled="model.isRegulator">
                         <md-option value="0">{{ 'Generic' | translate }}</md-option>
                         <md-option value="1">{{ 'Specific' | translate }}</md-option>
                     </md-select>

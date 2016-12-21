@@ -1461,7 +1461,6 @@
         $scope.__objlibDialog_State = $state;
         $scope.__objlibDialog_Location = $location;
         $scope.__objlibDialog_AnrService = AnrService;
-        console.log(AnrService);
         $mdDialog.show({
             controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', '$stateParams', CreateObjlibDialogCtrl],
             templateUrl: '/views/anr/create.objlibs.html',
