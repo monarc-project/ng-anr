@@ -2138,7 +2138,8 @@
     function ExportAssetDialog($scope, $mdDialog, mode) {
         $scope.mode = mode;
         $scope.exportData = {
-            password: null
+            password: null,
+            simple_mode: true,
         };
 
         $scope.cancel = function() {
