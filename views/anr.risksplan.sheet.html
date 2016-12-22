@@ -18,7 +18,7 @@
 
         <tbody>
         <tr edit-model="risk" ng-repeat="risk in rec_risks">
-            <td>{{ risk.instance[_langField('name')] }}</td>
+            <td><a ui-sref="main.project.anr.instance({modelId: model.anr.id, instId: risk.instance.id})" href="javascript:;">{{ risk.instance[_langField('name')] }}</a></td>
             <td>{{ risk.threat.code }} - {{ risk.threat[_langField('label')] }}</td>
             <td>{{ risk.vulnerability.code }} - {{ risk.vulnerability[_langField('label')] }}</td>
             <td>{{ risk.instanceRisk.comment }}</td>
