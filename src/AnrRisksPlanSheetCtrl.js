@@ -21,7 +21,16 @@
                 $scope.rec = data;
             });
             ClientRecommandationService.getRecommandationRisks($stateParams.modelId, $stateParams.recId).then(function (data) {
-                $scope.rec_risks = data['recommandations-risks'];
+                // Filter out non-treated risks
+                var recrisks = data['recommandations-risks'];
+                $scope.rec_risks = [];
+
+                for (var i in recrisks) {
+                    var risk = recrisks[i];
+                    if ((risk.instanceRisk && risk.instanceRisk.kindOfMeasure != 5) || (risk.instanceRiskOp && risk.instanceRiskOp.kindOfMeasure != 5)) {
+                        $scope.rec_risks.push(risk);
+                    }
+                }
             })
         }
 
