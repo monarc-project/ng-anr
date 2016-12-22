@@ -917,7 +917,7 @@
             return (parseInt(val) == val);
         };
 
-        $scope.updateInfoRiskColumns = function () {
+        var updateInfoRiskColumns = function () {
             var header = [];
             for (var t = $scope.scales.threats.min; t <= $scope.scales.threats.max; ++t) {
                 for (var v = $scope.scales.vulns.min; v <= $scope.scales.vulns.max; ++v) {
@@ -946,7 +946,6 @@
         }
 
         $scope.info_risk_columns = [];
-        $scope.info_risk_rows = [];
 
         var scaleWatchSetup = false;
         var thresholdsWatchSetup = false;
@@ -971,8 +970,7 @@
                 });
             }
 
-            $scope.updateInfoRiskColumns();
-            $scope.info_risk_rows = $rootScope.range($scope.scales.impacts.min, $scope.scales.impacts.max);
+            updateInfoRiskColumns();
             thresholdsWatchSetup = true;
         }, true);
 
@@ -990,6 +988,8 @@
             AnrService.updateScale($scope.model.anr.id, id, model.min, model.max, function () {
                 $scope.$broadcast('scale-changed');
 
+                updateInfoRiskColumns();
+
                 // Reload comments
                 $scope.updateScales();
                 $scope.updateScaleComments(id);
@@ -1005,6 +1005,7 @@
             }, function () {
                 $q.reject();
             });
+
             return promise;
         };
 

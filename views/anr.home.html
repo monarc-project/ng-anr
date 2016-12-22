@@ -14,7 +14,7 @@
                         <th></th>
                         <th ng-repeat="v in info_risk_columns">{{v}}</th>
                     </tr>
-                    <tr ng-repeat="i in info_risk_rows">
+                    <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)">
                         <th>{{i}}</th>
                         <td ng-class="{'green': v*i <= thresholds.thresholds.min, 'orange': v*i <= thresholds.thresholds.max && v*i > thresholds.thresholds.min, 'red': v*i > thresholds.thresholds.max}"
                             ng-repeat="v in info_risk_columns">{{v*i}}</td>
