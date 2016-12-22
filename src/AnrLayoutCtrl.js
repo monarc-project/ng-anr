@@ -372,6 +372,12 @@
                     anr: $scope.model.anr,
                     subStep: step
                 }
+            }).then(function () {
+                $scope.updateAnrRisksTable();
+                $scope.$broadcast('risks-table-edited');
+            }, function () {
+                $scope.updateAnrRisksTable();
+                $scope.$broadcast('risks-table-edited');
             });
         };
 
