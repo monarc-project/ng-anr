@@ -402,7 +402,10 @@
 
         if ($scope.OFFICE_MODE == 'FO') {
             $scope.$watch('display.anrSelectedTabIndex', function (newValue) {
-                if (newValue == 2) {
+                if (newValue == 1) {
+                    // Update scales, in case we made changes to risks, and our ANR isn't scaleupdatable anymore
+                    $scope.updateScales();
+                } else if (newValue == 2) {
                     // Init KB Mgmt, if needed
                     $scope.$broadcast('setup-kb-mgmt');
                 }
