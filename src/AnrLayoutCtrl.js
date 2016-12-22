@@ -1874,25 +1874,25 @@
         };
 
         $scope.previousThreat = function () {
+            $scope.display.currentThreat--;
+
             if ($scope.evalContextForm.$dirty && $scope.anr.rwd >= 1) {
                 $scope.saveThreat(function () {
-                    $scope.display.currentThreat--;
                     $scope.updateThreat();
                 });
             } else {
-                $scope.display.currentThreat--;
                 $scope.updateThreat();
             }
         };
 
         $scope.nextThreat = function () {
+            $scope.display.currentThreat++;
+
             if ($scope.evalContextForm.$dirty && $scope.anr.rwd >= 1) {
                 $scope.saveThreat(function () {
-                    $scope.display.currentThreat++;
                     $scope.updateThreat();
                 });
             } else {
-                $scope.display.currentThreat++;
                 $scope.updateThreat();
             }
         };

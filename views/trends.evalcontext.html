@@ -130,7 +130,7 @@
                     </div>
 
                     <div layout="row" layout-align="start center">
-                        <md-button ng-click="previousThreat()" type="submit" class="md-accent md-hue-3" ng-disabled="threats[0].id == currentThreatObj.id">
+                        <md-button ng-click="previousThreat()" type="submit" class="md-accent md-hue-3" ng-disabled="display.currentThreat <= 0">
                             <md-icon>chevron_left</md-icon>
                             {{ 'Previous' | translate }}
                         </md-button>
@@ -143,7 +143,7 @@
 
                         <span flex></span>
 
-                        <md-button ng-click="nextThreat()" type="submit" class="md-accent md-hue-3" ng-disabled="threats[threats.length - 1].id == currentThreatObj.id">
+                        <md-button ng-click="nextThreat()" type="submit" class="md-accent md-hue-3" ng-disabled="display.currentThreat >= threats.length - 1">
                             {{ 'Next' | translate }}
                             <md-icon>chevron_right</md-icon>
                         </md-button>
