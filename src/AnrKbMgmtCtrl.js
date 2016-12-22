@@ -361,6 +361,12 @@
                         threat.theme = threat.theme.id;
                     }
 
+                    var cont = threat.cont;
+                    threat.cont = undefined;
+                    if (cont) {
+                        $scope.createNewThreat(ev);
+                    }
+
                     ThreatService.createThreat(threat,
                         function () {
                             $scope.updateThreats();
@@ -545,6 +551,12 @@
                 }
             })
                 .then(function (vuln) {
+                    var cont = vuln.cont;
+                    vuln.cont = undefined;
+                    if (cont) {
+                        $scope.createNewVuln(ev);
+                    }
+
                     VulnService.createVuln(vuln,
                         function () {
                             $scope.updateVulns();
@@ -722,6 +734,12 @@
                 }
             })
                 .then(function (measure) {
+                    var cont = measure.cont;
+                    measure.cont = undefined;
+                    if (cont) {
+                        $scope.createNewMeasure(ev);
+                    }
+
                     MeasureService.createMeasure(measure,
                         function () {
                             $scope.updateMeasures();
@@ -904,6 +922,12 @@
                     }
                     if (amv.vulnerability) {
                         amv.vulnerability = amv.vulnerability.id;
+                    }
+
+                    var cont = amv.cont;
+                    amv.cont = undefined;
+                    if (cont) {
+                        $scope.createNewAmv(ev);
                     }
 
                     AmvService.createAmv(amv,
@@ -1950,6 +1974,10 @@
         $scope.create = function() {
             $mdDialog.hide($scope.threat);
         };
+        $scope.createAndContinue = function() {
+            $scope.threat.cont = true;
+            $mdDialog.hide($scope.threat);
+        };
     }
 
     function CreateVulnDialogCtrl($scope, $mdDialog, ModelService, ConfigService, vuln) {
@@ -1987,6 +2015,10 @@
         $scope.create = function() {
             $mdDialog.hide($scope.vuln);
         };
+        $scope.createAndContinue = function() {
+            $scope.vuln.cont = true;
+            $mdDialog.hide($scope.vuln);
+        };
     }
 
     function CreateMeasureDialogCtrl($scope, $mdDialog, ConfigService, measure) {
@@ -2010,6 +2042,10 @@
         };
 
         $scope.create = function() {
+            $mdDialog.hide($scope.measure);
+        };
+        $scope.createAndContinue = function() {
+            $scope.measure.cont = true;
             $mdDialog.hide($scope.measure);
         };
     }
@@ -2131,6 +2167,14 @@
                 $scope.amv.implicitPosition = 1;
             }
 
+            $mdDialog.hide($scope.amv);
+        };
+        $scope.createAndContinue = function() {
+            if ($scope.amv.implicitPosition == 3 && !$scope.amv.previous) {
+                $scope.amv.implicitPosition = 1;
+            }
+
+            $scope.amv.cont = true;
             $mdDialog.hide($scope.amv);
         };
     }
