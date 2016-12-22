@@ -654,12 +654,36 @@
         };
 
         $scope.visible = function (item) {
-            if (item.type == 'lib') {
-                return !($scope.filter.library && $scope.filter.library.length > 0 &&
-                item[$scope._langField('name')].toLowerCase().indexOf($scope.filter.library.toLowerCase()) == -1);
-            } else if (item.type == 'inst') {
-                return !($scope.filter.instance && $scope.filter.instance.length > 0 &&
-                item[$scope._langField('name')].toLowerCase().indexOf($scope.filter.instance.toLowerCase()) == -1);
+            if ((item.type == 'lib' || item.type == 'libcat') && $scope.filter.library && $scope.filter.library.length > 0) {
+                if (item.__children__.length > 0) {
+                    var atLeastOneChildVisible = false;
+
+                    for (var i = 0; i < item.__children__.length; ++i) {
+                        if ($scope.visible(item.__children__[i])) {
+                            atLeastOneChildVisible = true;
+                            break;
+                        }
+                    }
+
+                    return atLeastOneChildVisible;
+                } else {
+                    return item[$scope._langField('name')].toLowerCase().indexOf($scope.filter.library.toLowerCase()) >= 0;
+                }
+            } else if (item.type == 'inst' && $scope.filter.instance && $scope.filter.instance.length > 0) {
+                if (item.__children__.length > 0) {
+                    var atLeastOneChildVisible = false;
+
+                    for (var i = 0; i < item.__children__.length; ++i) {
+                        if ($scope.visible(item.__children__[i])) {
+                            atLeastOneChildVisible = true;
+                            break;
+                        }
+                    }
+
+                    return atLeastOneChildVisible;
+                } else {
+                    return item[$scope._langField('name')].toLowerCase().indexOf($scope.filter.instance.toLowerCase()) >= 0;
+                }
             }
 
             return true;
