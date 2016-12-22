@@ -172,6 +172,9 @@
             <md-button ng-click="create()" ng-disabled="amvForm.$error.required" type="submit" class="md-accent md-hue-3">
                 {{ (amv.id > 0 ? 'Update' : 'Create') | translate }}
             </md-button>
+            <md-button ng-click="createAndContinue()" ng-disabled="amvForm.$error.required" ng-if="!amv.id" class="md-accent md-hue-3">
+                {{ 'Create and continue' | translate }}
+            </md-button>
         </md-dialog-actions>
     </form>
 </md-dialog>

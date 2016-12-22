@@ -128,8 +128,8 @@
                                 <tr md-row ng-repeat="node in object.replicas">
                                     <td md-cell>{{ node[_langField('name')] }}</td>
                                     <td md-cell>
-                                        <md-button ng-if="OFFICE_MODE == 'BO'" class="md-icon-button" aria-title="{{ node[_langField('name')] }}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></md-button>
-                                        <md-button ng-disabled="isAnrReadOnly" class="md-icon-button" aria-title="{{ 'Detach' | translate }}" ng-click="detachInstance($event,node)""><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></md-button>
+                                        <md-button ng-if="OFFICE_MODE == 'BO'" class="md-icon-button md-primary" aria-title="{{ node[_langField('name')] }}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></md-button>
+                                        <md-button ng-disabled="isAnrReadOnly" class="md-icon-button md-warn" aria-title="{{ 'Detach' | translate }}" ng-click="detachInstance($event,node)""><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></md-button>
                                     </td>
                                 </tr>
                             </tbody>
