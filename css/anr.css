@@ -549,6 +549,9 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
     font-weight: bold;
     color: #F57C00 !important;
 }
+.active-obj md-icon {
+    color: #F57C00;
+}
 
 .active-inst {
     font-weight: bold;

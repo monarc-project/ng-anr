@@ -1,57 +1,58 @@
 <div class="md-padding" ng-cloak ng-controller="AnrObjectCtrl">
-    <div layout="row" layout-align="space-around center">
-        <md-button class="md-icon-button" ui-sref="main.kb_mgmt.info_risk({tab: 'objlibs'})"><md-icon>arrow_back</md-icon></md-button>
-        <div flex ng-if="object" ng-class="{'active-obj': mode == 'anr'}" class="md-padding">
-            <h2 class="no-margin">
-                <md-icon ng-if="object && object.scope == 2" style="color: #F57C00">language</md-icon>
-                {{ object[_langField('name')] }}
-            </h2>
+    <md-card flex>
+        <div class="md-padding-left md-padding-right" layout="column" layout-gt-md="row" layout-align="space-between center" flex-gt-md layout-wrap>
+            <div layout="row">
+                <md-button class="md-icon-button" ng-if="OFFICE_MODE == 'BO'" ui-sref="main.kb_mgmt.info_risk({tab: 'objlibs'})"><md-icon>arrow_back</md-icon></md-button>
 
-            <span>{{ object[_langField('label')] }}</span>
+                <div flex ng-if="!object">
+                    <md-progress-circular md-indeterminate="true"></md-progress-circular>
+                </div>
+
+                <div flex ng-if="object" ng-class="{'active-obj': mode == 'anr'}">
+                    <h2 class="no-margin">
+                        <md-icon ng-if="object.scope == 2" style="color: #F57C00">language</md-icon>
+                        {{ object[_langField('name')] }}
+                    </h2>
+
+                    <span>{{ object[_langField('label')] }}</span>
+                </div>
+
+                <md-menu>
+                    <md-button ng-click="openAnrToolsMenu($mdOpenMenu, $event);">
+                        <md-tooltip md-direction="bottom">{{ 'Object actions' | translate }}</md-tooltip>
+                        <md-icon md-menu-origin>more_vert</md-icon>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button ng-click="createComponent($event)" ng-disabled="isAnrReadOnly">
+                                <md-icon>add_to_photos</md-icon> {{ 'Add component' | translate }}
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="editObjlib($event, object)" ng-disabled="isAnrReadOnly">
+                                <md-icon>edit</md-icon> {{ 'Edit object' | translate }}
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="cloneObject($event)" ng-disabled="isAnrReadOnly">
+                                <md-icon>control_point_duplicate</md-icon> {{ 'Duplicate object' | translate }}
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="exportObject($event)" ng-disabled="isSafari()">
+                                <md-icon>save</md-icon> {{ 'Export object' | translate }}
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button ng-click="deleteObject($event)" ng-disabled="isAnrReadOnly">
+                                <md-icon>{{ (mode == 'bdc' || OFFICE_MODE == 'FO') ? 'delete' : 'content_cut' }}</md-icon> {{ (mode == 'bdc' || OFFICE_MODE == 'FO') ? ('Delete object' | translate) : ('Detach object' | translate) }}
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
         </div>
-
-        <div flex ng-if="!object">
-            <md-progress-circular md-indeterminate="true"></md-progress-circular>
-        </div>
-
-        <md-fab-speed-dial md-direction="down" class="md-scale md-fab-top-right" style="margin-top: 48px">
-            <md-fab-trigger>
-                <md-button aria-label="menu" class="md-fab">
-                    <md-icon>more_vert</md-icon>
-                    <md-tooltip md-direction="left">{{ 'Object actions' | translate }}</md-tooltip>
-                </md-button>
-            </md-fab-trigger>
-
-            <md-fab-actions>
-                <md-button aria-label="{{ 'Add component' | translate }}" class="md-fab md-raised md-mini" ng-disabled="isAnrReadOnly" ng-click="createComponent($event)">
-                    <md-icon>add_to_photos</md-icon>
-                    <md-tooltip md-direction="left">{{ 'Add component' | translate }}</md-tooltip>
-                </md-button>
-
-                <md-button aria-label="{{ 'Edit object' | translate }}" class="md-fab md-raised md-mini" ng-disabled="isAnrReadOnly" ng-click="editObjlib($event, object)">
-                    <md-icon>edit</md-icon>
-                    <md-tooltip md-direction="left">{{ 'Edit object' | translate }}</md-tooltip>
-                </md-button>
-
-                <md-button aria-label="{{ 'Duplicate object' | translate }}" class="md-fab md-raised md-mini" ng-disabled="isAnrReadOnly" ng-click="cloneObject($event);">
-                    <md-icon>control_point_duplicate</md-icon>
-                    <md-tooltip md-direction="left">{{ 'Duplicate object' | translate }}</md-tooltip>
-                </md-button>
-
-                <md-button aria-label="{{ 'Export object' | translate }}" class="md-fab md-raised md-mini" ng-disabled="isSafari();" ng-click="exportObject($event)">
-                    <md-icon>save</md-icon>
-                    <md-tooltip md-direction="left">{{ 'Export object' | translate }}</md-tooltip>
-                </md-button>
-
-                <md-button aria-label="{{ 'Delete object' | translate }}" class="md-fab md-raised md-mini md-warn" ng-disabled="isAnrReadOnly" ng-click="deleteObject($event)">
-                    <md-icon>{{ (mode == 'bdc' || OFFICE_MODE == 'FO') ? 'delete' : 'content_cut' }}</md-icon>
-                    <md-tooltip md-direction="left">{{ (mode == 'bdc' || OFFICE_MODE == 'FO') ? ('Delete object' | translate) : ('Detach object' | translate) }}</md-tooltip>
-                </md-button>
-
-            </md-fab-actions>
-        </md-fab-speed-dial>
-    </div>
-
+    </md-card>
 
     <md-card ng-if="object">
         <md-tabs md-dynamic-height md-border-bottom md-selected="ToolsAnrService.currentTab">
@@ -61,8 +62,21 @@
 
                     <ul class="md-treeview">
                         <li class="md-treeview-root">
-                            <a ng-if="mode == 'bdc'" ui-sref="main.kb_mgmt.info_risk.object({objectId: object.id})" class="active-obj"><md-icon>place</md-icon> {{ object[_langField('name')] }}</a>
-                            <a ng-if="mode == 'anr'" ui-sref="main.kb_mgmt.models.details.object({objectId: object.id})" class="active-obj"><md-icon>place</md-icon> {{ object[_langField('name')] }}</a>
+                            <a ng-if="mode == 'bdc'" ui-sref="main.kb_mgmt.info_risk.object({objectId: object.id})">
+                                <span class="active-obj"><md-icon>place</md-icon> {{ object[_langField('name')] }}</span>
+                                <md-button ng-click="createComponent($event)" ng-disabled="isAnrReadOnly" class="md-icon-button md-primary">
+                                    <md-icon>add_to_photos</md-icon>
+                                </md-button>
+                            </a>
+                            <a ng-if="mode == 'anr'" ui-sref="main.kb_mgmt.models.details.object({objectId: object.id})">
+                                <span class="active-obj">
+                                    <md-icon>place</md-icon> {{ object[_langField('name')] }}
+                                </span>
+
+                                <md-button ng-click="createComponent($event)" ng-disabled="isAnrReadOnly" class="md-icon-button md-primary">
+                                    <md-icon>add_to_photos</md-icon>
+                                </md-button>
+                            </a>
 
                             <ul>
                                 <li ng-repeat="node in composition"
