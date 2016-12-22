@@ -324,6 +324,16 @@
         $scope.cloneObject = function (ev) {
             $http.post("/api/objects-duplication", {id: $scope.object.id, implicitPosition: 2}).then(function (data) {
                 toastr.success(gettextCatalog.getString('Ths object has been duplicated successfully.'), gettextCatalog.getString('Duplication successful'));
+
+                if ($rootScope.hookUpdateObjlib) {
+                    $rootScope.hookUpdateObjlib();
+                }
+
+                if ($scope.OFFICE_MODE == 'BO') {
+                    $state.transitionTo("main.kb_mgmt.models.details.object", {modelId: $scope.model.id, objectId: data.data.id});
+                } else {
+                    $state.transitionTo("main.project.anr.object", {modelId: $scope.model.anr.id, objectId: data.data.id});
+                }
             });
         };
 
@@ -424,7 +434,7 @@
                     q.reject();
                 }
             };
-            
+
             if ($scope.mode != 'anr') {
                 ObjlibService.getObjlibs({filter: query, order: $scope._langField('name')}).then(handle_objects, function (x) { q.reject(x); });
             } else {
