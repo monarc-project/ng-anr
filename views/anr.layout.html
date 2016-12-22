@@ -108,7 +108,7 @@
                                             <md-progress-circular md-diameter="24"></md-progress-circular>
                                         </div>
                                         <ol class="no-list-style" ui-tree-nodes="" ng-model="anr_obj_library_data" id="objlib-tree-root">
-                                            <li ng-repeat="node in anr_obj_library_data" ui-tree-node data-collapsed="{{node.__collapsed__}}" ng-include="'tree_node_renderer.html'"></li>
+                                            <li ng-repeat="node in anr_obj_library_data" ui-tree-node data-collapsed="{{node.__collapsed__ && !filter.library}}" ng-include="'tree_node_renderer.html'"></li>
                                         </ol>
                                     </div>
                                 </div>

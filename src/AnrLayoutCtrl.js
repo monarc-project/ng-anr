@@ -595,9 +595,49 @@
                 }
 
                 node.__collapsed__ = false;
-                $scope.collapseCache['inst' + node.id] = false;
+                $scope.collapseCache[node.type + node.id] = false;
             }
         };
+
+        var applyCollapsedCache = function (root) {
+            if (!root) {
+                root = $scope.anr_obj_instances_data;
+            }
+
+            for (var i = 0; i < root.length; ++i) {
+                var node = root[i];
+
+                if (node.__children__ && node.__children__.length > 0) {
+                    applyCollapsedCache(node.__children__);
+                }
+
+                node.__collapsed__ = $scope.collapseCache[node.type + node.id];
+            }
+        };
+
+        $scope.unwrapAllObjects = function () {
+            $scope.unwrapAll($scope.anr_obj_library_data);
+        };
+
+        $scope.$watch('filter.library', function (newValue, oldValue) {
+            if ((!oldValue || oldValue.length == 0) && newValue.length > 0) {
+                $scope.__collapseCacheCopy = angular.copy($scope.collapseCache);
+                $scope.unwrapAllObjects();
+            } else if (oldValue && oldValue.length > 0 && newValue.length == 0) {
+                $scope.collapseCache = $scope.__collapseCacheCopy;
+                applyCollapsedCache($scope.anr_obj_library_data);
+            }
+        });
+
+        $scope.$watch('filter.instance', function (newValue, oldValue) {
+            if ((!oldValue || oldValue.length == 0) && newValue.length > 0) {
+                $scope.__collapseCacheCopy = angular.copy($scope.collapseCache);
+                $scope.unwrapAll();
+            } else if (oldValue && oldValue.length > 0 && newValue.length == 0) {
+                $scope.collapseCache = $scope.__collapseCacheCopy;
+                applyCollapsedCache($scope.anr_obj_instances_data);
+            }
+        });
 
         $scope.toggleItemCollapsed = function (node) {
             if (!$scope.collapseCache) {
@@ -616,10 +656,10 @@
         $scope.visible = function (item) {
             if (item.type == 'lib') {
                 return !($scope.filter.library && $scope.filter.library.length > 0 &&
-                item.name1.toLowerCase().indexOf($scope.filter.library.toLowerCase()) == -1);
+                item[$scope._langField('name')].toLowerCase().indexOf($scope.filter.library.toLowerCase()) == -1);
             } else if (item.type == 'inst') {
                 return !($scope.filter.instance && $scope.filter.instance.length > 0 &&
-                item.name1.toLowerCase().indexOf($scope.filter.instance.toLowerCase()) == -1);
+                item[$scope._langField('name')].toLowerCase().indexOf($scope.filter.instance.toLowerCase()) == -1);
             }
 
             return true;
@@ -724,6 +764,7 @@
                         output.__collapsed__ = $scope.collapseCache[output.type + output.id];
                     } else {
                         output.__collapsed__ = true;
+                        $scope.collapseCache[output.type + output.id] = true;
                     }
 
                     if (category.child && category.child.length > 0) {
@@ -741,6 +782,7 @@
                                 obj.__collapsed__ = $scope.collapseCache[obj.type + obj.id];
                             } else {
                                 obj.__collapsed__ = true;
+                                $scope.collapseCache[obj.type + obj.id] = true;
                             }
 
                             obj.__children__ = [];
@@ -804,6 +846,7 @@
                         output.__collapsed__ = $scope.collapseCache[output.type + output.id];
                     } else {
                         output.__collapsed__ = true;
+                        $scope.collapseCache[output.type + output.id] = true;
                     }
 
                     var parentPathPlusOne = parentPath ? (parentPath + " > " + instance[$scope._langField('name')]) : instance[$scope._langField('name')];
