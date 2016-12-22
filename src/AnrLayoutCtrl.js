@@ -385,7 +385,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$state', 'TreatmentPlanService', 'anr', 'subStep', MethodEditRisksDialog],
+                controller: ['$scope', '$mdDialog', '$state', 'TreatmentPlanService', 'ClientRecommandationService', 'anr', 'subStep', MethodEditRisksDialog],
                 templateUrl: '/views/anr/risks.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -1780,7 +1780,7 @@
         };
     }
 
-    function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService, anr, subStep) {
+    function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService, ClientRecommandationService, anr, subStep) {
         $scope.subStep = subStep;
         $scope.isAnrReadOnly = !anr.rwd;
         $scope.sortableConf = {
@@ -1788,7 +1788,26 @@
             handle: '.grab-handle',
             forceFallback: true,
             onUpdate: function (evt) {
-                TreatmentPlanService.patch
+                if (evt.newIndex == 0) {
+                    ClientRecommandationService.updateRecommandation({
+                        anr: anr.id,
+                        id: evt.model.id,
+                        implicitPosition: 1
+                    });
+                } else if (evt.newIndex == $scope.recommendations.length - 1) {
+                    ClientRecommandationService.updateRecommandation({
+                        anr: anr.id,
+                        id: evt.model.id,
+                        implicitPosition: 2
+                    });
+                } else {
+                    ClientRecommandationService.updateRecommandation({
+                        anr: anr.id,
+                        id: evt.model.id,
+                        implicitPosition: 3,
+                        previous: $scope.recommendations[evt.oldIndex].id
+                    });
+                }
             }
         };
 

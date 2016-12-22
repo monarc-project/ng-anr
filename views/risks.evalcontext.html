@@ -48,14 +48,14 @@
                         <td class="no-padding-important">
                             <table class="md-table-inline">
                                 <tr ng-repeat="risk in rec.risks">
-                                    <td>{{ risk.cacheMaxRisk }}</td>
+                                    <td class="txtcenter">{{ risk.cacheMaxRisk | dashnull }}</td>
                                 </tr>
                             </table>
                         </td>
                         <td class="no-padding-important">
                             <table class="md-table-inline">
                                 <tr ng-repeat="risk in rec.risks">
-                                    <td>{{ risk.cacheTargetedRisk }}</td>
+                                    <td class="txtcenter">{{ risk.cacheTargetedRisk | dashnull }}</td>
                                 </tr>
                             </table>
                         </td>
