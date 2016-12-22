@@ -1,7 +1,7 @@
 <div class="md-padding" ng-cloak ng-controller="AnrObjectCtrl">
     <md-card flex>
-        <div class="md-padding-left md-padding-right" layout="column" layout-gt-md="row" layout-align="space-between center" flex-gt-md layout-wrap>
-            <div layout="row">
+        <div class="md-padding-left md-padding-right" layout="column" layout-gt-md="row" layout-align="space-between center" flex-gt-md>
+            <div layout="row" layout-align="start center">
                 <md-button class="md-icon-button" ng-if="OFFICE_MODE == 'BO'" ui-sref="main.kb_mgmt.info_risk({tab: 'objlibs'})"><md-icon>arrow_back</md-icon></md-button>
 
                 <div flex ng-if="!object">
