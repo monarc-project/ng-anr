@@ -424,11 +424,11 @@
                     q.reject();
                 }
             };
-            if($scope.mode != 'anr'){
-                ObjlibService.getObjlibs({filter: query, order: 'name1'}).then(handle_objects, function (x) { q.reject(x); });
-            }
-            else{
-                ObjlibService.getObjectsOfAnr($rootScope.anr_id, {filter: query, order: 'name1'}, handle_objects, function(x) {q.reject(x);});
+            
+            if ($scope.mode != 'anr') {
+                ObjlibService.getObjlibs({filter: query, order: $scope._langField('name')}).then(handle_objects, function (x) { q.reject(x); });
+            } else {
+                ObjlibService.getObjectsOfAnr($rootScope.anr_id, {filter: query, order: $scope._langField('name')}, handle_objects, function(x) {q.reject(x);});
             }
 
 

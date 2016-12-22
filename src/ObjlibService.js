@@ -34,7 +34,7 @@
                     }
                 });
 
-            self.AnrObjectsService = $resource($rootScope.OFFICE_MODE == 'FO' ? '/api/client-anr/:anrId/objects' : '/api/anr/:anrId/objects', {}, {'query': {isArray: false}});//on utilisera que query
+            self.AnrObjectsService = $resource($rootScope.OFFICE_MODE == 'FO' ? '/api/client-anr/:urlAnrId/objects' : '/api/anr/:anrId/objects', {urlAnrId: $rootScope.getUrlAnrId()}, {'query': {isArray: false}});//on utilisera que query
 
             self.CommonObjectResource = $resource('/api/' + anr + 'objects/import/:objectId', { objectId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
                 {
