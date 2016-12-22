@@ -837,3 +837,20 @@ md-select-menu md-content
     color: #2196F3;
     font-style: italic;
 }
+
+.md-table-inline {
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+}
+.md-table-inline tr {
+    border: none;
+}
+.md-table-inline tr td {
+    border: none;
+    border-bottom: 1px solid;
+    height: 16px;
+}
+.md-table-inline tr:last-child td {
+    border-bottom: none;
+}
