@@ -854,3 +854,6 @@ md-select-menu md-content
 .md-table-inline tr:last-child td {
     border-bottom: none;
 }
+.grab-handle {
+    cursor: move;
+}

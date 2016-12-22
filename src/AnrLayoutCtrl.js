@@ -1783,6 +1783,14 @@
     function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService, anr, subStep) {
         $scope.subStep = subStep;
         $scope.isAnrReadOnly = !anr.rwd;
+        $scope.sortableConf = {
+            animation: 50,
+            handle: '.grab-handle',
+            forceFallback: true,
+            onUpdate: function (evt) {
+                TreatmentPlanService.patch
+            }
+        };
 
         TreatmentPlanService.getTreatmentPlans({anr: anr.id}).then(function (data) {
             $scope.recommendations = data['recommandations-risks'];

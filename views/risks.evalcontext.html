@@ -26,9 +26,9 @@
                     </tr>
                     </thead>
 
-                    <tbody>
+                    <tbody ng-sortable="sortableConf">
                     <tr ng-repeat="rec in recommendations">
-                        <td></td>
+                        <td class="txtcenter"><md-icon class="grab-handle">vertical_align_center</md-icon></td>
                         <td><a href="javascript:;" ng-click="openRecommendation(rec)"><b>{{ rec.code }}</b></a><br/>{{ rec.description }}</td>
                         <td><span ng-repeat="i in range(1, rec.importance)" class="anr-importance">&bull;</span></td>
                         <td class="no-padding-important">
