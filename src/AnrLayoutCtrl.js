@@ -1494,8 +1494,10 @@
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
-            }).then(function (object) {
-
+            }).then(function () {
+                $scope.updateObjectsLibrary();
+            }, function () {
+                $scope.updateObjectsLibrary();
             });
         };
 
