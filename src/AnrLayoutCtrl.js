@@ -980,6 +980,11 @@
         }, true);
 
         var updateScale = function(id, model) {
+            model.min = parseInt(model.min);
+            model.max = parseInt(model.max);
+            if (isNaN(model.min) || model.min < 0) model.min = 0;
+            if (isNaN(model.max) || model.max < 0) model.max = 0;
+
             if (model.min > model.max) model.min = model.max;
             if (model.max < model.min) model.max = model.min;
 
