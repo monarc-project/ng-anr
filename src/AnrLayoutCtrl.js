@@ -980,6 +980,11 @@
         }, true);
 
         var updateScale = function(id, model) {
+            model.min = parseInt(model.min);
+            model.max = parseInt(model.max);
+            if (isNaN(model.min) || model.min < 0) model.min = 0;
+            if (isNaN(model.max) || model.max < 0) model.max = 0;
+
             if (model.min > model.max) model.min = model.max;
             if (model.max < model.min) model.max = model.min;
 
@@ -1489,8 +1494,10 @@
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
-            }).then(function (object) {
-
+            }).then(function () {
+                $scope.updateObjectsLibrary();
+            }, function () {
+                $scope.updateObjectsLibrary();
             });
         };
 
@@ -2141,7 +2148,11 @@
             });
 
             file.upload.then(function (response) {
-                toastr.success(gettextCatalog.getString("The object has been imported successfully"));
+                if (response.data.errors && response.data.errors.length > 0) {
+                    toastr.warning(gettextCatalog.getString("Some files could not be imported"));
+                } else {
+                    toastr.success(gettextCatalog.getString("The object has been imported successfully"));
+                }
             });
         }
 
