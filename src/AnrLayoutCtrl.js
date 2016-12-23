@@ -270,6 +270,7 @@
         }
 
         $scope.openRiskSheet = function (risk) {
+            $scope.resetOpSheet();
             $scope.sheet_risk = angular.copy(risk);
 
             var reducAmount = [];
@@ -298,6 +299,7 @@
         };
 
         $scope.openOpRiskSheet = function (risk) {
+            $scope.resetSheet();
             $scope.opsheet_risk = risk;
             $scope._copyRecs = [];
         };
