@@ -2110,7 +2110,7 @@
         $scope.step = step;
         $scope.deliverable = {
             'version': '',
-            'status': 1,
+            'status': 0,
             'classification': '',
             'docname': '',
             'managers': '',
@@ -2120,7 +2120,12 @@
 
         $http.get('/api/client-anr/' + anr.id + '/deliverable').then(function (data) {
             $scope.models = data.data;
-            $scope.deliverable.model = data.data[0].id;
+
+            for (var i = 0; i < $scope.models.length; ++i) {
+                if ($scope.models[i].category == step.num) {
+                    $scope.deliverable.model = $scope.models[i].id;
+                }
+            }
         });
         
         $scope.save = function () {
