@@ -512,7 +512,12 @@
                 }
             }).then(function (deliverable) {
                 $http.post('/api/client-anr/' + $scope.model.anr.id + '/deliverable', deliverable, {responseType: "arraybuffer"}).then(function (data) {
-                    DownloadService.downloadBlob(data.data, 'deliverable.docx');
+                    var docname = deliverable.docname;
+                    if (!docname) {
+                        docname = 'Untitled-Deliverable';
+                    }
+
+                    DownloadService.downloadBlob(data.data, docname + '.docx');
                     toastr.success(gettextCatalog.getString('The deliverable has been generated successfully.'), gettextCatalog.getString('Generation successful'));
                 })
             });
