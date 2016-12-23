@@ -35,6 +35,10 @@
 
         var isObjectLoading = true;
 
+        $scope.openObjectMenu = function ($mdMenuEvent, ev) {
+            $mdMenuEvent();
+        }
+
         $scope.$watch('object.risks', function (newValue, oldValue) {
             if (!isObjectLoading) {
                 for (var i = 0; i < newValue.length; ++i) {
