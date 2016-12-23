@@ -2108,6 +2108,7 @@
             'docname': '',
             'managers': '',
             'consultants': '',
+            'summaryEvalRisk': '',
         };
 
         $http.get('/api/client-anr/' + anr.id + '/deliverable').then(function (data) {
