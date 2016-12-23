@@ -440,6 +440,7 @@
         var updateMethodProgress = function () {
             $scope.methodProgress = [
                 {
+                    num: 1,
                     color: 'green',
                     label: gettextCatalog.getString("Context setup"),
                     deliverable: gettextCatalog.getString("Context validation"),
@@ -451,6 +452,7 @@
                     ]
                 },
                 {
+                    num: 2,
                     color: 'blue',
                     label: gettextCatalog.getString("Context modeling"),
                     deliverable: gettextCatalog.getString("Model validation"),
@@ -460,6 +462,7 @@
                     ]
                 },
                 {
+                    num: 3,
                     color: 'yellow',
                     label: gettextCatalog.getString("Risks evaluation and treatment"),
                     deliverable: gettextCatalog.getString("Final report"),
@@ -469,6 +472,7 @@
                     ]
                 },
                 {
+                    num: 4,
                     color: 'red',
                     label: gettextCatalog.getString("Implementation and monitoring"),
                     deliverable: null,
@@ -496,14 +500,15 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$http', 'anr', MethodDeliverableDialog],
+                controller: ['$scope', '$mdDialog', '$http', 'anr', 'step', MethodDeliverableDialog],
                 templateUrl: '/views/anr/deliverable.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                    anr: $scope.model.anr
+                    anr: $scope.model.anr,
+                    step: step,
                 }
             }).then(function (deliverable) {
                 $http.post('/api/client-anr/' + $scope.model.anr.id + '/deliverable', deliverable, {responseType: "arraybuffer"}).then(function (data) {
@@ -2094,7 +2099,8 @@
         };
     }
 
-    function MethodDeliverableDialog($scope, $mdDialog, $http, anr) {
+    function MethodDeliverableDialog($scope, $mdDialog, $http, anr, step) {
+        $scope.step = step;
         $scope.deliverable = {
             'version': '',
             'status': 1,
