@@ -1805,8 +1805,10 @@
         $scope.sortableConf = {
             animation: 50,
             handle: '.grab-handle',
+            draggable: '.draggable',
             forceFallback: true,
             onUpdate: function (evt) {
+                console.log(evt.newIndex);
                 if (evt.newIndex == 0) {
                     ClientRecommandationService.updateRecommandation({
                         anr: anr.id,
@@ -1827,11 +1829,24 @@
                         previous: $scope.recommendations[evt.oldIndex].id
                     });
                 }
+
+                return true;
             }
         };
 
         TreatmentPlanService.getTreatmentPlans({anr: anr.id}).then(function (data) {
             $scope.recommendations = data['recommandations-risks'];
+
+            // Preprocess row spans
+            for (var i = 0; i < $scope.recommendations.length; ++i) {
+                var rec = $scope.recommendations[i];
+
+                if (rec.risks) {
+                    rec.risksCount = Object.keys(rec.risks).length;
+                } else {
+                    rec.risksCount = 0;
+                }
+            }
         });
 
         $scope.openRecommendation = function (rec) {
