@@ -62,13 +62,13 @@
 
                     <ul class="md-treeview">
                         <li class="md-treeview-root">
-                            <a ng-if="mode == 'bdc'" ui-sref="main.kb_mgmt.info_risk.object({objectId: object.id})">
+                            <a ng-if="mode == 'bdc'">
                                 <span class="active-obj"><md-icon>place</md-icon> {{ object[_langField('name')] }}</span>
-                                <md-button ng-click="createComponent($event)" ng-disabled="isAnrReadOnly" class="md-icon-button md-primary">
+                                <md-button ng-click="createComponent()" ng-disabled="isAnrReadOnly" class="md-icon-button md-primary">
                                     <md-icon>add_to_photos</md-icon>
                                 </md-button>
                             </a>
-                            <a ng-if="mode == 'anr'" ui-sref="main.kb_mgmt.models.details.object({objectId: object.id})">
+                            <a ng-if="mode == 'anr'">
                                 <span class="active-obj">
                                     <md-icon>place</md-icon> {{ object[_langField('name')] }}
                                 </span>
