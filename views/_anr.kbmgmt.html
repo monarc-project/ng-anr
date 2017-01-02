@@ -47,7 +47,7 @@
             </md-button>
 
             <md-table-container flex>
-                <table md-table md-row-select multiple ng-model="assets.selected" md-progress="assets.promise">
+                <table md-table md-row-select="! isAnrReadOnly" multiple ng-model="assets.selected" md-progress="assets.promise">
                     <thead md-head md-order="assets.query.order" md-on-reorder="updateAssets">
                     <tr md-row>
                         <th md-column md-order-by="status"><span translate>Status</span></th>
@@ -118,7 +118,7 @@
             </md-button>
 
             <md-table-container flex>
-                <table md-table md-row-select multiple ng-model="threats.selected" md-progress="threats.promise">
+                <table md-table md-row-select="! isAnrReadOnly" multiple ng-model="threats.selected" md-progress="threats.promise">
                     <thead md-head md-order="threats.query.order" md-on-reorder="updateThreats">
                     <tr md-row>
                         <th md-column md-order-by="status"><span translate>Status</span></th>
@@ -189,7 +189,7 @@
             </md-button>
 
             <md-table-container flex>
-                <table md-table md-row-select multiple ng-model="vulns.selected" md-progress="vulns.promise">
+                <table md-table md-row-select="! isAnrReadOnly" multiple ng-model="vulns.selected" md-progress="vulns.promise">
                     <thead md-head md-order="vulns.query.order" md-on-reorder="updateVulns">
                     <tr md-row>
                         <th md-column md-order-by="status"><span translate>Status</span></th>
@@ -258,7 +258,7 @@
             </md-button>
 
             <md-table-container flex>
-                <table md-table md-row-select multiple ng-model="measures.selected" md-progress="measures.promise">
+                <table md-table md-row-select="! isAnrReadOnly" multiple ng-model="measures.selected" md-progress="measures.promise">
                     <thead md-head md-order="measures.query.order" md-on-reorder="updateMeasures">
                     <tr md-row>
                         <th md-column md-order-by="status"><span translate>Status</span></th>
@@ -325,7 +325,7 @@
             </md-button>
 
             <md-table-container flex>
-                <table md-table md-row-select multiple ng-model="amvs.selected" md-progress="amvs.promise">
+                <table md-table md-row-select="! isAnrReadOnly" multiple ng-model="amvs.selected" md-progress="amvs.promise">
                     <thead md-head md-order="amvs.query.order" md-on-reorder="updateAmvs">
                     <tr md-row>
                         <th md-column md-order-by="status"><span translate>Status</span></th>
@@ -399,7 +399,7 @@
             </md-button>
 
             <md-table-container flex>
-                <table md-table md-row-select multiple ng-model="tags.selected" md-progress="tags.promise">
+                <table md-table md-row-select="! isAnrReadOnly" multiple ng-model="tags.selected" md-progress="tags.promise">
                     <thead md-head md-order="tags.query.order" md-on-reorder="updateTags">
                     <tr md-row>
                         <th md-column md-order-by="code"><span translate>Code</span></th>
@@ -483,7 +483,7 @@
             </md-button>
 
             <md-table-container flex>
-                <table md-table md-row-select multiple ng-model="risks.selected" md-progress="risks.promise">
+                <table md-table md-row-select="! isAnrReadOnly" multiple ng-model="risks.selected" md-progress="risks.promise">
                     <thead md-head md-order="risks.query.order" md-on-reorder="updateRisks">
                     <tr md-row>
                         <th md-column><span translate>Tags</span></th>
