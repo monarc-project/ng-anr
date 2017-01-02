@@ -46,7 +46,7 @@ table.md-table tbody.md-body>tr.md-row:hover {
 
 .table-fab-top-2 {
     margin-right: 72px;
-    margin-top: 64px;
+    margin-top: 34px;
 }
 
 .md-toolbar-pad {
@@ -495,7 +495,7 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
 }
 
 .table-fab-top {
-    margin-top: 64px;
+    margin-top: 34px;
 }
 
 .table-fab-top-withactions {
