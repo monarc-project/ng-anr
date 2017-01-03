@@ -674,6 +674,18 @@
             node.__collapsed__ = $scope.collapseCache[node.type + node.id];
         };
 
+        $scope.removeAccents = function(str){
+            return str.toLowerCase()
+                .replace(/[áàãâä]/gi,"a")
+                .replace(/[éè¨ê]/gi,"e")
+                .replace(/[íìïî]/gi,"i")
+                .replace(/[óòöôõ]/gi,"o")
+                .replace(/[úùüû]/gi, "u")
+                .replace(/[ç]/gi, "c")
+                .replace(/[ñ]/gi, "n")
+                .replace(/[^a-zA-Z0-9]/g," ");
+        }
+
         $scope.visible = function (item) {
             if ((item.type == 'lib' || item.type == 'libcat') && $scope.filter.library && $scope.filter.library.length > 0) {
                 if (item.__children__.length > 0) {
@@ -688,7 +700,7 @@
 
                     return atLeastOneChildVisible;
                 } else {
-                    return item[$scope._langField('name')].toLowerCase().indexOf($scope.filter.library.toLowerCase()) >= 0;
+                    return $scope.removeAccents(item[$scope._langField('name')]).indexOf($scope.removeAccents($scope.filter.library)) >= 0;
                 }
             } else if (item.type == 'inst' && $scope.filter.instance && $scope.filter.instance.length > 0) {
                 if (item.__children__.length > 0) {
@@ -703,7 +715,7 @@
 
                     return atLeastOneChildVisible;
                 } else {
-                    return item[$scope._langField('name')].toLowerCase().indexOf($scope.filter.instance.toLowerCase()) >= 0;
+                    return $scope.removeAccents(item[$scope._langField('name')]).indexOf($scope.removeAccents($scope.filter.instance)) >= 0;
                 }
             }
 
