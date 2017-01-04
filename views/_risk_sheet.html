@@ -54,7 +54,10 @@
             </tr>
              <tr>
                 <th class="txtright w120p" translate>Threat probability</td>
-                <td colspan="3">{{ sheet_risk.threatRate }}</td>
+                <td colspan="3">
+                    <p ng-if="sheet_risk.threatRate == -1">-</p>
+                    <p ng-if="sheet_risk.threatRate > -1"><strong>{{ sheet_risk.threatRate }}</strong> - {{ comms.threat[sheet_risk.threatRate][_langField('comment')] }}</p>
+                </td>
             </tr>
             <tr>
                 <th class="txtright w120p" translate>Vulnerability</td>
@@ -62,7 +65,10 @@
             </tr>
              <tr>
                 <th class="txtright w120p" translate>Vulnerability qualification</td>
-                <td colspan="3">{{ sheet_risk.vulnerabilityRate }}</td>
+                <td colspan="3">
+                    <p ng-if="sheet_risk.vulnerabilityRate == -1">-</p>
+                    <p ng-if="sheet_risk.vulnerabilityRate > -1"><strong>{{ sheet_risk.vulnerabilityRate }}</strong> - {{ comms.vuln[sheet_risk.vulnerabilityRate][_langField('comment')] }}</p>
+                </td>
             </tr>
             <tr>
                 <th class="txtright w120p" translate>Measures set</td>
