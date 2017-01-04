@@ -1741,7 +1741,7 @@
     function ExportAnrDialog($scope, $mdDialog, mode) {
         $scope.mode = mode;
         $scope.exportData = {
-            password: null,
+            password: '',
             simple_mode: true,
         };
 
@@ -2177,7 +2177,7 @@
         $scope.file_range = 0;
         $scope.import = {
             mode: 'duplicate',
-            password: null,
+            password: '',
         };
 
         $scope.uploadFile = function (file) {
@@ -2244,7 +2244,7 @@
         $scope.file_range = 0;
         $scope.import = {
             mode: 'duplicate',
-            password: null,
+            password: '',
         };
 
         $scope.uploadFile = function (file) {

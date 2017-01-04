@@ -539,7 +539,7 @@
     function ExportObjectDialog($scope, $mdDialog, mode) {
         $scope.mode = mode;
         $scope.exportData = {
-            password: null,
+            password: '',
             simple_mode: true,
         };
 
