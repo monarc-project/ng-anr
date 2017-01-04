@@ -332,6 +332,7 @@
         $scope.exportData = {
             password: '',
             simple_mode: true,
+            assessments: 0
         };
 
         $scope.cancel = function() {
