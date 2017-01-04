@@ -166,7 +166,11 @@
                         method = $http.post;
                     }
                     method('/api/'+cliAnr+'anr/' + $scope.model.anr.id + '/instances/' + $scope.instance.id + '/export', {id: $scope.instance.id, password: exports.password, assessments: exports.assessments}).then(function (data) {
-                        DownloadService.downloadBlob(data.data, 'instance.bin');
+                        var contentD = data.headers('Content-Disposition'),
+                            contentT = data.headers('Content-Type');
+                        contentD = contentD.substring(0,contentD.length-1).split('filename="');
+                        contentD = contentD[contentD.length-1];
+                        DownloadService.downloadBlob(data.data, contentD,contentT);
                         toastr.success(gettextCatalog.getString('The instance has been exported successfully.'), gettextCatalog.getString('Export successful'));
                     })
                 });
