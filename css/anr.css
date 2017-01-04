@@ -718,6 +718,7 @@ md-progress-linear.yellow .md-container {
 .md-monarc-tooltip .txt-red { color: #EF9A9A; }
 
 .w100{ width: 100%; }
+.w120p{ width: 120px !important; }
 
 .anr-importance {
     color: #FF5722;
