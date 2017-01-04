@@ -330,8 +330,9 @@
     function ExportInstanceDialog($scope, $mdDialog, mode) {
         $scope.mode = mode;
         $scope.exportData = {
-            password: null,
+            password: '',
             simple_mode: true,
+            assessments: 0
         };
 
         $scope.cancel = function() {

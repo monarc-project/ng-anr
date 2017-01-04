@@ -2182,7 +2182,7 @@
     function ExportAssetDialog($scope, $mdDialog, mode) {
         $scope.mode = mode;
         $scope.exportData = {
-            password: null,
+            password: '',
             simple_mode: true,
         };
 
@@ -2349,7 +2349,7 @@
         $scope.assetTypeStr = assetTypeStr;
         $scope.file = [];
         $scope.file_range = 0;
-        $scope.import = {password: null};
+        $scope.import = {password: ''};
 
         AssetService.getAssetsCommon({limit: 0}).then(function (data) {
             $scope.assets = data.assets;
