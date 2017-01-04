@@ -242,14 +242,13 @@ angular.module('AnrModule').directive('editable', function(){
     	callback: '=action'
     },
     link: function(scope, element, attrs) {
+    	function triggerValidation(direction){
+    		scope.$apply(function() {
+    			scope.callback.call(null, direction);
+        });
+        return event.preventDefault();
+    	}
       element.bind("keydown keypress", function(event) {
-      	function triggerValidation(direction){
-      		scope.$apply(function() {
-      			scope.callback.call(null, direction);
-          });
-          return event.preventDefault();
-      	}
-
         if ( element.prop('tagName').toLowerCase() == "textarea" && ((event.which === 13 && event.ctrlKey) || (event.which === 13 && event.metaKey))) {
            	triggerValidation();
         }
@@ -263,6 +262,11 @@ angular.module('AnrModule').directive('editable', function(){
       		triggerValidation('next');
       	}
 
+      });
+
+      element.bind("blur", function(event) {
+      	console.log("ici");
+      	triggerValidation();
       });
     }
   };
