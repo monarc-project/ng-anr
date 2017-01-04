@@ -26,6 +26,10 @@ md-option {
     margin: 0 0;
 }
 
+td.no-border, th.no-border{
+    border: 0px !important;
+}
+
 table.md-table tbody.md-body>tr.md-row {
     height: 36px;
     transition: 0.25s background-color;
