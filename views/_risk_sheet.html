@@ -74,7 +74,7 @@
                 <th class="txtright w120p" translate>Measures set</td>
                 <td colspan="3">{{ sheet_risk.comment }}</td>
             </tr>
-            <tr>
+            <tr ng-if="OFFICE_MODE == 'FO'">
                 <th class="txtright w120p" translate>Recommendations</th>
                 <td colspan="3">
                     <ul class="no-list-style no-padding">
