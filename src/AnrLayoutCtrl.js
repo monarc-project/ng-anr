@@ -1527,11 +1527,14 @@
         $scope.importInstance = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'AnrService', 'toastr', 'gettextCatalog', 'Upload', ImportInstanceDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'AnrService', 'toastr', 'gettextCatalog', 'Upload', 'instanceId', ImportInstanceDialogCtrl],
                 templateUrl: '/views/anr/import.instance.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
+                locals: {
+                    instanceId: $rootScope.anr_selected_instance_id
+                },
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
             }).then(function (object) {
@@ -2166,7 +2169,7 @@
                 }
             }
         });
-        
+
         $scope.save = function () {
             $mdDialog.hide($scope.deliverable);
         }
@@ -2244,7 +2247,7 @@
         };
     }
 
-    function ImportInstanceDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload) {
+    function ImportInstanceDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload, instanceId) {
         $scope.file = [];
         $scope.file_range = 0;
         $scope.import = {
@@ -2255,7 +2258,7 @@
         $scope.uploadFile = function (file) {
             file.upload = Upload.upload({
                 url: '/api/client-anr/' + $scope.getUrlAnrId() + '/instances/import',
-                data: {'mode': $scope.import.mode, file: file, password: $scope.import.password}
+                data: {'mode': $scope.import.mode, file: file, password: $scope.import.password, idparent: instanceId}
             });
 
             file.upload.then(function (response) {
