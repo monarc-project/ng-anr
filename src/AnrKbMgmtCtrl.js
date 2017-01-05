@@ -439,7 +439,7 @@
         $scope.deleteThreat = function (ev, item) {
             var confirm = $mdDialog.confirm()
                 .title(gettextCatalog.getString('Are you sure you want to delete threat "{{ label }}"?',
-                    {label: item.label}))
+                    {label: item[$scope._langField('label')]}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
                 .ok(gettextCatalog.getString('Delete'))
@@ -449,7 +449,7 @@
                     function () {
                         $scope.updateThreats();
                         toastr.success(gettextCatalog.getString('The threat "{{label}}" has been deleted.',
-                            {label: item.label}), gettextCatalog.getString('Deletion successful'));
+                            {label: item[$scope._langField('label')]}), gettextCatalog.getString('Deletion successful'));
                     }
                 );
             });
