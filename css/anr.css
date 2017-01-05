@@ -865,3 +865,24 @@ md-select-menu md-content
 .grab-handle {
     cursor: move;
 }
+
+.material-icons.md-48 {
+  font-size: 48px;
+}
+
+.size-auto{
+    width: auto;
+    height: auto;
+}
+.min-size-auto{
+    min-width: auto;
+    min-height: auto;
+}
+
+.border-right{
+    border-right: 1px solid #BBBBBB;
+}
+
+.hpad-10{ padding: 0 10px; }
+.bigger{ font-size: 1.3em; }
+.mw250p {min-width: 250px;}
