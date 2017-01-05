@@ -133,11 +133,11 @@
                         </md-card>
 
                         <div editable callback="onImpactScaleChanged" layout="row">
-                            <h4 ng-if="OFFICE_MODE == 'BO' || scalesCanChange" edit-model="scales.impacts"><span translate>Impacts scale:</span> [
+                            <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="scales.impacts"><span translate>Impacts scale:</span> [
                                 <span class="text-blue" edit-field="min"></span> -
                                 <span class="text-blue" edit-field="max"></span> ]
                             </h4>
-                            <h4 ng-if="OFFICE_MODE == 'FO' && !scalesCanChange"><span translate>Impacts scale:</span> [
+                            <h4 ng-if="(OFFICE_MODE == 'FO' && !scalesCanChange ) || isAnrReadOnly"><span translate>Impacts scale:</span> [
                                 <span class="text-blue">{{ scales.impacts.min }}</span> -
                                 <span class="text-blue">{{ scales.impacts.max }}</span> ]
                             </h4>
@@ -165,11 +165,11 @@
 
 
                         <div editable callback="onThreatScaleChanged" layout="row">
-                            <h4 ng-if="OFFICE_MODE == 'BO' || scalesCanChange" edit-model="scales.threats"><span translate>Threats scale:</span> [
+                            <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="scales.threats"><span translate>Threats scale:</span> [
                                 <span class="text-blue" edit-field="min"></span> -
                                 <span class="text-blue" edit-field="max"></span> ]
                             </h4>
-                            <h4 ng-if="OFFICE_MODE == 'FO' && !scalesCanChange"><span translate>Threats scale:</span> [
+                            <h4 ng-if="(OFFICE_MODE == 'FO' && !scalesCanChange ) || isAnrReadOnly"><span translate>Threats scale:</span> [
                                 <span class="text-blue">{{ scales.threats.min }}</span> -
                                 <span class="text-blue">{{ scales.threats.max }}</span> ]
                             </h4>
@@ -183,11 +183,11 @@
 
 
                         <div editable callback="onVulnScaleChanged" layout="row">
-                            <h4 ng-if="OFFICE_MODE == 'BO' || scalesCanChange" edit-model="scales.vulns"><span translate>Vulnerabilities scale:</span> [
+                            <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="scales.vulns"><span translate>Vulnerabilities scale:</span> [
                                 <span class="text-blue" edit-field="min"></span> -
                                 <span class="text-blue" edit-field="max"></span> ]
                             </h4>
-                            <h4 ng-if="OFFICE_MODE == 'FO' && !scalesCanChange"><span translate>Vulnerabilities scale:</span> [
+                            <h4 ng-if="(OFFICE_MODE == 'FO' && !scalesCanChange ) || isAnrReadOnly"><span translate>Vulnerabilities scale:</span> [
                                 <span class="text-blue">{{ scales.vulns.min }}</span> -
                                 <span class="text-blue">{{ scales.vulns.max }}</span> ]
                             </h4>
