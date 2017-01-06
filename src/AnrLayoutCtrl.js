@@ -697,6 +697,9 @@
                             break;
                         }
                     }
+                    if(!atLeastOneChildVisible && $scope.removeAccents(item[$scope._langField('name')]).indexOf($scope.removeAccents($scope.filter.library)) >= 0){
+                        atLeastOneChildVisible = true;
+                    }
 
                     return atLeastOneChildVisible;
                 } else {
@@ -711,6 +714,9 @@
                             atLeastOneChildVisible = true;
                             break;
                         }
+                    }
+                    if(!atLeastOneChildVisible && $scope.removeAccents(item[$scope._langField('name')]).indexOf($scope.removeAccents($scope.filter.instance)) >= 0){
+                        atLeastOneChildVisible = true;
                     }
 
                     return atLeastOneChildVisible;
