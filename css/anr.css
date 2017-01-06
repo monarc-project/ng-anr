@@ -887,3 +887,8 @@ md-select-menu md-content
 .bigger{ font-size: 1.3em; }
 .mw250p {min-width: 250px;}
 .black {color: rgba(0,0,0,0.87);}
+
+/*#anrMainTab > md-tabs-wrapper{
+    display: none;
+}
+*/

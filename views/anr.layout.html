@@ -28,20 +28,20 @@
                 </md-button>
                 <md-menu-content width="4">
                     <md-menu-item>
+                        <md-button ng-click="display.anrSelectedTabIndex = 1">{{ 'Evaluation scales' | translate }}</md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button ng-click="display.anrSelectedTabIndex = 2">{{ 'Knowledge base' | translate }}</md-button>
+                    </md-menu-item>
+                    <md-menu-item>
                         <md-button ng-click="openInterviewTools($event)">{{ 'Interviews table' | translate }}</md-button>
                     </md-menu-item>
                     <md-menu-item>
                         <md-button ng-click="openSnapshotTools($event)">{{ 'Snapshots' | translate }}</md-button>
                     </md-menu-item>
-                    <md-menu-item ng-if="!isAnrReadOnly">
-                        <md-button ng-click="importObject($event)">{{ 'Import an object' | translate }}</md-button>
-                    </md-menu-item>
-                    <md-menu-item ng-if="!isAnrReadOnly">
-                        <md-button ng-click="importInstance($event)">{{ 'Import an instance' | translate }}</md-button>
-                    </md-menu-item>
                 </md-menu-content>
             </md-menu>
-            <md-tabs md-border-bottom="true" md-selected="display.anrSelectedTabIndex" md-dynamic-height>
+            <md-tabs md-border-bottom="true" md-selected="display.anrSelectedTabIndex" md-dynamic-height id="anrMainTab">
                 <md-tab label="{{ 'Risk analysis' | translate }}">
                     <div layout="row" class="md-padding">
                         <div layout="column" resizable r-directions="['right']" id="global-resize-menu" r-width="GlobalResizeMenuSize">
