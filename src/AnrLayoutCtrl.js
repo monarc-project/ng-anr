@@ -16,6 +16,7 @@
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
                            $transitions, DownloadService, $mdPanel, $injector, ConfigService) {
 
+
         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
         $scope.scalesCanChange = false;
         $scope.isAnrReadOnly = true;
@@ -1547,6 +1548,10 @@
 
             });
         };
+
+        $scope.openAnrMenu = function ($mdMenuEvent, ev) {
+            $mdMenuEvent();
+        }
     }
 
     // Dialogs

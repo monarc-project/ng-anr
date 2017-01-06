@@ -1,12 +1,52 @@
+<md-card flex>
+    <div class="md-padding-left md-padding-right" layout="column" layout-gt-md="row" layout-align="space-between center" flex-gt-md>
+        <div layout="row" layout-align="start center">
+            <md-button class="md-icon-button" ng-if="OFFICE_MODE == 'BO'" ui-sref="main.kb_mgmt.info_risk({tab: 'objlibs'})"><md-icon>arrow_back</md-icon></md-button>
+            <div flex ng-if="!model.anr">
+                <md-progress-circular md-indeterminate="true"></md-progress-circular>
+            </div>
+            <div flex ng-if="model.anr">
+                <h2 class="no-margin">
+                    {{ model.anr[_langField('label')] }}
+                </h2>
+                <span>{{ model.anr[_langField('description')] }}</span>
+            </div>
+
+            <md-menu>
+                <md-button ng-click="openAnrMenu($mdOpenMenu, $event);">
+                    <md-tooltip md-direction="bottom">{{ 'Object actions' | translate }}</md-tooltip>
+                    <md-icon class="material-icons md-48 size-auto" md-menu-origin>more_vert</md-icon>
+                </md-button>
+                <md-menu-content width="4">
+                    <md-menu-item>
+                        <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-if="OFFICE_MODE == 'FO'" ng-click="editAnrInfo($event)">
+                            <md-icon class="md-light-theme material-icons">edit</md-icon><span class="black">{{ 'Edit risk analysis details' | translate }}</span>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="deleteAnr($event)" ng-if="OFFICE_MODE == 'FO'">
+                            <md-icon class="md-light-theme material-icons">delete</md-icon><span class="black">{{ 'Delete risk analysis' | translate }}</span>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="importInstance($event)" ng-if="OFFICE_MODE == 'FO'">
+                            <md-icon class="md-light-theme material-icons">play_for_work</md-icon><span class="black">{{ 'Import analysis' | translate }}</span>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
+                        <md-button class="md-primary" ng-click="exportAnr($event)" ng-disabled="isSafari()">
+                            <md-icon class="md-light-theme material-icons">call_made</md-icon><span class="black">{{ 'Export risk analysis' | translate }}</span>
+                        </md-button>
+                    </md-menu-item>
+                </md-menu-content>
+            </md-menu>
+        </div>
+    </div>
+</md-card>
 <md-tabs md-dynamic-height md-selected="ToolsAnrService.currentTab">
     <md-tab label="{{ 'General information' | translate }}">
         <div class="md-padding">
-            <md-button ng-disabled="isAnrReadOnly" ng-if="OFFICE_MODE == 'FO'" ng-click="editAnrInfo($event)"><md-icon>edit</md-icon> {{ 'Edit risk analysis details' | translate }}</md-button>
-            <md-button ng-click="exportAnr($event)" ng-disabled="isSafari()"><md-icon>save</md-icon> {{ 'Export risk analysis' | translate }}</md-button>
-            <md-button ng-disabled="isAnrReadOnly" ng-click="deleteAnr($event)" ng-if="OFFICE_MODE == 'FO'"><md-icon>delete</md-icon> {{ 'Delete risk analysis' | translate }}</md-button>
-
             <h4 translate>Calculation of risk / Thresholds - Information Risks</h4>
-
             <div layout="row">
                 <table class="tbl-risk-calc">
                     <tbody>
