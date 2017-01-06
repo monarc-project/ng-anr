@@ -86,7 +86,6 @@
                 <th class="txtright w120p" translate>Processing type</th>
                 <td colspan="3">
                     <md-input-container style="width: 200px">
-                        <label translate>Processing type</label>
                         <md-icon>widgets</md-icon>
                         <md-select ng-model="sheet_risk.kindOfMeasure" ng-disabled="isAnrReadOnly">
                             <md-option ng-value="5">{{ 'Not processed' | translate }}</md-option>
@@ -102,7 +101,6 @@
                 <th class="txtright w120p" translate>Reduce vulnerability by</th>
                 <td colspan="3">
                     <md-input-container style="width: 200px">
-                        <label translate>Reduce vulnerability by</label>
                         <md-icon>trending_down</md-icon>
                         <md-select ng-model="sheet_risk.reductionAmount" ng-disabled="isAnrReadOnly">
                             <md-option ng-repeat="i in reducAmount" ng-value="{{ i }}">{{ i }}</md-option>
