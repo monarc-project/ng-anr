@@ -1,4 +1,6 @@
 <md-tab label="{{ 'Operational risks' | translate }}">
+    <ng-include src="'views/anr/_object.composition.html'"></ng-include>
+    <br/>
     <div layout="row" layout-align="space-between center">
         <p class="md-title md-padding-left" ng-if="!opsheet_risk" translate>{{ oprisks_total }} operational risks</p>
 

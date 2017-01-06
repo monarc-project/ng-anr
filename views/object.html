@@ -56,89 +56,9 @@
 
     <md-card ng-if="object">
         <md-tabs md-dynamic-height md-border-bottom md-selected="ToolsAnrService.currentTab">
-            <md-tab label="{{ 'General information' | translate }}">
-                <div class="md-padding-left md-padding-right">
-                    <p class="md-title" translate>Composition</p>
-
-                    <ul class="md-treeview">
-                        <li class="md-treeview-root">
-                            <a ng-if="mode == 'bdc'">
-                                <span class="active-obj"><md-icon>place</md-icon> {{ object[_langField('name')] }}</span>
-                                <md-button ng-click="createComponent()" ng-disabled="isAnrReadOnly" class="md-icon-button md-primary">
-                                    <md-icon>add_to_photos</md-icon>
-                                </md-button>
-                            </a>
-                            <a ng-if="mode == 'anr'">
-                                <span class="active-obj">
-                                    <md-icon>place</md-icon> {{ object[_langField('name')] }}
-                                </span>
-
-                                <md-button ng-click="createComponent($event)" ng-disabled="isAnrReadOnly" class="md-icon-button md-primary">
-                                    <md-icon>add_to_photos</md-icon>
-                                </md-button>
-                            </a>
-
-                            <ul>
-                                <li ng-repeat="node in composition"
-                                    ng-class="{'md-treeview-branch': node.children && node.children.length > 0}"
-                                    ng-include="'objlibs.tree_item_template.html'"></li>
-                            </ul>
-                        </li>
-                    </ul>
-
-                    <div ng-if="object.parents.length > 0">
-                        <p class="md-title" translate>In the common library, this object is a direct component of :</p>
-                        <ul>
-                            <li ng-repeat="parent in object.parents">{{parent[_langField("name")]}} ({{parent[_langField("label")]}})</li>
-                        </ul>
-                    </div>
-
-                    <div ng-if="mode == 'bdc' && object.replicas.length > 0">
-                        <p class="md-title" translate>Object replica(s) in models</p>
-                        <table md-table>
-                            <thead md-head>
-                                <tr md-row>
-                                    <th md-column><span translate>Active parent</span></th>
-                                    <th md-column><span translate>Actions</span></th>
-                                </tr>
-                            </thead>
-                            <tbody md-body>
-                                <tr md-row ng-repeat="node in object.replicas">
-                                    <td md-cell>{{ node[_langField('label')] ? node[_langField('label')] : node[_langField('name')] }}</td>
-                                    <td md-cell>
-                                        <!-- <a aria-title="{{ node[_langField('name')] }}" ng-click="showInModel(node.id, object.id)"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></a> -->
-                                        <md-button class="md-icon-button" aria-title="{{ node[_langField('name')] }}" ui-sref="main.kb_mgmt.models.details.object({modelId: node.id, objectId: object.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></md-button>
-                                         <!--"-->
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div ng-if="mode == 'anr' && object.replicas.length > 0">
-                        <p class="md-title" translate>Object used in the risks analysis</p>
-                        <table md-table>
-                            <thead md-head>
-                                <tr md-row>
-                                    <th md-column><span translate>Active parent</span></th>
-                                    <th md-column><span translate>Actions</span></th>
-                                </tr>
-                            </thead>
-                            <tbody md-body>
-                                <tr md-row ng-repeat="node in object.replicas">
-                                    <td md-cell>{{ node[_langField('name')] }}</td>
-                                    <td md-cell>
-                                        <md-button ng-if="OFFICE_MODE == 'BO'" class="md-icon-button md-primary" aria-title="{{ node[_langField('name')] }}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></md-button>
-                                        <md-button ng-disabled="isAnrReadOnly" class="md-icon-button md-warn" aria-title="{{ 'Detach' | translate }}" ng-click="detachInstance($event,node)""><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></md-button>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </md-tab>
-
-            <md-tab label="{{ 'Information risks' | translate }}">
+            <md-tab ng-if="object.asset.type != 1" label="{{ 'Information risks' | translate }}">
+                <ng-include src="'views/anr/_object.composition.html'"></ng-include>
+                <br/>
                 <div layout="row" layout-align="start center" layout-fill>
                     <p class="md-title md-padding-left" translate>{{ object.risks.length }} risks</p>
                     <span flex></span>
@@ -146,7 +66,6 @@
                         <p translate>You are in the knowledge base. No evaluation may be set in this space.</p>
                     </md-card-content></md-card>
                 </div>
-
                 <table class="md-html-table big-border-all">
                     <thead class="big-border-bottom">
                     <tr>
