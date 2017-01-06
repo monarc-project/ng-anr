@@ -24,28 +24,28 @@
                     </md-button>
                     <md-menu-content width="4">
                         <md-menu-item>
-                            <md-button ng-click="createComponent($event)" ng-disabled="isAnrReadOnly">
-                                <md-icon>add_to_photos</md-icon> {{ 'Add component' | translate }}
+                            <md-button class="md-primary" ng-click="createComponent($event)" ng-disabled="isAnrReadOnly">
+                                <md-icon class="md-light-theme material-icons">add_to_photos</md-icon><span class="black">{{ 'Add component' | translate }}</span>
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button ng-click="editObjlib($event, object)" ng-disabled="isAnrReadOnly">
-                                <md-icon>edit</md-icon> {{ 'Edit object' | translate }}
+                            <md-button class="md-primary" ng-click="editObjlib($event, object)" ng-disabled="isAnrReadOnly">
+                                <md-icon class="md-light-theme material-icons">edit</md-icon><span class="black">{{ 'Edit object' | translate }}</span>
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button ng-click="cloneObject($event)" ng-disabled="isAnrReadOnly">
-                                <md-icon>control_point_duplicate</md-icon> {{ 'Duplicate object' | translate }}
+                            <md-button class="md-primary" ng-click="cloneObject($event)" ng-disabled="isAnrReadOnly">
+                                <md-icon class="md-light-theme material-icons">control_point_duplicate</md-icon><span class="black">{{ 'Duplicate object' | translate }}</span>
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button ng-click="exportObject($event)" ng-disabled="isSafari()">
-                                <md-icon>save</md-icon> {{ 'Export object' | translate }}
+                            <md-button class="md-primary" ng-click="exportObject($event)" ng-disabled="isSafari()">
+                                <md-icon class="md-light-theme material-icons">call_made</md-icon><span class="black">{{ 'Export object' | translate }}</span>
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button ng-click="deleteObject($event)" ng-disabled="isAnrReadOnly">
-                                <md-icon>{{ (mode == 'bdc' || OFFICE_MODE == 'FO') ? 'delete' : 'content_cut' }}</md-icon> {{ (mode == 'bdc' || OFFICE_MODE == 'FO') ? ('Delete object' | translate) : ('Detach object' | translate) }}
+                            <md-button class="md-primary" ng-click="deleteObject($event)" ng-disabled="isAnrReadOnly">
+                                <md-icon class="ng-scope md-light-theme material-icons">{{ (mode == 'bdc' || OFFICE_MODE == 'FO') ? 'delete' : 'content_cut' }}</md-icon><span class="black">{{ (mode == 'bdc' || OFFICE_MODE == 'FO') ? ('Delete object' | translate) : ('Detach object' | translate) }}</span>
                             </md-button>
                         </md-menu-item>
                     </md-menu-content>
