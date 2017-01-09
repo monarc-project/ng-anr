@@ -82,13 +82,15 @@
     </md-card>
 
     <md-card>
-        <md-tabs md-dynamic-height md-border-bottom md-selected="ToolsAnrService.currentTab">
+        <md-tabs md-dynamic-height md-border-bottom md-selected="ToolsAnrService.currentTab" ng-if="instance.asset.type == 1">
             <md-tab label="{{ 'Information risks' | translate }}">
                 <ng-include src="'views/anr/_table_risks.html'"></ng-include>
             </md-tab>
-            <ng-include src="'views/anr/_table_risks_op.html'" ng-if="instance.asset.type == 1"></ng-include>
-
+            <md-tab label="{{ 'Operational risks' | translate }}">
+                <ng-include src="'views/anr/_table_risks_op.html'"></ng-include>
+            </md-tab>
         </md-tabs>
+        <ng-include src="'views/anr/_table_risks.html'" ng-if="instance.asset.type != 1"></ng-include>
     </md-card>
 </div>
 

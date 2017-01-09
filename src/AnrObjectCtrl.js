@@ -312,7 +312,7 @@
                 .then(function (exports) {
                     var url = '/api/objects-export';
                     if ($scope.OFFICE_MODE == 'FO') {
-                        url = '/api/client-anr/' + $scope.model.anr.id + '/objects/' + $scope.object.id + '/export'
+                        url = '/api/client-anr/' + $scope.model.anr.id + '/objects/' + $scope.object.id + '/export';
                     }
                     $http.post(url, {id: $scope.object.id, password: exports.password}).then(function (data) {
                         var contentD = data.headers('Content-Disposition'),
@@ -326,7 +326,11 @@
         };
 
         $scope.cloneObject = function (ev) {
-            $http.post("/api/objects-duplication", {id: $scope.object.id, implicitPosition: 2}).then(function (data) {
+            var url = '/api/objects-duplication';
+            if ($scope.OFFICE_MODE == 'FO') {
+                url = '/api/client-anr/' + $scope.model.anr.id + '/objects-duplication';
+            }
+            $http.post(url, {id: $scope.object.id, implicitPosition: 2}).then(function (data) {
                 toastr.success(gettextCatalog.getString('Ths object has been duplicated successfully.'), gettextCatalog.getString('Duplication successful'));
 
                 if ($rootScope.hookUpdateObjlib) {

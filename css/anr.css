@@ -163,6 +163,9 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 .txtright {
     text-align: right;
 }
+.txtleft {
+    text-align: left;
+}
 
 .text-blue {
     color: #2196F3;

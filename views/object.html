@@ -55,57 +55,57 @@
     </md-card>
 
     <md-card ng-if="object">
-        <md-tabs md-dynamic-height md-border-bottom md-selected="ToolsAnrService.currentTab">
-            <md-tab ng-if="object.asset.type != 1" label="{{ 'Information risks' | translate }}">
-                <ng-include src="'views/anr/_object.composition.html'"></ng-include>
-                <br/>
-                <div layout="row" layout-align="start center" layout-fill>
-                    <p class="md-title md-padding-left" translate>{{ object.risks.length }} risks</p>
-                    <span flex></span>
-                    <md-card class="md-card-info" ng-if="mode == 'bdc'"><md-card-content>
-                        <p translate>You are in the knowledge base. No evaluation may be set in this space.</p>
-                    </md-card-content></md-card>
-                </div>
-                <table class="md-html-table big-border-all">
-                    <thead class="big-border-bottom">
-                    <tr>
-                        <th colspan="2" class="big-border-left"><p translate>Threat</p></th>
-                        <th colspan="3" class="big-border-left"><p translate>Vulnerability</p></th>
-                        <th colspan="3" class="big-border-left"><p translate>Current risk</p></th>
-                        <th rowspan="2"><p translate>Target risk</p></th>
-                    </tr>
-                    <tr>
-                        <th translate>Label</th>
-                        <th translate>Prob.</th>
-                        <th class="big-border-left" translate>Label</th>
-                        <th translate>Measures set</th>
-                        <th translate>Qualif.</th>
-                        <th class="big-border-left">C</th>
-                        <th>I</th>
-                        <th>D</th>
-                    </tr>
-                    </thead>
+        <div ng-if="object.asset.type != 1">
+            <ng-include src="'views/anr/_object.composition.html'"></ng-include>
+            <br/>
+            <div layout="row" layout-align="start center" layout-fill>
+                <p class="md-title md-padding-left" translate>{{ object.risks.length }} risks</p>
+                <span flex></span>
+                <md-card class="md-card-info" ng-if="mode == 'bdc'"><md-card-content>
+                    <p translate>You are in the knowledge base. No evaluation may be set in this space.</p>
+                </md-card-content></md-card>
+            </div>
+            <table class="md-html-table big-border-all">
+                <thead class="big-border-bottom">
+                <tr>
+                    <th colspan="2" class="big-border-left"><p translate>Threat</p></th>
+                    <th colspan="3" class="big-border-left"><p translate>Vulnerability</p></th>
+                    <th colspan="3" class="big-border-left"><p translate>Current risk</p></th>
+                    <th rowspan="2"><p translate>Target risk</p></th>
+                </tr>
+                <tr>
+                    <th translate>Label</th>
+                    <th translate>Prob.</th>
+                    <th class="big-border-left" translate>Label</th>
+                    <th translate>Measures set</th>
+                    <th translate>Qualif.</th>
+                    <th class="big-border-left">C</th>
+                    <th>I</th>
+                    <th>D</th>
+                </tr>
+                </thead>
 
-                    <tbody>
-                    <tr ng-repeat="risk in object.risks">
-                        <td>{{risk[_langField('threatDescription')]}}</td>
-                        <td class="txtcenter">{{risk.threatRate}}</td>
-                        <td>{{risk[_langField('vulnDescription')]}}</td>
-                        <td class="txtcenter">-</td>
-                        <td class="txtcenter">{{risk.vulnerabilityRate}}</td>
-                        <td ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc"
-                            ng-class="{'green': risk.c_risk >= 0 && risk.c_risk < scales.thresholds.min, 'orange': risk.c_risk >= scales.thresholds.min && risk.c_risk < scales.thresholds.max, 'red': risk.c_risk >= scales.thresholds.max}">{{risk.c_risk_enabled ? risk.c_risk : ''}}</td>
-                        <td ng-disabled="!risk.i_risk_enabled" class="tbl-risk-calc"
-                            ng-class="{'green': risk.i_risk >= 0 && risk.i_risk < scales.thresholds.min, 'orange': risk.i_risk >= scales.thresholds.min && risk.i_risk < scales.thresholds.max, 'red': risk.i_risk >= scales.thresholds.max}">{{risk.i_risk_enabled ? risk.i_risk : ''}}</td>
-                        <td ng-disabled="!risk.d_risk_enabled" class="tbl-risk-calc"
-                            ng-class="{'green': risk.d_risk >= 0 && risk.d_risk < scales.thresholds.min, 'orange': risk.d_risk >= scales.thresholds.min && risk.d_risk < scales.thresholds.max, 'red': risk.d_risk >= scales.thresholds.max}">{{risk.d_risk_enabled ? risk.d_risk : ''}}</td>
-                        <td class="txtcenter">{{risk.target|dashnull}}</td>
-                    </tr>
-                    </tbody>
-                </table>
-            </md-tab>
-            <ng-include src="'views/anr/_table_risks_op.html'" ng-if="object.asset.type == 1"></ng-include>
-        </md-tabs>
+                <tbody>
+                <tr ng-repeat="risk in object.risks">
+                    <td>{{risk[_langField('threatDescription')]}}</td>
+                    <td class="txtcenter">{{risk.threatRate}}</td>
+                    <td>{{risk[_langField('vulnDescription')]}}</td>
+                    <td class="txtcenter">-</td>
+                    <td class="txtcenter">{{risk.vulnerabilityRate}}</td>
+                    <td ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc"
+                        ng-class="{'green': risk.c_risk >= 0 && risk.c_risk < scales.thresholds.min, 'orange': risk.c_risk >= scales.thresholds.min && risk.c_risk < scales.thresholds.max, 'red': risk.c_risk >= scales.thresholds.max}">{{risk.c_risk_enabled ? risk.c_risk : ''}}</td>
+                    <td ng-disabled="!risk.i_risk_enabled" class="tbl-risk-calc"
+                        ng-class="{'green': risk.i_risk >= 0 && risk.i_risk < scales.thresholds.min, 'orange': risk.i_risk >= scales.thresholds.min && risk.i_risk < scales.thresholds.max, 'red': risk.i_risk >= scales.thresholds.max}">{{risk.i_risk_enabled ? risk.i_risk : ''}}</td>
+                    <td ng-disabled="!risk.d_risk_enabled" class="tbl-risk-calc"
+                        ng-class="{'green': risk.d_risk >= 0 && risk.d_risk < scales.thresholds.min, 'orange': risk.d_risk >= scales.thresholds.min && risk.d_risk < scales.thresholds.max, 'red': risk.d_risk >= scales.thresholds.max}">{{risk.d_risk_enabled ? risk.d_risk : ''}}</td>
+                    <td class="txtcenter">{{risk.target|dashnull}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+        <div ng-if="object.asset.type == 1">
+            <ng-include src="'views/anr/_table_risks_op.html'"></ng-include>
+        </div>
     </md-card>
 </div>
 
