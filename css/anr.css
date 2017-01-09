@@ -1,3 +1,6 @@
+body{
+    font-family: Helvetica, Sans-serif !important;
+}
 .preserve-newlines {
     white-space: pre-wrap
 }
