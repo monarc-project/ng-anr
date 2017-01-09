@@ -14,7 +14,7 @@
                 <md-tab label="{{ 'Trends assessment' | translate }}">
                     <div layout="column" class="md-padding-left md-padding-right">
                         <div ng-repeat="question in questions" layout="column">
-                            <div class="preserve-newlines">{{ question['label' + anr.language] }}</div>
+                            <div class="preserve-newlines bold">{{ question['label' + anr.language] }}</div>
                             <md-input-container class="md-block" style="margin-top: 0">
                                 <textarea ng-if="question.type == 1" ng-model="question.response" rows="3" ng-disabled="!anr.rwd"></textarea>
                                 <md-select ng-if="question.type == 2 && question.multichoice == 0" ng-disabled="!anr.rwd" ng-model="question.response">
