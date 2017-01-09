@@ -450,27 +450,11 @@ div.ng-inline-edit input, div.ng-inline-edit textarea {
     min-width: 200px;
 }
 
-/** Drag & Drop */
-.angular-ui-tree-drag {
-    border: 2px solid #808080;
-    font-weight: bold;
-}
 
-.angular-ui-tree-placeholder {
-    border: 2px dashed #33B5E5;
-}
-
-.angular-ui-tree-handle {
-    font-weight: normal;
-}
-
-.angular-ui-tree {
-    min-height: 30px;
-}
-.angular-ui-tree-nodes .angular-ui-tree-nodes {
+/*.angular-ui-tree-nodes .angular-ui-tree-nodes {
     padding-left: 6px;
 }
-
+*/
 /** Material Design Overrides */
 body {
     font-size: 12px;
@@ -522,9 +506,7 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
     min-height: 24px;
     width: 12px !important;
 }
-.md-tree-item-spacer {
-    width: 20px;
-}
+
 .md-tree-global-icon {
     min-width: 12px;
     width: 12px;
@@ -892,3 +874,101 @@ md-select-menu md-content
     display: none;
 }
 */
+
+/* ANR treeview styles + drag&drap*/
+
+.angular-ui-tree-handle {
+    font-weight: normal;
+    color: #333;
+}
+.angular-ui-tree-drag{
+    position: absolute !important;
+}
+
+.angular-ui-tree-drag:before{
+    border: 0 !important;
+}
+
+.angular-ui-tree-drag li:before{
+    border: 0 !important;
+}
+
+.angular-ui-tree-placeholder {
+    border: 2px dashed #33B5E5;
+}
+
+.angular-ui-tree {
+    min-height: 30px;
+}
+
+.treeview2.instances{
+    margin-bottom: 5px;
+}
+.treeview2.instances, .treeview2.instances ol {
+    font-weight: normal;
+    padding-right: 6px;
+    padding-left: 0px;
+    /*border-left: 1px dashed #AAAAAA;*/
+    margin-left: 18px;
+
+    position: relative;
+}
+
+.treeview2.categories{
+    padding-left: 5px;
+}
+
+.treeview2.instances:before, .treeview2.instances ol:before{
+    position: absolute;
+    content: "";
+    top: 0;
+    bottom: 13px;
+    border-left: 1px dashed #AAAAAA;
+}
+
+.treeview2.instances ol{
+    margin-left: 7px;
+}
+
+.treeview2.instances .md-tree-global-icon{
+    margin-right: 6px;
+}
+
+.treeview2.instances li{
+    padding-left: 14px;
+    position: relative;
+    margin-top: 1px;
+}
+.treeview2.instances li:before{
+    position: absolute;
+    border-bottom: 1px dashed #AAAAAA;
+    left: 0;
+    width: 13px;
+    top: 10px;
+    content: "";
+    z-index: 1;
+}
+
+.treeview2 .tree-toggler{
+    background-color: #F1F1F1;
+    border: 1px solid #DEDEDE;
+    border-radius: 0;
+    cursor: pointer;
+    width: 15px;
+    height: 15px;
+    text-align: center;
+    font-size: 1.2em;
+    line-height: 15px;
+    margin-right: 6px;
+    box-sizing: content-box;
+    outline-style: none;
+}
+
+.treeview2 .tree-toggler:hover{
+    background-color: #DFDFDF;
+    border: 1px solid #BEBEBE;
+}
+
+.treeview2.instances p:hover{
+    color: #388E3C;
+}
