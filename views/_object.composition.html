@@ -9,15 +9,13 @@
                     <md-icon>add_to_photos</md-icon>
                 </md-button>
             </a>
-            <a ng-if="mode == 'anr'">
-                <span class="active-obj">
-                    <md-icon>place</md-icon> {{ object[_langField('name')] }}
-                </span>
+            <div ng-if="mode == 'anr'" style="margin-bottom: -8px;margin-left:10px;">
+                <span class="active-obj">{{ object[_langField('name')] }}</span>
 
                 <md-button ng-click="createComponent($event)" ng-disabled="isAnrReadOnly" class="md-icon-button md-primary">
                     <md-icon>add_to_photos</md-icon>
                 </md-button>
-            </a>
+            </div>
 
             <ul>
                 <li ng-repeat="node in composition"
