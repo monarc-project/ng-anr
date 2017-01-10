@@ -1,0 +1,8 @@
+<md-card md-theme="primary" ng-if="model && OFFICE_MODE == 'FO' && model.anr.isSnapshot">
+    <md-card-content style="padding:0px;">
+        <md-toolbar layout="row" class="md-primary md-hue-1" style="padding:18px 10px 10px 10px;border-radius: 2px;font-size:16px;">
+            <div flex="70" translate>You are currently on a snapshot, no changes will be possible.</div>
+            <a style="color:rgba(255,255,255,0.87);" flex class="txtright" ui-sref="main.project.anr({modelId: model.anr.snapshotParent})"><md-icon class="material-icons">undo</md-icon><span>{{ 'Return to risk analysis' | translate }}</span></a>
+        </md-toolbar>
+    </md-card-content>
+</md-card>

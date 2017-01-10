@@ -21,6 +21,7 @@
         </div>
 
         <md-card>
+            <div ng-include="'views/anr/_anr.infosnapshot.html'"></div>
             <md-menu>
                 <md-button style="position: absolute; right: 24px; margin-top: 4px; z-index:10" ng-show="OFFICE_MODE == 'FO'"
                            ng-click="openAnrToolsMenu($mdOpenMenu, $event)"> {{ 'Tools' | translate }}
@@ -116,7 +117,7 @@
                     </div>
 
                 </md-tab>
-
+    
                 <md-tab label="{{ 'Evaluation scales' | translate }}">
                     <div class="md-padding-left md-padding-right" layout="column">
                         <md-input-container ng-if="OFFICE_MODE == 'BO'">
