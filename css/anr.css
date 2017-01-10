@@ -45,10 +45,16 @@ table.md-table tbody.md-body>tr.md-row:hover {
 }
 
 .tooltip-object-header, .tooltip-object-header .md-content {
-    min-width: 300px;
-    min-height: 175px;
+    width: 400px;
+    height:auto;
     font-size: 13px;
     white-space: pre-wrap;
+    overflow: none;
+    padding:10px 10px 0px 10px;
+}
+.tooltip-object-header .md-content tbody tr > td{
+    vertical-align:top;
+    padding-bottom:10px;
 }
 
 .table-fab-top-2 {
