@@ -160,7 +160,6 @@
                 $mdDialog.show(confirm).then(function () {
                     ObjlibService.deleteObjlib($scope.object.id, function () {
                         if ($scope.OFFICE_MODE == 'BO') {
-                            $scope.updateModel();
                             $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'objlibs'});
                         } else {
                             toastr.success(gettextCatalog.getString('The object has been successfully deleted'));
