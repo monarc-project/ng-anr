@@ -1839,7 +1839,6 @@
             draggable: '.draggable',
             forceFallback: true,
             onUpdate: function (evt) {
-                console.log(evt.newIndex);
                 if (evt.newIndex == 0) {
                     ClientRecommandationService.updateRecommandation({
                         anr: anr.id,
@@ -1939,25 +1938,73 @@
                 }
             }
 
-            $scope.questionsOriginal = angular.copy(data.questions);
-
-
-        })
+            $scope.questionsOriginal = angular.copy($scope.questions);
+        });
 
         $scope.saveQuestions = function () {
             for (var i = 0; i < $scope.questions.length; ++i) {
-                if ($scope.questions[i].response != $scope.questionsOriginal[i].response) {
-                    var response = $scope.questions[i].response;
+                if($scope.questionsOriginal[i] != undefined && $scope.questions[i].id > 0){
+                    if ($scope.questions[i].response != $scope.questionsOriginal[i].response) {
+                        var response = $scope.questions[i].response;
 
-                    if ($scope.questions[i].type == 2) {
-                        response = JSON.stringify(response);
+                        if ($scope.questions[i].type == 2) {
+                            response = JSON.stringify(response);
+                        }
+
+                        if($scope.questions[i].mode == 1){
+                            QuestionService.patchQuestion($scope.questions[i].id, {
+                                response: response,
+                                label1: $scope.questions[i].label1,
+                                label2: $scope.questions[i].label2,
+                                label3: $scope.questions[i].label3,
+                                label4: $scope.questions[i].label4,
+                                anr: $scope.anr.id
+                            });
+                        }else{
+                            QuestionService.patchQuestion($scope.questions[i].id, {response: response});
+                        }
                     }
-
-                    QuestionService.patchQuestion($scope.questions[i].id, {response: response});
+                }else{
+                    if($scope.questions[i].label1 != '' || $scope.questions[i].label2 != '' || $scope.questions[i].label3 != '' || $scope.questions[i].label4 != ''){
+                        (function(_i){
+                            QuestionService.createQuestion($scope.questions[_i],function(q){
+                                $scope.questions[_i].id = q.id;
+                            });
+                        })(i);
+                    }
                 }
             }
+            $scope.questionsOriginal = angular.copy($scope.questions);
 
             toastr.success(gettextCatalog.getString("Trends assessment saved successfully"));
+        };
+
+        $scope.addQuestion = function(){
+            $scope.questions.push({
+                id: null,
+                label1: '',
+                label2: '',
+                label3: '',
+                label4: '',
+                type: 1,
+                response: '',
+                mode: 1,
+                anr: $scope.anr.id
+            });
+        };
+
+        $scope.removeQuestion = function(i){
+            if($scope.questions[i] != undefined && $scope.questions[i].mode == 1){
+                if ($scope.confirmDelete == $scope.questions[i].id) {
+                    if($scope.questions[i].id > 0){
+                        QuestionService.deleteQuestion($scope.questions[i].id);
+                        toastr.success(gettextCatalog.getString("Question deleted"));
+                    }
+                    $scope.questions.splice(i,1);
+                }else{
+                    $scope.confirmDelete = $scope.questions[i].id;
+                }
+            }
         };
 
         ThreatService.getThreats({limit: 0}).then(function (data) {

@@ -13,8 +13,14 @@
             <md-tabs md-dynamic-height md-border-bottom>
                 <md-tab label="{{ 'Trends assessment' | translate }}">
                     <div layout="column" class="md-padding-left md-padding-right">
-                        <div ng-repeat="question in questions" layout="column">
-                            <div class="preserve-newlines bold">{{ question['label' + anr.language] }}</div>
+                        <div ng-repeat="(k, question) in questions" layout="column">
+                            <div class="preserve-newlines bold" ng-if="question.mode == 0">{{ question['label' + anr.language] }}</div>
+                            <div layout="row" layout-align="start end" ng-if="question.mode == 1">
+                                <md-input-container class="md-block" flex="80">
+                                    <input type="text" ng-model="question['label' + anr.language]" placeholder="{{ question['label' + anr.language]==''?('Question' | translate):'' }}" />
+                                </md-input-container>
+                                <md-button ng-class="{'md-icon-button': confirmDelete != question.id}" flex ng-click="removeQuestion(k)" class="md-primary" title="{{ 'Delete question' | translate }}"><md-icon>remove_circle_outline</md-icon> <span ng-if="confirmDelete == question.id" translate>Confirm?</span></md-button>
+                            </div>
                             <md-input-container class="md-block" style="margin-top: 0">
                                 <textarea ng-if="question.type == 1" ng-model="question.response" rows="3" ng-disabled="!anr.rwd"></textarea>
                                 <md-select ng-if="question.type == 2 && question.multichoice == 0" ng-disabled="!anr.rwd" ng-model="question.response">
@@ -25,6 +31,13 @@
                                 </md-select>
                             </md-input-container>
                         </div>
+                    </div>
+
+                    <div ng-if="anr.rwd == 1" layout-align="center" layout="row">
+                        <md-button class="md-primary" ng-click="addQuestion()">
+                            <md-icon>add_circle_outline</md-icon>
+                            {{ 'Add question' | translate }}
+                        </md-button>
                     </div>
 
                     <div layout="row" layout-align="end center" ng-if="anr.rwd == 1">
@@ -176,7 +189,7 @@
                                 </div>
 
                                 <div layout="row" layout-align="end center" ng-if="anr.rwd >= 1">
-                                    <md-button ng-click="saveSummary()" type="submit" class="md-primary">
+                                    <md-button ng-click="saveSummary()" type="submit" class="md-accent md-hue-3">
                                         {{ 'Save' | translate }}
                                     </md-button>
                                 </div>
@@ -188,3 +201,12 @@
         </md-dialog-content>
     </form>
 </md-dialog>
+
+<script type="text/ng-template" id="trend.evalcontext.addquestion.html">
+    <div class="preserve-newlines">
+        <input type="text" value="" />
+    </div>
+    <md-input-container class="md-block" style="margin-top: 0">
+        <textarea rows="3"></textarea>
+    </md-input-container>
+</script>
