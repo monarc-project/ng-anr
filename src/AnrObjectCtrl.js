@@ -105,6 +105,7 @@
         $scope.detachInstance = function (ev, instance){
             InstanceService.detach($scope, ev, instance.id, function(){
                 $scope.object.replicas.splice($scope.object.replicas.indexOf(instance), 1);
+                $scope.updateModel();
             });
         }
 
