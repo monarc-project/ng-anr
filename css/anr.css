@@ -983,3 +983,6 @@ md-select-menu md-content
 .treeview2.instances p:hover{
     color: #388E3C;
 }
+#anrMainTab > md-tabs-wrapper [aria-controls="tab-content-3"]{
+    display: none !important;
+}
