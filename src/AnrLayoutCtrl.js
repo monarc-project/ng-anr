@@ -66,6 +66,7 @@
         // Called by ObjectCtrl when an object has been modified
         $rootScope.hookUpdateObjlib = function (gotofirst) {
             $scope.updateInstances();
+            $scope.updateModel();
             $scope.updateObjectsLibrary(gotofirst);
         };
 
