@@ -1268,6 +1268,7 @@
                 }
 
                 $scope.updateScaleTypes();
+                updateInfoRiskColumns();
             });
 
         };
