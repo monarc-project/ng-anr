@@ -117,7 +117,7 @@
                     </div>
 
                 </md-tab>
-    
+
                 <md-tab label="{{ 'Evaluation scales' | translate }}">
                     <div class="md-padding-left md-padding-right" layout="column">
                         <md-input-container ng-if="OFFICE_MODE == 'BO'">
@@ -226,6 +226,34 @@
                                         </div>
                                     </md-input-container>
                                 </div>
+
+                                <div layout="row" layout-align="start center" class="md-padding">
+                                    <p class="anr-table-sidetitle" translate>Impact</p>
+                                    <table class="tbl-risk-calc">
+                                        <tbody>
+                                             <tr>
+                                                <td></td>
+                                                <td colspan="{{info_risk_columns.length}}" class="anr-table-toptitle" translate>TxV</td>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th ng-repeat="v in info_risk_columns">{{v}}</th>
+                                            </tr>
+                                            <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)">
+                                                <th>{{i}}</th>
+                                                <td ng-class="{'green': v*i <= thresholds.thresholds.min, 'orange': v*i <= thresholds.thresholds.max && v*i > thresholds.thresholds.min, 'red': v*i > thresholds.thresholds.max}"
+                                                    ng-repeat="v in info_risk_columns">{{v*i}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="anr-formula-container">
+                                        <div class="anr-formula">
+                                            <span class="green">R</span> = I x ( M x V )
+                                        </div>
+                                        <p class="md-caption">{{ 'R: Risk, I: Impact, M: Threat, V: Vulnerability' | translate }}</p>
+                                    </div>
+                                </div>
                             </div>
 
                             <div layout="column" flex="50">
@@ -250,6 +278,35 @@
                                             <div ng-message="max">{{ 'This cannot be higher than' | translate }} {{ scales.impacts.max*scales.threats.max*scales.vulns.max }}</div>
                                         </div>
                                     </md-input-container>
+                                </div>
+
+                                <div layout="row" layout-align="start center" class="md-padding">
+                                    <p class="anr-table-sidetitle" translate>Impact</p>
+                                    <table class="tbl-risk-calc">
+                                        <tbody>
+                                            <tr>
+                                                <td></td>
+                                                <td colspan="{{scales.threats.max - scales.threats.min + 1 }}" class="anr-table-toptitle" translate>Probability</td>
+                                            </tr>
+                                            <tr>
+                                                <th></th>
+                                                <th ng-repeat="p in range(scales.threats.min, scales.threats.max)">{{p}}</th>
+                                            </tr>
+                                            <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)">
+                                                <th>{{i}}</th>
+                                                <td ng-repeat="p in range(scales.threats.min, scales.threats.max)"
+                                                    ng-class="{'green': p*i <= thresholds.rolf_thresholds.min, 'orange': p*i <= thresholds.rolf_thresholds.max && p*i > thresholds.rolf_thresholds.min, 'red': p*i > thresholds.rolf_thresholds.max}">{{i*p}}</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+
+                                    <div class="anr-formula-container">
+                                        <div class="anr-formula">
+                                            <span class="green">R</span> = I x P
+                                        </div>
+
+                                        <p class="md-caption">{{ 'R: Risk, I: Impact, P: Probability' | translate }}</p>
+                                    </div>
                                 </div>
                             </div>
                         </form>
