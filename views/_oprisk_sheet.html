@@ -6,18 +6,18 @@
             <thead>
                 <tr>
                     <th class="no-border"></th>
-                    <th translate>Prob.</th>
-                    <th>R</th>
-                    <th>O</th>
-                    <th>L</th>
-                    <th>F</th>
-                    <th>P</th>
-                    <th translate>MAX risk</th>
+                    <th style="width:12%;" translate>Prob.</th>
+                    <th style="width:12%;">R</th>
+                    <th style="width:12%;">O</th>
+                    <th style="width:12%;">L</th>
+                    <th style="width:12%;">F</th>
+                    <th style="width:12%;">P</th>
+                    <th style="width:12%;" translate>MAX risk</th>
                 </tr>
             </thead>
             <tbody>
                 <tr class="tbl-risk-calc">
-                    <th class="txtright" translate>Current risk</th>
+                    <td class="bold txtleft" translate>Current risk</td>
                     <td>{{ opsheet_risk.netProb }}</td>
                     <td>{{ opsheet_risk.netR }}</td>
                     <td>{{ opsheet_risk.netO }}</td>
@@ -27,7 +27,7 @@
                     <td class="tbl-risk-calc" ng-class="{'green': opsheet_risk.cacheNetRisk >= 0 && opsheet_risk.cacheNetRisk < thresholds.rolf_thresholds.min, 'orange': opsheet_risk.cacheNetRisk >= thresholds.rolf_thresholds.min && opsheet_risk.cacheNetRisk < thresholds.rolf_thresholds.max, 'red': opsheet_risk.cacheNetRisk >= thresholds.rolf_thresholds.max}">{{ opsheet_risk.cacheNetRisk }}</td>
                 </tr>
                 <tr class="tbl-risk-calc" edit-model="opsheet_risk">
-                    <th class="txtright" translate>Target risk</th>
+                    <td class="bold txtleft" translate>Target risk</td>
                     <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedProb"></td>
                     <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedR"></td>
                     <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedO"></td>
@@ -37,28 +37,28 @@
                     <td class="tbl-risk-calc" ng-class="{'green': opsheet_risk.cacheTargetedRisk >= 0 && opsheet_risk.cacheTargetedRisk < thresholds.rolf_thresholds.min, 'orange': opsheet_risk.cacheTargetedRisk >= thresholds.rolf_thresholds.min && opsheet_risk.cacheTargetedRisk < thresholds.rolf_thresholds.max, 'red': opsheet_risk.cacheTargetedRisk >= thresholds.rolf_thresholds.max}">{{ opsheet_risk.cacheTargetedRisk }}</td>
                 </tr>
                 <tr>
-                    <th class="txtright w120p" translate>Instance</td>
+                    <td class="bold" translate>Instance</td>
                     <td class="bold" colspan="7"><md-icon ng-if="opsheet_risk.instanceInfos.scope == 2" class="md-tree-global-icon">language</md-icon>{{ opsheet_risk.instanceInfos[_langField("name")] }}</td>
                 </tr>
                 <tr>
-                    <th class="txtright w120p" translate>Risk description</td>
+                    <td class="bold" translate>Risk description</td>
                     <td colspan="7">{{ opsheet_risk[_langField("label")] }}</td>
                 </tr>
                 <tr>
-                    <th class="txtright w120p" translate>Risk probability</td>
+                    <td class="bold" translate>Risk probability</td>
                     <td colspan="7">
                         <p ng-if="opsheet_risk.netProb == -1">-</p>
                         <p ng-if="opsheet_risk.netProb > -1"><strong>{{ opsheet_risk.netProb }}</strong> - {{ comms.threat[opsheet_risk.netProb][_langField('comment')] }}</p>
                     </td>
                 </tr>
                 <tr>
-                    <th class="txtright w120p" translate>Measures set</td>
+                    <td class="bold" translate>Measures set</td>
                     <td colspan="7">
                         {{opsheet_risk.comment}}
                     </td>
                 </tr>
                 <tr ng-if="OFFICE_MODE == 'FO'">
-                    <th class="txtright w120p" translate>Recommendations</th>
+                    <td class="bold" translate>Recommendations</th>
                     <td colspan="7">
                         <ul class="no-list-style no-padding">
                             <li ng-repeat="rec in _copyRecs">{{ rec.recommandation.code }} <span class="anr-importance" ng-repeat="i in range(1, rec.recommandation.importance)">&bull;</span> &gt; {{ rec.recommandation.description }}</li>
@@ -66,7 +66,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th class="txtright w120p" translate>Processing type</td>
+                    <td class="bold" translate>Processing type</td>
                     <td colspan="7">
                         <md-input-container class="md-block" style="width: 200px">
                             <md-icon>widgets</md-icon>
