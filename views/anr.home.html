@@ -17,19 +17,19 @@
                     <md-tooltip md-direction="bottom">{{ 'Object actions' | translate }}</md-tooltip>
                     <md-icon class="material-icons md-48 size-auto" md-menu-origin>more_vert</md-icon>
                 </md-button>
-                <md-menu-content width="4">
-                    <md-menu-item>
-                        <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-if="OFFICE_MODE == 'FO'" ng-click="editAnrInfo($event)">
+                <md-menu-content width="OFFICE_MODE == 'FO'?4:1">
+                    <md-menu-item ng-if="OFFICE_MODE == 'FO'">
+                        <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="editAnrInfo($event)">
                             <md-icon class="md-light-theme material-icons">edit</md-icon><span class="black">{{ 'Edit risk analysis details' | translate }}</span>
                         </md-button>
                     </md-menu-item>
-                    <md-menu-item>
-                        <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="deleteAnr($event)" ng-if="OFFICE_MODE == 'FO'">
+                    <md-menu-item ng-if="OFFICE_MODE == 'FO'">
+                        <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="deleteAnr($event)">
                             <md-icon class="md-light-theme material-icons">delete</md-icon><span class="black">{{ 'Delete risk analysis' | translate }}</span>
                         </md-button>
                     </md-menu-item>
-                    <md-menu-item>
-                        <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="importInstance($event)" ng-if="OFFICE_MODE == 'FO'">
+                    <md-menu-item ng-if="OFFICE_MODE == 'FO'">
+                        <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="importInstance($event)">
                             <md-icon class="md-light-theme material-icons">play_for_work</md-icon><span class="black">{{ 'Import analysis' | translate }}</span>
                         </md-button>
                     </md-menu-item>
