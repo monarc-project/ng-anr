@@ -47,8 +47,8 @@
                 <tr>
                     <td class="bold" translate>Risk probability</td>
                     <td colspan="7">
-                        <p ng-if="opsheet_risk.netProb == -1">-</p>
-                        <p ng-if="opsheet_risk.netProb > -1"><strong>{{ opsheet_risk.netProb }}</strong> - {{ comms.threat[opsheet_risk.netProb][_langField('comment')] }}</p>
+                        <div ng-if="opsheet_risk.netProb == -1">-</div>
+                        <div ng-if="opsheet_risk.netProb > -1"><strong>{{ opsheet_risk.netProb }}</strong> - {{ comms.threat[opsheet_risk.netProb][_langField('comment')] }}</div>
                     </td>
                 </tr>
                 <tr>
@@ -67,8 +67,8 @@
                 </tr>
                 <tr>
                     <td class="bold" translate>Processing type</td>
-                    <td colspan="7">
-                        <md-input-container class="md-block" style="width: 200px">
+                    <td colspan="7" style="padding-top:0px;padding-bottom:0px;">
+                        <md-input-container class="md-block" style="width: 200px;margin:0px;">
                             <md-icon>widgets</md-icon>
                             <md-select ng-model="opsheet_risk.kindOfMeasure" ng-disabled="isAnrReadOnly">
                                 <md-option ng-value="5">{{ 'Not processed' | translate }}</md-option>
