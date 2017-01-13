@@ -97,7 +97,7 @@
                 {{ 'Cancel' | translate }}
             </md-button>
             <md-button ng-click="create()" ng-disabled="riskForm.$error.required" type="submit" class="md-accent md-hue-3">
-                {{ (risk.id > 0 ? 'Update' : 'Create') | translate }}
+                {{ (risk.id > 0 ? 'Save' : 'Create') | translate }}
             </md-button>
             <md-button ng-click="createAndContinue()" ng-if="!risk.id" ng-disabled="riskForm.$error.required" class="md-accent md-hue-3">
                 {{ 'Create and continue' | translate }}
