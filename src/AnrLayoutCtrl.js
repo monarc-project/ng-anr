@@ -1606,6 +1606,9 @@
             }
         }).then(function (objlib) {
             if (objlib) {
+                var cont = objlib.cont;
+                objlib.cont = undefined;
+
                 var copy = angular.copy(objlib);
 
                 if (objlib.asset) {
@@ -1629,7 +1632,9 @@
                         } else {
                             $location.path('/backoffice/kb/models/'+$parentScope.model.id+'/object/'+data.id);
                         }
-
+                        if(cont){
+                            createAttachedObject($scope, $mdDialog, $state, $location, $parentScope, AnrService, ev);
+                        }
                     });
                 }, function () {
                     // An error occurred, re-show the dialog
