@@ -1,0 +1,192 @@
+<div class="md-padding-left md-padding-right" layout="column">
+    <md-input-container ng-if="OFFICE_MODE == 'BO'">
+        <md-icon>language</md-icon>
+        <md-select ng-model="scales.language">
+            <md-option ng-repeat="(idx, lang) in languages" ng-value="idx">{{ lang }}</md-option>
+        </md-select>
+    </md-input-container>
+    <md-card md-theme="default" class="md-card-crit" ng-if="(!scalesCanChange || !model.anr.cacheModelIsScalesUpdatable) && OFFICE_MODE == 'FO'">
+        <md-card-content>
+            <p ng-if="model.anr.cacheModelIsScalesUpdatable" translate>Some of the risks of your analysis, your library, or your trends assessment have already been assessed. This being done, you may not edit the scales values.</p>
+            <p ng-if="!model.anr.cacheModelIsScalesUpdatable" translate>The risk analysis model used does not allow you to change the scales values.</p>
+        </md-card-content>
+    </md-card>
+
+    <div editable callback="onImpactScaleChanged" layout="row">
+        <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="scales.impacts"><span translate>Impacts scale:</span> [
+            <span class="text-blue" edit-field="min"></span> -
+            <span class="text-blue" edit-field="max"></span> ]
+        </h4>
+        <h4 ng-if="(OFFICE_MODE == 'FO' && !scalesCanChange ) || isAnrReadOnly"><span translate>Impacts scale:</span> [
+            <span class="text-blue">{{ scales.impacts.min }}</span> -
+            <span class="text-blue">{{ scales.impacts.max }}</span> ]
+        </h4>
+    </div>
+    <md-switch ng-model="display.show_hidden_impacts">{{ 'Show hidden impacts' | translate }}</md-switch>
+
+    <div class="horz-expanding-table" id="horiz-scrollable">
+        <table editable callback="onImpactCommChanged" visible="checkCommentVisibility" class="md-html-table">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">{{ type['label' + scales.language] }} <md-button class="md-icon-button md-warn" ng-if="type.type == 'CUS' && !isAnrReadOnly" ng-click="deleteCustomScaleType(type.id)"><md-icon>delete</md-icon></md-button> <md-button class="md-icon-button md-primary" ng-if="type.type != 'CUS' && !isAnrReadOnly" ng-click="setImpactVisibility(type.id, !!type.isHidden)"><md-icon>{{ type.isHidden ? 'visibility' : 'visibility_off' }}</md-icon></md-button></th>
+                    <th><span inline-edit="newColumn.name" inline-edit-callback="onCreateNewColumn(newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ 'New column name' | translate }}"></span></th>
+                </tr>
+            </thead>
+
+            <tbody ng-if="scales.impacts.min != scales.impacts.max && scales.impacts.max > 0">
+            <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)" edit-model="comms.impact[i]">
+                    <th>{{ i }}</th>
+                    <td class="preserve-newlines" ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types" edit-readonly="isAnrReadOnly" edit-field edit-ng-field="'comment' + scales.language" edit-localmodel="comms.impact[i][type.id]" edit-type="textarea"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <div editable callback="onThreatScaleChanged" layout="row">
+        <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="scales.threats"><span translate>Threats scale:</span> [
+            <span class="text-blue" edit-field="min"></span> -
+            <span class="text-blue" edit-field="max"></span> ]
+        </h4>
+        <h4 ng-if="(OFFICE_MODE == 'FO' && !scalesCanChange ) || isAnrReadOnly"><span translate>Threats scale:</span> [
+            <span class="text-blue">{{ scales.threats.min }}</span> -
+            <span class="text-blue">{{ scales.threats.max }}</span> ]
+        </h4>
+    </div>
+
+    <div ng-if="scales.threats.min != scales.threats.max && scales.threats.max > 0" editable callback="onThreatCommChanged">
+        <ul class="no-list-style" edit-model="comms">
+            <li ng-repeat="i in range(scales.threats.min, scales.threats.max)">{{i}}. <span edit-field edit-ng-field="'comment' + scales.language" edit-readonly="isAnrReadOnly" edit-type="textarea" edit-class="preserve-newlines" edit-localmodel="comms.threat[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+        </ul>
+    </div>
+
+
+    <div editable callback="onVulnScaleChanged" layout="row">
+        <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="scales.vulns"><span translate>Vulnerabilities scale:</span> [
+            <span class="text-blue" edit-field="min"></span> -
+            <span class="text-blue" edit-field="max"></span> ]
+        </h4>
+        <h4 ng-if="(OFFICE_MODE == 'FO' && !scalesCanChange ) || isAnrReadOnly"><span translate>Vulnerabilities scale:</span> [
+            <span class="text-blue">{{ scales.vulns.min }}</span> -
+            <span class="text-blue">{{ scales.vulns.max }}</span> ]
+        </h4>
+    </div>
+
+    <div ng-if="scales.vulns.min != scales.vulns.max && scales.vulns.max > 0" editable callback="onVulnCommChanged">
+        <ul class="no-list-style" edit-model="comms">
+            <li ng-repeat="i in range(scales.vulns.min, scales.vulns.max)">{{i}}. <span edit-field edit-ng-field="'comment' + scales.language" edit-type="textarea" edit-readonly="isAnrReadOnly" edit-class="preserve-newlines" edit-localmodel="comms.vuln[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+        </ul>
+    </div>
+
+    <h4 translate>Thresholds</h4>
+
+    <form name="thresholdsForm">
+        <div layout="column"">
+            <h5 translate>Max risks thresholds</h5>
+            <div layout="row" layout-align="start center">
+                <div class="anr-scales-demo-block green"></div>
+                <md-input-container>
+                    <input ng-disabled="isAnrReadOnly" type="number" name="thresholds_min" min="0" max="{{ thresholds.thresholds.max }}" ng-model="thresholds.thresholds.min" aria-label="min" />
+                    <div ng-messages="thresholdsForm.thresholds_min.$error">
+                        <div ng-message="min">{{ 'This cannot be lower than zero' | translate }}</div>
+                        <div ng-message="max">{{ 'This cannot be higher than the orange threshold' | translate }}</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start center">
+                <div class="anr-scales-demo-block orange"></div>
+                <md-input-container>
+                    <input ng-disabled="isAnrReadOnly" type="number" name="thresholds_max" min="{{ thresholds.thresholds.min }}" max="{{ scales.impacts.max*scales.threats.max*scales.vulns.max }}" ng-model="thresholds.thresholds.max" aria-label="max" />
+                    <div ng-messages="thresholdsForm.thresholds_max.$error">
+                        <div ng-message="min">{{ 'This cannot be lower than the green threshold' | translate }}</div>
+                        <div ng-message="max">{{ 'This cannot be higher than' | translate }} {{ scales.impacts.max*scales.threats.max*scales.vulns.max }}</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start center" class="md-padding">
+                <p class="anr-table-sidetitle" translate>Impact</p>
+                <table class="tbl-risk-calc">
+                    <tbody>
+                         <tr>
+                            <td></td>
+                            <td colspan="{{info_risk_columns.length}}" class="anr-table-toptitle" translate>TxV</td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th ng-repeat="v in info_risk_columns">{{v}}</th>
+                        </tr>
+                        <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)">
+                            <th>{{i}}</th>
+                            <td ng-class="{'green': v*i <= thresholds.thresholds.min, 'orange': v*i <= thresholds.thresholds.max && v*i > thresholds.thresholds.min, 'red': v*i > thresholds.thresholds.max}"
+                                ng-repeat="v in info_risk_columns">{{v*i}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="anr-formula-container">
+                    <div class="anr-formula">
+                        <span class="green">R</span> = I x ( M x V )
+                    </div>
+                    <p class="md-caption">{{ 'R: Risk, I: Impact, M: Threat, V: Vulnerability' | translate }}</p>
+                </div>
+            </div>
+        </div>
+
+        <div layout="column">
+            <h5 translate>Max ROLF thresholds</h5>
+            <div layout="row" layout-align="start center">
+                <div class="anr-scales-demo-block green"></div>
+                <md-input-container>
+                    <input ng-disabled="isAnrReadOnly" type="number" name="rolf_thresholds_min" min="0" max="{{ thresholds.rolf_thresholds.max }}" ng-model="thresholds.rolf_thresholds.min" aria-label="min" />
+                    <div ng-messages="thresholdsForm.rolf_thresholds_min.$error">
+                        <div ng-message="min">{{ 'This cannot be lower than zero' | translate }}</div>
+                        <div ng-message="max">{{ 'This cannot be higher than the orange threshold' | translate }}</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start center">
+                <div class="anr-scales-demo-block orange"></div>
+                <md-input-container>
+                    <input ng-disabled="isAnrReadOnly" type="number" name="rolf_thresholds_max" min="{{ thresholds.rolf_thresholds.min }}" max="{{ scales.impacts.max*scales.threats.max*scales.vulns.max }}" ng-model="thresholds.rolf_thresholds.max" aria-label="max" />
+                    <div ng-messages="thresholdsForm.rolf_thresholds_max.$error">
+                        <div ng-message="min">{{ 'This cannot be lower than the green threshold' | translate }}</div>
+                        <div ng-message="max">{{ 'This cannot be higher than' | translate }} {{ scales.impacts.max*scales.threats.max*scales.vulns.max }}</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+            <div layout="row" layout-align="start center" class="md-padding">
+                <p class="anr-table-sidetitle" translate>Impact</p>
+                <table class="tbl-risk-calc">
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td colspan="{{scales.threats.max - scales.threats.min + 1 }}" class="anr-table-toptitle" translate>Probability</td>
+                        </tr>
+                        <tr>
+                            <th></th>
+                            <th ng-repeat="p in range(scales.threats.min, scales.threats.max)">{{p}}</th>
+                        </tr>
+                        <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)">
+                            <th>{{i}}</th>
+                            <td ng-repeat="p in range(scales.threats.min, scales.threats.max)"
+                                ng-class="{'green': p*i <= thresholds.rolf_thresholds.min, 'orange': p*i <= thresholds.rolf_thresholds.max && p*i > thresholds.rolf_thresholds.min, 'red': p*i > thresholds.rolf_thresholds.max}">{{i*p}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="anr-formula-container">
+                    <div class="anr-formula">
+                        <span class="green">R</span> = I x P
+                    </div>
+
+                    <p class="md-caption">{{ 'R: Risk, I: Impact, P: Probability' | translate }}</p>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

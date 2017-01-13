@@ -881,10 +881,33 @@ md-select-menu md-content
 .mw250p {min-width: 250px;}
 .black {color: rgba(0,0,0,0.87);}
 
-/*#anrMainTab > md-tabs-wrapper{
+#anrMainTab > md-tabs-wrapper{
     display: none;
 }
-*/
+
+.anr-tools-button{
+    position: absolute;
+    right: 6px;
+    margin-top: 0px;
+    z-index: 10;
+    height: 50px;
+    width: 50px;
+    min-width: 40px;
+    line-height: 22px;
+    padding-right: 0px;
+    padding-left: 10px;
+    padding-bottom: 20px;
+    padding-top: 0px;
+    vertical-align: top;
+    background-color: #FFFFFF;
+    border-radius: 0 0 0 40px;
+    border-left: 1px solid #BBBBBB;
+    border-bottom: 1px solid #BBBBBB;
+    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);
+}
+.anr-tools-button .material-icons{
+    font-size:30px;
+}
 
 /* ANR treeview styles + drag&drap*/
 
@@ -982,8 +1005,4 @@ md-select-menu md-content
 
 .treeview2.instances p:hover{
     color: #388E3C;
-}
-#anrMainTab > md-tabs-wrapper md-tab-item:nth-child(2){
-    display: none !important;
-}
 }
