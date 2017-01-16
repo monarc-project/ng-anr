@@ -2353,6 +2353,7 @@
 
             file.upload.then(function (response) {
                 toastr.success(gettextCatalog.getString("The instance has been imported successfully"));
+                $scope.updateInstances();
             });
         }
 
