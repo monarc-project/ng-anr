@@ -2242,7 +2242,15 @@
         };
 
         $http.get('/api/client-anr/' + anr.id + '/deliverable').then(function (data) {
-            $scope.models = data.data;
+            $scope.models = data.data.models;
+
+            if (data.data.delivery && data.data.delivery.id) {
+                $scope.deliverable = data.data.delivery;
+                $scope.deliverable.docname = $scope.deliverable.name;
+                $scope.deliverable.managers = $scope.deliverable.respCustomer;
+                $scope.deliverable.consultants = $scope.deliverable.respSmile;
+
+            }
 
             for (var i = 0; i < $scope.models.length; ++i) {
                 if ($scope.models[i].category == step.num) {
