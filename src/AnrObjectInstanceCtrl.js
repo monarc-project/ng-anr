@@ -282,6 +282,27 @@
             })
         }
 
+        $scope.deleteSpecOpRisk = function (ev, risk) {
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Delete this specific operational risk?'))
+                .textContent(gettextCatalog.getString('The selected specific operational risk will be permanently deleted. Are you sure?'))
+                .targetEvent(ev)
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+
+            $mdDialog.show(confirm).then(function () {
+                AnrService.deleteInstanceOpRisk($scope.model.anr.id, risk.id, function () {
+                    toastr.success(gettextCatalog.getString("The specific operational risk has been successfully deleted"));
+                    $scope.updateInstanceRisksOp();
+                    if ($scope.updateAnrRisksOpTable) {
+                        $scope.updateAnrRisksOpTable();
+                    }
+                });
+            }, function () {
+                // Cancel
+            })
+        }
+
         $scope.getEveryScaleComm = function (instance, letter) {
             var keys = Object.keys($scope.scaleCommCache);
             var output = '<table><tbody>';
