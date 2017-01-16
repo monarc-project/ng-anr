@@ -425,7 +425,7 @@
                     $scope.$broadcast('setup-kb-mgmt');
                 }
 
-                if (oldValue == 2 && newValue == 0 && $scope.anr_selected_instance_id == null && $scope.anr_selected_object_id == null) {
+                if (oldValue == 2 && newValue == 0 && $scope.anr_selected_instance_id == null && $scope.anr) {
                     $scope.updateAnrRisksTable();
                     $scope.updateAnrRisksOpTable();
                 }
