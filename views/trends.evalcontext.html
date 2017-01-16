@@ -55,8 +55,8 @@
                             <p class="md-subhead md-padding-left">{{ 'Threats analysis' | translate }} - {{ display.currentThreat + 1 }} / {{ threats.length }}</p>
                             <span flex></span>
                             <md-progress-circular md-diameter="24" ng-if="threatLoading"></md-progress-circular>
-                            <md-select ng-model="display.currentThreat" md-on-close="updateThreat()">
-                                <md-option ng-repeat="threat in threats" ng-value="$index">{{ threat[_langField('label')] }}</md-option>
+                            <md-select ng-model="display.currentThreat" md-on-close="updateThreat()" class="bold md-title">
+                                <md-option ng-repeat="threat in threats" ng-value="$index" class="bold">{{ threat[_langField('label')] }}</md-option>
                             </md-select>
                         </div>
 
@@ -101,7 +101,7 @@
                             <tr>
                                 <td translate>Probability</td>
                                 <td>
-                                    <md-select ng-disabled="anr.rwd < 1" ng-model="currentThreatObj.qualification">
+                                    <md-select ng-disabled="anr.rwd < 1" ng-model="currentThreatObj.qualification" style="width: 200px">
                                         <md-option ng-value="-1">-1</md-option>
                                         <md-option ng-value="0">0</md-option>
                                         <md-option ng-value="1">1</md-option>

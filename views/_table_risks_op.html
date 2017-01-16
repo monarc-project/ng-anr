@@ -38,11 +38,6 @@
 
                 <md-button class="md-icon-button md-primary" ng-click="updateInstanceRisksOp ? updateInstanceRisksOp() : updateAnrRisksOpTable()"><md-icon>search</md-icon><md-tooltip>{{ 'Filter table' | translate }}</md-tooltip></md-button>
                 <md-button class="md-icon-button md-primary" ng-click="resetRisksOpFilters(); updateInstanceRisksOp ? updateInstanceRisksOp() : updateAnrRisksOpTable()"><md-icon>settings_backup_restore</md-icon><md-tooltip>{{ 'Reset filter' | translate }}</md-tooltip></md-button>
-
-                <md-button ng-if="instmode == 'anr'" ng-click="exportInstanceRisksOp ? exportInstanceRisksOp() : exportAnrRisksOpTable()">
-                    <md-icon>save</md-icon>
-                    {{ 'Export to CSV' | translate }}
-                </md-button>
             </form>
         </div>
     </md-card>
