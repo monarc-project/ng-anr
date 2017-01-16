@@ -1893,24 +1893,33 @@
             }
         };
 
-        TreatmentPlanService.getTreatmentPlans({anr: anr.id}).then(function (data) {
-            $scope.recommendations = data['recommandations-risks'];
+        var updatePlan = function () {
+            TreatmentPlanService.getTreatmentPlans({anr: anr.id}).then(function (data) {
+                $scope.recommendations = data['recommandations-risks'];
 
-            // Preprocess row spans
-            for (var i = 0; i < $scope.recommendations.length; ++i) {
-                var rec = $scope.recommendations[i];
+                // Preprocess row spans
+                for (var i = 0; i < $scope.recommendations.length; ++i) {
+                    var rec = $scope.recommendations[i];
 
-                if (rec.risks) {
-                    rec.risksCount = Object.keys(rec.risks).length;
-                } else {
-                    rec.risksCount = 0;
+                    if (rec.risks) {
+                        rec.risksCount = Object.keys(rec.risks).length;
+                    } else {
+                        rec.risksCount = 0;
+                    }
+
+                    if (rec.risksop) {
+                        rec.risksCount += rec.risksop.length;
+                    }
                 }
+            });
+        }
+        updatePlan();
 
-                if (rec.risksop) {
-                    rec.risksCount += rec.risksop.length;
-                }
-            }
-        });
+        $scope.resetPositions = function () {
+            TreatmentPlanService.deleteTreatmentPlan({anr: anr.id}, function (data) {
+                updatePlan();
+            });
+        };
 
         $scope.openRecommendation = function (rec) {
             $state.transitionTo('main.project.anr.risksplan.sheet', {modelId: anr.id, recId: rec.id});

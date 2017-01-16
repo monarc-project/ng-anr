@@ -11,7 +11,7 @@
         </md-toolbar>
         <md-dialog-content class="md-padding">
             <div>
-                <md-button class="md-primary" ng-if="anr.rwd >= 1">{{ 'Reset positions' | translate }}</md-button>
+                <md-button class="md-primary" ng-if="!isAnrReadOnly" ng-click="resetPositions()">{{ 'Reset positions' | translate }}</md-button>
 
                 <table class="md-html-table" ng-sortable="sortableConf">
                     <thead>

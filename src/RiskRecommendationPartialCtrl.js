@@ -4,12 +4,12 @@
         .module('AnrModule')
         .controller('RiskRecommendationPartialCtrl', [
             '$scope', '$rootScope', 'toastr', '$mdMedia', '$mdDialog', '$stateParams', 'gettextCatalog', '$state', '$q', '$attrs',
-            'ClientRecommandationService',
+            '$timeout', 'ClientRecommandationService',
             RiskRecommendationPartialCtrl
         ]);
 
     function RiskRecommendationPartialCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog, $state,
-                                     $q, $attrs, ClientRecommandationService) {
+                                     $q, $attrs, $timeout, ClientRecommandationService) {
         var riskMode = $attrs.monarcMode; // information / operational
         var isOpRiskMode = (riskMode == 'operational');
         var riskId = (isOpRiskMode ? $scope.opsheet_risk.id : $scope.sheet_risk.id);
@@ -153,17 +153,31 @@
         }
 
         var updateRecommandations = function () {
-            ClientRecommandationService.getRiskRecommandations($scope.model.anr.id, riskId, isOpRiskMode).then(function (data) {
-                $scope.recommandations = data['recommandations-risks'];
-                $rootScope.$broadcast('recommandations-loaded', $scope.recommandations);
-            })
+            // We need to debounce the update here as the view uses twice the controller. The data is shared
+            // through the broadcast event, but we have no way to know which controller will take care of the actual
+            // API request. The first one will "lock" updateDebounce in the scope, and the other one will skip
+            // the request.
+            if (!$rootScope.updateDebounce) {
+                $rootScope.updateDebounce = true;
+
+                ClientRecommandationService.getRiskRecommandations($scope.model.anr.id, riskId, isOpRiskMode).then(function (data) {
+                    $scope.recommandations = data['recommandations-risks'];
+                    $rootScope.$broadcast('recommandations-loaded', $scope.recommandations);
+                    $timeout(function () {
+                        $rootScope.updateDebounce = false;
+                    })
+                })
+            }
         };
 
         $rootScope.$on('recommandations-loaded', function (ev, recs) {
             $scope.recommandations = recs;
         })
 
-        updateRecommandations();
+        $timeout(function () {
+            updateRecommandations();
+        })
+
     }
 
 
