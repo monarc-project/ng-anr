@@ -38,8 +38,11 @@
                 if ($state.$current.name == 'main.kb_mgmt.models.details' || $state.$current.name == 'main.project.anr') {
                     $rootScope.anr_selected_instance_id = null;
                     $rootScope.anr_selected_object_id = null;
-                    $scope.updateAnrRisksTable();
-                    $scope.updateAnrRisksOpTable();
+
+                    if ($scope.model && $scope.model.anr && $scope.model.anr.id && $stateParams.modelId == $scope.model.anr.id) {
+                        $scope.updateAnrRisksTable();
+                        $scope.updateAnrRisksOpTable();
+                    }
                 }
             });
 
