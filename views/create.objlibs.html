@@ -145,7 +145,7 @@
                 <div layout="row" layout-align="center center">
                     <md-input-container class="md-block" flex>
                         <md-icon style="color: rgba(0,0,0,0.54)">class</md-icon>
-                        <label translate>Category</label>{{ objlib.category }}
+                        <label translate>Category</label>
                         <md-select required ng-model="objlib.category">
                             <md-option ng-if="objlib.category == 'null' && objlib.id > 0" ng-value="null">{{ 'Not set' | translate }}</md-option>
                             <md-option ng-repeat="cat in categories" ng-value="cat.id">{{ cat[_langField('label')] }}</md-option>
