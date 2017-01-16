@@ -16,6 +16,10 @@ md-option {
     cursor: pointer;
 }
 
+a.blue {
+    color: #2196F3;
+}
+
 .no-padding {
     padding: 0;
 }

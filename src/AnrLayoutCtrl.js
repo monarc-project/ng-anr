@@ -310,6 +310,15 @@
             $scope.opsheet_risk = undefined;
         };
 
+        $scope.treatmentStr = function (treatment) {
+            switch (treatment) {
+                case 1: return 'Reduction';
+                case 2: return 'Denied';
+                case 3: return 'Accepted';
+                case 4: return 'Shared';
+                default: return 'Not processed';
+            }
+        }
 
         $scope.saveRiskSheet = function (sheet) {
             AnrService.updateInstanceRisk($scope.model.anr.id, sheet.id, sheet, function () {
