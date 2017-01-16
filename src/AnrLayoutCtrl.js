@@ -400,7 +400,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$state', 'TreatmentPlanService', 'ClientRecommandationService', 'anr', 'subStep', MethodEditRisksDialog],
+                controller: ['$scope', '$mdDialog', '$state', 'TreatmentPlanService', 'ClientRecommandationService', 'anr', 'subStep', 'thresholds', MethodEditRisksDialog],
                 templateUrl: '/views/anr/risks.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -409,6 +409,7 @@
                 locals: {
                     subStep: step,
                     anr: $scope.model.anr,
+                    thresholds: $scope.thresholds
                 }
             }).then(function (data) {
 
@@ -1854,7 +1855,8 @@
         };
     }
 
-    function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService, ClientRecommandationService, anr, subStep) {
+    function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService, ClientRecommandationService, anr, subStep, thresholds) {
+        $scope.thresholds = thresholds;
         $scope.subStep = subStep;
         $scope.isAnrReadOnly = !anr.rwd;
         $scope.sortableConf = {
