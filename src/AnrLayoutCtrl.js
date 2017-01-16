@@ -1902,6 +1902,10 @@
                 } else {
                     rec.risksCount = 0;
                 }
+
+                if (rec.risksop) {
+                    rec.risksCount += rec.risksop.length;
+                }
             }
         });
 

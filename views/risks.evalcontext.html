@@ -43,6 +43,13 @@
                         <td class="txtcenter tbl-risk-calc" ng-class="{'green': risk.cacheMaxRisk >= 0 && risk.cacheMaxRisk <= thresholds.thresholds.min, 'orange': risk.cacheMaxRisk > thresholds.thresholds.min && risk.cacheMaxRisk <= thresholds.thresholds.max, 'red': risk.cacheMaxRisk > thresholds.thresholds.max}">{{ risk.cacheMaxRisk | dashnull }}</td>
                         <td class="txtcenter tbl-risk-calc" ng-class="{'green': risk.cacheTargetedRisk >= 0 && risk.cacheTargetedRisk <= thresholds.thresholds.min, 'orange': risk.cacheTargetedRisk > thresholds.thresholds.min && risk.cacheTargetedRisk <= thresholds.thresholds.max, 'red': risk.cacheTargetedRisk > thresholds.thresholds.max}">{{ risk.cacheTargetedRisk | dashnull }}</td>
                     </tr>
+
+                    <tr ng-if="rec.risksCount > 0" ng-repeat="risk in rec.risksop">
+                        <td>{{ risk.instance[_langField('label')] }}</td>
+                        <td>{{ risk.comment }}</td>
+                        <td class="txtcenter tbl-risk-calc" ng-class="{'green': risk.cacheMaxRisk >= 0 && risk.cacheMaxRisk <= thresholds.thresholds.min, 'orange': risk.cacheMaxRisk > thresholds.thresholds.min && risk.cacheMaxRisk <= thresholds.thresholds.max, 'red': risk.cacheMaxRisk > thresholds.thresholds.max}">{{ risk.cacheMaxRisk | dashnull }}</td>
+                        <td class="txtcenter tbl-risk-calc" ng-class="{'green': risk.cacheTargetedRisk >= 0 && risk.cacheTargetedRisk <= thresholds.thresholds.min, 'orange': risk.cacheTargetedRisk > thresholds.thresholds.min && risk.cacheTargetedRisk <= thresholds.thresholds.max, 'red': risk.cacheTargetedRisk > thresholds.thresholds.max}">{{ risk.cacheTargetedRisk | dashnull }}</td>
+                    </tr>
                     </tbody>
                 </table>
             </div>
