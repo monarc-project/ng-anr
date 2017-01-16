@@ -24,7 +24,7 @@
         var self = this;
 
         $scope.ToolsAnrService = ToolsAnrService;
-        $scope.GlobalResizeMenuSize = "";
+        $scope.GlobalResizeMenuSize = 230;
         $scope.GlobalResizeMenuContentHide = false;
         var minWidthMenu = 80;
         var isModelLoading = false;

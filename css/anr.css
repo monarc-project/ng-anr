@@ -247,6 +247,7 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
     list-style: none;
     padding: 0;
     margin: 0;
+    position:unset;
 }
 .md-treeview .md-treeview-root>ul {
     padding-left: 10px;

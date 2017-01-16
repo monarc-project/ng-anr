@@ -46,8 +46,8 @@
                 </div>
             </md-subheader>
 
-            <div layout="column" ng-hide="uiState.hideLibrary" style="background:white; z-index: 15; min-height: 150px;">
-                <div layout="row" layout-align="center center" style="background:white; z-index: 15;">
+            <div layout="column" style="background:white; z-index: 15; min-height: 450px;position:relative;">
+                <div ng-hide="uiState.hideLibrary" layout="row" layout-align="center center" style="background:white; z-index: 15;">
                     <md-input-container class="md-block" md-no-float flex  style="margin: 0; margin-bottom: 8px">
                         <md-icon>search</md-icon>
                         <input type="text" ng-model="filter.library" placeholder="{{ 'Search an object...' | translate }}">
@@ -55,7 +55,7 @@
                     <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-primary" ng-click="addObject($event)"><md-icon>add_to_photos</md-icon></md-button>
                 </div>
 
-                <div class="angular-ui-tree" id="libTree" ui-tree="libTreeCallbacks" data-drag-delay="150" style="background:white; z-index: 15; min-height: 500px">
+                <div ng-hide="uiState.hideLibrary" class="angular-ui-tree" id="libTree" ui-tree="libTreeCallbacks" data-drag-delay="150" style="background:white; z-index: 15; min-height: 500px">
                     <div layout="row" layout-align="center center" ng-if="!anr_obj_library_data">
                         <md-progress-circular md-diameter="24"></md-progress-circular>
                     </div>
