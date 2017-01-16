@@ -35,9 +35,11 @@
             $scope.resetRisksFilters();
 
             $timeout(function () {
-                if ($state.$current.name == 'main.kb_mgmt.models.details') {
+                if ($state.$current.name == 'main.kb_mgmt.models.details' || $state.$current.name == 'main.project.anr') {
                     $rootScope.anr_selected_instance_id = null;
                     $rootScope.anr_selected_object_id = null;
+                    $scope.updateAnrRisksTable();
+                    $scope.updateAnrRisksOpTable();
                 }
             });
 

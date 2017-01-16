@@ -137,6 +137,12 @@
                         AnrService.updateInstance($scope.instance.anr.id, instance, function () {
                             $scope.updateInstance();
                             $scope.instance_updating = false;
+                            if ($scope.updateAnrRisksTable) {
+                                $scope.updateAnrRisksTable();
+                            }
+                            if ($scope.updateAnrRisksOpTable) {
+                                $scope.updateAnrRisksOpTable();
+                            }
                             toastr.success(gettextCatalog.getString("The instance details have been updated"), gettextCatalog.getString("Update successful"));
                         });
                     }
