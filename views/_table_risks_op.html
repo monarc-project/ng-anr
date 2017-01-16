@@ -123,9 +123,11 @@
         <td class="tbl-risk-calc txtcenter" ng-class="{'green': risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min, 'orange': risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max, 'red': risk.cacheNetRisk > thresholds.rolf_thresholds.max}">{{ risk.cacheNetRisk|dashnull }}</td>
         <td class="preserve-newlines" ng-if="instmode == 'anr' || instmode == 'inst'" edit-readonly="isAnrReadOnly" edit-field="comment" edit-type="textarea"></td>
         <td class="small txtcenter" ng-if="instmode == 'obj'">-</td>
-        <td class="txtcenter big-border-left"><a href="javascript:;" ng-if=" instmode != 'obj' " ng-click="openOpRiskSheet(risk)" title="{{ 'Open risk sheet' | translate }} - {{instmode}}">
-            <md-icon class="md-primary">open_in_new</md-icon>
-        </a> <div style="display:inline-block" class="green-dot" ng-if="risk.t"></div> </td>
+        <td class="txtcenter big-border-left">
+            <a class="pointer blue" title="{{ ('Open risk sheet' | translate) }}" ng-click="openOpRiskSheet(risk)">
+                {{treatmentStr(risk.kindOfMeasure)|translate}}
+            </a>
+        </td>
         <td class="tbl-risk-calc txtcenter" ng-class="{'green': risk.cacheTargetedRisk >= 0 && risk.cacheTargetedRisk <= thresholds.rolf_thresholds.min, 'orange': risk.cacheTargetedRisk > thresholds.rolf_thresholds.min && risk.cacheTargetedRisk <= thresholds.rolf_thresholds.max, 'red': risk.cacheTargetedRisk > thresholds.rolf_thresholds.max}">{{ risk.cacheTargetedRisk|dashnull }}</td>
     </tr>
     </tbody>
