@@ -416,13 +416,18 @@
         };
 
         if ($scope.OFFICE_MODE == 'FO') {
-            $scope.$watch('display.anrSelectedTabIndex', function (newValue) {
+            $scope.$watch('display.anrSelectedTabIndex', function (newValue, oldValue) {
                 if (newValue == 1) {
                     // Update scales, in case we made changes to risks, and our ANR isn't scaleupdatable anymore
                     $scope.updateScales();
                 } else if (newValue == 2) {
                     // Init KB Mgmt, if needed
                     $scope.$broadcast('setup-kb-mgmt');
+                }
+
+                if (oldValue == 2 && newValue == 0 && $scope.anr_selected_instance_id == null && $scope.anr_selected_object_id == null) {
+                    $scope.updateAnrRisksTable();
+                    $scope.updateAnrRisksOpTable();
                 }
             });
         }
