@@ -33,7 +33,7 @@
                             </md-button>
                         </md-menu-item>
                         <md-menu-item ng-if="OFFICE_MODE == 'FO'">
-                            <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="importInstance($event)">
+                            <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="importInstance($event, instance.id)">
                                 <md-icon class="md-light-theme material-icons">play_for_work</md-icon><span class="black">{{ 'Import analysis' | translate }}</span>
                             </md-button>
                         </md-menu-item>
