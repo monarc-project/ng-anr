@@ -56,7 +56,7 @@
                             <span flex></span>
                             <md-progress-circular md-diameter="24" ng-if="threatLoading"></md-progress-circular>
                             <md-select ng-model="display.currentThreat" md-on-close="updateThreat()">
-                                <md-option ng-repeat="threat in threats" ng-value="$index">{{ threat[_langField('label')] }} - {{ threat[_langField('description')] }}</md-option>
+                                <md-option ng-repeat="threat in threats" ng-value="$index">{{ threat[_langField('label')] }}</md-option>
                             </md-select>
                         </div>
 
@@ -67,32 +67,7 @@
                                 <td colspan="2" ><b>{{ 'Theme:' | translate }}</b> {{ currentThreatObj.theme[_langField('label')] }}</td>
                             </tr>
                             <tr>
-                                <td><b>{{'Code:' | translate }}</b> {{ currentThreatObj.code }}</td>
-                                <td><b>{{'Label:' | translate }}</b> {{ currentThreatObj[_langField('label')] }}</td>
-                            </tr>
-                            <tr>
-                                <td rowspan="2">
-                                    {{ 'Accidental cause' | translate }}<br />
-                                    <md-checkbox ng-model="currentThreatObj.isAccidental" ng-disabled="anr.rwd < 1" ng-true-value="true" ng-false-value="false">{{ 'conceivable' | translate }}</md-checkbox>
-                                </td>
-                                <td><b>{{ 'Description:' | translate }}</b> {{ currentThreatObj[_langField('descAccidental')] }}</td>
-                            </tr>
-                            <tr>
-                                <td><b>{{ 'Example:' | translate }}</b> {{ currentThreatObj[_langField('exAccidental')] }}</td>
-                            </tr>
-                            <tr>
-                                <td rowspan="2">
-                                    {{ 'Deliberate cause' | translate }}<br />
-                                    <md-checkbox ng-model="currentThreatObj.isDeliberate" ng-disabled="anr.rwd < 1" ng-true-value="true" ng-false-value="false">{{ 'conceivable' | translate }}</md-checkbox>
-                                </td>
-                                <td><b>{{ 'Description:' | translate }}</b> {{ currentThreatObj[_langField('descDeliberate')] }}</td>
-                            </tr>
-                            <tr>
-                                <td><b>{{ 'Example:' | translate }}</b> {{ currentThreatObj[_langField('exDeliberate')] }}</td>
-                            </tr>
-                            <tr>
-                                <td translate>Types of consequences</td>
-                                <td>{{ currentThreatObj[_langField('typeConsequences')] }}</td>
+                                <td colspan="2" ><b>{{ 'Description:' | translate }}</b> {{ currentThreatObj[_langField('description')] }}</td>
                             </tr>
                             <tr>
                                 <td translate>Comments</td>
