@@ -55,7 +55,7 @@
                             <p class="md-subhead md-padding-left">{{ 'Threats analysis' | translate }} - {{ display.currentThreat + 1 }} / {{ threats.length }}</p>
                             <span flex></span>
                             <md-progress-circular md-diameter="24" ng-if="threatLoading"></md-progress-circular>
-                            <md-select ng-model="display.currentThreat" md-on-close="updateThreat()" class="bold md-title">
+                            <md-select ng-model="display.currentThreat" md-on-close="updateThreat()" class="bold" style="font-size:16px;">
                                 <md-option ng-repeat="threat in threats" ng-value="$index" class="bold">{{ threat[_langField('label')] }}</md-option>
                             </md-select>
                         </div>
