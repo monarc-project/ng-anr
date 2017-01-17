@@ -28,7 +28,7 @@
                 </md-button>
                 <md-menu-content width="4">
                     <md-menu-item>
-                        <md-button ng-click="display.anrSelectedTabIndex = 0" ui-sref="main.project.anr({modelId: model.anr.id})">{{ 'Risk analysis' | translate }}</md-button>
+                        <md-button ng-click="display.anrSelectedTabIndex = 0; updateInstances(); updateObjectsLibrary();" ui-sref="main.project.anr({modelId: model.anr.id})">{{ 'Risk analysis' | translate }}</md-button>
                     </md-menu-item>
                     <md-menu-item>
                         <md-button ng-click="display.anrSelectedTabIndex = 1">{{ 'Evaluation scales' | translate }}</md-button>
