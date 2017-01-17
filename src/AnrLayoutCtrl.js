@@ -158,6 +158,7 @@
                     // patch up only if we already have a risks table
                     // if this cause a problem, add a flag to updateModel so that we patch only in the risks
                     // table callback, and do a full refresh otherwise
+                    $scope.risks_total = data.count;
                     for (var i = 0; i < $scope.risks.length; ++i) {
                         for (var j in $scope.risks[i]) {
                             $scope.risks[i][j] = data.risks[i][j];
