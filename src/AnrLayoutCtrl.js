@@ -179,7 +179,8 @@
                 order: 'maxRisk',
                 order_direction: 'desc',
                 thresholds: -1,
-                page: 1
+                page: 1,
+                limit: 20
             };
         };
 

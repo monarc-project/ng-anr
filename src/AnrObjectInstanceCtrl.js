@@ -63,9 +63,9 @@
         $scope.updateInstanceRisks = function () {
             $scope.anr_risks_table_loading = true;
 
-            if ($scope.instance.asset.type == 2) {
+            /*if ($scope.instance.asset.type == 2) {
                 $scope.risks_filters.limit = 0;
-            }
+            }*/
 
             AnrService.getInstanceRisks($scope.model.anr.id, $scope.instance.id, $scope.risks_filters).then(function(data) {
                 if (!$scope.risks || data.risks.length != $scope.risks.length) {
