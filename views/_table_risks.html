@@ -140,26 +140,30 @@
         </tbody>
     </table>
 
-    <div layout="row" layout-align="end center">
+    <div layout="row" layout-align="end center" class="md-table-pagination">
         <md-button ng-click="createSpecRisk($event)" ng-if="OFFICE_MODE == 'FO' && !isAnrReadOnly && instmode == 'inst' && instance.asset.type != 1"><md-icon>add</md-icon> {{ 'Create a specific risk' | translate }}</md-button>
 
         <span flex></span>
 
-        <div layout="row" layout-align="end center">
+        <div class="page-select">
             <div class="label" translate>Page:</div>
 
-            <md-select  ng-model="risks_filters.page" ng-change="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()" aria-label="Page">
+            <md-select  class="md-table-select" md-container-class="md-pagination-select" ng-model="risks_filters.page" ng-change="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()" aria-label="Page">
                 <md-content>
                     <md-option ng-repeat="i in range(1, ceil(risks_total / risks_filters.limit))" ng-value="i">{{i}}</md-option>
                 </md-content>
             </md-select>
+        </div>
 
+        <div class="limit-select">
             <div class="label" translate>Rows per page:</div>
 
-            <md-select ng-model="risks_filters.limit" ng-change="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()" aria-label="Rows">
+            <md-select class="md-table-select" md-container-class="md-pagination-select"  ng-model="risks_filters.limit" ng-change="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()" aria-label="Rows">
                 <md-option ng-repeat="option in [20, 30, 50, 100]" ng-value="option.value ? $pagination.eval(option.value) : option">{{::option.label ? option.label : option}}</md-option>
             </md-select>
+        </div>
 
+        <div class="buttons">
             <div class="label">{{ (risks_filters.page - 1) * risks_filters.limit + 1 }} - {{ risks_filters.page * risks_filters.limit }} {{ 'of' | translate }} {{ risks_total }}</div>
 
             <md-button class="md-icon-button" type="button" ng-disabled="risks_filters.page <= 1" ng-click="risks_filters.page = risks_filters.page - 1; (updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable())" aria-label="Previous">
