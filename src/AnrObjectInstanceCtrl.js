@@ -75,6 +75,7 @@
                     // patch up only if we already have a risks table
                     // if this cause a problem, add a flag to updateInstance so that we patch only in the risks
                     // table callback, and do a full refresh otherwise
+                    $scope.risks_total = data.count;
                     for (var i = 0; i < $scope.risks.length; ++i) {
                         for (var j in $scope.risks[i]) {
                             $scope.risks[i][j] = data.risks[i][j];
@@ -98,6 +99,7 @@
                     // patch up only if we already have a risks table
                     // if this cause a problem, add a flag to updateInstance so that we patch only in the risks
                     // table callback, and do a full refresh otherwise
+                    $scope.oprisks_total = data.count;
                     for (var i = 0; i < $scope.oprisks.length; ++i) {
                         for (var j in $scope.oprisks[i]) {
                             $scope.oprisks[i][j] = data.oprisks[i][j];
