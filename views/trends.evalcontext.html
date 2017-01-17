@@ -10,7 +10,7 @@
             </div>
         </md-toolbar>
         <md-dialog-content>
-            <md-tabs md-dynamic-height md-border-bottom>
+            <md-tabs md-dynamic-height md-border-bottom md-selected="selTab">
                 <md-tab label="{{ 'Trends assessment' | translate }}">
                     <div layout="column" class="md-padding-left md-padding-right">
                         <div ng-repeat="(k, question) in questions" layout="column">
@@ -37,12 +37,6 @@
                         <md-button class="md-primary" ng-click="addQuestion()">
                             <md-icon>add_circle_outline</md-icon>
                             {{ 'Add question' | translate }}
-                        </md-button>
-                    </div>
-
-                    <div layout="row" layout-align="end center" ng-if="anr.rwd == 1">
-                        <md-button ng-click="saveQuestions()" type="submit" class="md-accent md-hue-3">
-                            {{ 'Save' | translate }}
                         </md-button>
                     </div>
                 </md-tab>
@@ -174,6 +168,13 @@
                 </md-tab>
             </md-tabs>
         </md-dialog-content>
+        <md-dialog-actions ng-if="selTab == 0">
+            <div layout="row" layout-align="end center" ng-if="anr.rwd == 1">
+                <md-button ng-click="saveQuestions()" type="submit" class="md-accent md-hue-3">
+                    {{ 'Save' | translate }}
+                </md-button>
+            </div>
+        </md-dialog-actions>
     </form>
 </md-dialog>
 
