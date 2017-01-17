@@ -1346,13 +1346,14 @@
             var promise = $q.defer();
 
             // This risk changed, update it
-            AnrService.updateInstanceRisk($scope.model.anr.id, model.id, model, function () {
+            AnrService.updateInstanceRisk($scope.model.anr.id, model.id, model, function (data) {
                 promise.resolve(true);
 
-                $scope.updateAnrRisksTable();
-
-                // Update the current instance risks table, if we're watching one
-                $scope.$broadcast('risks-table-edited');
+                model.cacheMaxRisk = data.cacheMaxRisk;
+                model.cacheTargetedRisk = data.cacheTargetedRisk;
+                model.c_risk = data.riskC;
+                model.i_risk = data.riskI;
+                model.d_risk = data.riskD;
             }, function () {
                 promise.reject(false);
             });

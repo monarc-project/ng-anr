@@ -265,7 +265,6 @@ angular.module('AnrModule').directive('editable', function(){
       });
 
       element.bind("blur", function(event) {
-      	console.log("ici");
       	triggerValidation();
       });
     }
