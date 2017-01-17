@@ -29,7 +29,7 @@
 
                     &nbsp;
 
-                    <md-input-container ng-if="instance.asset.type == 1" style="margin: 0 0; min-width: 120px;">
+                    <md-input-container ng-if="instance.asset.type == 1 || instmode == 'anr'" style="margin: 0 0; min-width: 120px;">
                         <label translate>Processing type</label>
                         <md-select ng-model="risks_filters.kindOfMeasure">
                             <md-option ng-value="null">{{ 'All (unfiltered)' | translate }}</md-option>
