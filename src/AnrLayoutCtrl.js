@@ -1560,7 +1560,7 @@
         $scope.importInstance = function (ev, parentId) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'AnrService', 'toastr', 'gettextCatalog', 'Upload', 'instanceId', 'parentId', ImportInstanceDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'AnrService', 'toastr', 'gettextCatalog', 'Upload', 'instanceId', 'parentId', 'updateInstances', ImportInstanceDialogCtrl],
                 templateUrl: '/views/anr/import.instance.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -1568,6 +1568,7 @@
                 locals: {
                     instanceId: $rootScope.anr_selected_instance_id,
                     parentId: parentId,
+                    updateInstances: $scope.updateInstances,
                 },
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
@@ -2359,7 +2360,7 @@
         };
     }
 
-    function ImportInstanceDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload, instanceId, parentId) {
+    function ImportInstanceDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload, instanceId, parentId, updateInstances) {
         $scope.file = [];
         $scope.file_range = 0;
         $scope.import = {
@@ -2375,7 +2376,7 @@
 
             file.upload.then(function (response) {
                 toastr.success(gettextCatalog.getString("The instance has been imported successfully"));
-                $scope.updateInstances();
+                updateInstances();
             });
         }
 
