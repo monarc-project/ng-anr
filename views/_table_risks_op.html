@@ -122,7 +122,7 @@
         <td class="small txtcenter" ng-if="instmode == 'obj'">-</td>
         <td class="txtcenter big-border-left">
             <a ng-if="risk.specific == 1 && deleteSpecOpRisk" class="pointer" ng-click="deleteSpecOpRisk($event, risk)"><md-icon class="md-warn">delete</md-icon></a>
-            <a class="pointer blue" title="{{ ('Open risk sheet' | translate) }}" ng-click="openOpRiskSheet(risk)">
+            <a class="pointer blue" title="{{ ('Open risk sheet' | translate) }}" ng-click="openOpRiskSheet(risk)" ng-if="instmode != 'obj'">
                 {{treatmentStr(risk.kindOfMeasure)|translate}}
             </a>
         </td>
