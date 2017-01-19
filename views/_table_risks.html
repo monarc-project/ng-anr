@@ -164,7 +164,7 @@
         </div>
 
         <div class="buttons">
-            <div class="label">{{ (risks_filters.page - 1) * risks_filters.limit + 1 }} - {{ risks_filters.page * risks_filters.limit }} {{ 'of' | translate }} {{ risks_total }}</div>
+            <div class="label">{{ (risks_filters.page - 1) * risks_filters.limit + 1 }} - {{ risks_total < risks_filters.page * risks_filters.limit ? risks_total : risks_filters.page * risks_filters.limit }} {{ 'of' | translate }} {{ risks_total }}</div>
 
             <md-button class="md-icon-button" type="button" ng-disabled="risks_filters.page <= 1" ng-click="risks_filters.page = risks_filters.page - 1; (updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable())" aria-label="Previous">
                 <md-icon md-svg-icon="navigate-before.svg"></md-icon>
