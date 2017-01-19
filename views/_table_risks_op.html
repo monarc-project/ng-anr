@@ -59,7 +59,7 @@
 <table class="md-html-table inputs-as-number big-border-all" ng-if="!opsheet_risk && oprisks.length > 0" editable callback="changeRiskOp">
     <thead class="big-border-bottom">
     <tr>
-        <th rowspan="3" translate>Asset</th>
+        <th ng-if="instmode != 'obj'" rowspan="3" translate>Asset</th>
         <th rowspan="3" translate>Risk description</th>
         <th ng-if="model.showRolfBrut" class="big-border-left" colspan="7" translate>RAW</th>
         <th colspan="8" class="big-border-left" translate>NET</th>
@@ -95,7 +95,7 @@
 
     <tbody>
     <tr ng-repeat="risk in oprisks" edit-model="risk" ng-class="{'specific-blue': risk.specific == 1}">
-        <td class="preserve-newlines">{{ risk.instanceInfos[_langField('name')] }}</td>
+        <td ng-if="instmode != 'obj'" class="preserve-newlines">{{ risk.instanceInfos[_langField('name')] }}</td>
         <td class="preserve-newlines">{{ risk[_langField('label')] || risk[_langField('description')] }}</td>
         <td class="big-border-left txtcenter" ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr' || instmode == 'inst')" edit-readonly="isAnrReadOnly || instmode == 'obj'" edit-filter="dashnull" edit-field="brutProb" title="{{threatCommCache[risk.brutProb]}}"></td>
         <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr' || instmode == 'inst')" edit-readonly="isAnrReadOnly || instmode == 'obj'" edit-filter="dashnull" edit-field="brutR" class="txtcenter" title="{{scaleCommCache[4][risk.brutR]}}"></td>
