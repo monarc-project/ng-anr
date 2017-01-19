@@ -1891,7 +1891,7 @@
                         anr: anr.id,
                         id: evt.model.id,
                         implicitPosition: 3,
-                        previous: $scope.recommendations[evt.oldIndex].id
+                        previous: $scope.recommendations[evt.newIndex - 1].id
                     });
                 }
 
@@ -2269,12 +2269,16 @@
         $http.get('/api/client-anr/' + anr.id + '/deliverable').then(function (data) {
             $scope.models = data.data.models;
 
-            if (data.data.delivery && data.data.delivery.id) {
-                $scope.deliverable = data.data.delivery;
-                $scope.deliverable.docname = $scope.deliverable.name;
-                $scope.deliverable.managers = $scope.deliverable.respCustomer;
-                $scope.deliverable.consultants = $scope.deliverable.respSmile;
-
+            if (data.data.delivery && data.data.delivery.length > 0) {
+                for (var i = 0; i < data.data.delivery.length; ++i) {
+                    if (data.data.delivery[i].typedoc == step.num) {
+                        $scope.deliverable = data.data.delivery[i];
+                        $scope.deliverable.docname = $scope.deliverable.name;
+                        $scope.deliverable.managers = $scope.deliverable.respCustomer;
+                        $scope.deliverable.consultants = $scope.deliverable.respSmile;
+                        break;
+                    }
+                }
             }
 
             for (var i = 0; i < $scope.models.length; ++i) {
