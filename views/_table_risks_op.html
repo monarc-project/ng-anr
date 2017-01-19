@@ -131,9 +131,39 @@
     </tbody>
 </table>
 
-<div layout="row" layout-align="space-between center" ng-if="!opsheet_risk">
+<div layout="row" layout-align="end center" ng-if="!opsheet_risk && instmode != 'obj'" class="md-table-pagination">
     <md-button ng-click="createSpecRiskOp($event)" ng-if="OFFICE_MODE == 'FO' && !isAnrReadOnly && instmode == 'inst'"><md-icon>add</md-icon> {{ 'Create a specific risk' | translate }}</md-button>
-    <md-select ng-model="risks_op_filters.page" md-on-close="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()"  ng-if="oprisks_total > 0">
-        <md-option ng-repeat="i in range(1, ceil(oprisks_total / 50))" ng-value="i"><span translate>Page {{ i }}</span></md-option>
-    </md-select>
+
+
+    <span flex></span>
+
+    <div class="page-select">
+        <div class="label" translate>Page:</div>
+
+        <md-select  class="md-table-select" md-container-class="md-pagination-select" ng-model="risks_op_filters.page" ng-change="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()" aria-label="Page">
+            <md-content>
+                <md-option ng-repeat="i in range(1, ceil(oprisks_total / risks_op_filters.limit))" ng-value="i">{{i}}</md-option>
+            </md-content>
+        </md-select>
+    </div>
+
+    <div class="limit-select">
+        <div class="label" translate>Rows per page:</div>
+
+        <md-select class="md-table-select" md-container-class="md-pagination-select"  ng-model="risks_op_filters.limit" ng-change="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()" aria-label="Rows">
+            <md-option ng-repeat="option in [20, 30, 50, 100]" ng-value="option.value ? $pagination.eval(option.value) : option">{{::option.label ? option.label : option}}</md-option>
+        </md-select>
+    </div>
+
+    <div class="buttons">
+        <div class="label">{{ (risks_op_filters.page - 1) * risks_op_filters.limit + 1 }} - {{ risks_op_filters.page * risks_op_filters.limit }} {{ 'of' | translate }} {{ oprisks_total }}</div>
+
+        <md-button class="md-icon-button" type="button" ng-disabled="risks_op_filters.page <= 1" ng-click="risks_op_filters.page = risks_op_filters.page - 1; (updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable())" aria-label="Previous">
+            <md-icon md-svg-icon="navigate-before.svg"></md-icon>
+        </md-button>
+
+        <md-button class="md-icon-button" type="button" ng-disabled="risks_op_filters.page >= ceil(oprisks_total / risks_op_filters.limit)" ng-click="risks_op_filters.page = risks_op_filters.page + 1; updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()" aria-label="Next">
+            <md-icon md-svg-icon="navigate-next.svg"></md-icon>
+        </md-button>
+    </div>
 </div>
