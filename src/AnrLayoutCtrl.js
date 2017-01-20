@@ -1173,7 +1173,7 @@
 
             var controller = ['$scope', '$mdDialog', 'ConfigService', 'anr', '$stateParams', CreateAnrDialogCtrl];
             if (CreateRiskAnalysisDialog) {
-                controller = ['$scope', '$mdDialog', 'toastr', 'gettext', 'gettextCatalog', 'ConfigService', 'ModelService',
+                controller = ['$scope', '$mdDialog', '$http', 'toastr', 'gettext', 'gettextCatalog', 'ConfigService', 'ModelService',
                     'ClientAnrService', 'anr', CreateRiskAnalysisDialog];
             }
 
