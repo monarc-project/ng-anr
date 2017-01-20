@@ -320,7 +320,7 @@
         };
 
         $scope.treatmentStr = function (treatment) {
-            switch (treatment) {
+            switch (parseInt(treatment)) {
                 case 1: return 'Reduction';
                 case 2: return 'Denied';
                 case 3: return 'Accepted';
