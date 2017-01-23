@@ -2264,27 +2264,15 @@
             'managers': '',
             'consultants': '',
             'summaryEvalRisk': '',
+            'typedoc': step.num,
         };
 
-        $http.get('/api/client-anr/' + anr.id + '/deliverable').then(function (data) {
-            $scope.models = data.data.models;
-
-            if (data.data.delivery && data.data.delivery.length > 0) {
-                for (var i = 0; i < data.data.delivery.length; ++i) {
-                    if (data.data.delivery[i].typedoc == step.num) {
-                        $scope.deliverable = data.data.delivery[i];
-                        $scope.deliverable.docname = $scope.deliverable.name;
-                        $scope.deliverable.managers = $scope.deliverable.respCustomer;
-                        $scope.deliverable.consultants = $scope.deliverable.respSmile;
-                        break;
-                    }
-                }
-            }
-
-            for (var i = 0; i < $scope.models.length; ++i) {
-                if ($scope.models[i].category == step.num) {
-                    $scope.deliverable.model = $scope.models[i].id;
-                }
+        $http.get('/api/client-anr/' + anr.id + '/deliverable/' + step.num).then(function (data) {
+            if (data.data.delivery && data.data.delivery.id) {
+                $scope.deliverable = data.data.delivery;
+                $scope.deliverable.docname = $scope.deliverable.name;
+                $scope.deliverable.managers = $scope.deliverable.respCustomer;
+                $scope.deliverable.consultants = $scope.deliverable.respSmile;
             }
         });
 
