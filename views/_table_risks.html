@@ -120,12 +120,12 @@
             <td class="preserve-newlines big-border-left" title="{{risk[_langField('vulnDescription')]}}">{{risk[_langField('vulnLabel')]}}</td>
             <td class="preserve-newlines" edit-readonly="isAnrReadOnly" edit-field="comment" edit-type="textarea"></td>
             <td edit-readonly="isAnrReadOnly" edit-field="vulnerabilityRate" edit-filter="dashnull" class="txtcenter" title="{{vulnsCommCache[risk.vulnerabilityRate]}}"></td>
-            <td ng-disabled="risk.c_risk_enabled == '0'" class="tbl-risk-calc big-border-left"
-                ng-class="{'green': risk.c_risk >= 0 && risk.c_risk <= thresholds.thresholds.min, 'orange': risk.c_risk > thresholds.thresholds.min && risk.c_risk <=thresholds.thresholds.max, 'red': risk.c_risk > thresholds.thresholds.max}">{{ risk.c_risk_enabled == '1' ? (risk.c_risk | dashnull) : '' }}</td>
-            <td ng-disabled="risk.i_risk_enabled == '0'" class="tbl-risk-calc"
-                ng-class="{'green': risk.i_risk >= 0 && risk.i_risk <= thresholds.thresholds.min, 'orange': risk.i_risk > thresholds.thresholds.min && risk.i_risk <= thresholds.thresholds.max, 'red': risk.i_risk > thresholds.thresholds.max}">{{ risk.i_risk_enabled == '1' ? (risk.i_risk | dashnull) : '' }}</td>
-            <td ng-disabled="risk.d_risk_enabled == '0'" class="tbl-risk-calc"
-                ng-class="{'green': risk.d_risk >= 0 && risk.d_risk <= thresholds.thresholds.min, 'orange': risk.d_risk > thresholds.thresholds.min && risk.d_risk <= thresholds.thresholds.max, 'red': risk.d_risk > thresholds.thresholds.max}">{{ risk.d_risk_enabled == '1' ? (risk.d_risk | dashnull) : '' }}</td>
+            <td ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc big-border-left"
+                ng-class="{'green': risk.c_risk >= 0 && risk.c_risk <= thresholds.thresholds.min, 'orange': risk.c_risk > thresholds.thresholds.min && risk.c_risk <=thresholds.thresholds.max, 'red': risk.c_risk > thresholds.thresholds.max}">{{ risk.c_risk_enabled ? (risk.c_risk | dashnull) : '' }}</td>
+            <td ng-disabled="!risk.i_risk_enabled" class="tbl-risk-calc"
+                ng-class="{'green': risk.i_risk >= 0 && risk.i_risk <= thresholds.thresholds.min, 'orange': risk.i_risk > thresholds.thresholds.min && risk.i_risk <= thresholds.thresholds.max, 'red': risk.i_risk > thresholds.thresholds.max}">{{ risk.i_risk_enabled ? (risk.i_risk | dashnull) : '' }}</td>
+            <td ng-disabled="!risk.d_risk_enabled" class="tbl-risk-calc"
+                ng-class="{'green': risk.d_risk >= 0 && risk.d_risk <= thresholds.thresholds.min, 'orange': risk.d_risk > thresholds.thresholds.min && risk.d_risk <= thresholds.thresholds.max, 'red': risk.d_risk > thresholds.thresholds.max}">{{ risk.d_risk_enabled ? (risk.d_risk | dashnull) : '' }}</td>
             <td>
                 <div layout="row" layout-align="center center">
                     <a ng-if="risk.specific == 1 && deleteSpecRisk" class="pointer" ng-click="deleteSpecRisk($event, risk)"><md-icon class="md-warn">delete</md-icon></a>
