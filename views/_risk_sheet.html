@@ -110,9 +110,9 @@
             <tr>
                 <td class="bold" translate>Security referential</td>
                 <td colspan="3">
-                    <div ng-if="sheet_risk.measure1.code">{{ sheet_risk.measure1.code }} - {{ sheet_risk.measure1[_langField('description')] }}</div>
-                    <div ng-if="sheet_risk.measure2.code">{{ sheet_risk.measure2.code }} - {{ sheet_risk.measure2[_langField('description')] }}</div>
-                    <div ng-if="sheet_risk.measure3.code">{{ sheet_risk.measure3.code }} - {{ sheet_risk.measure3[_langField('description')] }}</div>
+                    <div ng-if="sheet_risk.measure1">{{ sheet_risk.measure1 }}</div>
+                    <div ng-if="sheet_risk.measure2">{{ sheet_risk.measure2 }}</div>
+                    <div ng-if="sheet_risk.measure3">{{ sheet_risk.measure3 }}</div>
                 </td>
             </tr>
         </tbody>
