@@ -5,8 +5,8 @@
             <div flex ng-if="!model.anr">
                 <md-progress-circular md-indeterminate="true"></md-progress-circular>
             </div>
-            <div flex ng-if="model.anr">
-                <h2 class="no-margin">
+            <div flex ng-if="model.anr" class="active-inst">
+                <h2 class="no-margin ">
                     {{ model.anr[_langField('label')] }}
                 </h2>
                 <span>{{ model.anr[_langField('description')] }}</span>
