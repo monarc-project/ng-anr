@@ -1545,13 +1545,16 @@
         $scope.importObject = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ObjlibService', 'toastr', 'gettextCatalog', 'Upload', ImportObjectDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'ObjlibService', 'toastr', 'gettextCatalog', 'Upload', 'hookUpdateObjlib', ImportObjectDialogCtrl],
                 templateUrl: '/views/anr/import.object.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
+                locals: {
+                    hookUpdateObjlib: $scope.hookUpdateObjlib
+                }
             }).then(function () {
                 $scope.updateObjectsLibrary();
             }, function () {
@@ -1562,7 +1565,7 @@
         $scope.importInstance = function (ev, parentId) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'AnrService', 'toastr', 'gettextCatalog', 'Upload', 'instanceId', 'parentId', 'updateInstances', ImportInstanceDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'AnrService', 'toastr', 'gettextCatalog', 'Upload', 'instanceId', 'parentId', 'hookUpdateObjlib', ImportInstanceDialogCtrl],
                 templateUrl: '/views/anr/import.instance.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -1570,7 +1573,7 @@
                 locals: {
                     instanceId: $rootScope.anr_selected_instance_id,
                     parentId: parentId,
-                    updateInstances: $scope.updateInstances,
+                    hookUpdateObjlib: $scope.hookUpdateObjlib,
                 },
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
@@ -2286,7 +2289,7 @@
         };
     }
 
-    function ImportObjectDialogCtrl($scope, $mdDialog, ObjlibService, toastr, gettextCatalog, Upload) {
+    function ImportObjectDialogCtrl($scope, $mdDialog, ObjlibService, toastr, gettextCatalog, Upload, hookUpdateObjlib) {
         $scope.dialog_mode = null;
         $scope.file = [];
         $scope.file_range = 0;
@@ -2307,6 +2310,7 @@
                 } else {
                     toastr.success(gettextCatalog.getString("The object has been imported successfully"));
                 }
+                hookUpdateObjlib();
             });
         }
 
@@ -2344,6 +2348,7 @@
         $scope.importObjectCommon = function () {
             ObjlibService.importObjectCommon($scope.object_details.id, $scope.import.mode, function () {
                 toastr.success(gettextCatalog.getString("Object imported successfully"));
+                hookUpdateObjlib();
                 $scope.dialog_mode = 'common';
             });
 
@@ -2354,7 +2359,7 @@
         };
     }
 
-    function ImportInstanceDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload, instanceId, parentId, updateInstances) {
+    function ImportInstanceDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload, instanceId, parentId, hookUpdateObjlib) {
         $scope.file = [];
         $scope.file_range = 0;
         $scope.import = {
@@ -2374,7 +2379,7 @@
                 } else {
                     toastr.success(gettextCatalog.getString("The instance has been imported successfully"));
                 }
-                updateInstances();
+                hookUpdateObjlib();
                 $mdDialog.cancel();
             });
         }
