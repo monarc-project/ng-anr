@@ -2369,7 +2369,11 @@
             });
 
             file.upload.then(function (response) {
-                toastr.success(gettextCatalog.getString("The instance has been imported successfully"));
+                if (response.data.errors && response.data.errors.length > 0) {
+                    toastr.warning(gettextCatalog.getString("Some files could not be imported"));
+                } else {
+                    toastr.success(gettextCatalog.getString("The instance has been imported successfully"));
+                }
                 updateInstances();
                 $mdDialog.cancel();
             });
