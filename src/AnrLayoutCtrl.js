@@ -1460,11 +1460,12 @@
             })
                 .then(function (exports) {
                     var client = '';
+                    var customUrl = '/api/anr-export';
                     if ($scope.OFFICE_MODE == 'FO') {
-                        client = 'client-';
+                        customUrl = 'api/client-anr/'+ $scope.model.anr.id +'/export';
                     }
 
-                    $http.post('/api/' + client + 'anr-export', {id: $scope.model.anr.id, password: exports.password, assessments: exports.assessments}).then(function (data) {
+                    $http.post(customUrl, {id: $scope.model.anr.id, password: exports.password, assessments: exports.assessments}).then(function (data) {
                         var contentD = data.headers('Content-Disposition'),
                             contentT = data.headers('Content-Type');
                         contentD = contentD.substring(0,contentD.length-1).split('filename="');
