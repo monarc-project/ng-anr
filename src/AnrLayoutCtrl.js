@@ -495,7 +495,7 @@
                     label: gettextCatalog.getString("Risks evaluation and treatment"),
                     deliverable: gettextCatalog.getString("Final report"),
                     steps: [
-                        {label: gettextCatalog.getString("Risks estimation, evaluation and processing"), action: showAnrRisks, progressField: 'evalRisks'},
+                        {label: gettextCatalog.getString("Risks estimation, evaluation and processing"), action: showAnrSummary, progressField: 'evalRisks'},
                         {label: gettextCatalog.getString("Risk treatment plan management"), action: editRisksContext, progressField: 'evalPlanRisks'},
                     ]
                 },
