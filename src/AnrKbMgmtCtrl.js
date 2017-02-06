@@ -21,6 +21,9 @@
 
         /**** FO ADDITIONS ****/
         $scope.importAsset = function (ev) {
+            if($mdDialog){
+                $mdDialog.cancel();
+            }
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'AssetService', 'toastr', 'gettextCatalog', 'assetTypeStr', 'Upload', ImportAssetDialogCtrl],
@@ -130,7 +133,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'asset', CreateAssetDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'asset', 'importAsset', CreateAssetDialogCtrl],
                 templateUrl: '/views/anr/create.assets.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -138,7 +141,8 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                    'asset': asset
+                    'asset': asset,
+                    'importAsset': $scope.importAsset
                 }
             })
                 .then(function (asset) {
@@ -1821,14 +1825,14 @@
     // DIALOGS
     //////////////////////
 
-    function CreateAssetDialogCtrl($scope, $mdDialog, ModelService, ConfigService, asset) {
+    function CreateAssetDialogCtrl($scope, $mdDialog, ModelService, ConfigService, asset, importAsset) {
         ModelService.getModels({isGeneric:0}).then(function (data) {
             $scope.models = data.models;
         });
 
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
-
+        $scope.importAsset = importAsset;
 
         if (asset != undefined && asset != null) {
             $scope.asset = asset;

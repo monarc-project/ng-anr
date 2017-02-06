@@ -3,7 +3,12 @@
         <md-tab label="{{ 'Assets' | translate }}" md-on-select="selectAssetsTab()" md-on-deselect="deselectAssetsTab()">
 
             <div layout="row" layout-align="start center" class="md-padding" ng-if="!assets.selected.length">
-                <h2 class="md-title md-padding-right md-padding-left" translate>Assets</h2>
+                <h2 class="md-title md-padding-right md-padding-left">
+                    <span translate>Assets</span>
+                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'New asset' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewAsset($event)">
+                        <md-icon>add_to_photos</md-icon>
+                    </md-button>
+                </h2>
 
                 <form flex name="assets.filter.form">
                     <md-input-container class="md-block md-padding-left md-padding-right">
@@ -31,20 +36,6 @@
                     </md-button>
                 </div>
             </md-toolbar>
-
-            <md-button class="md-fab md-accent md-fab-top-right table-fab-top" aria-label="{{ 'New asset' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewAsset($event)">
-                <md-tooltip md-direction="left">
-                    {{ 'New asset' | translate }}
-                </md-tooltip>
-                <md-icon>add</md-icon>
-            </md-button>
-
-            <md-button class="md-fab md-accent md-fab-top-right table-fab-top-2" aria-label="{{ 'Import asset' | translate }}" ng-if="!isAnrReadOnly" ng-click="importAsset($event)">
-                <md-tooltip md-direction="left">
-                    {{ 'Import asset' | translate }}
-                </md-tooltip>
-                <md-icon>file_download</md-icon>
-            </md-button>
 
             <md-table-container flex>
                 <table md-table md-row-select="! isAnrReadOnly" multiple ng-model="assets.selected" md-progress="assets.promise">
@@ -83,7 +74,12 @@
 
         <md-tab label="{{ 'Threats' | translate }}" md-on-select="selectThreatsTab()" md-on-deselect="deselectThreatsTab()">
             <div class="md-padding" ng-if="!threats.selected.length" layout="row" layout-align="start center">
-                <h2 class="md-title md-padding-right md-padding-left" translate>Threats</h2>
+                <h2 class="md-title md-padding-right md-padding-left">
+                    <span translate>Threats</span>
+                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'New threat' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewThreat($event)">
+                        <md-icon>add_to_photos</md-icon>
+                    </md-button>
+                </h2>
 
                 <form flex name="threats.filter.form">
                     <md-input-container class="md-block md-padding-left md-padding-right">
@@ -109,13 +105,6 @@
                     </md-button>
                 </div>
             </md-toolbar>
-
-            <md-button class="md-fab md-accent md-fab-top-right table-fab-top" aria-label="{{ 'New threat' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewThreat($event)">
-                <md-tooltip md-direction="left">
-                    {{ 'New threat' | translate }}
-                </md-tooltip>
-                <md-icon>add</md-icon>
-            </md-button>
 
             <md-table-container flex>
                 <table md-table md-row-select="! isAnrReadOnly" multiple ng-model="threats.selected" md-progress="threats.promise">
@@ -152,7 +141,12 @@
 
         <md-tab label="{{ 'Vulnerabilities' | translate }}" md-on-select="selectVulnsTab()" md-on-deselect="deselectVulnsTab()">
             <div layout="row" layout-align="start center" class="md-padding" ng-if="!vulns.selected.length">
-                <h2 class="md-title md-padding-right md-padding-left" translate>Vulnerabilties</h2>
+                <h2 class="md-title md-padding-right md-padding-left">
+                    <span translate>Vulnerabilties</span>
+                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'New vulnerability' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewVuln($event)">
+                        <md-icon>add_to_photos</md-icon>
+                    </md-button>
+                </h2>
 
                 <form flex name="vulns.filter.form">
                     <md-input-container class="md-block md-padding-left md-padding-right">
@@ -180,13 +174,6 @@
                     </md-button>
                 </div>
             </md-toolbar>
-
-            <md-button ng-if="!isAnrReadOnly" class="md-fab md-accent md-fab-top-right table-fab-top" aria-label="{{ 'New vulnerability' | translate }}" ng-click="createNewVuln($event)">
-                <md-tooltip md-direction="left">
-                    {{ 'New vuln' | translate }}
-                </md-tooltip>
-                <md-icon>add</md-icon>
-            </md-button>
 
             <md-table-container flex>
                 <table md-table md-row-select="! isAnrReadOnly" multiple ng-model="vulns.selected" md-progress="vulns.promise">
@@ -221,7 +208,12 @@
 
         <md-tab label="{{ '27002 measures' | translate }}" md-on-select="selectMeasuresTab()" md-on-deselect="deselectMeasuresTab()">
             <div layout="row" layout-align="start center" class="md-padding" ng-if="!measures.selected.length">
-                <h2 class="md-title md-padding-right md-padding-left" translate>27002 measures</h2>
+                <h2 class="md-title md-padding-right md-padding-left">
+                    <span translate>27002 measures</span>
+                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'New measure' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewMeasure($event)">
+                        <md-icon>add_to_photos</md-icon>
+                    </md-button>
+                </h2>
 
                 <form flex name="measures.filter.form">
                     <md-input-container class="md-block md-padding-left md-padding-right">
@@ -249,13 +241,6 @@
                     </md-button>
                 </div>
             </md-toolbar>
-
-            <md-button ng-if="!isAnrReadOnly" class="md-fab md-accent md-fab-top-right table-fab-top" aria-label="{{ 'New measure' | translate }}" ng-click="createNewMeasure($event)">
-                <md-tooltip md-direction="left">
-                    {{ 'New measure' | translate }}
-                </md-tooltip>
-                <md-icon>add</md-icon>
-            </md-button>
 
             <md-table-container flex>
                 <table md-table md-row-select="! isAnrReadOnly" multiple ng-model="measures.selected" md-progress="measures.promise">
@@ -288,7 +273,12 @@
 
         <md-tab label="{{ 'Risks' | translate }}" md-on-select="selectAmvsTab()" md-on-deselect="deselectAmvsTab()">
             <div layout="row" layout-align="start center" class="md-padding" ng-if="!amvs.selected.length">
-                <h2 class="md-title md-padding-right md-padding-left" translate>Risks</h2>
+                <h2 class="md-title md-padding-right md-padding-left">
+                    <span translate>Risks</span>
+                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'New risk' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewAmv($event)">
+                        <md-icon>add_to_photos</md-icon>
+                    </md-button>
+                </h2>
 
                 <form flex name="amvs.filter.form">
                     <md-input-container class="md-block md-padding-left md-padding-right">
@@ -316,13 +306,6 @@
                     </md-button>
                 </div>
             </md-toolbar>
-
-            <md-button ng-if="!isAnrReadOnly" class="md-fab md-accent md-fab-top-right table-fab-top" aria-label="{{ 'New risk' | translate }}" ng-click="createNewAmv($event)">
-                <md-tooltip md-direction="left">
-                    {{ 'New risk' | translate }}
-                </md-tooltip>
-                <md-icon>add</md-icon>
-            </md-button>
 
             <md-table-container flex>
                 <table md-table md-row-select="! isAnrReadOnly" multiple ng-model="amvs.selected" md-progress="amvs.promise">
@@ -366,7 +349,12 @@
             <md-toolbar class="md-table-toolbar md-default"
                         ng-hide="tags.selected.length">
                 <div class="md-toolbar-tools">
-                    <h2 class="md-title" translate>Tags</h2>
+                    <h2 class="md-title">
+                        <span translate>Tags</span>
+                        <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'New tag' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewTag($event)">
+                            <md-icon>add_to_photos</md-icon>
+                        </md-button>
+                    </h2>
 
                     <div flex></div>
                     <md-icon>search</md-icon>
@@ -389,14 +377,6 @@
                     </md-button>
                 </div>
             </md-toolbar>
-
-            <md-button ng-if="!isAnrReadOnly" class="md-fab md-accent md-fab-top-right table-fab-top" aria-label="{{ 'New tag' | translate }}"
-                       ng-click="createNewTag($event)">
-                <md-tooltip md-direction="left">
-                    {{ 'New tag' | translate }}
-                </md-tooltip>
-                <md-icon>add</md-icon>
-            </md-button>
 
             <md-table-container flex>
                 <table md-table md-row-select="! isAnrReadOnly" multiple ng-model="tags.selected" md-progress="tags.promise">
@@ -436,7 +416,12 @@
             <md-toolbar class="md-table-toolbar md-default"
                         ng-hide="risks.selected.length">
                 <div class="md-toolbar-tools">
-                    <h2 class="md-title" translate>Risks</h2>
+                    <h2 class="md-title">
+                        <span translate>Risks</span>
+                        <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'New risk' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewRisk($event)">
+                            <md-icon>add_to_photos</md-icon>
+                        </md-button>
+                    </h2>
 
                     <div flex></div>
                     <md-icon>search</md-icon>
@@ -473,14 +458,6 @@
                     <md-icon>settings_backup_restore</md-icon>
                 </md-button>
             </div>
-
-            <md-button ng-if="!isAnrReadOnly" class="md-fab md-accent md-fab-top-right table-fab-top-withactions" aria-label="{{ 'New risk' | translate }}"
-                       ng-click="createNewRisk($event)">
-                <md-tooltip md-direction="left">
-                    {{ 'New risk' | translate }}
-                </md-tooltip>
-                <md-icon>add</md-icon>
-            </md-button>
 
             <md-table-container flex>
                 <table md-table md-row-select="! isAnrReadOnly" multiple ng-model="risks.selected" md-progress="risks.promise">

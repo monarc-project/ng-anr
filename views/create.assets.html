@@ -12,6 +12,12 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
+                <md-card ng-if="!asset.id">
+                    <md-button class="md-primary" aria-label="{{ 'Import asset' | translate }}" ng-if="!isAnrReadOnly" ng-click="importAsset($event)">
+                        <md-icon>file_download</md-icon><span>{{ 'Import asset type available' | translate }}</span>
+                    </md-button>
+                </md-card>
+
                 <md-subheader>{{ 'Labels and descriptions' | translate }}</md-subheader>
 
                 <md-input-container class="md-block" flex>
