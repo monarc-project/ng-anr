@@ -73,11 +73,39 @@
                 <td class="bold" translate>Measures set</td>
                 <td colspan="3">{{ sheet_risk.comment }}</td>
             </tr>
-            <tr ng-if="OFFICE_MODE == 'FO'">
-                <td class="bold" translate>Recommendations</td>
-                <td colspan="3">
-                    <ul class="no-list-style no-padding">
-                        <li ng-repeat="rec in _copyRecs">{{ rec.recommandation.code }} <span class="anr-importance" ng-repeat="i in range(1, rec.recommandation.importance)">&bull;</span> &gt; {{ rec.recommandation.description }}</li>
+            <tr ng-if="OFFICE_MODE == 'FO'" ng-controller="RiskRecommendationPartialCtrl" monarc-mode="information">
+                <td class="bold" style="vertical-align:top;">
+                    <span translate>Recommendations</span>
+                    <div layout="row" layout-align="center center">
+                        <md-autocomplete
+                                flex
+                                md-no-cache
+                                ng-disabled="isAnrReadOnly"
+                                md-selected-item="rec_edit.rec"
+                                md-search-text="recSearchText"
+                                md-items="item in queryRecSearch(recSearchText)"
+                                md-item-text="item.description"
+                                md-delay="300"
+                                md-min-length="0"
+                                md-input-name="rec"
+                                md-floating-label="{{ 'Search a recommendation' | translate }}">
+                            <md-item-template>
+                                <span md-highlight-text="recSearchText" md-highlight-flags="^i">{{ item.code }} - {{ item.description }}</span>
+                            </md-item-template>
+
+                            <md-not-found>
+                                {{ 'No recommendation matching your search was found' | translate }}
+                            </md-not-found>
+                        </md-autocomplete>
+
+                        <md-button ng-click="rec_edit.rec?attachRecommandation():createRecommandation($event)" class="md-icon-button md-primary" ng-disabled="isAnrReadOnly">
+                            <md-icon>{{ rec_edit.rec?'link':'add_to_photos' }}</md-icon>
+                        </md-button>
+                    </div>
+                </td>
+                <td colspan="3" style="vertical-align:top;">
+                    <ul class="no-list-style no-padding no-margin">
+                        <li ng-repeat="recommandation in recommandations"><a class="md-primary" href="javascript:void(0);" ng-click="editRecommandation($event, recommandation)">{{ recommandation.recommandation.code }}</a> <span class="anr-importance" ng-repeat="i in range(1, recommandation.recommandation.importance)">&bull;</span> &gt; {{ recommandation.recommandation.description }}</li>
                     </ul>
                 </td>
             </tr>
@@ -123,6 +151,6 @@
     </div>
 
 
-    <ng-include ng-if="OFFICE_MODE == 'FO'" monarc-mode="information" ng-controller="RiskRecommendationPartialCtrl" src="'/views/anr/_risk_rec_create_form.html'"></ng-include>
-    <ng-include ng-if="OFFICE_MODE == 'FO'" monarc-mode="information" ng-controller="RiskRecommendationPartialCtrl" src="'/views/anr/_risk_rec_form.html'"></ng-include>
+    <!-- <ng-include ng-if="OFFICE_MODE == 'FO'" monarc-mode="information" ng-controller="RiskRecommendationPartialCtrl" src="'/views/anr/_risk_rec_create_form.html'"></ng-include>
+    <ng-include ng-if="OFFICE_MODE == 'FO'" monarc-mode="information" ng-controller="RiskRecommendationPartialCtrl" src="'/views/anr/_risk_rec_form.html'"></ng-include> -->
 </div>
