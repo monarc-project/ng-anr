@@ -48,9 +48,9 @@
                         </tr>
 
                         <tr ng-if="rec.risksCount > 0" ng-repeat="risk in rec.risksop">
-                            <td ng-if="$index == 0 && rec.risks.length <= 0" rowspan="{{rec.risksCount}}" class="txtcenter"><md-icon class="grab-handle">vertical_align_center</md-icon></td>
-                            <td ng-if="$index == 0 && rec.risks.length <= 0" rowspan="{{rec.risksCount}}"><a href="javascript:void(0);" ng-click="editRecommandationContext($event, rec)" class="md-primary"><b>{{ rec.code }}</b></a><br/>{{ rec.description }}</td>
-                            <td ng-if="$index == 0 && rec.risks.length <= 0" rowspan="{{rec.risksCount}}"><span ng-repeat="i in range(1, rec.importance)" class="anr-importance">&bull;</span></td>
+                            <td ng-if="$index == 0 && !rec.risks" rowspan="{{rec.risksCount}}" class="txtcenter"><md-icon class="grab-handle">vertical_align_center</md-icon></td>
+                            <td ng-if="$index == 0 && !rec.risks" rowspan="{{rec.risksCount}}"><a href="javascript:void(0);" ng-click="editRecommandationContext($event, rec)" class="md-primary"><b>{{ rec.code }}</b></a><br/>{{ rec.description }}</td>
+                            <td ng-if="$index == 0 && !rec.risks" rowspan="{{rec.risksCount}}"><span ng-repeat="i in range(1, rec.importance)" class="anr-importance">&bull;</span></td>
                             <td>{{ risk.instance[_langField('name')] }}</td>
                             <td>{{ risk.comment }}</td>
                             <td class="txtcenter tbl-risk-calc" ng-class="{'green': risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min, 'orange': risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max, 'red': risk.cacheNetRisk > thresholds.rolf_thresholds.max}">{{ risk.cacheNetRisk | dashnull }}</td>
