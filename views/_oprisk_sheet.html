@@ -24,7 +24,7 @@
                     <td>{{ opsheet_risk.netL }}</td>
                     <td>{{ opsheet_risk.netF }}</td>
                     <td>{{ opsheet_risk.netP }}</td>
-                    <td class="tbl-risk-calc" ng-class="{'green': opsheet_risk.cacheNetRisk >= 0 && opsheet_risk.cacheNetRisk < thresholds.rolf_thresholds.min, 'orange': opsheet_risk.cacheNetRisk >= thresholds.rolf_thresholds.min && opsheet_risk.cacheNetRisk < thresholds.rolf_thresholds.max, 'red': opsheet_risk.cacheNetRisk >= thresholds.rolf_thresholds.max}">{{ opsheet_risk.cacheNetRisk }}</td>
+                    <td class="tbl-risk-calc" ng-class="{'green': opsheet_risk.cacheNetRisk >= 0 && opsheet_risk.cacheNetRisk <= thresholds.rolf_thresholds.min, 'orange': opsheet_risk.cacheNetRisk > thresholds.rolf_thresholds.min && opsheet_risk.cacheNetRisk <= thresholds.rolf_thresholds.max, 'red': opsheet_risk.cacheNetRisk > thresholds.rolf_thresholds.max}">{{ opsheet_risk.cacheNetRisk }}</td>
                 </tr>
                 <tr class="tbl-risk-calc" edit-model="opsheet_risk">
                     <td class="bold txtleft" translate>Target risk</td>
@@ -34,7 +34,7 @@
                     <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedL"></td>
                     <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedF"></td>
                     <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedP"></td>
-                    <td class="tbl-risk-calc" ng-class="{'green': opsheet_risk.cacheTargetedRisk >= 0 && opsheet_risk.cacheTargetedRisk < thresholds.rolf_thresholds.min, 'orange': opsheet_risk.cacheTargetedRisk >= thresholds.rolf_thresholds.min && opsheet_risk.cacheTargetedRisk < thresholds.rolf_thresholds.max, 'red': opsheet_risk.cacheTargetedRisk >= thresholds.rolf_thresholds.max}">{{ opsheet_risk.cacheTargetedRisk }}</td>
+                    <td class="tbl-risk-calc" ng-class="{'green': opsheet_risk.cacheTargetedRisk >= 0 && opsheet_risk.cacheTargetedRisk <= thresholds.rolf_thresholds.min, 'orange': opsheet_risk.cacheTargetedRisk > thresholds.rolf_thresholds.min && opsheet_risk.cacheTargetedRisk <= thresholds.rolf_thresholds.max, 'red': opsheet_risk.cacheTargetedRisk > thresholds.rolf_thresholds.max}">{{ opsheet_risk.cacheTargetedRisk }}</td>
                 </tr>
                 <tr>
                     <td class="bold" translate>Instance</td>
