@@ -37,12 +37,12 @@
             <md-button ng-click="cancel()">
                 {{ 'Cancel' | translate }}
             </md-button>
-            <md-button ng-click="deleteRecommandation($event, recommandation)" ng-if="recommandation.recommandation.id" type="submit" class="md-warn md-hue-3">
+            <md-button ng-click="deleteRecommandation($event, recommandation)" ng-if="recommandation.recommandation.id && !isRecoContext" type="submit" class="md-warn md-hue-3">
                 {{ 'Delete' | translate }}
             </md-button>
-            <md-button ng-if="recommandation.recommandation.id" ng-click="detachRecommandation($event, recommandation)">{{ 'Detach' | translate }}</md-button>
+            <md-button ng-if="recommandation.recommandation.id && !isRecoContext" ng-click="detachRecommandation($event, recommandation)">{{ 'Detach' | translate }}</md-button>
             <md-button ng-click="create()" ng-disabled="riskForm.$invalid" type="submit" class="md-accent md-hue-3">
-                {{ (recommandation.id > 0 ? 'Save' : 'Create') | translate }}
+                {{ (recommandation.recommandation.id > 0 ? 'Save' : 'Create') | translate }}
             </md-button>
         </md-dialog-actions>
     </form>

@@ -5,7 +5,7 @@
         .controller('AnrLayoutCtrl', [
             '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'TableHelperService',
             'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
-            '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService',
+            '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService', 'ClientRecommandationService',
             AnrLayoutCtrl
         ]);
 
@@ -14,7 +14,7 @@
      */
     function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, TableHelperService, ModelService,
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
-                           $transitions, DownloadService, $mdPanel, $injector, ConfigService) {
+                           $transitions, DownloadService, $mdPanel, $injector, ConfigService,ClientRecommandationService) {
 
 
         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
@@ -403,11 +403,58 @@
             });
         };
 
+        $scope.editRecommandationContext = function (ev, rec) {
+            if($mdDialog){
+                $mdDialog.cancel();
+            }
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'rec', 'ClientRecommandationService', CreateRecommandationDialogContext],
+                templateUrl: '/views/anr/create.recommandation.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    rec: rec
+                }
+            }).then(function () {
+                rec.anr = $scope.model.anr.id;
+                ClientRecommandationService.updateRecommandation(rec, function () {
+                    toastr.success(gettextCatalog.getString("The recommendation has been updated successfully"));
+                    $scope.methodProgress[2].steps[1].action($scope.methodProgress[2].steps[1]);
+                });
+            },function(){
+                $scope.methodProgress[2].steps[1].action($scope.methodProgress[2].steps[1]);
+            });
+        }
+
+        function CreateRecommandationDialogContext($scope, $mdDialog, rec) {
+            $scope.recommandation = {
+                recommandation: rec
+            };
+            $scope.isRecoContext = true;
+
+            $scope.delete = function () {
+                $mdDialog.hide(false);
+            };
+
+            $scope.create = function () {
+                $mdDialog.hide($scope.recommandation);
+            };
+
+            $scope.cancel = function() {
+                $mdDialog.cancel();
+            };
+        }
+
+
         var editRisksContext = function (step) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$state', 'TreatmentPlanService', 'ClientRecommandationService', 'anr', 'subStep', 'thresholds', MethodEditRisksDialog],
+                controller: ['$scope', '$mdDialog', '$state', 'TreatmentPlanService', 'ClientRecommandationService', 'anr', 'subStep', 'thresholds', 'editRecommandationContext', MethodEditRisksDialog],
                 templateUrl: '/views/anr/risks.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -416,7 +463,8 @@
                 locals: {
                     subStep: step,
                     anr: $scope.model.anr,
-                    thresholds: $scope.thresholds
+                    thresholds: $scope.thresholds,
+                    editRecommandationContext: $scope.editRecommandationContext
                 }
             }).then(function (data) {
 
@@ -1868,10 +1916,11 @@
         };
     }
 
-    function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService, ClientRecommandationService, anr, subStep, thresholds) {
+    function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService, ClientRecommandationService, anr, subStep, thresholds,editRecommandationContext) {
         $scope.thresholds = thresholds;
         $scope.subStep = subStep;
         $scope.isAnrReadOnly = !anr.rwd;
+        $scope.editRecommandationContext = editRecommandationContext;
         $scope.sortableConf = {
             animation: 50,
             handle: '.grab-handle',
