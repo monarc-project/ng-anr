@@ -13,7 +13,18 @@
         <md-dialog-content>
             <div class="md-dialog-content">
                 <div layout="row">
-                    <div layout="column" style="flex-grow: 1; margin-right: 30px; margin-left: 45px;">
+
+                    <div layout="column">
+                        <p style="height: 93px;">&nbsp;</p>
+                        <div layout="column" style="border: 1px solid #DFDFDF; padding: 1em; margin-left: 20px; margin-right: 20px;">
+                            <p>
+                                <span title="{{scaleCommCache[1][calculeImpact('c')]}}"><b>{{ 'Confidentiality' | translate }}</b><br /> <br style="line-height: 36px" /></span>
+                                <span title="{{scaleCommCache[2][calculeImpact('i')]}}"><b>{{ 'Integrity' | translate }}</b><br /> <br style="line-height: 36px" /></span>
+                                <span title="{{scaleCommCache[3][calculeImpact('d')]}}"><b>{{ 'Availability' | translate }}</b><br style="line-height: 19px" /></span>
+                            </p>
+                        </div>
+                    </div>
+                    <div layout="column" style="flex-grow: 1; margin-right: 20px;">
                         <div layout="row" style="align-items: center;">
                             <h4 translate style="flex-grow: 1;">Consequences</h4>
                             <md-switch style="margin:0px; height: auto; line-height: auto;" ng-model="display.hidden" ng-true-value="true" ng-false-value="false">{{ 'Show hidden consequences' | translate }}</md-switch>
@@ -45,13 +56,14 @@
                         </div>
                     </div>
                     <div layout="column">
-                        <h4 translate>Impact</h4>
-                        <div layout="column" style="border: 1px solid #DFDFDF; padding: 1em; text-align: center; margin-right: 45px;">
-                            <p style="height: 35px;">&nbsp;</p>
+                        <br style="line-height: 46px" />
+                        <div layout="column" style="border: 1px solid #DFDFDF; padding: 1em; text-align: center; margin-right: 20px;">
                             <p>
-                                <span title="{{scaleCommCache[1][calculeImpact('c')]}}">{{ 'Confidentiality' | translate }}<br /> <b>{{ calculeImpact('c') }}</b><br style="line-height: 36px" /></span>
-                                <span title="{{scaleCommCache[2][calculeImpact('i')]}}">{{ 'Integrity' | translate }}<br /> <b>{{ calculeImpact('i') }}</b><br style="line-height: 36px" /></span>
-                                <span title="{{scaleCommCache[3][calculeImpact('d')]}}">{{ 'Availability' | translate }}<br /> <b>{{ calculeImpact('d') }}</b><br style="line-height: 17px" /></span>
+                                <br style="line-height: 0px" />
+                                <span translate>Max<br style="line-height: 57px" /></span>
+                                <span title="{{scaleCommCache[1][calculeImpact('c')]}}"><b>{{ calculeImpact('c') }}</b><br style="line-height: 50px" /></span>
+                                <span title="{{scaleCommCache[2][calculeImpact('i')]}}"><b>{{ calculeImpact('i') }}</b><br style="line-height: 50px" /></span>
+                                <span title="{{scaleCommCache[3][calculeImpact('d')]}}"><b>{{ calculeImpact('d') }}</b><br style="line-height: 19px" /></span>
                             </p>
                         </div>
                     </div>
