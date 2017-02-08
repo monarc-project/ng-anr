@@ -52,7 +52,12 @@
                         <md-icon>search</md-icon>
                         <input type="text" ng-model="filter.library" placeholder="{{ 'Search an object...' | translate }}">
                     </md-input-container>
-                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-primary" ng-click="addObject($event)"><md-icon>add_to_photos</md-icon></md-button>
+                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-primary" ng-click="addObject($event)">
+                        <md-tooltip md-direction="left">
+                            {{ 'Add object' | translate }}
+                        </md-tooltip>
+                        <md-icon>add_to_photos</md-icon>
+                    </md-button>
                 </div>
 
                 <div ng-hide="uiState.hideLibrary" class="angular-ui-tree" id="libTree" ui-tree="libTreeCallbacks" data-drag-delay="150" style="background:white; z-index: 15; min-height: 500px">
