@@ -18,7 +18,7 @@
                             <h4 translate style="flex-grow: 1;">Consequences</h4>
                             <md-switch style="margin:0px; height: auto; line-height: auto;" ng-model="display.hidden" ng-true-value="true" ng-false-value="false">{{ 'Show hidden consequences' | translate }}</md-switch>
                         </div>
-                        <div layout="row" style="border: 1px solid #DFDFDF; padding: 1em;">
+                        <div layout="row" style="border: 1px solid #DFDFDF; padding: 1em; text-align: center;">
                             <div layout="column" ng-repeat="(idx, col) in instance.consequences" ng-if="!col.isHidden || display.hidden">
                                 <p>{{ col[_langField('scaleImpactTypeDescription')] }} <md-button class="md-icon-button" ng-click="setConsequenceVisibility(col.id, !!col.isHidden)"><md-icon>{{ col.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></p>
                                 <md-input-container style="margin: 8px 0">
@@ -47,10 +47,10 @@
                     <div layout="column">
                         <h4 translate>Impact</h4>
                         <div layout="column" style="border: 1px solid #DFDFDF; padding: 1em;">
-                            <p style="height: 54px;">&nbsp;</p>
+                            <p style="height: 50px;">&nbsp;</p>
                             <p>
-                                <span title="{{scaleCommCache[1][calculeImpact('c')]}}">{{ 'Confidentiality' | translate }}<br /> <b>{{ calculeImpact('c') }}</b><br style="line-height: 24px" /></span>
-                                <span title="{{scaleCommCache[2][calculeImpact('i')]}}">{{ 'Integrity' | translate }}<br /> <b>{{ calculeImpact('i') }}</b><br style="line-height: 24px" /></span>
+                                <span title="{{scaleCommCache[1][calculeImpact('c')]}}">{{ 'Confidentiality' | translate }}<br /> <b>{{ calculeImpact('c') }}</b><br style="line-height: 30px" /></span>
+                                <span title="{{scaleCommCache[2][calculeImpact('i')]}}">{{ 'Integrity' | translate }}<br /> <b>{{ calculeImpact('i') }}</b><br style="line-height: 30px" /></span>
                                 <span title="{{scaleCommCache[3][calculeImpact('d')]}}">{{ 'Availability' | translate }}<br /> <b>{{ calculeImpact('d') }}</b></span>
                             </p>
                         </div>
