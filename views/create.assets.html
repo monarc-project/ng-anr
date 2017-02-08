@@ -12,7 +12,7 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-card ng-if="!asset.id">
+                <md-card ng-if="!asset.id && OFFICE_MODE == 'FO'">
                     <md-button class="md-primary" aria-label="{{ 'Import asset' | translate }}" ng-if="!isAnrReadOnly" ng-click="importAsset($event)">
                         <md-icon>file_download</md-icon><span>{{ 'Import asset type available' | translate }}</span>
                     </md-button>
