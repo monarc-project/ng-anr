@@ -2,8 +2,8 @@
     <form name="riskForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 ng-if="!recommandation.id" translate>Add a new recommendation</h2>
-                <h2 ng-if="recommandation.id" translate>Update recommendation information</h2>
+                <h2 ng-if="!recommandation.recommandation.id" translate>Add a new recommendation</h2>
+                <h2 ng-if="recommandation.recommandation.id" translate>Update recommendation information</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -15,10 +15,10 @@
                 <md-input-container class="md-block">
                     <label translate>Code</label>
                     <md-icon>toc</md-icon>
-                    <input type="text" ng-model="recommandation.code">
+                    <input type="text" ng-model="recommandation.recommandation.code">
                 </md-input-container>
 
-                <md-radio-group ng-model="recommandation.importance">
+                <md-radio-group ng-model="recommandation.recommandation.importance">
                     <md-icon>star</md-icon>
                     <label translate>Importance</label>
                     <md-radio-button ng-value="1"><span class="anr-importance">&bull;</span> {{ 'Useful information for safety, advice' | translate }}</md-radio-button>
@@ -29,7 +29,7 @@
                 <md-input-container class="md-block">
                     <label translate>Description</label>
                     <md-icon>description</md-icon>
-                    <textarea rows="3" ng-model="recommandation.description"></textarea>
+                    <textarea rows="3" ng-model="recommandation.recommandation.description"></textarea>
                 </md-input-container>
             </div>
         </md-dialog-content>
@@ -37,14 +37,12 @@
             <md-button ng-click="cancel()">
                 {{ 'Cancel' | translate }}
             </md-button>
-            <md-button ng-click="delete()" ng-if="recommandation.id && !deleteConfirmation" type="submit" class="md-warn md-hue-3">
+            <md-button ng-click="deleteRecommandation($event, recommandation)" ng-if="recommandation.recommandation.id && !isRecoContext" type="submit" class="md-warn md-hue-3">
                 {{ 'Delete' | translate }}
             </md-button>
-            <md-button ng-click="deleteConfirm()" ng-if="recommandation.id && deleteConfirmation" type="submit" class="md-warn md-hue-3">
-                {{ 'Confirm?' | translate }}
-            </md-button>
+            <md-button ng-if="recommandation.recommandation.id && !isRecoContext" ng-click="detachRecommandation($event, recommandation)">{{ 'Detach' | translate }}</md-button>
             <md-button ng-click="create()" ng-disabled="riskForm.$invalid" type="submit" class="md-accent md-hue-3">
-                {{ (recommandation.id > 0 ? 'Save' : 'Create') | translate }}
+                {{ (recommandation.recommandation.id > 0 ? 'Save' : 'Create') | translate }}
             </md-button>
         </md-dialog-actions>
     </form>

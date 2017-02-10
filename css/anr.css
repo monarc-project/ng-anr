@@ -1011,3 +1011,10 @@ md-select-menu md-content
 .treeview2.instances p:hover{
     color: #388E3C;
 }
+
+.md-autocomplete-suggestions-container{
+    width: 500px;
+}
+.reco-autocomplete{
+    width: 500px !important;
+}

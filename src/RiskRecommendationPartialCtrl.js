@@ -27,8 +27,8 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen
             }).then(function (rec) {
-                rec.anr = $scope.model.anr.id;
-                ClientRecommandationService.createRecommandation(rec, function (data) {
+                rec.recommandation.anr = $scope.model.anr.id;
+                ClientRecommandationService.createRecommandation(rec.recommandation, function (data) {
                     toastr.success(gettextCatalog.getString("The recommendation has been created successfully"));
 
                     ClientRecommandationService.attachToRisk($scope.model.anr.id, data.id, riskId, isOpRiskMode,
@@ -42,10 +42,8 @@
 
         $scope.editRecommandation = function (ev, rec) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-            var srcRec = rec;
-
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'rec', CreateRecommandationDialog],
+                controller: ['$scope', '$mdDialog', 'rec', 'detachRecommandation', 'deleteRecommandation', CreateRecommandationDialog],
                 templateUrl: '/views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -53,21 +51,16 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                    rec: angular.copy(rec.recommandation)
+                    rec: rec,
+                    detachRecommandation: $scope.detachRecommandation,
+                    deleteRecommandation: $scope.deleteRecommandation
                 }
-            }).then(function (rec) {
-                if (rec === false) {
-                    ClientRecommandationService.deleteRecommandation({anr: $scope.model.anr.id, id: srcRec.recommandation.id}, function () {
-                        toastr.success(gettextCatalog.getString("The recommendation has been deleted successfully"));
-                        updateRecommandations();
-                    });
-                } else {
-                    rec.anr = $scope.model.anr.id;
-                    ClientRecommandationService.updateRecommandation(rec, function () {
-                        toastr.success(gettextCatalog.getString("The recommendation has been updated successfully"));
-                        updateRecommandations();
-                    });
-                }
+            }).then(function () {
+                rec.recommandation.anr = $scope.model.anr.id;
+                ClientRecommandationService.updateRecommandation(rec.recommandation, function () {
+                    toastr.success(gettextCatalog.getString("The recommendation has been updated successfully"));
+                    updateRecommandations();
+                });
             });
         }
 
@@ -111,6 +104,29 @@
                             gettextCatalog.getString('Operation successful'));
                     }
                 );
+            },function(){
+                $scope.editRecommandation(ev,recommandation);
+            });
+        }
+
+        $scope.deleteRecommandation = function(ev, recommandation){
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Are you sure you want to delete recommendation "{{ code }}"?',
+                    {code: recommandation.recommandation.code}))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .targetEvent(ev)
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                ClientRecommandationService.deleteRecommandation({anr: $scope.model.anr.id, id: recommandation.recommandation.id},
+                    function () {
+                        updateRecommandations();
+                        toastr.success(gettextCatalog.getString('The recommendation has been deleted successfully'),
+                            gettextCatalog.getString('Operation successful'));
+                    }
+                );
+            },function(){
+                $scope.editRecommandation(ev,recommandation);
             });
         }
 
@@ -181,9 +197,11 @@
     }
 
 
-    function CreateRecommandationDialog($scope, $mdDialog, rec) {
+    function CreateRecommandationDialog($scope, $mdDialog, rec, detachRecommandation, deleteRecommandation) {
         $scope.recommandation = rec;
         $scope.deleteConfirmation = false;
+        $scope.detachRecommandation = detachRecommandation;
+        $scope.deleteRecommandation = deleteRecommandation;
 
         $scope.delete = function () {
             $scope.deleteConfirmation = true;

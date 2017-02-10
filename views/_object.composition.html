@@ -6,6 +6,9 @@
             <a ng-if="mode == 'bdc'">
                 <span class="active-obj"><md-icon>place</md-icon> {{ object[_langField('name')] }}</span>
                 <md-button ng-click="createComponent()" ng-disabled="isAnrReadOnly" class="md-icon-button md-primary">
+                    <md-tooltip md-direction="left">
+                        {{ 'Add new component' | translate }}
+                    </md-tooltip>
                     <md-icon>add_to_photos</md-icon>
                 </md-button>
             </a>
@@ -13,6 +16,9 @@
                 <span class="active-obj">{{ object[_langField('name')] }}</span>
 
                 <md-button ng-click="createComponent($event)" ng-disabled="isAnrReadOnly" class="md-icon-button md-primary">
+                    <md-tooltip md-direction="left">
+                        {{ 'Add new component' | translate }}
+                    </md-tooltip>
                     <md-icon>add_to_photos</md-icon>
                 </md-button>
             </div>
