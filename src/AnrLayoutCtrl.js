@@ -109,12 +109,15 @@
                 });
             } else {
                 var ClientAnrService = $injector.get('ClientAnrService');
+                $rootScope.BreadcrumbAnrData = null;
                 ClientAnrService.getAnr($stateParams.modelId).then(function (data) {
                     $scope.model = {
                         id: null,
                         anr: data,
                         showRolfBrut: data.cacheModelShowRolfBrut && data.showRolfBrut,
                     };
+
+                    $rootScope.BreadcrumbAnrData = data;
 
                     $scope.isAnrReadOnly = (data.rwd == 0);
                     $scope.languages = ConfigService.getLanguages();
