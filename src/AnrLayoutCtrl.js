@@ -32,6 +32,7 @@
 
         $transitions.onBefore({}, function () {
             $scope.resetSheet();
+            $scope.resetOpSheet();
             $scope.resetRisksFilters();
 
             $timeout(function () {
