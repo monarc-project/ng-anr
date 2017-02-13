@@ -23,6 +23,7 @@
 
         var self = this;
 
+        $rootScope.BreadcrumbAnrHackLabel = '_';
         $scope.ToolsAnrService = ToolsAnrService;
         $scope.GlobalResizeMenuSize = 230;
         $scope.GlobalResizeMenuContentHide = false;
@@ -301,6 +302,7 @@
 
             $scope._copyRecs = [];
             $scope.updateSheetRiskTarget();
+            $scope.updateHackyBreadcrumb();
         };
 
         $scope.updateSheetRiskTarget = function () {
@@ -311,16 +313,19 @@
 
         $scope.resetSheet = function () {
             $scope.sheet_risk = undefined;
+            $scope.updateHackyBreadcrumb();
         };
 
         $scope.openOpRiskSheet = function (risk) {
             $scope.resetSheet();
             $scope.opsheet_risk = risk;
             $scope._copyRecs = [];
+            $scope.updateHackyBreadcrumb();
         };
 
         $scope.resetOpSheet = function () {
             $scope.opsheet_risk = undefined;
+            $scope.updateHackyBreadcrumb();
         };
 
         $scope.treatmentStr = function (treatment) {
@@ -489,6 +494,8 @@
                     $scope.updateAnrRisksTable();
                     $scope.updateAnrRisksOpTable();
                 }
+
+                $scope.updateHackyBreadcrumb();
             });
         }
 
@@ -1121,6 +1128,18 @@
 
             return promise;
         };
+
+        $scope.updateHackyBreadcrumb = function () {
+            if ($scope.sheet_risk || $scope.opsheet_risk) {
+                $rootScope.BreadcrumbAnrHackLabel = gettextCatalog.getString('Risk sheet');
+            } else if ($scope.display.anrSelectedTabIndex == 1) {
+                $rootScope.BreadcrumbAnrHackLabel = gettextCatalog.getString('Evaluation scales');
+            } else if ($scope.display.anrSelectedTabIndex == 2) {
+                $rootScope.BreadcrumbAnrHackLabel = gettextCatalog.getString('Knowledge base');
+            } else {
+                $rootScope.BreadcrumbAnrHackLabel = '_';
+            }
+        }
 
         $scope.onImpactScaleChanged = function (model, value) {
             return updateScale($scope.scales.impacts.id, model);
