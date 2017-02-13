@@ -2347,7 +2347,7 @@
         $scope.file = [];
         $scope.file_range = 0;
         $scope.import = {
-            mode: 'duplicate',
+            mode: 'merge',
             password: '',
         };
 
@@ -2416,7 +2416,7 @@
         $scope.file = [];
         $scope.file_range = 0;
         $scope.import = {
-            mode: 'duplicate',
+            mode: 'merge',
             password: '',
         };
 
