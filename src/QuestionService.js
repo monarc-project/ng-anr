@@ -9,18 +9,24 @@
 
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
-        self.QuestionResource = $resource('/api/' + anr + 'questions/:questionId', { questionId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
-            {
-                'update': {
-                    method: 'PUT'
+        var makeResource = function () {
+            self.QuestionResource = $resource('/api/' + anr + 'questions/:questionId', {
+                    questionId: '@id',
+                    urlAnrId: $rootScope.getUrlAnrId()
                 },
-                'patch': {
-                    method: 'PATCH'
-                },
-                'query': {
-                    isArray: false
-                }
-            });
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'patch': {
+                        method: 'PATCH'
+                    },
+                    'query': {
+                        isArray: false
+                    }
+                });
+        }
+        makeResource();
 
         var getQuestions = function (params) {
             return self.QuestionResource.query(params).$promise;
@@ -82,6 +88,7 @@
         };
 
         return {
+            makeResource: makeResource,
             getQuestions: getQuestions,
             getQuestion: getQuestion,
             createQuestion: createQuestion,
