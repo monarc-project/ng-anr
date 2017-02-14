@@ -2148,6 +2148,12 @@
             $scope.updateThreat();
         });
 
+        $scope.saveAndUpdateThreat = function () {
+            $scope.saveThreat(function () {
+                $scope.updateThreat();
+            })
+        };
+
         $scope.updateThreat = function () {
             $scope.threatLoading = true;
             var threat = $scope.threats[$scope.display.currentThreat];
