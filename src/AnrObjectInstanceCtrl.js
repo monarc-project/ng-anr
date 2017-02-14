@@ -323,7 +323,7 @@
                         var cons = instance.consequences[j];
 
                         if (cons.scaleImpactType == key && cons[letter + '_risk'] != -1) {
-                            output = output + "<tr><td class='txtright bold texttop'>" + cons[$scope._langField('scaleImpactTypeDescription')] + "</td> <td class='bold md-padding-left md-padding-right'>" + cons[letter + '_risk'] + "</td> <td>" + scaleComm[cons[letter + '_risk']] + '</td></tr>';
+                            output = output + "<tr><td class='txtright bold texttop align-top' style='vertical-align: top'>" + cons[$scope._langField('scaleImpactTypeDescription')] + "</td> <td class='bold md-padding-left md-padding-right' style='vertical-align: top'>" + cons[letter + '_risk'] + "</td> <td>" + scaleComm[cons[letter + '_risk']] + '</td></tr>';
                             break;
                         }
                     }
