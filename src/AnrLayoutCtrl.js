@@ -31,10 +31,21 @@
         var isModelLoading = false;
         var __panel = null;
 
-        $transitions.onBefore({}, function () {
+        $rootScope.hookBreadcrumbClicked = function () {
             $scope.resetSheet();
             $scope.resetOpSheet();
             $scope.resetRisksFilters();
+            $scope.display.anrSelectedTabIndex = 0;
+        };
+
+        $transitions.onBefore({}, function (trans) {
+            $scope.resetSheet();
+            $scope.resetOpSheet();
+            $scope.resetRisksFilters();
+            $rootScope.BreadcrumbAnrHackLabel = '_';
+            if (trans.to().name != 'main.project.anr') {
+                $rootScope.BreadcrumbAnrData = undefined;
+            }
 
             $timeout(function () {
                 if ($state.$current.name == 'main.kb_mgmt.models.details' || $state.$current.name == 'main.project.anr') {
