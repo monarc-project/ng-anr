@@ -13,11 +13,10 @@
             <div class="md-dialog-content">
 
                 <md-radio-group ng-model="import.mode">
-                    <label translate>Import method:</label>
-                    <md-radio-button value="duplicate">{{ 'By duplicating' | translate }}</md-radio-button>
+                    <b><label translate>Import method:</label></b>
+                    <md-radio-button value="duplicate" style="margin-top: 10px;">{{ 'By duplicating' | translate }}</md-radio-button>
                     <md-radio-button value="merge">{{ 'By merging' | translate }}</md-radio-button>
                 </md-radio-group>
-
 
                 <input type="file" name="file" ngf-drop ngf-select ng-repeat="i in range(0, file_range)"
                        ng-model="file[i]"

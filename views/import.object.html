@@ -11,17 +11,10 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <div ng-if="dialog_mode == null">
-                    <p translate>You may import an object:</p>
-                    <ul>
-                        <li><p translate>from a file (<b>warning:</b> You may only import an object from a file if the source software version is compatible with yours),</p></li>
-                        <li><p translate>from MONARC library: you can access the MONARC database directly to benefit from latest CASES team changes.</p></li>
-                    </ul>
-                </div>
 
                 <md-radio-group ng-model="import.mode">
-                    <label translate>Import method:</label>
-                    <md-radio-button value="duplicate">{{ 'By duplicating' | translate }}</md-radio-button>
+                    <b><label translate>Import method:</label></b>
+                    <md-radio-button value="duplicate" style="margin-top: 10px;">{{ 'By duplicating' | translate }}</md-radio-button>
                     <md-radio-button value="merge">{{ 'By merging' | translate }}</md-radio-button>
                 </md-radio-group>
 
