@@ -1245,19 +1245,6 @@
             return promise;
         };
 
-        $scope.updateHackyBreadcrumb = function () {
-
-            if ($scope.sheet_risk || $scope.opsheet_risk) {
-                $rootScope.BreadcrumbAnrHackLabel = gettextCatalog.getString('Risk sheet');
-            } else if ($scope.display.anrSelectedTabIndex == 1) {
-                $rootScope.BreadcrumbAnrHackLabel = gettextCatalog.getString('Evaluation scales');
-            } else if ($scope.display.anrSelectedTabIndex == 2) {
-                $rootScope.BreadcrumbAnrHackLabel = gettextCatalog.getString('Knowledge base');
-            } else {
-                $rootScope.BreadcrumbAnrHackLabel = '_';
-            }
-        }
-
         $scope.onImpactScaleChanged = function (model, value) {
             return updateScale($scope.scales.impacts.id, model);
         };
