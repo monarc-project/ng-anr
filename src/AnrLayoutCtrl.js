@@ -35,6 +35,7 @@
             $scope.resetSheet();
             $scope.resetOpSheet();
             $scope.resetRisksFilters();
+            $state.go('main.project.anr', {modelId: $scope.model.anr.id});
             $scope.display.anrSelectedTabIndex = 0;
         };
 
@@ -43,7 +44,7 @@
             $scope.resetOpSheet();
             $scope.resetRisksFilters();
             $rootScope.BreadcrumbAnrHackLabel = '_';
-            if (trans.to().name != 'main.project.anr') {
+            if (trans.to().name.substring(0, 16) != 'main.project.anr') {
                 $rootScope.BreadcrumbAnrData = undefined;
             }
 

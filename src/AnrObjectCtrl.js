@@ -32,6 +32,7 @@
 
         $rootScope.anr_selected_instance_id = null;
         $rootScope.anr_selected_object_id = $stateParams.objectId;
+        $rootScope.BreadcrumbAnrHackLabel = gettextCatalog.getString('Library');
 
         var isObjectLoading = true;
 
