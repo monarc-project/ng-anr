@@ -17,13 +17,25 @@
                            $transitions, DownloadService, $mdPanel, $injector, ConfigService,ClientRecommandationService) {
 
 
-        $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
+        if(!$scope.display){
+            switch($state.current.name){
+                default:
+                case 'main.project.anr':
+                    $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
+                    break;
+                case 'main.project.anr.scales':
+                    $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 1};
+                    break;
+                case 'main.project.anr.knowledge':
+                    $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 2};
+                    break;
+            }
+        }
         $scope.scalesCanChange = false;
         $scope.isAnrReadOnly = true;
 
         var self = this;
 
-        $rootScope.BreadcrumbAnrHackLabel = '_';
         $scope.ToolsAnrService = ToolsAnrService;
         $scope.GlobalResizeMenuSize = 230;
         $scope.GlobalResizeMenuContentHide = false;
@@ -31,20 +43,16 @@
         var isModelLoading = false;
         var __panel = null;
 
-        $rootScope.hookBreadcrumbClicked = function () {
-            $scope.resetSheet();
-            $scope.resetOpSheet();
-            $scope.resetRisksFilters();
-            $scope.display.anrSelectedTabIndex = 0;
-        };
 
         $transitions.onBefore({}, function (trans) {
-            $scope.resetSheet();
-            $scope.resetOpSheet();
-            $scope.resetRisksFilters();
-            $rootScope.BreadcrumbAnrHackLabel = '_';
-            if (trans.to().name != 'main.project.anr') {
-                $rootScope.BreadcrumbAnrData = undefined;
+            if(($state.$current.name == 'main.project.anr.risk' && $stateParams.riskId) ||
+                ($state.$current.name == 'main.project.anr.riskop' && $stateParams.riskopId) ||
+                ($state.$current.name == 'main.project.anr.instance.risk' && $stateParams.riskId && $stateParams.instId) ||
+                ($state.$current.name == 'main.project.anr.instance.riskop' && $stateParams.riskopId && $stateParams.instId)){
+            }else if($scope.display.anrSelectedTabIndex == 0){
+                $scope.resetSheet(true);
+                $scope.resetOpSheet(true);
+                $scope.resetRisksFilters(true);
             }
 
             $timeout(function () {
@@ -122,15 +130,12 @@
                 });
             } else {
                 var ClientAnrService = $injector.get('ClientAnrService');
-                $rootScope.BreadcrumbAnrData = null;
                 ClientAnrService.getAnr($stateParams.modelId).then(function (data) {
                     $scope.model = {
                         id: null,
                         anr: data,
                         showRolfBrut: data.cacheModelShowRolfBrut && data.showRolfBrut,
                     };
-
-                    $rootScope.BreadcrumbAnrData = data;
 
                     $scope.isAnrReadOnly = (data.rwd == 0);
                     $scope.languages = ConfigService.getLanguages();
@@ -170,6 +175,15 @@
                 if (!$scope.risks || $scope.risks.length != data.risks.length) {
                     $scope.risks_total = data.count;
                     $scope.risks = data.risks; // for the _table_risks.html partial
+                    if(($state.$current.name == 'main.project.anr.risk' || $state.$current.name == 'main.project.anr.instance.risk') && $stateParams.riskId){
+                        angular.forEach($scope.risks,function(r){
+                            if(r.id == $stateParams.riskId){
+                                ToolsAnrService.currentTab = 0;
+                                $scope.sheet_risk = r;
+                                return;
+                            }
+                        });
+                    }
                 } else {
                     // patch up only if we already have a risks table
                     // if this cause a problem, add a flag to updateModel so that we patch only in the risks
@@ -206,6 +220,15 @@
                 if (!$scope.oprisks || $scope.oprisks.length != data.oprisks.length) {
                     $scope.oprisks_total = data.count;
                     $scope.oprisks = data.oprisks; // for the _table_risks_op.html partial
+                    if(($state.$current.name == 'main.project.anr.riskop' || $state.$current.name == 'main.project.anr.instance.riskop') && $stateParams.riskopId){
+                        angular.forEach($scope.oprisks,function(r){
+                            if(r.id == $stateParams.riskopId){
+                                ToolsAnrService.currentTab = 1;
+                                $scope.opsheet_risk = r;
+                                return;
+                            }
+                        });
+                    }
                 } else {
                     // patch up only if we already have a risks table
                     // if this cause a problem, add a flag to updateModel so that we patch only in the risks
@@ -297,23 +320,30 @@
         }
 
         $scope.openRiskSheet = function (risk) {
-            $scope.resetOpSheet();
-            $scope.sheet_risk = angular.copy(risk);
+            if($stateParams.instId){
+                $state.transitionTo('main.project.anr.instance.risk',{modelId:$stateParams.modelId, instId:$stateParams.instId, riskId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
+            }else{
+                $state.transitionTo('main.project.anr.risk',{modelId:$stateParams.modelId, riskId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
+            }
+            $timeout(function() {
+                $scope.ToolsAnrService.currentTab = 0;
+                $scope.opsheet_risk = undefined;
+                $scope.sheet_risk = angular.copy(risk);
 
-            var reducAmount = [];
-            if($scope.scales.vulns != undefined){
-                for(var i = $scope.scales.vulns.min; i <= $scope.scales.vulns.max; i++){
-                    reducAmount.push(i);
-                    if($scope.sheet_risk.vulnerabilityRate != '-1' && i == $scope.sheet_risk.vulnerabilityRate){
-                        break;
+                var reducAmount = [];
+                if($scope.scales.vulns != undefined){
+                    for(var i = $scope.scales.vulns.min; i <= $scope.scales.vulns.max; i++){
+                        reducAmount.push(i);
+                        if($scope.sheet_risk.vulnerabilityRate != '-1' && i == $scope.sheet_risk.vulnerabilityRate){
+                            break;
+                        }
                     }
                 }
-            }
-            $scope.reducAmount = reducAmount;
+                $scope.reducAmount = reducAmount;
 
-            $scope._copyRecs = [];
-            $scope.updateSheetRiskTarget();
-            $scope.updateHackyBreadcrumb();
+                $scope._copyRecs = [];
+                $scope.updateSheetRiskTarget();
+            });
         };
 
         $scope.updateSheetRiskTarget = function () {
@@ -322,21 +352,48 @@
             $scope.sheet_risk.target_d = $scope.sheet_risk.d_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
         };
 
-        $scope.resetSheet = function () {
-            $scope.sheet_risk = undefined;
-            $scope.updateHackyBreadcrumb();
+        $scope.resetSheet = function (redir = false) {
+            if($scope.sheet_risk){
+                if(!redir){
+                    if($stateParams.instId){
+                        $state.transitionTo('main.project.anr.instance',{modelId:$stateParams.modelId, instId:$stateParams.instId},{inherit:true,notify:true,reload:false,location:'replace'});
+                    }else{
+                        $state.transitionTo('main.project.anr',{modelId:$stateParams.modelId},{inherit:true,notify:false,reload:false,location:'replace'});
+                    }
+                }
+                $timeout(function() {
+                    $scope.sheet_risk = undefined;
+                });
+            }
         };
 
         $scope.openOpRiskSheet = function (risk) {
-            $scope.resetSheet();
-            $scope.opsheet_risk = risk;
-            $scope._copyRecs = [];
-            $scope.updateHackyBreadcrumb();
+            if($stateParams.instId){
+                $state.transitionTo('main.project.anr.instance.riskop',{modelId:$stateParams.modelId, instId:$stateParams.instId, riskopId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
+            }else{
+                $state.transitionTo('main.project.anr.riskop',{modelId:$stateParams.modelId, riskopId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
+            }
+            $timeout(function() {
+                $scope.ToolsAnrService.currentTab = 1;
+                $scope.sheet_risk = undefined;
+                $scope.opsheet_risk = risk;
+                $scope._copyRecs = [];
+            });
         };
 
-        $scope.resetOpSheet = function () {
-            $scope.opsheet_risk = undefined;
-            $scope.updateHackyBreadcrumb();
+        $scope.resetOpSheet = function (redir = false) {
+            if($scope.opsheet_risk){
+                if(!redir){
+                    if($stateParams.instId){
+                        $state.transitionTo('main.project.anr.instance',{modelId:$stateParams.modelId, instId:$stateParams.instId},{inherit:true,notify:true,reload:false,location:'replace'});
+                    }else{
+                        $state.transitionTo('main.project.anr',{modelId:$stateParams.modelId},{inherit:true,notify:false,reload:false,location:'replace'});
+                    }
+                }
+                $timeout(function() {
+                    $scope.opsheet_risk = undefined;
+                });
+            }
         };
 
         $scope.treatmentStr = function (treatment) {
@@ -493,20 +550,68 @@
 
         if ($scope.OFFICE_MODE == 'FO') {
             $scope.$watch('display.anrSelectedTabIndex', function (newValue, oldValue) {
-                if (newValue == 1) {
-                    // Update scales, in case we made changes to risks, and our ANR isn't scaleupdatable anymore
-                    $scope.updateScales();
-                } else if (newValue == 2) {
-                    // Init KB Mgmt, if needed
-                    $scope.$broadcast('setup-kb-mgmt');
+                switch (newValue) {
+                    case 0:
+                        if(($state.$current.name == 'main.project.anr.risk' && $stateParams.riskId) || 
+                            ($state.$current.name == 'main.project.anr.riskop' && $stateParams.riskopId) ||
+                            ($state.$current.name == 'main.project.anr.object' && $stateParams.objectId) ||
+                            ($state.$current.name == 'main.project.anr.instance' && $stateParams.instId) ||
+                            ($state.$current.name == 'main.project.anr.instance.risk' && $stateParams.instId && $stateParams.riskId) ||
+                            ($state.$current.name == 'main.project.anr.instance.riskop' && $stateParams.instId && $stateParams.riskopId)){
+                            if($stateParams.instId){
+                                $rootScope.anr_selected_instance_id = $stateParams.instId;
+                                $rootScope.anr_selected_object_id = null;
+                            }else if($stateParams.objectId){
+                                $rootScope.anr_selected_object_id = $stateParams.objectId;
+                                $rootScope.anr_selected_instance_id = null;
+                                $scope.opsheet_risk = null;
+                                $scope.sheet_risk = null;
+                                $scope.risks = [];
+                                $scope.oprisks = [];
+                            }else{
+                                $rootScope.anr_selected_object_id = null;
+                                $rootScope.anr_selected_instance_id = null;
+                                $scope.opsheet_risk = null;
+                                $scope.sheet_risk = null;
+                                $scope.risks = [];
+                                $scope.oprisks = [];
+                            }
+                        }else{
+                            $state.transitionTo('main.project.anr',{modelId:$stateParams.modelId},{inherit:true,notify:false,reload:false,location:'replace'});
+                            $timeout(function() {
+                                if (oldValue == 2 && $scope.anr_selected_instance_id == null && $scope.anr) {
+                                    $scope.updateAnrRisksTable();
+                                    $scope.updateAnrRisksOpTable();
+                                }
+                            });
+                        }
+                        break;
+                    case 1:
+                        $state.transitionTo('main.project.anr.scales',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
+                        $timeout(function() {
+                            if($scope.model && $scope.model.anr){
+                                // Update scales, in case we made changes to risks, and our ANR isn't scaleupdatable anymore
+                                $scope.updateScales();
+                            }
+                        });
+                        break;
+                    case 2:
+                        $state.transitionTo('main.project.anr.knowledge',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
+                        $timeout(function() {
+                            // Init KB Mgmt, if needed
+                            $scope.$broadcast('setup-kb-mgmt');
+                        });
+                        break;
                 }
-
-                if (oldValue == 2 && newValue == 0 && $scope.anr_selected_instance_id == null && $scope.anr) {
-                    $scope.updateAnrRisksTable();
-                    $scope.updateAnrRisksOpTable();
+            });
+            $scope.$watch('ToolsAnrService.currentTab',function(newValue, oldValue){
+                if(newValue != oldValue){
+                    if($stateParams.instId){
+                        $state.transitionTo('main.project.anr.instance',{modelId:$stateParams.modelId, instId:$stateParams.instId},{inherit:true,notify:true,reload:false,location:'replace'});
+                    }else{
+                        $state.transitionTo('main.project.anr',{modelId:$stateParams.modelId},{inherit:true,notify:false,reload:false,location:'replace'});
+                    }
                 }
-
-                $scope.updateHackyBreadcrumb();
             });
         }
 
@@ -1141,6 +1246,7 @@
         };
 
         $scope.updateHackyBreadcrumb = function () {
+
             if ($scope.sheet_risk || $scope.opsheet_risk) {
                 $rootScope.BreadcrumbAnrHackLabel = gettextCatalog.getString('Risk sheet');
             } else if ($scope.display.anrSelectedTabIndex == 1) {
