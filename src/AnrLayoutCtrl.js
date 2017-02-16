@@ -45,7 +45,14 @@
 
         if ($scope.OFFICE_MODE == 'FO') {
             $rootScope.$on("$locationChangeStart", function(e, nextUrl, oldUrl){
-                if(nextUrl != oldUrl && nextUrl.substring(nextUrl.length-4) == '/anr' && $scope.display.anrSelectedTabIndex != 0){
+                if(nextUrl != oldUrl && nextUrl.substring(nextUrl.length-4) == '/anr' && ($scope.display.anrSelectedTabIndex != 0 || $scope.opsheet_risk || $scope.sheet_risk)){
+                    $rootScope.anr_selected_object_id = null;
+                    $rootScope.anr_selected_instance_id = null;
+                    $scope.opsheet_risk = null;
+                    $scope.sheet_risk = null;
+                    $scope.risks = [];
+                    $scope.oprisks = [];
+                    ToolsAnrService.currentTab = 0;
                     $scope.display.anrSelectedTabIndex = 0;
                     e.preventDefault();
                 }
