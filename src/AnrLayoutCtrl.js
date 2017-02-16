@@ -43,6 +43,14 @@
         var isModelLoading = false;
         var __panel = null;
 
+        if ($scope.OFFICE_MODE == 'FO') {
+            $rootScope.$on("$locationChangeStart", function(e, nextUrl, oldUrl){
+                if(nextUrl != oldUrl && nextUrl.substring(nextUrl.length-4) == '/anr' && $scope.display.anrSelectedTabIndex != 0){
+                    $scope.display.anrSelectedTabIndex = 0;
+                    e.preventDefault();
+                }
+            });
+        }
 
         $transitions.onBefore({}, function (trans) {
             if(($state.$current.name == 'main.project.anr.risk' && $stateParams.riskId) ||
