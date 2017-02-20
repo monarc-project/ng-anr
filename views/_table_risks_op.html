@@ -95,7 +95,7 @@
 
     <tbody>
     <tr ng-repeat="risk in oprisks" edit-model="risk" ng-class="{'specific-blue': risk.specific == 1}">
-        <td ng-if="instmode != 'obj'" class="preserve-newlines">{{ risk.instanceInfos[_langField('name')] }}</td>
+        <td ng-if="instmode != 'obj'" title="{{instanceCache[risk.instanceInfos.id].completePath}}" class="preserve-newlines">{{ risk.instanceInfos[_langField('name')] }}</td>
         <td class="preserve-newlines" title="{{ risk[_langField('description')] }}">{{ risk[_langField('label')] || risk[_langField('description')] }}</td>
         <td class="big-border-left txtcenter" ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr' || instmode == 'inst')" edit-readonly="isAnrReadOnly || instmode == 'obj'" edit-filter="dashnull" edit-field="brutProb" title="{{threatCommCache[risk.brutProb]}}"></td>
         <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr' || instmode == 'inst')" edit-readonly="isAnrReadOnly || instmode == 'obj'" edit-filter="dashnull" edit-field="brutR" class="txtcenter" title="{{scaleCommCache[4][risk.brutR]}}"></td>
