@@ -54,7 +54,7 @@
                     $scope.oprisks = [];
                     ToolsAnrService.currentTab = 0;
                     $scope.display.anrSelectedTabIndex = 0;
-                    e.preventDefault();
+                    //e.preventDefault();
                 }
             });
         }
