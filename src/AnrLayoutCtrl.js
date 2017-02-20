@@ -155,6 +155,7 @@
                     $scope.isAnrReadOnly = (data.rwd == 0);
                     $scope.languages = ConfigService.getLanguages();
                     $scope.scales.language = data.language;
+                    $scope.$parent.$parent.clientCurrentAnr = data;
 
                     thresholdsWatchSetup = false;
                     $scope.thresholds = {
