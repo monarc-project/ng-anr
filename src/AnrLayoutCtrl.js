@@ -63,7 +63,7 @@
             });
         }
 
-        $transitions.onBefore({}, function (trans) {
+        $transitions.onBefore({}, function () {
             if($scope.OFFICE_MODE == 'FO'){
                 if(($state.$current.name == 'main.project.anr.risk' && $stateParams.riskId) ||
                     ($state.$current.name == 'main.project.anr.riskop' && $stateParams.riskopId) ||
