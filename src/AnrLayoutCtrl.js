@@ -363,9 +363,13 @@
         };
 
         $scope.updateSheetRiskTarget = function () {
-            $scope.sheet_risk.target_c = $scope.sheet_risk.c_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
-            $scope.sheet_risk.target_i = $scope.sheet_risk.i_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
-            $scope.sheet_risk.target_d = $scope.sheet_risk.d_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
+            if(parseInt($scope.sheet_risk.threatRate) > -1 && parseInt($scope.sheet_risk.vulnerabilityRate) > -1){
+                $scope.sheet_risk.target_c = $scope.sheet_risk.c_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
+                $scope.sheet_risk.target_i = $scope.sheet_risk.i_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
+                $scope.sheet_risk.target_d = $scope.sheet_risk.d_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
+            }else{
+                $scope.sheet_risk.target_c = $scope.sheet_risk.target_i = $scope.sheet_risk.target_d = -1;
+            }
         };
 
         $scope.resetSheet = function (redir = false) {
@@ -1541,8 +1545,8 @@
             AnrService.updateInstanceRisk($scope.model.anr.id, model.id, model, function (data) {
                 promise.resolve(true);
 
-                model.cacheMaxRisk = data.cacheMaxRisk;
-                model.cacheTargetedRisk = data.cacheTargetedRisk;
+                model.max_risk = model.cacheMaxRisk = data.cacheMaxRisk;
+                model.target_risk = model.cacheTargetedRisk = data.cacheTargetedRisk;
                 model.c_risk = data.riskC;
                 model.i_risk = data.riskI;
                 model.d_risk = data.riskD;
