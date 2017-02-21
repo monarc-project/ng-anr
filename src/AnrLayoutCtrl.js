@@ -17,19 +17,23 @@
                            $transitions, DownloadService, $mdPanel, $injector, ConfigService,ClientRecommandationService) {
 
 
-        if(!$scope.display){
-            switch($state.current.name){
-                default:
-                case 'main.project.anr':
-                    $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
-                    break;
-                case 'main.project.anr.scales':
-                    $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 1};
-                    break;
-                case 'main.project.anr.knowledge':
-                    $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 2};
-                    break;
+        if ($scope.OFFICE_MODE == 'FO') {
+            if(!$scope.display){
+                switch($state.current.name){
+                    default:
+                    case 'main.project.anr':
+                        $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
+                        break;
+                    case 'main.project.anr.scales':
+                        $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 1};
+                        break;
+                    case 'main.project.anr.knowledge':
+                        $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 2};
+                        break;
+                }
             }
+        }else{
+            $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
         }
         $scope.scalesCanChange = false;
         $scope.isAnrReadOnly = true;
@@ -60,14 +64,19 @@
         }
 
         $transitions.onBefore({}, function (trans) {
-            if(($state.$current.name == 'main.project.anr.risk' && $stateParams.riskId) ||
-                ($state.$current.name == 'main.project.anr.riskop' && $stateParams.riskopId) ||
-                ($state.$current.name == 'main.project.anr.instance.risk' && $stateParams.riskId && $stateParams.instId) ||
-                ($state.$current.name == 'main.project.anr.instance.riskop' && $stateParams.riskopId && $stateParams.instId)){
-            }else if($scope.display.anrSelectedTabIndex == 0){
-                $scope.resetSheet(true);
-                $scope.resetOpSheet(true);
-                $scope.resetRisksFilters(true);
+            if($scope.OFFICE_MODE == 'FO'){
+                if(($state.$current.name == 'main.project.anr.risk' && $stateParams.riskId) ||
+                    ($state.$current.name == 'main.project.anr.riskop' && $stateParams.riskopId) ||
+                    ($state.$current.name == 'main.project.anr.instance.risk' && $stateParams.riskId && $stateParams.instId) ||
+                    ($state.$current.name == 'main.project.anr.instance.riskop' && $stateParams.riskopId && $stateParams.instId)){
+                }else if($scope.display.anrSelectedTabIndex == 0){
+                    $scope.resetSheet(true);
+                    $scope.resetOpSheet(true);
+                    $scope.resetRisksFilters(true);
+                }
+            }else{
+                $scope.resetSheet();
+                $scope.resetRisksFilters();
             }
 
             $timeout(function () {
@@ -336,10 +345,12 @@
         }
 
         $scope.openRiskSheet = function (risk) {
-            if($stateParams.instId){
-                $state.transitionTo('main.project.anr.instance.risk',{modelId:$stateParams.modelId, instId:$stateParams.instId, riskId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
-            }else{
-                $state.transitionTo('main.project.anr.risk',{modelId:$stateParams.modelId, riskId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
+            if($scope.OFFICE_MODE == 'FO'){
+                if($stateParams.instId){
+                    $state.transitionTo('main.project.anr.instance.risk',{modelId:$stateParams.modelId, instId:$stateParams.instId, riskId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
+                }else{
+                    $state.transitionTo('main.project.anr.risk',{modelId:$stateParams.modelId, riskId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
+                }
             }
             $timeout(function() {
                 $scope.ToolsAnrService.currentTab = 0;
@@ -374,11 +385,13 @@
 
         $scope.resetSheet = function (redir = false) {
             if($scope.sheet_risk){
-                if(!redir){
-                    if($stateParams.instId){
-                        $state.transitionTo('main.project.anr.instance',{modelId:$stateParams.modelId, instId:$stateParams.instId},{inherit:true,notify:true,reload:false,location:'replace'});
-                    }else{
-                        $state.transitionTo('main.project.anr',{modelId:$stateParams.modelId},{inherit:true,notify:false,reload:false,location:'replace'});
+                if($scope.OFFICE_MODE == 'FO'){
+                    if(!redir){
+                        if($stateParams.instId){
+                            $state.transitionTo('main.project.anr.instance',{modelId:$stateParams.modelId, instId:$stateParams.instId},{inherit:true,notify:true,reload:false,location:'replace'});
+                        }else{
+                            $state.transitionTo('main.project.anr',{modelId:$stateParams.modelId},{inherit:true,notify:false,reload:false,location:'replace'});
+                        }
                     }
                 }
                 $timeout(function() {
@@ -388,10 +401,12 @@
         };
 
         $scope.openOpRiskSheet = function (risk) {
-            if($stateParams.instId){
-                $state.transitionTo('main.project.anr.instance.riskop',{modelId:$stateParams.modelId, instId:$stateParams.instId, riskopId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
-            }else{
-                $state.transitionTo('main.project.anr.riskop',{modelId:$stateParams.modelId, riskopId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
+            if($scope.OFFICE_MODE == 'FO'){
+                if($stateParams.instId){
+                    $state.transitionTo('main.project.anr.instance.riskop',{modelId:$stateParams.modelId, instId:$stateParams.instId, riskopId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
+                }else{
+                    $state.transitionTo('main.project.anr.riskop',{modelId:$stateParams.modelId, riskopId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
+                }
             }
             $timeout(function() {
                 $scope.ToolsAnrService.currentTab = 1;
@@ -403,11 +418,13 @@
 
         $scope.resetOpSheet = function (redir = false) {
             if($scope.opsheet_risk){
-                if(!redir){
-                    if($stateParams.instId){
-                        $state.transitionTo('main.project.anr.instance',{modelId:$stateParams.modelId, instId:$stateParams.instId},{inherit:true,notify:true,reload:false,location:'replace'});
-                    }else{
-                        $state.transitionTo('main.project.anr',{modelId:$stateParams.modelId},{inherit:true,notify:false,reload:false,location:'replace'});
+                if($scope.OFFICE_MODE == 'FO'){
+                    if(!redir){
+                        if($stateParams.instId){
+                            $state.transitionTo('main.project.anr.instance',{modelId:$stateParams.modelId, instId:$stateParams.instId},{inherit:true,notify:true,reload:false,location:'replace'});
+                        }else{
+                            $state.transitionTo('main.project.anr',{modelId:$stateParams.modelId},{inherit:true,notify:false,reload:false,location:'replace'});
+                        }
                     }
                 }
                 $timeout(function() {
