@@ -20,26 +20,6 @@
         TableHelperService.resetBookmarks();
 
         /**** FO ADDITIONS ****/
-        $scope.importAsset = function (ev) {
-            if($mdDialog){
-                $mdDialog.cancel();
-            }
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-            $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'AssetService', 'toastr', 'gettextCatalog', 'assetTypeStr', 'Upload', ImportAssetDialogCtrl],
-                templateUrl: '/views/anr/import.asset.html',
-                targetEvent: ev,
-                preserveScope: false,
-                scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: false,
-                fullscreen: useFullScreen,
-                locals: {
-                    'assetTypeStr': $scope.assetTypeStr
-                }
-            }).then(function (asset) {
-
-            });
-        };
 
         /*
          * Global helpers
@@ -133,7 +113,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'asset', 'importAsset', CreateAssetDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'asset', CreateAssetDialogCtrl],
                 templateUrl: '/views/anr/create.assets.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -141,8 +121,7 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                    'asset': asset,
-                    'importAsset': $scope.importAsset
+                    'asset': asset
                 }
             })
                 .then(function (asset) {
@@ -1825,14 +1804,13 @@
     // DIALOGS
     //////////////////////
 
-    function CreateAssetDialogCtrl($scope, $mdDialog, ModelService, ConfigService, asset, importAsset) {
+    function CreateAssetDialogCtrl($scope, $mdDialog, ModelService, ConfigService, asset) {
         ModelService.getModels({isGeneric:0}).then(function (data) {
             $scope.models = data.models;
         });
 
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
-        $scope.importAsset = importAsset;
 
         if (asset != undefined && asset != null) {
             $scope.asset = asset;
@@ -2324,71 +2302,6 @@
         $scope.createAndContinue = function() {
             $scope.risk.cont = true;
             $mdDialog.hide($scope.risk);
-        };
-    }
-
-    /*** FO ***/
-    function ImportAssetDialogCtrl($scope, $mdDialog, AssetService, toastr, gettextCatalog, assetTypeStr, Upload) {
-        $scope.dialog_mode = null;
-        $scope.assetTypeStr = assetTypeStr;
-        $scope.file = [];
-        $scope.file_range = 0;
-        $scope.import = {password: ''};
-
-        AssetService.getAssetsCommon({limit: 0}).then(function (data) {
-            $scope.assets = data.assets;
-        });
-
-        $scope.uploadFile = function (file) {
-            file.upload = Upload.upload({
-                url: '/api/client-anr/' + $scope.getUrlAnrId() + '/assets/import',
-                data: {file: file, password: $scope.import.password}
-            });
-
-            file.upload.then(function (response) {
-                toastr.success(gettextCatalog.getString("The asset has been imported successfully"));
-            });
-        }
-
-        $scope.upgradeFileRange = function () {
-            $scope.file_range++;
-
-            for (var i = 0; i <= $scope.file_range; ++i) {
-                if ($scope.file[i] == undefined) {
-                    $scope.file[i] = {};
-                }
-            }
-        };
-
-        $scope.openAssetDetails = function (asset) {
-            $scope.dialog_mode = 'asset_details';
-            $scope.asset_details = asset;
-
-            AssetService.getAssetCommon(asset.id).then(function (data) {
-                $scope.asset_details = data;
-            })
-        };
-
-        $scope.closeAssetDetails = function () {
-            $scope.dialog_mode = 'common';
-        };
-
-        $scope.importAssetCommon = function () {
-            AssetService.importAssetCommon($scope.asset_details.id, function () {
-                toastr.success(gettextCatalog.getString("Asset imported successfully"));
-                $scope.dialog_mode = 'common';
-            });
-
-        };
-
-        $scope.cancel = function () {
-            $mdDialog.cancel();
-        };
-
-        $scope.create = function () {
-            if (Object.keys($scope.assetForm.$error).length == 0) {
-                $mdDialog.hide($scope.asset);
-            }
         };
     }
 })();
