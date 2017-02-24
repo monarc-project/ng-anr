@@ -243,33 +243,6 @@
             }
         };
 
-        $scope.exportAsset = function (ev,item) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
-            $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'mode', ExportAssetDialog],
-                templateUrl: '/views/anr/export.objlibs.html',
-                targetEvent: ev,
-                preserveScope: false,
-                scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: false,
-                fullscreen: useFullScreen,
-                locals: {
-                    mode: 'asset'
-                }
-            })
-                .then(function (exports) {
-                    $http.post('/api/asset/export', {id: item.id, password: exports.password}).then(function (data) {
-                        var contentD = data.headers('Content-Disposition'),
-                            contentT = data.headers('Content-Type');
-                        contentD = contentD.substring(0,contentD.length-1).split('filename="');
-                        contentD = contentD[contentD.length-1];
-                        DownloadService.downloadBlob(data.data, contentD,contentT);
-                        toastr.success(gettextCatalog.getString('The asset has been exported successfully.'), gettextCatalog.getString('Export successful'));
-                    })
-                });
-        };
-
         /*
          * THREATS TAB
          */
