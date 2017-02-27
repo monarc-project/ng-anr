@@ -17,12 +17,12 @@
                         md-selected-item="rec.measure"
                         md-search-text="m1SearchText"
                         md-items="item in queryMeasureSearch(m1SearchText)"
-                        md-item-text="item.code + ' (' + item[_langField('description')] + ')'"
+                        md-item-text="item.code + ' (' + _langField(item,'description') + ')'"
                         md-delay="300"
                         md-min-length="0"
                         md-floating-label="{{ 'Measure' | translate }}">
                     <md-item-template>
-                        <span md-highlight-text="m1SearchText" md-highlight-flags="^i">{{ item.code }} ({{ item[_langField('description')] }})</span>
+                        <span md-highlight-text="m1SearchText" md-highlight-flags="^i">{{ item.code }} ({{ _langField(item,'description') }})</span>
                     </md-item-template>
 
                     <md-not-found>

@@ -48,13 +48,13 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
                 var child = children[i];
 
                 if (parentPath != "") {
-                    child[$scope._langField('label')] = parentPath + " >> " + child[$scope._langField('label')];
+                    child[$scope._langField('label')] = parentPath + " >> " + $scope._langField(child,'label');
                 }
 
                 output.push(child);
 
                 if (child.child && child.child.length > 0) {
-                    var child_output = buildItemRecurse(child.child, child[$scope._langField('label')]);
+                    var child_output = buildItemRecurse(child.child, $scope._langField(child,'label'));
                     output = output.concat(child_output);
                 }
             }
@@ -128,7 +128,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
 
 
                             toastr.success(gettextCatalog.getString('The category "{{categoryLabel}}" has been created successfully.',
-                                {categoryLabel: category[$scope._langField('label')]}), gettextCatalog.getString('Creation successful'));
+                                {categoryLabel: $scope._langField(category,'label')}), gettextCatalog.getString('Creation successful'));
                         });
                     }
                 );
@@ -180,7 +180,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
                             }
 
                             toastr.success(gettextCatalog.getString('The category "{{categoryLabel}}" has been updated successfully.',
-                                {categoryLabel: category[$scope._langField('label')]}), gettextCatalog.getString('Update successful'));
+                                {categoryLabel: $scope._langField(category,'label')}), gettextCatalog.getString('Update successful'));
                         }
                     );
                 }, function () {
@@ -229,7 +229,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
                     var child = children[i];
 
                     for (var j = 0; j < depth; ++j) {
-                        child.label1 = " >> " + child.label1;
+                        child[$scope._langField('label')] = " >> " + $scope._langField(child,'label');
                     }
 
                     output.push(child);

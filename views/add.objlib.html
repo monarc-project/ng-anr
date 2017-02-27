@@ -18,7 +18,7 @@
                     <label translate>Category</label>
                     <md-select flex ng-model="selected_categ.id" md-on-open="loadCategs()" ng-change="changeCateg()">
                         <md-option ng-value="-1">{{ 'Uncategorized' | translate }}</md-option>
-                        <md-option ng-repeat="cat in categories" ng-value="cat.id">{{ cat[_langField('label')] }}</md-option>
+                        <md-option ng-repeat="cat in categories" ng-value="cat.id">{{ _langField(cat,'label') }}</md-option>
                     </md-select>
                 </md-input-container>
 
@@ -33,13 +33,13 @@
                                 md-search-text="objectSearchText"
                                 md-selected-item-change="selectedObjectItemChange(item)"
                                 md-items="item in queryObjectSearch(objectSearchText)"
-                                md-item-text="item[_langField('name')]"
+                                md-item-text="_langField(item,'name')"
                                 ng-disabled="!objlib.category.id"
                                 md-min-length="0"
                                 placeholder="{{ 'Select an object' | translate }}">
                             <md-item-template>
                                 <span md-highlight-text="objectSearchText"
-                                      md-highlight-flags="^i">{{ item[_langField('name')] }}</span>
+                                      md-highlight-flags="^i">{{ _langField(item,'name') }}</span>
                             </md-item-template>
 
                             <md-not-found>

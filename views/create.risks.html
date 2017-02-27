@@ -57,12 +57,12 @@
                             md-min-length="0"
                             md-no-cache="true"
                             placeholder="{{ 'Add categories...' | translate }}">
-                        <span md-highlight-text="categorySearchText">{{ item.code }} - {{ item[_langField('label')] }}</span>
+                        <span md-highlight-text="categorySearchText">{{ item.code }} - {{ _langField(item,'label') }}</span>
                     </md-autocomplete>
 
                     <md-chip-template>
                         <span>
-                            <strong>{{$chip[_langField('label')]}}</strong>
+                            <strong>{{_langField($chip,'label')}}</strong>
                             <em>{{$chip.code}}</em>
                         </span>
                     </md-chip-template>
@@ -79,13 +79,13 @@
                                      md-min-length="0"
                                      md-no-cache="true"
                                      placeholder="{{ 'Add tags...' | translate }}">
-                        <span md-highlight-text="tagSearchText">{{ item.code }} - {{ item[_langField('label')] }}</span>
+                        <span md-highlight-text="tagSearchText">{{ item.code }} - {{ _langField(item,'label') }}</span>
                     </md-autocomplete>
 
                     <md-chip-template>
                         <span>
                             <strong>{{$chip.code}}</strong>
-                            <em>{{$chip[_langField('label')]}}</em>
+                            <em>{{_langField($chip,'label')}}</em>
                         </span>
                     </md-chip-template>
                 </md-chips>

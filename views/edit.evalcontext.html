@@ -22,10 +22,10 @@
                         </div>
                         <md-card-content ng-if="guide !== undefined">
                             <p class="md-title" translate>Additional information</p>
-                            <p class="preserve-newlines">{{ guide[_langField('description')] }}</p>
+                            <p class="preserve-newlines">{{ _langField(guide,'description') }}</p>
                             <md-divider></md-divider>
                             <md-list>
-                                <md-list-item ng-repeat="item in guide_items" ng-click="insertItem(item)"><p>{{ item[_langField('description')] }}</p></md-list-item>
+                                <md-list-item ng-repeat="item in guide_items" ng-click="insertItem(item)"><p>{{ _langField(item,'description') }}</p></md-list-item>
                             </md-list>
                         </md-card-content>
                     </md-card>

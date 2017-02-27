@@ -181,12 +181,12 @@
                     } else {
                         var title = gettextCatalog.getString('Detach this object?');
                         var content = gettextCatalog.getString('The current object "{{ name }}" will be removed from the library. Are you sure?',
-                            {name: $scope.object[$scope._langField('name')]});
+                            {name: $scope._langField($scope.object,'name')});
 
                         if ($scope.OFFICE_MODE == 'FO') {
                             title = gettextCatalog.getString('Delete this object');
                             content = gettextCatalog.getString('The current object "{{ name }}" will be permanently deleted. Are you sure?',
-                                {name: $scope.object[$scope._langField('name')]});
+                                {name: $scope._langField($scope.object,'name')});
                         }
 
                         var confirm = $mdDialog.confirm()

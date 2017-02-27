@@ -22,11 +22,11 @@
                                 md-search-text="objectSearchText"
                                 md-selected-item-change="selectedObjectChange(item)"
                                 md-items="item in queryObjectSearch(objectSearchText)"
-                                md-item-text="item[_langField('name')]"
+                                md-item-text="_langField(item,'name')"
                                 md-min-length="0"
                                 placeholder="{{ 'Component' | translate }}">
                             <md-item-template>
-                                <span md-highlight-text="objectSearchText" md-highlight-flags="^i">{{ item[_langField('name')] }}</span>
+                                <span md-highlight-text="objectSearchText" md-highlight-flags="^i">{{ _langField(item,'name') }}</span>
                             </md-item-template>
 
                             <md-not-found>
@@ -57,11 +57,11 @@
                                 md-search-text="componentPreviousSearchText"
                                 md-selected-item-change="selectedPreviousItemChange(item)"
                                 md-items="item in queryComponentSearch(componentPreviousSearchText)"
-                                md-item-text="item[_langField('name')]"
+                                md-item-text="_langField(item,'name')"
                                 md-min-length="0"
                                 placeholder="{{ 'Previous component...' | translate }}">
                             <md-item-template>
-                                <span md-highlight-text="componentPreviousSearchText" md-highlight-flags="^i">{{ item[_langField('name')] }}</span>
+                                <span md-highlight-text="componentPreviousSearchText" md-highlight-flags="^i">{{ _langField(item,'name') }}</span>
                             </md-item-template>
 
                             <md-not-found>

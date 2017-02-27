@@ -38,17 +38,17 @@
                 </tr>
                 <tr>
                     <td class="bold" translate>Instance</td>
-                    <td class="bold" colspan="7"><md-icon ng-if="opsheet_risk.instanceInfos.scope == 2" class="md-tree-global-icon">language</md-icon>{{ opsheet_risk.instanceInfos[_langField("name")] }}</td>
+                    <td class="bold" colspan="7"><md-icon ng-if="opsheet_risk.instanceInfos.scope == 2" class="md-tree-global-icon">language</md-icon>{{ _langField(opsheet_risk.instanceInfos,"name") }}</td>
                 </tr>
                 <tr>
                     <td class="bold" translate>Risk description</td>
-                    <td colspan="7">{{ opsheet_risk[_langField("label")] }}</td>
+                    <td colspan="7">{{ _langField(opsheet_risk,"label") }}</td>
                 </tr>
                 <tr>
                     <td class="bold" translate>Risk probability</td>
                     <td colspan="7">
                         <div ng-if="opsheet_risk.netProb == -1">-</div>
-                        <div ng-if="opsheet_risk.netProb > -1"><strong>{{ opsheet_risk.netProb }}</strong> - {{ comms.threat[opsheet_risk.netProb][_langField('comment')] }}</div>
+                        <div ng-if="opsheet_risk.netProb > -1"><strong>{{ opsheet_risk.netProb }}</strong> - {{ _langField(comms.threat[opsheet_risk.netProb],'comment') }}</div>
                     </td>
                 </tr>
                 <tr>

@@ -49,24 +49,24 @@
             </tr>
             <tr>
                 <td class="bold" translate>Threat</td>
-                <td colspan="3">{{ sheet_risk[_langField('threatLabel')] }}</td>
+                <td colspan="3">{{ _langField(sheet_risk,'threatLabel') }}</td>
             </tr>
              <tr>
                 <td class="bold" translate>Threat probability</td>
                 <td colspan="3">
                     <div ng-if="sheet_risk.threatRate == -1">-</div>
-                    <div ng-if="sheet_risk.threatRate > -1"><strong>{{ sheet_risk.threatRate }}</strong> - {{ comms.threat[sheet_risk.threatRate][_langField('comment')] }}</div>
+                    <div ng-if="sheet_risk.threatRate > -1"><strong>{{ sheet_risk.threatRate }}</strong> - {{ _langField(comms.threat[sheet_risk.threatRate],'comment') }}</div>
                 </td>
             </tr>
             <tr>
                 <td class="bold" translate>Vulnerability</td>
-                <td colspan=3>{{ sheet_risk[_langField('vulnLabel')] }}</td>
+                <td colspan=3>{{ _langField(sheet_risk,'vulnLabel') }}</td>
             </tr>
              <tr>
                 <td class="bold" translate>Vulnerability qualification</td>
                 <td colspan="3">
                     <div ng-if="sheet_risk.vulnerabilityRate == -1">-</div>
-                    <div ng-if="sheet_risk.vulnerabilityRate > -1"><strong>{{ sheet_risk.vulnerabilityRate }}</strong> - {{ comms.vuln[sheet_risk.vulnerabilityRate][_langField('comment')] }}</div>
+                    <div ng-if="sheet_risk.vulnerabilityRate > -1"><strong>{{ sheet_risk.vulnerabilityRate }}</strong> - {{ _langField(comms.vuln[sheet_risk.vulnerabilityRate],'comment') }}</div>
                 </td>
             </tr>
             <tr>

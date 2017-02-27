@@ -4,7 +4,7 @@
     <ul class="md-treeview">
         <li class="md-treeview-root">
             <a ng-if="mode == 'bdc'">
-                <span class="active-obj"><md-icon>place</md-icon> {{ object[_langField('name')] }}</span>
+                <span class="active-obj"><md-icon>place</md-icon> {{ _langField(object,'name') }}</span>
                 <md-button ng-click="createComponent()" ng-disabled="isAnrReadOnly" class="md-icon-button md-primary">
                     <md-tooltip md-direction="left">
                         {{ 'Add new component' | translate }}
@@ -13,7 +13,7 @@
                 </md-button>
             </a>
             <div ng-if="mode == 'anr'" style="margin-bottom: -8px;margin-left:10px;">
-                <span class="active-obj">{{ object[_langField('name')] }}</span>
+                <span class="active-obj">{{ _langField(object,'name') }}</span>
 
                 <md-button ng-click="createComponent($event)" ng-disabled="isAnrReadOnly" class="md-icon-button md-primary">
                     <md-tooltip md-direction="left">
@@ -34,7 +34,7 @@
     <div ng-if="object.parents.length > 0">
         <p class="md-title" translate>In the common library, this object is a direct component of :</p>
         <ul>
-            <li ng-repeat="parent in object.parents">{{parent[_langField("name")]}} ({{parent[_langField("label")]}})</li>
+            <li ng-repeat="parent in object.parents">{{_langField(parent,"name")}} ({{_langField(parent,"label")}})</li>
         </ul>
     </div>
 
@@ -49,10 +49,10 @@
             </thead>
             <tbody md-body>
                 <tr md-row ng-repeat="node in object.replicas">
-                    <td md-cell>{{ node[_langField('label')] ? node[_langField('label')] : node[_langField('name')] }}</td>
+                    <td md-cell>{{ _langField(node,'label') ? _langField(node,'label') : _langField(node,'name') }}</td>
                     <td md-cell>
-                        <!-- <a aria-title="{{ node[_langField('name')] }}" ng-click="showInModel(node.id, object.id)"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></a> -->
-                        <md-button class="md-icon-button" aria-title="{{ node[_langField('name')] }}" ui-sref="main.kb_mgmt.models.details.object({modelId: node.id, objectId: object.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></md-button>
+                        <!-- <a aria-title="{{ _langField(node,'name') }}" ng-click="showInModel(node.id, object.id)"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ _langField(node,'name') }}</md-tooltip></a> -->
+                        <md-button class="md-icon-button" aria-title="{{ _langField(node,'name') }}" ui-sref="main.kb_mgmt.models.details.object({modelId: node.id, objectId: object.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ _langField(node,'name') }}</md-tooltip></md-button>
                          <!--"-->
                     </td>
                 </tr>
@@ -71,9 +71,9 @@
             </thead>
             <tbody md-body>
                 <tr md-row ng-repeat="node in object.replicas">
-                    <td md-cell>{{ node[_langField('name')] }}</td>
+                    <td md-cell>{{ _langField(node,'name') }}</td>
                     <td md-cell>
-                        <md-button ng-if="OFFICE_MODE == 'BO'" class="md-icon-button md-primary" aria-title="{{ node[_langField('name')] }}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ node[_langField('name')] }}</md-tooltip></md-button>
+                        <md-button ng-if="OFFICE_MODE == 'BO'" class="md-icon-button md-primary" aria-title="{{ node[_langField('name')] }}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ _langField(node,'name') }}</md-tooltip></md-button>
                         <md-button ng-disabled="isAnrReadOnly" class="md-icon-button md-warn" aria-title="{{ 'Detach' | translate }}" ng-click="detachInstance($event,node)"><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></md-button>
                     </td>
                 </tr>

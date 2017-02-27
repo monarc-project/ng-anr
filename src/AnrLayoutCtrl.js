@@ -935,13 +935,13 @@
                             break;
                         }
                     }
-                    if(!atLeastOneChildVisible && $scope.removeAccents(item[$scope._langField('name')]).indexOf($scope.removeAccents($scope.filter.library)) >= 0){
+                    if(!atLeastOneChildVisible && $scope.removeAccents($scope._langField(item,'name')).indexOf($scope.removeAccents($scope.filter.library)) >= 0){
                         atLeastOneChildVisible = true;
                     }
 
                     return atLeastOneChildVisible;
                 } else {
-                    return $scope.removeAccents(item[$scope._langField('name')]).indexOf($scope.removeAccents($scope.filter.library)) >= 0;
+                    return $scope.removeAccents($scope._langField(item,'name')).indexOf($scope.removeAccents($scope.filter.library)) >= 0;
                 }
             } else if (item.type == 'inst' && $scope.filter.instance && $scope.filter.instance.length > 0) {
                 if (item.__children__.length > 0) {
@@ -953,13 +953,13 @@
                             break;
                         }
                     }
-                    if(!atLeastOneChildVisible && $scope.removeAccents(item[$scope._langField('name')]).indexOf($scope.removeAccents($scope.filter.instance)) >= 0){
+                    if(!atLeastOneChildVisible && $scope.removeAccents($scope._langField(item,'name')).indexOf($scope.removeAccents($scope.filter.instance)) >= 0){
                         atLeastOneChildVisible = true;
                     }
 
                     return atLeastOneChildVisible;
                 } else {
-                    return $scope.removeAccents(item[$scope._langField('name')]).indexOf($scope.removeAccents($scope.filter.instance)) >= 0;
+                    return $scope.removeAccents($scope._langField(item,'name')).indexOf($scope.removeAccents($scope.filter.instance)) >= 0;
                 }
             }
 
@@ -1150,7 +1150,7 @@
                         $scope.collapseCache[output.type + output.id] = true;
                     }
 
-                    var parentPathPlusOne = parentPath ? (parentPath + " > " + instance[$scope._langField('name')]) : instance[$scope._langField('name')];
+                    var parentPathPlusOne = parentPath ? (parentPath + " > " + $scope._langField(instance,'name')) : $scope._langField(instance,'name');
 
                     if (instance.child && instance.child.length > 0) {
                         for (var i = 0; i < instance.child.length; ++i) {
@@ -1632,7 +1632,7 @@
                             $scope.scaleCommCache[comm.scaleImpactType.type] = {};
                         }
 
-                        $scope.scaleCommCache[comm.scaleImpactType.type][comm.val] = comm[$scope._langField('comment')];
+                        $scope.scaleCommCache[comm.scaleImpactType.type][comm.val] = $scope._langField(comm,'comment');
                     } else if (!isImpact) {
                         if (!obj[comm.val]) {
                             obj[comm.val] = comm;
@@ -1645,9 +1645,9 @@
                         }
 
                         if (scale_id == $scope.scales.threats.id) {
-                            $scope.threatCommCache[comm.val] = comm[$scope._langField('comment')];
+                            $scope.threatCommCache[comm.val] = $scope._langField(comm,'comment');
                         } else if (scale_id == $scope.scales.vulns.id) {
-                            $scope.vulnsCommCache[comm.val] = comm[$scope._langField('comment')];
+                            $scope.vulnsCommCache[comm.val] = $scope._langField(comm,'comment');
                         }
                     }
                 }
@@ -1912,13 +1912,13 @@
                         var child = children[i];
 
                         if (parentPath != "") {
-                            child[$scope._langField('label')] = parentPath + " >> " + child[$scope._langField('label')];
+                            child[$scope._langField('label')] = parentPath + " >> " + $scope._langField(child,'label');
                         }
 
                         output.push(child);
 
                         if (child.child && child.child.length > 0) {
-                            var child_output = buildItemRecurse(child.child, child[$scope._langField('label')]);
+                            var child_output = buildItemRecurse(child.child, $scope._langField(child,'label'));
                             output = output.concat(child_output);
                         }
                     }
@@ -1951,7 +1951,7 @@
                             var child = children[i];
 
                             for (var j = 0; j < depth; ++j) {
-                                child.label1 = " >> " + child.label1;
+                                child[$scope._langField('label')] = " >> " + $scope._langField(child,'label');
                             }
 
                             output.push(child);
@@ -2068,7 +2068,7 @@
         };
 
         $scope.insertItem = function (i) {
-            $scope.trix.insertString(i[$scope._langField('description')]);
+            $scope.trix.insertString($scope._langField(i,'description'));
         };
 
         $scope.cancel = function() {

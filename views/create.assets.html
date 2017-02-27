@@ -3,7 +3,7 @@
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 ng-if="!asset.id" translate>Add a new asset</h2>
-                <h2 ng-if="asset.id" translate>Update asset "{{asset[_langField('label')]}}" information</h2>
+                <h2 ng-if="asset.id" translate>Update asset "{{_langField(asset,'label')}}" information</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -74,7 +74,7 @@
                         <label translate>Models</label>
                         <md-icon>class</md-icon>
                         <md-select ng-disabled="asset.mode != 1" multiple ng-model="asset.models">
-                            <md-option ng-repeat="availModel in models" ng-value="availModel.id">{{ availModel[_langField('label')] }}</md-option>
+                            <md-option ng-repeat="availModel in models" ng-value="availModel.id">{{ _langField(availModel,'label') }}</md-option>
                         </md-select>
                     </md-input-container>
 

@@ -56,12 +56,12 @@
 
                         <tbody>
                         <tr ng-repeat="object in objects">
-                            <td>{{ object.category[_langField('label')] }}</td>
-                            <td>{{ object[_langField('label')] }}</td>
-                            <td>{{ object[_langField('name')] }}</td>
+                            <td>{{ _langField(object.category,'label') }}</td>
+                            <td>{{ _langField(object,'label') }}</td>
+                            <td>{{ _langField(object,'name') }}</td>
                             <td ng-if="object.scope == 1" translate>Local</td>
                             <td ng-if="object.scope == 2" translate>Global</td>
-                            <td>{{ object.asset[_langField('label')] }} - {{ object.asset[_langField('description')] }}</td>
+                            <td>{{ _langField(object.asset,'label') }} - {{ _langField(object.asset,'description') }}</td>
                             <td class="txtcenter"><md-button ng-click="openObjectDetails(object)" class="md-icon-button"><md-icon>open_in_new</md-icon></md-button></td>
                         </tr>
                         </tbody>
@@ -71,12 +71,12 @@
                 <div ng-if="dialog_mode == 'object_details'">
                     <div layout="row" layout-align="start center">
                         <md-button class="md-icon-button" ng-click="closeObjectDetails()"><md-icon>arrow_back</md-icon></md-button>
-                        <p class="md-title">{{ object_details[_langField('name')] }} - {{ object_details[_langField('label')] }}</p>
+                        <p class="md-title">{{ _langField(object_details,'name') }} - {{ _langField(object_details,'label') }}</p>
                     </div>
 
                     <p><strong translate>Scope:</strong> {{ (object_details.scope == 1 ? 'Local' : 'Global') | translate }}</p>
-                    <p><strong translate>Category:</strong> {{ object_details.category[_langField('label')] }}</p>
-                    <p><strong translate>Asset:</strong> {{ object_details.asset[_langField('label')] }}</p>
+                    <p><strong translate>Category:</strong> {{ _langField(object_details.category,'label') }}</p>
+                    <p><strong translate>Asset:</strong> {{ _langField(object_details.asset,'label') }}</p>
 
                     <md-button class="md-raised md-primary" ng-click="importObjectCommon()">{{ 'Import this object' | translate }}</md-button>
                 </div>

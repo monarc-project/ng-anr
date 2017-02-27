@@ -11,10 +11,10 @@
                 <div flex ng-if="object" ng-class="{'active-obj': mode == 'anr'}">
                     <h2 class="no-margin">
                         <md-icon ng-if="object.scope == 2" style="color: #F57C00">language</md-icon>
-                        {{ object[_langField('name')] }}
+                        {{ _langField(object,'name') }}
                     </h2>
 
-                    <span>{{ object[_langField('label')] }}</span>
+                    <span>{{ _langField(object,'label') }}</span>
                 </div>
 
                 <md-menu>
@@ -88,9 +88,9 @@
 
                     <tbody>
                     <tr ng-repeat="risk in object.risks">
-                        <td>{{risk[_langField('threatDescription')]}}</td>
+                        <td>{{_langField(risk,'threatDescription')}}</td>
                         <td class="txtcenter">{{risk.threatRate}}</td>
-                        <td>{{risk[_langField('vulnDescription')]}}</td>
+                        <td>{{_langField(risk,'vulnDescription')}}</td>
                         <td class="txtcenter">-</td>
                         <td class="txtcenter">{{risk.vulnerabilityRate}}</td>
                         <td ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc"
@@ -112,8 +112,8 @@
 </div>
 
 <script type="text/ng-template" id="objlibs.tree_item_template.html">
-    <a ng-if="mode == 'bdc'" ui-sref="main.kb_mgmt.info_risk.object({objectId: node.id})">{{ node[_langField('name')] }}</a>
-    <a ng-if="mode == 'anr'" ui-sref="main.kb_mgmt.models.details.object({objectId: node.id})"><md-icon ng-if="node.scope == 2" style="vertical-align:top;" ng-class="{'md-tree-global-icon': node.scope == 2}">language</md-icon>{{ node[_langField('name')] }}</a>
+    <a ng-if="mode == 'bdc'" ui-sref="main.kb_mgmt.info_risk.object({objectId: node.id})">{{ _langField(node,'name') }}</a>
+    <a ng-if="mode == 'anr'" ui-sref="main.kb_mgmt.models.details.object({objectId: node.id})"><md-icon ng-if="node.scope == 2" style="vertical-align:top;" ng-class="{'md-tree-global-icon': node.scope == 2}">language</md-icon>{{ _langField(node,'name') }}</a>
 
 
     <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="moveComponent(node, 'up')" ng-disabled="$index==0"><md-icon>arrow_upward</md-icon></md-button>

@@ -16,7 +16,7 @@
                     <label translate>Threat</label>
                     <md-icon>toc</md-icon>
                     <md-select ng-model="specrisk.threat" required>
-                        <md-option ng-repeat="threat in threats" ng-value="threat.id">{{ threat.code }} - {{ threat[_langField('label')] }}</md-option>
+                        <md-option ng-repeat="threat in threats" ng-value="threat.id">{{ threat.code }} - {{ _langField(threat,'label') }}</md-option>
                     </md-select>
                 </md-input-container>
 
@@ -24,7 +24,7 @@
                     <label translate>Vulnerability</label>
                     <md-icon>toc</md-icon>
                     <md-select ng-model="specrisk.vulnerability" required>
-                        <md-option ng-repeat="vuln in vulns" ng-value="vuln.id">{{ vuln.code }}- {{ vuln[_langField('label')] }}</md-option>
+                        <md-option ng-repeat="vuln in vulns" ng-value="vuln.id">{{ vuln.code }}- {{ _langField(vuln,'label') }}</md-option>
                     </md-select>
                 </md-input-container>
             </div>

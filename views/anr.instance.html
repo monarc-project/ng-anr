@@ -5,10 +5,10 @@
                 <div flex ng-if="instance" class="active-inst">
                     <h2 class="no-margin">
                         <md-icon ng-if="instance.object.scope == 2" style="color: #F57C00">language</md-icon>
-                        {{ instance[_langField('name')] }}
+                        {{ _langField(instance,'name') }}
                     </h2>
 
-                    <span>{{ instance[_langField('label')] }}</span>
+                    <span>{{ _langField(instance,'label') }}</span>
                 </div>
 
                 <md-menu>
@@ -95,7 +95,7 @@
 </div>
 
 <script type="text/ng-template" id="objlibs.tree_item_template.html">
-    <a ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>{{ node.children && node.children.length > 0 ? 'add': 'note' }}</md-icon> {{ node[_langField('name')] }}</a>
+    <a ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})"><md-icon>{{ node.children && node.children.length > 0 ? 'add': 'note' }}</md-icon> {{ _langField(node,'name') }}</a>
 
     <ul ng-if="node.children && node.children.length > 0">
         <li ng-repeat="node in node.children"

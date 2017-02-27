@@ -3,7 +3,7 @@
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 ng-if="!instance.id" translate>Add a new instance</h2>
-                <h2 ng-if="instance.id" translate>Update instance "{{instance[_langField('name')]}}" details</h2>
+                <h2 ng-if="instance.id" translate>Update instance "{{_langField(instance,'name')}}" details</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -31,7 +31,7 @@
                         </div>
                         <div layout="row" style="border: 1px solid #DFDFDF; padding: 1em; text-align: center;">
                             <div layout="column" ng-repeat="(idx, col) in instance.consequences" ng-if="!col.isHidden || display.hidden">
-                                <p>{{ col[_langField('scaleImpactTypeDescription')] }} <md-button class="md-icon-button" ng-click="setConsequenceVisibility(col.id, !!col.isHidden)"><md-icon>{{ col.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></p>
+                                <p>{{ _langField(col,'scaleImpactTypeDescription') }} <md-button class="md-icon-button" ng-click="setConsequenceVisibility(col.id, !!col.isHidden)"><md-icon>{{ col.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></p>
                                 <md-input-container style="margin: 8px 0">
                                     <md-select ng-model="instance.consequences[idx].c_risk" ng-disabled="col.isHidden" aria-label="C" title="{{scaleCommCache[col.scaleImpactType][instance.consequences[idx].c_risk]}}">
                                         <md-option value="-1">{{ 'Unknown' | translate }}</md-option>

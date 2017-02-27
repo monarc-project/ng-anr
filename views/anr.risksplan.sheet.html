@@ -18,9 +18,9 @@
 
         <tbody>
         <tr edit-model="risk" ng-repeat="risk in rec_risks">
-            <td><a ui-sref="main.project.anr.instance({modelId: model.anr.id, instId: risk.instance.id})" href="javascript:;">{{ risk.instance[_langField('name')] }}</a></td>
-            <td>{{ risk.threat.code }} - {{ risk.threat[_langField('label')] }}</td>
-            <td>{{ risk.vulnerability.code }} - {{ risk.vulnerability[_langField('label')] }}</td>
+            <td><a ui-sref="main.project.anr.instance({modelId: model.anr.id, instId: risk.instance.id})" href="javascript:;">{{ _langField(risk.instance,'name') }}</a></td>
+            <td>{{ risk.threat.code }} - {{ _langField(risk.threat,'label') }}</td>
+            <td>{{ risk.vulnerability.code }} - {{ _langField(risk.vulnerability,'label') }}</td>
             <td>{{ risk.instanceRisk.comment }}{{ risk.instanceRiskOp.comment }}</td>
             <td ng-if="risk.instanceRisk" ng-class="{'green': risk.instanceRisk.cacheMaxRisk >= 0 && risk.instanceRisk.cacheMaxRisk <= thresholds.thresholds.min, 'orange': risk.instanceRisk.cacheMaxRisk > thresholds.thresholds.min && risk.instanceRisk.cacheMaxRisk <= thresholds.thresholds.max, 'red': risk.instanceRisk.cacheMaxRisk > thresholds.thresholds.max}" class="tbl-risk-calc txtcenter">{{ risk.instanceRisk.cacheMaxRisk | dashnull }}</td>
             <td ng-if="risk.instanceRiskOp" ng-class="{'green': risk.instanceRiskOp.cacheMaxRisk >= 0 && risk.instanceRiskOp.cacheMaxRisk <= thresholds.thresholds.min, 'orange': risk.instanceRiskOp.cacheMaxRisk > thresholds.thresholds.min && risk.instanceRiskOp.cacheMaxRisk <= thresholds.thresholds.max, 'red': risk.instanceRiskOp.cacheMaxRisk > thresholds.thresholds.max}" class="tbl-risk-calc txtcenter">{{ risk.instanceRiskOp.cacheMaxRisk | dashnull }}</td>

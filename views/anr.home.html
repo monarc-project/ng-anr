@@ -7,9 +7,9 @@
             </div>
             <div flex ng-if="model.anr" class="active-inst">
                 <h2 class="no-margin ">
-                    {{ model.anr[_langField('label')] }}
+                    {{ _langField(model.anr,'label') }}
                 </h2>
-                <span>{{ model.anr[_langField('description')] }}</span>
+                <span>{{ _langField(model.anr,'description') }}</span>
             </div>
 
             <md-menu>

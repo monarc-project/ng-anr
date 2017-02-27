@@ -3,7 +3,7 @@
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 ng-if="!threat.id" translate>Add a new threat</h2>
-                <h2 ng-if="threat.id" translate>Update threat "{{threat[_langField('label')]}}" information</h2>
+                <h2 ng-if="threat.id" translate>Update threat "{{_langField(threat,'label')}}" information</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -50,12 +50,12 @@
                                 md-selected-item="threat.theme"
                                 md-search-text="themeSearchText"
                                 md-items="item in queryThemeSearch(themeSearchText)"
-                                md-item-text="item[_langField('label')]"
+                                md-item-text="_langField(item,'label')"
                                 md-min-length="0"
                                 md-selected-item-change="selectedThemeItemChange(item)"
                                 md-floating-label="{{ 'Theme' | translate }}">
                             <md-item-template>
-                                <span md-highlight-text="themeSearchText" md-highlight-flags="^i">{{ item[_langField('label')] }}</span>
+                                <span md-highlight-text="themeSearchText" md-highlight-flags="^i">{{ _langField(item,'label') }}</span>
                             </md-item-template>
 
                             <md-not-found>
@@ -83,7 +83,7 @@
                     <md-input-container class="md-block" flex>
                         <label translate>Theme label</label>
                         <md-icon></md-icon>
-                        <input ng-model="theme_edit[_langField('label')]">
+                        <input ng-model="_langField(theme_edit,'label')">
                     </md-input-container>
                     <md-button class="md-icon-button" ng-click="updateTheme(theme_edit)">
                         <md-icon>check</md-icon>
@@ -123,7 +123,7 @@
                         <label translate>Models</label>
                         <md-icon>class</md-icon>
                         <md-select multiple ng-disabled="threat.mode != 1" ng-model="threat.models">
-                            <md-option ng-repeat="availModel in models" value="{{ availModel.id }}">{{ availModel[_langField('label')] }}</md-option>
+                            <md-option ng-repeat="availModel in models" value="{{ availModel.id }}">{{ _langField(availModel,'label') }}</md-option>
                         </md-select>
                     </md-input-container>
 

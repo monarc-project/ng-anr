@@ -24,10 +24,10 @@
                             <md-input-container class="md-block" style="margin-top: 0">
                                 <textarea ng-if="question.type == 1" ng-model="question.response" rows="3" ng-disabled="!anr.rwd"></textarea>
                                 <md-select ng-if="question.type == 2 && question.multichoice == 0" ng-disabled="!anr.rwd" ng-model="question.response">
-                                    <md-option ng-repeat="choice in question.choices" ng-value="choice.id">{{ choice[_langField('label')] }}</md-option>
+                                    <md-option ng-repeat="choice in question.choices" ng-value="choice.id">{{ _langField(choice,'label') }}</md-option>
                                 </md-select>
                                 <md-select ng-if="question.type == 2 && question.multichoice == 1" ng-disabled="!anr.rwd" ng-model="question.response" multiple="true">
-                                    <md-option ng-repeat="choice in question.choices" ng-value="choice.id">{{ choice[_langField('label')] }}</md-option>
+                                    <md-option ng-repeat="choice in question.choices" ng-value="choice.id">{{ _langField(choice,'label') }}</md-option>
                                 </md-select>
                             </md-input-container>
                         </div>
@@ -50,7 +50,7 @@
                             <span flex></span>
                             <md-progress-circular md-diameter="24" ng-if="threatLoading"></md-progress-circular>
                             <md-select ng-model="display.currentThreat" md-on-close="saveAndUpdateThreat()" class="bold" style="font-size:16px;">
-                                <md-option ng-repeat="threat in threats" ng-value="$index" class="bold">{{ threat[_langField('label')] }}</md-option>
+                                <md-option ng-repeat="threat in threats" ng-value="$index" class="bold">{{ _langField(threat,'label') }}</md-option>
                             </md-select>
                         </div>
 
@@ -58,10 +58,10 @@
                         <table class="md-html-table">
                             <tbody>
                             <tr>
-                                <td colspan="2" ><b>{{ 'Theme:' | translate }}</b> {{ currentThreatObj.theme[_langField('label')] }}</td>
+                                <td colspan="2" ><b>{{ 'Theme:' | translate }}</b> {{ _langField(currentThreatObj.theme,'label') }}</td>
                             </tr>
                             <tr>
-                                <td colspan="2" ><b>{{ 'Description:' | translate }}</b> {{ currentThreatObj[_langField('description')] }}</td>
+                                <td colspan="2" ><b>{{ 'Description:' | translate }}</b> {{ _langField(currentThreatObj,'description') }}</td>
                             </tr>
                             <tr>
                                 <td translate>Comments</td>
@@ -148,10 +148,10 @@
                                         </div>
                                         <md-card-content ng-if="guide !== undefined">
                                             <p class="md-title" translate>Additional information</p>
-                                            <p class="preserve-newlines">{{ guide[_langField('description')] }}</p>
+                                            <p class="preserve-newlines">{{ _langField(guide,'description') }}</p>
                                             <md-divider></md-divider>
                                             <md-list>
-                                                <md-list-item ng-repeat="item in guide_items" ng-click="insertItem(item)"><p>{{ item[_langField('description')] }}</p></md-list-item>
+                                                <md-list-item ng-repeat="item in guide_items" ng-click="insertItem(item)"><p>{{ _langField(item,'description') }}</p></md-list-item>
                                             </md-list>
                                         </md-card-content>
                                     </md-card>

@@ -14,9 +14,9 @@
                 <md-card-content>
                     <p translate>You are about to validate the implementation of recommendation <b>{{rec.code}} - {{rec.description}}</b> for the following risk:</p>
                     <p>
-                        <span class="bold" translate>Asset:</span> {{risk.asset.code}} - {{risk.asset[_langField('label')]}}<br />
-                        <span class="bold" translate>Threat:</span> {{risk.threat.code}} - {{risk.threat[_langField('label')]}}<br />
-                        <span class="bold" translate>Vulnerability:</span> {{risk.vulnerability.code}} - {{risk.vulnerability[_langField('label')]}}
+                        <span class="bold" translate>Asset:</span> {{risk.asset.code}} - {{_langField(risk.asset,'label')}}<br />
+                        <span class="bold" translate>Threat:</span> {{risk.threat.code}} - {{_langField(risk.threat,'label')}}<br />
+                        <span class="bold" translate>Vulnerability:</span> {{risk.vulnerability.code}} - {{_langField(risk.vulnerability,'label')}}
                     </p>
                 </md-card-content>
             </md-card>

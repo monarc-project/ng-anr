@@ -5,7 +5,7 @@
 
     <div layout="column" ng-if="model" md-theme="light" class="md-padding-left md-padding-right">
         <div layout="row" layout-align="start center">
-            <h2 style="margin-right: 8px">{{ ::model[_langField('label')] }}</h2>
+            <h2 style="margin-right: 8px">{{ ::_langField(model,'label') }}</h2>
 
             <div ng-if="OFFICE_MODE == 'FO'" layout="row" layout-align="start center" ng-repeat="(idx, step) in methodProgress" flex>
                 <div class="monarc-wizard step-bullet {{ isMethodStepComplete(step) ? step.color : '' }} method-menu-step-{{::(idx+1)}}" ng-click="showMethodBox(idx+1, step, $event)">
@@ -71,11 +71,11 @@
 
         <md-icon ng-if="node.scope == 2" class="md-tree-global-icon">language</md-icon>
 
-        <p flex class="md-tree-link" ng-click="toggleItemCollapsed(node)" ng-if="node.type == 'libcat'"><strong>{{ ::node[_langField('label')] }}</strong></p>
-        <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.project.anr.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'FO'">{{ ::node[_langField('name')] }}</p>
-        <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.project.anr.instance({instId: node.id})" ng-if=" ! node.disableclick && node.type == 'inst' && OFFICE_MODE == 'FO'">{{ ::node[_langField('name')] }}</p>
-        <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.kb_mgmt.models.details.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'BO'">{{ ::node[_langField('name')] }}</p>
-        <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})" ng-if=" ! node.disableclick && node.type == 'inst' && OFFICE_MODE == 'BO'">{{ ::node[_langField('name')] }}</p>
+        <p flex class="md-tree-link" ng-click="toggleItemCollapsed(node)" ng-if="node.type == 'libcat'"><strong>{{ ::_langField(node,'label') }}</strong></p>
+        <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.project.anr.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'FO'">{{ ::_langField(node,'name') }}</p>
+        <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.project.anr.instance({instId: node.id})" ng-if=" ! node.disableclick && node.type == 'inst' && OFFICE_MODE == 'FO'">{{ ::_langField(node,'name') }}</p>
+        <p flex class="md-tree-link" ng-class="{'active-obj': node.type == 'lib' && node.id == anr_selected_object_id}" ui-sref="main.kb_mgmt.models.details.object({objectId: node.id})" ng-if="node.type == 'lib' && OFFICE_MODE == 'BO'">{{ ::_langField(node,'name') }}</p>
+        <p flex class="md-tree-link" ng-class="{'active-inst': node.type == 'inst' && node.id == anr_selected_instance_id}" ui-sref="main.kb_mgmt.models.details.instance({instId: node.id})" ng-if=" ! node.disableclick && node.type == 'inst' && OFFICE_MODE == 'BO'">{{ ::_langField(node,'name') }}</p>
     </div>
 
     <ol class="no-list-style" ui-tree-nodes="" ng-model="node.__children__" ng-show="!node.__collapsed__">
