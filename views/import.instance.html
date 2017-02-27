@@ -18,6 +18,12 @@
                     <md-radio-button value="merge">{{ 'By merging' | translate }}</md-radio-button>
                 </md-radio-group>
 
+                <md-card class="md-card-info">
+                    <md-card-content translate>
+                        Only global objects can be imported by merge.
+                    </md-card-content>
+                </md-card>
+
                 <input type="file" name="file" ngf-drop ngf-select ng-repeat="i in range(0, file_range)"
                        ng-model="file[i]"
                        class="md-upload-dropbox md-padding md-whiteframe-3dp"

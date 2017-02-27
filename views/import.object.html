@@ -18,6 +18,12 @@
                     <md-radio-button value="merge">{{ 'By merging' | translate }}</md-radio-button>
                 </md-radio-group>
 
+                <md-card class="md-card-info">
+                    <md-card-content translate>
+                        Only global objects can be imported by merge.
+                    </md-card-content>
+                </md-card>
+
                 <div layout="row" ng-show="dialog_mode == null">
                     <md-button flex ng-click="dialog_mode = 'file'" class="md-raised">{{ 'Import from file' | translate }}</md-button>
                     <md-button flex ng-click="openCommonList()" class="md-raised">{{ 'Import from MONARC library' | translate }}</md-button>
