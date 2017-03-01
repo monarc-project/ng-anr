@@ -383,7 +383,7 @@
             }
         };
 
-        $scope.resetSheet = function (redir = false) {
+        $scope.resetSheet = function (redir) {
             if($scope.sheet_risk){
                 if($scope.OFFICE_MODE == 'FO'){
                     if(!redir){
@@ -416,7 +416,7 @@
             });
         };
 
-        $scope.resetOpSheet = function (redir = false) {
+        $scope.resetOpSheet = function (redir) {
             if($scope.opsheet_risk){
                 if($scope.OFFICE_MODE == 'FO'){
                     if(!redir){
@@ -441,7 +441,7 @@
                 case 4: return 'Shared';
                 default: return 'Not processed';
             }
-        }
+        };
 
         $scope.saveRiskSheet = function (sheet) {
             AnrService.updateInstanceRisk($scope.model.anr.id, sheet.id, sheet, function () {
@@ -462,7 +462,7 @@
 
         $scope.$on('recommandations-loaded', function (ev, recs) {
             $scope._copyRecs = recs;
-        })
+        });
 
         /**
          * Risk analysis
