@@ -683,7 +683,7 @@
                     num: 1,
                     color: 'green',
                     label: gettextCatalog.getString("Context setup"),
-                    deliverable: gettextCatalog.getString("Context validation"),
+                    deliverable: gettextCatalog.getString("context validation"),
                     steps: [
                         {label: gettextCatalog.getString("Risks analysis context"), action: editEvalContext, anrField: 'contextAnaRisk', progressField: 'initAnrContext'},
                         {label: gettextCatalog.getString("Trends evaluation, threats evaluation and synthesis"), action: editTrendsContext, progressField: 'initEvalContext'},
@@ -695,9 +695,9 @@
                     num: 2,
                     color: 'blue',
                     label: gettextCatalog.getString("Context modeling"),
-                    deliverable: gettextCatalog.getString("Model validation"),
+                    deliverable: gettextCatalog.getString("model validation"),
                     steps: [
-                        {label: gettextCatalog.getString("Identification of assets, vulnerabilities and impacts assessment"), action: showAnrSummary, progressField: 'modelImpacts'},
+                        {label: gettextCatalog.getString("Identification of assets, vulnerabilities and impacts appreciation"), action: showAnrSummary, progressField: 'modelImpacts'},
                         {label: gettextCatalog.getString("Synthesis of assets / impacts"), action: editEvalContext, anrField: 'synthAct', progressField: 'modelSummary'},
                     ]
                 },
@@ -705,7 +705,7 @@
                     num: 3,
                     color: 'yellow',
                     label: gettextCatalog.getString("Risks evaluation and treatment"),
-                    deliverable: gettextCatalog.getString("Final report"),
+                    deliverable: gettextCatalog.getString("final report"),
                     steps: [
                         {label: gettextCatalog.getString("Risks estimation, evaluation and processing"), action: showAnrSummary, progressField: 'evalRisks'},
                         {label: gettextCatalog.getString("Risk treatment plan management"), action: editRisksContext, progressField: 'evalPlanRisks'},
