@@ -412,6 +412,11 @@ span.ng-inline-edit__text--placeholder {
     color: #888888;
 }
 
+
+.text-blue span.ng-inline-edit__text--placeholder {
+    color: #2196F3;
+}
+
 div.ng-inline-edit input, div.ng-inline-edit textarea {
     border-top: none;
     border-left: none;

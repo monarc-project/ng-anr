@@ -30,7 +30,7 @@
                 <tr>
                     <th></th>
                     <th ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">{{ type['label' + scales.language] }} <md-button class="md-icon-button md-warn" ng-if="type.type == 'CUS' && !isAnrReadOnly" ng-click="deleteCustomScaleType(type.id)"><md-icon>delete</md-icon></md-button> <md-button class="md-icon-button md-primary" ng-if="type.type != 'CUS' && !isAnrReadOnly" ng-click="setImpactVisibility(type.id, !!type.isHidden)"><md-icon>{{ type.isHidden ? 'visibility' : 'visibility_off' }}</md-icon></md-button></th>
-                    <th><span inline-edit="newColumn.name" inline-edit-callback="onCreateNewColumn(newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ 'New column name' | translate }}"></span></th>
+                    <th><span class="text-blue" inline-edit="newColumn.name" inline-edit-callback="onCreateNewColumn(newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ 'New column name' | translate }}"></span></th>
                 </tr>
             </thead>
 
