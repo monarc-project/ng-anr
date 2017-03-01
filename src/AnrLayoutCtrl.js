@@ -686,9 +686,9 @@
                     deliverable: gettextCatalog.getString("Context validation"),
                     steps: [
                         {label: gettextCatalog.getString("Risks analysis context"), action: editEvalContext, anrField: 'contextAnaRisk', progressField: 'initAnrContext'},
-                        {label: gettextCatalog.getString("Trends evaluation, threats evaluation, synthesis"), action: editTrendsContext, progressField: 'initEvalContext'},
+                        {label: gettextCatalog.getString("Trends evaluation, threats evaluation and synthesis"), action: editTrendsContext, progressField: 'initEvalContext'},
                         {label: gettextCatalog.getString("Risks management context"), action: editEvalContext, anrField: 'contextGestRisk', progressField: 'initRiskContext'},
-                        {label: gettextCatalog.getString("Evaluation, acceptance and impact criterias setup"), action: selectScalesTab, progressField: 'initDefContext'},
+                        {label: gettextCatalog.getString("Defining evaluation, acceptance and impact criteria"), action: selectScalesTab, progressField: 'initDefContext'},
                     ]
                 },
                 {

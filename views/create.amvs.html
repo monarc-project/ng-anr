@@ -24,7 +24,7 @@
                         md-delay="300"
                         md-min-length="0"
                         md-input-name="asset"
-                        md-floating-label="{{ 'Asset' | translate }}">
+                        md-floating-label="{{ 'Asset type' | translate }}">
                     <md-item-template>
                         <span md-highlight-text="assetSearchText" md-highlight-flags="^i">{{ item.code }} - {{ _langField(item,'label') }}</span>
                     </md-item-template>
@@ -34,7 +34,7 @@
                     </md-not-found>
 
                     <div ng-messages="amvForm.asset.$error">
-                        <div ng-message="required">{{ 'You must select an asset' | translate }}</div>
+                        <div ng-message="required">{{ 'You must select an asset type' | translate }}</div>
                     </div>
                 </md-autocomplete>
 
