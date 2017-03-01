@@ -151,8 +151,8 @@
                             <md-option ng-repeat="cat in categories" ng-value="cat.id">{{ _langField(cat,'label') }}</md-option>
                         </md-select>
                     </md-input-container>
-                    <md-button class="md-icon-button" ng-if="objlib.category" ng-click="editCategory($event, objlib.category)"><md-icon>edit</md-icon></md-button>
-                    <md-button class="md-icon-button" ng-click="createCategory($event, categorySearchText)"><md-icon>add</md-icon></md-button>
+                    <md-button class="md-icon-button md-primary" ng-if="objlib.category" ng-click="editCategory($event, objlib.category)"><md-icon>edit</md-icon></md-button>
+                    <md-button class="md-icon-button md-primary" ng-click="createCategory($event, categorySearchText)"><md-icon>add</md-icon></md-button>
                 </div>
 
                 <div class="md-block" layout="column" flex>
