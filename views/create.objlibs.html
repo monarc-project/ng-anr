@@ -2,8 +2,8 @@
     <form name="objlibForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 ng-if="!objlib.id" translate>Add a new object</h2>
-                <h2 ng-if="objlib.id" translate>Update object "{{_langField(objlib,'label')}}" information</h2>
+                <h2 ng-if="!objlib.id" translate>Add a new asset</h2>
+                <h2 ng-if="objlib.id" translate>Update asset "{{_langField(objlib,'label')}}" information</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -14,7 +14,7 @@
             <div class="md-dialog-content">
                 <md-card ng-if="!objlib.id && OFFICE_MODE == 'FO'">
                     <md-button class="md-primary" ng-click="importObject($event)">
-                        <md-icon>play_for_work</md-icon><span>{{ 'Import object available' | translate }}</span>
+                        <md-icon>play_for_work</md-icon><span>{{ 'Import an asset available' | translate }}</span>
                     </md-button>
                 </md-card>
                 <md-subheader>{{ 'Labels and descriptions' | translate }}</md-subheader>
@@ -74,7 +74,7 @@
                 <md-input-container class="md-block" layout="row" ng-if="mode=='anr_inst'" flex>
                     <label translate>Confidentiality</label>
                     <md-icon>https</md-icon>
-                    <md-select ng-model="objlib.c">
+                    <md-select ng-model="objlib.c">As
                         <md-option value="-1">{{ 'Inherited' | translate }}</md-option>
                         <md-option value="0">0</md-option>
                         <md-option value="1">1</md-option>

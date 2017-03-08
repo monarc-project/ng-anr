@@ -22,16 +22,6 @@
                                 <md-icon class="md-light-theme material-icons">edit</md-icon><span class="black">{{ 'Edit impacts' | translate }}</span>
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item>
-                            <md-button class="md-primary" ng-click="showObjectInLibrary(instance.object.id);">
-                                <md-icon class="md-light-theme material-icons">folder_open</md-icon><span class="black">{{ 'See object in the library' | translate }}</span>
-                            </md-button>
-                        </md-menu-item>
-                        <md-menu-item>
-                            <md-button class="md-primary" ng-click="detachInstance($event)" ng-disabled="isAnrReadOnly">
-                                <md-icon class="md-light-theme material-icons">content_cut</md-icon><span class="black">{{ 'Detach' | translate }}</span>
-                            </md-button>
-                        </md-menu-item>
                         <md-menu-item ng-if="OFFICE_MODE == 'FO'">
                             <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="importInstance($event, instance.id)">
                                 <md-icon class="md-light-theme material-icons">play_for_work</md-icon><span class="black">{{ 'Import analysis' | translate }}</span>
@@ -39,7 +29,17 @@
                         </md-menu-item>
                         <md-menu-item>
                             <md-button class="md-primary" ng-click="exportInstance($event)" ng-disabled="isSafari()">
-                                <md-icon class="md-light-theme material-icons">call_made</md-icon><span class="black">{{ 'Export instance' | translate }}</span>
+                                <md-icon class="md-light-theme material-icons">call_made</md-icon><span class="black">{{ 'Export analysis' | translate }}</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button class="md-primary" ng-click="showObjectInLibrary(instance.object.id);">
+                                <md-icon class="md-light-theme material-icons">folder_open</md-icon><span class="black">{{ 'See asset in the library' | translate }}</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
+                            <md-button class="md-primary md-warn" ng-click="detachInstance($event)" ng-disabled="isAnrReadOnly">
+                                <md-icon class="md-light-theme material-icons">content_cut</md-icon><span class="black">{{ 'Detach' | translate }}</span>
                             </md-button>
                         </md-menu-item>
                     </md-menu-content>

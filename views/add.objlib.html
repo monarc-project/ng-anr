@@ -2,7 +2,7 @@
     <form style="min-height: 400px">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 translate>Add an object to the model library</h2>
+                <h2 translate>Add an asset to the model library</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -52,7 +52,7 @@
                     <md-button ng-click="create()" class="md-primary"
                                ng-disabled="!objlib.object.id || !objlib.category.id">
                         <md-icon>add</md-icon>
-                        {{ 'Add the object' | translate }}
+                        {{ 'Add an asset' | translate }}
                     </md-button>
                 </div>
 
@@ -60,7 +60,7 @@
 
                 <md-button class="md-primary" ng-click="createAttachedObject()">
                     <md-icon>add</md-icon>
-                    {{ 'Create a new object and attach it to this model' | translate }}
+                    {{ 'Create a new asset and attach it to this model' | translate }}
                 </md-button>
             </div>
         </md-dialog-content>

@@ -150,10 +150,10 @@
         $scope.deleteObject = function (ev) {
             if ($scope.mode == 'bdc') {
                 var confirm = $mdDialog.confirm()
-                    .title(gettextCatalog.getString('Delete this object?'))
-                    .textContent(gettextCatalog.getString('The current object "{{ name }}" will be permanently deleted. Are you sure?',
+                    .title(gettextCatalog.getString('Delete this asset?'))
+                    .textContent(gettextCatalog.getString('The current asset "{{ name }}" will be permanently deleted. Are you sure?',
                         {name: $scope.object.name1}))
-                    .ariaLabel(gettextCatalog.getString('Delete this object'))
+                    .ariaLabel(gettextCatalog.getString('Delete this asset'))
                     .targetEvent(ev)
                     .ok(gettextCatalog.getString('Delete'))
                     .cancel(gettextCatalog.getString('Cancel'));
@@ -179,12 +179,12 @@
                     if ($scope.object.replicas.length > 0 || parents.length > 0) {
                         $scope.openDetachObjectDialog(ev, parents);
                     } else {
-                        var title = gettextCatalog.getString('Detach this object?');
+                        var title = gettextCatalog.getString('Detach this asset?');
                         var content = gettextCatalog.getString('The current object "{{ name }}" will be removed from the library. Are you sure?',
                             {name: $scope._langField($scope.object,'name')});
 
                         if ($scope.OFFICE_MODE == 'FO') {
-                            title = gettextCatalog.getString('Delete this object');
+                            title = gettextCatalog.getString('Delete this asset');
                             content = gettextCatalog.getString('The current object "{{ name }}" will be permanently deleted. Are you sure?',
                                 {name: $scope._langField($scope.object,'name')});
                         }

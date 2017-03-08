@@ -2,8 +2,8 @@
     <form>
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 ng-if="mode == 'object'" translate>Export object</h2>
-                <h2 ng-if="mode == 'instance'" translate>Export instance</h2>
+                <h2 ng-if="mode == 'object'" translate>Export asset</h2>
+                <h2 ng-if="mode == 'instance'" translate>Export asset</h2>
                 <h2 ng-if="mode == 'anr'" translate>Export risk analysis</h2>
                 <h2 ng-if="mode == 'asset'" translate>Export asset</h2>
                 <span flex></span>
@@ -16,8 +16,8 @@
             <div class="md-dialog-content" layout="column" layout-align="start top">
                 <md-subheader class="md-subheader">{{ 'Encryption' | translate }}</md-subheader>
 
-                <p ng-if="mode == 'object'" translate>You may enter a password to protect your object</p>
-                <p ng-if="mode == 'instance'" translate>You may enter a password to protect your instance</p>
+                <p ng-if="mode == 'object'" translate>You may enter a password to protect your asset</p>
+                <p ng-if="mode == 'instance'" translate>You may enter a password to protect your asset</p>
                 <p ng-if="mode == 'anr'" translate>You may enter a password to protect your risk analysis</p>
                 <p ng-if="mode == 'asset'" translate>You may enter a password to protect your asset</p>
 

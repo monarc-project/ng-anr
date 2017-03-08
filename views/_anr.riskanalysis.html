@@ -16,7 +16,7 @@
             <div layout="column" ng-hide="uiState.hideInstances" resizable r-directions="['bottom']">
                 <md-input-container md-no-float class="md-block" style="margin: 0; margin-bottom: 8px">
                     <md-icon>search</md-icon>
-                    <input type="text" ng-model="filter.instance" placeholder="{{ 'Search an instance...' | translate }}" flex="80">
+                    <input type="text" ng-model="filter.instance" placeholder="{{ 'Search an asset...' | translate }}" flex="80">
                 </md-input-container>
 
                 <md-button ui-sref="main.kb_mgmt.models.details({modelId: model.id})" ng-click="clearSelectedInstAndObj();" ng-if="OFFICE_MODE == 'BO'" layout="row" layout-align="start center" style="margin:0 0 8px 0; text-align:left" ng-class="{'active-inst': anr_selected_object_id == null && anr_selected_instance_id == null}">
@@ -41,7 +41,7 @@
 
             <md-subheader class="md-no-sticky md-small-subheader" style="z-index: 8">
                 <div layout="row" layout-align="space-between center">
-                    <div translate>Objects library</div>
+                    <div translate>Assets library</div>
                     <md-button class="md-icon-button" ng-click="uiState.hideLibrary = !uiState.hideLibrary"><md-icon>{{ uiState.hideLibrary ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
                 </div>
             </md-subheader>
@@ -50,11 +50,11 @@
                 <div ng-hide="uiState.hideLibrary" layout="row" layout-align="center center" style="background:white; z-index: 15;">
                     <md-input-container class="md-block" md-no-float flex  style="margin: 0; margin-bottom: 8px">
                         <md-icon>search</md-icon>
-                        <input type="text" ng-model="filter.library" placeholder="{{ 'Search an object...' | translate }}">
+                        <input type="text" ng-model="filter.library" placeholder="{{ 'Search an asset...' | translate }}">
                     </md-input-container>
                     <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-primary" ng-click="addObject($event)">
                         <md-tooltip md-direction="right">
-                            {{ 'Add object' | translate }}
+                            {{ 'Add an asset' | translate }}
                         </md-tooltip>
                         <md-icon>add_to_photos</md-icon>
                     </md-button>

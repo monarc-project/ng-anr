@@ -1,10 +1,10 @@
 <div flex ng-controller="AnrKbMgmtCtrl" class="anr-kb-mgmt">
     <md-tabs md-dynamic-height="true" md-border-bottom="true" md-selected="currentTabIndex">
-        <md-tab label="{{ 'Assets' | translate }}" md-on-select="selectAssetsTab()" md-on-deselect="deselectAssetsTab()">
+        <md-tab label="{{ 'Asset types' | translate }}" md-on-select="selectAssetsTab()" md-on-deselect="deselectAssetsTab()">
 
             <div layout="row" layout-align="start center" class="md-padding" ng-if="!assets.selected.length">
                 <h2 class="md-title md-padding-right md-padding-left">
-                    <span translate>Assets</span>
+                    <span translate>Asset types</span>
                     <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'New asset' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewAsset($event)">
                         <md-tooltip md-direction="left">
                             {{ 'New asset' | translate }}
@@ -215,10 +215,10 @@
                                  md-total="{{vulns.items.count}}" md-on-paginate="updateVulns" md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
         </md-tab>
 
-        <md-tab label="{{ '27002 measures' | translate }}" md-on-select="selectMeasuresTab()" md-on-deselect="deselectMeasuresTab()">
+        <md-tab label="{{ '27002 controls' | translate }}" md-on-select="selectMeasuresTab()" md-on-deselect="deselectMeasuresTab()">
             <div layout="row" layout-align="start center" class="md-padding" ng-if="!measures.selected.length">
                 <h2 class="md-title md-padding-right md-padding-left">
-                    <span translate>27002 measures</span>
+                    <span translate>27002 controls</span>
                     <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'New measure' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewMeasure($event)">
                         <md-tooltip md-direction="left">
                             {{ 'New measure' | translate }}
@@ -447,7 +447,7 @@
                     </md-input-container>
                 </form>
 
-                <md-select ng-model="risk_tag_filter" aria-label="{{ 'Asset type' | translate }}" placeholder="{{ 'Tag' | translate }}">
+                <md-select ng-model="risk_tag_filter" aria-label="{{ 'Asset types' | translate }}" placeholder="{{ 'Tag' | translate }}">
                     <md-option value="0">{{ 'All tags' | translate }}</md-option>
                     <md-option ng-repeat="tag in risk_tags" ng-value="tag.id">{{ tag.code }} ({{ _langField(tag,'label') }})</md-option>
                 </md-select>

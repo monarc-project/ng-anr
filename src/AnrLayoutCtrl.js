@@ -682,20 +682,20 @@
                 {
                     num: 1,
                     color: 'green',
-                    label: gettextCatalog.getString("Context setup"),
-                    deliverable: gettextCatalog.getString("context validation"),
+                    label: gettextCatalog.getString("Context Establishment"),
+                    deliverable: gettextCatalog.getString("Context validation"),
                     steps: [
                         {label: gettextCatalog.getString("Risks analysis context"), action: editEvalContext, anrField: 'contextAnaRisk', progressField: 'initAnrContext'},
-                        {label: gettextCatalog.getString("Trends evaluation, threats evaluation and synthesis"), action: editTrendsContext, progressField: 'initEvalContext'},
+                        {label: gettextCatalog.getString("Evaluation of Trends and Threat, and synthesis"), action: editTrendsContext, progressField: 'initEvalContext'},
                         {label: gettextCatalog.getString("Risks management context"), action: editEvalContext, anrField: 'contextGestRisk', progressField: 'initRiskContext'},
-                        {label: gettextCatalog.getString("Defining evaluation, acceptance and impact criteria"), action: selectScalesTab, progressField: 'initDefContext'},
+                        {label: gettextCatalog.getString("Definition of the risk evaluation criteria"), action: selectScalesTab, progressField: 'initDefContext'},
                     ]
                 },
                 {
                     num: 2,
                     color: 'blue',
                     label: gettextCatalog.getString("Context modeling"),
-                    deliverable: gettextCatalog.getString("model validation"),
+                    deliverable: gettextCatalog.getString("Model validation"),
                     steps: [
                         {label: gettextCatalog.getString("Identification of assets, vulnerabilities and impacts appreciation"), action: showAnrSummary, progressField: 'modelImpacts'},
                         {label: gettextCatalog.getString("Synthesis of assets / impacts"), action: editEvalContext, anrField: 'synthAct', progressField: 'modelSummary'},
@@ -704,10 +704,10 @@
                 {
                     num: 3,
                     color: 'yellow',
-                    label: gettextCatalog.getString("Risks evaluation and treatment"),
-                    deliverable: gettextCatalog.getString("final report"),
+                    label: gettextCatalog.getString("Evaluation and treatment of risks"),
+                    deliverable: gettextCatalog.getString("Final report"),
                     steps: [
-                        {label: gettextCatalog.getString("Risks estimation, evaluation and processing"), action: showAnrSummary, progressField: 'evalRisks'},
+                        {label: gettextCatalog.getString("Estimation, evaluation and risk treatment"), action: showAnrSummary, progressField: 'evalRisks'},
                         {label: gettextCatalog.getString("Risk treatment plan management"), action: editRisksContext, progressField: 'evalPlanRisks'},
                     ]
                 },
