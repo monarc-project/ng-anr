@@ -6,10 +6,9 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "ssh://gogs@rhea.netlor.fr:2222/monarc/ng_anr.git"
+    "url": "https://github.com/CASES-LU/ng-anr"
   },
   "dependencies": {
-
   },
   "devDependencies": {
 
