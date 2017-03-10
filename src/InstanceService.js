@@ -4,6 +4,7 @@ angular.module('AnrModule').service('InstanceService', ['$mdDialog', '$state', '
 		    .title(gettextCatalog.getString('Are you sure you want to detach this instance?'))
 		    .textContent(gettextCatalog.getString('This instance and all its children will be removed from the risk analysis. This operation cannot be undone.'))
 		    .ariaLabel('Detach instance')
+            .theme('light')
 		    .targetEvent(ev)
 		    .ok(gettextCatalog.getString('Detach'))
 		    .cancel(gettextCatalog.getString('Cancel'));

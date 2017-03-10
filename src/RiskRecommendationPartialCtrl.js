@@ -94,6 +94,7 @@
                     {code: recommandation.recommandation.code}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
+                .theme('light')
                 .ok(gettextCatalog.getString('Detach'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
@@ -115,6 +116,7 @@
                     {code: recommandation.recommandation.code}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
+                .theme('light')
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
@@ -155,6 +157,7 @@
                     {measure: measure.code, code: recommandation.recommandation.code}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
+                .theme('light')
                 .ok(gettextCatalog.getString('Detach'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
