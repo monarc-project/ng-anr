@@ -20,13 +20,13 @@
                         md-item-text="item.code + ' (' + _langField(item,'description') + ')'"
                         md-delay="300"
                         md-min-length="0"
-                        md-floating-label="{{ 'Measure' | translate }}">
+                        md-floating-label="{{ 'Control' | translate }}">
                     <md-item-template>
                         <span md-highlight-text="m1SearchText" md-highlight-flags="^i">{{ item.code }} ({{ _langField(item,'description') }})</span>
                     </md-item-template>
 
                     <md-not-found>
-                        {{ 'No measure matching your search was found' | translate }}
+                        {{ 'No control matching your search was found' | translate }}
                     </md-not-found>
                 </md-autocomplete>
             </div>

@@ -1,7 +1,7 @@
 <md-dialog md-theme="light" class="dialog-width">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2 translate>Detach object from risk analysis</h2>
+            <h2 translate>Detach asset from risk analysis</h2>
             <span flex></span>
             <md-button class="md-icon-button" ng-click="cancel()">
                 <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -12,7 +12,7 @@
         <div class="md-dialog-content">
             <md-card class="md-card-crit">
                 <md-card-content>
-                    <p translate>You may not detach this object because it is currently instanced. Please clear the existing dependencies before detaching it.</p>
+                    <p translate>You may not detach this asset because it is currently instanced. Please clear the existing dependencies before detaching it.</p>
                 </md-card-content>
             </md-card>
             <div ng-if="parents.length > 0">

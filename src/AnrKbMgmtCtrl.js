@@ -699,7 +699,7 @@
                     MeasureService.createMeasure(measure,
                         function () {
                             $scope.updateMeasures();
-                            toastr.success(gettextCatalog.getString('The measure "{{measureLabel}}" has been created successfully.',
+                            toastr.success(gettextCatalog.getString('The control "{{measureLabel}}" has been created successfully.',
                                 {measureLabel: $scope._langField(measure,'description')}), gettextCatalog.getString('Creation successful'));
                         },
 
@@ -730,7 +730,7 @@
                         MeasureService.updateMeasure(measure,
                             function () {
                                 $scope.updateMeasures();
-                                toastr.success(gettextCatalog.getString('The measure "{{measureLabel}}" has been updated successfully.',
+                                toastr.success(gettextCatalog.getString('The control "{{measureLabel}}" has been updated successfully.',
                                     {measureLabel: $scope._langField(measure,'description')}), gettextCatalog.getString('Update successful'));
                             },
 
@@ -744,7 +744,7 @@
 
         $scope.deleteMeasure = function (ev, item) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete measure "{{ label }}"?',
+                .title(gettextCatalog.getString('Are you sure you want to delete control "{{ label }}"?',
                     {label: $scope._langField(item,'description')}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
@@ -754,7 +754,7 @@
                 MeasureService.deleteMeasure(item.id,
                     function () {
                         $scope.updateMeasures();
-                        toastr.success(gettextCatalog.getString('The measure "{{label}}" has been deleted.',
+                        toastr.success(gettextCatalog.getString('The control "{{label}}" has been deleted.',
                             {label: $scope._langField(item,'description')}), gettextCatalog.getString('Deletion successful'));
                     }
                 );
@@ -766,7 +766,7 @@
             var count = $scope.measures.selected.length;
 
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete the {{count}} selected measures?',
+                .title(gettextCatalog.getString('Are you sure you want to delete the {{count}} selected controls?',
                     {count: count}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
@@ -780,7 +780,7 @@
 
                 MeasureService.deleteMassMeasure(ids, function () {
                     $scope.updateMeasures();
-                    toastr.success(gettextCatalog.getString('{{count}} measures have been deleted.',
+                    toastr.success(gettextCatalog.getString('{{count}} controls have been deleted.',
                         {count: count}), gettextCatalog.getString('Deletion successful'));
                 });
 

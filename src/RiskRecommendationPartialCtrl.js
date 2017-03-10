@@ -143,7 +143,7 @@
                 fullscreen: useFullScreen,
             }).then(function (measure_id) {
                 ClientRecommandationService.attachMeasureToRecommandation($scope.model.anr.id, recommandation.recommandation.id, measure_id, function () {
-                    toastr.success(gettextCatalog.getString("Measure attached to recommendation"));
+                    toastr.success(gettextCatalog.getString("Control attached to recommendation"));
                     updateRecommandations();
                 });
             });
@@ -151,7 +151,7 @@
 
         $scope.detachMeasureFromRecommandation = function (ev, recommandation, measure) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to detach measure {{measure}} recommendation "{{ code }}"?',
+                .title(gettextCatalog.getString('Are you sure you want to detach control {{measure}} recommendation "{{ code }}"?',
                     {measure: measure.code, code: recommandation.recommandation.code}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
@@ -161,7 +161,7 @@
                 ClientRecommandationService.detachMeasureFromRecommandation($scope.model.anr.id, measure.id,
                     function () {
                         updateRecommandations();
-                        toastr.success(gettextCatalog.getString('The measure has been detached.'),
+                        toastr.success(gettextCatalog.getString('The control has been detached.'),
                             gettextCatalog.getString('Operation successful'));
                     }
                 );

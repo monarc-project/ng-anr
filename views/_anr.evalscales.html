@@ -98,7 +98,7 @@
             <div layout="row" layout-align="start center">
                 <div class="anr-scales-demo-block orange"></div>
                 <md-input-container>
-                    <input ng-disabled="isAnrReadOnly" type="number" name="thresholds_max" min="{{ thresholds.thresholds.min }}" max="{{ scales.impacts.max*scales.threats.max*scales.vulns.max }}" ng-model="thresholds.thresholds.max" aria-label="max" />
+		    <input ng-disabled="isAnrReadOnly" type="number" name="thresholds_max" min="{{ thresholds.thresholds.min }}" max="{{ scales.impacts.max*scales.threats.max*scales.vulns.max }}" ng-model="thresholds.thresholds.max" aria-label="max" />
                     <div ng-messages="thresholdsForm.thresholds_max.$error">
                         <div ng-message="min">{{ 'This cannot be lower than the green threshold' | translate }}</div>
                         <div ng-message="max">{{ 'This cannot be higher than' | translate }} {{ scales.impacts.max*scales.threats.max*scales.vulns.max }}</div>
@@ -107,7 +107,7 @@
             </div>
 
             <div layout="row" layout-align="start center" class="md-padding">
-                <p class="anr-table-sidetitle" translate>Impact</p>
+                <p class="anr-table-sidetitle" translate><b>Impact</b></p>
                 <table class="tbl-risk-calc">
                     <tbody>
                          <tr>
@@ -128,9 +128,9 @@
 
                 <div class="anr-formula-container">
                     <div class="anr-formula">
-                        <span class="green">R</span> = I x ( M x V )
+                        <span class="green">R</span> = I x ({{'T' | translate}} x V )
                     </div>
-                    <p class="md-caption">{{ 'R: Risk, I: Impact, M: Threat, V: Vulnerability' | translate }}</p>
+                    <p class="md-caption">{{ 'R: Risk, I: Impact, T: Threat, V: Vulnerability' | translate }}</p>
                 </div>
             </div>
         </div>

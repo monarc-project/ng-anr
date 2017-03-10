@@ -13,7 +13,7 @@
             <div layout="row" layout-wrap class="md-padding-left md-padding-right">
                 <form layout="row" layout-wrap layout-align="center center" class="md-padding-left md-padding-right" ng-submit="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()">
                     <input type="submit" style="position: absolute; left: -99999px">
-                    <span ng-if="instmode == 'anr' || instmode == 'inst'">{{ 'Risk threshold (on max CID)' | translate }}&nbsp;</span>
+                    <span ng-if="instmode == 'anr' || instmode == 'inst'">{{ 'Risk threshold (on max CIA)' | translate }}&nbsp;</span>
                     <md-radio-group ng-if="instmode == 'anr' || instmode == 'inst'" ng-model="risks_filters.thresholds" layout="row" class="md-primary">
                         <md-radio-button ng-value="-1" aria-label="G"><div class="tbl-risk-calc anr-scales-demo-block green"></div></md-radio-button>
                         <md-radio-button ng-value="thresholds.thresholds.min" aria-label="O"><div class="tbl-risk-calc anr-scales-demo-block orange"></div></md-radio-button>
@@ -53,7 +53,7 @@
                             <md-option value="instance" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'Instance' | translate }}</md-option>
                             <md-option value="c_impact" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'C Impact' | translate }}</md-option>
                             <md-option value="i_impact" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'I Impact' | translate }}</md-option>
-                            <md-option value="d_impact" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'D Impact' | translate }}</md-option>
+                            <md-option value="d_impact" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'A Impact' | translate }}</md-option>
                             <md-option value="threat">{{ 'Threat' | translate }}</md-option>
                             <md-option value="threatRate">{{ 'Threat probability' | translate }}</md-option>
                             <md-option value="vulnerability">{{ 'Vulnerability' | translate }}</md-option>
@@ -86,7 +86,7 @@
     <table editable callback="onRisksTableEdited" class="md-html-table md-html-table-grey big-border-all" ng-if="risks.length > 0">
         <thead class="big-border-bottom">
         <tr>
-            <th rowspan="2" translate>Instance</th>
+            <th rowspan="2" translate>Asset</th>
             <th colspan="3" translate>Impact</th>
             <th colspan="2" class="big-border-left" translate>Threat</th>
             <th colspan="3" class="big-border-left" translate>Vulnerability</th>
@@ -97,7 +97,7 @@
         <tr>
             <th>C</th>
             <th>I</th>
-            <th>D</th>
+            <th translate>A</th>
             <th class="big-border-left" translate>Label</th>
             <th translate>Prob.</th>
             <th class="big-border-left" translate>Label</th>
@@ -105,7 +105,7 @@
             <th translate>Qualif.</th>
             <th class="big-border-left">C</th>
             <th>I</th>
-            <th>D</th>
+            <th translate>A</th>
         </tr>
         </thead>
 

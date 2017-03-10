@@ -64,12 +64,13 @@
                 <table class="md-html-table big-border-all">
                     <thead class="big-border-bottom">
                     <tr>
-                        <th colspan="2" class="big-border-left"><p translate>Threat</p></th>
-                        <th colspan="3" class="big-border-left"><p translate>Vulnerability</p></th>
-                        <th colspan="3" class="big-border-left"><p translate>Current risk</p></th>
-                        <th rowspan="2"><p translate>Target risk</p></th>
+			<th colspan="1" class="big-border-left"><p translate>Asset</p></th>                        
+			<th colspan="1" class="big-border-left"><p translate>Threat</p></th>
+                        <th colspan="1" class="big-border-left"><p translate>Vulnerability</p></th>
+                        <!--<th colspan="3" class="big-border-left"><p translate>Current risk</p></th>
+                        <th rowspan="2"><p translate>Target risk</p></th>-->
                     </tr>
-                    <tr>
+                    <!--<tr>
                         <th translate>Label</th>
                         <th translate>Prob.</th>
                         <th class="big-border-left" translate>Label</th>
@@ -78,15 +79,16 @@
                         <th class="big-border-left">C</th>
                         <th>I</th>
                         <th>D</th>
-                    </tr>
+                    </tr>-->
                     </thead>
 
                     <tbody>
                     <tr ng-repeat="risk in object.risks">
-                        <td>{{_langField(risk,'threatDescription')}}</td>
-                        <td class="txtcenter">{{risk.threatRate}}</td>
+			<td>{{ _langField(object,'name') }}</td>
+	                <td>{{_langField(risk,'threatDescription')}}</td>
+                        <!--<td class="txtcenter">{{risk.threatRate}}</td>-->
                         <td>{{_langField(risk,'vulnDescription')}}</td>
-                        <td class="txtcenter">-</td>
+                        <!--<td class="txtcenter">-</td>
                         <td class="txtcenter">{{risk.vulnerabilityRate}}</td>
                         <td ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc"
                             ng-class="{'green': risk.c_risk >= 0 && risk.c_risk < scales.thresholds.min, 'orange': risk.c_risk >= scales.thresholds.min && risk.c_risk < scales.thresholds.max, 'red': risk.c_risk >= scales.thresholds.max}">{{risk.c_risk_enabled ? risk.c_risk : ''}}</td>
@@ -94,7 +96,7 @@
                             ng-class="{'green': risk.i_risk >= 0 && risk.i_risk < scales.thresholds.min, 'orange': risk.i_risk >= scales.thresholds.min && risk.i_risk < scales.thresholds.max, 'red': risk.i_risk >= scales.thresholds.max}">{{risk.i_risk_enabled ? risk.i_risk : ''}}</td>
                         <td ng-disabled="!risk.d_risk_enabled" class="tbl-risk-calc"
                             ng-class="{'green': risk.d_risk >= 0 && risk.d_risk < scales.thresholds.min, 'orange': risk.d_risk >= scales.thresholds.min && risk.d_risk < scales.thresholds.max, 'red': risk.d_risk >= scales.thresholds.max}">{{risk.d_risk_enabled ? risk.d_risk : ''}}</td>
-                        <td class="txtcenter">{{risk.target|dashnull}}</td>
+                        <td class="txtcenter">{{risk.target|dashnull}}</td>-->
                     </tr>
                     </tbody>
                 </table>

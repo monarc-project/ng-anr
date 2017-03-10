@@ -1,7 +1,7 @@
 <md-dialog md-theme="light" class="dialog-width">
     <md-toolbar>
         <div class="md-toolbar-tools">
-            <h2 translate>Implementation of recommendation {{rec.code}} - {{rec.description}}</h2>
+            <h2>{{rec.code}} - {{rec.description}}</h2>
             <span flex></span>
             <md-button class="md-icon-button" ng-click="cancel()">
                 <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -14,9 +14,9 @@
                 <md-card-content>
                     <p translate>You are about to validate the implementation of recommendation <b>{{rec.code}} - {{rec.description}}</b> for the following risk:</p>
                     <p>
-                        <span class="bold" translate>Asset:</span> {{risk.asset.code}} - {{_langField(risk.asset,'label')}}<br />
-                        <span class="bold" translate>Threat:</span> {{risk.threat.code}} - {{_langField(risk.threat,'label')}}<br />
-                        <span class="bold" translate>Vulnerability:</span> {{risk.vulnerability.code}} - {{_langField(risk.vulnerability,'label')}}
+                        <span class="bold" translate>Asset:</span> {{ _langField(risk.instance,'name') }}<br />
+                        <span class="bold" translate>Threat:</span> {{_langField(risk.threat,'label')}}<br />
+                        <span class="bold" translate>Vulnerability:</span> {{_langField(risk.vulnerability,'label')}}
                     </p>
                 </md-card-content>
             </md-card>

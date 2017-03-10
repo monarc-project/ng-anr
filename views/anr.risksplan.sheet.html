@@ -1,6 +1,6 @@
 <div class="md-padding" ng-controller="AnrRisksPlanSheetCtrl">
     <md-button ng-click="backToList()"><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button>
-    <p class="md-title" translate>Implementation of the recommendation {{ rec.code }} - {{ rec.description }}</p>
+    <p class="md-title"><b>{{ rec.code }}</b><br>{{ rec.description }}</p>
 
     <table class="md-html-table" editable callback="onTableEdited">
         <thead>
@@ -8,9 +8,9 @@
             <th translate>Asset</th>
             <th translate>Threat</th>
             <th translate>Vulnerability</th>
-            <th translate>Observation before measure</th>
+            <th translate>Existing controls</th>
             <th translate>Current risk</th>
-            <th translate>Observation after measure</th>
+            <th translate>New controls</th>
             <th translate>Target risk</th>
             <th ng-if="!isAnrReadOnly" translate>Actions</th>
         </tr>

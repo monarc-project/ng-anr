@@ -3,7 +3,7 @@
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 ng-if="!threat.id" translate>Add a new threat</h2>
-                <h2 ng-if="threat.id" translate>Update threat "{{_langField(threat,'label')}}" information</h2>
+                <h2 ng-if="threat.id" translate>Update threat</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -113,7 +113,7 @@
                 <md-input-container layout="row">
                     <md-checkbox ng-model="threat.c" class="md-primary">C</md-checkbox>
                     <md-checkbox ng-model="threat.i" class="md-primary">I</md-checkbox>
-                    <md-checkbox ng-model="threat.d" class="md-primary">D</md-checkbox>
+                    <md-checkbox ng-model="threat.d" class="md-primary" translate>A</md-checkbox>
                 </md-input-container>
 
                 <div ng-if="OFFICE_MODE == 'BO'">
