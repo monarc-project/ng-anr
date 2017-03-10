@@ -2458,6 +2458,7 @@
 
         $scope.editInterview = function (interview) {
             $scope.new_interview = angular.copy(interview);
+            $scope.showInterviewForm = true;
         }
 
         $scope.deleteInterview = function (interview) {

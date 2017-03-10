@@ -268,6 +268,7 @@
                 .title(gettextCatalog.getString('Delete this specific risk?'))
                 .textContent(gettextCatalog.getString('The selected specific risk will be permanently deleted. Are you sure?'))
                 .targetEvent(ev)
+                .theme('light')
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
 
@@ -289,6 +290,7 @@
                 .title(gettextCatalog.getString('Delete this specific operational risk?'))
                 .textContent(gettextCatalog.getString('The selected specific operational risk will be permanently deleted. Are you sure?'))
                 .targetEvent(ev)
+                .theme('light')
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
 

@@ -87,6 +87,7 @@
                 .textContent(gettextCatalog.getString('The selected component will be detached from the current object.'))
                 .ariaLabel(gettextCatalog.getString('Detach this component'))
                 .targetEvent(ev)
+                .theme('light')
                 .ok(gettextCatalog.getString('Detach'))
                 .cancel(gettextCatalog.getString('Cancel'));
 
@@ -155,6 +156,7 @@
                         {name: $scope.object.name1}))
                     .ariaLabel(gettextCatalog.getString('Delete this asset'))
                     .targetEvent(ev)
+                    .theme('light')
                     .ok(gettextCatalog.getString('Delete'))
                     .cancel(gettextCatalog.getString('Cancel'));
 
@@ -194,6 +196,7 @@
                             .textContent(content)
                             .ariaLabel(gettextCatalog.getString('Detach this object'))
                             .targetEvent(ev)
+                            .theme('light')
                             .ok(gettextCatalog.getString('Detach'))
                             .cancel(gettextCatalog.getString('Cancel'));
 
@@ -514,6 +517,7 @@
                 .textContent(gettextCatalog.getString('The selected component will be detached from the current object.'))
                 .ariaLabel(gettextCatalog.getString('Detach this component'))
                 .targetEvent(ev)
+                .theme('light')
                 .ok(gettextCatalog.getString('Detach'))
                 .cancel(gettextCatalog.getString('Cancel'));
 
