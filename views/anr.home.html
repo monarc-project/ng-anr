@@ -14,23 +14,23 @@
 
             <md-menu>
                 <md-button ng-click="openAnrMenu($mdOpenMenu, $event);">
-                    <md-tooltip md-direction="bottom">{{ 'Object actions' | translate }}</md-tooltip>
+                    <md-tooltip md-direction="bottom">{{ 'Asset actions' | translate }}</md-tooltip>
                     <md-icon class="material-icons md-48 size-auto" md-menu-origin>more_vert</md-icon>
                 </md-button>
                 <md-menu-content width="OFFICE_MODE == 'FO'?4:1">
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">
                         <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="editAnrInfo($event)">
-                            <md-icon class="md-light-theme material-icons">edit</md-icon><span class="black">{{ 'Edit risk analysis details' | translate }}</span>
+                            <md-icon class="md-light-theme material-icons">edit</md-icon><span class="black">{{ 'Edit risk analysis' | translate }}</span>
                         </md-button>
                     </md-menu-item>
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">
                         <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="importInstance($event)">
-                            <md-icon class="md-light-theme material-icons">play_for_work</md-icon><span class="black">{{ 'Import analysis' | translate }}</span>
+                            <md-icon class="md-light-theme material-icons">play_for_work</md-icon><span class="black">{{ 'Import a risk analysis' | translate }}</span>
                         </md-button>
                     </md-menu-item>
                     <md-menu-item>
                         <md-button class="md-primary" ng-click="exportAnr($event)" ng-disabled="isSafari()">
-                            <md-icon class="md-light-theme material-icons">call_made</md-icon><span class="black">{{ 'Export risk analysis' | translate }}</span>
+                            <md-icon class="md-light-theme material-icons">call_made</md-icon><span class="black">{{ 'Export the whole risk analysis' | translate }}</span>
                         </md-button>
                     </md-menu-item>
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">

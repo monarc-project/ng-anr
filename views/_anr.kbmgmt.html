@@ -5,9 +5,9 @@
             <div layout="row" layout-align="start center" class="md-padding" ng-if="!assets.selected.length">
                 <h2 class="md-title md-padding-right md-padding-left">
                     <span translate>Asset types</span>
-                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'New asset' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewAsset($event)">
+                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'Add an asset' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewAsset($event)">
                         <md-tooltip md-direction="left">
-                            {{ 'New asset' | translate }}
+                            {{ 'Add an asset' | translate }}
                         </md-tooltip>
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
@@ -79,9 +79,9 @@
             <div class="md-padding" ng-if="!threats.selected.length" layout="row" layout-align="start center">
                 <h2 class="md-title md-padding-right md-padding-left">
                     <span translate>Threats</span>
-                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'New threat' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewThreat($event)">
+                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'Add a threat' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewThreat($event)">
                         <md-tooltip md-direction="left">
-                            {{ 'New threat' | translate }}
+                            {{ 'Add a threat' | translate }}
                         </md-tooltip>
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
@@ -149,9 +149,9 @@
             <div layout="row" layout-align="start center" class="md-padding" ng-if="!vulns.selected.length">
                 <h2 class="md-title md-padding-right md-padding-left">
                     <span translate>Vulnerabilties</span>
-                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'New vulnerability' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewVuln($event)">
+                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'Add a vulnerability' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewVuln($event)">
                         <md-tooltip md-direction="left">
-                            {{ 'New vulnerability' | translate }}
+                            {{ 'Add a vulnerability' | translate }}
                         </md-tooltip>
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
@@ -219,9 +219,9 @@
             <div layout="row" layout-align="start center" class="md-padding" ng-if="!measures.selected.length">
                 <h2 class="md-title md-padding-right md-padding-left">
                     <span translate>27002 controls</span>
-                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'New control' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewMeasure($event)">
+                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'Add a control' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewMeasure($event)">
                         <md-tooltip md-direction="left">
-                            {{ 'New control' | translate }}
+                            {{ 'Add a control' | translate }}
                         </md-tooltip>
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
@@ -283,13 +283,13 @@
                                  md-total="{{measures.items.count}}" md-on-paginate="updateMeasures" md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
         </md-tab>
 
-        <md-tab label="{{ 'Risks' | translate }}" md-on-select="selectAmvsTab()" md-on-deselect="deselectAmvsTab()">
+        <md-tab label="{{ 'Information risks' | translate }}" md-on-select="selectAmvsTab()" md-on-deselect="deselectAmvsTab()">
             <div layout="row" layout-align="start center" class="md-padding" ng-if="!amvs.selected.length">
                 <h2 class="md-title md-padding-right md-padding-left">
-                    <span translate>Risks</span>
-                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'New risk' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewAmv($event)">
+                    <span translate>Information risks</span>
+                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'Add a risk' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewAmv($event)">
                         <md-tooltip md-direction="left">
-                            {{ 'New risk' | translate }}
+                            {{ 'Add a risk' | translate }}
                         </md-tooltip>
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
@@ -364,9 +364,9 @@
             <div layout="row" layout-align="start center" class="md-padding" ng-if="!tags.selected.length">
                 <h2 class="md-title">
                     <span translate>Tags</span>
-                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'New tag' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewTag($event)">
+                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'Add a tag' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewTag($event)">
                         <md-tooltip md-direction="left">
-                            {{ 'New tag' | translate }}
+                            {{ 'Add a tag' | translate }}
                         </md-tooltip>
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
@@ -428,13 +428,13 @@
                                  md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
         </md-tab>
 
-        <md-tab label="{{ 'Operational Risks' | translate }}" md-on-select="selectRisksTab()" md-on-deselect="deselectRisksTab()">
+        <md-tab label="{{ 'Operational risks' | translate }}" md-on-select="selectRisksTab()" md-on-deselect="deselectRisksTab()">
             <div layout="row" layout-align="start center" class="md-padding" ng-if="!risks.selected.length">
                 <h2 class="md-title">
-                    <span translate>Risks</span>
-                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'New risk' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewRisk($event)">
+                    <span translate>Operational risks</span>
+                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'Add a risk' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewRisk($event)">
                         <md-tooltip md-direction="left">
-                            {{ 'New risk' | translate }}
+                            {{ 'Add a risk' | translate }}
                         </md-tooltip>
                         <md-icon>add_to_photos</md-icon>
                     </md-button>

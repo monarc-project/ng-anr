@@ -138,10 +138,10 @@
 
                             if (asset.mode == 0 && asset.models && asset.models.length > 0) {
                                 // If we create a generic asset, but we still have specific models, we should warn
-                                toastr.warning(gettextCatalog.getString('The asset type "{{assetLabel}}" has been created successfully, however without models, the element may not be specific.',
+                                toastr.warning(gettextCatalog.getString('The asset type has been created successfully, however without models, the element may not be specific.',
                                     {assetLabel: $scope._langField(asset,'label')}));
                             } else {
-                                toastr.success(gettextCatalog.getString('The asset type "{{assetLabel}}" has been created successfully.',
+                                toastr.success(gettextCatalog.getString('The asset type has been created successfully.',
                                     {assetLabel: $scope._langField(asset,'label')}), gettextCatalog.getString('Creation successful'));
                             }
                         },
@@ -175,11 +175,11 @@
 
                                 if (asset.mode == 0 && asset.models && asset.models.length > 0) {
                                     // If we create a generic asset, but we still have specific models, we should warn
-                                    toastr.warning(gettextCatalog.getString('The asset type "{{assetLabel}}" has been updated successfully, however without models, the element may not be specific.',
+                                    toastr.warning(gettextCatalog.getString('The asset type has been edited successfully, however without models, the element may not be specific.',
                                         {assetLabel: $scope._langField(asset,'label')}));
                                 } else {
-                                    toastr.success(gettextCatalog.getString('The asset type "{{assetLabel}}" has been updated successfully.',
-                                        {assetLabel: $scope._langField(asset,'label')}), gettextCatalog.getString('Update successful'));
+                                    toastr.success(gettextCatalog.getString('The asset type has been edited successfully.',
+                                        {assetLabel: $scope._langField(asset,'label')}), gettextCatalog.getString('Edition successful'));
                                 }
                             },
 
@@ -193,7 +193,7 @@
 
         $scope.deleteAsset = function (ev, item) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete asset type "{{ label }}"?',
+                .title(gettextCatalog.getString('Are you sure you want to delete asset type?',
                     {label: $scope._langField(item,'label')}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
@@ -204,7 +204,7 @@
                 AssetService.deleteAsset(item.id,
                     function () {
                         $scope.updateAssets();
-                        toastr.success(gettextCatalog.getString('The asset type "{{label}}" has been deleted.',
+                        toastr.success(gettextCatalog.getString('The asset type has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                     }
                 );
@@ -331,10 +331,10 @@
 
                             if (threat.mode == 0 && threat.models && threat.models.length > 0) {
                                 // If we create a generic threat, but we still have specific models, we should warn
-                                toastr.warning(gettextCatalog.getString('The threat "{{threatLabel}}" has been created successfully, however without models, the element may not be specific.',
+                                toastr.warning(gettextCatalog.getString('The threat has been created successfully, however without models, the element may not be specific.',
                                     {threatLabel: $scope._langField(threat,'label')}));
                             } else {
-                                toastr.success(gettextCatalog.getString('The threat "{{threatLabel}}" has been created successfully.',
+                                toastr.success(gettextCatalog.getString('The threat has been created successfully.',
                                     {threatLabel: $scope._langField(threat,'label')}), gettextCatalog.getString('Creation successful'));
                             }
                         },
@@ -376,11 +376,11 @@
 
                                 if (threat.mode == 0 && threat.models && threat.models.length > 0) {
                                     // If we create a generic threat, but we still have specific models, we should warn
-                                    toastr.warning(gettextCatalog.getString('The threat "{{threatLabel}}" has been updated successfully, however without models, the element may not be specific.',
+                                    toastr.warning(gettextCatalog.getString('The threat has been edited successfully, however without models, the element may not be specific.',
                                         {threatLabel: $scope._langField(threat,'label')}));
                                 } else {
-                                    toastr.success(gettextCatalog.getString('The threat "{{threatLabel}}" has been updated successfully.',
-                                        {threatLabel: $scope._langField(threat,'label')}), gettextCatalog.getString('Update successful'));
+                                    toastr.success(gettextCatalog.getString('The threat has been edited successfully.',
+                                        {threatLabel: $scope._langField(threat,'label')}), gettextCatalog.getString('Edition successful'));
                                 }
                                 threat.theme = themeBackup;
                             },
@@ -396,7 +396,7 @@
 
         $scope.deleteThreat = function (ev, item) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete threat "{{ label }}"?',
+                .title(gettextCatalog.getString('Are you sure you want to delete threat?',
                     {label: $scope._langField(item,'label')}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
@@ -407,7 +407,7 @@
                 ThreatService.deleteThreat(item.id,
                     function () {
                         $scope.updateThreats();
-                        toastr.success(gettextCatalog.getString('The threat "{{label}}" has been deleted.',
+                        toastr.success(gettextCatalog.getString('The threat has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                     }
                 );
@@ -523,10 +523,10 @@
 
                             if (vuln.mode == 0 && vuln.models && vuln.models.length > 0) {
                                 // If we create a generic vulnerability, but we still have specific models, we should warn
-                                toastr.warning(gettextCatalog.getString('The vulnerability "{{vulnLabel}}" has been created successfully, however without models, the element may not be specific.',
+                                toastr.warning(gettextCatalog.getString('The vulnerability has been created successfully, however without models, the element may not be specific.',
                                     {vulnLabel: $scope._langField(vuln,'label')}));
                             } else {
-                                toastr.success(gettextCatalog.getString('The vulnerability "{{vulnLabel}}" has been created successfully.',
+                                toastr.success(gettextCatalog.getString('The vulnerability has been created successfully.',
                                     {vulnLabel: $scope._langField(vuln,'label')}), gettextCatalog.getString('Creation successful'));
                             }
                         },
@@ -562,11 +562,11 @@
 
                                 if (vuln.mode == 0 && vuln.models && vuln.models.length > 0) {
                                     // If we create a generic vulnerability, but we still have specific models, we should warn
-                                    toastr.warning(gettextCatalog.getString('The vulnerability "{{vulnLabel}}" has been updated successfully, however without models, the element may not be specific.',
+                                    toastr.warning(gettextCatalog.getString('The vulnerability has been edited successfully, however without models, the element may not be specific.',
                                         {vulnLabel: $scope._langField(vuln,'label')}));
                                 } else {
-                                    toastr.success(gettextCatalog.getString('The vulnerability "{{vulnLabel}}" has been updated successfully.',
-                                        {vulnLabel: $scope._langField(vuln,'label')}), gettextCatalog.getString('Update successful'));
+                                    toastr.success(gettextCatalog.getString('The vulnerability has been edited successfully.',
+                                        {vulnLabel: $scope._langField(vuln,'label')}), gettextCatalog.getString('Edition successful'));
                                 }
                             },
 
@@ -580,7 +580,7 @@
 
         $scope.deleteVuln = function (ev, item) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete vulnerability "{{ label }}"?',
+                .title(gettextCatalog.getString('Are you sure you want to delete vulnerability?',
                     {label: $scope._langField(item,'label')}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
@@ -591,7 +591,7 @@
                 VulnService.deleteVuln(item.id,
                     function () {
                         $scope.updateVulns();
-                        toastr.success(gettextCatalog.getString('The vulnerability "{{label}}" has been deleted.',
+                        toastr.success(gettextCatalog.getString('The vulnerability has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                     }
                 );
@@ -628,7 +628,7 @@
         };
 
         /*
-         * 27002 MEASURES TAB
+         * 27002 CONTROLS TAB
          */
         $scope.measures = TableHelperService.build('description1', 20, 1, '');
         $scope.measures.activeFilter = 1;
@@ -705,7 +705,7 @@
                     MeasureService.createMeasure(measure,
                         function () {
                             $scope.updateMeasures();
-                            toastr.success(gettextCatalog.getString('The control "{{measureLabel}}" has been created successfully.',
+                            toastr.success(gettextCatalog.getString('The control has been created successfully.',
                                 {measureLabel: $scope._langField(measure,'description')}), gettextCatalog.getString('Creation successful'));
                         },
 
@@ -736,8 +736,8 @@
                         MeasureService.updateMeasure(measure,
                             function () {
                                 $scope.updateMeasures();
-                                toastr.success(gettextCatalog.getString('The control "{{measureLabel}}" has been updated successfully.',
-                                    {measureLabel: $scope._langField(measure,'description')}), gettextCatalog.getString('Update successful'));
+                                toastr.success(gettextCatalog.getString('The control has been edited successfully.',
+                                    {measureLabel: $scope._langField(measure,'description')}), gettextCatalog.getString('Edition successful'));
                             },
 
                             function () {
@@ -750,7 +750,7 @@
 
         $scope.deleteMeasure = function (ev, item) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete control "{{ label }}"?',
+                .title(gettextCatalog.getString('Are you sure you want to delete control?',
                     {label: $scope._langField(item,'description')}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
@@ -761,7 +761,7 @@
                 MeasureService.deleteMeasure(item.id,
                     function () {
                         $scope.updateMeasures();
-                        toastr.success(gettextCatalog.getString('The control "{{label}}" has been deleted.',
+                        toastr.success(gettextCatalog.getString('The control has been deleted.',
                             {label: $scope._langField(item,'description')}), gettextCatalog.getString('Deletion successful'));
                     }
                 );
@@ -954,7 +954,7 @@
                         AmvService.updateAmv(amv,
                             function () {
                                 $scope.updateAmvs();
-                                toastr.success(gettextCatalog.getString('The risk has been updated successfully.'), gettextCatalog.getString('Update successful'));
+                                toastr.success(gettextCatalog.getString('The risk has been edited successfully.'), gettextCatalog.getString('Edition successful'));
                             },
 
                             function () {
@@ -1019,7 +1019,7 @@
         };
 
         /*
-         * OBJECTS LIBRARY TAB
+         * ASSETS LIBRARY TAB
          */
         var objLibTabSelected = false;
         $scope.objlibs = TableHelperService.build('name1', 20, 1, '');
@@ -1188,8 +1188,8 @@
                                 function () {
                                     $scope.updateObjlibs();
                                     $scope.updateObjlibsTabCategoriesFilter();
-                                    toastr.success(gettextCatalog.getString('The asset "{{objlibLabel}}" has been updated successfully.',
-                                        {objlibLabel: $scope._langField(objlib,'label')}), gettextCatalog.getString('Update successful'));
+                                    toastr.success(gettextCatalog.getString('The asset has been edited successfully.',
+                                        {objlibLabel: $scope._langField(objlib,'label')}), gettextCatalog.getString('Edition successful'));
                                 },
 
                                 function () {
@@ -1204,7 +1204,7 @@
                                 function () {
                                     $scope.updateObjlibs();
                                     $scope.updateObjlibsTabCategoriesFilter();
-                                    toastr.success(gettextCatalog.getString('The asset "{{objlibLabel}}" has been created successfully.',
+                                    toastr.success(gettextCatalog.getString('The asset has been created successfully.',
                                         {objlibLabel: $scope._langField(objlib,'label')}), gettextCatalog.getString('Creation successful'));
 
                                     if (cont) {
@@ -1240,7 +1240,7 @@
 
         $scope.deleteObjlib = function (ev, item) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete asset "{{ label }}"?',
+                .title(gettextCatalog.getString('Are you sure you want to delete asset?',
                     {label: $scope._langField(item,'label')}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
@@ -1251,7 +1251,7 @@
                 ObjlibService.deleteObjlib(item.id,
                     function () {
                         $scope.updateObjlibs();
-                        toastr.success(gettextCatalog.getString('The asset "{{label}}" has been deleted.',
+                        toastr.success(gettextCatalog.getString('The asset has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                     }
                 );
@@ -1359,7 +1359,7 @@
                     CategoryService.createCategory(category,
                         function () {
                             $scope.updateCategories();
-                            toastr.success(gettextCatalog.getString('The category "{{categoryLabel}}" has been created successfully.',
+                            toastr.success(gettextCatalog.getString('The category has been created successfully.',
                                 {categoryLabel: $scope._langField(category,'label')}), gettextCatalog.getString('Creation successful'));
                         },
 
@@ -1390,8 +1390,8 @@
                         CategoryService.updateCategory(category,
                             function () {
                                 $scope.updateCategories();
-                                toastr.success(gettextCatalog.getString('The category "{{categoryLabel}}" has been updated successfully.',
-                                    {categoryLabel: $scope._langField(category,'label')}), gettextCatalog.getString('Update successful'));
+                                toastr.success(gettextCatalog.getString('The category has been edited successfully.',
+                                    {categoryLabel: $scope._langField(category,'label')}), gettextCatalog.getString('Edition successful'));
                             },
 
                             function () {
@@ -1404,7 +1404,7 @@
 
         $scope.deleteCategory = function (ev, item) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete category "{{ label }}"?',
+                .title(gettextCatalog.getString('Are you sure you want to delete category?',
                     {label: $scope._langField(item,'label')}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
@@ -1415,7 +1415,7 @@
                 CategoryService.deleteCategory(item.id,
                     function () {
                         $scope.updateCategories();
-                        toastr.success(gettextCatalog.getString('The category "{{label}}" has been deleted.',
+                        toastr.success(gettextCatalog.getString('The category has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                     }
                 );
@@ -1491,7 +1491,7 @@
                     TagService.createTag(tag,
                         function () {
                             $scope.updateTags();
-                            toastr.success(gettextCatalog.getString('The tag "{{tagLabel}}" has been created successfully.',
+                            toastr.success(gettextCatalog.getString('The tag has been created successfully.',
                                 {tagLabel: $scope._langField(tag,'label')}), gettextCatalog.getString('Creation successful'));
                         },
 
@@ -1522,8 +1522,8 @@
                         TagService.updateTag(tag,
                             function () {
                                 $scope.updateTags();
-                                toastr.success(gettextCatalog.getString('The tag "{{tagLabel}}" has been updated successfully.',
-                                    {tagLabel: $scope._langField(tag,'label')}), gettextCatalog.getString('Update successful'));
+                                toastr.success(gettextCatalog.getString('The tag has been edited successfully.',
+                                    {tagLabel: $scope._langField(tag,'label')}), gettextCatalog.getString('Edition successful'));
                             },
 
                             function () {
@@ -1536,7 +1536,7 @@
 
         $scope.deleteTag = function (ev, item) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete tag "{{ label }}"?',
+                .title(gettextCatalog.getString('Are you sure you want to delete tag?',
                     {label: $scope._langField(item,'label')}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
@@ -1547,7 +1547,7 @@
                 TagService.deleteTag(item.id,
                     function () {
                         $scope.updateTags();
-                        toastr.success(gettextCatalog.getString('The tag "{{label}}" has been deleted.',
+                        toastr.success(gettextCatalog.getString('The tag has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                     }
                 );
@@ -1681,7 +1681,7 @@
                     RiskService.createRisk(risk,
                         function () {
                             $scope.updateRisks();
-                            toastr.success(gettextCatalog.getString('The risk "{{riskLabel}}" has been created successfully.',
+                            toastr.success(gettextCatalog.getString('The risk has been created successfully.',
                                 {riskLabel: $scope._langField(risk,'label')}), gettextCatalog.getString('Creation successful'));
 
                             if (cont) {
@@ -1731,8 +1731,8 @@
                         RiskService.updateRisk(risk,
                             function () {
                                 $scope.updateRisks();
-                                toastr.success(gettextCatalog.getString('The risk "{{riskLabel}}" has been updated successfully.',
-                                    {riskLabel: $scope._langField(risk,'label')}), gettextCatalog.getString('Update successful'));
+                                toastr.success(gettextCatalog.getString('The risk has been edited successfully.',
+                                    {riskLabel: $scope._langField(risk,'label')}), gettextCatalog.getString('Edition successful'));
                             },
 
                             function () {
@@ -1745,7 +1745,7 @@
 
         $scope.deleteRisk = function (ev, item) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete risk "{{ label }}"?',
+                .title(gettextCatalog.getString('Are you sure you want to delete risk?',
                     {label: $scope._langField(item,'label')}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
@@ -1756,7 +1756,7 @@
                 RiskService.deleteRisk(item.id,
                     function () {
                         $scope.updateRisks();
-                        toastr.success(gettextCatalog.getString('The risk "{{label}}" has been deleted.',
+                        toastr.success(gettextCatalog.getString('The risk has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                     }
                 );

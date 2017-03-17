@@ -50,7 +50,7 @@
                         <label translate>Sort</label>
                         <md-select ng-model="risks_filters.order">
                             <md-option value="auditOrder" ng-if="instance.asset.type != 1 && instmode == 'inst'">{{ 'Audit order' | translate }}</md-option>
-                            <md-option value="instance" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'Instance' | translate }}</md-option>
+                            <md-option value="instance" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'Asset' | translate }}</md-option>
                             <md-option value="c_impact" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'C Impact' | translate }}</md-option>
                             <md-option value="i_impact" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'I Impact' | translate }}</md-option>
                             <md-option value="d_impact" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'A Impact' | translate }}</md-option>

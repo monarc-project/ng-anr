@@ -2,7 +2,7 @@
     <form style="min-height: 400px">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 translate>Add an asset to the model library</h2>
+                <h2 translate>Add an asset</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -11,7 +11,7 @@
         </md-toolbar>
         <md-dialog-content layout="row" layout-align="center center">
             <div class="md-dialog-content" layout="column" flex="75">
-                <p translate>Pick an existing object from the knowledge base</p>
+                <p translate>Pick an existing asset from the knowledge base</p>
 
                 <md-input-container class="md-block" flex>
                     <md-icon>class</md-icon>
@@ -36,14 +36,14 @@
                                 md-item-text="_langField(item,'name')"
                                 ng-disabled="!objlib.category.id"
                                 md-min-length="0"
-                                placeholder="{{ 'Select an object' | translate }}">
+                                placeholder="{{ 'Select an asset' | translate }}">
                             <md-item-template>
                                 <span md-highlight-text="objectSearchText"
                                       md-highlight-flags="^i">{{ _langField(item,'name') }}</span>
                             </md-item-template>
 
                             <md-not-found>
-                                {{ 'No object matching your search was found' | translate }}
+                                {{ 'No asset matching your search was found' | translate }}
                             </md-not-found>
 
                         </md-autocomplete>
@@ -60,7 +60,7 @@
 
                 <md-button class="md-primary" ng-click="createAttachedObject()">
                     <md-icon>add</md-icon>
-                    {{ 'Create a new asset and attach it to this model' | translate }}
+                    {{ 'Create an asset' | translate }}
                 </md-button>
             </div>
         </md-dialog-content>

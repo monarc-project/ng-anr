@@ -1,7 +1,7 @@
 angular.module('AnrModule').service('InstanceService', ['$mdDialog', '$state', 'gettextCatalog', 'AnrService', function($mdDialog, $state, gettextCatalog, AnrService ){
 	this.detach = function($scope, ev, iid, successCallback, gotoanr, cancelCallback){
 		var confirm = $mdDialog.confirm()
-		    .title(gettextCatalog.getString('Are you sure you want to detach this asset?'))
+		    .title(gettextCatalog.getString('Are you sure you want to detach asset?'))
 		    .textContent(gettextCatalog.getString('This instance and all its children will be removed from the risk analysis. This operation cannot be undone.'))
 		    .ariaLabel('Detach instance')
             .theme('light')

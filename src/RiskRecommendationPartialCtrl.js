@@ -58,7 +58,7 @@
             }).then(function () {
                 rec.recommandation.anr = $scope.model.anr.id;
                 ClientRecommandationService.updateRecommandation(rec.recommandation, function () {
-                    toastr.success(gettextCatalog.getString("The recommendation has been updated successfully"));
+                    toastr.success(gettextCatalog.getString("The recommendation has been edited successfully"));
                     updateRecommandations();
                 });
             });
@@ -90,7 +90,7 @@
 
         $scope.detachRecommandation = function (ev, recommandation) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to detach recommendation "{{ code }}"?',
+                .title(gettextCatalog.getString('Are you sure you want to detach recommendation ?',
                     {code: recommandation.recommandation.code}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
@@ -112,7 +112,7 @@
 
         $scope.deleteRecommandation = function(ev, recommandation){
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete recommendation "{{ code }}"?',
+                .title(gettextCatalog.getString('Are you sure you want to delete recommendation?',
                     {code: recommandation.recommandation.code}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
@@ -153,7 +153,7 @@
 
         $scope.detachMeasureFromRecommandation = function (ev, recommandation, measure) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to detach control {{measure}} recommendation "{{ code }}"?',
+                .title(gettextCatalog.getString('Are you sure you want to detach control of recommendation?',
                     {measure: measure.code, code: recommandation.recommandation.code}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)

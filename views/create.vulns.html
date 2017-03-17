@@ -2,8 +2,8 @@
     <form name="vulnForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 ng-if="!vuln.id" translate>Add a new vulnerability</h2>
-                <h2 ng-if="vuln.id" translate>Update vulnerability</h2>
+                <h2 ng-if="!vuln.id" translate>Add a vulnerability</h2>
+                <h2 ng-if="vuln.id" translate>Edit vulnerability</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>

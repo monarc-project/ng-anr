@@ -83,9 +83,9 @@
 
         $scope.deleteCompositionItem = function (ev, item) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Detach this component?'))
-                .textContent(gettextCatalog.getString('The selected component will be detached from the current object.'))
-                .ariaLabel(gettextCatalog.getString('Detach this component'))
+                .title(gettextCatalog.getString('Detach component'))
+                .textContent(gettextCatalog.getString('The selected component will be detached from the current asset.'))
+                .ariaLabel(gettextCatalog.getString('Detach component'))
                 .targetEvent(ev)
                 .theme('light')
                 .ok(gettextCatalog.getString('Detach'))
@@ -97,7 +97,7 @@
                         $scope.updateInstances();
                     }
                     $scope.updateObjlib();
-                    toastr.success(gettextCatalog.getString('The object has been detached successfully'), gettextCatalog.getString('Component detached'));
+                    toastr.success(gettextCatalog.getString('The asset has been detached successfully'), gettextCatalog.getString('Component detached'));
                 });
             }, function () {
                 // Cancel
@@ -131,7 +131,7 @@
             .then(function () {
                 if ($scope.OFFICE_MODE == 'FO') {
                     ObjlibService.deleteObjlib($scope.object.id, function () {
-                        toastr.success(gettextCatalog.getString('The object has been successfully deleted'));
+                        toastr.success(gettextCatalog.getString('The asset has been successfully deleted'));
                         if ($rootScope.hookUpdateObjlib) {
                             $rootScope.hookUpdateObjlib();
                         }
@@ -139,7 +139,7 @@
                     });
                 } else {
                     AnrService.removeObjectFromLibrary($rootScope.anr_id, $scope.object.id, function () {
-                        toastr.success(gettextCatalog.getString('The object has been detached from the library.'));
+                        toastr.success(gettextCatalog.getString('The asset has been detached from the library.'));
                         if ($rootScope.hookUpdateObjlib) {
                             $rootScope.hookUpdateObjlib(true);//true pour retouner sur la fiche du premier objet de la bibliothèque
                         }
@@ -151,10 +151,10 @@
         $scope.deleteObject = function (ev) {
             if ($scope.mode == 'bdc') {
                 var confirm = $mdDialog.confirm()
-                    .title(gettextCatalog.getString('Delete this asset?'))
-                    .textContent(gettextCatalog.getString('The current asset "{{ name }}" will be permanently deleted. Are you sure?',
+                    .title(gettextCatalog.getString('Delete asset'))
+                    .textContent(gettextCatalog.getString('The current asset will be permanently deleted. Are you sure?',
                         {name: $scope.object.name1}))
-                    .ariaLabel(gettextCatalog.getString('Delete this asset'))
+                    .ariaLabel(gettextCatalog.getString('Delete asset'))
                     .targetEvent(ev)
                     .theme('light')
                     .ok(gettextCatalog.getString('Delete'))
@@ -165,7 +165,7 @@
                         if ($scope.OFFICE_MODE == 'BO') {
                             $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'objlibs'});
                         } else {
-                            toastr.success(gettextCatalog.getString('The object has been successfully deleted'));
+                            toastr.success(gettextCatalog.getString('The asset has been successfully deleted'));
                             if ($rootScope.hookUpdateObjlib) {
                                 $rootScope.hookUpdateObjlib();
                             }
@@ -181,20 +181,20 @@
                     if ($scope.object.replicas.length > 0 || parents.length > 0) {
                         $scope.openDetachObjectDialog(ev, parents);
                     } else {
-                        var title = gettextCatalog.getString('Detach this asset?');
-                        var content = gettextCatalog.getString('The current object "{{ name }}" will be removed from the library. Are you sure?',
+                        var title = gettextCatalog.getString('Detach asset');
+                        var content = gettextCatalog.getString('The current asset will be removed from the library. Are you sure?',
                             {name: $scope._langField($scope.object,'name')});
 
                         if ($scope.OFFICE_MODE == 'FO') {
-                            title = gettextCatalog.getString('Delete this asset');
-                            content = gettextCatalog.getString('The current object "{{ name }}" will be permanently deleted. Are you sure?',
+                            title = gettextCatalog.getString('Delete asset');
+                            content = gettextCatalog.getString('The current asset will be permanently deleted. Are you sure?',
                                 {name: $scope._langField($scope.object,'name')});
                         }
 
                         var confirm = $mdDialog.confirm()
                             .title(title)
                             .textContent(content)
-                            .ariaLabel(gettextCatalog.getString('Detach this object'))
+                            .ariaLabel(gettextCatalog.getString('Detach asset'))
                             .targetEvent(ev)
                             .theme('light')
                             .ok(gettextCatalog.getString('Detach'))
@@ -203,7 +203,7 @@
                         $mdDialog.show(confirm).then(function () {
                             if ($scope.OFFICE_MODE == 'FO') {
                                 ObjlibService.deleteObjlib($scope.object.id, function () {
-                                    toastr.success(gettextCatalog.getString('The object has been successfully deleted'));
+                                    toastr.success(gettextCatalog.getString('The asset has been successfully deleted'));
                                     if ($rootScope.hookUpdateObjlib) {
                                         $rootScope.hookUpdateObjlib();
                                     }
@@ -211,7 +211,7 @@
                                 });
                             } else {
                                 AnrService.removeObjectFromLibrary($rootScope.anr_id, $scope.object.id, function () {
-                                    toastr.success(gettextCatalog.getString('The object has been detached from the library.'));
+                                    toastr.success(gettextCatalog.getString('The asset has been detached from the library.'));
                                     if ($rootScope.hookUpdateObjlib) {
                                         $rootScope.hookUpdateObjlib();
                                     }
@@ -270,14 +270,14 @@
                                         $rootScope.hookUpdateObjlib();
                                     }
 
-                                    toastr.success(gettextCatalog.getString('The object has been updated successfully.'), gettextCatalog.getString('Update successful'));
+                                    toastr.success(gettextCatalog.getString('The asset has been edited successfully.'), gettextCatalog.getString('Edition successful'));
                                 }
                             );
                         } else {
                             ObjlibService.createObjlib(objlib,
                                 function () {
                                     $scope.updateObjlib();
-                                    toastr.success(gettextCatalog.getString('The object has been created successfully.'), gettextCatalog.getString('Creation successful'));
+                                    toastr.success(gettextCatalog.getString('The asset has been created successfully.'), gettextCatalog.getString('Creation successful'));
                                 }
                             );
                         }
@@ -325,7 +325,7 @@
                         contentD = contentD.substring(0,contentD.length-1).split('filename="');
                         contentD = contentD[contentD.length-1];
                         DownloadService.downloadBlob(data.data, contentD,contentT);
-                        toastr.success(gettextCatalog.getString('The object has been exported successfully.'), gettextCatalog.getString('Export successful'));
+                        toastr.success(gettextCatalog.getString('The asset has been exported successfully.'), gettextCatalog.getString('Export successful'));
                     })
                 });
         };
@@ -336,7 +336,7 @@
                 url = '/api/client-anr/' + $scope.model.anr.id + '/objects-duplication';
             }
             $http.post(url, {id: $scope.object.id, implicitPosition: 2}).then(function (data) {
-                toastr.success(gettextCatalog.getString('Ths object has been duplicated successfully.'), gettextCatalog.getString('Duplication successful'));
+                toastr.success(gettextCatalog.getString('Ths asset has been duplicated successfully.'), gettextCatalog.getString('Duplication successful'));
 
                 if ($rootScope.hookUpdateObjlib) {
                     $rootScope.hookUpdateObjlib();
@@ -513,9 +513,9 @@
 
         $scope.detachObject = function (ev, node) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Detach this component?'))
-                .textContent(gettextCatalog.getString('The selected component will be detached from the current object.'))
-                .ariaLabel(gettextCatalog.getString('Detach this component'))
+                .title(gettextCatalog.getString('Detach component'))
+                .textContent(gettextCatalog.getString('The selected component will be detached from the current asset.'))
+                .ariaLabel(gettextCatalog.getString('Detach component'))
                 .targetEvent(ev)
                 .theme('light')
                 .ok(gettextCatalog.getString('Detach'))
@@ -527,7 +527,7 @@
                         $scope.updateInstances();
                     }
                     $parentScope.updateObjlib();
-                    toastr.success(gettextCatalog.getString('The object has been detached successfully'), gettextCatalog.getString('Component detached'));
+                    toastr.success(gettextCatalog.getString('The asset has been detached successfully'), gettextCatalog.getString('Component detached'));
                     $scope.parents.splice($scope.parents.indexOf(node), 1);
                     $parentScope.openDetachObjectDialog(ev, $scope.parents);
                 });

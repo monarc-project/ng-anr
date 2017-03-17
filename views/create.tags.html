@@ -2,8 +2,8 @@
     <form name="tagForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 ng-if="!tag.id" translate>Add a new tag</h2>
-                <h2 ng-if="tag.id" translate>Update tag</h2>
+                <h2 ng-if="!tag.id" translate>Add a tag</h2>
+                <h2 ng-if="tag.id" translate>Edit tag</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>

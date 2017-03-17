@@ -487,7 +487,7 @@
 
                 var ClientAnrService = $injector.get('ClientAnrService');
                 ClientAnrService.updateAnr(req, function () {
-                    toastr.success(gettextCatalog.getString("Update successful"));
+                    toastr.success(gettextCatalog.getString("Edition successful"));
                     $scope.updateModel(true);
                 });
             });
@@ -1407,7 +1407,7 @@
                         service = $injector.get('ClientAnrService');
                     }
                     service.patchAnr($scope.model.anr.id, anr, function () {
-                        toastr.success(gettextCatalog.getString("The risk analysis details have been updated"), gettextCatalog.getString("Update successful"));
+                        toastr.success(gettextCatalog.getString("The risk analysis details have been updated"), gettextCatalog.getString("Edition successful"));
                         if ($scope.OFFICE_MODE == 'FO') {
                             $scope.model.showRolfBrut = anr.showRolfBrut;
                             $rootScope.$broadcast('fo-anr-changed');
@@ -1441,7 +1441,7 @@
                                 $scope.updateObjectsLibrary(false, function () {
                                     $location.path('/backoffice/kb/models/' + $scope.model.id + '/object/' + objlib.id);
                                 });
-                                toastr.success(gettextCatalog.getString("The object has been added to the library."), gettextCatalog.getString("Object added successfully"));
+                                toastr.success(gettextCatalog.getString("The asset has been added to the library."), gettextCatalog.getString("Asset added successfully"));
                             });
                         }
                     });
@@ -2528,7 +2528,7 @@
                 if (response.data.errors && response.data.errors.length > 0) {
                     toastr.warning(gettextCatalog.getString("Some files could not be imported"));
                 } else {
-                    toastr.success(gettextCatalog.getString("The object has been imported successfully"));
+                    toastr.success(gettextCatalog.getString("The asset has been imported successfully"));
                 }
                 hookUpdateObjlib();
             });
@@ -2567,7 +2567,7 @@
 
         $scope.importObjectCommon = function () {
             ObjlibService.importObjectCommon($scope.object_details.id, $scope.import.mode, function () {
-                toastr.success(gettextCatalog.getString("Object imported successfully"));
+                toastr.success(gettextCatalog.getString("The asset has been imported successfully"));
                 hookUpdateObjlib();
                 $scope.dialog_mode = 'common';
             });

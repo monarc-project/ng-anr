@@ -127,7 +127,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
                             }
 
 
-                            toastr.success(gettextCatalog.getString('The category "{{categoryLabel}}" has been created successfully.',
+                            toastr.success(gettextCatalog.getString('The category has been created successfully.',
                                 {categoryLabel: $scope._langField(category,'label')}), gettextCatalog.getString('Creation successful'));
                         });
                     }
@@ -179,8 +179,8 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
                                 }
                             }
 
-                            toastr.success(gettextCatalog.getString('The category "{{categoryLabel}}" has been updated successfully.',
-                                {categoryLabel: $scope._langField(category,'label')}), gettextCatalog.getString('Update successful'));
+                            toastr.success(gettextCatalog.getString('The category has been edited successfully.',
+                                {categoryLabel: $scope._langField(category,'label')}), gettextCatalog.getString('Edition successful'));
                         }
                     );
                 }, function () {
@@ -312,7 +312,7 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
     $scope.destroyConfirm = function() {
         ObjlibService.deleteObjlibCat($scope.category.id, function () {
             $mdDialog.cancel();
-            toastr.success(gettextCatalog.getString('The category "{{categoryLabel}}" has been deleted.',
+            toastr.success(gettextCatalog.getString('The category has been deleted.',
                 {categoryLabel: category.label1}), gettextCatalog.getString('Deletion successful'));
         });
     };

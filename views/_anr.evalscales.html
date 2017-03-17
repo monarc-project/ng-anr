@@ -79,13 +79,13 @@
         </ul>
     </div>
 
-    <h4 translate>Thresholds</h4>
-
     <form name="thresholdsForm">
-        <div layout="column"">
-            <h5 translate>Max risks thresholds</h5>
-            <div layout="row" layout-align="start center">
-                <div class="anr-scales-demo-block green"></div>
+        
+            <h4 translate>Acceptance thresholds of information risks</h4>
+     <div layout="row">
+       <div layout="column" layout-align="space-around start">
+	    <div layout="row" layout-align="start center">
+	        <div class="anr-scales-demo-block green" flex></div>
                 <md-input-container>
                     <input ng-disabled="isAnrReadOnly" type="number" name="thresholds_min" min="0" max="{{ thresholds.thresholds.max }}" ng-model="thresholds.thresholds.min" aria-label="min" />
                     <div ng-messages="thresholdsForm.thresholds_min.$error">
@@ -105,9 +105,9 @@
                     </div>
                 </md-input-container>
             </div>
-
+        </div>
             <div layout="row" layout-align="start center" class="md-padding">
-                <p class="anr-table-sidetitle" translate><b>Impact</b></p>
+                <p class="anr-table-sidetitle"><b translate>Impact</b></p>
                 <table class="tbl-risk-calc">
                     <tbody>
                          <tr>
@@ -135,8 +135,9 @@
             </div>
         </div>
 
-        <div layout="column">
-            <h5 translate>Max ROLF thresholds</h5>
+        <h4 translate>Acceptance thresholds of operational risks</h4>
+     <div layout="row">
+         <div layout="column" layout-align="space-around start">
             <div layout="row" layout-align="start center">
                 <div class="anr-scales-demo-block green"></div>
                 <md-input-container>
@@ -158,9 +159,9 @@
                     </div>
                 </md-input-container>
             </div>
-
+         </div>
             <div layout="row" layout-align="start center" class="md-padding">
-                <p class="anr-table-sidetitle" translate>Impact</p>
+                <p class="anr-table-sidetitle"><b translate>Impact</b></p>
                 <table class="tbl-risk-calc">
                     <tbody>
                         <tr>

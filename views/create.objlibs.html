@@ -2,8 +2,8 @@
     <form name="objlibForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 ng-if="!objlib.id" translate>Add a new asset</h2>
-                <h2 ng-if="objlib.id" translate>Update asset</h2>
+                <h2 ng-if="!objlib.id" translate>Add an asset</h2>
+                <h2 ng-if="objlib.id" translate>Edit asset</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -14,7 +14,7 @@
             <div class="md-dialog-content">
                 <md-card ng-if="!objlib.id && OFFICE_MODE == 'FO'">
                     <md-button class="md-primary" ng-click="importObject($event)">
-                        <md-icon>play_for_work</md-icon><span>{{ 'Import an asset available' | translate }}</span>
+                        <md-icon>play_for_work</md-icon><span>{{ 'Import an asset' | translate }}</span>
                     </md-button>
                 </md-card>
                 <md-subheader>{{ 'Labels and descriptions' | translate }}</md-subheader>
@@ -131,7 +131,7 @@
                             </md-item-template>
 
                             <md-not-found>
-                                {{ 'No asset matching your search was found' | translate }}
+                                {{ 'No asset type matching your search was found' | translate }}
                             </md-not-found>
 
                             <div ng-messages="objlibForm.asset.$error">
@@ -169,13 +169,13 @@
                                 md-item-text="_langField(item,'label')"
                                 md-min-length="0"
                                 md-input-name="tag"
-                                md-floating-label="{{ 'ROLF Tag' | translate }}">
+                                md-floating-label="{{ 'Operational risk Tag' | translate }}">
                             <md-item-template>
                                 <span md-highlight-text="tagSearchText" md-highlight-flags="^i">{{ _langField(item,'label') }}</span>
                             </md-item-template>
 
                             <md-not-found>
-                                {{ 'No ROLF tag matching your search was found' | translate }}
+                                {{ 'No operational risk tag matching your search was found' | translate }}
                             </md-not-found>
                         </md-autocomplete>
                     </div>
@@ -203,13 +203,13 @@
                                 md-items="item in queryObjectSearch(objectPreviousSearchText)"
                                 md-item-text="_langField(item,'name')"
                                 md-min-length="0"
-                                placeholder="{{ 'Previous object...' | translate }}">
+                                placeholder="{{ 'Previous asset...' | translate }}">
                             <md-item-template>
                                 <span md-highlight-text="objectPreviousSearchText" md-highlight-flags="^i">{{ _langField(item,'name') }}</span>
                             </md-item-template>
 
                             <md-not-found>
-                                {{ 'No object matching your search was found' | translate }}
+                                {{ 'No asset matching your search was found' | translate }}
                             </md-not-found>
 
                         </md-autocomplete>

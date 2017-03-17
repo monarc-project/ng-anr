@@ -145,7 +145,7 @@
                             if ($scope.updateAnrRisksOpTable) {
                                 $scope.updateAnrRisksOpTable();
                             }
-                            toastr.success(gettextCatalog.getString("The instance details have been updated"), gettextCatalog.getString("Update successful"));
+                            toastr.success(gettextCatalog.getString("The asset has been edited"), gettextCatalog.getString("Edition successful"));
                         });
                     }
                 });
@@ -179,7 +179,7 @@
                         contentD = contentD.substring(0,contentD.length-1).split('filename="');
                         contentD = contentD[contentD.length-1];
                         DownloadService.downloadBlob(data.data, contentD,contentT);
-                        toastr.success(gettextCatalog.getString('The instance has been exported successfully.'), gettextCatalog.getString('Export successful'));
+                        toastr.success(gettextCatalog.getString('The asset has been exported successfully.'), gettextCatalog.getString('Export successful'));
                     })
                 });
         };
@@ -265,8 +265,8 @@
 
         $scope.deleteSpecRisk = function (ev, risk) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Delete this specific risk?'))
-                .textContent(gettextCatalog.getString('The selected specific risk will be permanently deleted. Are you sure?'))
+                .title(gettextCatalog.getString('Delete specific information risk'))
+                .textContent(gettextCatalog.getString('The selected specific information risk will be permanently deleted. Are you sure?'))
                 .targetEvent(ev)
                 .theme('light')
                 .ok(gettextCatalog.getString('Delete'))
@@ -274,7 +274,7 @@
 
             $mdDialog.show(confirm).then(function () {
                 AnrService.deleteInstanceRisk($scope.model.anr.id, risk.id, function () {
-                    toastr.success(gettextCatalog.getString("The specific risk has been successfully deleted"));
+                    toastr.success(gettextCatalog.getString("The specific information risk has been successfully deleted"));
                     $scope.updateInstanceRisks();
                     if ($scope.updateAnrRisksTable) {
                         $scope.updateAnrRisksTable();
@@ -287,7 +287,7 @@
 
         $scope.deleteSpecOpRisk = function (ev, risk) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Delete this specific operational risk?'))
+                .title(gettextCatalog.getString('Delete specific operational risk'))
                 .textContent(gettextCatalog.getString('The selected specific operational risk will be permanently deleted. Are you sure?'))
                 .targetEvent(ev)
                 .theme('light')

@@ -10,7 +10,7 @@
     </md-toolbar>
     <md-dialog-content>
         <div class="md-dialog-content">
-            <md-button class="md-subhead" ng-if="!isAnrReadOnly" ng-click="toggleInterviewForm()"><md-icon>{{ !showInterviewForm ? 'arrow_drop_down' : 'arrow_drop_up' }}</md-icon> {{ 'New interview' | translate }}</md-button>
+            <md-button class="md-subhead" ng-if="!isAnrReadOnly" ng-click="toggleInterviewForm()"><md-icon>{{ !showInterviewForm ? 'arrow_drop_down' : 'arrow_drop_up' }}</md-icon> {{ 'Add an interview' | translate }}</md-button>
 
             <md-card ng-if="showInterviewForm">
                 <md-card-content>
@@ -31,8 +31,8 @@
                         </md-input-container>
 
                         <div layout="row" layout-align="center center">
-                            <md-button ng-click="createInterview()" ng-if="!interviewCreating && !new_interview.id" ng-disabled="interviewForm.$error.required">{{ 'Create interview' | translate }}</md-button>
-                            <md-button ng-click="createInterview()" ng-if="!interviewCreating && new_interview.id" ng-disabled="interviewForm.$error.required">{{ 'Update interview' | translate }}</md-button>
+                            <md-button ng-click="createInterview()" ng-if="!interviewCreating && !new_interview.id" ng-disabled="interviewForm.$error.required">{{ 'Create an interview' | translate }}</md-button>
+                            <md-button ng-click="createInterview()" ng-if="!interviewCreating && new_interview.id" ng-disabled="interviewForm.$error.required">{{ 'Edit interview' | translate }}</md-button>
                             <md-progress-circular ng-if="interviewCreating"></md-progress-circular>
                         </div>
                     </form>

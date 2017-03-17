@@ -10,7 +10,7 @@
     </md-toolbar>
     <md-dialog-content>
         <div class="md-dialog-content">
-            <p class="md-subhead" ng-if="!isAnrReadOnly" translate>New snapshot</p>
+            <p class="md-subhead" ng-if="!isAnrReadOnly" translate>Add a snapshot</p>
 
             <div layout="row" ng-if="!isAnrReadOnly">
                 <md-input-container>
@@ -18,7 +18,7 @@
                     <textarea ng-model="newSnapshot.comment" ng-disabled="snapshotCreating"></textarea>
                 </md-input-container>
 
-                <md-button ng-click="createSnapshot()" ng-if="!snapshotCreating">{{ 'Create snapshot' | translate }}</md-button>
+                <md-button ng-click="createSnapshot()" ng-if="!snapshotCreating">{{ 'Create a snapshot' | translate }}</md-button>
                 <md-progress-circular ng-if="snapshotCreating"></md-progress-circular>
             </div>
 

@@ -2,8 +2,8 @@
     <form name="threatForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 ng-if="!threat.id" translate>Add a new threat</h2>
-                <h2 ng-if="threat.id" translate>Update threat</h2>
+                <h2 ng-if="!threat.id" translate>Add a threat</h2>
+                <h2 ng-if="threat.id" translate>Edit threat</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -67,13 +67,13 @@
                             </div>
                         </md-autocomplete>
 
-                        <md-button class="md-icon-button" ng-click="createTheme(themeSearchText)" ng-disabled="themeSearchText.length <= 0" ng-show="!threat.theme.id">
+                        <md-button class="md-icon-button md-primary" ng-click="createTheme(themeSearchText)" ng-disabled="themeSearchText.length <= 0" ng-show="!threat.theme.id">
                             <md-icon>add</md-icon>
                         </md-button>
-                        <md-button class="md-icon-button" ng-click="theme_edit=threat.theme" ng-show="threat.theme.id">
+                        <md-button class="md-icon-button md-primary" ng-click="theme_edit=threat.theme" ng-show="threat.theme.id">
                             <md-icon>edit</md-icon>
                         </md-button>
-                        <md-button class="md-icon-button" ng-click="deleteTheme(threat.theme)" ng-show="threat.theme.id">
+                        <md-button class="md-icon-button md-warn" ng-click="deleteTheme(threat.theme)" ng-show="threat.theme.id">
                             <md-icon>delete</md-icon>
                         </md-button>
                     </div>
@@ -113,7 +113,7 @@
                 <md-input-container layout="row">
                     <md-checkbox ng-model="threat.c" class="md-primary">C</md-checkbox>
                     <md-checkbox ng-model="threat.i" class="md-primary">I</md-checkbox>
-                    <md-checkbox ng-model="threat.d" class="md-primary" translate>A</md-checkbox>
+                    <md-checkbox ng-model="threat.d" class="md-primary">{{ 'A' | translate }}</md-checkbox>
                 </md-input-container>
 
                 <div ng-if="OFFICE_MODE == 'BO'">

@@ -2,8 +2,8 @@
     <form name="riskForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 ng-if="!risk.id" translate>Add a new specific operational risk</h2>
-                <h2 ng-if="risk.id" translate>Update specific risk</h2>
+                <h2 ng-if="!risk.id" translate>Add a specific operational risk</h2>
+                <h2 ng-if="risk.id" translate>Edit specific operational risk</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -17,7 +17,7 @@
                     <md-icon>book</md-icon>
                     <md-select ng-model="specrisk.source" flex>
                         <md-option ng-value="1">{{ 'Use an existing risk' | translate }}</md-option>
-                        <md-option ng-value="2">{{ 'Create a new risk' | translate }}</md-option>
+                        <md-option ng-value="2">{{ 'Create a risk' | translate }}</md-option>
                     </md-select>
                 </md-input-container>
 

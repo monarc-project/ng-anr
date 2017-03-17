@@ -2,7 +2,7 @@
     <form name="measureForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 translate>Object import center</h2>
+                <h2 translate>Asset import center</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -20,7 +20,7 @@
 
                 <md-card class="md-card-info">
                     <md-card-content translate>
-                        Only global objects can be imported by merge.
+                        Only global assets can be imported by merge.
                     </md-card-content>
                 </md-card>
 
@@ -36,7 +36,7 @@
 
                     <md-input-container class="md-block">
                         <md-icon>vpn_key</md-icon>
-                        <label translate>Objects password (if any)</label>
+                        <label translate>Asset password (if any)</label>
                         <input ng-model="import.password" type="password">
                     </md-input-container>
 
@@ -84,7 +84,7 @@
                     <p><strong translate>Category:</strong> {{ _langField(object_details.category,'label') }}</p>
                     <p><strong translate>Asset:</strong> {{ _langField(object_details.asset,'label') }}</p>
 
-                    <md-button class="md-raised md-primary" ng-click="importObjectCommon()">{{ 'Import this asset' | translate }}</md-button>
+                    <md-button class="md-raised md-primary" ng-click="importObjectCommon()">{{ 'Import asset' | translate }}</md-button>
                 </div>
             </div>
 

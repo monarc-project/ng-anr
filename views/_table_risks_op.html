@@ -53,7 +53,7 @@
 <div ng-if="!oprisks || !oprisks.length" class="md-padding">
     <em ng-if="instmode == 'inst' ">{{ 'There are no operational risks for this instance, or the filters gave no results.' | translate }}</em>
     <em ng-if="instmode == 'anr' ">{{ 'There are no operational risks for this risk analysis, or the filters gave no results.' | translate }}</em>
-    <em ng-if="instmode == 'obj' ">{{ 'There are no operational risks for this object.' | translate }}</em>
+    <em ng-if="instmode == 'obj' ">{{ 'There are no operational risks for this asset.' | translate }}</em>
 </div>
 
 <table class="md-html-table inputs-as-number big-border-all" ng-if="!opsheet_risk && oprisks.length > 0" editable callback="changeRiskOp">
@@ -61,8 +61,8 @@
     <tr>
         <th ng-if="instmode != 'obj'" rowspan="3" translate>Asset</th>
         <th rowspan="3" translate>Risk description</th>
-        <th ng-if="model.showRolfBrut" class="big-border-left" colspan="7" translate>RAW</th>
-        <th colspan="8" class="big-border-left" translate>NET</th>
+        <th ng-if="model.showRolfBrut" class="big-border-left" colspan="7" translate>Inherent risk</th>
+        <th colspan="8" class="big-border-left" translate>Net risk</th>
         <th rowspan="3" class="big-border-left" translate>Processing</th>
         <th rowspan="3" translate>Target risk</th>
     </tr>
