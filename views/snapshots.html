@@ -43,8 +43,8 @@
                         <div layout="row" layout-align="center center" class="txtcenter">
                             <md-button class="md-icon-button md-primary" ng-click="openSnapshot(snapshot)"><md-icon>visibility</md-icon></md-button>
                             <md-button class="md-icon-button md-primary" ng-click="restoreSnapshot(snapshot)" ng-if="!snapshotRestoring"><md-icon>restore</md-icon></md-button>
-                            <md-progress-circular md-diameter="20" ng-if="snapshotRestoring"></md-progress-circular>
-                            <md-button ng-class="{'md-icon-button': confirmDelete != snapshot.id}" class="md-warn" ng-click="deleteSnapshot(snapshot)"><md-icon>delete</md-icon> <span ng-if="confirmDelete == snapshot.id" translate>Confirm?</span></md-button>
+			    <md-progress-circular md-diameter="20" ng-if="snapshotRestoring"></md-progress-circular>
+                            <md-button ng-class="{'md-icon-button': confirmDelete != snapshot.id}" class="md-warn" ng-click="deleteSnapshot(snapshot)"><md-icon>delete</md-icon><span ng-if="confirmDelete == snapshot.id" translate>Confirm?</span></md-button>
                         </div>
                     </td>
                 </tr>
