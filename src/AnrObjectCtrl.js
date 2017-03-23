@@ -336,7 +336,7 @@
                 url = '/api/client-anr/' + $scope.model.anr.id + '/objects-duplication';
             }
             $http.post(url, {id: $scope.object.id, implicitPosition: 2}).then(function (data) {
-                toastr.success(gettextCatalog.getString('Ths asset has been duplicated successfully.'), gettextCatalog.getString('Duplication successful'));
+                toastr.success(gettextCatalog.getString('The asset has been duplicated successfully.'), gettextCatalog.getString('Duplication successful'));
 
                 if ($rootScope.hookUpdateObjlib) {
                     $rootScope.hookUpdateObjlib();

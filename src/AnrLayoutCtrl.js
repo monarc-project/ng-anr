@@ -536,7 +536,7 @@
             }).then(function () {
                 rec.anr = $scope.model.anr.id;
                 ClientRecommandationService.updateRecommandation(rec, function () {
-                    toastr.success(gettextCatalog.getString("The recommendation has been updated successfully"));
+                    toastr.success(gettextCatalog.getString("The recommendation has been edited successfully"));
                     $scope.methodProgress[2].steps[1].action($scope.methodProgress[2].steps[1]);
                 });
             },function(){
@@ -1407,7 +1407,7 @@
                         service = $injector.get('ClientAnrService');
                     }
                     service.patchAnr($scope.model.anr.id, anr, function () {
-                        toastr.success(gettextCatalog.getString("The risk analysis details have been updated"), gettextCatalog.getString("Edition successful"));
+                        toastr.success(gettextCatalog.getString("The risk analysis have been edited."), gettextCatalog.getString("Edition successful"));
                         if ($scope.OFFICE_MODE == 'FO') {
                             $scope.model.showRolfBrut = anr.showRolfBrut;
                             $rootScope.$broadcast('fo-anr-changed');
