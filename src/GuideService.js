@@ -7,7 +7,7 @@
     function GuideService($resource, gettextCatalog) {
         var self = this;
 
-        self.GuideResource = $resource('/api/guides/:guideId', { guideId: '@id' },
+        self.GuideResource = $resource('api/guides/:guideId', { guideId: '@id' },
             {
                 'update': {
                     method: 'PUT'
@@ -38,7 +38,7 @@
         };
 
 
-        self.ItemResource = $resource('/api/guides-items/:itemId', { itemId: '@id' },
+        self.ItemResource = $resource('api/guides-items/:itemId', { itemId: '@id' },
             {
                 'update': {
                     method: 'PUT'

@@ -10,7 +10,7 @@
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         var makeResource = function () {
-            self.ThreatResource = $resource('/api/' + anr + 'threats/:threatId', {
+            self.ThreatResource = $resource('api/' + anr + 'threats/:threatId', {
                     threatId: '@id',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
@@ -25,7 +25,7 @@
                         isArray: false
                     }
                 });
-            self.ThreatThemeResource = $resource('/api/' + anr + 'themes/:themeId', {
+            self.ThreatThemeResource = $resource('api/' + anr + 'themes/:themeId', {
                     themeId: '@id',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
@@ -66,9 +66,9 @@
 
         var deleteMassThreat = function (ids, success, error) {
             if ($rootScope.OFFICE_MODE == 'FO') {
-                MassDeleteService.deleteMass('/api/client-anr/' + $rootScope.getUrlAnrId() + '/threats', ids, success, error);
+                MassDeleteService.deleteMass('api/client-anr/' + $rootScope.getUrlAnrId() + '/threats', ids, success, error);
             } else {
-                MassDeleteService.deleteMass('/api/threats', ids, success, error);
+                MassDeleteService.deleteMass('api/threats', ids, success, error);
             }
         };
 

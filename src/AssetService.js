@@ -10,7 +10,7 @@
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         var makeResource = function () {
-            self.AssetResource = $resource('/api/' + anr + 'assets/:assetId', {
+            self.AssetResource = $resource('api/' + anr + 'assets/:assetId', {
                     assetId: '@id',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
@@ -26,7 +26,7 @@
                     }
                 });
 
-            self.CommonAssetResource = $resource('/api/' + anr + 'assets/importcomm/:assetId', { assetId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
+            self.CommonAssetResource = $resource('api/' + anr + 'assets/importcomm/:assetId', { assetId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
                 {
                     'update': {
                         method: 'PUT'
@@ -63,9 +63,9 @@
 
         var deleteMassAsset = function (ids, success, error) {
             if ($rootScope.OFFICE_MODE == 'FO') {
-                MassDeleteService.deleteMass('/api/client-anr/' + $rootScope.getUrlAnrId() + '/assets', ids, success, error);
+                MassDeleteService.deleteMass('api/client-anr/' + $rootScope.getUrlAnrId() + '/assets', ids, success, error);
             } else {
-                MassDeleteService.deleteMass('/api/' + anr + 'assets', ids, success, error);
+                MassDeleteService.deleteMass('api/' + anr + 'assets', ids, success, error);
             }
 
         };

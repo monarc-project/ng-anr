@@ -10,7 +10,7 @@
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         var makeResource = function () {
-            self.RiskResource = $resource('/api/' + anr + 'rolf-risks/:riskId', {
+            self.RiskResource = $resource('api/' + anr + 'rolf-risks/:riskId', {
                     riskId: '@id',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
@@ -47,9 +47,9 @@
 
         var deleteMassRisk = function (ids, success, error) {
             if ($rootScope.OFFICE_MODE == 'FO') {
-                MassDeleteService.deleteMass('/api/client-anr/' + $rootScope.getUrlAnrId() + '/rolf-risks', ids, success, error);
+                MassDeleteService.deleteMass('api/client-anr/' + $rootScope.getUrlAnrId() + '/rolf-risks', ids, success, error);
             } else {
-                MassDeleteService.deleteMass('/api/rolf-risks', ids, success, error);
+                MassDeleteService.deleteMass('api/rolf-risks', ids, success, error);
             }
         };
 

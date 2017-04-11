@@ -10,7 +10,7 @@
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         var makeResource = function () {
-            self.QuestionResource = $resource('/api/' + anr + 'questions/:questionId', {
+            self.QuestionResource = $resource('api/' + anr + 'questions/:questionId', {
                     questionId: '@id',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
@@ -53,7 +53,7 @@
         };
 
 
-        self.ChoiceResource = $resource('/api/questions-choices/:choiceId', { choiceId: '@id' },
+        self.ChoiceResource = $resource('api/questions-choices/:choiceId', { choiceId: '@id' },
             {
                 'update': {
                     method: 'PUT'

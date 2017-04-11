@@ -7,7 +7,7 @@
     function ModelService($resource) {
         var self = this;
 
-        self.ModelResource = $resource('/api/models/:modelId', { modelId: '@id' },
+        self.ModelResource = $resource('api/models/:modelId', { modelId: '@id' },
             {
                 'update': {
                     method: 'PUT'
@@ -20,7 +20,7 @@
                 }
             });
 
-        self.ModelDuplicationResource = $resource('/api/models-duplication');
+        self.ModelDuplicationResource = $resource('api/models-duplication');
 
         var getModels = function (params) {
             return self.ModelResource.query(params).$promise;

@@ -10,7 +10,7 @@
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         var makeResource = function () {
-            self.TagResource = $resource('/api/' + anr + 'rolf-tags/:tagId', {
+            self.TagResource = $resource('api/' + anr + 'rolf-tags/:tagId', {
                     tagId: '@id',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
@@ -47,9 +47,9 @@
 
         var deleteMassTag = function (ids, success, error) {
             if ($rootScope.OFFICE_MODE == 'FO') {
-                MassDeleteService.deleteMass('/api/client-anr/' + $rootScope.getUrlAnrId() + '/rolf-tags', ids, success, error);
+                MassDeleteService.deleteMass('api/client-anr/' + $rootScope.getUrlAnrId() + '/rolf-tags', ids, success, error);
             } else {
-                MassDeleteService.deleteMass('/api/rolf-tags', ids, success, error);
+                MassDeleteService.deleteMass('api/rolf-tags', ids, success, error);
             }
         };
 

@@ -10,7 +10,7 @@
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         var makeResource = function () {
-            self.AmvResource = $resource('/api/' + anr + 'amvs/:amvId', {
+            self.AmvResource = $resource('api/' + anr + 'amvs/:amvId', {
                     amvId: '@id',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
@@ -50,9 +50,9 @@
 
         var deleteMassAmv = function (ids, success, error) {
             if ($rootScope.OFFICE_MODE == 'FO') {
-                MassDeleteService.deleteMass('/api/client-anr/' + $rootScope.getUrlAnrId() + '/amvs', ids, success, error);
+                MassDeleteService.deleteMass('api/client-anr/' + $rootScope.getUrlAnrId() + '/amvs', ids, success, error);
             } else {
-                MassDeleteService.deleteMass('/api/amvs', ids, success, error);
+                MassDeleteService.deleteMass('api/amvs', ids, success, error);
             }
         };
 

@@ -10,7 +10,7 @@
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         var makeResource = function () {
-            self.MeasureResource = $resource('/api/' + anr + 'measures/:measureId', {
+            self.MeasureResource = $resource('api/' + anr + 'measures/:measureId', {
                     measureId: '@id',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
@@ -50,9 +50,9 @@
 
         var deleteMassMeasure = function (ids, success, error) {
             if ($rootScope.OFFICE_MODE == 'FO') {
-                MassDeleteService.deleteMass('/api/client-anr/' + $rootScope.getUrlAnrId() + '/measures', ids, success, error);
+                MassDeleteService.deleteMass('api/client-anr/' + $rootScope.getUrlAnrId() + '/measures', ids, success, error);
             } else {
-                MassDeleteService.deleteMass('/api/measures', ids, success, error);
+                MassDeleteService.deleteMass('api/measures', ids, success, error);
             }
         }
 

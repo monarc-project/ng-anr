@@ -10,7 +10,7 @@
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         var makeResource = function () {
-            self.VulnResource = $resource('/api/' + anr + 'vulnerabilities/:vulnId', {
+            self.VulnResource = $resource('api/' + anr + 'vulnerabilities/:vulnId', {
                     vulnId: '@id',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
@@ -50,9 +50,9 @@
 
         var deleteMassVuln = function (ids, success, error) {
             if ($rootScope.OFFICE_MODE == 'FO') {
-                MassDeleteService.deleteMass('/api/client-anr/' + $rootScope.getUrlAnrId() + '/vulnerabilities', ids, success, error);
+                MassDeleteService.deleteMass('api/client-anr/' + $rootScope.getUrlAnrId() + '/vulnerabilities', ids, success, error);
             } else {
-                MassDeleteService.deleteMass('/api/vulnerabilities', ids, success, error);
+                MassDeleteService.deleteMass('api/vulnerabilities', ids, success, error);
             }
         };
 

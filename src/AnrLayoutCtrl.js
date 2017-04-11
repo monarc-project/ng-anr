@@ -302,7 +302,7 @@
                 anr = 'client-anr';
             }
 
-            $http.get("/api/" + anr + "/" + $scope.model.anr.id + "/risks?" + $scope.serializeQueryString(params)).then(function (data) {
+            $http.get("api/" + anr + "/" + $scope.model.anr.id + "/risks?" + $scope.serializeQueryString(params)).then(function (data) {
                 var contentT = data.headers('Content-Type');
                 DownloadService.downloadBlob(data.data, 'risks.csv',contentT);
             });
@@ -316,7 +316,7 @@
                 anr = 'client-anr';
             }
 
-            $http.get("/api/"+anr+"/" + $scope.model.anr.id + "/risksop?" + $scope.serializeQueryString(params)).then(function (data) {
+            $http.get("api/"+anr+"/" + $scope.model.anr.id + "/risksop?" + $scope.serializeQueryString(params)).then(function (data) {
                 var contentT = data.headers('Content-Type');
                 DownloadService.downloadBlob(data.data, 'risks_op.csv',contentT);
             });
@@ -751,7 +751,7 @@
                     step: step,
                 }
             }).then(function (deliverable) {
-                $http.post('/api/client-anr/' + $scope.model.anr.id + '/deliverable', deliverable, {responseType: "arraybuffer"}).then(function (data) {
+                $http.post('api/client-anr/' + $scope.model.anr.id + '/deliverable', deliverable, {responseType: "arraybuffer"}).then(function (data) {
                     var docname = deliverable.docname;
                     if (!docname) {
                         docname = 'Untitled-Deliverable';
@@ -1672,7 +1672,7 @@
             })
                 .then(function (exports) {
                     var client = '';
-                    var customUrl = '/api/anr-export';
+                    var customUrl = 'api/anr-export';
                     if ($scope.OFFICE_MODE == 'FO') {
                         customUrl = 'api/client-anr/'+ $scope.model.anr.id +'/export';
                     }
@@ -2491,7 +2491,7 @@
             'typedoc': step.num,
         };
 
-        $http.get('/api/client-anr/' + anr.id + '/deliverable/' + step.num).then(function (data) {
+        $http.get('api/client-anr/' + anr.id + '/deliverable/' + step.num).then(function (data) {
             if (data.data.delivery && data.data.delivery.id) {
                 $scope.deliverable = data.data.delivery;
                 $scope.deliverable.docname = $scope.deliverable.name;
@@ -2520,7 +2520,7 @@
 
         $scope.uploadFile = function (file) {
             file.upload = Upload.upload({
-                url: '/api/client-anr/' + $scope.getUrlAnrId() + '/objects/import',
+                url: 'api/client-anr/' + $scope.getUrlAnrId() + '/objects/import',
                 data: {'mode': $scope.import.mode, file: file, password: $scope.import.password}
             });
 
@@ -2589,7 +2589,7 @@
 
         $scope.uploadFile = function (file) {
             file.upload = Upload.upload({
-                url: '/api/client-anr/' + $scope.getUrlAnrId() + '/instances/import',
+                url: 'api/client-anr/' + $scope.getUrlAnrId() + '/instances/import',
                 data: {'mode': $scope.import.mode, file: file, password: $scope.import.password, idparent: parentId}
             });
 
