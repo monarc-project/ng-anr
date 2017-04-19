@@ -21,7 +21,7 @@
                 <span ng-repeat="i in range(1, entry.recoImportance)" class="anr-importance">&bull;</span> <b>{{ entry.recoCode }}</b><br />
                 {{entry.recoDescription}}<br />
                 <b translate>Comment:</b> {{ entry.recoComment }}<br />
-                <b translate>Deadline:</b> {{ entry.recoDuedate }}<br />
+                <b translate>Deadline:</b> {{ formatDate(entry.recoDuedate.date) | date : 'dd/MM/yyyy' }}<br />
                 <b translate>Manager:</b> {{ entry.recoResponsable }}
             </td>
             <td>
