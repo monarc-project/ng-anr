@@ -45,7 +45,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'recommendation', 'risk', ValidateMeasureDialog],
-                templateUrl: '/views/anr/validate.recommandation.html',
+                templateUrl: 'views/anr/validate.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),

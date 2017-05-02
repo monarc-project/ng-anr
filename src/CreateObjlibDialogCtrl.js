@@ -96,7 +96,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
     $scope.createCategory = function (ev, catName) {
         $mdDialog.show({
             controller: ['$scope', '$mdDialog', '$q', 'toastr', 'gettextCatalog', 'ConfigService', 'ObjlibService', 'categories', 'catName', CreateObjlibCategoryDialogCtrl],
-            templateUrl: '/views/anr/create.objlibs.categories.html',
+            templateUrl: 'views/anr/create.objlibs.categories.html',
             clickOutsideToClose: false,
             preserveScope: false,
             scope: $scope.$dialogScope.$new(),
@@ -153,7 +153,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
         ObjlibService.getObjlibCat(cat).then(function (cat) {
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', '$q', 'toastr', 'gettextCatalog', 'ConfigService', 'ObjlibService', 'categories', 'catName', 'category', CreateObjlibCategoryDialogCtrl],
-                templateUrl: '/views/anr/create.objlibs.categories.html',
+                templateUrl: 'views/anr/create.objlibs.categories.html',
                 clickOutsideToClose: false,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),

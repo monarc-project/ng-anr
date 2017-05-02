@@ -115,7 +115,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'AnrService', 'ObjlibService', 'InstanceService', '$parentScope', 'parents', 'gettextCatalog', 'toastr', '$state', DetachObjectDialog],
-                templateUrl: '/views/anr/detach.objlibs.html',
+                templateUrl: 'views/anr/detach.objlibs.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -233,7 +233,7 @@
             $scope.objLibDialog = $mdDialog;
             $scope.objLibDialog.show({
                 controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', CreateObjlibDialogCtrl],
-                templateUrl: '/views/anr/create.objlibs.html',
+                templateUrl: 'views/anr/create.objlibs.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -304,7 +304,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'mode', ExportObjectDialog],
-                templateUrl: '/views/anr/export.objlibs.html',
+                templateUrl: 'views/anr/export.objlibs.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -355,7 +355,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', '$q', 'ObjlibService', 'myself', '$rootScope', 'AnrService', 'mode', CreateComponentDialogCtrl],
-                templateUrl: '/views/anr/create.objlibs.node.html',
+                templateUrl: 'views/anr/create.objlibs.node.html',
                 targetEvent: ev,
                 clickOutsideToClose: false,
                 preserveScope: false,

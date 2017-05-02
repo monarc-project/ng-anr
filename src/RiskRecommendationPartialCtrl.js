@@ -20,7 +20,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', CreateRecommandationDialog],
-                templateUrl: '/views/anr/create.recommandation.html',
+                templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -44,7 +44,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'rec', 'detachRecommandation', 'deleteRecommandation', CreateRecommandationDialog],
-                templateUrl: '/views/anr/create.recommandation.html',
+                templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -137,7 +137,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', '$q', 'MeasureService', MeasureRecommandationAttachDialog],
-                templateUrl: '/views/anr/create.recommandation-measure.html',
+                templateUrl: 'views/anr/create.recommandation-measure.html',
                 preserveScope: false,
                 targetEvent: ev,
                 scope: $scope.$dialogScope.$new(),
