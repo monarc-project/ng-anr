@@ -156,12 +156,11 @@
                 </div>
 
                 <div class="md-block" layout="column" flex>
-                    <div layout="row">
+                    <div layout="row" ng-hide="!objlib.asset || objlib.asset.type != 1" >
                         <md-icon style="margin-right: 8px;">class</md-icon>
                         <md-autocomplete
                                 flex
-                                ng-disabled="!objlib.asset || objlib.asset.type != 1"
-                                md-no-cache="true"
+                               	md-no-cache="true"
                                 md-selected-item="objlib.rolfTag"
                                 md-search-text="tagSearchText"
                                 md-selected-item-change="selectedTagItemChange(item)"
@@ -169,6 +168,7 @@
                                 md-item-text="_langField(item,'label')"
                                 md-min-length="0"
                                 md-input-name="tag"
+				md-clear-button="true"
                                 md-floating-label="{{ 'Operational risk Tag' | translate }}">
                             <md-item-template>
                                 <span md-highlight-text="tagSearchText" md-highlight-flags="^i">{{ _langField(item,'label') }}</span>
@@ -178,9 +178,9 @@
                                 {{ 'No operational risk tag matching your search was found' | translate }}
                             </md-not-found>
                         </md-autocomplete>
-                    </div>
+		     </div>
                 </div>
-
+		
                 <md-input-container class="md-block" flex>
                     <label translate>Location</label>
                     <md-icon>reorder</md-icon>
