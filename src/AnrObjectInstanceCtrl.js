@@ -121,7 +121,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'AnrService', 'instance', 'scales', 'scaleCommCache', CreateInstanceDialogCtrl],
-                templateUrl: '/views/anr/create.instance.html',
+                templateUrl: 'views/anr/create.instance.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -156,7 +156,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'mode', ExportInstanceDialog],
-                templateUrl: '/views/anr/export.objlibs.html',
+                templateUrl: 'views/anr/export.objlibs.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -221,7 +221,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'RiskService', CreateSpecRiskOPDialog],
-                templateUrl: '/views/anr/create.specriskop.html',
+                templateUrl: 'views/anr/create.specriskop.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -244,7 +244,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'ThreatService', 'VulnService', CreateSpecRiskDialog],
-                templateUrl: '/views/anr/create.specrisk.html',
+                templateUrl: 'views/anr/create.specrisk.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
