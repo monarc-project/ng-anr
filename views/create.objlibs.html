@@ -65,11 +65,11 @@
                     </md-select>
                 </md-input-container>
 
-                <md-input-container class="md-block" layout="row" ng-if="mode=='anr'" flex>
+                <!--<md-input-container class="md-block" layout="row" ng-if="mode=='anr'" flex>
                     <label translate>Maximum unavailability (days)</label>
                     <md-icon>power_settings_new</md-icon>
                     <input ng-model="objlib.disponibility">
-                </md-input-container>
+                </md-input-container>-->
 
                 <md-input-container class="md-block" layout="row" ng-if="mode=='anr_inst'" flex>
                     <label translate>Confidentiality</label>
@@ -127,7 +127,7 @@
                                 md-input-name="asset"
                                 md-floating-label="{{ 'Asset type' | translate }}">
                             <md-item-template>
-                                <span md-highlight-text="assetSearchText" md-highlight-flags="^i">{{ item.code }} - {{ _langField(item,'label') }} ({{ specificityStr(item.mode) }})</span>
+                                <span md-highlight-text="assetSearchText" md-highlight-flags="^i">{{ item.code }} - {{ _langField(item,'label') }}</span>
                             </md-item-template>
 
                             <md-not-found>

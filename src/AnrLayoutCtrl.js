@@ -472,7 +472,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'GuideService', 'anr', 'subStep', MethodEditContextDialog],
-                templateUrl: '/views/anr/edit.evalcontext.html',
+                templateUrl: 'views/anr/edit.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
@@ -498,7 +498,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'QuestionService', 'ThreatService', 'ClientAnrService', 'GuideService', 'anr', 'subStep', MethodEditTrendsDialog],
-                templateUrl: '/views/anr/trends.evalcontext.html',
+                templateUrl: 'views/anr/trends.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
@@ -524,7 +524,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'rec', 'ClientRecommandationService', CreateRecommandationDialogContext],
-                templateUrl: '/views/anr/create.recommandation.html',
+                templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -569,7 +569,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', '$state', 'TreatmentPlanService', 'ClientRecommandationService', 'anr', 'subStep', 'thresholds', 'editRecommandationContext', MethodEditRisksDialog],
-                templateUrl: '/views/anr/risks.evalcontext.html',
+                templateUrl: 'views/anr/risks.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
@@ -687,7 +687,7 @@
                     steps: [
                         {label: gettextCatalog.getString("Risks analysis context"), action: editEvalContext, anrField: 'contextAnaRisk', progressField: 'initAnrContext'},
                         {label: gettextCatalog.getString("Evaluation of Trends and Threat, and synthesis"), action: editTrendsContext, progressField: 'initEvalContext'},
-                        {label: gettextCatalog.getString("Risks management context"), action: editEvalContext, anrField: 'contextGestRisk', progressField: 'initRiskContext'},
+                        {label: gettextCatalog.getString("Risks management organisation"), action: editEvalContext, anrField: 'contextGestRisk', progressField: 'initRiskContext'},
                         {label: gettextCatalog.getString("Definition of the risk evaluation criteria"), action: selectScalesTab, progressField: 'initDefContext'},
                     ]
                 },
@@ -741,7 +741,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', '$http', 'anr', 'step', MethodDeliverableDialog],
-                templateUrl: '/views/anr/deliverable.evalcontext.html',
+                templateUrl: 'views/anr/deliverable.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
@@ -1391,7 +1391,7 @@
 
             $mdDialog.show({
                 controller: controller,
-                templateUrl: '/views/dialogs/create.anr.html',
+                templateUrl: 'views/dialogs/create.anr.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -1423,7 +1423,7 @@
             if ($scope.OFFICE_MODE == 'BO') {
                 $mdDialog.show({
                     controller: ['$scope', '$mdDialog', '$q', '$state', 'ObjlibService', 'AnrService', '$stateParams', '$location', '$parentScope', 'anr_id', 'categories', AddObjectDialogCtrl],
-                    templateUrl: '/views/anr/add.objlib.html',
+                    templateUrl: 'views/anr/add.objlib.html',
                     targetEvent: ev,
                     preserveScope: false,
                     scope: $scope.$dialogScope.$new(),
@@ -1660,7 +1660,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'mode', ExportAnrDialog],
-                templateUrl: '/views/anr/export.objlibs.html',
+                templateUrl: 'views/anr/export.objlibs.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -1723,7 +1723,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$rootScope', '$mdDialog', '$state', 'ClientSnapshotService', 'toastr', 'gettextCatalog', 'anr', ToolsSnapshotDialog],
-                templateUrl: '/views/anr/snapshots.html',
+                templateUrl: 'views/anr/snapshots.html',
                 targetEvent: ev,
                 locals: {
                     anr: $scope.model.anr
@@ -1741,7 +1741,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'ClientInterviewService', 'toastr', 'gettextCatalog', 'anr', ToolsInterviewDialog],
-                templateUrl: '/views/anr/interviews.html',
+                templateUrl: 'views/anr/interviews.html',
                 targetEvent: ev,
                 locals: {
                     anr: $scope.model.anr
@@ -1758,7 +1758,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'ObjlibService', 'toastr', 'gettextCatalog', 'Upload', 'hookUpdateObjlib', ImportObjectDialogCtrl],
-                templateUrl: '/views/anr/import.object.html',
+                templateUrl: 'views/anr/import.object.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -1778,7 +1778,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'AnrService', 'toastr', 'gettextCatalog', 'Upload', 'instanceId', 'parentId', 'hookUpdateObjlib', ImportInstanceDialogCtrl],
-                templateUrl: '/views/anr/import.instance.html',
+                templateUrl: 'views/anr/import.instance.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -1837,7 +1837,7 @@
         $scope.__objlibDialog_AnrService = AnrService;
         $mdDialog.show({
             controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', '$stateParams', CreateObjlibDialogCtrl],
-            templateUrl: '/views/anr/create.objlibs.html',
+            templateUrl: 'views/anr/create.objlibs.html',
             clickOutsideToClose: false,
             preserveScope: false,
             scope: $scope.$dialogScope.$new(),
