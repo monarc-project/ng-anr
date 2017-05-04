@@ -2,11 +2,8 @@
     <div layout="column" layout-align="center center" ng-if="!model" flex class="md-padding">
         <md-progress-circular md-indeterminate="true"></md-progress-circular>
     </div>
-
     <div layout="column" ng-if="model" md-theme="light" class="md-padding-left md-padding-right">
         <div layout="row" layout-align="start center">
-            <h2 style="margin-right: 8px">{{ ::_langField(model,'label') }}</h2>
-
             <div ng-if="OFFICE_MODE == 'FO'" layout="row" layout-align="start center" ng-repeat="(idx, step) in methodProgress" flex>
                 <div class="monarc-wizard step-bullet {{ isMethodStepComplete(step) ? step.color : '' }} method-menu-step-{{::(idx+1)}}" ng-click="showMethodBox(idx+1, step, $event)">
                     <div flex class="txtcenter">{{ ::(idx+1) }}</div>
