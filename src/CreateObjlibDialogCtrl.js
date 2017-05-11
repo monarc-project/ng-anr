@@ -351,10 +351,13 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
             parent: null,
             implicitPosition: 2,
             position: null,
-            label1: catName,
+            label1: '',
             label2: '',
             label3: '',
             label4: '',
         };
+
+        $scope.category[$scope._langField('label')] = catName;
+
     }
 }
