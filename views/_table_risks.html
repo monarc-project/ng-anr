@@ -6,7 +6,7 @@
 
 <div ng-show="!sheet_risk">
     <div layout="row" layout-align="space-between center" class="md-padding md-padding-left md-padding-right">
-        <span class="md-subhead md-padding-left" translate>{{ risks_total }} information risks</span>
+        <span class="md-title md-padding-left" translate>{{ risks_total }} information risks</span>
         <md-progress-circular md-diameter="20" ng-if="anr_risks_table_loading"></md-progress-circular>
 
         <md-card ng-if="(instmode == 'anr' || instmode == 'inst') && !sheet_risk">
