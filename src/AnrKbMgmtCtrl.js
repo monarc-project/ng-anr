@@ -1848,7 +1848,7 @@
         });
 
         $scope.languages = ConfigService.getLanguages();
-        $scope.language = ConfigService.getDefaultLanguageIndex();
+        $scope.language = $scope.getAnrLanguage();
         $scope.themeSearchText = '';
 
         if (threat != undefined && threat != null) {
@@ -1939,7 +1939,7 @@
         });
 
         $scope.languages = ConfigService.getLanguages();
-        $scope.language = ConfigService.getDefaultLanguageIndex();
+        $scope.language = $scope.getAnrLanguage();
 
         if (vuln != undefined && vuln != null) {
             $scope.vuln = vuln;
@@ -1976,7 +1976,7 @@
 
     function CreateMeasureDialogCtrl($scope, $mdDialog, ConfigService, measure) {
         $scope.languages = ConfigService.getLanguages();
-        $scope.language = ConfigService.getDefaultLanguageIndex();
+        $scope.language = $scope.getAnrLanguage();
 
         if (measure != undefined && measure != null) {
             $scope.measure = measure;
@@ -2005,7 +2005,7 @@
 
     function CreateAmvDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService, MeasureService, ConfigService, AmvService, $q, amv) {
         $scope.languages = ConfigService.getLanguages();
-        $scope.defaultLang = ConfigService.getDefaultLanguageIndex();
+        $scope.defaultLang = $scope.getAnrLanguage();
 
 
         $scope.queryAmvs = function (asset_id) {
@@ -2151,7 +2151,7 @@
 
     function CreateCategoryDialogCtrl($scope, $mdDialog, ConfigService, category) {
         $scope.languages = ConfigService.getLanguages();
-        $scope.language = ConfigService.getDefaultLanguageIndex();
+        $scope.language = $scope.getAnrLanguage();
 
         if (category != undefined && category != null) {
             $scope.category = category;
@@ -2176,7 +2176,7 @@
 
     function CreateTagDialogCtrl($scope, $mdDialog, ConfigService, tag) {
         $scope.languages = ConfigService.getLanguages();
-        $scope.language = ConfigService.getDefaultLanguageIndex();
+        $scope.language = $scope.getAnrLanguage();
 
         if (tag != undefined && tag != null) {
             $scope.tag = tag;
@@ -2201,7 +2201,7 @@
 
     function CreateRiskDialogCtrl($scope, $mdDialog, $q, ConfigService, CategoryService, TagService, risk) {
         $scope.languages = ConfigService.getLanguages();
-        $scope.language = ConfigService.getDefaultLanguageIndex();
+        $scope.language = $scope.getAnrLanguage();
 
 
         $scope.categorySearchText = null;
