@@ -29,10 +29,13 @@
                     <md-button flex ng-click="openCommonList()" class="md-raised">{{ 'Import from MONARC library' | translate }}</md-button>
                 </div>
 
-                <div ng-if="dialog_mode == 'file'" layout="column">
-                    <input type="file" name="file" ngf-drop ngf-select ng-repeat="i in range(0, file_range)" ng-model="file[i]" class="md-upload-dropbox md-padding md-whiteframe-3dp"
-                         ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-allow-dir="false">
-                    </input>
+                <div ng-if="dialog_mode == 'file'">
+                
+                <input type="file" name="file" ngf-drop ngf-select ng-repeat="i in range(0, file_range)"
+                       ng-model="file[i]"
+                       class="md-upload-dropbox md-padding md-whiteframe-3dp"
+                       ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-allow-dir="false">
+                </input>
 
                     <md-input-container class="md-block">
                         <md-icon>vpn_key</md-icon>
@@ -41,8 +44,9 @@
                     </md-input-container>
 
                     <div layout="row" layout-align="end center">
-                        <md-button ng-click="upgradeFileRange()"><md-icon>add</md-icon> {{ 'Add another file' | translate }}</md-button>
-                        <md-button ng-click="uploadFile(file)"><md-icon>file_download</md-icon> {{ 'Import file' | translate }}</md-button>
+                        <md-button ng-show="!isImportingIn" ng-click="uploadFile(file)"><md-icon>file_download</md-icon> {{ 'Import file' | translate }}</md-button>
+						      <md-progress-circular ng-show="isImportingIn" md-mode="indeterminate" md-diameter="40"></md-progress-circular>&nbsp;
+                        <h3 ng-show="isImportingIn">{{ 'Importing file...' | translate }}</h3>
                     </div>
                 </div>
 

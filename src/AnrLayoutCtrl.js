@@ -2513,24 +2513,30 @@
         $scope.dialog_mode = null;
         $scope.file = [];
         $scope.file_range = 0;
+ 		  $scope.isImportingIn = false;
         $scope.import = {
             mode: 'merge',
             password: '',
         };
 
         $scope.uploadFile = function (file) {
+        	   $scope.isImportingIn = true;
             file.upload = Upload.upload({
                 url: 'api/client-anr/' + $scope.getUrlAnrId() + '/objects/import',
                 data: {'mode': $scope.import.mode, file: file, password: $scope.import.password}
             });
 
             file.upload.then(function (response) {
+				$scope.isImportingIn = false;
                 if (response.data.errors && response.data.errors.length > 0) {
                     toastr.warning(gettextCatalog.getString("Some files could not be imported"));
                 } else {
                     toastr.success(gettextCatalog.getString("The asset has been imported successfully"));
+						   hookUpdateObjlib();	                    
+                    $mdDialog.cancel();
+
                 }
-                hookUpdateObjlib();
+                
             });
         }
 
@@ -2571,8 +2577,7 @@
                 hookUpdateObjlib();
                 $scope.dialog_mode = 'common';
             });
-
-        };
+		  };
 
         $scope.cancel = function () {
             $mdDialog.cancel();
@@ -2582,25 +2587,29 @@
     function ImportInstanceDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload, instanceId, parentId, hookUpdateObjlib) {
         $scope.file = [];
         $scope.file_range = 0;
+		  $scope.isImportingIn = false;
         $scope.import = {
             mode: 'merge',
             password: '',
         };
 
         $scope.uploadFile = function (file) {
+        	   $scope.isImportingIn = true;
             file.upload = Upload.upload({
                 url: 'api/client-anr/' + $scope.getUrlAnrId() + '/instances/import',
                 data: {'mode': $scope.import.mode, file: file, password: $scope.import.password, idparent: parentId}
             });
 
             file.upload.then(function (response) {
+            $scope.isImportingIn = false;
                 if (response.data.errors && response.data.errors.length > 0) {
                     toastr.warning(gettextCatalog.getString("Some files could not be imported"));
                 } else {
                     toastr.success(gettextCatalog.getString("The instance has been imported successfully"));
+						  hookUpdateObjlib();                    
+                    $mdDialog.cancel();
+
                 }
-                hookUpdateObjlib();
-                $mdDialog.cancel();
             });
         }
 
