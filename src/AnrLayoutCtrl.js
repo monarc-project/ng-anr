@@ -2383,15 +2383,20 @@
                 $scope.confirmDelete = snapshot.id;
             }
         };
-
+        
         $scope.restoreSnapshot = function (snapshot) {
-            $scope.snapshotRestoring = true;
-            ClientSnapshotService.restoreSnapshot(snapshot.id, function (data) {
+        	   $scope.snapshotRestoring = true;
+            if ($scope.confirmRestore == snapshot.id) {
+            	 ClientSnapshotService.restoreSnapshot(snapshot.id, function (data) {
                 toastr.success(gettextCatalog.getString("Snapshot restored"));
                 $state.transitionTo('main.project.anr', {modelId: data.data.id});
                 $rootScope.$broadcast('fo-anr-changed');
                 $scope.snapshotRestoring = false;
-            })
+                });
+            } else {
+                $scope.confirmRestore = snapshot.id;
+                $scope.snapshotRestoring = false;
+            }
         };
 
         $scope.openSnapshot = function (snapshot) {
