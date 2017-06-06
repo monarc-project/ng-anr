@@ -426,12 +426,34 @@ div.ng-inline-edit input, div.ng-inline-edit textarea {
     outline: none;
 }
 
+input, textarea {
+    border-top: 1px solid #2196F3;;
+    border-left: 1px solid #2196F3;;
+    border-right: 1px solid #2196F3;;
+    border-bottom: 1px solid #2196F3;
+    outline: none;    
+}
+
+td input.edit-field {
+	text-align: center;
+	width: 1.5em;
+}
+
+textarea {
+	height: 100px;
+	width: 100%;
+}
+
+span textarea {
+	height: 100%;
+	width: 70%;
+}
 .small div.ng-inline-edit input {
     width: 64px;
 }
 
 .large div.ng-inline-edit textarea {
-    width: 300px;
+    width: 100%
 }
 
 .anr-table-toptitle {
@@ -739,7 +761,8 @@ md-progress-linear.yellow .md-container {
     font-style: italic;
 }
 .inputs-as-number input.edit-field{
-    width: 25px !important;
+	 text-align: center;   
+	 width: 2em;
 }
 .editerror {
   /*animation: shake 0.4s linear;
