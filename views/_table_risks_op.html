@@ -68,14 +68,14 @@
     </tr>
 
     <tr>
-        <th rowspan="2" translate ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">Prob.</th>
+        <th title="{{scaleThreat}}" rowspan="2" translate ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">Prob.</th>
         <th colspan="5" translate ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">Impact</th>
         <th rowspan="2" translate ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">Current risk</th>
 
-        <th rowspan="2" class="big-border-left" translate>Prob.</th>
+        <th title="{{scaleThreat}}" rowspan="2" class="big-border-left" translate>Prob.</th>
         <th colspan="5" translate>Impact</th>
         <th rowspan="2" translate>Current risk</th>
-        <th rowspan="2" translate>Existing controls</th>
+        <th style="min-width: 200px" rowspan="2" translate>Existing controls</th>
     </tr>
 
     <tr>

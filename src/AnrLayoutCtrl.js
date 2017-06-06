@@ -59,6 +59,7 @@
                     ToolsAnrService.currentTab = 0;
                     $scope.display.anrSelectedTabIndex = 0;
                     e.preventDefault();
+                    
                 }
             });
         }
@@ -1476,6 +1477,8 @@
         $scope.updateScales = function () {
             AnrService.getScales($scope.model.anr.id).then(function (data) {
                 $scope.scalesCanChange = data.canChange && $scope.model.anr.cacheModelIsScalesUpdatable;
+                $scope.scaleThreat = ''; // Reset tooltip Prob. on table risks
+                $scope.scaleVul = ''; // Reset tooltip Qualif. on table risks
                 for (var i = 0; i < data.scales.length; ++i) {
                     var scale = data.scales[i];
 
@@ -1483,7 +1486,7 @@
                     // When we post a comment, we need to check if the ID is empty or not, and call POST/PUT methods
                     // accordingly on the scales/:id/comments endpoint. For UI/UX reasons, we need to filter everything
                     // here since we don't have proper backend endpoints.
-
+						  
                     scaleWatchSetup = false;
                     commsWatchSetup = false;
                     if (scale.type == "impact") {
@@ -1496,7 +1499,7 @@
                         $scope.scales.threats.max = scale.max;
                         $scope.scales.threats.type = scale.type;
                         $scope.scales.threats.id = scale.id;
-                    } else if (scale.type == "vulnerability") {
+						 } else if (scale.type == "vulnerability") {
                         $scope.scales.vulns.min = scale.min;
                         $scope.scales.vulns.max = scale.max;
                         $scope.scales.vulns.type = scale.type;
@@ -1513,7 +1516,7 @@
         $scope.updateScaleTypes = function (cb) {
             AnrService.getScalesTypes($scope.model.anr.id).then(function (data) {
                 $scope.scales_types = data.types;
-
+                
                 $scope.scales_types_by_id = {};
                 for(var i = 0 ; i<data.types.length ; ++i){
                     $scope.scales_types_by_id[data.types[i].id] = data.types[i];
@@ -1591,6 +1594,9 @@
         $scope.scaleCommCache = {}; // C/I/D, type
         $scope.threatCommCache = {};
         $scope.vulnsCommCache = {};
+        $scope.scaleThreat = '';
+        $scope.scaleVul = '';
+        
 
         $scope.updateScaleComments = function (scale_id) {
             commsWatchSetup = false;
@@ -1599,14 +1605,17 @@
                 var isImpact = false;
 
                 if (scale_id === $scope.scales.threats.id) {
-                    obj = $scope.comms.threat;
+                    obj = $scope.comms.threat; 
+
+										
+                                             
                 } else if (scale_id === $scope.scales.vulns.id) {
                     obj = $scope.comms.vuln;
                 } else if (scale_id === $scope.scales.impacts.id) {
                     obj = $scope.comms.impact;
                     isImpact = true;
                 }
-
+                		              
                 // Reset comments for this scale
                 if (!isImpact) {
                     for (var i = 0; i < obj.length; ++i) {
@@ -1644,18 +1653,29 @@
                             obj[comm.val].comment4 = comm.comment4;
                         }
 
-                        if (scale_id == $scope.scales.threats.id) {
-                            $scope.threatCommCache[comm.val] = $scope._langField(comm,'comment');
+                        if (scale_id == $scope.scales.threats.id) {                        	 
+                            $scope.threatCommCache[comm.val] = $scope._langField(comm,'comment');                      
+                            
                         } else if (scale_id == $scope.scales.vulns.id) {
                             $scope.vulnsCommCache[comm.val] = $scope._langField(comm,'comment');
                         }
                     }
                 }
+                
+                if (scale_id == $scope.scales.threats.id) { 
+              			for (var i = $scope.scales.threats.min; i <= $scope.scales.threats.max; i++) {
+               		$scope.scaleThreat += i + ' :  ' + $scope.threatCommCache[i] + "\n";
+					    	}
+					 }
+					 if (scale_id == $scope.scales.vulns.id) { 
+              			for (var i = $scope.scales.vulns.min; i <= $scope.scales.vulns.max; i++) {
+               		$scope.scaleVul += i + ' :  ' + $scope.vulnsCommCache[i] + "\n";
+               	   }
+					 }
             });
         };
-
-
-        $scope.exportAnr = function (ev) {
+        
+		      $scope.exportAnr = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
@@ -1687,7 +1707,6 @@
                     })
                 });
         };
-
         $scope.showMethodBox = function (stepNum, step, ev) {
             var position = $mdPanel.newPanelPosition()
                 .relativeTo('.method-menu-step-' + stepNum)
