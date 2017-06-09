@@ -1479,6 +1479,11 @@
                 $scope.scalesCanChange = data.canChange && $scope.model.anr.cacheModelIsScalesUpdatable;
                 $scope.scaleThreat = ''; // Reset tooltip Prob. on table risks
                 $scope.scaleVul = ''; // Reset tooltip Qualif. on table risks
+                $scope.scaleR = ''; // Reset tooltip (R)Reputation on table risks
+					 $scope.scaleO = ''; // Reset tooltip (O)Operation on table risks
+                $scope.scaleF = ''; // Reset tooltip (F)Finance on table risks
+                $scope.scaleL = ''; // Reset tooltip (L)Legal on table risks
+                $scope.scaleP = ''; // Reset tooltip (P)Person on table risks
                 for (var i = 0; i < data.scales.length; ++i) {
                     var scale = data.scales[i];
 
@@ -1596,8 +1601,12 @@
         $scope.vulnsCommCache = {};
         $scope.scaleThreat = '';
         $scope.scaleVul = '';
+        $scope.scaleR = '';
+		  $scope.scaleO = '';
+        $scope.scaleF = '';
+        $scope.scaleL = '';
+        $scope.scaleP = '';
         
-
         $scope.updateScaleComments = function (scale_id) {
             commsWatchSetup = false;
             AnrService.getScaleComments($scope.model.anr.id, scale_id).then(function (data) {
@@ -1663,13 +1672,39 @@
                 }
                 
                 if (scale_id == $scope.scales.threats.id) { 
-              			for (var i = $scope.scales.threats.min; i <= $scope.scales.threats.max; i++) {
+                     
+							for (var i = $scope.scales.threats.min; i <= $scope.scales.threats.max; i++) {
                		$scope.scaleThreat += i + ' :  ' + $scope.threatCommCache[i] + "\n";
-					    	}
-					 }
+               		}       
+				    }
 					 if (scale_id == $scope.scales.vulns.id) { 
               			for (var i = $scope.scales.vulns.min; i <= $scope.scales.vulns.max; i++) {
                		$scope.scaleVul += i + ' :  ' + $scope.vulnsCommCache[i] + "\n";
+               	   }
+					 }
+					 if (scale_id == $scope.scales.impacts.id) { 
+              			for (var i = $scope.scales.impacts.min; i <= $scope.scales.impacts.max; i++) {
+               		$scope.scaleR += i + ' :  ' + $scope.scaleCommCache[4][i] + "\n";
+               	   }
+					 }
+					 if (scale_id == $scope.scales.impacts.id) { 
+              			for (var i = $scope.scales.impacts.min; i <= $scope.scales.impacts.max; i++) {
+               		$scope.scaleO += i + ' :  ' + $scope.scaleCommCache[5][i] + "\n";
+               	   }
+					 }
+					 if (scale_id == $scope.scales.impacts.id) { 
+              			for (var i = $scope.scales.impacts.min; i <= $scope.scales.impacts.max; i++) {
+               		$scope.scaleL += i + ' :  ' + $scope.scaleCommCache[6][i] + "\n";
+               	   }
+					 }
+					 if (scale_id == $scope.scales.impacts.id) { 
+              			for (var i = $scope.scales.impacts.min; i <= $scope.scales.impacts.max; i++) {
+               		$scope.scaleF += i + ' :  ' + $scope.scaleCommCache[7][i] + "\n";
+               	   }
+					 }
+ 					 if (scale_id == $scope.scales.impacts.id) { 
+              			for (var i = $scope.scales.impacts.min; i <= $scope.scales.impacts.max; i++) {
+               		$scope.scaleP += i + ' :  ' + $scope.scaleCommCache[8][i] + "\n";
                	   }
 					 }
             });
@@ -2176,14 +2211,13 @@
         };
     }
 
-    function MethodEditTrendsDialog($scope, $mdDialog, toastr, gettextCatalog, QuestionService, ThreatService, ClientAnrService, GuideService, anr, subStep) {
+    function MethodEditTrendsDialog($scope, $mdDialog, toastr, gettextCatalog, QuestionService, ThreatService, ClientAnrService, GuideService, anr, subStep) {         
+   
         $scope.subStep = subStep;
         $scope.anr = anr;
         $scope.display = {};
-        $scope.isAnrReadOnly = !anr.rwd;
-
+        $scope.isAnrReadOnly = !anr.rwd;       
         $scope.guideVisible = false;
-
         $scope.toggleGuide = function () {
             $scope.guideVisible = !$scope.guideVisible;
 
@@ -2294,7 +2328,7 @@
         ThreatService.getThreats({limit: 0}).then(function (data) {
             $scope.threats = data.threats;
             $scope.display.currentThreat = 0;
-            $scope.updateThreat();
+            $scope.updateThreat();      
         });
 
         $scope.saveAndUpdateThreat = function () {
@@ -2312,6 +2346,8 @@
                 $scope.currentThreatObj = data;
             })
         };
+        
+        
 
         $scope.previousThreat = function () {
             $scope.display.currentThreat--;
@@ -2336,6 +2372,7 @@
                 $scope.updateThreat();
             }
         };
+               
 
         $scope.saveThreat = function (cb) {
             var copy = angular.copy($scope.currentThreatObj);

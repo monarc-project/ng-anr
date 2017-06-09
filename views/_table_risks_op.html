@@ -79,17 +79,17 @@
     </tr>
 
     <tr>
-        <th ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">R</th>
-        <th ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">O</th>
-        <th ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">L</th>
-        <th ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">F</th>
-        <th ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">P</th>
+        <th title="{{scaleR}}" ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">R</th>
+        <th title="{{scaleO}}" ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">O</th>
+        <th title="{{scaleL}}" ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">L</th>
+        <th title="{{scaleF}}" ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">F</th>
+        <th title="{{scaleP}}" ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">P</th>
 
-        <th>R</th>
-        <th>O</th>
-        <th>L</th>
-        <th>F</th>
-        <th>P</th>
+        <th title="{{scaleR}}">R</th>
+        <th title="{{scaleO}}">O</th>
+        <th title="{{scaleL}}">L</th>
+        <th title="{{scaleF}}">F</th>
+        <th title="{{scaleP}}">P</th>
     </tr>
     </thead>
 
