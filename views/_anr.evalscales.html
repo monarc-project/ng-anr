@@ -45,11 +45,11 @@
 
 
     <div editable callback="onThreatScaleChanged" layout="row">
-        <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="scales.threats"><span translate>Threats scale:</span> [
+        <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="scales.threats"><span translate>Likelihood scale:</span> [
             <span class="text-blue" edit-field="min"></span> -
             <span class="text-blue" edit-field="max"></span> ]
         </h4>
-        <h4 ng-if="(OFFICE_MODE == 'FO' && !scalesCanChange ) || isAnrReadOnly"><span translate>Threats scale:</span> [
+        <h4 ng-if="(OFFICE_MODE == 'FO' && !scalesCanChange ) || isAnrReadOnly"><span translate>Likelihood scale:</span> [
             <span class="text-blue">{{ scales.threats.min }}</span> -
             <span class="text-blue">{{ scales.threats.max }}</span> ]
         </h4>
