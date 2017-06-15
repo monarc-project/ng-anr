@@ -23,8 +23,8 @@
             <td><b>{{ rec.code }}</b><br/><span class="md-caption">{{ rec.description }}</span></td>
             <td class="txtcenter"><span ng-repeat="i in range(1, rec.importance)" class="anr-importance">&bull;</span></td>
             <td class="preserve-newlines" edit-field="comment" edit-type="textarea"></td>
-            <td edit-field="responsable"></td>
-            <td edit-field="duedate" edit-placeholder="jj-mm-yyyy"></td>
+            <td edit-field="responsable" edit-type="textarea"></td>
+            <td edit-field="duedate" edit-placeholder="jj-mm-yyyy" edit-type="textarea"></td>
             <td ng-if="rec.counterTreated == 0" translate>Coming</td>
             <td ng-if="rec.counterTreated > 0" translate>In progress ({{rec.counterTreated}})</td>
             <td>

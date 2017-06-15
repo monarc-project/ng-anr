@@ -129,7 +129,7 @@
             <td>
                 <div layout="row" layout-align="center center">
                     <a ng-if="risk.specific == 1 && deleteSpecRisk" class="pointer" ng-click="deleteSpecRisk($event, risk)"><md-icon class="md-warn">delete</md-icon></a>
-                    <a class="pointer blue" title="{{ ('Open risk sheet' | translate) }}" ng-click="openRiskSheet(risk)">
+                    <a class="pointer blue" title="{{ 'Open risk sheet' | translate }}" ng-click="openRiskSheet(risk)">
                         {{treatmentStr(risk.kindOfMeasure)|translate}}
                     </a>
                 </div>
