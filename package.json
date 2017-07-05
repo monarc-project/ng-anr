@@ -5,7 +5,7 @@
   "private": true,
   "repository": {
     "type": "git",
-    "url": "https://github.com/CASES-LU/ng-anr"
+    "url": "https://github.com/monarc-project/ng-anr"
   },
   "dependencies": {
   },
