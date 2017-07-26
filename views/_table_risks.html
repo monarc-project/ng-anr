@@ -30,10 +30,10 @@
                     &nbsp;
 
                     <md-input-container ng-if="instance.asset.type == 1 || instmode == 'anr'" style="margin: 0 0; min-width: 120px;">
-                        <label translate>Processing type</label>
+                        <label translate>Kind of treatment</label>
                         <md-select ng-model="risks_filters.kindOfMeasure">
                             <md-option ng-value="null">{{ 'All (unfiltered)' | translate }}</md-option>
-                            <md-option ng-value="5">{{ 'Not processed' | translate }}</md-option>
+                            <md-option ng-value="5">{{ 'Not treated' | translate }}</md-option>
                             <md-option ng-value="1">{{ 'Reduction' | translate }}</md-option>
                             <md-option ng-value="2">{{ 'Denied' | translate }}</md-option>
                             <md-option ng-value="3">{{ 'Accepted' | translate }}</md-option>
@@ -91,7 +91,7 @@
             <th colspan="2" class="big-border-left" translate>Threat</th>
             <th colspan="3" class="big-border-left" translate>Vulnerability</th>
             <th colspan="3" class="big-border-left" style="min-width: 110px" translate>Current risk</th>
-            <th rowspan="2" translate>Processing</th>
+            <th rowspan="2" translate>Treatment</th>
             <th rowspan="2" translate>Target risk</th>
         </tr>
         <tr>
