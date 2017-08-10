@@ -11,7 +11,7 @@
     /**
      * ANR > RISKS PLAN PROCESSING > HISTORY
      */
-  
+
 
 function AnrRisksPlanHistoryCtrl($scope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog, $state,
                                    TreatmentPlanService, ClientRecommandationService, $q) {
@@ -32,17 +32,16 @@ function AnrRisksPlanHistoryCtrl($scope, toastr, $mdMedia, $mdDialog, $statePara
                 case 2: return 'Denied';
                 case 3: return 'Accepted';
                 case 4: return 'Shared';
-                default: return 'Not processed';
+                default: return 'Not treated';
             }
         };
 
         ClientRecommandationService.getRecommandationHistory($stateParams.modelId).then(function (data) {
             $scope.history = data['recommandations-historics'];
-                                
+
         })
-                
-                
+
+
     }
 
 })();
-

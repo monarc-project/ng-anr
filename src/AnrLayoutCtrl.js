@@ -59,7 +59,7 @@
                     ToolsAnrService.currentTab = 0;
                     $scope.display.anrSelectedTabIndex = 0;
                     e.preventDefault();
-                    
+
                 }
             });
         }
@@ -440,7 +440,7 @@
                 case 2: return 'Denied';
                 case 3: return 'Accepted';
                 case 4: return 'Shared';
-                default: return 'Not processed';
+                default: return 'Not treated';
             }
         };
 
@@ -590,7 +590,7 @@
             $scope.$watch('display.anrSelectedTabIndex', function (newValue, oldValue) {
                 switch (newValue) {
                     case 0:
-                        if(($state.$current.name == 'main.project.anr.risk' && $stateParams.riskId) || 
+                        if(($state.$current.name == 'main.project.anr.risk' && $stateParams.riskId) ||
                             ($state.$current.name == 'main.project.anr.riskop' && $stateParams.riskopId) ||
                             ($state.$current.name == 'main.project.anr.object' && $stateParams.objectId) ||
                             ($state.$current.name == 'main.project.anr.instance' && $stateParams.instId) ||
@@ -1491,7 +1491,7 @@
                     // When we post a comment, we need to check if the ID is empty or not, and call POST/PUT methods
                     // accordingly on the scales/:id/comments endpoint. For UI/UX reasons, we need to filter everything
                     // here since we don't have proper backend endpoints.
-						  
+
                     scaleWatchSetup = false;
                     commsWatchSetup = false;
                     if (scale.type == "impact") {
@@ -1521,7 +1521,7 @@
         $scope.updateScaleTypes = function (cb) {
             AnrService.getScalesTypes($scope.model.anr.id).then(function (data) {
                 $scope.scales_types = data.types;
-                
+
                 $scope.scales_types_by_id = {};
                 for(var i = 0 ; i<data.types.length ; ++i){
                     $scope.scales_types_by_id[data.types[i].id] = data.types[i];
@@ -1606,7 +1606,7 @@
         $scope.scaleF = '';
         $scope.scaleL = '';
         $scope.scaleP = '';
-        
+
         $scope.updateScaleComments = function (scale_id) {
             commsWatchSetup = false;
             AnrService.getScaleComments($scope.model.anr.id, scale_id).then(function (data) {
@@ -1614,17 +1614,17 @@
                 var isImpact = false;
 
                 if (scale_id === $scope.scales.threats.id) {
-                    obj = $scope.comms.threat; 
+                    obj = $scope.comms.threat;
 
-										
-                                             
+
+
                 } else if (scale_id === $scope.scales.vulns.id) {
                     obj = $scope.comms.vuln;
                 } else if (scale_id === $scope.scales.impacts.id) {
                     obj = $scope.comms.impact;
                     isImpact = true;
                 }
-                		              
+
                 // Reset comments for this scale
                 if (!isImpact) {
                     for (var i = 0; i < obj.length; ++i) {
@@ -1662,54 +1662,54 @@
                             obj[comm.val].comment4 = comm.comment4;
                         }
 
-                        if (scale_id == $scope.scales.threats.id) {                        	 
-                            $scope.threatCommCache[comm.val] = $scope._langField(comm,'comment');                      
-                            
+                        if (scale_id == $scope.scales.threats.id) {
+                            $scope.threatCommCache[comm.val] = $scope._langField(comm,'comment');
+
                         } else if (scale_id == $scope.scales.vulns.id) {
                             $scope.vulnsCommCache[comm.val] = $scope._langField(comm,'comment');
                         }
                     }
                 }
-                
-                if (scale_id == $scope.scales.threats.id) { 
-                     
+
+                if (scale_id == $scope.scales.threats.id) {
+
 							for (var i = $scope.scales.threats.min; i <= $scope.scales.threats.max; i++) {
                		$scope.scaleThreat += i + ' :  ' + $scope.threatCommCache[i] + "\n";
-               		}       
+               		}
 				    }
-					 if (scale_id == $scope.scales.vulns.id) { 
+					 if (scale_id == $scope.scales.vulns.id) {
               			for (var i = $scope.scales.vulns.min; i <= $scope.scales.vulns.max; i++) {
                		$scope.scaleVul += i + ' :  ' + $scope.vulnsCommCache[i] + "\n";
                	   }
 					 }
-					 if (scale_id == $scope.scales.impacts.id) { 
+					 if (scale_id == $scope.scales.impacts.id) {
               			for (var i = $scope.scales.impacts.min; i <= $scope.scales.impacts.max; i++) {
                		$scope.scaleR += i + ' :  ' + $scope.scaleCommCache[4][i] + "\n";
                	   }
 					 }
-					 if (scale_id == $scope.scales.impacts.id) { 
+					 if (scale_id == $scope.scales.impacts.id) {
               			for (var i = $scope.scales.impacts.min; i <= $scope.scales.impacts.max; i++) {
                		$scope.scaleO += i + ' :  ' + $scope.scaleCommCache[5][i] + "\n";
                	   }
 					 }
-					 if (scale_id == $scope.scales.impacts.id) { 
+					 if (scale_id == $scope.scales.impacts.id) {
               			for (var i = $scope.scales.impacts.min; i <= $scope.scales.impacts.max; i++) {
                		$scope.scaleL += i + ' :  ' + $scope.scaleCommCache[6][i] + "\n";
                	   }
 					 }
-					 if (scale_id == $scope.scales.impacts.id) { 
+					 if (scale_id == $scope.scales.impacts.id) {
               			for (var i = $scope.scales.impacts.min; i <= $scope.scales.impacts.max; i++) {
                		$scope.scaleF += i + ' :  ' + $scope.scaleCommCache[7][i] + "\n";
                	   }
 					 }
- 					 if (scale_id == $scope.scales.impacts.id) { 
+ 					 if (scale_id == $scope.scales.impacts.id) {
               			for (var i = $scope.scales.impacts.min; i <= $scope.scales.impacts.max; i++) {
                		$scope.scaleP += i + ' :  ' + $scope.scaleCommCache[8][i] + "\n";
                	   }
 					 }
             });
         };
-        
+
 		      $scope.exportAnr = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
@@ -2211,12 +2211,12 @@
         };
     }
 
-    function MethodEditTrendsDialog($scope, $mdDialog, toastr, gettextCatalog, QuestionService, ThreatService, ClientAnrService, GuideService, anr, subStep) {         
-   
+    function MethodEditTrendsDialog($scope, $mdDialog, toastr, gettextCatalog, QuestionService, ThreatService, ClientAnrService, GuideService, anr, subStep) {
+
         $scope.subStep = subStep;
         $scope.anr = anr;
         $scope.display = {};
-        $scope.isAnrReadOnly = !anr.rwd;       
+        $scope.isAnrReadOnly = !anr.rwd;
         $scope.guideVisible = false;
         $scope.toggleGuide = function () {
             $scope.guideVisible = !$scope.guideVisible;
@@ -2328,7 +2328,7 @@
         ThreatService.getThreats({limit: 0}).then(function (data) {
             $scope.threats = data.threats;
             $scope.display.currentThreat = 0;
-            $scope.updateThreat();      
+            $scope.updateThreat();
         });
 
         $scope.saveAndUpdateThreat = function () {
@@ -2346,8 +2346,8 @@
                 $scope.currentThreatObj = data;
             })
         };
-        
-        
+
+
 
         $scope.previousThreat = function () {
             $scope.display.currentThreat--;
@@ -2372,7 +2372,7 @@
                 $scope.updateThreat();
             }
         };
-               
+
 
         $scope.saveThreat = function (cb) {
             var copy = angular.copy($scope.currentThreatObj);
@@ -2439,7 +2439,7 @@
                 $scope.confirmDelete = snapshot.id;
             }
         };
-        
+
         $scope.restoreSnapshot = function (snapshot) {
         	   $scope.snapshotRestoring = true;
             if ($scope.confirmRestore == snapshot.id) {
@@ -2593,11 +2593,11 @@
                     toastr.warning(gettextCatalog.getString("Some files could not be imported"));
                 } else {
                     toastr.success(gettextCatalog.getString("The asset has been imported successfully"));
-						   hookUpdateObjlib();	                    
+						   hookUpdateObjlib();
                     $mdDialog.cancel();
 
                 }
-                
+
             });
         }
 
@@ -2667,7 +2667,7 @@
                     toastr.warning(gettextCatalog.getString("Some files could not be imported"));
                 } else {
                     toastr.success(gettextCatalog.getString("The instance has been imported successfully"));
-						  hookUpdateObjlib();                    
+						  hookUpdateObjlib();
                     $mdDialog.cancel();
 
                 }
