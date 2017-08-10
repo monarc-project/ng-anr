@@ -1629,10 +1629,6 @@
             risksTabSelected = true;
             TableHelperService.watchSearch($scope, 'risks.query.filter', $scope.risks.query, $scope.updateRisks, $scope.risks);
 
-            CategoryService.getCategories({limit: 0, order: '-label1'}).then(function (cats) {
-                $scope.risk_categories = cats.categories;
-            });
-
             TagService.getTags({limit: 0, order: '-label1'}).then(function (tags) {
                 $scope.risk_tags = tags.tags;
             })
