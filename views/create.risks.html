@@ -45,29 +45,6 @@
                     </div>
                 </md-input-container>
 
-                <md-chips ng-model="risk.categories"
-                          md-autocomplete-snap
-                          md-require-match="true"
-                          ng-if="OFFICE_MODE == 'BO'">
-                    <md-autocomplete
-                            md-selected-item="selectedCategoryItem"
-                            md-search-text="categorySearchText"
-                            md-items="item in queryCategorySearch(categorySearchText)"
-                            md-item-text="item.code"
-                            md-min-length="0"
-                            md-no-cache="true"
-                            placeholder="{{ 'Add categories...' | translate }}">
-                        <span md-highlight-text="categorySearchText">{{ item.code }} - {{ _langField(item,'label') }}</span>
-                    </md-autocomplete>
-
-                    <md-chip-template>
-                        <span>
-                            <strong>{{_langField($chip,'label')}}</strong>
-                            <em>{{$chip.code}}</em>
-                        </span>
-                    </md-chip-template>
-                </md-chips>
-
                 <md-chips ng-model="risk.tags"
                           md-autocomplete-snap
                           md-require-match="true">
