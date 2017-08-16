@@ -220,7 +220,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'RiskService', CreateSpecRiskOPDialog],
+                controller: ['$scope', '$mdDialog', 'RiskService','$q', CreateSpecRiskOPDialog],
                 templateUrl: 'views/anr/create.specriskop.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -230,6 +230,7 @@
             }).then(function (risk) {
                 risk.instance = $stateParams.instId;
                 risk.specific = 1;
+                risk.risk = risk.risk.id;
                 AnrService.createInstanceOpRisk($scope.model.anr.id, risk, function () {
                     toastr.success(gettextCatalog.getString("The specific operational risk has been successfully created"));
                     $scope.updateInstanceRisksOp();
@@ -243,7 +244,7 @@
         $scope.createSpecRisk = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ThreatService', 'VulnService', CreateSpecRiskDialog],
+                controller: ['$scope', '$mdDialog', 'ThreatService', 'VulnService', '$q', CreateSpecRiskDialog],
                 templateUrl: 'views/anr/create.specrisk.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -253,6 +254,8 @@
             }).then(function (risk) {
                 risk.instance = $stateParams.instId;
                 risk.specific = 1;
+                risk.threat = risk.threat.id;
+                risk.vulnerability = risk.vulnerability.id;
                 AnrService.createInstanceRisk($scope.model.anr.id, risk, function () {
                     toastr.success(gettextCatalog.getString("The specific risk has been successfully created"));
                     $scope.updateInstanceRisks();
@@ -423,7 +426,7 @@
         }
     }
 
-    function CreateSpecRiskOPDialog($scope, $mdDialog, RiskService) {
+    function CreateSpecRiskOPDialog($scope, $mdDialog, RiskService, $q) {
         RiskService.getRisks({limit: 0}).then(function (data) {
             $scope.risks = data.risks;
         });
@@ -432,12 +435,29 @@
             $mdDialog.hide($scope.specrisk);
         }
 
+        $scope.selectedRiskItemChange = function (item) {
+            if (item) {
+                $scope.specrisk.threat = item;
+              }
+        }
+
+        $scope.queryRiskSearch = function (query) {
+            var promise = $q.defer();
+            RiskService.getRisks({filter: query}).then(function (e) {
+                promise.resolve(e.risks);
+              }, function (e) {
+                promise.reject(e);
+            });
+
+            return promise.promise;
+        };
+
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
     }
 
-    function CreateSpecRiskDialog($scope, $mdDialog, ThreatService, VulnService) {
+    function CreateSpecRiskDialog($scope, $mdDialog, ThreatService, VulnService, $q) {
         ThreatService.getThreats({limit: 0}).then(function (data) {
             $scope.threats = data.threats;
         });
@@ -449,6 +469,38 @@
         $scope.create = function () {
             $mdDialog.hide($scope.specrisk);
         }
+
+        $scope.selectedVulnItemChange = function (item) {
+            if (item) {
+                $scope.specrisk.vulnerability = item;
+              }
+        }
+        $scope.selectedThreatItemChange = function (item) {
+            if (item) {
+                $scope.specrisk.threat = item;
+              }
+        }
+
+        $scope.queryVulnSearch = function (query) {
+            var promise = $q.defer();
+            VulnService.getVulns({filter: query}).then(function (e) {
+                promise.resolve(e.vulnerabilities);
+              }, function (e) {
+                promise.reject(e);
+            });
+
+            return promise.promise;
+        };
+        $scope.queryThreatSearch = function (query) {
+            var promise = $q.defer();
+            ThreatService.getThreats({filter: query, status: 1}).then(function (e) {
+                promise.resolve(e.threats);
+              }, function (e) {
+                promise.reject(e);
+            });
+
+            return promise.promise;
+        };
 
         $scope.cancel = function() {
             $mdDialog.cancel();

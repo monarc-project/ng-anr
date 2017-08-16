@@ -12,30 +12,63 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-input-container class="md-block">
-                    <label translate>Threat</label>
-                    <md-icon>toc</md-icon>
-                    <md-select ng-model="specrisk.threat" required>
-                        <md-option ng-repeat="threat in threats" ng-value="threat.id">{{ threat.code }} - {{ _langField(threat,'label') }}</md-option>
-                    </md-select>
-                </md-input-container>
+<!--<md-icon>toc</md-icon> -->
+                <md-autocomplete
+                        flex
+                        required
+                        md-selected-item="specrisk.threat"
+                        md-search-text="threatSearchText"
+                        md-selected-item-change="selectedThreatItemChange(item)"
+                        md-items="threat in queryThreatSearch(threatSearchText)"
+                        md-item-text="threat.code + ' - ' + _langField(threat,'label')"
+                        md-delay="300"
+                        md-min-length="0"
+                        md-input-name="threat"
+                        md-floating-label="{{ 'Threat' | translate }}">
+                    <md-item-template>
+                        <span md-highlight-text="assetSearchText">{{ threat.code }} - {{ _langField(threat,'label') }}</span>
+                    </md-item-template>
 
-                <md-input-container class="md-block">
-                    <label translate>Vulnerability</label>
-                    <md-icon>toc</md-icon>
-                    <md-select ng-model="specrisk.vulnerability" required>
-                        <md-option ng-repeat="vuln in vulns" ng-value="vuln.id">{{ vuln.code }}- {{ _langField(vuln,'label') }}</md-option>
-                    </md-select>
-                </md-input-container>
+                    <md-not-found>
+                        {{ 'No threat matching your search was found' | translate }}
+                    </md-not-found>
+                    <div ng-messages="riskForm.threat.$error">
+                        <div ng-message="required">{{ 'You must select a threat' | translate }}</div>
+                    </div>
+                </md-autocomplete>
+                <md-autocomplete
+                        flex
+                        required
+                        md-selected-item="specrisk.vulnerability"
+                        md-search-text="vulnSearchText"
+                        md-selected-item-change="selectedVulnItemChange(item)"
+                        md-items="vuln in queryVulnSearch(vulnSearchText)"
+                        md-item-text="vuln.code + ' - ' + _langField(vuln,'label')"
+                        md-delay="300"
+                        md-min-length="0"
+                        md-input-name="vulnerability"
+                        md-floating-label="{{ 'Vulnerability' | translate }}">
+                   <md-item-template>
+                        <span md-highlight-text="vulnSearchText">{{ vuln.code }} - {{ _langField(vuln,'label') }}</span>
+                    </md-item-template>
+
+                    <md-not-found>
+                        {{ 'No vulnerability matching your search was found' | translate }}
+                    </md-not-found>
+
+                    <div ng-messages="riskForm.vulnerability.$error">
+                        <div ng-message="required">{{ 'You must select a vulnerability' | translate }}</div>
+                    </div>
+                </md-autocomplete>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row" layout-align="end center">
-            <md-button ng-click="cancel()">
-                {{ 'Cancel' | translate }}
-            </md-button>
-            <md-button ng-click="create()" ng-disabled="riskForm.$error.required" type="submit" class="md-accent md-hue-3">
-                {{ (specrisk.id > 0 ? 'Save' : 'Create') | translate }}
-            </md-button>
-        </md-dialog-actions>
+           <md-button ng-click="cancel()">
+               {{ 'Cancel' | translate }}
+           </md-button>
+           <md-button ng-click="create()" ng-disabled="riskForm.$error.required" type="submit" class="md-accent md-hue-3">
+               {{ (specrisk.id > 0 ? 'Save' : 'Create') | translate }}
+           </md-button>
+         </md-dialog-actions>
     </form>
 </md-dialog>

@@ -21,13 +21,32 @@
                     </md-select>
                 </md-input-container>
 
-                <md-input-container ng-if="specrisk.source == 1" class="md-block">
-                    <label translate>Source risk</label>
-                    <md-icon>toc</md-icon>
-                    <md-select ng-model="specrisk.risk" required>
-                        <md-option ng-repeat="risk in risks" ng-value="risk.id">{{ risk.code }} - {{ _langField(risk,'label') }}</md-option>
-                    </md-select>
-                </md-input-container>
+                <div class="md-block" ng-if="specrisk.source == 1" >
+                    <md-autocomplete
+                            flex
+                            required
+                            md-selected-item="specrisk.risk"
+                            md-search-text="riskSearchText"
+                            md-selected-item-change="selectedRiskItemChange(item)"
+                            md-items="risk in queryRiskSearch(riskSearchText)"
+                            md-item-text="risk.code + ' - ' + _langField(risk,'label')"
+                            md-delay="300"
+                            md-min-length="0"
+                            md-input-name="risk"
+                            md-floating-label="{{ 'Risk' | translate }}">
+                       <md-item-template>
+                            <span md-highlight-text="riskSearchText" md-highlight-flags="^i">{{ risk.code }} - {{ _langField(risk,'label') }}</span>
+                        </md-item-template>
+
+                        <md-not-found>
+                            {{ 'No operational risk matching your search was found' | translate }}
+                        </md-not-found>
+
+                        <div ng-messages="riskForm.risk.$error">
+                            <div ng-message="required">{{ 'You must select a risk' | translate }}</div>
+                        </div>
+                    </md-autocomplete>
+                </div>
 
                 <div layout="column" ng-if="specrisk.source == 2">
                     <md-input-container class="md-block">
