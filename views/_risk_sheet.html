@@ -29,7 +29,7 @@
                 <td ng-if="!sheet_risk.d_risk_enabled" ng-disabled="true"></td>
             </tr>
             <tr class="tbl-risk-calc">
-                <td class="bold txtleft" translate>Target risk</td>
+                <td class="bold txtleft" translate>Residual risk</td>
                 <td ng-if="sheet_risk.c_risk_enabled" ng-class="{'green': sheet_risk.target_c <= thresholds.thresholds.min && sheet_risk.target_c > -1, 'orange': sheet_risk.target_c <= thresholds.thresholds.max && sheet_risk.target_c > thresholds.thresholds.min, 'red': sheet_risk.target_c > thresholds.thresholds.max}">
                     {{sheet_risk.target_c}}
                 </td>
