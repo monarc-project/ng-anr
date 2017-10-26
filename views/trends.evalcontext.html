@@ -20,10 +20,10 @@
                                     <input type="text" ng-model="question['label' + anr.language]" placeholder="{{ 'Question' | translate }}" />
                                 </md-input-container>
                                 <md-button ng-class="{'md-icon-button': confirmDelete != question.id}" )" class="md-warn" ng-click="removeQuestion(k)">
-                                <md-tooltip md-direction="right"> {{ 'Delete' | translate }} </md-tooltip>                            
+                                <md-tooltip md-direction="right"> {{ 'Delete' | translate }} </md-tooltip>
                                 <md-icon>delete</md-icon>
                                 <span ng-if="confirmDelete != null" translate>Confirm?</span>
-                                </md-button>                     
+                                </md-button>
                             </div>
                             <md-input-container class="md-block" style="margin-top: 0">
                                 <textarea ng-if="question.type == 1" ng-model="question.response" rows="3" ng-disabled="!anr.rwd"></textarea>
@@ -99,10 +99,10 @@
                             <tr>
                                 <td translate>Probability</td>
                                 <td>
-                                    <md-select ng-disabled="anr.rwd < 1" ng-model="currentThreatObj.qualification">
+                                    <md-select ng-disabled="anr.rwd < 1 || !isScalesDefined() " ng-model="currentThreatObj.qualification">
                                         <md-option ng-repeat="i in range(scales.threats.min,scales.threats.max)" ng-value="{{ i }}">{{ i }}: {{threatCommCache[i]}}</md-option>
                                     </md-select>
-                                    <md-checkbox ng-disabled="anr.rwd < 1" ng-model="currentThreatObj.forceQualification">{{ 'Force probability in the analysis' | translate }}</md-checkbox>
+                                    <md-checkbox ng-disabled="anr.rwd < 1 || !isScalesDefined()" ng-model="currentThreatObj.forceQualification">{{ 'Force probability in the analysis' | translate }}</md-checkbox>
                                 </td>
                             </tr>
                             </tbody>

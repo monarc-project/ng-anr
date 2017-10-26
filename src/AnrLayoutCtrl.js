@@ -2245,6 +2245,14 @@
             }
         };
 
+        $scope.isScalesDefined = function () {
+          var progress = false;
+                if ($scope.anr.initDefContext==1) {
+                    progress = true;
+                }
+            return progress;
+        };
+
         QuestionService.getQuestions().then(function (data) {
             $scope.questions = angular.copy(data.questions);
 
