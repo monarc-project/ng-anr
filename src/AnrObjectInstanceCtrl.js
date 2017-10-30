@@ -230,7 +230,9 @@
             }).then(function (risk) {
                 risk.instance = $stateParams.instId;
                 risk.specific = 1;
-                risk.risk = risk.risk.id;
+                if(typeof risk.risk !== "undefined")
+                    risk.risk = risk.risk.id;
+
                 AnrService.createInstanceOpRisk($scope.model.anr.id, risk, function () {
                     toastr.success(gettextCatalog.getString("The specific operational risk has been successfully created"));
                     $scope.updateInstanceRisksOp();
