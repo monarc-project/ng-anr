@@ -96,10 +96,10 @@
                                     </md-radio-group>
                                 </td>
                             </tr>
-                            <tr>
+                            <tr ng-hide="anr.rwd < 1 || !isScalesDefined()">
                                 <td translate>Probability</td>
                                 <td>
-                                    <md-select ng-disabled="anr.rwd < 1 || !isScalesDefined() " ng-model="currentThreatObj.qualification">
+                                    <md-select  ng-model="currentThreatObj.qualification">
                                         <md-option ng-repeat="i in range(scales.threats.min,scales.threats.max)" ng-value="{{ i }}">{{ i }}: {{threatCommCache[i]}}</md-option>
                                     </md-select>
                                     <md-checkbox ng-disabled="anr.rwd < 1 || !isScalesDefined()" ng-model="currentThreatObj.forceQualification">{{ 'Force probability in the analysis' | translate }}</md-checkbox>
