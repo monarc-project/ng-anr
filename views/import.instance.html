@@ -37,7 +37,7 @@
                 </md-input-container>
 
                 <div layout="row" layout-align="end center">
-                        <md-button ng-disabled="file ==''" ng-show="!isImportingIn" ng-click="uploadFile(file)">
+                        <md-button ng-disabled="file.length < 1" ng-show="!isImportingIn" ng-click="uploadFile(file)">
                         <md-icon>file_download</md-icon>
                         {{ 'Import file' | translate }}
                         </md-button>

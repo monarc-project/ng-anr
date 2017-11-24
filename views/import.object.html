@@ -44,7 +44,7 @@
                     </md-input-container>
 
                     <div layout="row" layout-align="end center">
-                        <md-button ng-disabled="file ==''" ng-show="!isImportingIn" ng-click="uploadFile(file)"><md-icon>file_download</md-icon> {{ 'Import file' | translate }}</md-button>
+                        <md-button ng-disabled="file.length < 1" ng-show="!isImportingIn" ng-click="uploadFile(file)"><md-icon>file_download</md-icon> {{ 'Import a file' | translate }}</md-button>
 						      <md-progress-circular ng-show="isImportingIn" md-mode="indeterminate" md-diameter="40"></md-progress-circular>&nbsp;
                         <h3 ng-show="isImportingIn">{{ 'Importing file...' | translate }}</h3>
                     </div>
