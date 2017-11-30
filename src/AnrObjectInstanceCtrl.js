@@ -178,7 +178,11 @@
                             contentT = data.headers('Content-Type');
                         contentD = contentD.substring(0,contentD.length-1).split('filename="');
                         contentD = contentD[contentD.length-1];
-                        DownloadService.downloadBlob(data.data, contentD,contentT);
+                        if (exports.password == '') {
+                            DownloadService.downloadJSON(data.data, contentD);
+                        } else {
+                            DownloadService.downloadBlob(data.data, contentD, contentT);
+                        }
                         toastr.success(gettextCatalog.getString('The asset has been exported successfully.'), gettextCatalog.getString('Export successful'));
                     })
                 });

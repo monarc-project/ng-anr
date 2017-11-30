@@ -18,7 +18,7 @@
                 document.body.appendChild(a);
                 a.style.display = 'none';
 
-                return function (blobData, fileName,typeF) {
+                return function (blobData, fileName, typeF) {
                     if (typeF == undefined) {
                         typeF = 'application/octet-stream';
                     }
@@ -35,11 +35,35 @@
                 };
             }());
 
-            saveData(data, name,typeF);
+            saveData(data, name, typeF);
+        };
+
+
+        var downloadJSON = function (data, fileName) {
+          var saveData = (function () {
+              var a = document.createElement('a');
+              document.body.appendChild(a);
+              a.style.display = 'none';
+
+              return function (jsonData, fileName) {
+                var blob = new Blob([angular.toJson(jsonData)], {type: 'application/json'}),
+                    url = window.URL.createObjectURL(blob);
+
+                a.href = url;
+                a.download = fileName;
+                a.click();
+
+                setTimeout(function() {
+                    window.URL.revokeObjectURL(url);
+                }, 800);
+              };
+          }());
+          saveData(data, fileName);
         };
 
         return {
             downloadBlob: downloadBlob,
+            downloadJSON: downloadJSON
         };
     }
 
