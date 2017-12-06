@@ -1713,10 +1713,6 @@
                         var riskCatIds = [];
                         var riskTagIds = [];
 
-                        for (var i = 0; i < risk.categories.length; ++i) {
-                            riskCatIds.push(risk.categories[i].id);
-                        }
-
                         for (var i = 0; i < risk.tags.length; ++i) {
                             riskTagIds.push(risk.tags[i].id);
                         }
