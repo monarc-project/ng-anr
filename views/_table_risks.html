@@ -8,7 +8,6 @@
     <div layout="row" layout-align="space-between center" class="md-padding md-padding-left md-padding-right">
         <span class="md-title md-padding-left" translate>{{ risks_total }} information risks</span>
         <md-progress-circular md-diameter="20" ng-if="anr_risks_table_loading"></md-progress-circular>
-
         <md-card ng-if="(instmode == 'anr' || instmode == 'inst') && !sheet_risk">
             <div layout="row" layout-wrap class="md-padding-left md-padding-right">
                 <form layout="row" layout-wrap layout-align="center center" class="md-padding-left md-padding-right" ng-submit="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()">
@@ -29,7 +28,7 @@
 
                     &nbsp;
 
-                    <md-input-container ng-if="instance.asset.type == 1 || instmode == 'anr'" style="margin: 0 0; min-width: 120px;">
+                    <md-input-container style="margin: 0 0; min-width: 120px;">
                         <label translate>Kind of treatment</label>
                         <md-select ng-model="risks_filters.kindOfMeasure">
                             <md-option ng-value="null">{{ 'All (unfiltered)' | translate }}</md-option>
@@ -43,6 +42,8 @@
 
                     <md-button class="md-icon-button" ng-click="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()"><md-icon class="md-primary">search</md-icon><md-tooltip>{{ 'Filter table' | translate }}</md-tooltip></md-button>
                     <md-button class="md-icon-button" ng-click="resetRisksFilters(); updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()"><md-icon class="md-primary">settings_backup_restore</md-icon><md-tooltip>{{ 'Reset filter' | translate }}</md-tooltip></md-button>
+                    <md-button ng-if="instmode == 'anr'" class="md-icon-button" ng-click="exportInstanceRisks ? exportInstanceRisks() : exportAnrRisksTable()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip><</md-button>
+
 
                     <div style="width:1px; background:#EAEAEA;height:48px;margin-left:2px;margin-right:10px;"></div>
 
@@ -74,9 +75,7 @@
             </div>
         </md-card>
 
-        <md-select class="no-margin" ng-model="risks_filters.page" md-on-close="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()" ng-if="risks_total > 0 && (!instance || instance.asset.type == 1)">
-            <md-option ng-repeat="i in range(1, ceil(risks_total / risks_filters.limit))" ng-value="i"><span translate>Page {{ i }}</span></md-option>
-        </md-select>
+
     </div>
 
     <div ng-if="risks && risks.length === 0" class="md-padding">
