@@ -1999,11 +1999,6 @@
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
 
-        if (risk != undefined)
-          if(risk.tags == null){
-            $scope.risk.tags=[];
-          }
-
         tagSearchText = null;
         tagSelectedItem = null;
         $scope.queryTagSearch = function (query) {
