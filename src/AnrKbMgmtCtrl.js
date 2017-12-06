@@ -1283,7 +1283,6 @@
         });*/
 
 
-
         /**
          * TAGS
          */
@@ -1493,12 +1492,8 @@
                 .then(function (risk) {
                     var riskBackup = angular.copy(risk);
 
-                    var riskCatIds = [];
                     var riskTagIds = [];
-
-
-
-                    for (var i = 0; i < risk.tags.length; ++i) {
+          for (var i = 0; i < risk.tags.length; ++i) {
                         riskTagIds.push(risk.tags[i].id);
                     }
 
@@ -1544,7 +1539,6 @@
                 })
                     .then(function (risk) {
                         var riskBackup = angular.copy(risk);
-                        var riskCatIds = [];
                         var riskTagIds = [];
 
                         for (var i = 0; i < risk.tags.length; ++i) {
@@ -2005,11 +1999,13 @@
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
 
+        if (risk != undefined)
+          if(risk.tags == null){
+            $scope.risk.tags=[];
+          }
 
-
-
-        $scope.tagSearchText = null;
-        $scope.tagSelectedItem = null;
+        tagSearchText = null;
+        tagSelectedItem = null;
         $scope.queryTagSearch = function (query) {
             var promise = $q.defer();
             TagService.getTags({filter: query}).then(function (e) {
@@ -2037,9 +2033,15 @@
 
             return promise.promise;
         };
-
+        // TO DO : To improve, test if the risk has tags if it hasn't create an empty table of tags.
         if (risk != undefined && risk != null) {
             $scope.risk = risk;
+            if ($scope.risk.tags.length >0) {
+            }
+            else {
+              $scope.risk.tags=[];
+            }
+
         } else {
             $scope.risk = {
                 code: '',
