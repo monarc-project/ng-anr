@@ -5,7 +5,7 @@
         .controller('AnrKbMgmtCtrl', [
             '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
             'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'TagService', 'RiskService',
-            'CategoryService', '$state', '$timeout', '$rootScope',
+             '$state', '$timeout', '$rootScope',
             AnrKbMgmtCtrl
         ]);
 
@@ -14,7 +14,7 @@
      */
     function AnrKbMgmtCtrl($scope, $stateParams, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService,
                                   AssetService, ThreatService, VulnService, AmvService, MeasureService, TagService,
-                                  RiskService, CategoryService, $state, $timeout, $rootScope) {
+                                  RiskService, $state, $timeout, $rootScope) {
         $scope.tab = -1;
         $scope.gettext = gettextCatalog.getString;
         TableHelperService.resetBookmarks();
@@ -1029,7 +1029,7 @@
             $scope.objlibs.previousQueryOrder = $scope.objlibs.query.order;
         }
 
-        $scope.objlib_category_filter = 0;
+
         $scope.objlib_asset_filter = 0;
         $scope.objlib_lockswitch = false;
         $scope.objlib_assets = [];
@@ -1064,25 +1064,23 @@
         }
 
         $scope.resetObjlibsFilters = function () {
-            $scope.objlib_category_filter = 0;
+
             $scope.objlib_asset_filter = 0;
             $scope.objlib_lockswitch = false;
         };
 
-        $scope.selectCategoryFilter = function (id) {
-            $scope.objlib_category_filter = id;
-        };
+
 
         $scope.selectObjlibsTab = function () {
             $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'objlibs'});
             objLibTabSelected = true;
             TableHelperService.watchSearch($scope, 'objlibs.query.filter', $scope.objlibs.query, $scope.updateObjlibs, $scope.objlibs);
 
-            // Load all assets and categories to fill the md-select dropdowns
+            // Load all assets to fill the md-select dropdowns
             AssetService.getAssets({order: '-code', limit: 0}).then(function (data) {
                 $scope.objlib_assets = data.assets;
             });
-            $scope.updateObjlibsTabCategoriesFilter();
+
         };
 
         $scope.deselectObjlibsTab = function () {
@@ -1090,38 +1088,9 @@
             TableHelperService.unwatchSearch($scope.objlibs);
         };
 
-        $scope.updateObjlibsTabCategoriesFilter = function () {
-            ObjlibService.getObjlibsCats({limit: 0}).then(function (data) {
-                var buildItemRecurse = function (children, depth) {
-                    var output = [];
-
-                    for (var i = 0; i < children.length; ++i) {
-                        var child = children[i];
-
-                        for (var j = 0; j < depth; ++j) {
-                            child[$scope._langField('label')] = " >> " + $scope._langField(child,'label');
-                        }
-
-                        output.push(child);
-
-                        if (child.child && child.child.length > 0) {
-                            var child_output = buildItemRecurse(child.child, depth + 1);
-                            output = output.concat(child_output);
-                        }
-                    }
-
-                    return output;
-                };
-
-                $scope.objlib_categories = buildItemRecurse(data.categories, 0);
-            });
-        };
-
         $scope.updateObjlibs = function () {
             var query = angular.copy($scope.objlibs.query);
-            if ($scope.objlib_category_filter > 0 || $scope.objlib_category_filter == -1) {
-                query.category = $scope.objlib_category_filter;
-            }
+
             if ($scope.objlib_asset_filter > 0) {
                 query.asset = $scope.objlib_asset_filter;
             }
@@ -1187,7 +1156,7 @@
                             ObjlibService.updateObjlib(objlib,
                                 function () {
                                     $scope.updateObjlibs();
-                                    $scope.updateObjlibsTabCategoriesFilter();
+
                                     toastr.success(gettextCatalog.getString('The asset has been edited successfully.',
                                         {objlibLabel: $scope._langField(objlib,'label')}), gettextCatalog.getString('Edition successful'));
                                 },
@@ -1203,7 +1172,7 @@
                             ObjlibService.createObjlib(objlib,
                                 function () {
                                     $scope.updateObjlibs();
-                                    $scope.updateObjlibsTabCategoriesFilter();
+
                                     toastr.success(gettextCatalog.getString('The asset has been created successfully.',
                                         {objlibLabel: $scope._langField(objlib,'label')}), gettextCatalog.getString('Creation successful'));
 
@@ -1220,7 +1189,7 @@
                     }
                 }, function () {
                     $scope.updateObjlibs();
-                    $scope.updateObjlibsTabCategoriesFilter();
+
                 });
         };
 
@@ -1300,7 +1269,7 @@
          */
         $scope.selectTagsTab = function (tab) {
             switch (tab) {
-                case 'categories': $scope.currentTabIndex = 0; break;
+
                 case 'tags': $scope.currentTabIndex = 1; break;
                 case 'risks': $scope.currentTabIndex = 2; break;
             }
@@ -1312,138 +1281,6 @@
             $scope.tab = tabName;
             $scope.selectTab(tabName);
         });*/
-
-        /**
-         * CATEGORIES
-         */
-        $scope.categories = TableHelperService.build('label1', 10, 1, '');
-
-        $scope.updateCategories = function () {
-            $scope.categories.promise = CategoryService.getCategories($scope.categories.query);
-            $scope.categories.promise.then(
-                function (data) {
-                    $scope.categories.items = data;
-                }
-            )
-        };
-        $scope.removeCategoriesFilter = function () {
-            TableHelperService.removeFilter($scope.categories);
-        };
-
-        $scope.selectCategoriesTab = function () {
-            $state.transitionTo('main.kb_mgmt.op_risk', {'tab': 'categories'});
-            TableHelperService.watchSearch($scope, 'categories.query.filter', $scope.categories.query, $scope.updateCategories, $scope.categories);
-        };
-
-        $scope.deselectCategoriesTab = function () {
-            TableHelperService.unwatchSearch($scope.categories);
-        };
-
-
-        $scope.createNewCategory = function (ev, category) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
-            $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ConfigService', 'category', CreateCategoryDialogCtrl],
-                templateUrl: 'views/dialogs/create.categories.html',
-                targetEvent: ev,
-                preserveScope: false,
-                scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: false,
-                fullscreen: useFullScreen,
-                locals: {
-                    'category': category
-                }
-            })
-                .then(function (category) {
-                    CategoryService.createCategory(category,
-                        function () {
-                            $scope.updateCategories();
-                            toastr.success(gettextCatalog.getString('The category has been created successfully.',
-                                {categoryLabel: $scope._langField(category,'label')}), gettextCatalog.getString('Creation successful'));
-                        },
-
-                        function () {
-                            $scope.createNewCategory(ev, category);
-                        }
-                    );
-                });
-        };
-
-        $scope.editCategory = function (ev, category) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
-            CategoryService.getCategory(category.id).then(function (categoryData) {
-                $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', 'ConfigService', 'category', CreateCategoryDialogCtrl],
-                    templateUrl: 'views/dialogs/create.categories.html',
-                    targetEvent: ev,
-                    preserveScope: false,
-                    scope: $scope.$dialogScope.$new(),
-                    clickOutsideToClose: false,
-                    fullscreen: useFullScreen,
-                    locals: {
-                        'category': categoryData
-                    }
-                })
-                    .then(function (category) {
-                        CategoryService.updateCategory(category,
-                            function () {
-                                $scope.updateCategories();
-                                toastr.success(gettextCatalog.getString('The category has been edited successfully.',
-                                    {categoryLabel: $scope._langField(category,'label')}), gettextCatalog.getString('Edition successful'));
-                            },
-
-                            function () {
-                                $scope.editCategory(ev, category);
-                            }
-                        );
-                    });
-            });
-        };
-
-        $scope.deleteCategory = function (ev, item) {
-            var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete category?',
-                    {label: $scope._langField(item,'label')}))
-                .textContent(gettextCatalog.getString('This operation is irreversible.'))
-                .targetEvent(ev)
-                .theme('light')
-                .ok(gettextCatalog.getString('Delete'))
-                .cancel(gettextCatalog.getString('Cancel'));
-            $mdDialog.show(confirm).then(function() {
-                CategoryService.deleteCategory(item.id,
-                    function () {
-                        $scope.updateCategories();
-                        toastr.success(gettextCatalog.getString('The category has been deleted.',
-                            {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
-                    }
-                );
-            });
-        };
-
-        $scope.deleteCategoryMass = function (ev) {
-            var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete the {{count}} selected category(s)?',
-                    {count: $scope.categories.selected.length}))
-                .textContent(gettextCatalog.getString('This operation is irreversible.'))
-                .targetEvent(ev)
-                .theme('light')
-                .ok(gettextCatalog.getString('Delete'))
-                .cancel(gettextCatalog.getString('Cancel'));
-            $mdDialog.show(confirm).then(function() {
-                angular.forEach($scope.categories.selected, function (value, key) {
-                    CategoryService.deleteCategory(value.id);
-                });
-
-                $scope.updateCategories();
-                toastr.success(gettextCatalog.getString('{{count}} categories have been deleted.',
-                    {count: $scope.categories.selected.length}), gettextCatalog.getString('Deletion successful'));
-                $scope.categories.selected = [];
-
-            }, function() {
-            });
-        };
 
 
         /**
@@ -1587,7 +1424,7 @@
 
         var risksTabSelected = false;
 
-        $scope.$watchGroup(['risk_category_filter', 'risk_tag_filter'], function (newValue, oldValue) {
+        $scope.$watchGroup(['risk_tag_filter'], function (newValue, oldValue) {
             if (risksTabSelected) {
                 // Refresh contents
                 $scope.updateRisks();
@@ -1596,9 +1433,7 @@
 
         $scope.updateRisks = function () {
             var query = angular.copy($scope.risks.query);
-            if ($scope.risk_category_filter > 0) {
-                query.category = $scope.risk_category_filter;
-            }
+
             if ($scope.risk_tag_filter > 0) {
                 query.tag = $scope.risk_tag_filter;
             }
@@ -1620,7 +1455,7 @@
         };
 
         $scope.resetRisksFilters = function () {
-            $scope.risk_category_filter = null;
+
             $scope.risk_tag_filter = null;
         }
 
@@ -1643,7 +1478,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'CategoryService', 'TagService', 'risk', CreateRiskDialogCtrl],
+                controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'TagService', 'risk', CreateRiskDialogCtrl],
                 templateUrl: 'views/anr/create.risks.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -1657,18 +1492,12 @@
                 .then(function (risk) {
                     var riskBackup = angular.copy(risk);
 
-                    var riskCatIds = [];
                     var riskTagIds = [];
-
-                    for (var i = 0; i < risk.categories.length; ++i) {
-                        riskCatIds.push(risk.categories[i].id);
-                    }
-
-                    for (var i = 0; i < risk.tags.length; ++i) {
+          for (var i = 0; i < risk.tags.length; ++i) {
                         riskTagIds.push(risk.tags[i].id);
                     }
 
-                    risk.categories = riskCatIds;
+
                     risk.tags = riskTagIds;
 
                     var cont = risk.cont;
@@ -1697,7 +1526,7 @@
 
             RiskService.getRisk(risk.id).then(function (riskData) {
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'CategoryService', 'TagService', 'risk', CreateRiskDialogCtrl],
+                    controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'TagService', 'risk', CreateRiskDialogCtrl],
                     templateUrl: 'views/anr/create.risks.html',
                     targetEvent: ev,
                     preserveScope: false,
@@ -1710,18 +1539,13 @@
                 })
                     .then(function (risk) {
                         var riskBackup = angular.copy(risk);
-                        var riskCatIds = [];
                         var riskTagIds = [];
-
-                        for (var i = 0; i < risk.categories.length; ++i) {
-                            riskCatIds.push(risk.categories[i].id);
-                        }
 
                         for (var i = 0; i < risk.tags.length; ++i) {
                             riskTagIds.push(risk.tags[i].id);
                         }
 
-                        risk.categories = riskCatIds;
+
                         risk.tags = riskTagIds;
 
                         RiskService.updateRisk(risk,
@@ -2145,30 +1969,6 @@
     }
 
 
-    function CreateCategoryDialogCtrl($scope, $mdDialog, ConfigService, category) {
-        $scope.languages = ConfigService.getLanguages();
-        $scope.language = $scope.getAnrLanguage();
-
-        if (category != undefined && category != null) {
-            $scope.category = category;
-        } else {
-            $scope.category = {
-                code: '',
-                label1: '',
-                label2: '',
-                label3: '',
-                label4: ''
-            };
-        }
-
-        $scope.cancel = function() {
-            $mdDialog.cancel();
-        };
-
-        $scope.create = function() {
-            $mdDialog.hide($scope.category);
-        };
-    }
 
     function CreateTagDialogCtrl($scope, $mdDialog, ConfigService, tag) {
         $scope.languages = ConfigService.getLanguages();
@@ -2195,43 +1995,12 @@
         };
     }
 
-    function CreateRiskDialogCtrl($scope, $mdDialog, $q, ConfigService, CategoryService, TagService, risk) {
+    function CreateRiskDialogCtrl($scope, $mdDialog, $q, ConfigService, TagService, risk) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
 
-
-        $scope.categorySearchText = null;
-        $scope.categorySelectedItem = null;
-        $scope.queryCategorySearch = function (query) {
-            var promise = $q.defer();
-            CategoryService.getCategories({filter: query}).then(function (e) {
-                // Filter out values already selected
-                var filtered = [];
-                for (var j = 0; j < e.categories.length; ++j) {
-                    var found = false;
-
-                    for (var i = 0; i < $scope.risk.categories.length; ++i) {
-                        if ($scope.risk.categories[i].id == e.categories[j].id) {
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found) {
-                        filtered.push(e.categories[j]);
-                    }
-                }
-
-                promise.resolve(filtered);
-            }, function (e) {
-                promise.reject(e);
-            });
-
-            return promise.promise;
-        };
-
-        $scope.tagSearchText = null;
-        $scope.tagSelectedItem = null;
+        tagSearchText = null;
+        tagSelectedItem = null;
         $scope.queryTagSearch = function (query) {
             var promise = $q.defer();
             TagService.getTags({filter: query}).then(function (e) {
@@ -2259,9 +2028,15 @@
 
             return promise.promise;
         };
-
+        // TO DO : To improve, test if the risk has tags if it hasn't create an empty table of tags.
         if (risk != undefined && risk != null) {
             $scope.risk = risk;
+            if ($scope.risk.tags.length >0) {
+            }
+            else {
+              $scope.risk.tags=[];
+            }
+
         } else {
             $scope.risk = {
                 code: '',
@@ -2273,7 +2048,6 @@
                 description2: '',
                 description3: '',
                 description4: '',
-                categories: [],
                 tags: [],
             };
         }
