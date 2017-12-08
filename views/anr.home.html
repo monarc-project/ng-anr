@@ -1,29 +1,31 @@
 <md-card flex>
     <div class="md-padding-left md-padding-right" layout="column" layout-gt-md="row" layout-align="space-between center" flex-gt-md>
         <div layout="row" layout-align="start center">
-            <md-button class="md-icon-button" ng-if="OFFICE_MODE == 'BO'" ui-sref="main.kb_mgmt.info_risk({tab: 'objlibs'})"><md-icon>arrow_back</md-icon></md-button>
             <div flex ng-if="!model.anr">
                 <md-progress-circular md-indeterminate="true"></md-progress-circular>
             </div>
             <div flex ng-if="model.anr" class="active-inst">
-                <h2 class="no-margin ">
+                <h2 ng-if="OFFICE_MODE == 'FO'" class="no-margin ">
                     {{ _langField(model.anr,'label') }}
+                </h2>
+                <h2 ng-if="OFFICE_MODE == 'BO'" class="no-margin ">
+                    {{ _langField(model,'label') }}
                 </h2>
                 <span>{{ _langField(model.anr,'description') }}</span>
             </div>
 
-            <md-menu>
+            <md-menu ng-if="OFFICE_MODE == 'FO'">
                 <md-button ng-click="openAnrMenu($mdOpenMenu, $event);">
                     <md-tooltip md-direction="bottom">{{ 'Asset actions' | translate }}</md-tooltip>
                     <md-icon class="material-icons md-48 size-auto" md-menu-origin>more_vert</md-icon>
                 </md-button>
-                <md-menu-content width="OFFICE_MODE == 'FO'?4:1">
-                    <md-menu-item ng-if="OFFICE_MODE == 'FO'">
+                <md-menu-content>
+                    <md-menu-item>
                         <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="editAnrInfo($event)">
                             <md-icon class="md-light-theme material-icons">edit</md-icon><span class="black">{{ 'Edit risk analysis' | translate }}</span>
                         </md-button>
                     </md-menu-item>
-                    <md-menu-item ng-if="OFFICE_MODE == 'FO'">
+                    <md-menu-item>
                         <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="importInstance($event)">
                             <md-icon class="md-light-theme material-icons">play_for_work</md-icon><span class="black">{{ 'Import a risk analysis' | translate }}</span>
                         </md-button>
@@ -33,7 +35,7 @@
                             <md-icon class="md-light-theme material-icons">call_made</md-icon><span class="black">{{ 'Export the whole risk analysis' | translate }}</span>
                         </md-button>
                     </md-menu-item>
-                    <md-menu-item ng-if="OFFICE_MODE == 'FO'">
+                    <md-menu-item>
                         <md-button class="md-primary md-warn" ng-disabled="isAnrReadOnly" ng-click="deleteAnr($event)">
                             <md-icon class="md-light-theme material-icons">delete</md-icon><span class="black">{{ 'Delete risk analysis' | translate }}</span>
                         </md-button>
