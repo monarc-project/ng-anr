@@ -12,7 +12,7 @@
         <md-dialog-content class="md-padding">
             <div>
                 <md-button class="md-primary" ng-if="!isAnrReadOnly" ng-click="resetPositions()">{{ 'Reset positions' | translate }}</md-button>
-
+                <md-button class="md-primary" ng-if="!isAnrReadOnly" ng-click="export()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip></md-button>
                 <table class="md-html-table" ng-sortable="sortableConf">
                     <thead>
                     <tr>

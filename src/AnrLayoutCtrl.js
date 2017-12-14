@@ -569,7 +569,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$state', 'TreatmentPlanService', 'ClientRecommandationService', 'anr', 'subStep', 'thresholds', 'editRecommandationContext', MethodEditRisksDialog],
+                controller: ['$scope', '$mdDialog', '$state', 'TreatmentPlanService', 'ClientRecommandationService', 'anr', 'subStep', 'thresholds', 'editRecommandationContext', 'gettextCatalog',  MethodEditRisksDialog],
                 templateUrl: 'views/anr/risks.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -2138,7 +2138,7 @@
         };
     }
 
-    function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService, ClientRecommandationService, anr, subStep, thresholds,editRecommandationContext) {
+    function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService, ClientRecommandationService, anr, subStep, thresholds,editRecommandationContext,gettextCatalog) {
         $scope.thresholds = thresholds;
         $scope.subStep = subStep;
         $scope.isAnrReadOnly = !anr.rwd;
@@ -2200,6 +2200,69 @@
             TreatmentPlanService.deleteTreatmentPlan({anr: anr.id}, function (data) {
                 updatePlan();
             });
+        };
+        //temporary function waiting for the ashboard for better export
+        $scope.export = function () {
+          finalArray=[];
+          recLine = 0;
+          finalArray[recLine]= gettextCatalog.getString('Residual risk');
+          finalArray[recLine]+=','+gettextCatalog.getString('Description');
+          finalArray[recLine]+=','+gettextCatalog.getString('Imp.');
+          finalArray[recLine]+=','+gettextCatalog.getString('Asset');
+          finalArray[recLine]+=','+gettextCatalog.getString('Existing controls');
+          finalArray[recLine]+=','+gettextCatalog.getString('Current risk');
+          finalArray[recLine]+=','+gettextCatalog.getString('Residual risk');
+          updatePlan();
+          for (var i = 0; i < $scope.recommendations.length; ++i) {
+              var rec = $scope.recommendations[i];
+              if (rec.risks) {
+                  for(k=0; k<Object.keys(rec.risks).length;++k)
+                  {
+                    recLine++;
+                    finalArray[recLine]="\""+rec.code.toString()+"\"";
+                    finalArray[recLine]+=','+"\""+rec.description.toString()+"\"";
+                    finalArray[recLine]+=','+"\""+rec.importance.toString()+"\"";
+                    finalArray[recLine]+=','+"\""+$scope._langField(rec.risks[k].instance,'label')+"\"";
+                    finalArray[recLine]+=','+"\""+rec.risks[k].comment.toString()+"\"";
+                    if (rec.risks[k].cacheMaxRisk.toString()=='-1')
+                      rec.risks[k].cacheMaxRisk='';
+                    if (rec.risks[k].cacheTargetedRisk.toString()=='-1')
+                      rec.risks[k].cacheTargetedRisk='';
+                    finalArray[recLine]+=','+rec.risks[k].cacheMaxRisk.toString();
+                    finalArray[recLine]+=','+rec.risks[k].cacheTargetedRisk.toString();
+
+                  }
+              }
+              if (rec.risksop) {
+                  for(k=0; k<Object.keys(rec.risksop).length;++k)
+                  {
+                    recLine++;
+                    finalArray[recLine]="\""+rec.code.toString()+"\"";
+                    finalArray[recLine]+=','+"\""+rec.description.toString()+"\"";
+                    finalArray[recLine]+=','+"\""+rec.importance.toString()+"\"";
+                    finalArray[recLine]+=','+"\""+$scope._langField(rec.risksop[k].instance,'label')+"\"";
+                    finalArray[recLine]+=','+"\""+rec.risksop[k].comment.toString()+"\"";
+                    finalArray[recLine]+=','+rec.risksop[k].cacheNetRisk.toString();
+                    finalArray[recLine]+=','+rec.risksop[k].cacheTargetedRisk.toString();
+
+                  }
+              }
+            }
+
+          let csvContent = "data:text/csv;charset=utf-8,";
+          for(var j = 0; j < finalArray.length; ++j)
+              {
+               let row = finalArray[j].toString()+","+"\r\n";
+               csvContent += row ;
+              }
+
+
+          var encodedUri = encodeURI(csvContent);
+          var link = document.createElement("a");
+          link.setAttribute("href", encodedUri);
+          link.setAttribute("download", "risktreatmantplan.csv");
+          document.body.appendChild(link); // Required for FF
+          link.click(); // This will download the data file named "my_data.csv".
         };
 
         $scope.openRecommendation = function (rec) {
