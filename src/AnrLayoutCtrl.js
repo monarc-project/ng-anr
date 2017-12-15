@@ -2222,10 +2222,16 @@
                     {
                     recLine++;
                     finalArray[recLine]="\""+rec.code.toString()+"\"";
-                    finalArray[recLine]+=','+"\""+rec.description.toString()+"\"";
+                    if (rec.risks[k].description !=null )
+                      finalArray[recLine]+=','+"\""+rec.description.toString()+"\"";
+                    else
+                      finalArray[recLine]+=','+"\""+' '+"\"";
                     finalArray[recLine]+=','+"\""+rec.importance.toString()+"\"";
                     finalArray[recLine]+=','+"\""+$scope._langField(rec.risks[k].instance,'label')+"\"";
-                    finalArray[recLine]+=','+"\""+rec.risks[k].comment.toString()+"\"";
+                    if (rec.risks[k].comment !=null )
+                      finalArray[recLine]+=','+"\""+rec.risks[k].comment.toString()+"\"";
+                    else
+                      finalArray[recLine]+=','+"\""+' '+"\"";
                     if (rec.risks[k].cacheMaxRisk.toString()=='-1')
                       rec.risks[k].cacheMaxRisk='';
                     if (rec.risks[k].cacheTargetedRisk.toString()=='-1')
@@ -2239,15 +2245,20 @@
               if (rec.risksop) {
                   for(k=0; k<Object.keys(rec.risksop).length;++k)
                   {
+                    if (rec.risksop[k] !=null )
+                    {
                     recLine++;
                     finalArray[recLine]="\""+rec.code.toString()+"\"";
                     finalArray[recLine]+=','+"\""+rec.description.toString()+"\"";
                     finalArray[recLine]+=','+"\""+rec.importance.toString()+"\"";
                     finalArray[recLine]+=','+"\""+$scope._langField(rec.risksop[k].instance,'label')+"\"";
-                    finalArray[recLine]+=','+"\""+rec.risksop[k].comment.toString()+"\"";
+                    if (rec.risksop[k].comment !=null )
+                      finalArray[recLine]+=','+"\""+rec.risksop[k].comment.toString()+"\"";
+                    else
+                      finalArray[recLine]+=','+"\""+' '+"\"";
                     finalArray[recLine]+=','+rec.risksop[k].cacheNetRisk.toString();
                     finalArray[recLine]+=','+rec.risksop[k].cacheTargetedRisk.toString();
-
+                  }
                   }
               }
             }
