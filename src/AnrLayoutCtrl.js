@@ -2216,49 +2216,46 @@
           for (var i = 0; i < $scope.recommendations.length; ++i) {
               var rec = $scope.recommendations[i];
               if (rec.risks) {
-                  for(k=0; k<Object.keys(rec.risks).length;++k)
+                  for(risk in rec.risks)
                   {
-                    if (rec.risks[k] !=null)
-                    {
                     recLine++;
                     finalArray[recLine]="\""+rec.code.toString()+"\"";
-                    if (rec.risks[k].description !=null )
+                    if (rec.description !=null )
                       finalArray[recLine]+=','+"\""+rec.description.toString()+"\"";
                     else
                       finalArray[recLine]+=','+"\""+' '+"\"";
                     finalArray[recLine]+=','+"\""+rec.importance.toString()+"\"";
-                    finalArray[recLine]+=','+"\""+$scope._langField(rec.risks[k].instance,'label')+"\"";
-                    if (rec.risks[k].comment !=null )
-                      finalArray[recLine]+=','+"\""+rec.risks[k].comment.toString()+"\"";
+                    finalArray[recLine]+=','+"\""+$scope._langField(rec.risks[risk].instance,'name')+"\"";
+                    if (rec.risks[risk].comment !=null )
+                      finalArray[recLine]+=','+"\""+rec.risks[risk].comment.toString()+"\"";
                     else
                       finalArray[recLine]+=','+"\""+' '+"\"";
-                    if (rec.risks[k].cacheMaxRisk.toString()=='-1')
-                      rec.risks[k].cacheMaxRisk='';
-                    if (rec.risks[k].cacheTargetedRisk.toString()=='-1')
-                      rec.risks[k].cacheTargetedRisk='';
-                    finalArray[recLine]+=','+rec.risks[k].cacheMaxRisk.toString();
-                    finalArray[recLine]+=','+rec.risks[k].cacheTargetedRisk.toString();
-                  }
-
+                    if (rec.risks[risk].cacheMaxRisk.toString()=='-1')
+                      rec.risks[risk].cacheMaxRisk=' ';
+                    if (rec.risks[risk].cacheTargetedRisk.toString()=='-1')
+                      rec.risks[risk].cacheTargetedRisk=' ';
+                    finalArray[recLine]+=','+rec.risks[risk].cacheMaxRisk;
+                    finalArray[recLine]+=','+rec.risks[risk].cacheTargetedRisk;
                   }
               }
               if (rec.risksop) {
-                  for(k=0; k<Object.keys(rec.risksop).length;++k)
+                  for(riskop in rec.risksop)
                   {
-                    if (rec.risksop[k] !=null )
-                    {
                     recLine++;
                     finalArray[recLine]="\""+rec.code.toString()+"\"";
                     finalArray[recLine]+=','+"\""+rec.description.toString()+"\"";
                     finalArray[recLine]+=','+"\""+rec.importance.toString()+"\"";
-                    finalArray[recLine]+=','+"\""+$scope._langField(rec.risksop[k].instance,'label')+"\"";
-                    if (rec.risksop[k].comment !=null )
-                      finalArray[recLine]+=','+"\""+rec.risksop[k].comment.toString()+"\"";
+                    finalArray[recLine]+=','+"\""+$scope._langField(rec.risksop[riskop].instance,'name')+"\"";
+                    if (rec.risksop[riskop].comment !=null )
+                      finalArray[recLine]+=','+"\""+rec.risksop[riskop].comment.toString()+"\"";
                     else
                       finalArray[recLine]+=','+"\""+' '+"\"";
-                    finalArray[recLine]+=','+rec.risksop[k].cacheNetRisk.toString();
-                    finalArray[recLine]+=','+rec.risksop[k].cacheTargetedRisk.toString();
-                  }
+                    if(rec.risksop[riskop].cacheNetRisk.toString()=='-1')
+                      rec.risksop[riskop].cacheNetRisk=' ';
+                    if(rec.risksop[riskop].cacheTargetedRisk.toString()=='-1')
+                      rec.risksop[riskop].cacheTargetedRisk=' ';
+                    finalArray[recLine]+=','+rec.risksop[riskop].cacheNetRisk;
+                    finalArray[recLine]+=','+rec.risksop[riskop].cacheTargetedRisk;
                   }
               }
             }
