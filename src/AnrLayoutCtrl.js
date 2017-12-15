@@ -2218,6 +2218,8 @@
               if (rec.risks) {
                   for(k=0; k<Object.keys(rec.risks).length;++k)
                   {
+                    if (rec.risks[k] !=null)
+                    {
                     recLine++;
                     finalArray[recLine]="\""+rec.code.toString()+"\"";
                     finalArray[recLine]+=','+"\""+rec.description.toString()+"\"";
@@ -2230,6 +2232,7 @@
                       rec.risks[k].cacheTargetedRisk='';
                     finalArray[recLine]+=','+rec.risks[k].cacheMaxRisk.toString();
                     finalArray[recLine]+=','+rec.risks[k].cacheTargetedRisk.toString();
+                  }
 
                   }
               }
