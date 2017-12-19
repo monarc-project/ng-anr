@@ -24,18 +24,22 @@
                 // Filter out non-treated risks
                 var recrisks = data['recommandations-risks'];
                 $scope.rec_risks = [];
+                $scope.rec_risksOp = [];
 
                 for (var i in recrisks) {
                     var risk = recrisks[i];
-                    if ((risk.instanceRisk && risk.instanceRisk.kindOfMeasure != 5) || (risk.instanceRiskOp && risk.instanceRiskOp.kindOfMeasure != 5)) {
+                    if (risk.instanceRisk && risk.instanceRisk.kindOfMeasure != 5)   {
                         $scope.rec_risks.push(risk);
+                    }
+                    if(risk.instanceRiskOp && risk.instanceRiskOp.kindOfMeasure != 5){
+                      $scope.rec_risksOp.push(risk);
                     }
                 }
             })
         }
 
         updateRecs();
-        
+
         $scope.backToList = function () {
             $state.transitionTo('main.project.anr.risksplan', {modelId: $stateParams.modelId});
         };
@@ -73,6 +77,97 @@
             return true;
         };
 
+        $scope.exportRiskPlanSheet = function () {
+          //updateRecs();
+          finalArray=[];
+          recLine = 0;
+
+          risks = $scope.rec_risks;
+          if (risks.length != 0)
+          {
+            finalArray[recLine]= gettextCatalog.getString('Asset');
+            finalArray[recLine]+=','+gettextCatalog.getString('Threat');
+            finalArray[recLine]+=','+gettextCatalog.getString('Vulnerability');
+            finalArray[recLine]+=','+gettextCatalog.getString('Existing controls');
+            finalArray[recLine]+=','+gettextCatalog.getString('Current risk');
+            finalArray[recLine]+=','+gettextCatalog.getString('New controls');
+            finalArray[recLine]+=','+gettextCatalog.getString('Residual risk');
+
+
+            for (rec in risks)
+            {
+              recLine++;
+              finalArray[recLine]="\""+$scope._langField(risks[rec].instance,'name')+"\"";
+              finalArray[recLine]+=','+"\""+$scope._langField(risks[rec].threat,'label')+"\"";
+              finalArray[recLine]+=','+"\""+$scope._langField(risks[rec].vulnerability,'label')+"\"";
+              if(risks[rec].instanceRisk.comment != null)
+                finalArray[recLine]+=','+"\""+risks[rec].instanceRisk.comment+"\"";
+              else
+                finalArray[recLine]+=','+"\""+' '+"\"";
+              if(risks[rec].instanceRisk.cacheMaxRisk != -1)
+                finalArray[recLine]+=','+"\""+risks[rec].instanceRisk.cacheMaxRisk+"\"";
+              else
+                finalArray[recLine]+=','+"\""+' '+"\"";
+              if(risks[rec].instanceRisk.commentAfter != null)
+                finalArray[recLine]+=','+"\""+risks[rec].instanceRisk.commentAfter+"\"";
+              else
+                finalArray[recLine]+=','+"\""+' '+"\"";
+              if(risks[rec].instanceRisk.cacheTargetedRisk != -1)
+                finalArray[recLine]+=','+"\""+risks[rec].instanceRisk.cacheTargetedRisk+"\"";
+              else
+                finalArray[recLine]+=','+"\""+' '+"\"";
+            }
+            recLine++;
+          }
+
+          risksOP = $scope.rec_risksOp;
+          if(risksOP.length !=0)
+          {
+            finalArray[recLine]= gettextCatalog.getString('Asset');
+            finalArray[recLine]+=','+gettextCatalog.getString('Risk description');
+            finalArray[recLine]+=','+gettextCatalog.getString('Existing controls');
+            finalArray[recLine]+=','+gettextCatalog.getString('Current risk');
+            finalArray[recLine]+=','+gettextCatalog.getString('New controls');
+            finalArray[recLine]+=','+gettextCatalog.getString('Residual risk');
+            for (rec in risksOP)
+            {
+              recLine++;
+              finalArray[recLine]="\""+$scope._langField(risksOP[rec].instance,'name')+"\"";
+              finalArray[recLine]+=','+"\""+$scope._langField(risksOP[rec].instanceRiskOp,'riskCacheLabel')+"\"";
+              if(risksOP[rec].instanceRiskOp.comment != null)
+                finalArray[recLine]+=','+"\""+risksOP[rec].instanceRiskOp.comment+"\"";
+              else
+                finalArray[recLine]+=','+"\""+' '+"\"";
+              if(risksOP[rec].instanceRiskOp.cacheNetRisk != -1)
+                finalArray[recLine]+=','+"\""+risksOP[rec].instanceRiskOp.cacheNetRisk+"\"";
+              else
+                finalArray[recLine]+=','+"\""+' '+"\"";
+              if(risksOP[rec].commentAfter != null)
+                finalArray[recLine]+=','+"\""+risksOP[rec].commentAfter+"\"";
+              else
+                finalArray[recLine]+=','+"\""+' '+"\"";
+              if(risksOP[rec].instanceRiskOp.cacheTargetedRisk != -1)
+                finalArray[recLine]+=','+"\""+risksOP[rec].instanceRiskOp.cacheTargetedRisk+"\"";
+              else
+                finalArray[recLine]+=','+"\""+' '+"\"";
+            }
+          }
+          let csvContent = "data:text/csv;charset=utf-8,";
+          for(var j = 0; j < finalArray.length; ++j)
+              {
+               let row = finalArray[j].toString()+","+"\r\n";
+               csvContent += row ;
+              }
+
+
+          var encodedUri = encodeURI(csvContent);
+          var link = document.createElement("a");
+          link.setAttribute("href", encodedUri);
+          link.setAttribute("download", "recommendationrisks.csv");
+          document.body.appendChild(link); // Required for FF
+          link.click(); // This will download the data file named "my_data.csv".
+        };
+
     }
 
 
@@ -89,5 +184,7 @@
             $mdDialog.cancel();
         }
     }
+
+
 
 })();

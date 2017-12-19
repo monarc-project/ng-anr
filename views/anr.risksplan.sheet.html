@@ -1,10 +1,11 @@
 <div class="md-padding" ng-controller="AnrRisksPlanSheetCtrl">
     <md-button ng-click="backToList()"><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button>
+    <md-button class="md-primary" ng-if="!isAnrReadOnly" ng-click="exportRiskPlanSheet()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip></md-button>
     <p class="md-title"><b>{{ rec.code }}</b><br>{{ rec.description }}</p>
 
     <table class="md-html-table" editable callback="onTableEdited">
-        <thead>
-        <tr>
+        <thead ng-if="rec_risks.length > 0">
+        <tr >
             <th translate>Asset</th>
             <th translate>Threat</th>
             <th translate>Vulnerability</th>
@@ -23,13 +24,31 @@
             <td>{{ risk.vulnerability.code }} - {{ _langField(risk.vulnerability,'label') }}</td>
             <td>{{ risk.instanceRisk.comment }}{{ risk.instanceRiskOp.comment }}</td>
             <td ng-if="risk.instanceRisk" ng-class="{'green': risk.instanceRisk.cacheMaxRisk >= 0 && risk.instanceRisk.cacheMaxRisk <= thresholds.thresholds.min, 'orange': risk.instanceRisk.cacheMaxRisk > thresholds.thresholds.min && risk.instanceRisk.cacheMaxRisk <= thresholds.thresholds.max, 'red': risk.instanceRisk.cacheMaxRisk > thresholds.thresholds.max}" class="tbl-risk-calc txtcenter">{{ risk.instanceRisk.cacheMaxRisk | dashnull }}</td>
-            <td ng-if="risk.instanceRiskOp" ng-class="{'green': risk.instanceRiskOp.cacheMaxRisk >= 0 && risk.instanceRiskOp.cacheMaxRisk <= thresholds.thresholds.min, 'orange': risk.instanceRiskOp.cacheMaxRisk > thresholds.thresholds.min && risk.instanceRiskOp.cacheMaxRisk <= thresholds.thresholds.max, 'red': risk.instanceRiskOp.cacheMaxRisk > thresholds.thresholds.max}" class="tbl-risk-calc txtcenter">{{ risk.instanceRiskOp.cacheMaxRisk | dashnull }}</td>
             <td class="preserve-newlines" edit-field="commentAfter" edit-readonly="isAnrReadOnly" edit-type="textarea"></td>
             <td ng-if="risk.instanceRisk" ng-class="{'green': risk.instanceRisk.cacheTargetedRisk >= 0 && risk.instanceRisk.cacheTargetedRisk <= thresholds.thresholds.min, 'orange': risk.instanceRisk.cacheTargetedRisk > thresholds.thresholds.min && risk.instanceRisk.cacheTargetedRisk <= thresholds.thresholds.max, 'red': risk.instanceRisk.cacheTargetedRisk > thresholds.thresholds.max}" class="tbl-risk-calc txtcenter">{{ risk.instanceRisk.cacheTargetedRisk | dashnull }}</td>
-            <td ng-if="risk.instanceRiskOp" ng-class="{'green': risk.instanceRiskOp.cacheTargetedRisk >= 0 && risk.instanceRiskOp.cacheTargetedRisk <= thresholds.thresholds.min, 'orange': risk.instanceRiskOp.cacheTargetedRisk > thresholds.thresholds.min && risk.instanceRiskOp.cacheTargetedRisk <= thresholds.thresholds.max, 'red': risk.instanceRiskOp.cacheTargetedRisk > thresholds.thresholds.max}" class="tbl-risk-calc txtcenter">{{ risk.instanceRiskOp.cacheTargetedRisk | dashnull }}</td>
             <td ng-if="!isAnrReadOnly"><md-button ng-if="risk.instanceRisk" class="md-icon-button md-primary" ng-click="validate($event, risk)"><md-icon>check_circle</md-icon></md-button></td>
         </tr>
+        <thead ng-if="rec_risksOp.length > 0">
+        <tr>
+            <th translate>Asset</th>
+            <th translate colspan="2">Risk description</th>
+            <th translate>Existing controls</th>
+            <th translate>Current risk</th>
+            <th translate>New controls</th>
+            <th translate>Residual risk</th>
+            <th ng-if="!isAnrReadOnly" translate>Actions</th>
+        </tr>
+        </thead>
+        <tr edit-model="risk" ng-repeat="risk in rec_risksOp">
+            <td><a ui-sref="main.project.anr.instance({modelId: model.anr.id, instId: risk.instance.id})" href="javascript:;">{{ _langField(risk.instance,'name') }}</a></td>
+            <td colspan="2">{{ _langField(risk.instanceRiskOp,'riskCacheLabel') }}</td>
+            <td>{{ risk.instanceRisk.comment }}{{ risk.instanceRiskOp.comment }}</td>
+            <td ng-if="risk.instanceRiskOp" ng-class="{'green': risk.instanceRiskOp.cacheNetRisk >= 0 && risk.instanceRiskOp.cacheNetRisk <= thresholds.rolf_thresholds.min, 'orange': risk.instanceRiskOp.cacheNetRisk > thresholds.rolf_thresholds.min && risk.instanceRiskOp.cacheNetRisk <= thresholds.rolf_thresholds.max, 'red': risk.instanceRiskOp.cacheNetRisk > thresholds.rolf_thresholds.max}" class="tbl-risk-calc txtcenter">{{ risk.instanceRiskOp.cacheNetRisk | dashnull }}</td>
+            <td class="preserve-newlines" edit-field="commentAfter" edit-readonly="isAnrReadOnly" edit-type="textarea"></td>
+            <td ng-if="risk.instanceRiskOp" ng-class="{'green': risk.instanceRiskOp.cacheTargetedRisk >= 0 && risk.instanceRiskOp.cacheTargetedRisk <= thresholds.rolf_thresholds.min, 'orange': risk.instanceRiskOp.cacheTargetedRisk > thresholds.rolf_thresholds.min && risk.instanceRiskOp.cacheTargetedRisk <= thresholds.rolf_thresholds.max, 'red': risk.instanceRiskOp.cacheTargetedRisk > thresholds.rolf_thresholds.max}" class="tbl-risk-calc txtcenter">{{ risk.instanceRiskOp.cacheTargetedRisk | dashnull }}</td>
+            <td ng-if="!isAnrReadOnly"><md-button ng-if="risk.instanceRisk" class="md-icon-button md-primary" ng-click="validate($event, risk)"><md-icon>check_circle</md-icon></md-button></td>
+        </tr>
+        </thead>
         </tbody>
     </table>
 </div>
-
