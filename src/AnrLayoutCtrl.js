@@ -716,7 +716,7 @@
                     num: 4,
                     color: 'red',
                     label: gettextCatalog.getString("Implementation and monitoring"),
-                    deliverable: null,
+                    deliverable: gettextCatalog.getString("Implementation Plan"),
                     steps: [
                         {label: gettextCatalog.getString("Management of the implementation of the risk treatment plan"), action: editRiskTreatPlan, progressField: 'manageRisks'},
                     ]
