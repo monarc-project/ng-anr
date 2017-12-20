@@ -1,7 +1,9 @@
 <div class="md-padding" ng-controller="AnrRisksPlanHistoryCtrl">
     <md-button ng-click="backToList()"><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button>
-    <p class="md-title" translate>Implementation history</p>
-
+    <div layout="row" layout-align="space-between end">
+      <p class="md-title" translate>Implementation history</p>
+      <md-button class="md-icon-button" ng-if="!isAnrReadOnly" ng-click="exportHistory()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip></md-button>
+    </div>
     <table class="md-html-table">
         <thead>
         <tr>
@@ -35,8 +37,8 @@
                 <b translate>New controls:</b> {{ entry.riskCommentAfter }}
             </td>
             <td class="preserve-newlines">{{ entry.implComment }}</td>
-            <td class="tbl-risk-calc" ng-class="{'green': entry.riskMaxRiskBefore >= 0 && entry.riskMaxRiskBefore <= thresholds.thresholds.min, 'orange': entry.riskMaxRiskBefore > thresholds.thresholds.min && entry.riskMaxRiskBefore <= thresholds.thresholds.max, 'red': entry.riskMaxRiskBefore > thresholds.thresholds.max}">{{ entry.riskMaxRiskBefore }}</td>
-            <td class="tbl-risk-calc" ng-class="{'green': entry.riskMaxRiskAfter >= 0 && entry.riskMaxRiskAfter <= thresholds.thresholds.min, 'orange': entry.riskMaxRiskAfter > thresholds.thresholds.min && entry.riskMaxRiskAfter <= thresholds.thresholds.max, 'red': entry.riskMaxRiskAfter > thresholds.thresholds.max}">{{ entry.riskMaxRiskAfter }}</td>
+            <td class="tbl-risk-calc" ng-class="{'green': entry.riskMaxRiskBefore >= 0 && entry.riskMaxRiskBefore <= thresholds.thresholds.min, 'orange': entry.riskMaxRiskBefore > thresholds.thresholds.min && entry.riskMaxRiskBefore <= thresholds.thresholds.max, 'red': entry.riskMaxRiskBefore > thresholds.thresholds.max}">{{ entry.riskMaxRiskBefore | dashnull }}</td>
+            <td class="tbl-risk-calc" ng-class="{'green': entry.riskMaxRiskAfter >= 0 && entry.riskMaxRiskAfter <= thresholds.thresholds.min, 'orange': entry.riskMaxRiskAfter > thresholds.thresholds.min && entry.riskMaxRiskAfter <= thresholds.thresholds.max, 'red': entry.riskMaxRiskAfter > thresholds.thresholds.max}">{{ entry.riskMaxRiskAfter | dashnull }}</td>
         </tr>
         </tbody>
     </table>
