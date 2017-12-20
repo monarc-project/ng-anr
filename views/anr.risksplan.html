@@ -1,8 +1,11 @@
 <div class="md-padding" ng-controller="AnrRisksPlanCtrl">
     <p class="md-title" translate>Implementation of the risk treatment plan</p>
 
+    <div layout="row" layout-align="space-between end">
     <md-button ui-sref="main.project.anr.risksplan.history({modelId: model.anr.id})"><md-icon>history</md-icon> {{ 'Open the implementation history' | translate }}</md-button>
-    <md-button class="md-primary" ng-if="!isAnrReadOnly" ng-click="export()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip></md-button>
+    <md-button class="md-icon-button" ng-if="!isAnrReadOnly" ng-click="export()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip></md-button>
+    </div>
+
     <table class="md-html-table" editable callback="onTableEdited">
         <thead>
         <tr>
