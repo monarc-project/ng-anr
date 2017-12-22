@@ -323,6 +323,20 @@
             });
         }
 
+        $scope.exportInstanceOpTable = function () {
+            var params = angular.copy($scope.risks_filters);
+            params.csv = true;
+            var anr = 'anr';
+            if ($scope.OFFICE_MODE == 'FO') {
+                anr = 'client-anr';
+            }
+
+            $http.get("api/"+anr+"/" + $scope.model.anr.id + "/instances/"+ $rootScope.anr_selected_instance_id +'?'+ $scope.serializeQueryString(params)).then(function (data) {
+                var contentT = data.headers('Content-Type');
+                DownloadService.downloadBlob(data.data, 'risks_op_inst.csv',contentT);
+            });
+        }
+
         $scope.resetRisksFilters();
         $scope.resetRisksOpFilters();
         $scope.updateModel();
