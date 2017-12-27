@@ -29,10 +29,10 @@
             </td>
             <td>
                 <b translate>Asset type:</b> {{ entry.riskAsset }}<br />
-		<b translate>Asset:</b> {{ entry.riskInstance }}<br />
+		            <b translate>Asset:</b> {{ entry.riskInstance }}<br />
                 <b translate>Threat:</b> {{ entry.riskThreat }}<br />
                 <b translate>Vulnerability:</b> {{ entry.riskVul }}<br />
-                <b translate>Treatment type:</b> {{ treatmentStr(entry.riskKindOfMeasure) | translate }}<br />
+                <b translate>Kind of treatment:</b> {{ treatmentStr(entry.riskKindOfMeasure) | translate }}<br />
                 <b translate>Existing controls:</b> {{ entry.riskCommentBefore }}<br />
                 <b translate>New controls:</b> {{ entry.riskCommentAfter }}
             </td>

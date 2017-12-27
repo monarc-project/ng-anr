@@ -55,7 +55,7 @@ function AnrRisksPlanHistoryCtrl($scope, toastr, $mdMedia, $mdDialog, $statePara
             finalArray[recLine]+=','+gettextCatalog.getString('Asset');
             finalArray[recLine]+=','+gettextCatalog.getString('Threat');
             finalArray[recLine]+=','+gettextCatalog.getString('Vulnerability');
-            finalArray[recLine]+=','+gettextCatalog.getString('Treatment type:');
+            finalArray[recLine]+=','+gettextCatalog.getString('Kind of treatment');
             finalArray[recLine]+=','+gettextCatalog.getString('Existing controls');
             finalArray[recLine]+=','+gettextCatalog.getString('New controls');
             finalArray[recLine]+=','+gettextCatalog.getString('Implementation comment');
@@ -88,7 +88,7 @@ function AnrRisksPlanHistoryCtrl($scope, toastr, $mdMedia, $mdDialog, $statePara
             finalArray[recLine]+=','+"\""+entries[entry].riskInstance+"\"";
             finalArray[recLine]+=','+"\""+entries[entry].riskThreat+"\"";
             finalArray[recLine]+=','+"\""+entries[entry].riskVul+"\"";
-            finalArray[recLine]+=','+"\""+$scope.treatmentStr(entries[entry].riskKindOfMeasure)+"\"";
+            finalArray[recLine]+=','+"\""+gettextCatalog.getString($scope.treatmentStr(entries[entry].riskKindOfMeasure))+"\"";
             if(entries[entry].riskCommentBefore !=null)
               finalArray[recLine]+=','+"\""+entries[entry].riskCommentBefore+"\"";
             else

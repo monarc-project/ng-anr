@@ -1,7 +1,10 @@
 <div class="md-padding" ng-controller="AnrRisksPlanSheetCtrl">
     <md-button ng-click="backToList()"><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button>
-    <md-button class="md-primary" ng-if="!isAnrReadOnly" ng-click="exportRiskPlanSheet()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip></md-button>
-    <p class="md-title"><b>{{ rec.code }}</b><br>{{ rec.description }}</p>
+
+    <div layout="row" layout-align="space-between end">
+      <p class="md-title"><b>{{ rec.code }}</b><br>{{ rec.description }}</p>
+      <md-button class="md-icon-button" ng-if="!isAnrReadOnly" ng-click="exportRiskPlanSheet()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip></md-button>
+    </div>
 
     <table class="md-html-table" editable callback="onTableEdited">
         <thead ng-if="rec_risks.length > 0">
