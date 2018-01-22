@@ -2670,8 +2670,8 @@
             if (data.data.delivery && data.data.delivery.id) {
                 $scope.deliverable = data.data.delivery;
                 $scope.deliverable.docname = $scope.deliverable.name;
-                $scope.deliverable.managers = $scope.deliverable.respCustomer;
-                $scope.deliverable.consultants = $scope.deliverable.respSmile;
+                $scope.deliverable.managers = $scope.deliverable.respSmile;
+                $scope.deliverable.consultants = $scope.deliverable.respCustomer;
             }
         });
 
