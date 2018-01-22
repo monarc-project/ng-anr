@@ -61,9 +61,9 @@
                             <p>
                                 <br style="line-height: 0px" />
                                 <span>{{ 'Max' | translate }}<br style="line-height: 57px" /></span>
-                                <span title="{{scaleCommCache[1][calculeImpact('c')]}}"><b>{{ calculeImpact('c') }}</b><br style="line-height: 50px" /></span>
-                                <span title="{{scaleCommCache[2][calculeImpact('i')]}}"><b>{{ calculeImpact('i') }}</b><br style="line-height: 50px" /></span>
-                                <span title="{{scaleCommCache[3][calculeImpact('d')]}}"><b>{{ calculeImpact('d') }}</b><br style="line-height: 19px" /></span>
+                                <span title="{{scaleCommCache[1][calculeImpact('c')]}}"><b>{{ calculeImpact('c') > -1 ? (calculeImpact('c') | dashnull) : '-' }}</b><br style="line-height: 50px" /></span>
+                                <span title="{{scaleCommCache[2][calculeImpact('i')]}}"><b>{{ calculeImpact('i') > -1 ? (calculeImpact('i') | dashnull) : '-'}}</b><br style="line-height: 50px" /></span>
+                                <span title="{{scaleCommCache[3][calculeImpact('d')]}}"><b>{{ calculeImpact('d') > -1 ? (calculeImpact('d') | dashnull) : '-' }}</b><br style="line-height: 19px" /></span>
                             </p>
                         </div>
                     </div>
