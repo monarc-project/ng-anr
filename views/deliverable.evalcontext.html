@@ -1,4 +1,4 @@
-<md-dialog md-theme="light" class="dialog-width">
+<md-dialog md-theme="light" class="dialog-width" ng-controller="DeliveriesModelsCtrl">
     <form name="evalContextForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -16,6 +16,13 @@
                     <md-select ng-model="deliverable.status">
                         <md-option ng-value="0">{{ 'Draft' | translate}}</md-option>
                         <md-option ng-value="1">{{ 'Final' | translate}}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Template</label>
+                    <md-select ng-model="deliveriesmodels.id">
+                        <md-option ng-value="deliverymodel" ng-repeat="deliverymodel in deliveriesmodels" ng-if="deliverymodel.category==step.num">{{ _langField(deliverymodel,'description') }}</md-option>
                     </md-select>
                 </md-input-container>
 

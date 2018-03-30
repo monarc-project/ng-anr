@@ -2657,6 +2657,7 @@
         $scope.step = step;
         $scope.deliverable = {
             'version': '',
+            'template': 1,
             'status': 0,
             'classification': '',
             'docname': '',
@@ -2667,6 +2668,7 @@
         };
 
         $http.get('api/client-anr/' + anr.id + '/deliverable/' + step.num).then(function (data) {
+            console.log(data);
             if (data.data.delivery && data.data.delivery.id) {
                 $scope.deliverable = data.data.delivery;
                 $scope.deliverable.docname = $scope.deliverable.name;
