@@ -21,7 +21,7 @@
 
                 <md-input-container class="md-block">
                     <label translate>Template</label>
-                    <md-select ng-model="deliveriesmodels.id">
+                    <md-select ng-model="deliverable.template">
                         <md-option ng-value="deliverymodel" ng-repeat="deliverymodel in deliveriesmodels" ng-if="deliverymodel.category==step.num">{{ _langField(deliverymodel,'description') }}</md-option>
                     </md-select>
                 </md-input-container>
