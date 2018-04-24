@@ -1821,6 +1821,10 @@
             });
         }
 
+        $scope.goToDashboard = function () {
+            console.log('salut');
+            $state.transitionTo("main.dashboard");
+        };
 
         $scope.openInterviewTools = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
