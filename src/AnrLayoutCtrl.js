@@ -1822,7 +1822,6 @@
         }
 
         $scope.goToDashboard = function () {
-            console.log('salut');
             $state.transitionTo("main.dashboard");
         };
 
