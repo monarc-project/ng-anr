@@ -60,7 +60,7 @@ table.md-table tbody.md-body>tr.md-row:hover {
 .tooltip-object-header, .tooltip-object-header .md-content {
     width: 400px;
     height:auto;
-    font-size: 25px;
+    font-size: 13px;
     white-space: pre-wrap;
     overflow: none;
     padding:10px 10px 0px 10px;
