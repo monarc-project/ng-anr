@@ -91,13 +91,15 @@
                                 md-menu-class="reco-autocomplete"
                                 md-floating-label="{{ 'Search a recommendation' | translate }}">
                             <md-item-template>
-                                <span md-highlight-text="recSearchText" md-highlight-flags="^i">{{ item.code }} - {{ item.description }}</span>
+                                <span md-highlight-text="recSearchText" md-highlight-flags="^i" >{{ item.code }} - {{ item.description }}</span>
+                                <md-tooltip class="tooltip-recommendation">{{ item.code }} - {{ item.description }}</md-tooltip>
                             </md-item-template>
 
                             <md-not-found>
                                 {{ 'No recommendation matching your search was found' | translate }}
                             </md-not-found>
                         </md-autocomplete>
+
 
                         <md-button ng-click="rec_edit.rec?attachRecommandation():createRecommandation($event)" class="md-icon-button md-primary" ng-disabled="isAnrReadOnly">
                             <md-icon>{{ rec_edit.rec?'link':'add_to_photos' }}</md-icon>
