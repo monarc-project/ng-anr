@@ -2660,6 +2660,7 @@
         $scope.step = step;
         $scope.deliverable = {
             'version': '',
+            'template': 0,
             'status': 0,
             'classification': '',
             'docname': '',
@@ -2675,6 +2676,7 @@
                 $scope.deliverable.docname = $scope.deliverable.name;
                 $scope.deliverable.managers = $scope.deliverable.respSmile;
                 $scope.deliverable.consultants = $scope.deliverable.respCustomer;
+                $scope.deliverable.template = $scope.deliverable.template;
             }
         });
 
