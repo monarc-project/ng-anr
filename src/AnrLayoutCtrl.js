@@ -702,6 +702,12 @@
             $scope.clearSelectedInstAndObj();
             $scope.display.anrSelectedTabIndex = 0;
         }
+        var editAnrSoa = function () {
+            $state.transitionTo('main.project.anr.soa', {modelId: $scope.model.anr.id});
+            $scope.clearSelectedInstAndObj();
+            $scope.display.anrSelectedTabIndex = 0;
+
+        }
 
 
 
@@ -747,6 +753,7 @@
                     deliverable: gettextCatalog.getString("Implementation Plan"),
                     steps: [
                         {label: gettextCatalog.getString("Management of the implementation of the risk treatment plan"), action: editRiskTreatPlan, progressField: 'manageRisks'},
+                       {label: gettextCatalog.getString("Statement of applicability"), action: editAnrSoa, progressField: 'SOA'},
                     ]
                 }
             ];
