@@ -1821,6 +1821,9 @@
             });
         }
 
+        $scope.goToDashboard = function () {
+            $state.transitionTo("main.dashboard");
+        };
 
         $scope.openInterviewTools = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
