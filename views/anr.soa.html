@@ -26,11 +26,12 @@
                     <td edit-field="justification" class="preserve-newlines"  edit-type="textarea"></td>
                     <td edit-field="evidences" edit-type="textarea"></td>
                     <td edit-field="actions" edit-placeholder="" edit-type="textarea"></td>
-                    <td edit-field="compliance" edit-placeholder="" edit-type="textarea"  ng-class="{'green': soa.compliance == '75', 'orange': soa.compliance == '25', 'red': soa.compliance == '0' }" >
-
-
-
-                       </td>
+                    <td edit-field="compliance" edit-placeholder="" edit-type="textarea" style="background : #FA5858  " ng-if=" soa.compliance == 0 " ></td>
+                    <td edit-field="compliance" edit-placeholder="" edit-type="textarea" style="background : #FE9A2E " ng-if=" soa.compliance == 25 " ></td>
+                    <td edit-field="compliance" edit-placeholder="" edit-type="textarea" style="background : #FFFF00 " ng-if=" soa.compliance == 50 " ></td>
+                    <td edit-field="compliance" edit-placeholder="" edit-type="textarea" style="background : #BFFF00 " ng-if=" soa.compliance == 75 " ></td>
+                    <td edit-field="compliance" edit-placeholder="" edit-type="textarea" style="background : #00FF00 " ng-if=" soa.compliance == 100 " ></td>
+                    <td edit-field="compliance" edit-placeholder="" edit-type="textarea" style="background : none " ng-if=" soa.compliance != 0 && soa.compliance != 25 && soa.compliance != 50 && soa.compliance != 75 && soa.compliance != 100  " ></td>
 
 
                 </tr>
