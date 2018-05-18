@@ -24,11 +24,14 @@
                     case 'main.project.anr':
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
                         break;
-                    case 'main.project.anr.scales':
+                    case 'main.project.anr.dashboard':
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 1};
                         break;
-                    case 'main.project.anr.knowledge':
+                    case 'main.project.anr.scales':
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 2};
+                        break;
+                    case 'main.project.anr.knowledge':
+                        $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 3};
                         break;
                 }
             }
@@ -653,6 +656,9 @@
                         }
                         break;
                     case 1:
+                        $state.transitionTo('main.project.anr.dashboard',{modelId:$stateParams.modelId},{inherit:false,notify:false,reload:false,location:'replace'});
+                        break;
+                    case 2:
                         $state.transitionTo('main.project.anr.scales',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
                         $timeout(function() {
                             if($scope.model && $scope.model.anr){
@@ -661,7 +667,7 @@
                             }
                         });
                         break;
-                    case 2:
+                    case 3:
                         $state.transitionTo('main.project.anr.knowledge',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
                         $timeout(function() {
                             // Init KB Mgmt, if needed
@@ -682,7 +688,7 @@
         }
 
         var selectScalesTab = function () {
-            $scope.display.anrSelectedTabIndex = 1;
+            $scope.display.anrSelectedTabIndex = 2;
         };
 
         var showAnrSummary = function () {
@@ -1822,7 +1828,7 @@
         }
 
         $scope.goToDashboard = function () {
-            $state.transitionTo("main.dashboard");
+            $state.transitionTo("main.project.anr.dashboard" , {modelId: $stateParams.modelId});
         };
 
         $scope.openInterviewTools = function (ev) {
