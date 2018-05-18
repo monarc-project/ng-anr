@@ -18,6 +18,8 @@
 
       });
 
+
+
      $scope.onTableEdited = function (model, name) {
          var promise = $q.defer();
 
@@ -59,9 +61,19 @@
     // finalArray[recLine]="\""+soas[soa].id+"\"";
      finalArray[recLine]="\""+soas[soa].reference+"\"";
      finalArray[recLine]+=','+"\""+soas[soa].control+"\"";
-     finalArray[recLine]+=','+"\""+soas[soa].requirement+"\"";
-     finalArray[recLine]+=','+"\""+soas[soa].justification+"\"";
-     finalArray[recLine]+=','+"\""+soas[soa].evidences+"\"";
+     if(soas[soa].requirement==null)
+        finalArray[recLine]+=','+"\""+' '+"\"";
+      else
+        finalArray[recLine]+=','+"\""+soas[soa].requirement+"\"";
+     if(soas[soa].justification==null)
+        finalArray[recLine]+=','+"\""+' '+"\"";
+      else
+        finalArray[recLine]+=','+"\""+soas[soa].justification+"\"";
+    if(soas[soa].evidences==null)
+        finalArray[recLine]+=','+"\""+' '+"\"";
+      else
+        finalArray[recLine]+=','+"\""+soas[soa].evidences+"\"";
+
      if(soas[soa].actions==null)
         finalArray[recLine]+=','+"\""+' '+"\"";
       else
@@ -85,13 +97,17 @@
    var encodedUri = encodeURI(csvContent);
    var link = document.createElement("a");
    link.setAttribute("href", encodedUri);
-   link.setAttribute("download", "soqslist.csv");
+   link.setAttribute("download", "soaslist.csv");
    document.body.appendChild(link); // Required for FF
    link.click(); // This will download the data file named "my_data.csv".
 
- };
-}
 
+ };
+
+
+
+
+}
 
 
 

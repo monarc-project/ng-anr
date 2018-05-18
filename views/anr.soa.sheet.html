@@ -1,0 +1,36 @@
+<div class="md-padding" ng-controller="AnrSoaSheetCtrl">
+    <md-button ng-click="backToList()"><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button>
+
+    <div layout="row" layout-align="space-between end">
+      <p class="md-title">{{ soa.reference }}-{{ soa.control }}  </p>
+      <md-button class="md-icon-button" ng-if="!isAnrReadOnly" ng-click="exportSoaSheet()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip></md-button>
+    </div>
+
+
+
+        <span edit-model="risks" ng-repeat="amv in amvs"  ng-if="amv.measure1.id == soa.measure || amv.measure2.id == soa.measure || amv.measure3.id == soa.measure" >
+          <md-card class="md-card-info"  ng-repeat="risk in risks" ng-if="risk.amv==amv.id">
+
+          <md-card-content>
+            <div  ng-repeat="asset in assets"  ng-if="amv.asset.id == asset.id " >
+            <b  translate>  Asset:</b  >  <b  >{{asset.label2}} </b  >          </br  >
+            <BLOCKQUOTE>{{asset.description2}}
+
+            </div  >
+
+            <div  ng-repeat="threat in threats"  ng-if="amv.threat.id == threat.id " >
+            <b  translate>Threat:</b  >  <b  >  {{threat.label2}}</b  >          </br  >
+            <BLOCKQUOTE>{{threat.description2}}
+
+            </div  >
+          </md-card-content>
+
+
+        </md-card>
+        </span  >
+
+
+
+
+
+</div  >

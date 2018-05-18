@@ -1,5 +1,5 @@
 <div class="md-padding" ng-controller="AnrSoaCtrl">
-    <p class="md-title" translate>Satement of applicability</p>
+    <p class="md-title" translate>Statement of applicability</p>
 
     <div layout="row" layout-align="space-between end">
     <md-button class="md-icon-button" ng-if="!isAnrReadOnly" ng-click="export()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip></md-button>
@@ -20,16 +20,17 @@
 
                 <tbody>
                 <tr edit-model="soa" ng-repeat="soa in soas">
-                    <td  class="txtcenter"> <md-button class="md-icon-button md-primary" ui-sref="main.project.anr.risksplan.sheet({modelId: model.anr.id, recId: 1})">{{ soa.reference }}</md-button></td>
+                    <td  class="txtcenter"> <md-button class=" md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.reference }}</md-button></td>
                     <td  class="txtcenter">{{ soa.control }}</td>
                     <td class="txtcenter">{{ soa.requirement }}   </td>
                     <td edit-field="justification" class="preserve-newlines"  edit-type="textarea"></td>
                     <td edit-field="evidences" edit-type="textarea"></td>
                     <td edit-field="actions" edit-placeholder="" edit-type="textarea"></td>
-                    <td edit-field="compliance" edit-placeholder="" edit-type="textarea" ></td>
+                    <td edit-field="compliance" edit-placeholder="" edit-type="textarea"  ng-class="{'green': soa.compliance == '75', 'orange': soa.compliance == '25', 'red': soa.compliance == '0' }" >
 
 
 
+                       </td>
 
 
                 </tr>
