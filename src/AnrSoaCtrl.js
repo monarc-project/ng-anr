@@ -3,21 +3,22 @@
     angular
         .module('AnrModule')
         .controller('AnrSoaCtrl', [
-            '$scope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state' , 'ClientSoaService', '$q',
+            '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state' , 'ClientSoaService', '$q',
             AnrSoaCtrl
         ]);
 
     /**
      * ANR > STATEMENT OF APPLICABILITY
      */
-    function AnrSoaCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state,
-                                  ClientSoaService, $q) {
-
+    function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state,
+                                  ClientSoaService, $q, $filter, ngTableParams) {
+      //$scope.soas=[];
       ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
           $scope.soas = data['Soa-list'];
+          $scope.totalItems = $scope.soas.length ;   //$scope.soas.length
+
 
       });
-
 
 
      $scope.onTableEdited = function (model, name) {
@@ -41,6 +42,28 @@
 
 
  };
+
+
+ $scope.viewby = 10;
+ $scope.currentPage = 1;
+ $scope.itemsPerPage = $scope.viewby;
+ $scope.maxSize = 5; //Number of pager buttons to show
+
+ $scope.setPage = function (pageNo) {
+   $scope.currentPage = pageNo;
+ };
+
+ $scope.pageChanged = function() {
+   console.log('Page changed to: ' + $scope.currentPage);
+ };
+
+$scope.setItemsPerPage = function(num) {
+ $scope.itemsPerPage = num;
+ $scope.currentPage = 1; //reset to first page
+ $scope.numPage = $scope.totalItems/num;
+
+}
+
 
  $scope.export = function () {
    finalArray=[];

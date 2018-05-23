@@ -40,7 +40,7 @@
           $scope.amvs = data['amvs'];
 
       });
-      $scope.empty="TRUE";
+      $scope.empty="false";
 
      $scope.onTableEdited = function (model, name) {
          var promise = $q.defer();
@@ -126,7 +126,8 @@
 
 
             for (amv in amvs){
-              if( soa.measure===amvs[amv].measure1.id   ){
+
+              if( (amvs[amv].measure1.id == soa.measure)){
                     for (risk in risks){
                       if(risks[risk].amv == amvs[amv].id ){
                             for (asset in assets){
