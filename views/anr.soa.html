@@ -22,7 +22,7 @@
 
                 <tbody>
                 <tr edit-model="soa" ng-repeat="soa in soas.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage))">
-                    <td  class="txtcenter"> <md-button class=" md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.reference }}</md-button></td>
+                    <td  class="txtcenter" > <md-button class=" md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.reference }}</md-button></td>
                     <td  class="txtcenter">{{ soa.control }}</td>
                     <td class="txtcenter">{{ soa.requirement }}   </td>
                     <td edit-field="justification" class="preserve-newlines"  edit-type="textarea"></td>
@@ -52,7 +52,7 @@
             <div class="page-select">
                 <div class="label" translate>Page:</div>
 
-                <md-select  class="md-table-select" md-container-class="md-pagination-select"   ng-model="page" ng-change="setPage(page)" aria-label="Page">
+                <md-select  class="md-table-select" md-container-class="md-pagination-select"   ng-model="currentPage" ng-change="setPage(currentPage)" aria-label="Page">
                   <md-content>
 
                         <md-option ng-repeat="i in range(1, ceil(totalItems / itemsPerPage))" ng-default="1" ng-value="i"   >{{i}} </md-option>

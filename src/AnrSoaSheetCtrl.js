@@ -3,7 +3,7 @@
     angular
         .module('AnrModule')
         .controller('AnrSoaSheetCtrl', [
-            '$scope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state' , '$stateParams', 'ClientSoaService','ThreatService','AssetService','AmvService', '$q', '$rootScope',
+            '$scope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state' , '$stateParams', 'ClientSoaService','AmvService', '$q', '$rootScope',
             AnrSoaSheetCtrl
         ]);
 
@@ -11,7 +11,7 @@
      * ANR > STATEMENT OF APPLICABILITY S
      */
     function AnrSoaSheetCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, $stateParams,
-                                  ClientSoaService,ThreatService,AssetService,AmvService, $q) {
+                                  ClientSoaService,AmvService, $q) {
 
 
 
@@ -21,10 +21,7 @@
 
 
 
-      ThreatService.getThreats({anr: $scope.model.anr.id}).then(function (data) {
-          $scope.threats = data['threats'];
 
-      });
 
 
       ClientSoaService.getSoa({anr: $scope.model.anr.id, id: $stateParams.soaId}).then(function (data) {
@@ -32,10 +29,7 @@
       });
 
 
-      AssetService.getAssets({anr: $scope.model.anr.id}).then(function (data) {
-          $scope.assets = data['assets'];
 
-      });
       AmvService.getAmvs({anr: $scope.model.anr.id}).then(function (data) {
           $scope.amvs = data['amvs'];
 
@@ -69,41 +63,29 @@
                   soa = $scope.soa;
                   amvs = $scope.amvs;
                   risks = $scope.risks;
-                  assets = $scope.assets;
-                  threats = $scope.threats;
-
-
-                             var list=[];
+                              var list=[];
 
                               for (amv in amvs){
                                 if(amvs[amv].measure1.id==soa.measure  || amvs[amv].measure2.id==soa.measure  ||amvs[amv].measure3.id==soa.measure  ){
                                       for (risk in risks){
                                         if(risks[risk].amv == amvs[amv].id ){
-                                              for (asset in assets){
-                                                if(assets[asset].id == amvs[amv].asset.id ){
 
-                                                test.asset=assets[asset].label2;
-                                                test.assetd=assets[asset].description2;
+                                                test.asset=risks[risk].assetLabel2;
+                                                test.assetd=risks[risk].assetDescription2;
 
-                                                }
-                                              }
-                                              for (threat in threats){
-                                                if(threats[threat].id == amvs[amv].threat.id ){
-                                                  test.threat=threats[threat].label2;
-                                                  test.threatd=threats[threat].description2;}
-                                              }
 
-                                              list.push(test);
+                                                test.threat=risks[risk].threatLabel2;
+                                                test.threatd=risks[risk].threatDescription2;
 
+                                                list.push(test);
                                         }
+                                     }
 
-                                    }
-
-                              }
+                                 }
 
 
-                              $scope.list = list;
-                            }
+                                 $scope.list = list;
+                             }
 
 
         }
@@ -121,37 +103,26 @@
             soa = $scope.soa;
             amvs = $scope.amvs;
             risks = $scope.risks;
-            assets = $scope.assets;
-            threats = $scope.threats;
 
 
             for (amv in amvs){
+              mes2_code=mes3_code="test";
+              if(amvs[amv].measure2!=null){mes2_code=amvs[amv].measure2.code;}
+              if(amvs[amv].measure3!=null){mes3_code=amvs[amv].measure3.code;}
 
-              if( (amvs[amv].measure1.id == soa.measure)){
+              if( amvs[amv].measure1.code == soa.reference || mes2_code == soa.reference  || mes3_code == soa.reference){
                     for (risk in risks){
                       if(risks[risk].amv == amvs[amv].id ){
-                            for (asset in assets){
-                              if(assets[asset].id == amvs[amv].asset.id ){
                               recLine++;
-                              finalArray[recLine]="\""+assets[asset].label2+"\"";
-                              finalArray[recLine]+=','+"\""+assets[asset].description2+"\"";
+                              finalArray[recLine]="\""+risks[risk].assetLabel2	+"\"";
+                              finalArray[recLine]+=','+"\""+risks[risk].assetDescription2+"\"";
 
-                              }
-                            }
-                            for (threat in threats){
-                              if(threats[threat].id == amvs[amv].threat.id ){
-                              finalArray[recLine]+=','+"\""+threats[threat].label2+"\"";
-                              finalArray[recLine]+=','+"\""+threats[threat].description2+"\"";
-                              }
-                            }
-
+                              finalArray[recLine]+=','+"\""+risks[risk].threatLabel2+"\"";
+                              finalArray[recLine]+=','+"\""+risks[risk].threatDescription2+"\"";
                       }
-
-
-                  }
-
+                   }
+              }
             }
-          }
 
             let csvContent = "data:text/csv;charset=utf-8,";
             for(var j = 0; j < finalArray.length; ++j)
