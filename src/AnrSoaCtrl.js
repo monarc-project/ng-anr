@@ -20,6 +20,7 @@
 
 
       });
+
     
      $scope.onTableEdited = function (model, name) {
          var promise = $q.defer();

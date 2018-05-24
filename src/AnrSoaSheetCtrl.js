@@ -70,19 +70,19 @@
                                       for (risk in risks){
                                         if(risks[risk].amv == amvs[amv].id ){
 
-                                                test.asset=risks[risk].assetLabel2;
-                                                test.assetd=risks[risk].assetDescription2;
+                                                test.asset=$scope ._langField(risks[risk],'assetLabel');
+                                                test.assetd=$scope._langField(risks[risk],'assetDescription');
 
 
-                                                test.threat=risks[risk].threatLabel2;
-                                                test.threatd=risks[risk].threatDescription2;
+                                                test.threat=$scope._langField(risks[risk],'threatLabel');
+                                                test.threatd=$scope._langField(risks[risk],'threatDescription');
 
                                                 list.push(test);
                                         }
                                      }
 
                                  }
-
+                                 
 
                                  $scope.list = list;
                              }
@@ -114,11 +114,11 @@
                     for (risk in risks){
                       if(risks[risk].amv == amvs[amv].id ){
                               recLine++;
-                              finalArray[recLine]="\""+risks[risk].assetLabel2	+"\"";
-                              finalArray[recLine]+=','+"\""+risks[risk].assetDescription2+"\"";
+                              finalArray[recLine]="\""+$scope._langField(risks[risk],'assetLabel')	+"\"";
+                              finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'assetDescription')+"\"";
 
-                              finalArray[recLine]+=','+"\""+risks[risk].threatLabel2+"\"";
-                              finalArray[recLine]+=','+"\""+risks[risk].threatDescription2+"\"";
+                              finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'threatLabel')+"\"";
+                              finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'threatDescription')+"\"";
                       }
                    }
               }

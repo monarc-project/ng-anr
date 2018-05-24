@@ -13,14 +13,14 @@
                           <div  >
                             {{empty = TRUE}}
 
-                          <b  translate>  Asset:</b  >  <b  >{{risk.assetLabel2}} </b  >          </br  >
-                          <BLOCKQUOTE>{{risk.assetDescription2}}
+                          <b  translate>  Asset:</b  >  <b  >{{_langField(risk,'assetLabel')}} </b  >          </br  >
+                          <BLOCKQUOTE>{{_langField(risk,'assetDescription')}}
 
                           </div  >
 
                           <div   >
-                          <b  translate>Threat:</b  >  <b  >  {{risk.threatLabel2}}</b  >          </br  >
-                          <BLOCKQUOTE>{{risk.threatDescription2}}
+                          <b  translate>Threat:</b  >  <b  >  {{_langField(risk,'threatLabel')}}</b  >          </br  >
+                          <BLOCKQUOTE>{{_langField(risk,'threatDescription')}}
 
                           </div  >
                 </md-card-content>
