@@ -3,7 +3,7 @@
     angular
         .module('AnrModule')
         .controller('AnrSoaSheetCtrl', [
-            '$scope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state' , '$stateParams', 'ClientSoaService','AmvService', '$q', '$rootScope',
+            '$scope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state' , '$stateParams', 'ClientSoaService','AmvService', 'AnrService', '$q', '$rootScope',
             AnrSoaSheetCtrl
         ]);
 
@@ -11,14 +11,7 @@
      * ANR > STATEMENT OF APPLICABILITY S
      */
     function AnrSoaSheetCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, $stateParams,
-                                  ClientSoaService,AmvService, $q) {
-
-
-
-
-
-
-
+                                  ClientSoaService,AmvService,AnrService,  $q) {
 
 
 
@@ -26,6 +19,30 @@
 
       ClientSoaService.getSoa({anr: $scope.model.anr.id, id: $stateParams.soaId}).then(function (data) {
           $scope.soa = data;
+      });
+
+
+      $scope.risks_filters.limit = -1;
+      $scope.risks_filters.page = 1;
+      //     updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable();
+
+      AnrService.getInstanceRisks($scope.model.anr.id,null, $scope.risks_filters).then(function(data) {
+          if (!$scope.risks || data.risks.length != $scope.risks.length) {
+              $scope.risks_total = data.count;
+              $scope.risks = data.risks; // for the _table_risks.html partial
+          } else {
+              // patch up only if we already have a risks table
+              // if this cause a problem, add a flag to updateInstance so that we patch only in the risks
+              // table callback, and do a full refresh otherwise
+              $scope.risks_total = data.count;
+              for (var i = 0; i < $scope.risks.length; ++i) {
+                  for (var j in $scope.risks[i]) {
+                      $scope.risks[i][j] = data.risks[i][j];
+                  }
+              }
+          }
+
+          $scope.anr_risks_table_loading = false;
       });
 
 
@@ -82,14 +99,14 @@
                                      }
 
                                  }
-                                 
+
 
                                  $scope.list = list;
                              }
 
 
         }
-
+        $scope.tiret="-";
         $scope.soaRisk();
 
           $scope.exportSoaSheet = function () {
@@ -99,6 +116,8 @@
             finalArray[recLine]+=','+gettextCatalog.getString('asset description');
             finalArray[recLine]+=','+gettextCatalog.getString('threat');
             finalArray[recLine]+=','+gettextCatalog.getString('threat description');
+            finalArray[recLine]+=','+gettextCatalog.getString('vulnerability');
+            finalArray[recLine]+=','+gettextCatalog.getString('vulnerability description');
 
             soa = $scope.soa;
             amvs = $scope.amvs;
@@ -119,6 +138,8 @@
 
                               finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'threatLabel')+"\"";
                               finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'threatDescription')+"\"";
+                              finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'vulnLabel')+"\"";
+                              finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'vulnDescription')+"\"";
                       }
                    }
               }

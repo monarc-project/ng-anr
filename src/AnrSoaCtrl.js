@@ -3,7 +3,7 @@
     angular
         .module('AnrModule')
         .controller('AnrSoaCtrl', [
-            '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state' , 'ClientSoaService', '$q', 'AnrService',
+            '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state' , 'ClientSoaService',  '$q',
             AnrSoaCtrl
         ]);
 
@@ -11,7 +11,7 @@
      * ANR > STATEMENT OF APPLICABILITY
      */
     function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state,
-                                  ClientSoaService, $q, $filter, AnrService) {
+                                  ClientSoaService,  $q, $filter) {
 
       ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
           $scope.soas = data['Soa-list'];
@@ -21,7 +21,8 @@
 
       });
 
-    
+
+
      $scope.onTableEdited = function (model, name) {
          var promise = $q.defer();
 
