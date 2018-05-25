@@ -5,10 +5,37 @@
       <p class="md-title">{{ soa.reference }}-{{ soa.control }}  </p>
       <md-button class="md-icon-button" ng-if="!isAnrReadOnly" ng-click="exportSoaSheet()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip></md-button>
     </div>
+    <table class="md-html-table" editable >
+        <thead>
+        <tr>
+            <th translate style="min-width: 200px">asset</th>
+            <th translate style="min-width: 200px">threat</th>
+            <th translate style="min-width: 200px">vulnerability</th>
+            <th translate style="min-width: 200px">Existing controls</th>
+        </tr>
+        </thead>
+
+                <tbody>
 
 
-        <span edit-model="risks" ng-repeat="amv in amvs"   ng-if="amv.measure1.id == soa.measure || amv.measure2.id == soa.measure || amv.measure3.id == soa.measure" >
-            <md-card class="md-card-info"  ng-repeat="risk in risks" ng-if="risk.amv==amv.id">
+                  <tr class="txtcenter" ng-repeat="risk in risks" ng-if="risk.measure1==soa.reference+tiret+soa.control || risk.measure2==soa.reference+tiret+soa.control || risk.measure3==soa.reference+tiret+soa.control">
+
+
+                    <td  class="txtcenter"  > {{_langField(risk,'assetLabel')}}</td>
+                    <td  class="txtcenter">{{_langField(risk,'threatLabel')}}</td>
+                    <td class="txtcenter">{{_langField(risk,'vulnLabel')}}   </td>
+                    <td class="txtcenter">{{risk.comment }}</td>
+
+
+                  </tr>
+
+
+
+                </tbody>
+
+    </table>
+
+  <!-- <md-card class="md-card-info"  ng-repeat="risk in risks" ng-if="risk.amv==amv.id">
                   <md-card-content>
                           <div  >
                             {{empty = TRUE}}
@@ -33,11 +60,9 @@
 
                 </md-card-content>
             </md-card>
-       </span  >
-
         <div ng-if="empty == FALSE" class="md-padding">
                   <em>{{ 'There are no risks for this recommandation.' | translate }}{{empty}}</em>
-        </div>
+        </div> -->
 
 
 

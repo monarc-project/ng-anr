@@ -106,7 +106,7 @@
 
 
         }
-        $scope.tiret="-";
+        $scope.tiret=" - ";
         $scope.soaRisk();
 
           $scope.exportSoaSheet = function () {
