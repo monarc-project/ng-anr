@@ -118,6 +118,7 @@
             finalArray[recLine]+=','+gettextCatalog.getString('threat description');
             finalArray[recLine]+=','+gettextCatalog.getString('vulnerability');
             finalArray[recLine]+=','+gettextCatalog.getString('vulnerability description');
+            finalArray[recLine]+=','+gettextCatalog.getString('Existing controls');
 
             soa = $scope.soa;
             amvs = $scope.amvs;
@@ -140,6 +141,7 @@
                               finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'threatDescription')+"\"";
                               finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'vulnLabel')+"\"";
                               finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'vulnDescription')+"\"";
+                                finalArray[recLine]+=','+"\""+risks[risk].comment+"\"";
                       }
                    }
               }
