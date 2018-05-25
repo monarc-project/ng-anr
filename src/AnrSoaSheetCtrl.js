@@ -123,7 +123,7 @@
             soa = $scope.soa;
             amvs = $scope.amvs;
             risks = $scope.risks;
-
+            instanceCache= $scope.instanceCache;
 
             for (amv in amvs){
               mes2_code=mes3_code="test";
@@ -134,9 +134,12 @@
                     for (risk in risks){
                       if(risks[risk].amv == amvs[amv].id ){
                               recLine++;
-                              finalArray[recLine]="\""+$scope._langField(risks[risk],'assetLabel')	+"\"";
+                              for (instance in instanceCache){
+                                if(instanceCache[instance].id ==risks[risk].instance){
+                              finalArray[recLine]="\""+$scope._langField(instanceCache[instance],'name')	+"\"";
+                                }
+                              }
                               finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'assetDescription')+"\"";
-
                               finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'threatLabel')+"\"";
                               finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'threatDescription')+"\"";
                               finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'vulnLabel')+"\"";
