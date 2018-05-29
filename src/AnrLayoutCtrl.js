@@ -656,7 +656,12 @@
                         }
                         break;
                     case 1:
-                        $state.transitionTo('main.project.anr.dashboard',{modelId:$stateParams.modelId},{inherit:false,notify:false,reload:false,location:'replace'});
+                        $state.transitionTo('main.project.anr.dashboard',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
+                        $timeout(function() {
+                            if($scope.model && $scope.model.anr){
+                                
+                            }
+                        });
                         break;
                     case 2:
                         $state.transitionTo('main.project.anr.scales',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});

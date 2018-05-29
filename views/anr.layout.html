@@ -28,7 +28,7 @@
                         <md-button ng-click="display.anrSelectedTabIndex = 0; updateInstances(); updateObjectsLibrary();" ui-sref="main.project.anr({modelId: model.anr.id})">{{ 'Risk analysis' | translate }}</md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button ng-click="display.anrSelectedTabIndex = 1">{{ 'Dashboard' | translate }}</md-button>
+                        <md-button ng-click="display.anrSelectedTabIndex = 1;" ui-sref="main.project.anr.dashboard({modelId: model.anr.id})">{{ 'Dashboard' | translate }}</md-button>
                     </md-menu-item>
                     <md-menu-item>
                         <md-button ng-click="display.anrSelectedTabIndex = 2">{{ 'Evaluation scales' | translate }}</md-button>
@@ -50,7 +50,7 @@
                 </md-tab>
 
                 <md-tab label="{{ 'Dashboard' | translate }}">
-                    <div ng-include="'views/client.dashboard.html'"></div>
+                    <div ng-include="'views/anr/anr.dashboard.html'"></div>
                 </md-tab>
 
                 <md-tab label="{{ 'Evaluation scales' | translate }}">
