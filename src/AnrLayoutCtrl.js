@@ -1350,7 +1350,7 @@
         var createComm = function (model_id, row_id, comment, impactType) {
             var promise = $q.defer();
 
-            AnrService.createScaleComment($scope.model.anr.id, model_id, row_id, comment, impactType, function () {
+            AnrService.createScaleComment($scope.model.anr.id, model_id, row_id, comment, impactType, $scope.scales.language, function () {
                 $scope.updateScaleComments(model_id);
                 promise.resolve();
             }, function () {
@@ -1386,7 +1386,7 @@
 
         $scope.newColumn = { name: null };
         $scope.onCreateNewColumn = function (newValue) {
-            AnrService.createScaleType($scope.model.anr.id, $scope.scales.impacts.id, newValue, function () {
+            AnrService.createScaleType($scope.model.anr.id, $scope.scales.impacts.id, newValue, $scope.scales.language, function () {
                 $scope.updateScaleTypes(function () {
                     $timeout(function () {
                         var scroller = document.getElementById('horiz-scrollable');
