@@ -27,14 +27,14 @@
                     <md-menu-item>
                         <md-button ng-click="display.anrSelectedTabIndex = 0; updateInstances(); updateObjectsLibrary();" ui-sref="main.project.anr({modelId: model.anr.id})">{{ 'Risk analysis' | translate }}</md-button>
                     </md-menu-item>
-                    <md-menu-item>
-                        <md-button ng-click="goToDashboard()">{{ 'Dashboard' | translate }}</md-button>
+                    <md-menu-item ng-if="OFFICE_MODE == 'FO'">
+                        <md-button ng-click="display.anrSelectedTabIndex = 1;" ui-sref="main.project.anr.dashboard({modelId: model.anr.id})">{{ 'Dashboard' | translate }}</md-button>
                     </md-menu-item>
                     <md-menu-item>
-                        <md-button ng-click="display.anrSelectedTabIndex = 1">{{ 'Evaluation scales' | translate }}</md-button>
+                        <md-button ng-click="display.anrSelectedTabIndex = 2">{{ 'Evaluation scales' | translate }}</md-button>
                     </md-menu-item>
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">
-                        <md-button ng-click="display.anrSelectedTabIndex = 2">{{ 'Knowledge base' | translate }}</md-button>
+                        <md-button ng-click="display.anrSelectedTabIndex = 3">{{ 'Knowledge base' | translate }}</md-button>
                     </md-menu-item>
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">
                         <md-button ng-click="openInterviewTools($event)">{{ 'Interviews table' | translate }}</md-button>
@@ -47,6 +47,10 @@
             <md-tabs md-border-bottom="true" md-selected="display.anrSelectedTabIndex" md-dynamic-height id="anrMainTab">
                 <md-tab label="{{ 'Risk analysis' | translate }}">
                     <div ng-include="'views/anr/_anr.riskanalysis.html'"></div>
+                </md-tab>
+
+                <md-tab label="{{ 'Dashboard' | translate }}">
+                    <div ng-include="'views/anr/anr.dashboard.html'"></div>
                 </md-tab>
 
                 <md-tab label="{{ 'Evaluation scales' | translate }}">
