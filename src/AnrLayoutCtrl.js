@@ -77,10 +77,13 @@
                     $scope.resetSheet(true);
                     $scope.resetOpSheet(true);
                     $scope.resetRisksFilters(true);
-                }
+                    $scope.resetRisksOpFilters(true)
+                  }
             }else{
                 $scope.resetSheet();
+                $scope.resetOpSheet();
                 $scope.resetRisksFilters();
+                $scope.resetRisksOpFilters();
             }
 
             $timeout(function () {
@@ -455,7 +458,7 @@
                         if($stateParams.instId){
                             $state.transitionTo('main.project.anr.instance',{modelId:$stateParams.modelId, instId:$stateParams.instId},{inherit:true,notify:true,reload:false,location:'replace'});
                         }else{
-                            $state.transitionTo('main.project.anr',{modelId:$stateParams.modelId},{inherit:true,notify:false,reload:false,location:'replace'});
+                            $state.transitionTo('main.project.anr.riskop',{modelId:$stateParams.modelId},{inherit:true,notify:false,reload:false,location:'replace'});
                         }
                     }
                 }
@@ -659,7 +662,7 @@
                         $state.transitionTo('main.project.anr.dashboard',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
                         $timeout(function() {
                             if($scope.model && $scope.model.anr){
-                                
+
                             }
                         });
                         break;
