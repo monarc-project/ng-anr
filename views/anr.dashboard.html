@@ -120,9 +120,17 @@
                             <div id="cartographyChartExport"></div>
                         </div>
 
-                        <p id='actualRisksByParentAssetBreadcrumb' ng-show="showRisksTabs && displayActualRisksBy=='parentAsset'"></p>
+                        <div id='actualRisksByParentAssetInteractiveBreadcrumb' layout='row' ng-show="showRisksTabs && displayActualRisksBy=='parentAsset'">
 
-                        <!-- <div id='actualRisksByParentAssetInteractiveBreadcrumb' layout='row' ng-show="showRisksTabs && displayActualRisksBy=='parentAsset'"></div> -->
+                            <md-button id="actualBreadcrumb_button0" class="added-button" ng-show="showRisksTabs && displayActualRisksBy=='parentAsset'" ng-click="breadcrumbGoBackActualRisksParentAsset(0)"></md-button>
+                            <p ng-show="dashboard.actualRisksBreadcrumb.length > 1 && showRisksTabs && displayActualRisksBy=='parentAsset'">></p>
+                            <md-button id="actualBreadcrumb_button1" class="added-button" ng-show="dashboard.actualRisksBreadcrumb.length > 1 && showRisksTabs && displayActualRisksBy=='parentAsset'" ng-click="breadcrumbGoBackActualRisksParentAsset(1)"></md-button>
+                            <p ng-show="dashboard.actualRisksBreadcrumb.length > 2 && showRisksTabs && displayActualRisksBy=='parentAsset'">></p>
+                            <md-button id="actualBreadcrumb_button2" class="added-button" ng-show="dashboard.actualRisksBreadcrumb.length > 2 && showRisksTabs && displayActualRisksBy=='parentAsset'" ng-click="breadcrumbGoBackActualRisksParentAsset(2)"></md-button>
+                            <p ng-show="dashboard.actualRisksBreadcrumb.length > 3 && showRisksTabs && displayActualRisksBy=='parentAsset'">></p>
+                            <md-button id="actualBreadcrumb_button3" class="added-button" ng-show="dashboard.actualRisksBreadcrumb.length > 3 && showRisksTabs && displayActualRisksBy=='parentAsset'" ng-click="breadcrumbGoBackActualRisksParentAsset(3)"></md-button>
+
+                        </div>
 
                         <nvd3 ng-show ="dashboard.showGraphFrame1" id="graphFrame1" options="initOptionActualRisk" data="initDataActualRisk "  api="graphFrame1" config="{refreshDataOnly: true}"></nvd3>
                     </div>
@@ -154,7 +162,17 @@
 
                         </div>
 
-                        <p id='residualRisksByParentAssetBreadcrumb' ng-show="showRisksTabs && displayResidualRisksBy=='parentAsset'"></p>
+                        <div id='residualRisksByParentAssetInteractiveBreadcrumb' layout='row' ng-show="showRisksTabs && displayResidualRisksBy=='parentAsset'">
+
+                            <md-button id="residualBreadcrumb_button0" class="added-button" ng-show="showRisksTabs && displayResidualRisksBy=='parentAsset'" ng-click="breadcrumbGoBackResidualRisksParentAsset(0)"></md-button>
+                            <p ng-show="dashboard.residualRisksBreadcrumb.length > 1 && showRisksTabs && displayResidualRisksBy=='parentAsset'">></p>
+                            <md-button id="residualBreadcrumb_button1" class="added-button" ng-show="dashboard.residualRisksBreadcrumb.length > 1 && showRisksTabs && displayResidualRisksBy=='parentAsset'" ng-click="breadcrumbGoBackResidualRisksParentAsset(1)"></md-button>
+                            <p ng-show="dashboard.residualRisksBreadcrumb.length > 2 && showRisksTabs && displayResidualRisksBy=='parentAsset'">></p>
+                            <md-button id="residualBreadcrumb_button2" class="added-button" ng-show="dashboard.residualRisksBreadcrumb.length > 2 && showRisksTabs && displayResidualRisksBy=='parentAsset'" ng-click="breadcrumbGoBackResidualRisksParentAsset(2)"></md-button>
+                            <p ng-show="dashboard.residualRisksBreadcrumb.length > 3 && showRisksTabs && displayResidualRisksBy=='parentAsset'">></p>
+                            <md-button id="residualBreadcrumb_button3" class="added-button" ng-show="dashboard.residualRisksBreadcrumb.length > 3 && showRisksTabs && displayResidualRisksBy=='parentAsset'" ng-click="breadcrumbGoBackResidualRisksParentAsset(3)"></md-button>
+
+                        </div>
 
                         <nvd3 ng-show ="dashboard.showGraphFrame2" id="graphFrame2" options="initOptionResidualRisk" data="initDataResidualRisk " api="graphFrame2"  config="{refreshDataOnly: true}"></nvd3>
                         <div ng-if="showRisksTabs && !dashboard.carto.targeted">
