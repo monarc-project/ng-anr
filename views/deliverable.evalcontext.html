@@ -1,4 +1,4 @@
-<md-dialog md-theme="light" class="dialog-width">
+<md-dialog md-theme="light" class="dialog-width" ng-controller="DeliveriesModelsCtrl">
     <form name="evalContextForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
@@ -17,6 +17,16 @@
                         <md-option ng-value="0">{{ 'Draft' | translate}}</md-option>
                         <md-option ng-value="1">{{ 'Final' | translate}}</md-option>
                     </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block">
+                    <label translate>Template</label>
+                    <md-select ng-model="deliverable.template" name="template" ng-required="true">
+                         <md-option ng-value="deliverymodel.id" ng-repeat="(index, deliverymodel) in deliveriesmodels" ng-if="deliverymodel.category===step.num" ng-selected="$first">{{ _langField(deliverymodel, 'description') }}</md-option>
+                    </md-select>
+                    <div ng-messages="evalContextForm.template.$error" role="alert">
+                        <div ng-message="required">{{ 'You must select a template' | translate }}</div>
+                    </div>
                 </md-input-container>
 
                 <md-input-container class="md-block">
@@ -59,7 +69,7 @@
             <md-button ng-click="cancel()">
                 {{ 'Cancel' | translate }}
             </md-button>
-            <md-button ng-click="save()" type="submit" class="md-accent md-hue-3">
+            <md-button ng-click="save()" type="submit"  ng-disabled="evalContextForm.$error.required" class="md-accent md-hue-3">
                 {{ 'Save' | translate }}
             </md-button>
         </md-dialog-actions>

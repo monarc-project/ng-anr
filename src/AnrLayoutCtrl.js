@@ -24,11 +24,14 @@
                     case 'main.project.anr':
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
                         break;
-                    case 'main.project.anr.scales':
+                    case 'main.project.anr.dashboard':
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 1};
                         break;
-                    case 'main.project.anr.knowledge':
+                    case 'main.project.anr.scales':
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 2};
+                        break;
+                    case 'main.project.anr.knowledge':
+                        $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 3};
                         break;
                 }
             }
@@ -74,10 +77,13 @@
                     $scope.resetSheet(true);
                     $scope.resetOpSheet(true);
                     $scope.resetRisksFilters(true);
-                }
+                    $scope.resetRisksOpFilters(true)
+                  }
             }else{
                 $scope.resetSheet();
+                $scope.resetOpSheet();
                 $scope.resetRisksFilters();
+                $scope.resetRisksOpFilters();
             }
 
             $timeout(function () {
@@ -452,7 +458,7 @@
                         if($stateParams.instId){
                             $state.transitionTo('main.project.anr.instance',{modelId:$stateParams.modelId, instId:$stateParams.instId},{inherit:true,notify:true,reload:false,location:'replace'});
                         }else{
-                            $state.transitionTo('main.project.anr',{modelId:$stateParams.modelId},{inherit:true,notify:false,reload:false,location:'replace'});
+                            $state.transitionTo('main.project.anr.riskop',{modelId:$stateParams.modelId},{inherit:true,notify:false,reload:false,location:'replace'});
                         }
                     }
                 }
@@ -653,6 +659,14 @@
                         }
                         break;
                     case 1:
+                        $state.transitionTo('main.project.anr.dashboard',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
+                        $timeout(function() {
+                            if($scope.model && $scope.model.anr){
+
+                            }
+                        });
+                        break;
+                    case 2:
                         $state.transitionTo('main.project.anr.scales',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
                         $timeout(function() {
                             if($scope.model && $scope.model.anr){
@@ -661,7 +675,7 @@
                             }
                         });
                         break;
-                    case 2:
+                    case 3:
                         $state.transitionTo('main.project.anr.knowledge',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
                         $timeout(function() {
                             // Init KB Mgmt, if needed
@@ -682,7 +696,7 @@
         }
 
         var selectScalesTab = function () {
-            $scope.display.anrSelectedTabIndex = 1;
+            $scope.display.anrSelectedTabIndex = 2;
         };
 
         var showAnrSummary = function () {
@@ -1346,7 +1360,7 @@
         var createComm = function (model_id, row_id, comment, impactType) {
             var promise = $q.defer();
 
-            AnrService.createScaleComment($scope.model.anr.id, model_id, row_id, comment, impactType, function () {
+            AnrService.createScaleComment($scope.model.anr.id, model_id, row_id, comment, impactType, $scope.scales.language, function () {
                 $scope.updateScaleComments(model_id);
                 promise.resolve();
             }, function () {
@@ -1382,7 +1396,7 @@
 
         $scope.newColumn = { name: null };
         $scope.onCreateNewColumn = function (newValue) {
-            AnrService.createScaleType($scope.model.anr.id, $scope.scales.impacts.id, newValue, function () {
+            AnrService.createScaleType($scope.model.anr.id, $scope.scales.impacts.id, newValue, $scope.scales.language, function () {
                 $scope.updateScaleTypes(function () {
                     $timeout(function () {
                         var scroller = document.getElementById('horiz-scrollable');
@@ -1828,6 +1842,9 @@
             });
         }
 
+        $scope.goToDashboard = function () {
+            $state.transitionTo("main.project.anr.dashboard" , {modelId: $stateParams.modelId});
+        };
 
         $scope.openInterviewTools = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
@@ -2664,6 +2681,7 @@
         $scope.step = step;
         $scope.deliverable = {
             'version': '',
+            'template': 0,
             'status': 0,
             'classification': '',
             'docname': '',
@@ -2679,6 +2697,7 @@
                 $scope.deliverable.docname = $scope.deliverable.name;
                 $scope.deliverable.managers = $scope.deliverable.respSmile;
                 $scope.deliverable.consultants = $scope.deliverable.respCustomer;
+                $scope.deliverable.template = $scope.deliverable.template;
             }
         });
 

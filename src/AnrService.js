@@ -259,11 +259,11 @@
             return self.ScalesTypesResource.query({anrId: anr_id, order:'position'}).$promise;
         };
 
-        var createScaleType = function (anr_id, scale_id, label1, success, error) {
+        var createScaleType = function (anr_id, scale_id, label1, langue = null, success, error) {
              if ($rootScope.OFFICE_MODE == "FO") {
                 new self.ScalesTypesResource({anrId: anr_id, anr: anr_id, scale: scale_id, Label: label1, isHidden: false, isSys: false, implicitPosition: 2, langue: $rootScope.getAnrLanguage().toString()}).$save(success, error);
              } else {
-        	      new self.ScalesTypesResource({anrId: anr_id, anr: anr_id, scale: scale_id, Label: label1, isHidden: false, isSys: false, implicitPosition: 2, langue: $rootScope._langField().toString()}).$save(success, error);
+        	      new self.ScalesTypesResource({anrId: anr_id, anr: anr_id, scale: scale_id, Label: label1, isHidden: false, isSys: false, implicitPosition: 2, langue: langue}).$save(success, error);
              }
         };
 
@@ -280,11 +280,11 @@
             return self.ScalesCommentResource.query({anrId: anr_id, scaleId: type}).$promise;
         };
 
-        var createScaleComment = function ( anr_id, scale_id, row, comment, type_impact_id, success, error) {
+        var createScaleComment = function ( anr_id, scale_id, row, comment, type_impact_id, langue = null, success, error) {
              if ($rootScope.OFFICE_MODE == "FO") {
                 new self.ScalesCommentResource({anrId: anr_id, scaleId: scale_id, val: row, scaleImpactType: type_impact_id, comment: comment, langue: $rootScope.getAnrLanguage().toString()}).$save(success, error);
              } else {
-        	      new self.ScalesCommentResource({anrId: anr_id, scaleId: scale_id, val: row, scaleImpactType: type_impact_id, comment: comment, langue: $rootScope._langField().toString()}).$save(success, error);
+        	      new self.ScalesCommentResource({anrId: anr_id, scaleId: scale_id, val: row, scaleImpactType: type_impact_id, comment: comment, langue: langue }).$save(success, error);
              }
         };
 
