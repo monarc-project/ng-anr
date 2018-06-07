@@ -123,15 +123,11 @@
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
                 console.log('copying reco...');
-                // ClientRecommandationService.deleteRecommandation({anr: $scope.model.anr.id, id: recommandation.recommandation.id},
-                //     function () {
-                //         updateRecommandations();
-                //         toastr.success(gettextCatalog.getString('The recommendation has been deleted successfully'),
-                //             gettextCatalog.getString('Operation successful'));
-                //     }
-                // );
-                recommandation.recommandation.code += ' (copy)'
-                console.log(recommandation.recommandation);
+                newRecommendation = {};
+                angular.copy(recommandation, newRecommendation);
+                delete newRecommendation.recommandation.id;
+                newRecommendation.recommandation.code += ' (copy)';
+                console.log(newRecommendation.recommandation);
                 // ClientRecommandationService.createRecommandation(rec.recommandation, function (data) {
                 //     toastr.success(gettextCatalog.getString("The recommendation has been copied successfully"));
                 //
@@ -142,7 +138,8 @@
                 //         });
                 // })
             },function(){
-                $scope.editRecommandation(ev,recommandation);
+                // $scope.editRecommandation(ev,recommandation);
+                updateRecommandations();
             });
 
         }
