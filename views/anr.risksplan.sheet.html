@@ -29,8 +29,9 @@
             <td ng-if="risk.instanceRisk" ng-class="{'green': risk.instanceRisk.cacheMaxRisk >= 0 && risk.instanceRisk.cacheMaxRisk <= thresholds.thresholds.min, 'orange': risk.instanceRisk.cacheMaxRisk > thresholds.thresholds.min && risk.instanceRisk.cacheMaxRisk <= thresholds.thresholds.max, 'red': risk.instanceRisk.cacheMaxRisk > thresholds.thresholds.max}" class="tbl-risk-calc txtcenter">{{ risk.instanceRisk.cacheMaxRisk | dashnull }}</td>
             <td class="preserve-newlines" edit-field="commentAfter" edit-readonly="isAnrReadOnly" edit-type="textarea"></td>
             <td ng-if="risk.instanceRisk" ng-class="{'green': risk.instanceRisk.cacheTargetedRisk >= 0 && risk.instanceRisk.cacheTargetedRisk <= thresholds.thresholds.min, 'orange': risk.instanceRisk.cacheTargetedRisk > thresholds.thresholds.min && risk.instanceRisk.cacheTargetedRisk <= thresholds.thresholds.max, 'red': risk.instanceRisk.cacheTargetedRisk > thresholds.thresholds.max}" class="tbl-risk-calc txtcenter">{{ risk.instanceRisk.cacheTargetedRisk | dashnull }}</td>
-            <td ng-if="!isAnrReadOnly"><md-button ng-if="risk.instanceRisk" class="md-icon-button md-primary" ng-click="validate($event, risk)"><md-icon>check_circle</md-icon></md-button></td>
+            <td ng-if="!isAnrReadOnly"><md-button class="md-icon-button md-primary" ng-click="validate($event, risk)"><md-icon>check_circle</md-icon></md-button></td>
         </tr>
+
         <thead ng-if="rec_risksOp.length > 0">
         <tr>
             <th translate>Asset</th>
@@ -49,7 +50,7 @@
             <td ng-if="risk.instanceRiskOp" ng-class="{'green': risk.instanceRiskOp.cacheNetRisk >= 0 && risk.instanceRiskOp.cacheNetRisk <= thresholds.rolf_thresholds.min, 'orange': risk.instanceRiskOp.cacheNetRisk > thresholds.rolf_thresholds.min && risk.instanceRiskOp.cacheNetRisk <= thresholds.rolf_thresholds.max, 'red': risk.instanceRiskOp.cacheNetRisk > thresholds.rolf_thresholds.max}" class="tbl-risk-calc txtcenter">{{ risk.instanceRiskOp.cacheNetRisk | dashnull }}</td>
             <td class="preserve-newlines" edit-field="commentAfter" edit-readonly="isAnrReadOnly" edit-type="textarea"></td>
             <td ng-if="risk.instanceRiskOp" ng-class="{'green': risk.instanceRiskOp.cacheTargetedRisk >= 0 && risk.instanceRiskOp.cacheTargetedRisk <= thresholds.rolf_thresholds.min, 'orange': risk.instanceRiskOp.cacheTargetedRisk > thresholds.rolf_thresholds.min && risk.instanceRiskOp.cacheTargetedRisk <= thresholds.rolf_thresholds.max, 'red': risk.instanceRiskOp.cacheTargetedRisk > thresholds.rolf_thresholds.max}" class="tbl-risk-calc txtcenter">{{ risk.instanceRiskOp.cacheTargetedRisk | dashnull }}</td>
-            <td ng-if="!isAnrReadOnly"><md-button ng-if="risk.instanceRisk" class="md-icon-button md-primary" ng-click="validate($event, risk)"><md-icon>check_circle</md-icon></md-button></td>
+            <td ng-if="!isAnrReadOnly"><md-button class="md-icon-button md-primary" ng-click="validate($event, risk)"><md-icon>check_circle</md-icon></md-button></td>
         </tr>
         </thead>
         </tbody>
