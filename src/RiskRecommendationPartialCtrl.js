@@ -19,7 +19,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'editRecommandation', CreateRecommandationDialog],
+                controller: ['$scope', '$mdDialog', CreateRecommandationDialog],
                 templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -43,7 +43,7 @@
         $scope.editRecommandation = function (ev, rec) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'rec', 'detachRecommandation', 'deleteRecommandation', CreateRecommandationDialog],
+                controller: ['$scope', '$mdDialog', 'rec', 'detachRecommandation', 'copyRecommandation', 'deleteRecommandation', CreateRecommandationDialog],
                 templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -53,6 +53,7 @@
                 locals: {
                     rec: rec,
                     detachRecommandation: $scope.detachRecommandation,
+                    copyRecommandation: $scope.copyRecommandation,
                     deleteRecommandation: $scope.deleteRecommandation
                 }
             }).then(function () {
@@ -110,6 +111,40 @@
             },function(){
                 $scope.editRecommandation(ev,recommandation);
             });
+        }
+
+        $scope.copyRecommandation = function (ev, recommandation) {
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Are you sure you want to copy the recommendation?',
+                    {code: recommandation.recommandation.code}))
+                .targetEvent(ev)
+                .theme('light')
+                .ok(gettextCatalog.getString('Copy'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                console.log('copying reco...');
+                // ClientRecommandationService.deleteRecommandation({anr: $scope.model.anr.id, id: recommandation.recommandation.id},
+                //     function () {
+                //         updateRecommandations();
+                //         toastr.success(gettextCatalog.getString('The recommendation has been deleted successfully'),
+                //             gettextCatalog.getString('Operation successful'));
+                //     }
+                // );
+                recommandation.recommandation.code += ' (copy)'
+                console.log(recommandation.recommandation);
+                // ClientRecommandationService.createRecommandation(rec.recommandation, function (data) {
+                //     toastr.success(gettextCatalog.getString("The recommendation has been copied successfully"));
+                //
+                //     ClientRecommandationService.attachToRisk($scope.model.anr.id, data.id, riskId, isOpRiskMode,
+                //         function () {
+                //             toastr.success(gettextCatalog.getString("The recommandation has been attached to this risk."));
+                //             updateRecommandations();
+                //         });
+                // })
+            },function(){
+                $scope.editRecommandation(ev,recommandation);
+            });
+
         }
 
         $scope.deleteRecommandation = function(ev, recommandation){
@@ -203,10 +238,11 @@
     }
 
 
-    function CreateRecommandationDialog($scope, $mdDialog, rec, detachRecommandation, deleteRecommandation) {
+    function CreateRecommandationDialog($scope, $mdDialog, rec, detachRecommandation, copyRecommandation, deleteRecommandation) {
         $scope.recommandation = rec;
         $scope.deleteConfirmation = false;
         $scope.detachRecommandation = detachRecommandation;
+        $scope.copyRecommandation = copyRecommandation;
         $scope.deleteRecommandation = deleteRecommandation;
 
         $scope.delete = function () {
@@ -218,6 +254,7 @@
         };
 
         $scope.create = function () {
+            console.log($scope.recommandation);
             $mdDialog.hide($scope.recommandation);
         };
 
