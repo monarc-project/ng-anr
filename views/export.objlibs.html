@@ -46,6 +46,14 @@
                         <md-option ng-value="1">{{ 'Yes' | translate }}</md-option>
                         <md-option ng-value="0">{{ 'No' | translate }}</md-option>
                     </md-select>
+
+                </md-input-container>
+                <md-input-container ng-if="exportData.assessments" == 1 class="md-block" flex ng-if="mode == 'anr' || mode == 'instance'">
+                  <label translate>Export with existing controls and  recommendations?</label>
+                  <md-select ng-model="exportData.controls_reco" style="min-width: 200px">
+                      <md-option ng-value="1">{{ 'Yes' | translate }}</md-option>
+                      <md-option ng-value="0">{{ 'No' | translate }}</md-option>
+                  </md-select>
                 </md-input-container>
 
             </div>

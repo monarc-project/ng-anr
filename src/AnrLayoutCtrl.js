@@ -1774,7 +1774,7 @@
                         customUrl = 'api/client-anr/'+ $scope.model.anr.id +'/export';
                     }
 
-                    $http.post(customUrl, {id: $scope.model.anr.id, password: exports.password, assessments: exports.assessments}).then(function (data) {
+                    $http.post(customUrl, {id: $scope.model.anr.id, password: exports.password, assessments: exports.assessments, controls_reco: exports.controls_reco}).then(function (data) {
                         var contentD = data.headers('Content-Disposition'),
                             contentT = data.headers('Content-Type');
                         contentD = contentD.substring(0,contentD.length-1).split('filename="');
@@ -2114,7 +2114,8 @@
         $scope.exportData = {
             password: '',
             simple_mode: true,
-            assessments: 0
+            assessments: 0,
+            controls_reco: 1
         };
 
         $scope.cancel = function() {
