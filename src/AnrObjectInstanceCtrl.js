@@ -173,7 +173,7 @@
                         cliAnr = 'client-';
                         method = $http.post;
                     }
-                    method('api/'+cliAnr+'anr/' + $scope.model.anr.id + '/instances/' + $scope.instance.id + '/export', {id: $scope.instance.id, password: exports.password, assessments: exports.assessments, controls_reco: exports.controls_reco,}).then(function (data) {
+                    method('api/'+cliAnr+'anr/' + $scope.model.anr.id + '/instances/' + $scope.instance.id + '/export', {id: $scope.instance.id, password: exports.password, assessments: exports.assessments, controls_reco: exports.controls_reco}).then(function (data) {
                         var contentD = data.headers('Content-Disposition'),
                             contentT = data.headers('Content-Type');
                         contentD = contentD.substring(0,contentD.length-1).split('filename="');
