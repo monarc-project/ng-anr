@@ -3,7 +3,7 @@
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 ng-if="!recommandation.recommandation.id" translate>Add a recommendation</h2>
-                <h2 ng-if="recommandation.recommandation.id" translate>Edit recommendation</h2>
+                <h2 ng-if="recommandation.recommandation.id" translate>Edit A recommendation</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -12,6 +12,33 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
+                <md-input-container class="md-block">
+                    <md-icon>toc</md-icon>
+                    <md-autocomplete
+                            flex
+                            md-no-cache
+                            ng-disabled="isAnrReadOnly"
+                            md-selected-item="rec_edit.rec"
+                            md-search-text="recSearchText"
+                            md-items="item in queryRecSearch(recSearchText)"
+                            md-item-text="item.description"
+                            md-delay="300"
+                            md-min-length="0"
+                            md-input-name="rec"
+                            md-menu-class="reco-autocomplete"
+                            md-floating-label="{{ 'Search a recommendation' | translate }}">
+                        <md-item-template>
+                            <span md-highlight-text="recSearchText" md-highlight-flags="^i" >{{ item.code }} - {{ item.description }}</span>
+                            <md-tooltip class="tooltip-recommendation">{{ item.code }} - {{ item.description }}</md-tooltip>
+                        </md-item-template>
+
+                        <md-not-found>
+                            {{ 'No recommendation matching your search was found' | translate }}
+                        </md-not-found>
+                    </md-autocomplete>
+                </md-input-container>
+
+
                 <md-input-container class="md-block">
                     <label translate>Code</label>
                     <md-icon>toc</md-icon>

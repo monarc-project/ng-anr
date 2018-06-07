@@ -19,7 +19,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', CreateRecommandationDialog],
+                controller: ['$scope', '$mdDialog', 'editRecommandation', CreateRecommandationDialog],
                 templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -67,7 +67,9 @@
         $scope.queryRecSearch = function (query) {
             var q = $q.defer();
             ClientRecommandationService.getRecommandations({anr: $scope.model.anr.id, filter: query}).then(function (data) {
+                console.log('querySearch...');
                 q.resolve(data.recommandations);
+                console.log(data.recommandations);
             }, function () {
                 q.reject();
             });
@@ -190,6 +192,7 @@
         };
 
         $rootScope.$on('recommandations-loaded', function (ev, recs) {
+            console.log('recommandations-loaded');
             $scope.recommandations = recs;
         })
 
