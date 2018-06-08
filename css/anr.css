@@ -395,6 +395,52 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
     color: white;
 }
 
+/** soaTable compliance  */
+.tbl-soa {
+    text-align: center;
+    vertical-align: middle;
+    color: white;
+
+}
+
+.tbl-soa td, .o.tbl-soa th {
+    width: 25px;
+    height: 25px;
+    color: #333333;
+    font-weight: bold;
+}
+
+.tbl-soa td.wide {
+    width: 72px;
+}
+
+.tbl-soa .greeen, .tbl-soa.greeen {
+    background: #00FF00;
+    color: black;
+}
+
+.tbl-soa .green, .tbl-soa.green {
+    background: #BFFF00;
+    color: black;
+}
+
+.tbl-soa .yellow, .tbl-soa.yellow {
+    background: #FFFF00;
+    color: black;
+}
+
+.tbl-soa .orange, .tbl-soa.orange {
+    background: #FE9A2E;
+    color: black;
+}
+
+.tbl-soa .red, .tbl-soa.red {
+    background: #FE642E;
+    color: black;
+}
+
+
+
 .anr-scales-demo-block {
     width: 24px;
     height: 24px;

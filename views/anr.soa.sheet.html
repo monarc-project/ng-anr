@@ -21,7 +21,8 @@
                   <tr class="txtcenter" ng-repeat="risk in risks" ng-if="risk.measure1==soa.reference+tiret+soa.control || risk.measure2==soa.reference+tiret+soa.control || risk.measure3==soa.reference+tiret+soa.control">
 
 
-                    <td  class="txtcenter" ng-repeat="instance in instanceCache" ng-if="instance.id ==risk.instance" > {{_langField(instance,'name')}}</td>
+
+                    <td  class="txtcenter" ng-repeat="instance in instanceCache" ng-if="instance.id ==risk.instance" ><a ui-sref="main.project.anr.instance({modelId: model.anr.id, instId: instance.id})" href="javascript:;"> {{_langField(instance,'name')}}</a></td>
                     <td  class="txtcenter">{{_langField(risk,'threatLabel')}}</td>
                     <td class="txtcenter">{{_langField(risk,'vulnLabel')}}   </td>
                     <td class="txtcenter">{{risk.comment }}</td>
