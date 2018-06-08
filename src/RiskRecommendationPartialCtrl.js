@@ -122,26 +122,18 @@
                 .ok(gettextCatalog.getString('Copy'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-                console.log('copying reco...');
-                newRecommendation = {};
-                angular.copy(recommandation, newRecommendation);
-                delete newRecommendation.recommandation.id;
-                newRecommendation.recommandation.code += ' (copy)';
-                console.log(newRecommendation.recommandation);
-                // ClientRecommandationService.createRecommandation(rec.recommandation, function (data) {
-                //     toastr.success(gettextCatalog.getString("The recommendation has been copied successfully"));
-                //
-                //     ClientRecommandationService.attachToRisk($scope.model.anr.id, data.id, riskId, isOpRiskMode,
-                //         function () {
-                //             toastr.success(gettextCatalog.getString("The recommandation has been attached to this risk."));
-                //             updateRecommandations();
-                //         });
-                // })
-            },function(){
-                // $scope.editRecommandation(ev,recommandation);
-                updateRecommandations();
-            });
+                recommandation.recommandation.anr = $scope.model.anr.id;
+                ClientRecommandationService.copyRecommandation(recommandation.recommandation, function (data) {
+                    toastr.success(gettextCatalog.getString("The recommendation has been copied successfully"));
 
+                    ClientRecommandationService.attachToRisk($scope.model.anr.id, data.id, riskId, isOpRiskMode,
+                        function () {
+                            toastr.success(gettextCatalog.getString("The recommandation has been attached to this risk."));
+                            updateRecommandations();
+                        });
+                })
+            },function(){
+            });
         }
 
         $scope.deleteRecommandation = function(ev, recommandation){
