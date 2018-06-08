@@ -136,12 +136,12 @@
                         <nvd3 ng-show ="dashboard.showGraphFrame1" id="graphFrame1" options="initOptionCurrentRisk" data="initDataCurrentRisk "  api="graphFrame1" config="{refreshDataOnly: true}"></nvd3>
                     </div>
                     <div layout="column" flex="35">
-                        <p class="md-title" ng-show ="showRisksTabs" translate>Target risks</p>
+                        <p class="md-title" ng-show ="showRisksTabs" translate>Residual risks</p>
 
                         <div layout="row" layout-align="start center">
 
                             <md-input-container id="riskTab" ng-show ="showRisksTabs">
-                                <label translate>Display target risks by</label>
+                                <label translate>Display residual risks by</label>
                                 <md-select ng-model="displayTargetRisksBy">
                                     <md-option value="level" selected>{{ 'Level' | translate }}</md-option>
                                     <md-option value="asset" >{{ 'All assets' | translate }}</md-option>
