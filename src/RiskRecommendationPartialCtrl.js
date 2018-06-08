@@ -114,16 +114,17 @@
         }
 
         $scope.copyRecommandation = function (ev, recommandation) {
+            reco = recommandation.recommandation ? recommandation.recommandation : recommandation;
             var confirm = $mdDialog.confirm()
                 .title(gettextCatalog.getString('Are you sure you want to copy the recommendation?',
-                    {code: recommandation.recommandation.code}))
+                    {code: reco.code}))
                 .targetEvent(ev)
                 .theme('light')
                 .ok(gettextCatalog.getString('Copy'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-                recommandation.recommandation.anr = $scope.model.anr.id;
-                ClientRecommandationService.copyRecommandation(recommandation.recommandation, function (data) {
+                reco.anr = $scope.model.anr.id;
+                ClientRecommandationService.copyRecommandation(reco, function (data) {
                     toastr.success(gettextCatalog.getString("The recommendation has been copied successfully"));
 
                     ClientRecommandationService.attachToRisk($scope.model.anr.id, data.id, riskId, isOpRiskMode,
