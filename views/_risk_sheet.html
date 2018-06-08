@@ -101,8 +101,11 @@
                         </md-autocomplete>
 
 
-                        <md-button ng-click="rec_edit.rec?attachRecommandation():createRecommandation($event)" class="md-icon-button md-primary" ng-disabled="isAnrReadOnly">
+                        <md-button ng-click="rec_edit.rec?attachRecommandation():createRecommandation($event)" class="md-icon-button md-primary" ng-attr-title="Attach this recommendation" ng-disabled="isAnrReadOnly">
                             <md-icon>{{ rec_edit.rec?'link':'add_to_photos' }}</md-icon>
+                        </md-button>
+                        <md-button ng-if="rec_edit.rec" ng-click="copyRecommandation($event, rec_edit.rec)" class="md-icon-button md-primary" ng-attr-title="Copy" ng-disabled="isAnrReadOnly">
+                            <i class="material-icons">flip_to_front</i>
                         </md-button>
                     </div>
                 </td>
