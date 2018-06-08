@@ -1,5 +1,5 @@
 <div class="md-padding" ng-controller="AnrRisksPlanHistoryCtrl">
-    <md-button ng-click="backToList()"><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button>
+    <md-button class="md-primary md-light-theme"  ng-click="backToList()"><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button>
     <div layout="row" layout-align="space-between end">
       <p class="md-title" translate>Implementation history</p>
       <md-button class="md-icon-button" ng-if="!isAnrReadOnly" ng-click="exportHistory()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip></md-button>
