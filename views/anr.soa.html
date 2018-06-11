@@ -30,7 +30,8 @@
         </thead>
 
                 <tbody>
-                <tr edit-model="soa" ng-repeat="soa in soas.sort().slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)).sort() | filter:searchText">
+                <tr edit-model="soa" ng-repeat="soa in soas.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | filter:searchText">
+
 
 
                     <td  class="txtcenter" > <md-button class=" md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.reference }}</md-button></td>
@@ -40,6 +41,7 @@
                     <td edit-field="evidences" edit-type="textarea"></td>
                     <td edit-field="actions"  edit-type="textarea"></td>
                     <td edit-field="compliance"  class="tbl-soa"  edit-placeholder="" edit-type="textarea" ng-type ="number" ng-class="{'greeen':  soa.compliance <= 100 && soa.compliance > 75  , 'green':  soa.compliance <= 75  && soa.compliance > 50 ,'yellow': soa.compliance <= 50  && soa.compliance > 25,'orange': soa.compliance <= 25  && soa.compliance > 0, 'red': soa.compliance == 0  }"  ></td>
+
 
 
                     </td>
