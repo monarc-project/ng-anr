@@ -1436,7 +1436,7 @@
         });
 
         $scope.updateTagsRisks = function(value) {
-            $scope.risk_tag_filter = value;
+            value == '0' ? $scope.risk_tag_filter = null : $scope.risk_tag_filter = value ;
         }
 
         $scope.updateRisks = function () {
