@@ -1435,7 +1435,7 @@
             $scope.updateRisks();
         });
 
-        $scope.updateTags = function (value,) {
+        $scope.updateTagsRisks = function(value) {
             $scope.risk_tag_filter = value;
         }
 
