@@ -16,8 +16,12 @@
       ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
           $scope.soas = data['Soa-list'];
           $scope.totalItems = $scope.soas.length ;   //$scope.soas.length
+          for (soa in $scope.soas)
+          {
+            if($scope.soas[soa].compliance !=null)
+                  $scope.soas[soa].compliance=$scope.soas[soa].compliance+"%";
 
-
+          }
 
       });
 
@@ -30,21 +34,18 @@
              anr: $scope.model.anr.id,
              id: model.id,
          };
-       if(name === "compliance" && model[name]<= 100 && model[name] >= 0 ){
 
-       params[name] = model[name];
+         if(name === "compliance" && model[name].replace("%","")<= 100 && model[name].replace("%", "") >= 0 ){
+           params[name] = model[name];
+          }
 
-
-     }else{if (name != "compliance"){
-
-       params[name] = model[name];
-     }else{
-      // toastr.error($scope.file.$error, gettextCatalog.getString('error ') );
-      toastr.error(gettextCatalog.getString('the value of the compliance must be between 0 and 100 '));
-
-
-     }
-      }
+          else{
+                if (name != "compliance"){
+                  params[name] = model[name];}
+                else{
+                  toastr.error(gettextCatalog.getString('the value of the compliance must be between 0 and 100 '));
+                }
+          }
 
 
          ClientSoaService.updateSoa(params, function () {
@@ -137,9 +138,7 @@ $scope.setItemsPerPage = function(num) {
    var link = document.createElement("a");
    link.setAttribute("href", encodedUri);
    link.setAttribute("download", "soaslist.csv");
-   document.body.appendChild(link);
-   finalArray[recLine]= gettextCatalog.getString('Ref');
-   finalArray[recLine]+=','+gettextCatalog.getString('Control');  // Required for FF
+   document.body.appendChild(link);  // Required for FF
    link.click();  // This will download the data file named "my_data.csv".
 
 
