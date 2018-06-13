@@ -447,7 +447,7 @@
                     </md-input-container>
                 </form>
 
-                <md-select ng-model="risk_tag_filter" aria-label="{{ 'Asset types' | translate }}" placeholder="{{ 'Tag' | translate }}">
+                <md-select ng-model="risk_tag_filter" ng-change="updateTags(risk_tag_filter)" aria-label="{{ 'Asset types' | translate }}" placeholder="{{ 'Tag' | translate }}">
                     <md-option value="0">{{ 'All tags' | translate }}</md-option>
                     <md-option ng-repeat="tag in risk_tags" ng-value="tag.id">{{ tag.code }} ({{ _langField(tag,'label') }})</md-option>
                 </md-select>
