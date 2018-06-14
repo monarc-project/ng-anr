@@ -35,9 +35,9 @@
                 <td edit-field="justification" class="preserve-newlines"  edit-type="textarea"></td>
                 <td edit-field="evidences" edit-type="textarea"></td>
                 <td edit-field="actions"  edit-type="textarea"></td>
-                <td class="tbl-soa" edit-type="textarea"
-                    ng-class="{'greeen':  soa.compliance.replace('%', '') <= 100 && soa.compliance.replace('%', '') > 75  , 'greeen':  soa.compliance.replace('%', '') <= 75  && soa.compliance.replace('%', '') > 50 ,'yellow': soa.compliance.replace('%', '') <= 50  && soa.compliance.replace('%', '') > 25,'orange': soa.compliance.replace('%', '') <= 25  && soa.compliance.replace('%', '') > 0, 'red': soa.compliance.replace('%', '') == 0  }"
-                    ><input ng-class="{'tbl-soa greeen':  soa.compliance.replace('%', '') <= 100 && soa.compliance.replace('%', '') > 75  , 'tbl-soa green':  soa.compliance.replace('%', '') <= 75  && soa.compliance.replace('%', '') > 50 ,'yellow': soa.compliance.replace('%', '') <= 50  && soa.compliance.replace('%', '') > 25,'orange': soa.compliance.replace('%', '') <= 25  && soa.compliance.replace('%', '') > 0, 'red': soa.compliance.replace('%', '') == 0  }" type="text" ng-model="soa.compliance" ng-change="onTableEdited(soa, 'compliance')"></input>
+                <td class="tbl-soa" edit-field="compliance" edit-type="textarea"
+                    ng-class="{'greeen':  soa.compliance.replace('%', '') <= 100 && soa.compliance.replace('%', '') > 75 , 'green':  soa.compliance.replace('%', '') <= 75  && soa.compliance.replace('%', '') > 50 ,'yellow': soa.compliance.replace('%', '') <= 50  && soa.compliance.replace('%', '') > 25,'orange': soa.compliance.replace('%', '') <= 25  && soa.compliance.replace('%', '') > 0, 'red': soa.compliance.replace('%', '') == 0  }"
+                    >
                 </td>
             </tr>
         </tbody>
