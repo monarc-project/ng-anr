@@ -4,103 +4,73 @@
     <p class="md-title" translate>Statement of applicability</p>
 
     <div layout="row" layout-align="start center" class="md-padding" >
-
-
         <form flex >
             <md-input-container class="md-block md-padding-left md-padding-right">
                 <label><md-icon>search</md-icon> {{ 'Search' | translate }}</label>
                 <input ng-model="searchText" >
             </md-input-container>
         </form>
-
-
         <md-button class="md-icon-button" ng-if="!isAnrReadOnly" ng-click="export()">
-          <md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip>
+            <md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip>
         </md-button>
-
     </div>
-
-
-
-
 
     <table   class="md-html-table" editable callback="onTableEdited">
         <thead>
-        <tr>
-            <th translate>Ref.</th>
-            <th translate>Control</th>
-            <th translate>Requirement</th>
-            <th translate>Justification for inclusion/exclusion</th>
-            <th translate>Evidences</th>
-            <th translate>Actions</th>
-            <th translate>level of compliance</th>
-        </tr>
+            <tr>
+                <th translate>Ref.</th>
+                <th translate>Control</th>
+                <th translate>Requirement</th>
+                <th translate>Justification for inclusion/exclusion</th>
+                <th translate>Evidences</th>
+                <th translate>Actions</th>
+                <th translate>level of compliance</th>
+            </tr>
         </thead>
-
-                <tbody>
-                <tr edit-model="soa" ng-repeat="soa in soas.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | filter:searchText">
-
-
-
-                    <td  class="txtcenter" > <md-button class=" md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.reference }}</md-button></td>
-                    <td  class="txtcenter">{{ soa.control }}</td>
-                    <td class="txtcenter">{{ soa.requirement }}   </td>
-                    <td edit-field="justification" class="preserve-newlines"  edit-type="textarea"></td>
-                    <td edit-field="evidences" edit-type="textarea"></td>
-                    <td edit-field="actions"  edit-type="textarea"></td>
-                    <td edit-field="compliance"  class="tbl-soa" edit-type="textarea" ng-class="{'greeen':  soa.compliance.replace('%', '') <= 100 && soa.compliance.replace('%', '') > 75  , 'green':  soa.compliance.replace('%', '') <= 75  && soa.compliance.replace('%', '') > 50 ,'yellow': soa.compliance.replace('%', '') <= 50  && soa.compliance.replace('%', '') > 25,'orange': soa.compliance.replace('%', '') <= 25  && soa.compliance.replace('%', '') > 0, 'red': soa.compliance.replace('%', '') == 0  }" >
-                     </td>
-
-
-
-
-                </tr>
-                </tbody>
-
+        <tbody>
+            <tr edit-model="soa" ng-repeat="soa in soas.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | filter:searchText">
+                <td  class="txtcenter" > <md-button class=" md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.reference }}</md-button></td>
+                <td  class="txtcenter">{{ soa.control }}</td>
+                <td class="txtcenter">{{ soa.requirement }}   </td>
+                <td edit-field="justification" class="preserve-newlines"  edit-type="textarea"></td>
+                <td edit-field="evidences" edit-type="textarea"></td>
+                <td edit-field="actions"  edit-type="textarea"></td>
+                <td edit-field="compliance"  class="tbl-soa" edit-type="textarea" ng-class="{'greeen':  soa.compliance.replace('%', '') <= 100 && soa.compliance.replace('%', '') > 75  , 'green':  soa.compliance.replace('%', '') <= 75  && soa.compliance.replace('%', '') > 50 ,'yellow': soa.compliance.replace('%', '') <= 50  && soa.compliance.replace('%', '') > 25,'orange': soa.compliance.replace('%', '') <= 25  && soa.compliance.replace('%', '') > 0, 'red': soa.compliance.replace('%', '') == 0  }" >
+                </td>
+            </tr>
+        </tbody>
     </table>
 
 
-        <div layout="row" layout-align="end center" class="md-table-pagination">
-
-            <span flex></span>
-
-            <div class="page-select">
-                <div class="label" translate>Page:</div>
-
-                <md-select  class="md-table-select" md-container-class="md-pagination-select"   ng-model="currentPage" ng-change="setPage(currentPage)" aria-label="Page">
-                      <md-content>
-
-                        <md-option ng-repeat="i in range(1, ceil(totalItems / itemsPerPage))" ng-default="1" ng-value="i"   >{{i}} </md-option>
-                      </md-content>
-
-                </md-select>
-              </div>
-
-            <div >
-                <div class="label" translate>Rows per page:</div>
-
-                <md-select class="md-table-select" md-container-class="md-pagination-select"   ng-model="viewby" ng-change="setItemsPerPage(viewby)" aria-label="Rows" >
-                       <md-option ng-repeat="option in [10, 20, 30, 50, 100]"  ng-value="option.value ? $pagination.eval(option.value) : option">{{::option.label ? option.label : option}}</md-option>
-                </md-select>
-            </div>
-
-        <div class="buttons">
-          <div class="label">{{ (currentPage - 1) * viewby + 1 }} - {{ totalItems < currentPage * viewby ? totalItems : currentPage * viewby }} {{ 'of' | translate }} {{ totalItems }}</div>
-
-                <md-button class="md-icon-button" type="button" ng-disabled="currentPage <= 1" ng-click="currentPage = currentPage - 1; (pageChanged())" aria-label="Previous">
-                    <md-icon md-svg-icon="navigate-before.svg"></md-icon>
-                </md-button>
-
-                <md-button class="md-icon-button" type="button" ng-disabled="currentPage >= ceil(totalItems / viewby)" ng-click="currentPage = currentPage + 1; pageChanged()" aria-label="Next">
-                    <md-icon md-svg-icon="navigate-next.svg"></md-icon>
-                </md-button>
-          </div>
+    <div layout="row" layout-align="end center" class="md-table-pagination">
+        <span flex></span>
+        <div class="page-select">
+            <div class="label" translate>Page:</div>
+            <md-select  class="md-table-select" md-container-class="md-pagination-select"   ng-model="currentPage" ng-change="setPage(currentPage)" aria-label="Page">
+                <md-content>
+                    <md-option ng-repeat="i in range(1, ceil(totalItems / itemsPerPage))" ng-default="1" ng-value="i">{{i}}</md-option>
+                </md-content>
+            </md-select>
         </div>
 
+        <div class="limit-select">
+            <div class="label" translate>Rows per page:</div>
 
+            <md-select class="md-table-select" md-container-class="md-pagination-select"   ng-model="viewby" ng-change="setItemsPerPage(viewby)" aria-label="Rows" >
+                <md-option ng-repeat="option in [10, 20, 30, 50, 100]"  ng-value="option.value ? $pagination.eval(option.value) : option">{{::option.label ? option.label : option}}</md-option>
+            </md-select>
+        </div>
 
+        <div class="buttons">
+            <div class="label">{{ (currentPage - 1) * viewby + 1 }} - {{ totalItems < currentPage * viewby ? totalItems : currentPage * viewby }} {{ 'of' | translate }} {{ totalItems }}</div>
 
+            <md-button class="md-icon-button" type="button" ng-disabled="currentPage <= 1" ng-click="currentPage = currentPage - 1; (pageChanged())" aria-label="Previous">
+                <md-icon md-svg-icon="navigate-before.svg"></md-icon>
+            </md-button>
 
-
-
-      </div>
+            <md-button class="md-icon-button" type="button" ng-disabled="currentPage >= ceil(totalItems / viewby)" ng-click="currentPage = currentPage + 1; pageChanged()" aria-label="Next">
+                <md-icon md-svg-icon="navigate-next.svg"></md-icon>
+            </md-button>
+        </div>
+    </div>
+</div>
