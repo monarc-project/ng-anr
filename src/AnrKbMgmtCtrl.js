@@ -19,6 +19,9 @@
         $scope.gettext = gettextCatalog.getString;
         TableHelperService.resetBookmarks();
 
+        $scope.risk_tag_filter = null;
+
+
         /**** FO ADDITIONS ****/
 
         /*
@@ -1429,7 +1432,12 @@
                 // Refresh contents
                 $scope.updateRisks();
             }
+            $scope.updateRisks();
         });
+
+        $scope.updateTagsRisks = function(value) {
+            value == '0' ? $scope.risk_tag_filter = null : $scope.risk_tag_filter = value ;
+        }
 
         $scope.updateRisks = function () {
             var query = angular.copy($scope.risks.query);
@@ -1437,6 +1445,7 @@
             if ($scope.risk_tag_filter > 0) {
                 query.tag = $scope.risk_tag_filter;
             }
+            $scope.risks.query.tag = $scope.risk_tag_filter;
 
             if ($scope.risks.previousQueryOrder != $scope.risks.query.order) {
                 $scope.risks.query.page = query.page = 1;

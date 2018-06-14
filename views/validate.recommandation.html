@@ -15,8 +15,9 @@
                     <p translate>You are about to validate the implementation of recommendation <b>{{rec.code}} - {{rec.description}}</b> for the following risk:</p>
                     <p>
                         <span class="bold" translate>Asset:</span> {{ _langField(risk.instance,'name') }}<br />
-                        <span class="bold" translate>Threat:</span> {{_langField(risk.threat,'label')}}<br />
-                        <span class="bold" translate>Vulnerability:</span> {{_langField(risk.vulnerability,'label')}}
+                        <span ng-if="risk.instanceRiskOp" class="bold" translate>Risk description:</span> {{_langField(risk.instanceRiskOp,'riskCacheLabel')}}
+                        <span ng-if="risk.instanceRisk" class="bold" translate>Threat:</span> {{_langField(risk.threat,'label')}}<br />
+                        <span ng-if="risk.instanceRisk" class="bold" translate>Vulnerability:</span> {{_langField(risk.vulnerability,'label')}}
                     </p>
                 </md-card-content>
             </md-card>

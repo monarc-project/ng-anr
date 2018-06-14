@@ -29,16 +29,40 @@
             </td>
             <td>
                 <b translate>Asset type:</b> {{ entry.riskAsset }}<br />
-		            <b translate>Asset:</b> {{ entry.riskInstance }}<br />
-                <b translate>Threat:</b> {{ entry.riskThreat }}<br />
-                <b translate>Vulnerability:</b> {{ entry.riskVul }}<br />
+                <b translate>Asset:</b> {{ entry.riskInstance }}<br />
+                <div ng-if="entry.instanceRiskOp">
+                  <b  translate >Risk description:</b> {{ entry.riskOpDescription }}<br />
+                </div>
+                <div ng-if="entry.instanceRisk">
+                  <b translate>Threat:</b> {{ entry.riskThreat }}<br />
+                  <b translate>Vulnerability:</b> {{ entry.riskVul }}<br />
+                </div>
                 <b translate>Kind of treatment:</b> {{ treatmentStr(entry.riskKindOfMeasure) | translate }}<br />
                 <b translate>Existing controls:</b> {{ entry.riskCommentBefore }}<br />
                 <b translate>New controls:</b> {{ entry.riskCommentAfter }}
             </td>
             <td class="preserve-newlines">{{ entry.implComment }}</td>
-            <td class="tbl-risk-calc" ng-class="{'green': entry.riskMaxRiskBefore >= 0 && entry.riskMaxRiskBefore <= thresholds.thresholds.min, 'orange': entry.riskMaxRiskBefore > thresholds.thresholds.min && entry.riskMaxRiskBefore <= thresholds.thresholds.max, 'red': entry.riskMaxRiskBefore > thresholds.thresholds.max}">{{ entry.riskMaxRiskBefore | dashnull }}</td>
-            <td class="tbl-risk-calc" ng-class="{'green': entry.riskMaxRiskAfter >= 0 && entry.riskMaxRiskAfter <= thresholds.thresholds.min, 'orange': entry.riskMaxRiskAfter > thresholds.thresholds.min && entry.riskMaxRiskAfter <= thresholds.thresholds.max, 'red': entry.riskMaxRiskAfter > thresholds.thresholds.max}">{{ entry.riskMaxRiskAfter | dashnull }}</td>
+
+              <td ng-if="entry.instanceRiskOp" class="tbl-risk-calc"
+                  ng-class="{'green': entry.riskMaxRiskBefore >= 0 && entry.riskMaxRiskBefore <= thresholds.rolf_thresholds.min,
+                            'orange': entry.riskMaxRiskBefore > thresholds.rolf_thresholds.min && entry.riskMaxRiskBefore <= thresholds.rolf_thresholds.max,
+                            'red': entry.riskMaxRiskBefore > thresholds.rolf_thresholds.max}">
+                            {{ entry.riskMaxRiskBefore | dashnull }}</td>
+              <td ng-if="entry.instanceRiskOp" class="tbl-risk-calc"
+                  ng-class="{'green': entry.riskMaxRiskAfter >= 0 && entry.riskMaxRiskAfter <= thresholds.rolf_thresholds.min,
+                            'orange': entry.riskMaxRiskAfter > thresholds.rolf_thresholds.min && entry.riskMaxRiskAfter <= thresholds.rolf_thresholds.max,
+                            'red': entry.riskMaxRiskAfter > thresholds.rolf_thresholds.max}">
+                            {{ entry.riskMaxRiskAfter | dashnull }}</td>
+            <td ng-if="entry.instanceRisk" class="tbl-risk-calc"
+                  ng-class="{'green': entry.riskMaxRiskBefore >= 0 && entry.riskMaxRiskBefore <= thresholds.thresholds.min,
+                            'orange': entry.riskMaxRiskBefore > thresholds.thresholds.min && entry.riskMaxRiskBefore <= thresholds.thresholds.max,
+                            'red': entry.riskMaxRiskBefore > thresholds.thresholds.max}">
+                            {{ entry.riskMaxRiskBefore | dashnull }}</td>
+            <td ng-if="entry.instanceRisk" class="tbl-risk-calc"
+                ng-class="{'green': entry.riskMaxRiskAfter >= 0 && entry.riskMaxRiskAfter <= thresholds.thresholds.min,
+                          'orange': entry.riskMaxRiskAfter > thresholds.thresholds.min && entry.riskMaxRiskAfter <= thresholds.thresholds.max,
+                          'red': entry.riskMaxRiskAfter > thresholds.thresholds.max}">
+                          {{ entry.riskMaxRiskAfter | dashnull }}</td>
         </tr>
         </tbody>
     </table>
