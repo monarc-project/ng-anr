@@ -19,15 +19,13 @@
           for (soa in $scope.soas)
           {
             if($scope.soas[soa].compliance !=null)
-                  $scope.soas[soa].compliance=$scope.soas[soa].compliance+"%";
-
+                  $scope.soas[soa].compliance = $scope.soas[soa].compliance + "%";
           }
 
       });
 
-
-
      $scope.onTableEdited = function (model, name) {
+         console.log('onTableEdited');
          var promise = $q.defer();
 
          var params = {
@@ -36,7 +34,9 @@
          };
 
          if(name === "compliance" && model[name].replace("%","")<= 100 && model[name].replace("%", "") >= 0 ){
+           model[name] = model[name].replace("%", "");
            params[name] = model[name];
+           model[name] = model[name] + '%';
           }
 
           else{

@@ -15,7 +15,7 @@
         </md-button>
     </div>
 
-    <table   class="md-html-table" editable callback="onTableEdited">
+    <table class="md-html-table" editable callback="onTableEdited">
         <thead>
             <tr>
                 <th translate>Ref.</th>
@@ -29,13 +29,15 @@
         </thead>
         <tbody>
             <tr edit-model="soa" ng-repeat="soa in soas.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | filter:searchText">
-                <td  class="txtcenter" > <md-button class=" md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.reference }}</md-button></td>
-                <td  class="txtcenter">{{ soa.control }}</td>
-                <td class="txtcenter">{{ soa.requirement }}   </td>
+                <td  class="txtcenter" > <md-button class="md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.reference }}</md-button></td>
+                <td class="txtleft">{{ soa.control }}</td>
+                <td class="txtcenter">{{ soa.requirement }}</td>
                 <td edit-field="justification" class="preserve-newlines"  edit-type="textarea"></td>
                 <td edit-field="evidences" edit-type="textarea"></td>
                 <td edit-field="actions"  edit-type="textarea"></td>
-                <td edit-field="compliance"  class="tbl-soa" edit-type="textarea" ng-class="{'greeen':  soa.compliance.replace('%', '') <= 100 && soa.compliance.replace('%', '') > 75  , 'green':  soa.compliance.replace('%', '') <= 75  && soa.compliance.replace('%', '') > 50 ,'yellow': soa.compliance.replace('%', '') <= 50  && soa.compliance.replace('%', '') > 25,'orange': soa.compliance.replace('%', '') <= 25  && soa.compliance.replace('%', '') > 0, 'red': soa.compliance.replace('%', '') == 0  }" >
+                <td class="tbl-soa" edit-type="textarea"
+                    ng-class="{'greeen':  soa.compliance.replace('%', '') <= 100 && soa.compliance.replace('%', '') > 75  , 'greeen':  soa.compliance.replace('%', '') <= 75  && soa.compliance.replace('%', '') > 50 ,'yellow': soa.compliance.replace('%', '') <= 50  && soa.compliance.replace('%', '') > 25,'orange': soa.compliance.replace('%', '') <= 25  && soa.compliance.replace('%', '') > 0, 'red': soa.compliance.replace('%', '') == 0  }"
+                    ><input ng-class="{'tbl-soa greeen':  soa.compliance.replace('%', '') <= 100 && soa.compliance.replace('%', '') > 75  , 'tbl-soa green':  soa.compliance.replace('%', '') <= 75  && soa.compliance.replace('%', '') > 50 ,'yellow': soa.compliance.replace('%', '') <= 50  && soa.compliance.replace('%', '') > 25,'orange': soa.compliance.replace('%', '') <= 25  && soa.compliance.replace('%', '') > 0, 'red': soa.compliance.replace('%', '') == 0  }" type="text" ng-model="soa.compliance" ng-change="onTableEdited(soa, 'compliance')"></input>
                 </td>
             </tr>
         </tbody>
