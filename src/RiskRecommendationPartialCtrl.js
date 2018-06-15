@@ -69,8 +69,8 @@
             var q = $q.defer();
             ClientRecommandationService.getRecommandations({anr: $scope.model.anr.id, filter: query}).then(function (data) {
                 console.log('querySearch...');
-                q.resolve(data.recommandations);
                 console.log(data.recommandations);
+                q.resolve(data.recommandations);
             }, function () {
                 q.reject();
             });
@@ -129,10 +129,12 @@
 
                     ClientRecommandationService.attachToRisk($scope.model.anr.id, data.id, riskId, isOpRiskMode,
                         function () {
-                            toastr.success(gettextCatalog.getString("The recommandation has been attached to this risk."));
                             updateRecommandations();
+                            toastr.success(gettextCatalog.getString("The recommandation has been attached to this risk."));
                         });
                 })
+            },function(){
+                $scope.editRecommandation(ev,recommandation);
             });
         }
 
