@@ -35,7 +35,12 @@
                       $scope.rec_risksOp.push(risk);
                     }
                 }
+                //backToList when is the last validation of recommendation
+                if ($scope.rec_risks.length == 0 && $scope.rec_risksOp.length == 0 ) {
+                    $scope.backToList();
+                }
             })
+
         }
 
         updateRecs();
@@ -78,7 +83,6 @@
         };
 
         $scope.exportRiskPlanSheet = function () {
-          //updateRecs();
           finalArray=[];
           recLine = 0;
 
