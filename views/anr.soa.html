@@ -35,12 +35,12 @@
                 <td class="txtleft">{{ soa.requirement }}</td>
 
                 <td class="btn">
-                <button type="button" ng-model="soa.EX"  ng-click="onTableEdited(soa, 'EX') " ng-disabled="soa.LR || soa.CO || soa.BR || soa.BP|| soa.RRA " ng-class="{'bouton-true': soa.EX=='1' ,'bouton-false':soa.EX=='0'  }">EX</button>
-                <button type="button" ng-model="soa.LR"  ng-click="onTableEdited(soa, 'LR')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.LR=='1' ,'bouton-false':soa.LR=='0'  }">LR</button>
-                <button type="button" ng-model="soa.CO"  ng-click="onTableEdited(soa, 'CO')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.CO=='1' ,'bouton-false':soa.CO=='0'  }">CO</button>
-                <button type="button" ng-model="soa.BR"  ng-click="onTableEdited(soa, 'BR')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.BR=='1' ,'bouton-false':soa.BR=='0'  }">BR</button>
-                <button type="button" ng-model="soa.BP"  ng-click="onTableEdited(soa, 'BP')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.BP=='1' ,'bouton-false':soa.BP=='0'  }">BP</button>
-                <button type="button" ng-model="soa.RRA" ng-click="onTableEdited(soa, 'RRA')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.RRA=='1' ,'bouton-false':soa.RRA=='0'  }">RRA</button>
+                <button type="button" ng-model="soa.EX"  ng-click="onTableEdited(soa, 'EX') " ng-disabled="soa.LR || soa.CO || soa.BR || soa.BP|| soa.RRA " ng-class="{'bouton-true': soa.EX=='1' ,'bouton-false':soa.EX=='0'  }">{{ 'EX' | translate }} <md-tooltip>{{ 'excluded' | translate }}</md-tooltip></button>
+                <button type="button" ng-model="soa.LR"  ng-click="onTableEdited(soa, 'LR')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.LR=='1' ,'bouton-false':soa.LR=='0'  }">{{ 'LR' | translate }}<md-tooltip>{{ 'legal requirements' | translate }}</md-tooltip></button>
+                <button type="button" ng-model="soa.CO"  ng-click="onTableEdited(soa, 'CO')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.CO=='1' ,'bouton-false':soa.CO=='0'  }">{{ 'CO' | translate }}<md-tooltip>{{ 'contractual obligations' | translate }}</md-tooltip></button>
+                <button type="button" ng-model="soa.BR"  ng-click="onTableEdited(soa, 'BR')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.BR=='1' ,'bouton-false':soa.BR=='0'  }">{{ 'BR' | translate }}<md-tooltip>{{ 'business requirements/adopted' | translate }}</md-tooltip></button>
+                <button type="button" ng-model="soa.BP"  ng-click="onTableEdited(soa, 'BP')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.BP=='1' ,'bouton-false':soa.BP=='0'  }">{{ 'BP' | translate }}<md-tooltip>{{ 'best practices' | translate }}</md-tooltip></button>
+                <button type="button" ng-model="soa.RRA" ng-click="onTableEdited(soa, 'RRA')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.RRA=='1' ,'bouton-false':soa.RRA=='0'  }">{{ 'RRA' | translate }}<md-tooltip>{{ 'results of risk assessment' | translate }}</md-tooltip></button>
                 <td edit-field="inclusion/exclusion" class="preserve-newlines"  edit-type="textarea"></td>
 
 
