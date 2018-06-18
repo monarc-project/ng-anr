@@ -20,7 +20,6 @@
             <tr>
                 <th translate>Ref.</th>
                 <th translate>Control</th>
-                <th translate>Requirement</th>
                 <th translate>inclusion/exclusion</th>
                 <th translate>Justification</th>
                 <th translate>Evidences</th>
@@ -32,7 +31,6 @@
             <tr edit-model="soa" ng-repeat="soa in soas.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | filter:searchText">
                 <td  class="txtcenter" > <md-button class="md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.reference }}</md-button></td>
                 <td class="txtleft">{{ soa.control }}</td>
-                <td class="txtleft">{{ soa.requirement }}</td>
 
                 <td class="btn">
                 <button type="button" ng-model="soa.EX"  ng-click="onTableEdited(soa, 'EX') " ng-disabled="soa.LR || soa.CO || soa.BR || soa.BP|| soa.RRA " ng-class="{'bouton-true': soa.EX=='1' ,'bouton-false':soa.EX=='0'  }">{{ 'EX' | translate }} <md-tooltip>{{ 'excluded' | translate }}</md-tooltip></button>
