@@ -6,7 +6,7 @@
     <div layout="row" layout-align="start center" class="md-padding" >
         <form flex >
             <md-input-container class="md-block md-padding-left md-padding-right">
-                <label><md-icon>search</md-icon> {{ 'Search' | translate }}</label>
+                <label><md-icon>search</md-icon> {{ 'Search...' | translate }}</label>
                 <input ng-model="searchText" >
             </md-input-container>
         </form>
@@ -21,7 +21,8 @@
                 <th translate>Ref.</th>
                 <th translate>Control</th>
                 <th translate>Requirement</th>
-                <th translate>Justification for inclusion/exclusion</th>
+                <th translate>inclusion/exclusion</th>
+                <th translate>Justification</th>
                 <th translate>Evidences</th>
                 <th translate>Actions</th>
                 <th translate>level of compliance</th>
@@ -31,8 +32,19 @@
             <tr edit-model="soa" ng-repeat="soa in soas.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | filter:searchText">
                 <td  class="txtcenter" > <md-button class="md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.reference }}</md-button></td>
                 <td class="txtleft">{{ soa.control }}</td>
-                <td class="txtcenter">{{ soa.requirement }}</td>
-                <td edit-field="justification" class="preserve-newlines"  edit-type="textarea"></td>
+                <td class="txtleft">{{ soa.requirement }}</td>
+
+                <td class="btn">
+                <button type="button" ng-model="soa.EX"  ng-click="onTableEdited(soa, 'EX') " ng-disabled="soa.LR || soa.CO || soa.BR || soa.BP|| soa.RRA " ng-class="{'bouton-true': soa.EX=='1' ,'bouton-false':soa.EX=='0'  }">EX</button>
+                <button type="button" ng-model="soa.LR"  ng-click="onTableEdited(soa, 'LR')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.LR=='1' ,'bouton-false':soa.LR=='0'  }">LR</button>
+                <button type="button" ng-model="soa.CO"  ng-click="onTableEdited(soa, 'CO')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.CO=='1' ,'bouton-false':soa.CO=='0'  }">CO</button>
+                <button type="button" ng-model="soa.BR"  ng-click="onTableEdited(soa, 'BR')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.BR=='1' ,'bouton-false':soa.BR=='0'  }">BR</button>
+                <button type="button" ng-model="soa.BP"  ng-click="onTableEdited(soa, 'BP')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.BP=='1' ,'bouton-false':soa.BP=='0'  }">BP</button>
+                <button type="button" ng-model="soa.RRA" ng-click="onTableEdited(soa, 'RRA')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.RRA=='1' ,'bouton-false':soa.RRA=='0'  }">RRA</button>
+                <td edit-field="inclusion/exclusion" class="preserve-newlines"  edit-type="textarea"></td>
+
+
+                </td>
                 <td edit-field="evidences" edit-type="textarea"></td>
                 <td edit-field="actions"  edit-type="textarea"></td>
                 <td class="tbl-soa" edit-field="compliance" edit-type="textarea"

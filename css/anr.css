@@ -439,6 +439,37 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
     color: black;
 }
 
+/** soaTable justification  */
+.btn {
+    text-align: center;
+    vertical-align: middle;
+
+}
+
+.btn .bouton-true {
+	padding:6px 0 6px 0;
+	font:bold 13px Arial;
+	background:#478bf9;
+	color:#fff;
+	border-radius:2px;
+	width:40px;
+	border:none;
+}
+.btn .bouton-false {
+	padding:6px 0 6px 0;
+	font:bold 13px Arial;
+	background:#f5f5f5;
+	color:#555;
+	border-radius:2px;
+	width:40px;
+	border:1px solid #ccc;
+}
+
+.bouton-false:disabled,
+.bouton-false[disabled]{
+  background:#BDBDBD;
+}
+
 
 .anr-scales-demo-block {
     width: 24px;

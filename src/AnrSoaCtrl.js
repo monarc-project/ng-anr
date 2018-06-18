@@ -18,7 +18,7 @@
           $scope.totalItems = $scope.soas.length ;   //$scope.soas.length
           for (soa in $scope.soas)
           {
-            if($scope.soas[soa].compliance !=null)
+            if($scope.soas[soa].compliance != null)
                   $scope.soas[soa].compliance = $scope.soas[soa].compliance + "%";
           }
 
@@ -32,9 +32,13 @@
              anr: $scope.model.anr.id,
              id: model.id,
          };
+         if(name === "EX" || name === "LR" || name === "CO" || name === "BR" || name === "BP" || name === "RRA" ){
+           if (model[name] == 0) { model[name]=1}else  model[name]=0;
+          }
+
+
 
          if(name === "compliance" && model[name].replace("%","")<= 100 && model[name].replace("%", "") >= 0 ){
-           model[name] = model[name].replace("%", "");
            params[name] = model[name];
            model[name] = model[name] + '%';
           }
@@ -82,13 +86,23 @@ $scope.setItemsPerPage = function(num) {
 }
 
 
+
+
+
+
+
+
+
+
+
+
  $scope.export = function () {
    finalArray=[];
    recLine = 0;
    finalArray[recLine]= gettextCatalog.getString('Ref');
    finalArray[recLine]+=','+gettextCatalog.getString('Control');
    finalArray[recLine]+=','+gettextCatalog.getString('Requirement');
-   finalArray[recLine]+=','+gettextCatalog.getString('Justification for inclusion/exclusion');
+   finalArray[recLine]+=','+gettextCatalog.getString('Justification');
    finalArray[recLine]+=','+gettextCatalog.getString('Evidences');
    finalArray[recLine]+=','+gettextCatalog.getString('Actions');
    finalArray[recLine]+=','+gettextCatalog.getString('level of compliance');
