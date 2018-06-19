@@ -11,12 +11,14 @@
 
 
 
+  <!-- <div ng-init='start=0'>
 
 
+    <div  ng-repeat="risk in risks" ng-if="risk.measure1==soa.reference+tiret+soa.control || risk.measure2==soa.reference+tiret+soa.control || risk.measure3==soa.reference+tiret+soa.control" ng-if="$index == $ctrl.tasks.length - 1">
+      <div ng-if="start==0" ng-init="start=start+$index">  -->
 
-
-    <table  class="md-html-table md-html-table-grey big-border-all" >
-         <thead class="big-border-bottom">
+    <table  class="md-html-table md-html-table-grey big-border-all"    >
+         <thead class="big-border-bottom"  >
          <tr>
              <th rowspan="2" translate>Asset</th>
              <th colspan="3" translate>Impact</th>
@@ -47,17 +49,17 @@
              <td  class="txtcenter">{{risk.c_impact|dashnull}}</td>
              <td  class="txtcenter">{{risk.i_impact|dashnull}}</td>
              <td  class="txtcenter">{{risk.d_impact|dashnull}}</td>
-             <td class="preserve-newlines big-border-left" >{{_langField(risk,'threatLabel')}}</td>
-             <td edit-readonly="isAnrReadOnly"  edit-filter="dashnull" class="txtcenter" >{{_langField(risk,'threatRate')|dashnull}}</td>
-             <td class="txtcenter">{{_langField(risk,'vulnLabel')}}</td>
-             <td class="txtcenter" >{{risk.comment }}</td>
-             <td class="txtcenter" >{{risk.vulnerabilityRate	|dashnull}}</td>
-             <td ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc big-border-left"
-                 ng-class="{'green': risk.c_risk >= 0 && risk.c_risk <= thresholds.thresholds.min, 'orange': risk.c_risk > thresholds.thresholds.min && risk.c_risk <=thresholds.thresholds.max, 'red': risk.c_risk > thresholds.thresholds.max}">{{ risk.c_risk_enabled ? (risk.c_risk | dashnull) : '' }}</td>
-             <td ng-disabled="!risk.i_risk_enabled" class="tbl-risk-calc"
-                 ng-class="{'green': risk.i_risk >= 0 && risk.i_risk <= thresholds.thresholds.min, 'orange': risk.i_risk > thresholds.thresholds.min && risk.i_risk <= thresholds.thresholds.max, 'red': risk.i_risk > thresholds.thresholds.max}">{{ risk.i_risk_enabled ? (risk.i_risk | dashnull) : '' }}</td>
-             <td ng-disabled="!risk.d_risk_enabled" class="tbl-risk-calc"
-                 ng-class="{'green': risk.d_risk >= 0 && risk.d_risk <= thresholds.thresholds.min, 'orange': risk.d_risk > thresholds.thresholds.min && risk.d_risk <= thresholds.thresholds.max, 'red': risk.d_risk > thresholds.thresholds.max}">{{ risk.d_risk_enabled ? (risk.d_risk | dashnull) : '' }}</td>
+             <td  class="preserve-newlines big-border-left" >{{_langField(risk,'threatLabel')}}</td>
+             <td  class="txtcenter" >{{risk.threatRate|dashnull}}</td>
+             <td  class="txtcenter">{{_langField(risk,'vulnLabel')}}</td>
+             <td  class="txtcenter" >{{risk.comment }}</td>
+             <td  class="txtcenter" >{{risk.vulnerabilityRate	|dashnull}}</td>
+             <td  ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc big-border-left"
+                  ng-class="{'green': risk.c_risk >= 0 && risk.c_risk <= thresholds.thresholds.min, 'orange': risk.c_risk > thresholds.thresholds.min && risk.c_risk <=thresholds.thresholds.max, 'red': risk.c_risk > thresholds.thresholds.max}">{{ risk.c_risk_enabled ? (risk.c_risk | dashnull) : '' }}</td>
+             <td  ng-disabled="!risk.i_risk_enabled" class="tbl-risk-calc"
+                  ng-class="{'green': risk.i_risk >= 0 && risk.i_risk <= thresholds.thresholds.min, 'orange': risk.i_risk > thresholds.thresholds.min && risk.i_risk <= thresholds.thresholds.max, 'red': risk.i_risk > thresholds.thresholds.max}">{{ risk.i_risk_enabled ? (risk.i_risk | dashnull) : '' }}</td>
+             <td  ng-disabled="!risk.d_risk_enabled" class="tbl-risk-calc"
+                  ng-class="{'green': risk.d_risk >= 0 && risk.d_risk <= thresholds.thresholds.min, 'orange': risk.d_risk > thresholds.thresholds.min && risk.d_risk <= thresholds.thresholds.max, 'red': risk.d_risk > thresholds.thresholds.max}">{{ risk.d_risk_enabled ? (risk.d_risk | dashnull) : '' }}</td>
              <td>
                  <div layout="row" layout-align="center center">
                          {{treatmentStr(risk.kindOfMeasure)|translate}}
@@ -69,7 +71,7 @@
          </tbody>
      </table>
 
-
-
-
-</div  >
+        </div  >
+           <!-- </div  >
+   </div  >
+</div  > -->
