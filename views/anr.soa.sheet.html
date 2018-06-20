@@ -44,15 +44,15 @@
          </thead>
 
          <tbody>
-           <tr class="txtcenter" ng-repeat="risk in risks" ng-if="risk.measure1==soa.reference+tiret+soa.control || risk.measure2==soa.reference+tiret+soa.control || risk.measure3==soa.reference+tiret+soa.control">
-             <td  class="txtcenter" ng-repeat="instance in instanceCache" ng-if="instance.id ==risk.instance" ><a ui-sref="main.project.anr.instance({modelId: model.anr.id, instId: instance.id})" href="javascript:;"> {{_langField(instance,'name')}}</a></td>
+           <tr class="txtleft" ng-repeat="risk in risks" ng-if="risk.measure1==soa.reference+tiret+soa.control || risk.measure2==soa.reference+tiret+soa.control || risk.measure3==soa.reference+tiret+soa.control">
+             <td  class="txtleft" ng-repeat="instance in instanceCache" ng-if="instance.id ==risk.instance" ><a ui-sref="main.project.anr.instance({modelId: model.anr.id, instId: instance.id})" href="javascript:;"> {{_langField(instance,'name')}}</a></td>
              <td  class="txtcenter">{{risk.c_impact|dashnull}}</td>
              <td  class="txtcenter">{{risk.i_impact|dashnull}}</td>
              <td  class="txtcenter">{{risk.d_impact|dashnull}}</td>
-             <td  class="preserve-newlines big-border-left" >{{_langField(risk,'threatLabel')}}</td>
+             <td  class="preserve-newlines big-border-left txtleft" >{{_langField(risk,'threatLabel')}}</td>
              <td  class="txtcenter" >{{risk.threatRate|dashnull}}</td>
-             <td  class="txtcenter">{{_langField(risk,'vulnLabel')}}</td>
-             <td  class="txtcenter" >{{risk.comment }}</td>
+             <td  class="txtleft">{{_langField(risk,'vulnLabel')}}</td>
+             <td  class="txtleft" >{{risk.comment }}</td>
              <td  class="txtcenter" >{{risk.vulnerabilityRate	|dashnull}}</td>
              <td  ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc big-border-left"
                   ng-class="{'green': risk.c_risk >= 0 && risk.c_risk <= thresholds.thresholds.min, 'orange': risk.c_risk > thresholds.thresholds.min && risk.c_risk <=thresholds.thresholds.max, 'red': risk.c_risk > thresholds.thresholds.max}">{{ risk.c_risk_enabled ? (risk.c_risk | dashnull) : '' }}</td>

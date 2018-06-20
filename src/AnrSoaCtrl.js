@@ -3,26 +3,71 @@
     angular
         .module('AnrModule')
         .controller('AnrSoaCtrl', [
-            '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state' , 'ClientSoaService',  '$q',
+            '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state', 'ClientCategoryService' , 'ClientSoaService',  '$q',
             AnrSoaCtrl
         ]);
 
     /**
      * ANR > STATEMENT OF APPLICABILITY
      */
-    function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state,
+    function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, ClientCategoryService,
                                   ClientSoaService,  $q, $filter) {
+
+
+
+
+      $scope.Category=[0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+      $scope.CategoryIndex=[0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+      ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
+          $scope.Categories = data['categories'];
+      });
+
 
       ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
           $scope.soas = data['Soa-list'];
+          $scope.soas.sort(compare);
           $scope.totalItems = $scope.soas.length ;   //$scope.soas.length
-          for (soa in $scope.soas)
-          {
-            if($scope.soas[soa].compliance != null)
+          for (soa in $scope.soas){
+          if($scope.soas[soa].compliance != null)
                   $scope.soas[soa].compliance = $scope.soas[soa].compliance + "%";
+
+
+          for (Category in $scope.Categories){
+
+              if($scope.Categories[Category].id == $scope.soas[soa].category.id)
+                   $scope.Category[$scope.Categories[Category].id-1]=$scope.Category[$scope.Categories[Category].id-1]+1;
+
           }
 
+          }
+
+
+          for(var i=1;i<$scope.Category.length;i++){
+            $scope.CategoryIndex[i]=$scope.CategoryIndex[i-1]+$scope.Category[i-1];
+
+          }
+
+
+
+
+
+          console.log(  $scope.Category);
+          console.log(  $scope.CategoryIndex);
+
+
       });
+
+
+
+
+      function compare(a, b) {
+
+        return a.category.id-b.category.id;
+
+      }
+
+
+
 
      $scope.onTableEdited = function (model, name) {
          console.log('onTableEdited');
@@ -99,10 +144,12 @@ $scope.setItemsPerPage = function(num) {
  $scope.export = function () {
    finalArray=[];
    recLine = 0;
-   finalArray[recLine]= gettextCatalog.getString('Ref');
+   finalArray[recLine]= gettextCatalog.getString('Category');
+   finalArray[recLine]+=','+gettextCatalog.getString('Ref');
    finalArray[recLine]+=','+gettextCatalog.getString('Control');
    finalArray[recLine]+=','+gettextCatalog.getString('Requirement');
-   finalArray[recLine]+=','+gettextCatalog.getString('Justification');
+   finalArray[recLine]+=','+gettextCatalog.getString('Inclusion/exclusion');
+   finalArray[recLine]+=','+gettextCatalog.getString('Remarks');
    finalArray[recLine]+=','+gettextCatalog.getString('Evidences');
    finalArray[recLine]+=','+gettextCatalog.getString('Actions');
    finalArray[recLine]+=','+gettextCatalog.getString('level of compliance');
@@ -113,16 +160,33 @@ $scope.setItemsPerPage = function(num) {
    {
      recLine++;
     // finalArray[recLine]="\""+soas[soa].id+"\"";
-     finalArray[recLine]="\""+soas[soa].reference+"\"";
+     finalArray[recLine]="\""+$scope._langField(soas[soa].category,'label')+"\"";
+     finalArray[recLine]+=','+"\""+soas[soa].reference+"\"";
      finalArray[recLine]+=','+"\""+soas[soa].control+"\"";
      if(soas[soa].requirement==null)
         finalArray[recLine]+=','+"\""+' '+"\"";
       else
-        finalArray[recLine]+=','+"\""+soas[soa].requirement+"\"";
-     if(soas[soa].justification==null)
+        finalArray[recLine]+=','+"\""+soas[soa].requirement;
+      //Inclusion/exclusion
+
+      finalArray[recLine]+=','+"\""+' ';
+      if(soas[soa].EX == 1)      finalArray[recLine]+=gettextCatalog.getString('EX')+"- ";
+      if(soas[soa].LR == 1)      finalArray[recLine]+=gettextCatalog.getString('LR')+"- ";
+      if(soas[soa].CO == 1)      finalArray[recLine]+=gettextCatalog.getString('CO')+"- ";
+      if(soas[soa].BR == 1)      finalArray[recLine]+=gettextCatalog.getString('BR')+"- ";
+      if(soas[soa].BP == 1)      finalArray[recLine]+=gettextCatalog.getString('BP')+"- ";
+      if(soas[soa].RRA == 1)      finalArray[recLine]+=gettextCatalog.getString('RRA');
+      finalArray[recLine]+="\"";
+
+
+
+
+
+    //Remarks
+     if(soas[soa].remarks==null)
         finalArray[recLine]+=','+"\""+' '+"\"";
       else
-        finalArray[recLine]+=','+"\""+soas[soa].justification+"\"";
+        finalArray[recLine]+=','+"\""+soas[soa].remarks+"\"";
     if(soas[soa].evidences==null)
         finalArray[recLine]+=','+"\""+' '+"\"";
       else
