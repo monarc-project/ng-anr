@@ -552,16 +552,29 @@
             });
         };
 
+        $scope.queryRecSearch1 = function (query) {
+            console.log('queryRecSearch1...');
+            var q = $q.defer();
+            ClientRecommandationService.getRecommandations({anr: $scope.model.anr.id, filter: query}).then(function (data) {
+                q.resolve(data.recommandations);
+                console.log(data.recommandations);
+            }, function () {
+                q.reject();
+            });
+
+            return q.promise;
+        };
+
         $scope.editRecommandationContext = function (ev, rec) {
             if($mdDialog){
                 $mdDialog.cancel();
             }
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'rec', 'ClientRecommandationService', CreateRecommandationDialogContext],
+                controller: ['$scope', '$mdDialog', 'rec', 'ClientRecommandationService', CreateRecommandationDialogContext, RiskRecommendationPartialCtrl, 'RiskRecommendationPartialCtrl'],
                 templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
-                preserveScope: false,
+                preserveScope: true,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
@@ -775,7 +788,8 @@
             }
         };
 
-        $scope.openMethodDeliverable = function (step) {
+        $scope.openMethodDeliverable = function (step, ev) {
+            ev.preventDefault();
             if ($scope.isAnrReadOnly) {
                 return;
             }
@@ -1789,6 +1803,7 @@
                 });
         };
         $scope.showMethodBox = function (stepNum, step, ev) {
+            ev.preventDefault()
             var position = $mdPanel.newPanelPosition()
                 .relativeTo('.method-menu-step-' + stepNum)
                 .addPanelPosition(stepNum == 4 ? $mdPanel.xPosition.ALIGN_END : $mdPanel.xPosition.ALIGN_START, $mdPanel.yPosition.BELOW);

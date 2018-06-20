@@ -41,6 +41,7 @@
         }
 
         $scope.editRecommandation = function (ev, rec) {
+            ev.preventDefault();
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'rec', 'detachRecommandation', 'copyRecommandation', 'deleteRecommandation', CreateRecommandationDialog],
@@ -66,11 +67,11 @@
         }
 
         $scope.queryRecSearch = function (query) {
+            console.log('querySearch...');
             var q = $q.defer();
             ClientRecommandationService.getRecommandations({anr: $scope.model.anr.id, filter: query}).then(function (data) {
-                console.log('querySearch...');
-                console.log(data.recommandations);
                 q.resolve(data.recommandations);
+                console.log(data.recommandations);
             }, function () {
                 q.reject();
             });
@@ -121,7 +122,8 @@
                 .targetEvent(ev)
                 .theme('light')
                 .ok(gettextCatalog.getString('Copy'))
-                .cancel(gettextCatalog.getString('Cancel'));
+                .cancel(gettextCatalog.getString('Cancel'))
+;
             $mdDialog.show(confirm).then(function() {
                 reco.anr = $scope.model.anr.id;
                 ClientRecommandationService.copyRecommandation(reco, function (data) {
