@@ -19,7 +19,7 @@
                                 <md-input-container class="md-block" flex="80">
                                     <input type="text" ng-model="question['label' + anr.language]" placeholder="{{ 'Question' | translate }}" />
                                 </md-input-container>
-                                <md-button ng-class="{'md-icon-button': confirmDelete != question.id}" )" class="md-warn" ng-click="removeQuestion(k)">
+                                <md-button ng-class="{'md-icon-button': confirmDelete != question.id}" class="md-warn" ng-click="removeQuestion(k)">
                                 <md-tooltip md-direction="right"> {{ 'Delete' | translate }} </md-tooltip>
                                 <md-icon>delete</md-icon>
                                 <span ng-if="confirmDelete != null" translate>Confirm?</span>
