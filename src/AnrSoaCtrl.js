@@ -28,9 +28,9 @@
           $scope.soas.sort(compare);
           $scope.totalItems = $scope.soas.length ;   //$scope.soas.length
           for (soa in $scope.soas){
-          if($scope.soas[soa].compliance != null)
-                  $scope.soas[soa].compliance = $scope.soas[soa].compliance + "%";
-
+          // if($scope.soas[soa].compliance != null)
+          //         $scope.soas[soa].compliance = $scope.soas[soa].compliance + "%";
+          //
 
           for (Category in $scope.Categories){
 
@@ -82,19 +82,20 @@
           }
 
 
+          params[name] = model[name];
 
-         if(name === "compliance" && model[name].replace("%","")<= 100 && model[name].replace("%", "") >= 0 ){
-           params[name] = model[name];
-           model[name] = model[name] + '%';
-          }
-
-          else{
-                if (name != "compliance"){
-                  params[name] = model[name];}
-                else{
-                  toastr.error(gettextCatalog.getString('the value of the compliance must be between 0 and 100 '));
-                }
-          }
+         // if(name === "compliance" && model[name].replace("%","")<= 100 && model[name].replace("%", "") >= 0 ){
+         //   params[name] = model[name];
+         //   model[name] = model[name] + '%';
+         //  }
+         //
+         //  else{
+         //        if (name != "compliance"){
+         //          params[name] = model[name];}
+         //        else{
+         //          toastr.error(gettextCatalog.getString('the value of the compliance must be between 0 and 100 '));
+         //        }
+         //  }
 
 
          ClientSoaService.updateSoa(params, function () {

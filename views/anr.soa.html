@@ -53,9 +53,19 @@
                 </td>
                 <td edit-field="evidences" edit-type="textarea"></td>
                 <td edit-field="actions"  edit-type="textarea"></td>
-                <td class="tbl-soa" edit-field="compliance" edit-type="textarea"
-                    ng-class="{'greeen':  soa.compliance.replace('%', '') <= 100 && soa.compliance.replace('%', '') > 75 , 'green':  soa.compliance.replace('%', '') <= 75  && soa.compliance.replace('%', '') > 50 ,'yellow': soa.compliance.replace('%', '') <= 50  && soa.compliance.replace('%', '') > 25,'orange': soa.compliance.replace('%', '') <= 25  && soa.compliance.replace('%', '') > 0, 'red': soa.compliance.replace('%', '') == 0  }"
-                    >
+                <td class="tbl-soa"
+                 ng-class="{'greeen':  soa.compliance == '5', 'green': soa.compliance == '4' ,'yellow': soa.compliance == '3' ,'orange': soa.compliance == '2' , 'red': soa.compliance == '1'  }"
+                 >
+                  <md-input-container>
+                    <md-select ng-model="soa.compliance" ng-change="onTableEdited(soa, 'compliance') ">
+                        <md-option value="1">{{ 'Initial' | translate }}</md-option>
+                        <md-option value="2">{{ 'Developing' | translate }}</md-option>
+                        <md-option value="3">{{ ' Defined ' | translate }}</md-option>
+                        <md-option value="4">{{ 'Managed' | translate }}</md-option>
+                        <md-option value="5">{{ 'Optimized ' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
+
                 </td>
             </tr>
         </tbody>
