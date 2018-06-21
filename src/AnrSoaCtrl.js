@@ -25,7 +25,17 @@
 
       ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
           $scope.soas = data['Soa-list'];
-          $scope.soas.sort(compare);
+
+          //tri par reference
+          $scope.soas.sort(function (a, b) {
+            return a.reference.localeCompare(b.reference);
+          });
+
+          //tri par category_id
+          $scope.soas.sort(function compare(a, b) {
+            return a.category.id-b.category.id;
+          });
+
           $scope.totalItems = $scope.soas.length ;   //$scope.soas.length
           for (soa in $scope.soas){
           // if($scope.soas[soa].compliance != null)
@@ -60,11 +70,7 @@
 
 
 
-      function compare(a, b) {
 
-        return a.category.id-b.category.id;
-
-      }
 
 
 
@@ -148,7 +154,6 @@ $scope.setItemsPerPage = function(num) {
    finalArray[recLine]= gettextCatalog.getString('Category');
    finalArray[recLine]+=','+gettextCatalog.getString('Ref');
    finalArray[recLine]+=','+gettextCatalog.getString('Control');
-   finalArray[recLine]+=','+gettextCatalog.getString('Requirement');
    finalArray[recLine]+=','+gettextCatalog.getString('Inclusion/exclusion');
    finalArray[recLine]+=','+gettextCatalog.getString('Remarks');
    finalArray[recLine]+=','+gettextCatalog.getString('Evidences');
@@ -164,10 +169,7 @@ $scope.setItemsPerPage = function(num) {
      finalArray[recLine]="\""+$scope._langField(soas[soa].category,'label')+"\"";
      finalArray[recLine]+=','+"\""+soas[soa].reference+"\"";
      finalArray[recLine]+=','+"\""+soas[soa].control+"\"";
-     if(soas[soa].requirement==null)
-        finalArray[recLine]+=','+"\""+' '+"\"";
-      else
-        finalArray[recLine]+=','+"\""+soas[soa].requirement;
+
       //Inclusion/exclusion
 
       finalArray[recLine]+=','+"\""+' ';
@@ -200,8 +202,16 @@ $scope.setItemsPerPage = function(num) {
 
     if(soas[soa].compliance==null)
        finalArray[recLine]+=','+"\""+' '+"\"";
-     else
-       finalArray[recLine]+=','+"\""+soas[soa].compliance+"\"";
+     else{
+       if(soas[soa].compliance == 1)      finalArray[recLine]+=','+"\""+gettextCatalog.getString('Initial')+"\"";
+       if(soas[soa].compliance == 2)      finalArray[recLine]+=','+"\""+gettextCatalog.getString('Developing')+"\"";
+       if(soas[soa].compliance == 3)      finalArray[recLine]+=','+"\""+gettextCatalog.getString('Defined')+"\"";
+       if(soas[soa].compliance == 4)      finalArray[recLine]+=','+"\""+gettextCatalog.getString('Managed')+"\"";
+       if(soas[soa].compliance == 5)      finalArray[recLine]+=','+"\""+gettextCatalog.getString('Optimized')+"\"";
+
+
+     }
+       
 
    }
 
