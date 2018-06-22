@@ -13,43 +13,10 @@
         <md-dialog-content>
             <div class="md-dialog-content">
                 <md-input-container class="md-block">
-                    <label translate>Enter a code or search a recommendation</label>
-                    <!-- <md-autocomplete
-                            flex
-                            ng-disabled="isAnrReadOnly"
-                            md-search-text="recSearchText1"
-                            md-items="item in queryRecSearch1(recSearchText1)"
-                            md-item-text="item.description"
-                            md-delay="300"
-                            md-min-length="0"
-                            md-input-name="rec1"
-                            md-menu-class="reco-autocomplete">
-                        <md-item-template>
-                            <span md-highlight-text="queryRecSearch1" md-highlight-flags="^i">{{ item.code }} - {{ item.description }}</span>
-                        </md-item-template>
-                        <md-not-found>
-                            {{ 'No recommendation matching your search was found' | translate }}
-                        </md-not-found>
-                    </md-autocomplete> -->
-
-                    <!-- <md-autocomplete
-                        md-selected-item="selectedItem"
-                        md-search-text="searchText"
-                        md-items="item in queryRecSearch1(searchText)">
-                        <md-item-template>
-                            <span md-highlight-text="searchText">{{item}}</span>
-                        </md-item-template>
-                    </md-autocomplete> -->
-
-                    <!-- <md-autocomplete
-                            flex
-                            md-no-cache
-                            md-search-text="searchText"
-                            md-items="item in queryRecSearch1(searchText)"
-                            md-item-text="item.description"
-                            md-delay="600">
-                        <span md-highlight-text="searchText">{{item.description}}</span>
-                    </md-autocomplete> -->
+                    <label translate>Enter a code or search a recommendation to copy an existing</label>
+                    <md-select ng-model="recommandation.recommandation" md-on-open="loadOptions($event)" md-on-close="fillRecommendationForm($event, recommandation.recommandation)">
+                        <md-option ng-repeat="item in options" ng-value="item">{{ item.code }} - {{ item.description }}</md-option>
+                    </md-select>
                 </md-input-container>
 
                 <md-input-container class="md-block">
