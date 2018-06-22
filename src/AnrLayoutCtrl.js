@@ -552,19 +552,6 @@
             });
         };
 
-        $scope.queryRecSearch1 = function (query) {
-            console.log('queryRecSearch1...');
-            var q = $q.defer();
-            ClientRecommandationService.getRecommandations({anr: $scope.model.anr.id, filter: query}).then(function (data) {
-                q.resolve(data.recommandations);
-                console.log(data.recommandations);
-            }, function () {
-                q.reject();
-            });
-
-            return q.promise;
-        };
-
         $scope.editRecommandationContext = function (ev, rec) {
             if($mdDialog){
                 $mdDialog.cancel();
