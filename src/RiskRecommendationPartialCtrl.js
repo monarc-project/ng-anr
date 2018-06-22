@@ -8,8 +8,8 @@
             RiskRecommendationPartialCtrl
         ]);
 
-    function RiskRecommendationPartialCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog, $state,
-                                     $q, $attrs, $timeout, ClientRecommandationService) {
+    function RiskRecommendationPartialCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog,
+                                            $state, $q, $attrs, $timeout, ClientRecommandationService) {
         var riskMode = $attrs.monarcMode; // information / operational
         var isOpRiskMode = (riskMode == 'operational');
         var riskId = (isOpRiskMode ? $scope.opsheet_risk.id : $scope.sheet_risk.id);
@@ -19,7 +19,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', CreateRecommandationDialog],
+                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', CreateRecommandationDialog],
                 templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -44,7 +44,7 @@
             ev.preventDefault();
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'rec', 'detachRecommandation', 'copyRecommandation', 'deleteRecommandation', CreateRecommandationDialog],
+                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'rec', 'detachRecommandation', 'copyRecommandation', 'deleteRecommandation', CreateRecommandationDialog],
                 templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -122,8 +122,8 @@
                 .targetEvent(ev)
                 .theme('light')
                 .ok(gettextCatalog.getString('Copy'))
-                .cancel(gettextCatalog.getString('Cancel'))
-;
+                .cancel(gettextCatalog.getString('Cancel'));
+
             $mdDialog.show(confirm).then(function() {
                 reco.anr = $scope.model.anr.id;
                 ClientRecommandationService.copyRecommandation(reco, function (data) {
@@ -220,7 +220,6 @@
         };
 
         $rootScope.$on('recommandations-loaded', function (ev, recs) {
-            console.log('recommandations-loaded');
             $scope.recommandations = recs;
         })
 
@@ -231,12 +230,30 @@
     }
 
 
-    function CreateRecommandationDialog($scope, $mdDialog, rec, detachRecommandation, copyRecommandation, deleteRecommandation) {
+    function CreateRecommandationDialog($scope, $mdDialog, ClientRecommandationService, rec, detachRecommandation, copyRecommandation, deleteRecommandation) {
         $scope.recommandation = rec;
         $scope.deleteConfirmation = false;
         $scope.detachRecommandation = detachRecommandation;
         $scope.copyRecommandation = copyRecommandation;
         $scope.deleteRecommandation = deleteRecommandation;
+
+        $scope.loadOptions = function(ev) {
+            console.log('loadOptions...');
+            ClientRecommandationService.getRecommandations({anr: 5}).then(function (data) {
+                $scope.options = data.recommandations;
+                console.log(data.recommandations);
+            }, function () {
+            });
+            return $scope.options;
+        };
+
+        $scope.fillRecommendationForm = function(ev, selectedRec) {
+            console.log('fillRecommendationForm...');
+            console.log(selectedRec);
+            $scope.recommandation.code = selectedRec.code;
+            $scope.recommandation.recommandation.importance = selectedRec.importance;
+            $scope.recommandation.recommandation.description = selectedRec.description;
+        };
 
         $scope.delete = function () {
             $scope.deleteConfirmation = true;
@@ -247,7 +264,6 @@
         };
 
         $scope.create = function () {
-            console.log($scope.recommandation);
             $mdDialog.hide($scope.recommandation);
         };
 
