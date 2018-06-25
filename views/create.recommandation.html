@@ -13,7 +13,7 @@
         <md-dialog-content>
             <div class="md-dialog-content">
                 <md-input-container class="md-block">
-                    <label translate>Enter a code or search a recommendation to copy an existing</label>
+                    <label translate>Search a recommendation to create one from an existing</label>
                     <md-select ng-model="recommandation.recommandation" md-on-open="loadOptions($event)" md-on-close="fillRecommendationForm($event, recommandation.recommandation)">
                         <md-option ng-repeat="item in options" ng-value="item">{{ item.code }} - {{ item.description }}</md-option>
                     </md-select>
