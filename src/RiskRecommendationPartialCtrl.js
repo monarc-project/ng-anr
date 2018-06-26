@@ -52,6 +52,7 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
+                    ClientRecommandationService: ClientRecommandationService,
                     rec: rec,
                     detachRecommandation: $scope.detachRecommandation,
                     copyRecommandation: $scope.copyRecommandation,
@@ -67,7 +68,7 @@
         }
 
         $scope.queryRecSearch = function (query) {
-            console.log('querySearch...');
+            console.log('queryRecSearch...');
             var q = $q.defer();
             ClientRecommandationService.getRecommandations({anr: $scope.model.anr.id, filter: query}).then(function (data) {
                 q.resolve(data.recommandations);
@@ -237,22 +238,23 @@
         $scope.copyRecommandation = copyRecommandation;
         $scope.deleteRecommandation = deleteRecommandation;
 
-        $scope.loadOptions = function(ev) {
+        $scope.loadOptions = function(ev, anrID) {
             console.log('loadOptions...');
+            console.log($scope.model);
             ClientRecommandationService.getRecommandations({anr: 5}).then(function (data) {
                 $scope.options = data.recommandations;
                 console.log(data.recommandations);
-            }, function () {
             });
             return $scope.options;
         };
 
-        $scope.fillRecommendationForm = function(ev, selectedRec) {
-            console.log('fillRecommendationForm...');
-            console.log(selectedRec);
-            $scope.recommandation.code = selectedRec.code;
-            $scope.recommandation.recommandation.importance = selectedRec.importance;
-            $scope.recommandation.recommandation.description = selectedRec.description;
+        $scope.setSelectedRecommendation = function(ev, selectedRec) {
+            console.log('setSelectedRecommendation...');
+            if (selectedRec !== undefined) {
+                $scope.recommandation.code = selectedRec.code;
+                $scope.recommandation.recommandation.importance = selectedRec.importance;
+                $scope.recommandation.recommandation.description = selectedRec.description;
+            }
         };
 
         $scope.delete = function () {
