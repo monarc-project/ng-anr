@@ -19,13 +19,16 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', CreateRecommandationDialog],
+                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'anrId', CreateRecommandationDialog],
                 templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
-                fullscreen: useFullScreen
+                fullscreen: useFullScreen,
+                locals: {
+                    anrId: $scope.model.anr.id
+                }
             }).then(function (rec) {
                 rec.recommandation.anr = $scope.model.anr.id;
                 ClientRecommandationService.createRecommandation(rec.recommandation, function (data) {
@@ -44,7 +47,7 @@
             ev.preventDefault();
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'rec', 'detachRecommandation', 'copyRecommandation', 'deleteRecommandation', CreateRecommandationDialog],
+                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'anrId', 'rec' , 'detachRecommandation', 'copyRecommandation', 'deleteRecommandation', CreateRecommandationDialog],
                 templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -54,6 +57,7 @@
                 locals: {
                     ClientRecommandationService: ClientRecommandationService,
                     rec: rec,
+                    anrId: $scope.model.anr.id,
                     detachRecommandation: $scope.detachRecommandation,
                     copyRecommandation: $scope.copyRecommandation,
                     deleteRecommandation: $scope.deleteRecommandation
@@ -231,7 +235,7 @@
     }
 
 
-    function CreateRecommandationDialog($scope, $mdDialog, ClientRecommandationService, rec, detachRecommandation, copyRecommandation, deleteRecommandation) {
+    function CreateRecommandationDialog($scope, $mdDialog, ClientRecommandationService, anrId, rec, detachRecommandation, copyRecommandation, deleteRecommandation) {
         $scope.recommandation = rec;
         $scope.deleteConfirmation = false;
         $scope.detachRecommandation = detachRecommandation;
@@ -240,8 +244,7 @@
 
         $scope.loadOptions = function(ev, anrID) {
             console.log('loadOptions...');
-            console.log($scope.model);
-            ClientRecommandationService.getRecommandations({anr: 5}).then(function (data) {
+            ClientRecommandationService.getRecommandations({anr: anrId}).then(function (data) {
                 $scope.options = data.recommandations;
                 console.log(data.recommandations);
             });
