@@ -15,9 +15,9 @@
 
 
 
-
-      $scope.Category=[0,0,0,0,0,0,0,0,0,0,0,0,0,0];
-      $scope.CategoryIndex=[0,0,0,0,0,0,0,0,0,0,0,0,0,0];
+      $scope.selectedCategory="all";
+      $scope.Category=[0];
+      $scope.CategoryIndex=[0];
       ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
           $scope.Categories = data['categories'];
       });
@@ -37,12 +37,18 @@
           });
 
           $scope.totalItems = $scope.soas.length ;   //$scope.soas.length
-          for (soa in $scope.soas){
+
+
+          //for every soa
           // if($scope.soas[soa].compliance != null)
           //         $scope.soas[soa].compliance = $scope.soas[soa].compliance + "%";
           //
 
           for (Category in $scope.Categories){
+
+            $scope.Category[$scope.Categories[Category].id-1]=0;
+            $scope.CategoryIndex[$scope.Categories[Category].id-1]=0;
+              for (soa in $scope.soas){
 
               if($scope.Categories[Category].id == $scope.soas[soa].category.id)
                    $scope.Category[$scope.Categories[Category].id-1]=$scope.Category[$scope.Categories[Category].id-1]+1;
@@ -53,6 +59,8 @@
 
 
           for(var i=1;i<$scope.Category.length;i++){
+            if( ! $scope.CategoryIndex[i-1])$scope.CategoryIndex[i-1]=0;
+            if( ! $scope.Category[i-1])$scope.Category[i-1]=0;
             $scope.CategoryIndex[i]=$scope.CategoryIndex[i-1]+$scope.Category[i-1];
 
           }
@@ -61,8 +69,8 @@
 
 
 
-          console.log(  $scope.Category);
-          console.log(  $scope.CategoryIndex);
+          //console.log(  $scope.Category);
+          //console.log(  $scope.CategoryIndex);
 
 
       });
@@ -84,7 +92,7 @@
              id: model.id,
          };
          if(name === "EX" || name === "LR" || name === "CO" || name === "BR" || name === "BP" || name === "RRA" ){
-           if (model[name] == 0) { model[name]=1}else  model[name]=0;
+           if (model[name] == 0) { model[name]=1} else  model[name]=0;
           }
 
 
@@ -211,7 +219,7 @@ $scope.setItemsPerPage = function(num) {
 
 
      }
-       
+
 
    }
 
