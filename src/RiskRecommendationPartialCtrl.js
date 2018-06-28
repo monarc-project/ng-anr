@@ -259,6 +259,7 @@
                 $scope.recommandation.recommandation.importance = selectedRec.importance;
                 $scope.recommandation.recommandation.description = selectedRec.description;
                 $scope.recommandation.recommandation.id = null;
+                $scope.recommandation.recommandation.copy = true;
             }
         };
 
