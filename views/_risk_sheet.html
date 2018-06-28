@@ -128,12 +128,12 @@
                 </td>
             </tr>
             <tr>
-                <td class="bold" translate>Reduce vulnerability by</td>
-                <td colspan="3" style="padding-top:0px;padding-bottom:0px;">
-                    <md-input-container style="width: 200px;margin:0px;">
+                <td class="bold" translate>Vulnerability reduction</td>
+                <td colspan="3" style="padding-top:0px;padding-bottom:0px">
+                    <md-input-container ng-if="sheet_risk.vulnerabilityRate > -1" style="width: 850px; margin:0px">
                         <md-icon>trending_down</md-icon>
                         <md-select ng-model="sheet_risk.reductionAmount" ng-disabled="isAnrReadOnly">
-                            <md-option ng-repeat="i in reducAmount" ng-value="{{ i }}">{{ i }}</md-option>
+                            <md-option ng-repeat="i in reducAmount" ng-value="{{ reducAmount[reducAmount.length - 1] - i }}"><strong>{{ i }}</strong> - {{_langField(comms.vuln[i],'comment')}}</md-option>
                         </md-select>
                     </md-input-container>
                 </td>
