@@ -254,9 +254,11 @@
         $scope.setSelectedRecommendation = function(ev, selectedRec) {
             console.log('setSelectedRecommendation...');
             if (selectedRec !== undefined) {
-                $scope.recommandation.code = selectedRec.code;
+                // $scope.recommandation.recommandation.code = selectedRec.code + ' ' + gettextCatalog.getString('(copy)');
+                $scope.recommandation.recommandation.code = selectedRec.code;
                 $scope.recommandation.recommandation.importance = selectedRec.importance;
                 $scope.recommandation.recommandation.description = selectedRec.description;
+                $scope.recommandation.recommandation.id = null;
             }
         };
 
