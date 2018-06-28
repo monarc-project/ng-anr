@@ -1447,7 +1447,6 @@
             }
             $scope.risks.query.tag = $scope.risk_tag_filter;
 
-
             if ($scope.risks.previousQueryOrder != $scope.risks.query.order) {
                 $scope.risks.query.page = query.page = 1;
                 $scope.risks.previousQueryOrder = $scope.risks.query.order;
