@@ -104,9 +104,6 @@
                         <md-button ng-click="rec_edit.rec?attachRecommandation():createRecommandation($event)" class="md-icon-button md-primary" ng-attr-title="{{ 'Attach this recommendation' | translate }}" ng-disabled="isAnrReadOnly">
                             <md-icon>{{ rec_edit.rec?'link':'add_to_photos' }}</md-icon>
                         </md-button>
-                        <md-button ng-if="rec_edit.rec" ng-click="copyRecommandation($event, rec_edit.rec)" class="md-icon-button md-primary" ng-attr-title="{{ 'Copy' | translate }}" ng-disabled="isAnrReadOnly">
-                            <i class="material-icons">control_point_duplicate</i>
-                        </md-button>
                     </div>
                 </td>
                 <td colspan="3" style="vertical-align:top;">
