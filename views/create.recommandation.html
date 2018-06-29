@@ -12,9 +12,9 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-input-container class="md-block">
+                <md-input-container class="md-block" style="margin-right: 10px;">
                     <label translate>Search a recommendation to create one from an existing</label>
-                    <md-select ng-model="recommandation.recommandation" md-on-open="loadOptions($event, recommandation.recommandation)" md-on-close="setSelectedRecommendation($event, recommandation.recommandation)">
+                    <md-select flex ng-model="recommandation.recommandation" md-on-open="loadOptions($event, recommandation.recommandation)" md-on-close="setSelectedRecommendation($event, recommandation.recommandation)">
                         <md-option ng-repeat="item in options" ng-value="item">{{ item.code }} - {{ item.description }}</md-option>
                     </md-select>
                 </md-input-container>
