@@ -243,18 +243,14 @@
         $scope.deleteRecommandation = deleteRecommandation;
 
         $scope.loadOptions = function(ev, anrID) {
-            console.log('loadOptions...');
             ClientRecommandationService.getRecommandations({anr: anrId}).then(function (data) {
                 $scope.options = data.recommandations;
-                console.log(data.recommandations);
             });
             return $scope.options;
         };
 
         $scope.setSelectedRecommendation = function(ev, selectedRec) {
-            console.log('setSelectedRecommendation...');
             if (selectedRec !== undefined) {
-                // $scope.recommandation.recommandation.code = selectedRec.code + ' ' + gettextCatalog.getString('(copy)');
                 $scope.recommandation.recommandation.code = selectedRec.code;
                 $scope.recommandation.recommandation.importance = selectedRec.importance;
                 $scope.recommandation.recommandation.description = selectedRec.description;
