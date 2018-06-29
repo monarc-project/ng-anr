@@ -173,7 +173,7 @@
                         cliAnr = 'client-';
                         method = $http.post;
                     }
-                    method('api/'+cliAnr+'anr/' + $scope.model.anr.id + '/instances/' + $scope.instance.id + '/export', {id: $scope.instance.id, password: exports.password, assessments: exports.assessments}).then(function (data) {
+                    method('api/'+cliAnr+'anr/' + $scope.model.anr.id + '/instances/' + $scope.instance.id + '/export', {id: $scope.instance.id, password: exports.password, assessments: exports.assessments, controls: exports.controls, recommendations: exports.recommendations}).then(function (data) {
                         var contentD = data.headers('Content-Disposition'),
                             contentT = data.headers('Content-Type');
                         contentD = contentD.substring(0,contentD.length-1).split('filename="');
@@ -376,7 +376,9 @@
         $scope.exportData = {
             password: '',
             simple_mode: true,
-            assessments: 0
+            assessments: 0,
+            controls: true,
+            recommendations: true
         };
 
         $scope.cancel = function() {
