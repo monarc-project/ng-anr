@@ -47,8 +47,8 @@
                 {{ 'Delete' | translate }}
             </md-button>
             <md-button ng-if="recommandation.recommandation.id && !isRecoContext" ng-click="detachRecommandation($event, recommandation)">{{ 'Detach' | translate }}</md-button>
-            <md-button ng-if="recommandation.recommandation.copy || recommandation.recommandation.id" ng-click="copyRecommandation($event, recommandation)">{{ 'Copy' | translate }}</md-button>
-            <md-button ng-if="!recommandation.recommandation.copy" ng-click="create()" ng-disabled="riskForm.$invalid" type="submit" class="md-accent md-hue-3">
+            <md-button ng-click="copyRecommandation($event, recommandation)" >{{ 'Copy' | translate }}</md-button>
+            <md-button ng-click="create()" ng-disabled="riskForm.$invalid" type="submit" class="md-accent md-hue-3">
                 {{ (recommandation.recommandation.id > 0 ? 'Save' : 'Create') | translate }}
             </md-button>
         </md-dialog-actions>
