@@ -234,7 +234,6 @@
 
     }
 
-
     function CreateRecommandationDialog($scope, $mdDialog, ClientRecommandationService, anrId, rec, detachRecommandation, copyRecommandation, deleteRecommandation) {
         $scope.recommandation = rec;
         $scope.deleteConfirmation = false;
@@ -251,6 +250,7 @@
 
         $scope.setSelectedRecommendation = function(ev, selectedRec) {
             if (selectedRec !== undefined) {
+                $scope.code = selectedRec.code;
                 $scope.recommandation.recommandation.code = selectedRec.code;
                 $scope.recommandation.recommandation.importance = selectedRec.importance;
                 $scope.recommandation.recommandation.description = selectedRec.description;
