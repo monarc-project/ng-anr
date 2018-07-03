@@ -101,14 +101,14 @@
                         </md-autocomplete>
 
 
-                        <md-button ng-click="rec_edit.rec?attachRecommandation():createRecommandation($event)" class="md-icon-button md-primary" ng-disabled="isAnrReadOnly">
+                        <md-button ng-click="rec_edit.rec?attachRecommandation():createRecommandation($event)" class="md-icon-button md-primary" ng-attr-title="{{ 'Attach this recommendation' | translate }}" ng-disabled="isAnrReadOnly">
                             <md-icon>{{ rec_edit.rec?'link':'add_to_photos' }}</md-icon>
                         </md-button>
                     </div>
                 </td>
                 <td colspan="3" style="vertical-align:top;">
                     <ul class="no-list-style no-padding no-margin">
-                        <li ng-repeat="recommandation in recommandations"><a class="md-primary" href="javascript:void(0);" ng-click="editRecommandation($event, recommandation)">{{ recommandation.recommandation.code }}</a> <span class="anr-importance" ng-repeat="i in range(1, recommandation.recommandation.importance)">&bull;</span> &gt; {{ recommandation.recommandation.description }}</li>
+                        <li ng-repeat="recommandation in recommandations"><a class="md-primary" href="#" ng-click="editRecommandation($event, recommandation)">{{ recommandation.recommandation.code }}</a> <span class="anr-importance" ng-repeat="i in range(1, recommandation.recommandation.importance)">&bull;</span> &gt; {{ recommandation.recommandation.description }}</li>
                     </ul>
                 </td>
             </tr>

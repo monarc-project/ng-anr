@@ -83,7 +83,7 @@
                                 </md-not-found>
                             </md-autocomplete>
 
-                            <md-button ng-click="rec_edit.rec?attachRecommandation():createRecommandation($event)" class="md-icon-button md-primary" ng-disabled="isAnrReadOnly">
+                            <md-button ng-click="rec_edit.rec?attachRecommandation():createRecommandation($event)" class="md-icon-button md-primary" ng-attr-title="{{ 'Attach this recommendation' | translate }}" ng-disabled="isAnrReadOnly">
                                 <md-icon>{{ rec_edit.rec?'link':'add_to_photos' }}</md-icon>
                             </md-button>
                         </div>
