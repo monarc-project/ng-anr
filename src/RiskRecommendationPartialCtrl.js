@@ -249,13 +249,10 @@
         $scope.setSelectedRecommendation = function(ev, selectedRec) {
             if (selectedRec !== undefined) {
                 $scope.recommandation = selectedRec;
-                console.log($scope.recommandation);
                 $scope.recommandation['recommandation'] = {};
                 $scope.recommandation['recommandation']['code'] = selectedRec.code;
                 $scope.recommandation['recommandation']['importance'] = selectedRec.importance;
                 $scope.recommandation['recommandation']['description'] = selectedRec.description;
-                // $scope.code = selectedRec.code;
-                // $scope.recommandation.recommandation.id = null;
             }
         };
 
