@@ -31,7 +31,7 @@
             <tr>
 
                 <th translate>Category</th>
-                <th translate>Ref.</th>
+                <th  >   <md-button class="md-icon-button md-primary" ng-click="onTableEdited()"><md-icon>up</md-icon></md-button>    {{ 'Ref.'| translate }}</th>
                 <th translate>Control</th>
                 <th translate>inclusion/exclusion</th>
                 <th translate>Remarks</th>
@@ -43,11 +43,12 @@
          <tbody ng-repeat="cat in Categories| filter:searchText" ng-if="(selectedCategory =='all' || selectedCategory == cat.id) && Category[cat.id-1] !=0 " > <!--cat.anr.id -->
           <!-- .slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | filter:searchText -->
 
-            <tr edit-model="soa" ng-repeat="soa in soas  " ng-if="soa.category.id==cat.id">
-               <td  rowspan="{{Category[cat.id-1]}}" style="max-width: 300px" class="txtleft" ng-if="$index == CategoryIndex[cat.id-1] ">{{_langField(cat,'label')}}</td>
+            <tr edit-model="soa" ng-repeat="soa in soas  " ng-if="soa.measure.category.id==cat.id">
+              <td  rowspan="{{Category[cat.id-1]}}" style="max-width: 300px" class="txtleft" ng-if="$index == CategoryIndex[cat.id-1]  ">{{_langField(cat,'label')}}</td>
+              <!-- <td   style="max-width: 300px" class="txtleft" ng-if=" order !='category' ">{{_langField(cat,'label')}}</td> -->
 
-                <td  class="txtcenter" > <md-button class="md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.reference }}</md-button></td>
-                <td  class="txtleft">{{ soa.control }}</td>
+                <td  class="txtcenter" > <md-button class="md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.measure.code }}</md-button></td>
+                <td  class="txtleft">{{_langField(soa.measure,'description')}}</td>
 
                 <td class="btn">
                 <button type="button" ng-model="soa.EX"  ng-click="onTableEdited(soa, 'EX') " ng-disabled="soa.LR || soa.CO || soa.BR || soa.BP|| soa.RRA " ng-class="{'bouton-true': soa.EX=='1' ,'bouton-false':soa.EX=='0'  }">{{ 'EX' | translate }} <md-tooltip>{{ 'excluded' | translate }}</md-tooltip></button>

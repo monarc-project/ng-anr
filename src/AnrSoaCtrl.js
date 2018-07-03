@@ -3,19 +3,21 @@
     angular
         .module('AnrModule')
         .controller('AnrSoaCtrl', [
-            '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state', 'ClientCategoryService' , 'ClientSoaService',  '$q',
+            '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state', 'MeasureService', 'ClientCategoryService' , 'ClientSoaService',  '$q',
             AnrSoaCtrl
         ]);
 
     /**
      * ANR > STATEMENT OF APPLICABILITY
      */
-    function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, ClientCategoryService,
+    function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, MeasureService, ClientCategoryService,
                                   ClientSoaService,  $q, $filter) {
 
 
 
       $scope.selectedCategory="all";
+      $scope.order="category";
+
       $scope.Category=[0];
       $scope.CategoryIndex=[0];
       ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
@@ -26,15 +28,32 @@
       ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
           $scope.soas = data['Soa-list'];
 
+          //
+          // //tri par compliance
+          // $scope.soas.sort(function (a, b) {
+          //   return a.compliance-b.compliance;
+          // });
+
+
+          // //tri par measure
+          // $scope.soas.sort(function (a, b) {
+          //   return a.control.localeCompare(b.control);
+          // });
+
+
           //tri par reference
           $scope.soas.sort(function (a, b) {
-            return a.reference.localeCompare(b.reference);
+            return a.measure.code.localeCompare(b.measure.code);
           });
 
           //tri par category_id
-          $scope.soas.sort(function compare(a, b) {
-            return a.category.id-b.category.id;
+          $scope.soas.sort(function (a, b) {
+            return a.measure.category.id-b.measure.category.id;
           });
+
+
+
+
 
           $scope.totalItems = $scope.soas.length ;   //$scope.soas.length
 
@@ -48,12 +67,13 @@
 
             $scope.Category[$scope.Categories[Category].id-1]=0;
             $scope.CategoryIndex[$scope.Categories[Category].id-1]=0;
+
               for (soa in $scope.soas){
 
-              if($scope.Categories[Category].id == $scope.soas[soa].category.id)
-                   $scope.Category[$scope.Categories[Category].id-1]=$scope.Category[$scope.Categories[Category].id-1]+1;
+                if($scope.Categories[Category].id == $scope.soas[soa].measure.category.id)
+                     $scope.Category[$scope.Categories[Category].id-1]=$scope.Category[$scope.Categories[Category].id-1]+1;
+              }
 
-          }
 
           }
 
@@ -69,8 +89,8 @@
 
 
 
-          //console.log(  $scope.Category);
-          //console.log(  $scope.CategoryIndex);
+        //  console.log(  $scope.Category);
+        //  console.log(  $scope.CategoryIndex);
 
 
       });
@@ -174,9 +194,9 @@ $scope.setItemsPerPage = function(num) {
    {
      recLine++;
     // finalArray[recLine]="\""+soas[soa].id+"\"";
-     finalArray[recLine]="\""+$scope._langField(soas[soa].category,'label')+"\"";
-     finalArray[recLine]+=','+"\""+soas[soa].reference+"\"";
-     finalArray[recLine]+=','+"\""+soas[soa].control+"\"";
+     finalArray[recLine]="\""+$scope._langField(soas[soa].measure.category,'label')+"\"";
+     finalArray[recLine]+=','+"\""+soas[soa].measure.code+"\"";
+     finalArray[recLine]+=','+"\""+$scope._langField(soas[soa].measure,'description')+"\"";
 
       //Inclusion/exclusion
 
