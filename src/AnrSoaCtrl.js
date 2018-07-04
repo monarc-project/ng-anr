@@ -17,12 +17,19 @@
 
       $scope.selectedCategory="all";
       $scope.order="category";
+      $scope.orderReference=$scope.orderMeasure=$scope.orderCompliance="-1";
+
 
       $scope.Category=[0];
       $scope.CategoryIndex=[0];
       ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
           $scope.Categories = data['categories'];
       });
+
+
+
+
+
 
 
       ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
@@ -96,6 +103,75 @@
       });
 
 
+
+
+            $scope.soasMeasures = function () {
+              //tri par measure
+              if(  $scope.orderMeasure=='-1'){
+                $scope.soas.sort(function (a, b) {
+                  return $scope._langField(a.measure,'description').localeCompare($scope._langField(b.measure,'description'));
+                  });
+                  $scope.orderMeasure='1';
+              }else{
+                $scope.soas.sort(function (a, b) {
+                  return $scope._langField(b.measure,'description').localeCompare($scope._langField(a.measure,'description'));
+                  });
+                  $scope.orderMeasure='-1';
+              }
+                $scope.soas.sort(function (a, b) {
+                  return a.measure.category.id-b.measure.category.id;
+
+              });
+
+            };
+
+            $scope.soasCompliance = function () {
+
+              //tri par compliance
+              if(  $scope.orderCompliance=='-1'){
+
+                    $scope.soas.sort(function (a, b) {
+                      return a.compliance-b.compliance;
+                    });
+                    $scope.orderCompliance='1';
+             }else{
+                   $scope.soas.sort(function (a, b) {
+                     return b.compliance-a.compliance;
+                   });
+                   $scope.orderCompliance='-1';
+             }
+
+                $scope.soas.sort(function (a, b) {
+                  return a.measure.category.id-b.measure.category.id;
+                });
+
+
+            };
+
+
+            $scope.soasReference = function () {
+
+             //tri par reference
+             if(  $scope.orderReference=='-1'){
+
+               $scope.soas.sort(function (a, b) {
+                  return a.measure.code.localeCompare(b.measure.code);
+                  });
+               $scope.orderReference='1';
+             }else{
+               $scope.soas.sort(function (a, b) {
+                  return b.measure.code.localeCompare(a.measure.code);
+                  });
+                $scope.orderReference='-1';
+              }
+
+
+            $scope.soas.sort(function (a, b) {
+               return a.measure.category.id-b.measure.category.id;
+              });
+
+
+          };
 
 
 
