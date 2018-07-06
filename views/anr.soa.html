@@ -25,35 +25,35 @@
     </div>
 
     <table class="md-html-table" editable callback="onTableEdited">
-        <!-- <thead md-head md-order="soas.query.order" md-on-reorder=""> -->
       <thead>
 
             <tr>
 
-                <th translate>Category</th>
-                <th  >   <md-button class=" " ng-click="soasReference()"> {{ 'Ref.'| translate }}</md-button>   </th>
-                <th  >   <md-button class=" " ng-click="soasMeasures()"> {{ 'Control'| translate }}</md-button>   </th>
-
-                <th translate>inclusion/exclusion</th>
-                <th translate>Remarks</th>
-                <th translate>Evidences</th>
-                <th translate>Actions</th>
-                <th  >   <md-button class=" " ng-click="soasCompliance()"> {{ 'level of compliance'| translate }}</md-button>   </th>
+                <th  style="width: 10%" ><md-button class=" sortorder descending " ng-click="soasCategory()"> {{ 'Category'| translate }} </md-button> </th>
+                <th  style="width: 5%" ><md-button class=" " ng-click="soasReference()"> {{ 'Ref.'| translate }} </md-button>   </th>
+                <th  style="width: 15%" ><md-button class=" " ng-click="soasMeasures()" > {{ 'Control'| translate }} </md-button>   </th>
+                <th  style="width: 15%" translate>inclusion/exclusion</th>
+                <th  style="width: 15%" translate>Remarks</th>
+                <th  style="width: 15%" translate>Evidences</th>
+                <th  style="width: 15%">Actions</th>
+                <th  style="width: 10%" >   <md-button class=" " ng-click="soasCompliance()"> {{ 'level of compliance'| translate }}</md-button>   </th>
 
             </tr>
         </thead>
-         <tbody ng-repeat="cat in Categories| filter:searchText" ng-if="(selectedCategory =='all' || selectedCategory == cat.id) && Category[cat.id-1] !=0" > <!--cat.anr.id -->
-          <!-- .slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | filter:searchText -->
+         <tbody > <!--cat.anr.id -->
+          <!-- soa in soas.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | filter:searchText -->
 
-            <tr edit-model="soa" ng-repeat="soa in soas  " ng-if="soa.measure.category.id==cat.id">
-              <td  rowspan="{{Category[cat.id-1]}}" style="max-width: 300px" class="txtleft" ng-if="$index == CategoryIndex[cat.id-1] && order=='category' ">{{_langField(cat,'label')}}</td>
-              <td   style="max-width: 300px" class="txtleft" ng-if=" order !='category' ">{{_langField(cat,'label')}}</td>
+            <tr edit-model="soa" ng-repeat="soa in soas   "   ng-if="  (selectedCategory =='all' || selectedCategory == soa.measure.category.id) && Category[soa.measure.category.id-1] !=0   ">
+              <td  rowspan="{{Category[soa.measure.category.id-1]}}" style="max-width: 300px" class="txtleft" ng-if="$index == CategoryIndex[soa.measure.category.id-1] && order=='category' ">{{soa.measure.category.reference}}-{{_langField(soa.measure.category,'label')}}</td>
+              <!-- <td  rowspan="{{CategoryIndex[soa.measure.category.id]-$index}}" style="max-width: 300px" class="txtleft" ng-if="$index == 10 && order=='category' ">{{soa.measure.category.reference}}-{{_langField(soa.measure.category,'label')}}</td> -->
+
+              <td   style="max-width: 300px" class="txtleft" ng-if=" order !='category' ">{{_langField(soa.measure.category,'label')}}</td>
 
                 <td  class="txtcenter" > <md-button class="md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.measure.code }}</md-button></td>
                 <td  class="txtleft">{{_langField(soa.measure,'description')}}</td>
 
                 <td class="btn">
-                <button type="button" ng-model="soa.EX"  ng-click="onTableEdited(soa, 'EX') " ng-disabled="soa.LR || soa.CO || soa.BR || soa.BP|| soa.RRA " ng-class="{'bouton-true': soa.EX=='1' ,'bouton-false':soa.EX=='0'  }">{{ 'EX' | translate }} <md-tooltip>{{ 'excluded' | translate }}</md-tooltip></button>
+                <button type="button" ng-model="soa.EX"  ng-click="onTableEdited(soa, 'EX')" ng-disabled="soa.LR || soa.CO || soa.BR || soa.BP|| soa.RRA " ng-class="{'bouton-true': soa.EX=='1' ,'bouton-false':soa.EX=='0'  }">{{ 'EX' | translate }} <md-tooltip>{{ 'excluded' | translate }}</md-tooltip></button>
                 <button type="button" ng-model="soa.LR"  ng-click="onTableEdited(soa, 'LR')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.LR=='1' ,'bouton-false':soa.LR=='0'  }">{{ 'LR' | translate }}<md-tooltip>{{ 'legal requirements' | translate }}</md-tooltip></button>
                 <button type="button" ng-model="soa.CO"  ng-click="onTableEdited(soa, 'CO')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.CO=='1' ,'bouton-false':soa.CO=='0'  }">{{ 'CO' | translate }}<md-tooltip>{{ 'contractual obligations' | translate }}</md-tooltip></button>
                 <button type="button" ng-model="soa.BR"  ng-click="onTableEdited(soa, 'BR')" ng-disabled="soa.EX" ng-class="{'bouton-true': soa.BR=='1' ,'bouton-false':soa.BR=='0'  }">{{ 'BR' | translate }}<md-tooltip>{{ 'business requirements/adopted' | translate }}</md-tooltip></button>
@@ -65,8 +65,8 @@
                 </td>
                 <td edit-field="evidences" edit-type="textarea"></td>
                 <td edit-field="actions"  edit-type="textarea"></td>
-                <td class="tbl-soa"
-                 ng-class="{'greeen':  soa.compliance == '5', 'green': soa.compliance == '4' ,'yellow': soa.compliance == '3' ,'orange': soa.compliance == '2' , 'red': soa.compliance == '1'  }"
+                <td class="tbl-risk-calc"
+                 ng-class="{'green':  soa.compliance == '5', 'orange': soa.compliance == '4' || soa.compliance == '3' ,'red': soa.compliance == '2' || soa.compliance == '1'  }"
                  >
                   <md-input-container>
                     <md-select ng-model="soa.compliance" ng-change="onTableEdited(soa, 'compliance') ">
@@ -105,6 +105,7 @@
             <md-select class="md-table-select" md-container-class="md-pagination-select"   ng-model="viewby" ng-change="setItemsPerPage(viewby)" aria-label="Rows" >
                 <md-option ng-repeat="option in [10, 20, 30, 50, 100]"  ng-value="option.value ? $pagination.eval(option.value) : option">{{::option.label ? option.label : option}}</md-option>
             </md-select>
+
         </div>
 
         <div class="buttons">
@@ -119,4 +120,6 @@
             </md-button>
         </div>
     </div>
+
+
 </div>

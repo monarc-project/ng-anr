@@ -26,12 +26,7 @@
           $scope.Categories = data['categories'];
       });
 
-
-
-
-
-
-
+      
       ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
           $scope.soas = data['Soa-list'];
 
