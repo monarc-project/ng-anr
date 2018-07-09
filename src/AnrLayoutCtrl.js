@@ -1402,6 +1402,19 @@
             });
         };
 
+        $scope.onEditCustomColumn = function (id, newValue) {
+            AnrService.patchScaleType($scope.model.anr.id, id, newValue, $scope.scales.language, function () {
+                $scope.updateScaleTypes(function () {
+                    $timeout(function () {
+                        var scroller = document.getElementById('horiz-scrollable');
+                        scroller.scrollLeft = scroller.scrollWidth;
+                    }, 0, false);
+                });
+                // $scope.column.name = newValue;
+                $scope.$broadcast('scales-impacts-type-changed');
+            });
+        };
+
         $scope.setImpactVisibility = function (id, visible) {
             AnrService.patchScaleType($scope.model.anr.id, id, {isHidden: visible ? 0 : 1}, function () {
                 $scope.updateScaleTypes();

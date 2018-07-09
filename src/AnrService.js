@@ -267,8 +267,13 @@
              }
         };
 
-        var patchScaleType = function (anr_id, scale_type_id, data, success, error) {
-            self.ScalesTypesResource.patch({anrId: anr_id, scaleTypeId: scale_type_id}, data, success, error);
+        var patchScaleType = function (anr_id, scale_type_id, data, langue = null, success, error) {
+            if ($rootScope.OFFICE_MODE == "FO") {
+                langue = $rootScope.getAnrLanguage().toString();
+            }
+            var new_data = {};
+            new_data['label' + langue] = data
+            self.ScalesTypesResource.patch({anrId: anr_id, scaleTypeId: scale_type_id}, new_data, success, error);
         };
 
         var deleteScaleType = function (anr_id, scale_type_id, success, error) {
