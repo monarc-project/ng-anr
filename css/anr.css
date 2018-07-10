@@ -370,8 +370,7 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 }
 
 .tbl-risk-calc td, .tbl-risk-calc th {
-    width: 25px;
-    height: 25px;
+
     color: #333333;
     font-weight: bold;
 }
@@ -404,39 +403,29 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 }
 
 .tbl-soa td, .o.tbl-soa th {
-    width: 25px;
-    height: 25px;
+    /* width: 25px;
+    height: 25px; */
     color: #333333;
     font-weight: bold;
 }
 
-.tbl-soa td.wide {
+/* .tbl-soa td.wide {
     width: 72px;
-}
-
-.tbl-soa .greeen, .tbl-soa.greeen {
-    background: #00FF00;
-    color: black;
-}
+} */
 
 .tbl-soa .green, .tbl-soa.green {
-    background: #BFFF00;
-    color: black;
-}
-
-.tbl-soa .yellow, .tbl-soa.yellow {
-    background: #FFFF00;
+    background: #D6F107;
     color: black;
 }
 
 .tbl-soa .orange, .tbl-soa.orange {
-    background: #FE9A2E;
+    background: #FFBC1C;
     color: black;
 }
 
 .tbl-soa .red, .tbl-soa.red {
-    background: #FE642E;
-    color: black;
+    background: #FD661F;
+    color: white;
 }
 
 /** soaTable justification  */

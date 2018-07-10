@@ -26,21 +26,14 @@
           $scope.Categories = data['categories'];
       });
 
-      
+
+
+
+
+
+
       ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
           $scope.soas = data['Soa-list'];
-
-          //
-          // //tri par compliance
-          // $scope.soas.sort(function (a, b) {
-          //   return a.compliance-b.compliance;
-          // });
-
-
-          // //tri par measure
-          // $scope.soas.sort(function (a, b) {
-          //   return a.control.localeCompare(b.control);
-          // });
 
 
           //tri par reference
@@ -101,6 +94,8 @@
 
 
             $scope.soasMeasures = function () {
+              $scope.order="measure";
+
               //tri par measure
               if(  $scope.orderMeasure=='-1'){
                 $scope.soas.sort(function (a, b) {
@@ -113,14 +108,12 @@
                   });
                   $scope.orderMeasure='-1';
               }
-                $scope.soas.sort(function (a, b) {
-                  return a.measure.category.id-b.measure.category.id;
 
-              });
 
             };
 
             $scope.soasCompliance = function () {
+              $scope.order="compliance";
 
               //tri par compliance
               if(  $scope.orderCompliance=='-1'){
@@ -136,15 +129,13 @@
                    $scope.orderCompliance='-1';
              }
 
-                $scope.soas.sort(function (a, b) {
-                  return a.measure.category.id-b.measure.category.id;
-                });
 
 
             };
 
 
             $scope.soasReference = function () {
+              $scope.order="reference";
 
              //tri par reference
              if(  $scope.orderReference=='-1'){
@@ -152,22 +143,40 @@
                $scope.soas.sort(function (a, b) {
                   return a.measure.code.localeCompare(b.measure.code);
                   });
+                  $scope.soas.sort(function (a, b) {
+                    return a.measure.category.id-b.measure.category.id;
+                  });
                $scope.orderReference='1';
              }else{
                $scope.soas.sort(function (a, b) {
                   return b.measure.code.localeCompare(a.measure.code);
                   });
+                  $scope.soas.sort(function (a, b) {
+                    return b.measure.category.id-a.measure.category.id;
+                  });
                 $scope.orderReference='-1';
               }
 
 
-            $scope.soas.sort(function (a, b) {
-               return a.measure.category.id-b.measure.category.id;
-              });
-
 
           };
 
+          $scope.soasCategory= function () {
+            $scope.order="category";
+
+
+            $scope.soas.sort(function (a, b) {
+              return a.measure.code.localeCompare(b.measure.code);
+            });
+
+            //tri par category_id
+            $scope.soas.sort(function (a, b) {
+              return a.measure.category.id-b.measure.category.id;
+            });
+
+
+
+        };
 
 
 

@@ -33,6 +33,9 @@
                     case 'main.project.anr.knowledge':
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 3};
                         break;
+                    case 'main.project.anr.soa':
+                        $scope.display = {show_hidden_impacts: false};
+                        break;
                 }
             }
         }else{
@@ -716,7 +719,7 @@
             $scope.clearSelectedInstAndObj();
             $scope.display.anrSelectedTabIndex = 0;
         }
-      
+
 
 
 
