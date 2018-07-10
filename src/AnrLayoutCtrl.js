@@ -553,15 +553,16 @@
         };
 
         $scope.editRecommandationContext = function (ev, rec) {
+            ev.preventDefault();
             if($mdDialog){
                 $mdDialog.cancel();
             }
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'rec', 'ClientRecommandationService', CreateRecommandationDialogContext, RiskRecommendationPartialCtrl, 'RiskRecommendationPartialCtrl'],
+                controller: ['$scope', '$mdDialog', 'rec', 'ClientRecommandationService', CreateRecommandationDialogContext],
                 templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
-                preserveScope: true,
+                preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
