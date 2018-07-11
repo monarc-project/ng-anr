@@ -25,6 +25,10 @@
                 id: model.id,
             };
 
+            if (name == 'duedate') {
+                new_date = new Date(model[name]);
+                model[name] = new_date.toLocaleString();
+            }
             params[name] = model[name];
 
             ClientRecommandationService.updateRecommandation(params, function () {

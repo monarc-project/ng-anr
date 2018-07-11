@@ -556,6 +556,7 @@
         };
 
         $scope.editRecommandationContext = function (ev, rec) {
+            ev.preventDefault();
             if($mdDialog){
                 $mdDialog.cancel();
             }
@@ -779,7 +780,8 @@
             }
         };
 
-        $scope.openMethodDeliverable = function (step) {
+        $scope.openMethodDeliverable = function (step, ev) {
+            ev.preventDefault();
             if ($scope.isAnrReadOnly) {
                 return;
             }
@@ -1405,6 +1407,19 @@
             });
         };
 
+        $scope.onEditCustomColumn = function (id, newValue) {
+            AnrService.patchScaleType($scope.model.anr.id, id, newValue, $scope.scales.language, function () {
+                $scope.updateScaleTypes(function () {
+                    $timeout(function () {
+                        var scroller = document.getElementById('horiz-scrollable');
+                        scroller.scrollLeft = scroller.scrollWidth;
+                    }, 0, false);
+                });
+                // $scope.column.name = newValue;
+                $scope.$broadcast('scales-impacts-type-changed');
+            });
+        };
+
         $scope.setImpactVisibility = function (id, visible) {
             AnrService.patchScaleType($scope.model.anr.id, id, {isHidden: visible ? 0 : 1}, function () {
                 $scope.updateScaleTypes();
@@ -1778,7 +1793,7 @@
                         customUrl = 'api/client-anr/'+ $scope.model.anr.id +'/export';
                     }
 
-                    $http.post(customUrl, {id: $scope.model.anr.id, password: exports.password, assessments: exports.assessments}).then(function (data) {
+                    $http.post(customUrl, {id: $scope.model.anr.id, password: exports.password, assessments: exports.assessments, methodSteps: exports.methodSteps, interviews: exports.interviews, controls: exports.controls, recommendations: exports.recommendations}).then(function (data) {
                         var contentD = data.headers('Content-Disposition'),
                             contentT = data.headers('Content-Type');
                         contentD = contentD.substring(0,contentD.length-1).split('filename="');
@@ -1793,6 +1808,7 @@
                 });
         };
         $scope.showMethodBox = function (stepNum, step, ev) {
+            ev.preventDefault()
             var position = $mdPanel.newPanelPosition()
                 .relativeTo('.method-menu-step-' + stepNum)
                 .addPanelPosition(stepNum == 4 ? $mdPanel.xPosition.ALIGN_END : $mdPanel.xPosition.ALIGN_START, $mdPanel.yPosition.BELOW);
@@ -2118,7 +2134,11 @@
         $scope.exportData = {
             password: '',
             simple_mode: true,
-            assessments: 0
+            assessments: 0,
+            methodSteps: true,
+            interviews: true,
+            controls: true,
+            recommendations: true
         };
 
         $scope.cancel = function() {
