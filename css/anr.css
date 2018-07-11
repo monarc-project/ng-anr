@@ -403,8 +403,8 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 }
 
 .tbl-soa td, .o.tbl-soa th {
-    /* width: 25px;
-    height: 25px; */
+    width: 500px;
+    height: 500px;
     color: #333333;
     font-weight: bold;
 }

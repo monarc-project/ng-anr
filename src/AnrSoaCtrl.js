@@ -17,7 +17,7 @@
 
       $scope.selectedCategory="all";
       $scope.order="category";
-      $scope.orderReference=$scope.orderMeasure=$scope.orderCompliance="-1";
+      $scope.orderReference=$scope.orderMeasure=$scope.orderCompliance=$scope.orderCategory="-1";
 
 
       $scope.Category=[0];
@@ -158,21 +158,34 @@
               }
 
 
-
           };
 
           $scope.soasCategory= function () {
             $scope.order="category";
 
-
             $scope.soas.sort(function (a, b) {
               return a.measure.code.localeCompare(b.measure.code);
             });
 
-            //tri par category_id
+
             $scope.soas.sort(function (a, b) {
               return a.measure.category.id-b.measure.category.id;
             });
+
+        // if(  $scope.orderCategory=='-1'){
+        //
+        //     //tri par category_id
+        //     $scope.soas.sort(function (a, b) {
+        //       return a.measure.category.id-b.measure.category.id;
+        //     });
+        //     $scope.orderCategory='1';
+        //
+        // }else{
+        //   $scope.soas.sort(function (a, b) {
+        //     return b.measure.category.id-a.measure.category.id;
+        //   });
+        //    $scope.orderCategory='-1';
+        //  }
 
 
 

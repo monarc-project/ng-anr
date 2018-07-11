@@ -19,6 +19,7 @@
 
       ClientSoaService.getSoa({anr: $scope.model.anr.id, id: $stateParams.soaId}).then(function (data) {
           $scope.soa = data;
+          $scope.soaDescription = $scope._langField(data.measure,'description');
       });
 
 
@@ -83,7 +84,7 @@
                               var list=[];
 
                               for (amv in amvs){
-                                if(amvs[amv].measure1.id==soa.measure  || amvs[amv].measure2.id==soa.measure  ||amvs[amv].measure3.id==soa.measure  ){
+                                if(amvs[amv].measure1.id==soa.measure.id  || amvs[amv].measure2.id==soa.measure.id  ||amvs[amv].measure3.id==soa.measure.id  ){
                                       for (risk in risks){
                                         if(risks[risk].amv == amvs[amv].id ){
 
@@ -130,7 +131,7 @@
               if(amvs[amv].measure2!=null){mes2_code=amvs[amv].measure2.code;}
               if(amvs[amv].measure3!=null){mes3_code=amvs[amv].measure3.code;}
 
-              if( amvs[amv].measure1.code == soa.reference || mes2_code == soa.reference  || mes3_code == soa.reference){
+              if( amvs[amv].measure1.code == soa.measure.code || mes2_code == soa.measure.code  || mes3_code == soa.measure.code){
                     for (risk in risks){
                       if(risks[risk].amv == amvs[amv].id ){
                               recLine++;
