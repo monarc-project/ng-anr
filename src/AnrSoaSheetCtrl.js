@@ -114,12 +114,19 @@
             finalArray=[];
             recLine = 0;
             finalArray[recLine]= gettextCatalog.getString('asset');
-            finalArray[recLine]+=','+gettextCatalog.getString('asset description');
+            finalArray[recLine]+=','+gettextCatalog.getString('C Impact');
+            finalArray[recLine]+=','+gettextCatalog.getString('I Impact');
+            finalArray[recLine]+=','+gettextCatalog.getString('A Impact');
             finalArray[recLine]+=','+gettextCatalog.getString('threat');
-            finalArray[recLine]+=','+gettextCatalog.getString('threat description');
+            finalArray[recLine]+=','+gettextCatalog.getString('prob.');
             finalArray[recLine]+=','+gettextCatalog.getString('vulnerability');
-            finalArray[recLine]+=','+gettextCatalog.getString('vulnerability description');
             finalArray[recLine]+=','+gettextCatalog.getString('Existing controls');
+            finalArray[recLine]+=','+gettextCatalog.getString('Qualif.');
+            finalArray[recLine]+=','+gettextCatalog.getString('Current risk C');
+            finalArray[recLine]+=','+gettextCatalog.getString('Current risk I');
+            finalArray[recLine]+=','+gettextCatalog.getString('Current risk A');
+            finalArray[recLine]+=','+gettextCatalog.getString('Treatment');
+            finalArray[recLine]+=','+gettextCatalog.getString('Residual risk');
 
             soa = $scope.soa;
             amvs = $scope.amvs;
@@ -140,12 +147,76 @@
                               finalArray[recLine]="\""+$scope._langField(instanceCache[instance],'name')	+"\"";
                                 }
                               }
-                              finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'assetDescription')+"\"";
+                              if(risks[risk].c_impact =='-1'){
+                                  finalArray[recLine]+=','+"\""+' '+"\"";
+                              }else{
+                              finalArray[recLine]+=','+"\""+risks[risk].c_impact+"\"";}
+
+                              if(risks[risk].i_impact =='-1'){
+                                  finalArray[recLine]+=','+"\""+' '+"\"";
+                              }else{
+                              finalArray[recLine]+=','+"\""+risks[risk].i_impact+"\"";}
+
+                              if(risks[risk].d_impact =='-1'){
+                                  finalArray[recLine]+=','+"\""+' '+"\"";
+                              }else{
+                              finalArray[recLine]+=','+"\""+risks[risk].d_impact+"\"";}
+
                               finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'threatLabel')+"\"";
-                              finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'threatDescription')+"\"";
+
+                              if(risks[risk].threatRate =='-1'){
+                                  finalArray[recLine]+=','+"\""+' '+"\"";
+                              }else{
+                              finalArray[recLine]+=','+"\""+risks[risk].threatRate+"\"";}
+
+
                               finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'vulnLabel')+"\"";
-                              finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'vulnDescription')+"\"";
-                                finalArray[recLine]+=','+"\""+risks[risk].comment+"\"";
+
+                              if(risks[risk].comment ==null){
+                                  finalArray[recLine]+=','+"\""+' '+"\"";
+                              }else{
+                              finalArray[recLine]+=','+"\""+risks[risk].comment+"\"";}
+
+                              if(risks[risk].vulnerabilityRate =='-1'){
+                                  finalArray[recLine]+=','+"\""+' '+"\"";
+                              }else{
+                              finalArray[recLine]+=','+"\""+risks[risk].vulnerabilityRate+"\"";}
+
+                              if(risks[risk].c_risk =='-1'){
+                                  finalArray[recLine]+=','+"\""+' '+"\"";
+                              }else{
+                              finalArray[recLine]+=','+"\""+risks[risk].c_risk+"\"";}
+
+                              if(risks[risk].i_risk =='-1'){
+                                  finalArray[recLine]+=','+"\""+' '+"\"";
+                              }else{
+                              finalArray[recLine]+=','+"\""+risks[risk].i_risk+"\"";}
+
+                              if(risks[risk].d_risk =='-1'){
+                                  finalArray[recLine]+=','+"\""+' '+"\"";
+                              }else{
+                              finalArray[recLine]+=','+"\""+risks[risk].d_risk+"\"";}
+                              if(risks[risk].kindOfMeasure =='1'){
+                                finalArray[recLine]+=','+"\""+gettextCatalog.getString('Reduction')+"\"";
+
+                               }else if (risks[risk].kindOfMeasure =='2') {
+                                finalArray[recLine]+=','+"\""+gettextCatalog.getString('Denied')+"\"";
+
+                              }else if (risks[risk].kindOfMeasure =='3') {
+                                finalArray[recLine]+=','+"\""+gettextCatalog.getString('Accepted')+"\"";
+
+                              }else if (risks[risk].kindOfMeasure =='4') {
+                                finalArray[recLine]+=','+"\""+gettextCatalog.getString('Shared')+"\"";
+
+                              }else if (risks[risk].kindOfMeasure =='5') {
+                                finalArray[recLine]+=','+"\""+gettextCatalog.getString('Not treated')+"\"";
+
+                              }
+
+                              if(risks[risk].target_risk =='-1'){
+                                  finalArray[recLine]+=','+"\""+' '+"\"";
+                              }else{
+                              finalArray[recLine]+=','+"\""+risks[risk].target_risk+"\"";}
                       }
                    }
               }
