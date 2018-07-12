@@ -33,7 +33,8 @@
                 <tr>
                     <th></th>
                     <th ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">
-                      {{ type['label' + scales.language] }}
+                      <span class="text-blue" ng-if="type.type == 'CUS' && !isAnrReadOnly" inline-edit="column.name" inline-edit-callback="onEditCustomColumn(type.id, newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ type['label' + scales.language]? type['label' + scales.language] : '...' }}"></span>
+                      <span class="text-blue" ng-if="type.type != 'CUS' && !isAnrReadOnly">{{ type['label' + scales.language] }}</span>
                       <md-button class="md-icon-button md-warn" ng-if="type.type == 'CUS' && !isAnrReadOnly" ng-click="deleteCustomScaleType(type.id)">
                         <md-icon>delete</md-icon></md-button>
                       <md-button class="md-icon-button md-primary" ng-if="type.type != 'CUS' && !isAnrReadOnly" ng-click="setImpactVisibility(type.id, !!type.isHidden)">

@@ -2,25 +2,37 @@
     <div layout="column" md-theme="light" class="md-padding-left md-padding-right">
         <md-card  ng-show="isAllowed('userfo')" md-theme-watch>
             <md-card-content layout="column">
-                <md-tabs md-dynamic-height="true" md-border-bottom="true" md-selected="currentTabIndex">
-                    <md-tab label="{{ 'Risks' | translate }}" md-on-select="selectGraphRisks()">
-                    </md-tab>
 
-                    <md-tab label="{{ 'Threats' | translate }}" md-on-select="selectGraphThreats()">
-                    </md-tab>
+              <div layout="row" layout-align="start">
+                <div flex ="1">
+                    <md-button class="md-icon-button" ng-click="generateXlsxData()">
+                      <md-icon class="md-warn">file_download</md-icon>
+                      <md-tooltip> {{ 'Export the whole dashboard' | translate }} (xlsx)</md-tooltip>
+                    </md-button>
+                </div>
+                <div flex>
+                  <md-tabs md-dynamic-height="true" md-border-bottom="true" md-selected="currentTabIndex">
+                      <md-tab label="{{ 'Risks' | translate }}" md-on-select="selectGraphRisks()">
+                      </md-tab>
 
-                    <md-tab label="{{ 'Vulnerabilities' | translate }}" md-on-select="selectGraphVulnerabilities()">
-                    </md-tab>
+                      <md-tab label="{{ 'Threats' | translate }}" md-on-select="selectGraphThreats()">
+                      </md-tab>
 
-                    <md-tab label="{{ 'Cartography' | translate }}" md-on-select="selectGraphCartography()">
-                    </md-tab>
+                      <md-tab label="{{ 'Vulnerabilities' | translate }}" md-on-select="selectGraphVulnerabilities()">
+                      </md-tab>
 
-                    <!-- <md-tab label="{{ 'Decision support' | translate }}" md-on-select="selectGraphDecisionSupport()">
-                    </md-tab>
+                      <md-tab label="{{ 'Cartography' | translate }}" md-on-select="selectGraphCartography()">
+                      </md-tab>
 
-                    <md-tab label="{{ 'Perspective' | translate }}" md-on-select="selectGraphPerspective()">
-                    </md-tab> -->
-                </md-tabs>
+                      <!-- <md-tab label="{{ 'Decision support' | translate }}" md-on-select="selectGraphDecisionSupport()">
+                      </md-tab>
+
+                      <md-tab label="{{ 'Perspective' | translate }}" md-on-select="selectGraphPerspective()">
+                      </md-tab> -->
+                  </md-tabs>
+                </div>
+              </div>
+
 
                 <div layout="row" layout-align="space-around">
                     <div layout="column" flex="35">
