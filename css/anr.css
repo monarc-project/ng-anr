@@ -428,6 +428,21 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
     color: white;
 }
 
+/** soaTable compliance  */
+
+
+.buttonsoa {
+   border: none;
+   text-align: center;
+   text-decoration: none;
+   display: inline-block;
+   cursor: pointer;
+   background-color: white;
+   color: black;
+}
+.buttonsoa:hover {background-color: #e7e7e7;}
+
+
 /** soaTable justification  */
 .btn {
     text-align: center;

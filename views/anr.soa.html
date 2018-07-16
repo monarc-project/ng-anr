@@ -14,7 +14,7 @@
 
         <md-select ng-model="selectedCategory" ng-change="onTableEdited" >
           <md-option  value="all">all</md-option>
-          <md-option ng-repeat="cat in Categories" value="{{cat.id}}" ng-if="Category[cat.id-1] !=0 ">{{_langField(cat,'label')}}</md-option>
+          <md-option ng-repeat="cat in Categories" value="{{cat.id}}" >{{_langField(cat,'label')}}</md-option>
 
         </md-select>
 
@@ -29,21 +29,21 @@
 
             <tr >
 
-                <th  style="width: 8%" ><md-button class="  " ng-click="soasCategory()"> {{ 'Category'| translate }} </md-button> </th>
-                <th  style="width: 4%" ><md-button class=" " ng-click="soasReference()"> {{ 'Ref.'| translate }} </md-button>      </th>
-                <th  style="width: 15%" ><md-button class=" " ng-click="soasMeasures()" > {{ 'Control'| translate }} </md-button>  </th>
+                <th  style="width: 7%" ><md-button class="buttonsoa"   ng-click="soasCategory()"> {{ 'Category'| translate }} </md-button> </th>
+                <th  style="width: 3%" ><md-button  class="buttonsoa"  ng-click="soasReference()"> {{ 'Ref.'| translate }} </md-button>      </th>
+                <th  style="width: 15%" ><md-button class="buttonsoa"   ng-click="soasMeasures()" > {{ 'Control'| translate }} </md-button>  </th>
                 <th  style="width: 15%" translate>inclusion/exclusion</th>
-                <th  style="width: 15%" translate>Remarks</th>
-                <th  style="width: 15%" translate>Evidences</th>
-                <th  style="width: 15%">Actions</th>
-                <th  style="width: 15%" >   <md-button class=" " ng-click="soasCompliance()"> {{ 'level of compliance'| translate }}</md-button>   </th>
+                <th  style="width: 18%" translate>Remarks</th>
+                <th  style="width: 18%" translate>Evidences</th>
+                <th  style="width: 19%" >Actions</th>
+                <th  style="width: 5%" >   <button class="buttonsoa" ng-click="soasCompliance()" style="width: 110px;"> {{ 'level of compliance'| translate }}</button>   </th>
 
             </tr>
         </thead>
          <tbody > <!--cat.anr.id -->
           <!-- soa in soas.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | filter:searchText -->
 
-            <tr edit-model="soa" ng-repeat="soa in soas "   ng-if="  (selectedCategory =='all' || selectedCategory == soa.measure.category.id) && Category[soa.measure.category.id-1] !=0   ">
+            <tr edit-model="soa" ng-repeat="soa in soas "   ng-if="  (selectedCategory =='all' || selectedCategory == soa.measure.category.id)  ">
               <td  rowspan="{{Category[soa.measure.category.id-1]}}" style="max-width: 300px" class="txtleft" ng-if="$index == CategoryIndex[soa.measure.category.id-1] && order=='category' ">{{soa.measure.category.reference}}-{{_langField(soa.measure.category,'label')}}</td>
               <!-- <td  rowspan="{{CategoryIndex[soa.measure.category.id]-$index}}" style="max-width: 300px" class="txtleft" ng-if="$index == 10 && order=='category' ">{{soa.measure.category.reference}}-{{_langField(soa.measure.category,'label')}}</td> -->
 
@@ -69,7 +69,7 @@
                  ng-class="{'green':  soa.compliance == '5', 'orange': soa.compliance == '4' || soa.compliance == '3' ,'red': soa.compliance == '2' || soa.compliance == '1'  }"
                  >
                   <md-input-container>
-                    <md-select ng-model="soa.compliance" ng-change="onTableEdited(soa, 'compliance') "  style="width: 190px;">
+                    <md-select ng-model="soa.compliance" ng-change="onTableEdited(soa, 'compliance') "  style="width: 110px;">
                         <md-option value="1">{{ 'Initial' | translate }}</md-option>
                         <md-option value="2">{{ 'Developing' | translate }}</md-option>
                         <md-option value="3">{{ 'Defined' | translate }}</md-option>
