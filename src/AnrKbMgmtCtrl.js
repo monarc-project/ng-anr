@@ -1813,7 +1813,7 @@
     }
 
     function CreateMeasureDialogCtrl($scope, $mdDialog, ClientCategoryService, ConfigService, measure) {
-      ClientCategoryService.getCategories({anr: 59}).then(function (data) {
+      ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
          $scope.categories = data['categories'];
       });
         $scope.languages = ConfigService.getLanguages();
