@@ -691,12 +691,12 @@
 
         $scope.createNewMeasure = function (ev, measure) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-            ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
-               $scope.categories = data['categories'];
-            });
+            // ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
+            //    $scope.categories = data['categories'];
+            // });
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '  ClientCategoryService', 'ConfigService', 'measure', CreateMeasureDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'ClientCategoryService', 'ConfigService', 'measure', CreateMeasureDialogCtrl],
                 templateUrl: 'views/anr/create.measures.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -733,7 +733,7 @@
 
             MeasureService.getMeasure(measure.id).then(function (measureData) {
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', 'ConfigService', 'measure', CreateMeasureDialogCtrl],
+                    controller: ['$scope', '$mdDialog', 'ClientCategoryService', 'ConfigService', 'measure', CreateMeasureDialogCtrl],
                     templateUrl: 'views/anr/create.measures.html',
                     targetEvent: ev,
                     preserveScope: false,
@@ -1813,7 +1813,7 @@
     }
 
     function CreateMeasureDialogCtrl($scope, $mdDialog, ClientCategoryService, ConfigService, measure) {
-      ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
+      ClientCategoryService.getCategories({anr: 59}).then(function (data) {
          $scope.categories = data['categories'];
       });
         $scope.languages = ConfigService.getLanguages();
