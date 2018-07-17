@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrKbMgmtCtrl', [
             '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
-            'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'TagService', 'RiskService',
+            'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'TagService', 'RiskService','ClientCategoryService',
              '$state', '$timeout', '$rootScope',
             AnrKbMgmtCtrl
         ]);
@@ -14,7 +14,7 @@
      */
     function AnrKbMgmtCtrl($scope, $stateParams, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService,
                                   AssetService, ThreatService, VulnService, AmvService, MeasureService, TagService,
-                                  RiskService, $state, $timeout, $rootScope) {
+                                  RiskService,ClientCategoryService, $state, $timeout, $rootScope) {
         $scope.tab = -1;
         $scope.gettext = gettextCatalog.getString;
         TableHelperService.resetBookmarks();
@@ -654,6 +654,9 @@
         $scope.deselectMeasuresTab = function () {
             TableHelperService.unwatchSearch($scope.measures);
         };
+        ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
+           $scope.categories = data['categories'];
+       });
 
         $scope.updateMeasures = function () {
             var query = angular.copy($scope.measures.query);
@@ -663,13 +666,16 @@
                 $scope.measures.query.page = query.page = 1;
                 $scope.measures.previousQueryOrder = $scope.measures.query.order;
             }
-
             $scope.measures.promise = MeasureService.getMeasures(query);
             $scope.measures.promise.then(
                 function (data) {
                     $scope.measures.items = data;
                 }
             )
+             ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
+                $scope.categories = data['categories'];
+            });
+
         };
         $scope.removeMeasuresFilter = function () {
             TableHelperService.removeFilter($scope.vulns);
@@ -685,9 +691,12 @@
 
         $scope.createNewMeasure = function (ev, measure) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
+               $scope.categories = data['categories'];
+            });
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ConfigService', 'measure', CreateMeasureDialogCtrl],
+                controller: ['$scope', '$mdDialog', '  ClientCategoryService', 'ConfigService', 'measure', CreateMeasureDialogCtrl],
                 templateUrl: 'views/anr/create.measures.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -1803,9 +1812,13 @@
         };
     }
 
-    function CreateMeasureDialogCtrl($scope, $mdDialog, ConfigService, measure) {
+    function CreateMeasureDialogCtrl($scope, $mdDialog, ClientCategoryService, ConfigService, measure) {
+      ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
+         $scope.categories = data['categories'];
+      });
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
+
 
         if (measure != undefined && measure != null) {
             $scope.measure = measure;
@@ -1830,6 +1843,7 @@
             $scope.measure.cont = true;
             $mdDialog.hide($scope.measure);
         };
+
     }
 
     function CreateAmvDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService, MeasureService, ConfigService, AmvService, $q, amv) {
@@ -1931,6 +1945,19 @@
 
             return promise.promise;
         };
+
+        // Categories
+        $scope.queryCategoriesSearch = function (query) {
+            var promise = $q.defer();
+            ClientCategoryService.getCategories({filter: query}).then(function (e) {
+                promise.resolve(e.categories);
+            }, function (e) {
+                promise.reject(e);
+            });
+
+            return promise.promise;
+        };
+
 
         $scope.selectedMeasureItemChange = function (idx, item) {
             if (item) {
