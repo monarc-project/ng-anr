@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrKbMgmtCtrl', [
             '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
-            'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'TagService', 'RiskService','ClientCategoryService',
+            'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'ClientSoaService', 'TagService', 'RiskService','ClientCategoryService',
              '$state', '$timeout', '$rootScope',
             AnrKbMgmtCtrl
         ]);
@@ -13,7 +13,7 @@
      * ANR > KB
      */
     function AnrKbMgmtCtrl($scope, $stateParams, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService,
-                                  AssetService, ThreatService, VulnService, AmvService, MeasureService, TagService,
+                                  AssetService, ThreatService, VulnService, AmvService, MeasureService, ClientSoaService, TagService,
                                   RiskService,ClientCategoryService, $state, $timeout, $rootScope) {
         $scope.tab = -1;
         $scope.gettext = gettextCatalog.getString;
@@ -43,6 +43,8 @@
                 case 'measures': $scope.currentTabIndex = 3; break;
                 case 'amvs': $scope.currentTabIndex = 4; break;
                 case 'objlibs': $scope.currentTabIndex = 5; break;
+                case 'categories': $scope.currentTabIndex = 6; break;
+
             }
         }
         //$scope.selectTab($scope.tab);
@@ -691,12 +693,12 @@
 
         $scope.createNewMeasure = function (ev, measure) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-            // ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
-            //    $scope.categories = data['categories'];
-            // });
+            ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
+               $scope.categories = data['categories'];
+            });
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ClientCategoryService', 'ConfigService', 'measure', CreateMeasureDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'ClientCategoryService', 'ConfigService', 'measure', 'anrId', CreateMeasureDialogCtrl],
                 templateUrl: 'views/anr/create.measures.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -704,7 +706,8 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                    'measure': measure
+                    'measure': measure,
+                    'anrId': $scope.model.anr.id
                 }
             })
                 .then(function (measure) {
@@ -733,7 +736,7 @@
 
             MeasureService.getMeasure(measure.id).then(function (measureData) {
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', 'ClientCategoryService', 'ConfigService', 'measure', CreateMeasureDialogCtrl],
+                    controller: ['$scope', '$mdDialog', 'ClientCategoryService', 'ConfigService', 'measure', 'anrId', CreateMeasureDialogCtrl],
                     templateUrl: 'views/anr/create.measures.html',
                     targetEvent: ev,
                     preserveScope: false,
@@ -741,7 +744,8 @@
                     clickOutsideToClose: false,
                     fullscreen: useFullScreen,
                     locals: {
-                        'measure': measureData
+                        'measure': measureData,
+                        'anrId': $scope.model.anr.id
                     }
                 })
                     .then(function (measure) {
@@ -809,9 +813,10 @@
             });
         };
 
-        /*
-         * AMVS TAB
-         */
+
+         /*
+          * AMVS TAB
+          */
         $scope.amvs = TableHelperService.build('status', 20, 1, '');
         $scope.amvs.activeFilter = 1;
         var amvsFilterWatch;
@@ -1812,12 +1817,14 @@
         };
     }
 
-    function CreateMeasureDialogCtrl($scope, $mdDialog, ClientCategoryService, ConfigService, measure) {
-      ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
+    function CreateMeasureDialogCtrl($scope, $mdDialog, ClientCategoryService, ConfigService, measure, anrId) {
+
+      $scope.languages = ConfigService.getLanguages();
+      $scope.language = $scope.getAnrLanguage();
+      ClientCategoryService.getCategories({anr: anrId}).then(function (data) {
          $scope.categories = data['categories'];
       });
-        $scope.languages = ConfigService.getLanguages();
-        $scope.language = $scope.getAnrLanguage();
+
 
 
         if (measure != undefined && measure != null) {
@@ -1946,10 +1953,19 @@
             return promise.promise;
         };
 
-        // Categories
-        $scope.queryCategoriesSearch = function (query) {
+
+        $scope.selectedMeasureItemChange = function (idx, item) {
+            if (item) {
+                $scope.amv['measure' + idx] = item;
+            }
+        }
+
+
+
+        // Category
+        $scope.queryCategorysSearch = function (query) {
             var promise = $q.defer();
-            ClientCategoryService.getCategories({filter: query}).then(function (e) {
+            ClientCategoryService.getCategory({filter: query}).then(function (e) {
                 promise.resolve(e.categories);
             }, function (e) {
                 promise.reject(e);
@@ -1959,11 +1975,16 @@
         };
 
 
-        $scope.selectedMeasureItemChange = function (idx, item) {
+        $scope.selectedCategoryItemChange = function (idx, item) {
             if (item) {
-                $scope.amv['measure' + idx] = item;
+              // $scope.amv.category = item;
+
+                $scope.amv['category' + idx] = item;
             }
         }
+
+
+
 
         ////
 

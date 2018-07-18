@@ -44,8 +44,6 @@
                     <label translate>category</label>
                     <md-icon>turned_in</md-icon>
                     <md-select ng-model="measure.category.id">
-                        <md-option ng-value="1">{{ 'Primary' | translate }}</md-option>
-                        <md-option ng-value="2">{{ 'Secondary' | translate }}</md-option>
                         <md-option ng-repeat="cat in categories" value="{{cat.id}}"  >{{_langField(cat,'label')}}</md-option>
 
                     </md-select>
