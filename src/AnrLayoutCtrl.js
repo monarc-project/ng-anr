@@ -283,7 +283,7 @@
 
         $scope.resetRisksOpFilters = function () {
             $scope.risks_op_filters = {
-                order: 'maxRisk',
+                order: 'cacheNetRisk',
                 order_direction: 'desc',
                 thresholds: -1,
                 page: 1,
@@ -316,7 +316,7 @@
         }
 
         $scope.exportAnrRisksOpTable = function () {
-            var params = angular.copy($scope.risks_filters);
+            var params = angular.copy($scope.risks_op_filters);
             params.csv = true;
             var anr = 'anr';
             if ($scope.OFFICE_MODE == 'FO') {
@@ -330,7 +330,7 @@
         }
 
         $scope.exportInstanceOpTable = function () {
-            var params = angular.copy($scope.risks_filters);
+            var params = angular.copy($scope.risks_op_filters);
             params.csv = true;
             var anr = 'anr';
             if ($scope.OFFICE_MODE == 'FO') {
@@ -362,7 +362,7 @@
         $scope.updateModel();
         $scope.instmode = 'anr';
 
-        $scope.$watchGroup(['risks_filters.order', 'risks_filters.order_direction'], function (newValue, oldValue) {
+        $scope.$watchGroup(['risks_filters.order', 'risks_filters.order_direction', 'risks_op_filters.order', 'risks_op_filters.order_direction'], function (newValue, oldValue) {
             if (newValue != oldValue) {
                 if ($state.current.name == "main.kb_mgmt.models.details" || $state.current.name == 'main.project.anr') {
                     $scope.updateAnrRisksTable();

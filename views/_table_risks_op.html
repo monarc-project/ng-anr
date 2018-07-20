@@ -41,6 +41,27 @@
                 <md-button ng-if="(instmode == 'anr' && OFFICE_MODE == 'FO' && !isAnrReadOnly)" class="md-icon-button" ng-click="exportInstanceRisks ? exportInstanceRisks() : exportAnrRisksOpTable()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip><</md-button>
                 <md-button ng-if="(instmode == 'inst' && OFFICE_MODE == 'FO' && !isAnrReadOnly)" class="md-icon-button" ng-click="exportInstanceOpTable()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip><</md-button>
 
+                <md-input-container>
+                    <label translate>Sort</label>
+                    <md-select ng-model="risks_op_filters.order">
+                        <md-option value="instance" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'Asset' | translate }}</md-option>
+                        <md-option value="position" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'Position' | translate }}</md-option>
+                        <md-option value="brutProb"  ng-if="model.showRolfBrut" >{{ 'Inherent probability' | translate }}</md-option>
+                        <md-option value="cacheBrutRisk"  ng-if="model.showRolfBrut" >{{ 'Inherent risk' | translate }}</md-option>
+                        <md-option value="netProb">{{ 'Net probability' | translate }}</md-option>
+                        <md-option value="cacheNetRisk">{{ 'Net risk ' | translate }}</md-option>
+                        <md-option value="cacheTargetedRisk">{{ 'Residual risk' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container>
+                    <label translate>Sort direction</label>
+                    <md-select ng-model="risks_op_filters.order_direction">
+                        <md-option value="asc">{{ 'Ascending' | translate }}</md-option>
+                        <md-option value="desc">{{ 'Descending' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
+
             </form>
         </div>
     </md-card>
