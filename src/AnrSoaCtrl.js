@@ -84,8 +84,8 @@
 
 
 
-        //  console.log(  $scope.Category);
-        //  console.log(  $scope.CategoryIndex);
+         // console.log(  $scope.Category);
+         // console.log(  $scope.CategoryIndex);
 
 
       });
@@ -210,19 +210,6 @@
 
 
           params[name] = model[name];
-
-         // if(name === "compliance" && model[name].replace("%","")<= 100 && model[name].replace("%", "") >= 0 ){
-         //   params[name] = model[name];
-         //   model[name] = model[name] + '%';
-         //  }
-         //
-         //  else{
-         //        if (name != "compliance"){
-         //          params[name] = model[name];}
-         //        else{
-         //          toastr.error(gettextCatalog.getString('the value of the compliance must be between 0 and 100 '));
-         //        }
-         //  }
 
 
          ClientSoaService.updateSoa(params, function () {
