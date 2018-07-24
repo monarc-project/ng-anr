@@ -114,6 +114,9 @@
 
         $scope.$on('risks-table-filters-changed', function () {
             $scope.updateInstanceRisks();
+        });
+
+        $scope.$on('risks-op-table-filters-changed', function () {
             $scope.updateInstanceRisksOp()
         });
 
