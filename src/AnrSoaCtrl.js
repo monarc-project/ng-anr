@@ -38,7 +38,7 @@
 
 
           $scope.Categories.push({'id':$scope.id_cat, 'reference':'-----', 'label1':'-----', 'label2':'-----', 'label3':'-----', 'label4':'-----'});
-          // console.log(  $scope.Categories);
+          //console.log(  $scope.Categories);
 
 
       });
@@ -87,8 +87,8 @@
 
                                                    }
 
-                                                  // console.log(  $scope.Category);
-                                                  // console.log(  $scope.CategoryIndex);
+                                                  //console.log(  $scope.Category);
+                                                  //console.log(  $scope.CategoryIndex);
 
                                                  };
 
@@ -100,14 +100,14 @@
 
            for (soa in $scope.soas_data){
 
-                 if($scope.status == $scope.soas_data[soa].measure.status || $scope.status == "all")
+                 if(($scope.status == $scope.soas_data[soa].measure.status || $scope.status == "all") && ($scope.selectedCategory == $scope.soas_data[soa].measure.category.id || $scope.selectedCategory == "all") )
                       $scope.test.push($scope.soas_data[soa]);
 
            }
+
            $scope.soas= $scope.test;
            rowspan_calcul();
-           $scope.selectCategory();
-           // console.log(  $scope.soas);
+           //console.log(  $scope.soas);
 
 
 
@@ -255,7 +255,7 @@
 
 
      $scope.onTableEdited = function (model, name) {
-         console.log('onTableEdited');
+         //console.log('onTableEdited');
          var promise = $q.defer();
 
          var params = {
