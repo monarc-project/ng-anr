@@ -905,12 +905,12 @@
 
          if(category.status==1) {
            MeasureService.getMeasures({anr: $scope.model.anr.id}).then(function (data) {
-               $scope.measures = data['measures'];
-               for (measure in $scope.measures){
-                 if( $scope.measures[measure].category !=null ) {
-                   if($scope.measures[measure].status==1 && $scope.measures[measure].category.id==category.id ) {
-                         MeasureService.patchMeasure($scope.measures[measure].id, {status: !$scope.measures[measure].status}, function () {
-                             $scope.measures[measure].status = !$scope.measures[measure].status;
+               $scope.measures_cat = data['measures'];
+               for (measure in $scope.measures_cat){
+                 if( $scope.measures_cat[measure].category !=null ) {
+                   if($scope.measures_cat[measure].status==1 && $scope.measures_cat[measure].category.id==category.id ) {
+                         MeasureService.patchMeasure($scope.measures_cat[measure].id, {status: !$scope.measures_cat[measure].status}, function () {
+                             $scope.measures_cat[measure].status = !$scope.measures_cat[measure].status;
                           })
 
                     }
@@ -1010,13 +1010,13 @@
             $mdDialog.show(confirm).then(function() {
 
               MeasureService.getMeasures({anr: $scope.model.anr.id}).then(function (data) {
-                  $scope.measures = data['measures'];
-                  for (measure in $scope.measures){
-                    if( $scope.measures[measure].category !=null ) {
-                      if($scope.measures[measure].category.id == item.id) {
-                         $scope.measures[measure].category =null;
+                  $scope.measures_cat = data['measures'];
+                  for (measure in $scope.measures_cat){
+                    if( $scope.measures_cat[measure].category !=null ) {
+                      if($scope.measures_cat[measure].category.id == item.id) {
+                         $scope.measures_cat[measure].category =null;
 
-                         MeasureService.updateMeasure($scope.measures[measure],
+                         MeasureService.updateMeasure($scope.measures_cat[measure],
                              function () {
 
                                  var query = angular.copy($scope.categories.query);
@@ -1056,14 +1056,14 @@
                     ids.push($scope.categories.selected[i].id);
                 }
                 MeasureService.getMeasures({anr: $scope.model.anr.id}).then(function (data) {
-                    $scope.measures = data['measures'];
-                    for (measure in $scope.measures){
+                    $scope.measures_cat = data['measures'];
+                    for (measure in $scope.measures_cat){
                       for (var i = 0; i < ids.length; ++i) {
-                     if( $scope.measures[measure].category !=null ) {
-                        if($scope.measures[measure].category.id == ids[i]) {
-                           $scope.measures[measure].category =null;
+                     if( $scope.measures_cat[measure].category !=null ) {
+                        if($scope.measures_cat[measure].category.id == ids[i]) {
+                           $scope.measures_cat[measure].category =null;
 
-                           MeasureService.updateMeasure($scope.measures[measure],
+                           MeasureService.updateMeasure($scope.measures_cat[measure],
                              function () {
                                  var query = angular.copy($scope.categories.query);
                               }
