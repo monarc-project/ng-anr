@@ -34,7 +34,7 @@
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 3};
                         break;
                     case 'main.project.anr.soa':
-                        $scope.display = {show_hidden_impacts: false};
+                        $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 4};
                         break;
                 }
             }
@@ -686,6 +686,12 @@
                             $scope.$broadcast('setup-kb-mgmt');
                         });
                         break;
+                        case 4:
+                            $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
+                            $timeout(function() {
+                              $scope.goToSoa();
+                            });
+                            break;
                 }
             });
             $scope.$watch('ToolsAnrService.currentTab',function(newValue, oldValue){
@@ -1858,7 +1864,9 @@
         $scope.goToDashboard = function () {
             $state.transitionTo("main.project.anr.dashboard" , {modelId: $stateParams.modelId});
         };
-
+        $scope.goToSoa = function () {
+            $state.transitionTo("main.project.anr.soa" , {modelId: $stateParams.modelId});
+        }
         $scope.openInterviewTools = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 

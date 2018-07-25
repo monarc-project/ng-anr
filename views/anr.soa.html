@@ -31,18 +31,18 @@
         </md-button>
     </div>
 
-    <table class="md-html-table" editable callback="onTableEdited">
+    <table class="md-html-table soa-table"  editable callback="onTableEdited">
       <thead>
 
             <tr >
 
                 <th  style="width: 7%" ><button class="buttonsoa"   ng-click="soasCategory()" > {{ 'Category'| translate }} </button> </th>
                 <th  style="width: 3%" ><button  class="buttonsoa"  ng-click="soasReference()"> {{ 'Ref.'| translate }} </button>      </th>
-                <th  style="width: 15%" ><button class="buttonsoa"   ng-click="soasMeasures()" > {{ 'Control'| translate }} </button>  </th>
+                <th  style="width: 14%" ><button class="buttonsoa"   ng-click="soasMeasures()" > {{ 'Control'| translate }} </button>  </th>
                 <th  style="width: 15%" translate>inclusion/exclusion</th>
                 <th  style="width: 18%" translate>Remarks</th>
                 <th  style="width: 18%" translate>Evidences</th>
-                <th  style="width: 19%" >Actions</th>
+                <th  style="width: 18%" >Actions</th>
                 <th  style="width: 5%" >   <button class="buttonsoa" ng-click="soasCompliance()" style="width: 110px;"> {{ 'level of compliance'| translate }}</button>   </th>
 
             </tr>
@@ -56,7 +56,7 @@
 
               <td   style="max-width: 300px" class="txtleft" ng-if=" order !='category' ">{{soa.measure.category.reference}}-{{_langField(soa.measure.category,'label')}}</td>
 
-                <td  class="txtcenter" > <md-button class="md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.measure.code }}--{{soa.measure.category.reference}}</md-button></td>
+                <td  class="txtcenter" > <md-button class="md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.measure.code }}</md-button></td>
                 <td  class="txtleft">{{_langField(soa.measure,'description')}}</td>
 
                 <td class="btn">

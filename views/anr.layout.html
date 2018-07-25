@@ -40,7 +40,7 @@
                         <md-button ng-click="openInterviewTools($event)">{{ 'Interviews table' | translate }}</md-button>
                     </md-menu-item>
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">
-                        <md-button     ui-sref="main.project.anr.soa({modelId: model.anr.id})">{{ 'Statement of applicability' | translate }}</md-button>
+                        <md-button  ng-click="display.anrSelectedTabIndex = 4;"   ui-sref="main.project.anr.soa({modelId: model.anr.id})">{{ 'Statement of applicability' | translate }}</md-button>
                     </md-menu-item>
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">
                         <md-button ng-click="openSnapshotTools($event)">{{ 'Snapshots' | translate }}</md-button>
@@ -63,6 +63,10 @@
 
                 <md-tab label="{{ 'Knowledge base' | translate }}" ng-if="OFFICE_MODE == 'FO'">
                     <div ng-include="'views/anr/_anr.kbmgmt.html'"></div>
+                </md-tab>
+
+                <md-tab label="{{ 'Statement of applicability' | translate }}" >
+                    <div ng-include="'views/anr/anr.soa.html'"></div>
                 </md-tab>
             </md-tabs>
         </md-card>
