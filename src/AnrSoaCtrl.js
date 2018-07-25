@@ -95,7 +95,7 @@
 
 
 
-         $scope.selectStatus = function () {
+         $scope.selectStatusCategory = function () {
            $scope.test=[];
 
            for (soa in $scope.soas_data){
@@ -128,32 +128,12 @@
 
         }
         $scope.soas_data = $scope.soas;
-        $scope.selectStatus();
+        $scope.selectStatusCategory();
 
 
 
       });
 
-
-
-
-
-
-      $scope.selectCategory = function () {
-        $scope.test=[];
-
-        for (soa in $scope.soas_data){
-
-              if($scope.selectedCategory == $scope.soas_data[soa].measure.category.id || $scope.selectedCategory == "all")
-                   $scope.test.push($scope.soas_data[soa]);
-
-        }
-        $scope.soas= $scope.test;
-        rowspan_calcul();
-
-
-
-    };
 
 
 

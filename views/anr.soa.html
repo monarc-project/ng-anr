@@ -5,10 +5,10 @@
 
     <div layout="row" layout-align="start center" class="md-padding" >
 
-      <md-select ng-model="status" ng-change="selectStatus()" style="width: 100px">
-        <md-option  value="1">{{ 'active' | translate }}</md-option>
-        <md-option  value="0">{{ 'inactive' | translate }}</md-option>
-        <md-option  value="all">{{ 'all' | translate }}</md-option>
+      <md-select ng-model="status" ng-change="selectStatusCategory()" >
+        <md-option  value="1">{{ 'Show active only' | translate }}</md-option>
+        <md-option  value="0">{{ 'Show inactive only' | translate }}</md-option>
+        <md-option  value="all">{{ 'Show all' | translate }}</md-option>
       </md-select>
 
         <form flex >
@@ -19,7 +19,7 @@
         </form>
 
 
-        <md-select ng-model="selectedCategory" ng-change="selectCategory()" >
+        <md-select ng-model="selectedCategory" ng-change="selectStatusCategory()" >
           <md-option  value="all">all</md-option>
           <md-option ng-repeat="cat in Categories" value="{{cat.id}}" >{{_langField(cat,'label')}}</md-option>
 
