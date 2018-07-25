@@ -405,8 +405,8 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 .tbl-soa td, .o.tbl-soa th {
     width: 500px;
     height: 500px;
-    color: #333333;
     font-weight: bold;
+    font-size: 16px;
 }
 
 /* .tbl-soa td.wide {
@@ -439,6 +439,9 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
    cursor: pointer;
    background-color: white;
    color: black;
+
+   color: #333333;
+   font-weight : bold;
 }
 .buttonsoa:hover {background-color: #e7e7e7;}
 

@@ -4,6 +4,13 @@
     <p class="md-title" translate>Statement of applicability</p>
 
     <div layout="row" layout-align="start center" class="md-padding" >
+
+      <md-select ng-model="status" ng-change="selectStatus()" style="width: 100px">
+        <md-option  value="1">{{ 'active' | translate }}</md-option>
+        <md-option  value="0">{{ 'inactive' | translate }}</md-option>
+        <md-option  value="all">{{ 'all' | translate }}</md-option>
+      </md-select>
+
         <form flex >
             <md-input-container class="md-block md-padding-left md-padding-right">
                 <label><md-icon>search</md-icon> {{ 'Search...' | translate }}</label>
@@ -12,7 +19,7 @@
         </form>
 
 
-        <md-select ng-model="selectedCategory" ng-change="onTableEdited" >
+        <md-select ng-model="selectedCategory" ng-change="selectCategory()" >
           <md-option  value="all">all</md-option>
           <md-option ng-repeat="cat in Categories" value="{{cat.id}}" >{{_langField(cat,'label')}}</md-option>
 
@@ -29,9 +36,9 @@
 
             <tr >
 
-                <th  style="width: 7%" ><md-button class="buttonsoa"   ng-click="soasCategory()"> {{ 'Category'| translate }} </md-button> </th>
-                <th  style="width: 3%" ><md-button  class="buttonsoa"  ng-click="soasReference()"> {{ 'Ref.'| translate }} </md-button>      </th>
-                <th  style="width: 15%" ><md-button class="buttonsoa"   ng-click="soasMeasures()" > {{ 'Control'| translate }} </md-button>  </th>
+                <th  style="width: 7%" ><button class="buttonsoa"   ng-click="soasCategory()" > {{ 'Category'| translate }} </button> </th>
+                <th  style="width: 3%" ><button  class="buttonsoa"  ng-click="soasReference()"> {{ 'Ref.'| translate }} </button>      </th>
+                <th  style="width: 15%" ><button class="buttonsoa"   ng-click="soasMeasures()" > {{ 'Control'| translate }} </button>  </th>
                 <th  style="width: 15%" translate>inclusion/exclusion</th>
                 <th  style="width: 18%" translate>Remarks</th>
                 <th  style="width: 18%" translate>Evidences</th>
@@ -42,14 +49,14 @@
         </thead>
          <tbody > <!--cat.anr.id -->
           <!-- soa in soas.slice(((currentPage-1)*itemsPerPage), ((currentPage)*itemsPerPage)) | filter:searchText -->
-
-            <tr edit-model="soa" ng-repeat="soa in soas "   ng-if="  (selectedCategory =='all' || selectedCategory == soa.measure.category.id)  ">
+ <!-- (selectedCategory =='all' || selectedCategory == soa.measure.category.id) && -->
+            <tr edit-model="soa" ng-repeat="soa in soas "   ng-if="true">
               <td  rowspan="{{Category[soa.measure.category.id-1]}}" style="max-width: 300px" class="txtleft" ng-if="$index == CategoryIndex[soa.measure.category.id-1] && order=='category' ">{{soa.measure.category.reference}}-{{_langField(soa.measure.category,'label')}}</td>
               <!-- <td  rowspan="{{CategoryIndex[soa.measure.category.id]-$index}}" style="max-width: 300px" class="txtleft" ng-if="$index == 10 && order=='category' ">{{soa.measure.category.reference}}-{{_langField(soa.measure.category,'label')}}</td> -->
 
               <td   style="max-width: 300px" class="txtleft" ng-if=" order !='category' ">{{soa.measure.category.reference}}-{{_langField(soa.measure.category,'label')}}</td>
 
-                <td  class="txtcenter" > <md-button class="md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.measure.code }}</md-button></td>
+                <td  class="txtcenter" > <md-button class="md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.measure.code }}--{{soa.measure.category.reference}}</md-button></td>
                 <td  class="txtleft">{{_langField(soa.measure,'description')}}</td>
 
                 <td class="btn">

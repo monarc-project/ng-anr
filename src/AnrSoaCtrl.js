@@ -17,79 +17,142 @@
 
       $scope.selectedCategory="all";
       $scope.order="category";
+      $scope.status="1";
+      $scope.id_cat=0;
+
+
       $scope.orderReference=$scope.orderMeasure=$scope.orderCompliance=$scope.orderCategory="-1";
 
-
+         // $scope.Category = new Array();
+         // $scope.CategoryIndex = new Array();
       $scope.Category=[0];
       $scope.CategoryIndex=[0];
       ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
           $scope.Categories = data['categories'];
-      });
-
-
-
-
-
-
-
-      ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
-          $scope.soas = data['Soa-list'];
-
-
-          //tri par reference
-          $scope.soas.sort(function (a, b) {
-            return a.measure.code.localeCompare(b.measure.code);
-          });
-
-          //tri par category_id
-          $scope.soas.sort(function (a, b) {
-            return a.measure.category.id-b.measure.category.id;
-          });
-
-
-
-
-
-          $scope.totalItems = $scope.soas.length ;   //$scope.soas.length
-
-
-          //for every soa
-          // if($scope.soas[soa].compliance != null)
-          //         $scope.soas[soa].compliance = $scope.soas[soa].compliance + "%";
-          //
-
           for (Category in $scope.Categories){
-
-            $scope.Category[$scope.Categories[Category].id-1]=0;
-            $scope.CategoryIndex[$scope.Categories[Category].id-1]=0;
-
-              for (soa in $scope.soas){
-
-                if($scope.Categories[Category].id == $scope.soas[soa].measure.category.id)
-                     $scope.Category[$scope.Categories[Category].id-1]=$scope.Category[$scope.Categories[Category].id-1]+1;
+                if($scope.Categories[Category].id >= $scope.id_cat)
+                     $scope.id_cat=$scope.Categories[Category].id+1;
               }
 
 
-          }
 
 
-          for(var i=1;i<$scope.Category.length;i++){
-            if( ! $scope.CategoryIndex[i-1])$scope.CategoryIndex[i-1]=0;
-            if( ! $scope.Category[i-1])$scope.Category[i-1]=0;
-            $scope.CategoryIndex[i]=$scope.CategoryIndex[i-1]+$scope.Category[i-1];
-
-          }
-
-
-
-
-
-         // console.log(  $scope.Category);
-         // console.log(  $scope.CategoryIndex);
+          $scope.Categories.push({'id':$scope.id_cat, 'reference':'-----', 'label1':'-----', 'label2':'-----', 'label3':'-----', 'label4':'-----'});
+          console.log(  $scope.Categories);
 
 
       });
 
+
+
+      function categories_sort(a, b) {
+
+        return a.measure.category.id-b.measure.category.id;
+      };
+
+      function categories_sortInv(a, b) {
+        
+        return b.measure.category.id-a.measure.category.id;
+      };
+
+
+                                                 function rowspan_calcul() {
+                                                   //tri par reference
+                                                   $scope.soas.sort(function (a, b) {
+                                                     return a.measure.code.localeCompare(b.measure.code);
+                                                   });
+
+                                                   //tri par category_id
+                                                   $scope.soas.sort(categories_sort);
+                                                   $scope.totalItems = $scope.soas.length ;   //$scope.soas.length
+
+                                                   for (Category in $scope.Categories){
+                                                     $scope.Category[$scope.Categories[Category].id-1]=0;
+                                                     $scope.CategoryIndex[$scope.Categories[Category].id-1]=0;
+
+                                                       for (soa in $scope.soas){
+
+                                                         if($scope.Categories[Category].id == $scope.soas[soa].measure.category.id)
+                                                              $scope.Category[$scope.Categories[Category].id-1]=$scope.Category[$scope.Categories[Category].id-1]+1;
+                                                       }
+
+
+                                                   }
+
+
+                                                   for(var i=1;i<$scope.Category.length;i++){
+                                                     if( ! $scope.CategoryIndex[i-1])$scope.CategoryIndex[i-1]=0;
+                                                     if( ! $scope.Category[i-1])$scope.Category[i-1]=0;
+                                                     $scope.CategoryIndex[i]=$scope.CategoryIndex[i-1]+$scope.Category[i-1];
+
+                                                   }
+
+                                                  console.log(  $scope.Category);
+                                                  console.log(  $scope.CategoryIndex);
+
+                                                 };
+
+
+
+
+         $scope.selectStatus = function () {
+           $scope.test=[];
+
+           for (soa in $scope.soas_data){
+
+                 if($scope.status == $scope.soas_data[soa].measure.status || $scope.status == "all")
+                      $scope.test.push($scope.soas_data[soa]);
+
+           }
+           $scope.soas= $scope.test;
+           rowspan_calcul();
+           console.log(  $scope.soas);
+
+
+
+
+       };
+
+
+      ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
+        $scope.soas_data = data['Soa-list'];
+        $scope.soas = [];
+        for (soa in $scope.soas_data){
+          if( $scope.soas_data[soa].measure.category ==null ) {
+              var soa_n = $scope.soas_data[soa];
+              soa_n.measure.category={'id':$scope.id_cat, 'reference':'-----', 'label1':'-----', 'label2':'-----', 'label3':'-----', 'label4':'-----'};
+                   $scope.soas.push(soa_n);
+
+          }else                    $scope.soas.push($scope.soas_data[soa]);
+
+        }
+        $scope.soas_data = $scope.soas;
+        $scope.selectStatus();
+
+
+
+      });
+
+
+
+
+
+
+      $scope.selectCategory = function () {
+        $scope.test=[];
+
+        for (soa in $scope.soas_data){
+
+              if($scope.selectedCategory == $scope.soas_data[soa].measure.category.id || $scope.selectedCategory == "all")
+                   $scope.test.push($scope.soas_data[soa]);
+
+        }
+        $scope.soas= $scope.test;
+        rowspan_calcul();
+
+
+
+    };
 
 
 
@@ -143,17 +206,13 @@
                $scope.soas.sort(function (a, b) {
                   return a.measure.code.localeCompare(b.measure.code);
                   });
-                  $scope.soas.sort(function (a, b) {
-                    return a.measure.category.id-b.measure.category.id;
-                  });
+                  $scope.soas.sort(categories_sort);
                $scope.orderReference='1';
              }else{
                $scope.soas.sort(function (a, b) {
                   return b.measure.code.localeCompare(a.measure.code);
                   });
-                  $scope.soas.sort(function (a, b) {
-                    return b.measure.category.id-a.measure.category.id;
-                  });
+                  $scope.soas.sort(categories_sortInv);
                 $scope.orderReference='-1';
               }
 
@@ -168,9 +227,7 @@
             });
 
 
-            $scope.soas.sort(function (a, b) {
-              return a.measure.category.id-b.measure.category.id;
-            });
+            $scope.soas.sort(categories_sort);
 
         // if(  $scope.orderCategory=='-1'){
         //

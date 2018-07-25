@@ -43,12 +43,11 @@
                 <md-input-container class="md-block" layout="row" flex>
                     <label translate>category</label>
                     <md-icon>turned_in</md-icon>
-                    <md-select ng-model="measure.category.id" name="catId" required>
+                    <md-select ng-model="measure.category.id" name="catId" >
                         <md-option ng-repeat="cat in categories" value="{{cat.id}}"  >{{_langField(cat,'label')}}</md-option>
+
                     </md-select>
-                    <div ng-messages="measureForm.catId.$error">
-                        <div ng-message="required">{{ 'The category may not be empty' | translate }}</div>
-                    </div>
+
                 </md-input-container>
             </div>
         </md-dialog-content>

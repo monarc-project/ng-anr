@@ -645,6 +645,7 @@
             initMeasuresFilter = $scope.$watch('measures.activeFilter', function() {
                 if (initMeasuresFilter) {
                     initMeasuresFilter = false;
+
                 } else {
                     $scope.updateMeasures();
                 }
@@ -713,6 +714,7 @@
 
                     MeasureService.createMeasure(measure,
                         function () {
+                          $scope.measures.activeFilter=1;
                             $scope.updateMeasures();
                             toastr.success(gettextCatalog.getString('The control has been created successfully.',
                                 {measureLabel: $scope._langField(measure,'description')}), gettextCatalog.getString('Creation successful'));
@@ -842,7 +844,7 @@
 
                     $scope.measures.selected = [];
                 })
-                
+
 
 
 
@@ -900,9 +902,29 @@
 
 
         $scope.toggleCategoryStatus = function (category) {
+
+         if(category.status==1) {
+           MeasureService.getMeasures({anr: $scope.model.anr.id}).then(function (data) {
+               $scope.measures = data['measures'];
+               for (measure in $scope.measures){
+                 if( $scope.measures[measure].category !=null ) {
+                   if($scope.measures[measure].status==1 && $scope.measures[measure].category.id==category.id ) {
+                         MeasureService.patchMeasure($scope.measures[measure].id, {status: !$scope.measures[measure].status}, function () {
+                             $scope.measures[measure].status = !$scope.measures[measure].status;
+                          })
+
+                    }
+                  }
+                }
+              //  $scope.updateMeasures();
+
+           })
+
+          }
             ClientCategoryService.patchCategory(category.id, {status: !category.status}, function () {
                 category.status = !category.status;
             });
+
         }
 
 
@@ -990,13 +1012,14 @@
               MeasureService.getMeasures({anr: $scope.model.anr.id}).then(function (data) {
                   $scope.measures = data['measures'];
                   for (measure in $scope.measures){
-                    if($scope.measures[measure].category) {
+                    if( $scope.measures[measure].category !=null ) {
                       if($scope.measures[measure].category.id == item.id) {
                          $scope.measures[measure].category =null;
 
                          MeasureService.updateMeasure($scope.measures[measure],
                              function () {
-                                 var query = angular.copy($scope.cat.query);
+
+                                 var query = angular.copy($scope.categories.query);
                               }
                          );
                          }
@@ -1036,13 +1059,13 @@
                     $scope.measures = data['measures'];
                     for (measure in $scope.measures){
                       for (var i = 0; i < ids.length; ++i) {
-                      if($scope.measures[measure].category) {
+                     if( $scope.measures[measure].category !=null ) {
                         if($scope.measures[measure].category.id == ids[i]) {
                            $scope.measures[measure].category =null;
 
                            MeasureService.updateMeasure($scope.measures[measure],
                              function () {
-                                 var query = angular.copy($scope.cat.query);
+                                 var query = angular.copy($scope.categories.query);
                               }
                            );
                            }
