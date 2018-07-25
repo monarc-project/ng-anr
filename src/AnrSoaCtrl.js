@@ -38,7 +38,7 @@
 
 
           $scope.Categories.push({'id':$scope.id_cat, 'reference':'-----', 'label1':'-----', 'label2':'-----', 'label3':'-----', 'label4':'-----'});
-          console.log(  $scope.Categories);
+          // console.log(  $scope.Categories);
 
 
       });
@@ -51,7 +51,7 @@
       };
 
       function categories_sortInv(a, b) {
-        
+
         return b.measure.category.id-a.measure.category.id;
       };
 
@@ -87,8 +87,8 @@
 
                                                    }
 
-                                                  console.log(  $scope.Category);
-                                                  console.log(  $scope.CategoryIndex);
+                                                  // console.log(  $scope.Category);
+                                                  // console.log(  $scope.CategoryIndex);
 
                                                  };
 
@@ -106,7 +106,8 @@
            }
            $scope.soas= $scope.test;
            rowspan_calcul();
-           console.log(  $scope.soas);
+           $scope.selectCategory();
+           // console.log(  $scope.soas);
 
 
 
