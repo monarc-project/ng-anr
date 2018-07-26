@@ -38,7 +38,7 @@
 
 
           $scope.Categories.push({'id':$scope.id_cat, 'reference':'-----', 'label1':'-----', 'label2':'-----', 'label3':'-----', 'label4':'-----'});
-          //console.log(  $scope.Categories);
+          console.log(  $scope.Categories);
 
 
       });
@@ -107,7 +107,6 @@
 
            $scope.soas= $scope.test;
            rowspan_calcul();
-           //console.log(  $scope.soas);
 
 
 
@@ -127,8 +126,11 @@
           }else                    $scope.soas.push($scope.soas_data[soa]);
 
         }
+
         $scope.soas_data = $scope.soas;
         $scope.selectStatusCategory();
+
+        console.log(  $scope.soas);
 
 
 

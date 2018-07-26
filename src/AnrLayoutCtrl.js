@@ -36,6 +36,9 @@
                     case 'main.project.anr.soa':
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 4};
                         break;
+                    case 'main.project.anr.soa.sheet':
+                        $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 5};
+                        break;
                 }
             }
         }else{
@@ -686,12 +689,17 @@
                             $scope.$broadcast('setup-kb-mgmt');
                         });
                         break;
-                        case 4:
-                            $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
-                            $timeout(function() {
-                              $scope.goToSoa();
-                            });
-                            break;
+                      case 4:
+                          $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
+                          $timeout(function() {
+                          $scope.goToSoa();
+                          });
+                        break;
+                      // case 5:
+                      //     $state.transitionTo('main.project.anr.soa.sheet',{modelId:$stateParams.modelId, soaId: soa.id},{inherit:true,notify:true,reload:false,location:'replace'});
+                      //     $timeout(function() {
+                      //     });
+                      //   break;
                 }
             });
             $scope.$watch('ToolsAnrService.currentTab',function(newValue, oldValue){

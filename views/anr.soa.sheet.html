@@ -1,6 +1,5 @@
 <div class="md-padding" ng-controller="AnrSoaSheetCtrl">
-    <md-button ng-click="backToList()"><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button>
-
+    <md-button ng-click="backToList()" ui-sref="main.project.anr.soa({modelId: model.anr.id})"><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button>
     <div layout="row" layout-align="space-between end">
       <p class="md-title">{{ soa.measure.code }}-{{_langField(soa.measure,'description')}}  </p>
 
@@ -20,7 +19,7 @@
     <div  ng-repeat="risk in risks" ng-if="risk.measure1==soa.reference+tiret+soa.control || risk.measure2==soa.reference+tiret+soa.control || risk.measure3==soa.reference+tiret+soa.control" ng-if="$index == $ctrl.tasks.length - 1">
       <div ng-if="start==0" ng-init="start=start+$index">  -->
 
-    <table  class="md-html-table md-html-table-grey big-border-all"    >
+    <table  class="md-html-table soa-table md-html-table-grey big-border-all"    >
          <thead class="big-border-bottom"  >
          <tr>
              <th rowspan="2" translate>Asset</th>
