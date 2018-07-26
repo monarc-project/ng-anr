@@ -1413,7 +1413,7 @@
         };
 
         $scope.onEditCustomColumn = function (id, newValue) {
-            AnrService.patchScaleType($scope.model.anr.id, id, newValue, $scope.scales.language, function () {
+            AnrService.patchScaleType($scope.model.anr.id, id, {label: newValue}, $scope.scales.language, function () {
                 $scope.updateScaleTypes(function () {
                     $timeout(function () {
                         var scroller = document.getElementById('horiz-scrollable');
@@ -1426,7 +1426,7 @@
         };
 
         $scope.setImpactVisibility = function (id, visible) {
-            AnrService.patchScaleType($scope.model.anr.id, id, {isHidden: visible ? 0 : 1}, function () {
+            AnrService.patchScaleType($scope.model.anr.id, id, {isHidden: visible ? 0 : 1}, $scope.scales.language, function () {
                 $scope.updateScaleTypes();
                 $scope.$broadcast('scales-impacts-type-changed');
             });
