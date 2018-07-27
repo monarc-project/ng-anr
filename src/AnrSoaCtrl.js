@@ -57,13 +57,24 @@
 
 
                                                  function rowspan_calcul() {
-                                                   //tri par reference
-                                                   $scope.soas.sort(function (a, b) {
-                                                     return a.measure.code.localeCompare(b.measure.code);
-                                                   });
 
                                                    //tri par category_id
-                                                   $scope.soas.sort(categories_sort);
+                                                   if($scope.orderCategory=='-1'){
+                                                     //tri par reference
+                                                     $scope.soas.sort(function (a, b) {
+                                                       return a.measure.code.localeCompare(b.measure.code);
+                                                     });
+                                                     //tri par category_id
+                                                     $scope.soas.sort(categories_sort);
+                                                   }else{
+                                                     //tri par reference
+                                                     $scope.soas.sort(function (a, b) {
+                                                       return b.measure.code.localeCompare(a.measure.code);
+                                                     });
+                                                     //tri par category_id
+                                                     $scope.soas.sort(categories_sortInv);
+                                                   }
+
                                                    $scope.totalItems = $scope.soas.length ;   //$scope.soas.length
 
                                                    for (Category in $scope.Categories){
@@ -79,16 +90,22 @@
 
                                                    }
 
+                                                   if($scope.orderCategory=='-1'){
 
                                                    for(var i=1;i<$scope.Category.length;i++){
-                                                     if( ! $scope.CategoryIndex[i-1])$scope.CategoryIndex[i-1]=0;
-                                                     if( ! $scope.Category[i-1])$scope.Category[i-1]=0;
+                                                     if( ! $scope.CategoryIndex[i-1]) $scope.CategoryIndex[i-1]=0;
+                                                     if( ! $scope.Category[i-1]) $scope.Category[i-1]=0;
                                                      $scope.CategoryIndex[i]=$scope.CategoryIndex[i-1]+$scope.Category[i-1];
 
                                                    }
+                                                 }else {
+                                                   for(var i=$scope.Category.length-1;i>0;i--){
+                                                     if( ! $scope.CategoryIndex[i+1]) $scope.CategoryIndex[i+1]=0;
+                                                     if( ! $scope.Category[i+1]) $scope.Category[i+1]=0;
+                                                     $scope.CategoryIndex[i]=$scope.CategoryIndex[i+1]+$scope.Category[i+1];
 
-                                                  //console.log(  $scope.Category);
-                                                  //console.log(  $scope.CategoryIndex);
+                                                   }
+                                                 }
 
                                                  };
 
@@ -202,38 +219,22 @@
 
           };
 
-          $scope.soasCategory= function () {
-            $scope.order="category";
-
-            $scope.soas.sort(function (a, b) {
-              return a.measure.code.localeCompare(b.measure.code);
-            });
-
-
-            $scope.soas.sort(categories_sort);
-
-        // if(  $scope.orderCategory=='-1'){
-        //
-        //     //tri par category_id
-        //     $scope.soas.sort(function (a, b) {
-        //       return a.measure.category.id-b.measure.category.id;
-        //     });
-        //     $scope.orderCategory='1';
-        //
-        // }else{
-        //   $scope.soas.sort(function (a, b) {
-        //     return b.measure.category.id-a.measure.category.id;
-        //   });
-        //    $scope.orderCategory='-1';
-        //  }
-
-
-
-        };
 
 
 
 
+                                                   $scope.soasCategory= function () {
+                                                     $scope.order="category";
+
+                                                       rowspan_calcul();
+
+                                                     if(  $scope.orderCategory=='-1'){
+
+                                                           $scope.orderCategory='1';
+                                                    }else{
+                                                           $scope.orderCategory='-1';
+                                                    }
+                                                  };
 
 
      $scope.onTableEdited = function (model, name) {

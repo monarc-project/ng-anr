@@ -903,14 +903,13 @@
 
         $scope.toggleCategoryStatus = function (category) {
 
-         if(category.status==1) {
            MeasureService.getMeasures({anr: $scope.model.anr.id}).then(function (data) {
                $scope.measures_cat = data['measures'];
                for (measure in $scope.measures_cat){
                  if( $scope.measures_cat[measure].category !=null ) {
-                   if($scope.measures_cat[measure].status==1 && $scope.measures_cat[measure].category.id==category.id ) {
-                         MeasureService.patchMeasure($scope.measures_cat[measure].id, {status: !$scope.measures_cat[measure].status}, function () {
-                             $scope.measures_cat[measure].status = !$scope.measures_cat[measure].status;
+                   if( $scope.measures_cat[measure].category.id==category.id ) {
+                         MeasureService.patchMeasure($scope.measures_cat[measure].id, {status: category.status}, function () {
+                             $scope.measures_cat[measure].status = !category.status;
                           })
 
                     }
@@ -920,7 +919,7 @@
 
            })
 
-          }
+
             ClientCategoryService.patchCategory(category.id, {status: !category.status}, function () {
                 category.status = !category.status;
             });

@@ -243,7 +243,6 @@
 
  $scope.backToList = function () {
      // $state.transitionTo('main.project.anr.soa', {modelId: $scope.model.anr.id});
-     $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId});
      $scope.display.anrSelectedTabIndex = 4;
 
 
