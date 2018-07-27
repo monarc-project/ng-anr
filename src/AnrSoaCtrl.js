@@ -34,9 +34,6 @@
                      $scope.id_cat=$scope.Categories[Category].id+1;
               }
 
-
-
-
           $scope.Categories.push({'id':$scope.id_cat, 'reference':'-----', 'label1':'-----', 'label2':'-----', 'label3':'-----', 'label4':'-----'});
           console.log(  $scope.Categories);
 
@@ -58,19 +55,13 @@
 
                                                  function rowspan_calcul() {
 
-                                                   //tri par category_id
+
+                                                   $scope.soasReferences();
+                                                   $scope.orderReference=- $scope.orderReference;
                                                    if($scope.orderCategory=='-1'){
-                                                     //tri par reference
-                                                     $scope.soas.sort(function (a, b) {
-                                                       return a.measure.code.localeCompare(b.measure.code);
-                                                     });
                                                      //tri par category_id
                                                      $scope.soas.sort(categories_sort);
                                                    }else{
-                                                     //tri par reference
-                                                     $scope.soas.sort(function (a, b) {
-                                                       return b.measure.code.localeCompare(a.measure.code);
-                                                     });
                                                      //tri par category_id
                                                      $scope.soas.sort(categories_sortInv);
                                                    }
@@ -197,39 +188,84 @@
             };
 
 
-            $scope.soasReference = function () {
-              $scope.order="reference";
+          //   $scope.soasReference = function () {
+          //     $scope.order="reference";
+          //
+          //    //tri par reference
+          //    if(  $scope.orderReference=='-1'){
+          //
+          //      $scope.soas.sort(function (a, b) {
+          //         return a.measure.code.localeCompare(b.measure.code);
+          //         });
+          //         $scope.soas.sort(categories_sort);
+          //      $scope.orderReference='1';
+          //    }else{
+          //      $scope.soas.sort(function (a, b) {
+          //         return b.measure.code.localeCompare(a.measure.code);
+          //         });
+          //         $scope.soas.sort(categories_sortInv);
+          //       $scope.orderReference='-1';
+          //     }
+          //
+          //
+          // };
 
-             //tri par reference
-             if(  $scope.orderReference=='-1'){
+          $scope.soasReferences = function () {
+            for (soa in $scope.soas){
+                $scope.soas[soa].measure.code=$scope.soas[soa].measure.code.split(".");
+            }
+            console.log($scope.soas);
+           //tri par reference
+           if(  $scope.orderReference=='-1'){
 
                $scope.soas.sort(function (a, b) {
-                  return a.measure.code.localeCompare(b.measure.code);
+                  return a.measure.code[2]-b.measure.code[2];
                   });
-                  $scope.soas.sort(categories_sort);
-               $scope.orderReference='1';
-             }else{
-               $scope.soas.sort(function (a, b) {
-                  return b.measure.code.localeCompare(a.measure.code);
-                  });
-                  $scope.soas.sort(categories_sortInv);
-                $scope.orderReference='-1';
-              }
+                $scope.soas.sort(function (a, b) {
+                   return a.measure.code[1]-b.measure.code[1];
+                   });
+                $scope.soas.sort(function (a, b) {
+                   return a.measure.code[0]-b.measure.code[0];
+                   });
+             $scope.orderReference='1';
+           }else{
+             $scope.soas.sort(function (a, b) {
+                return b.measure.code[2]-a.measure.code[2];
+                });
+              $scope.soas.sort(function (a, b) {
+                 return b.measure.code[1]-a.measure.code[1];
+                 });
+              $scope.soas.sort(function (a, b) {
+                 return b.measure.code[0]-a.measure.code[0];
+                 });
+              $scope.orderReference='-1';
+            }
+
+            for (soa in $scope.soas){
+                  $scope.soas[soa].measure.code=$scope.soas[soa].measure.code.join(".");
+            }
+
+            console.log($scope.soas);
+
+        };
 
 
-          };
+                      $scope.soasReference = function () {
+                        $scope.order="reference";
+                        $scope.soasReferences();
+                    };
+
 
 
 
 
 
                                                    $scope.soasCategory= function () {
-                                                     $scope.order="category";
 
                                                        rowspan_calcul();
+                                                       $scope.order="category";
 
                                                      if(  $scope.orderCategory=='-1'){
-
                                                            $scope.orderCategory='1';
                                                     }else{
                                                            $scope.orderCategory='-1';

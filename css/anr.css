@@ -930,6 +930,11 @@ md-dialog.md-transition-in {
     transition: none;
     transition-duration: 0ms;
     transition-delay: 0ms;
+
+}
+md-menu-content {
+
+    min-height: 340px;
 }
 .md-button
 {

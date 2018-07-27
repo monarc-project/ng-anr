@@ -23,7 +23,7 @@
                 <md-button class="anr-tools-button" title="{{ 'Tools' | translate }}" ng-click="openAnrToolsMenu($mdOpenMenu, $event)">
                     <md-icon md-menu-origin>more_vert</md-icon>
                 </md-button>
-                <md-menu-content width="4">
+                <md-menu-content width="4" >
                     <md-menu-item>
                         <md-button ng-click="display.anrSelectedTabIndex = 0; updateInstances(); updateObjectsLibrary();" ui-sref="main.project.anr({modelId: model.anr.id})">{{ 'Risk analysis' | translate }}</md-button>
                     </md-menu-item>
@@ -48,7 +48,7 @@
 
                 </md-menu-content>
             </md-menu>
-            <md-tabs md-border-bottom="true" md-selected="display.anrSelectedTabIndex" md-dynamic-height id="anrMainTab">
+            <md-tabs md-border-bottom="true" md-selected="display.anrSelectedTabIndex" md-dynamic-height   id="anrMainTab">
                 <md-tab label="{{ 'Risk analysis' | translate }}">
                     <div ng-include="'views/anr/_anr.riskanalysis.html'"></div>
                 </md-tab>
