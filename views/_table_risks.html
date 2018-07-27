@@ -8,7 +8,7 @@
     <div layout="row" layout-align="space-between center" class="md-padding md-padding-left md-padding-right">
         <span class="md-title md-padding-left" translate>{{ risks_total }} information risks</span>
         <md-progress-circular md-diameter="20" ng-if="anr_risks_table_loading"></md-progress-circular>
-        <md-card ng-if="(instmode == 'anr' || instmode == 'inst') && !sheet_risk">
+        <md-card ng-if="(instmode == 'anr' || instmode == 'inst') && !sheet_risk && OFFICE_MODE == 'FO'">
             <div layout="row" layout-wrap class="md-padding-left md-padding-right">
                 <form layout="row" layout-wrap layout-align="center center" class="md-padding-left md-padding-right" ng-submit="updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable()">
                     <input type="submit" style="position: absolute; left: -99999px">

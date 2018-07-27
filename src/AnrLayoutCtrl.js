@@ -167,7 +167,7 @@
                         anr: data,
                         showRolfBrut: data.cacheModelShowRolfBrut && data.showRolfBrut,
                     };
-
+                    $scope.rolfBrut = { show : $scope.model.showRolfBrut == 1 ? true: false}
                     $scope.isAnrReadOnly = (data.rwd == 0);
                     $scope.languages = ConfigService.getLanguages();
                     $scope.scales.language = data.language;
@@ -199,7 +199,9 @@
                     }
                 })
             }
+
         };
+
 
         $scope.updateAnrRisksTable = function (cb) {
             $scope.anr_risks_table_loading = true;
@@ -244,6 +246,16 @@
                 page: 1,
                 limit: 20
             };
+        };
+
+        $scope.updateShowRolfBrut = function () {
+            service = $injector.get('ClientAnrService');
+            anr = angular.copy($scope.model.anr)
+            anr.showRolfBrut = $scope.rolfBrut.show == true ? 1 : 0;
+            service.patchAnr($scope.model.anr.id, anr, function () {
+                  $scope.model.showRolfBrut = anr.showRolfBrut;
+            });
+            $scope.model.anr = anr;
         };
 
         $scope.updateAnrRisksOpTable = function (cb) {
@@ -1475,12 +1487,8 @@
                     }
                     service.patchAnr($scope.model.anr.id, anr, function () {
                         toastr.success(gettextCatalog.getString("The risk analysis have been edited."), gettextCatalog.getString("Edition successful"));
-                        if ($scope.OFFICE_MODE == 'FO') {
-                            $scope.model.showRolfBrut = anr.showRolfBrut;
-                            $rootScope.$broadcast('fo-anr-changed');
-                        }
                     });
-                    $scope.model.anr = anr;
+                  $scope.model.anr = anr;
                 });
         };
 
