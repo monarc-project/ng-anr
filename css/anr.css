@@ -932,7 +932,7 @@ md-dialog.md-transition-in {
     transition-delay: 0ms;
 
 }
-md-menu-content {
+.anr-menu {
 
     min-height: 340px;
 }
