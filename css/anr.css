@@ -435,6 +435,9 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
     background: #FD661F;
     color: white;
 }
+.tbl-soa .gray, .tbl-soa.gray {
+    background: #BDBDBD;
+}
 
 /** soaTable compliance  */
 
@@ -454,7 +457,7 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 .buttonsoa:hover {background-color: #e7e7e7;}
 
 
-/** soaTable justification  */
+/** soaTable inclusion/exclusion  */
 .btn {
     text-align: center;
     vertical-align: middle;
