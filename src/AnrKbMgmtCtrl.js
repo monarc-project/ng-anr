@@ -1723,7 +1723,7 @@
         }
 
         $scope.createTheme = function (label) {
-            ThreatService.createTheme({label1: label}, function (data) {
+            ThreatService.createTheme({label1 : label , label2 : label, label3 : label , label4 : label}, function (data) {
                 ThreatService.getTheme(data.id).then(function (theme) {
                     $scope.threat.theme = theme;
                 })
