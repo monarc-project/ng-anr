@@ -46,7 +46,7 @@
          </thead>
 
          <tbody>
-           <tr class="txtleft" ng-repeat="risk in risks" ng-if="risk.measure1==soa.measure.code+tiret+soaDescription || risk.measure2==soa.measure.code+tiret+soaDescription || risk.measure3==soa.measure.code+tiret+soaDescription">
+           <tr class="txtleft" ng-repeat="risk in risks" ng-if="risk.measure1==soa.measure.code+' - '+soaDescription || risk.measure2==soa.measure.code+' - '+soaDescription || risk.measure3==soa.measure.code+' - '+soaDescription">
              <td  class="txtleft" ng-repeat="instance in instanceCache" ng-if="instance.id ==risk.instance" ><a ui-sref="main.project.anr.instance({modelId: model.anr.id, instId: instance.id})" href="javascript:;"> {{_langField(instance,'name')}}</a></td>
              <td  class="txtcenter">{{risk.c_impact|dashnull}}</td>
              <td  class="txtcenter">{{risk.i_impact|dashnull}}</td>

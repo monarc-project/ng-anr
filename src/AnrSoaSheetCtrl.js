@@ -25,16 +25,13 @@
 
       $scope.risks_filters.limit = -1;
       $scope.risks_filters.page = 1;
-      //     updateInstanceRisks ? updateInstanceRisks() : updateAnrRisksTable();
 
+      // get the full list of risks
       AnrService.getInstanceRisks($scope.model.anr.id,null, $scope.risks_filters).then(function(data) {
           if (!$scope.risks || data.risks.length != $scope.risks.length) {
               $scope.risks_total = data.count;
-              $scope.risks = data.risks; // for the _table_risks.html partial
+              $scope.risks = data.risks;
           } else {
-              // patch up only if we already have a risks table
-              // if this cause a problem, add a flag to updateInstance so that we patch only in the risks
-              // table callback, and do a full refresh otherwise
               $scope.risks_total = data.count;
               for (var i = 0; i < $scope.risks.length; ++i) {
                   for (var j in $scope.risks[i]) {
@@ -76,39 +73,6 @@
 
          };
 
-         $scope.soaRisk = function () {
-
-                  soa = $scope.soa;
-                  amvs = $scope.amvs;
-                  risks = $scope.risks;
-                              var list=[];
-
-                              for (amv in amvs){
-                                if(amvs[amv].measure1.id==soa.measure.id  || amvs[amv].measure2.id==soa.measure.id  ||amvs[amv].measure3.id==soa.measure.id  ){
-                                      for (risk in risks){
-                                        if(risks[risk].amv == amvs[amv].id ){
-
-                                                test.asset=$scope ._langField(risks[risk],'assetLabel');
-                                                test.assetd=$scope._langField(risks[risk],'assetDescription');
-
-
-                                                test.threat=$scope._langField(risks[risk],'threatLabel');
-                                                test.threatd=$scope._langField(risks[risk],'threatDescription');
-
-                                                list.push(test);
-                                        }
-                                     }
-
-                                 }
-
-
-                                 $scope.list = list;
-                             }
-
-
-        }
-        $scope.tiret=" - ";
-        $scope.soaRisk();
 
           $scope.exportSoaSheet = function () {
             finalArray=[];
@@ -234,8 +198,8 @@
             var link = document.createElement("a");
             link.setAttribute("href", encodedUri);
             link.setAttribute("download", "soaRisks.csv");
-            document.body.appendChild(link); // Required for FF
-            link.click(); // This will download the data file named "my_data.csv".
+            document.body.appendChild(link);
+            link.click(); // This will download the data file named "soaRisks.csv".
 
 
           };

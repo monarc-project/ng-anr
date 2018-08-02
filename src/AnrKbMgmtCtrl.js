@@ -725,6 +725,7 @@
                         }
                     ).then(function (data) {
                       $scope.measure_data=data;
+                      //create soa linked to the measure
                       var  soa={ "anr" : $scope.model.anr.id , "measure" : $scope.measure_data.id };
                       ClientSoaService.createSoa(soa,
                           function () {
@@ -768,6 +769,7 @@
             });
         };
 
+
         $scope.deleteMeasure = function (ev, item) {
             var confirm = $mdDialog.confirm()
                 .title(gettextCatalog.getString('Are you sure you want to delete control?',
@@ -778,7 +780,7 @@
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-
+              //delete the soa associated to the measure
                 ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
                   $scope.soas = data['Soa-list'];
                   for (soa in $scope.soas){
@@ -820,7 +822,7 @@
                 for (var i = 0; i < $scope.measures.selected.length; ++i) {
                     ids.push($scope.measures.selected[i].id);
                 }
-
+                //delete the soas associated to the measures
                 ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
                   $scope.soas = data['Soa-list'];
                     for (soa in $scope.soas){
@@ -900,7 +902,7 @@
             TableHelperService.removeFilter($scope.vulns);
         };
 
-
+        //the new status of the category is also assigned to the measure
         $scope.toggleCategoryStatus = function (category) {
 
            MeasureService.getMeasures({anr: $scope.model.anr.id}).then(function (data) {
@@ -915,7 +917,6 @@
                     }
                   }
                 }
-              //  $scope.updateMeasures();
 
            })
 
@@ -996,7 +997,6 @@
             });
 
         };
-
         $scope.deleteCategory = function (ev, item) {
             var confirm = $mdDialog.confirm()
                 .title(gettextCatalog.getString('Are you sure you want to delete category?',
@@ -1007,7 +1007,8 @@
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-
+              
+              // once we  delete a category the measure linked to this category have their category-id changed to null
               MeasureService.getMeasures({anr: $scope.model.anr.id}).then(function (data) {
                   $scope.measures_cat = data['measures'];
                   for (measure in $scope.measures_cat){
