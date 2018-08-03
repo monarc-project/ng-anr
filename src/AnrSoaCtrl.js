@@ -54,13 +54,13 @@
         return b.measure.category.id-a.measure.category.id;
       };
 
-      //calculate the raxspans for the sort by category
+      //calculate the rawspans for the sort by category
 
       function rowspan_calcul() {
          $scope.testt=[];
-         //  console.log('before');
-         //  setTimeout(function(){
-         //  console.log('after');
+          // console.log('before');
+          // setTimeout(function(){
+          // console.log('after');
 
          if($scope.order=="category"){
            $scope.soasReferences();
