@@ -30,7 +30,7 @@
                 </div>
 
                 <div ng-if="dialog_mode == 'file'">
-                
+
                 <input type="file" name="file" ngf-drop ngf-select ng-repeat="i in range(0, file_range)"
                        ng-model="file[i]"
                        class="md-upload-dropbox md-padding md-whiteframe-3dp"
@@ -52,26 +52,30 @@
 
                 <div ng-if="dialog_mode == 'common'">
                     <p class="md-title" translate>List of common MONARC assets</p>
+
+                    <md-input-container class="md-block md-padding-left md-padding-right">
+                        <label><md-icon>search</md-icon> {{ 'Search an asset...' | translate }}</label>
+                        <input type="text" ng-model="assets.filter">
+                    </md-input-container>
+
                     <table class="md-html-table">
                         <thead>
                         <tr>
-                            <th translate>Category</th>
-                            <th translate>Label</th>
                             <th translate>Name</th>
+                            <th translate>Category</th>
                             <th translate>Scope</th>
-                            <th translate>Asset</th>
+                            <th translate>Asset Type</th>
                             <th translate>Actions</th>
                         </tr>
                         </thead>
 
                         <tbody>
                         <tr ng-repeat="object in objects">
-                            <td>{{ _langField(object.category,'label') }}</td>
-                            <td>{{ _langField(object,'label') }}</td>
                             <td>{{ _langField(object,'name') }}</td>
+                            <td>{{ _langField(object.category,'label') }}</td>
                             <td ng-if="object.scope == 1" translate>Local</td>
                             <td ng-if="object.scope == 2" translate>Global</td>
-                            <td>{{ _langField(object.asset,'label') }} - {{ _langField(object.asset,'description') }}</td>
+                            <td>{{ _langField(object.asset,'label') }}</td>
                             <td class="txtcenter"><md-button ng-click="openObjectDetails(object)" class="md-icon-button"><md-icon>open_in_new</md-icon></md-button></td>
                         </tr>
                         </tbody>

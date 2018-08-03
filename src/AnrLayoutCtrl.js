@@ -2781,13 +2781,28 @@
             }
         };
 
-        $scope.openCommonList = function () {
-            $scope.dialog_mode = 'common';
+        $scope.$watchGroup(['assets.filter'], function (newValue, oldValue) {
+            if (newValue != oldValue) {
+                    $scope.updateAssets();
+                }
 
-            ObjlibService.getObjectsCommon({limit: 0}).then(function (data) {
+        });
+
+        $scope.assets = {
+              filter:null
+        };
+
+        $scope.updateAssets = function () {
+            var filter =  angular.copy($scope.assets.filter);
+            ObjlibService.getObjectsCommon({filter : filter}).then(function (data) {
                 $scope.objects = data.objects;
             });
-        }
+        };
+
+        $scope.openCommonList = function () {
+            $scope.dialog_mode = 'common';
+            $scope.updateAssets();
+        };
 
         $scope.openObjectDetails = function (object) {
             $scope.dialog_mode = 'object_details';
