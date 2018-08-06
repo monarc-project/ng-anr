@@ -1139,7 +1139,7 @@
                             output.__children__.push(recurseFillTree(category.child[i], depth + 1));
                         }
                     }
-
+                    var tempChildren =[]; //temporary table to sort the "leaf object"
                     if (category.objects && category.objects.length > 0) {
                         for (var i = 0; i < category.objects.length; ++i) {
                             var obj = category.objects[i];
@@ -1153,11 +1153,18 @@
                             }
 
                             obj.__children__ = [];
-                            output.__children__.push(obj);
+                            tempChildren.push(obj); //making the leaf object
                             if($scope.first_object == null){
                                 $scope.first_object = obj;
                             }
                         }
+                        tempChildren.sort(function (a,b){ //sort the leaf object
+                              return ($scope._langField(a,'name')).localeCompare($scope._langField(b,'name'),{ignorePunctuation: true});
+                        });
+
+                        tempChildren.forEach(function(element) { //add the leaf objects to all the children
+                          output.__children__.push(element);
+                        });
                     }
 
                     return output;
