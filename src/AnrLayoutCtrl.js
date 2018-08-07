@@ -1124,6 +1124,7 @@
                 }
 
                 var recurseFillTree = function (category, depth) {
+                  console.log('dede');
                     var output = {id: category.id, type: 'libcat', label1: category.label1, label2: category.label2,
                         label3: category.label3, label4: category.label4, depth: depth, __children__: []};
 
@@ -1174,11 +1175,14 @@
                 $scope.first_object = null;
                 $scope.has_virtual_categ = false;
                 for (var v = 0; v < data.categories.length; ++v) {
-                    var cat = data.categories[v];
-                    if(cat.id == -1){
+                  console.log(data.categories[v]);
+                    if(data.categories[v].child || data.categories[v].objects.length > 0){ //do not show empty category
+                      var cat = data.categories[v];
+                      if(cat.id == -1){
                         $scope.has_virtual_categ = true;
                     }
                     lib_data.push(recurseFillTree(cat, 0));
+                  }
                 }
                 $scope.anr_obj_library_data = lib_data;
 
