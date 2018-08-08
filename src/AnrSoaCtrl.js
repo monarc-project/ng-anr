@@ -211,65 +211,53 @@
                 $scope.soas[soa].measure.code=$scope.soas[soa].measure.code.split(".");
             }
 
-           if(  $scope.orderReference=='-1'){
-
-               $scope.soas.sort(function (a, b) {
-                  return a.measure.code[2]-b.measure.code[2];
-                  });
-                $scope.soas.sort(function (a, b) {
-                   return a.measure.code[1]-b.measure.code[1];
-                   });
-                $scope.soas.sort(function (a, b) {
-                   return a.measure.code[0]-b.measure.code[0];
-                   });
+           if($scope.orderReference=='-1'){
+             $scope.soas.sort(function (a, b) {
+               if(a.measure.code[0]==b.measure.code[0]){
+                if(a.measure.code[1]==b.measure.code[1])
+                    return a.measure.code[2]-b.measure.code[2];
+                  else
+                    return a.measure.code[1]-b.measure.code[1];
+                }else {
+                  return a.measure.code[0]-b.measure.code[0];
+                }
+              });
              $scope.orderReference='1';
            }else{
              $scope.soas.sort(function (a, b) {
-                return b.measure.code[2]-a.measure.code[2];
-                });
-              $scope.soas.sort(function (a, b) {
-                 return b.measure.code[1]-a.measure.code[1];
-                 });
-              $scope.soas.sort(function (a, b) {
-                 return b.measure.code[0]-a.measure.code[0];
-                 });
+               if(a.measure.code[0]==b.measure.code[0]){
+                if(a.measure.code[1]==b.measure.code[1])
+                    return b.measure.code[2]-a.measure.code[2];
+                  else
+                    return b.measure.code[1]-a.measure.code[1];
+                }else {
+                  return b.measure.code[0]-a.measure.code[0];
+                }
+              });
               $scope.orderReference='-1';
             }
-
             for (soa in $scope.soas){
                   $scope.soas[soa].measure.code=$scope.soas[soa].measure.code.join(".");
             }
-
-
         };
-
-                      //Sort by reference  and calculate the rawspans size
-
-                      $scope.soasReference = function () {
-                        $scope.currentPage = 1; //reset to first page
-                        $scope.order="reference";
-                        $scope.soasReferences();
-                        rowspan_calcul();
-
-                    };
-
-
-
-
-
-                    //Sort by category  and calculate the rawspans size
-
-                     $scope.soasCategory= function () {
-                       $scope.order="category";
-                       $scope.currentPage = 1; //reset to first page
-                       rowspan_calcul();
-
-                       if(  $scope.orderCategory=='-1'){
-                         $scope.orderCategory='1';
-                       }else{
-                          $scope.orderCategory='-1';
-                       }
-                     };
+      //Sort by reference  and calculate the rawspans size
+      $scope.soasReference = function () {
+      $scope.currentPage = 1; //reset to first page
+      $scope.order="reference";
+      $scope.soasReferences();
+      rowspan_calcul();
+      };
+    //Sort by category  and calculate the rawspans size
+      $scope.soasCategory= function () {
+      $scope.order="category";
+      $scope.currentPage = 1; //reset to first page
+      rowspan_calcul();
+      if($scope.orderCategory=='-1'){
+          $scope.orderCategory='1';
+        }else{
+          $scope.orderCategory='-1';
+         }
+      };
 
 
      $scope.onTableEdited = function (model, name) {
@@ -282,22 +270,13 @@
          if(name === "EX" || name === "LR" || name === "CO" || name === "BR" || name === "BP" || name === "RRA" ){
            if (model[name] == 0) { model[name]=1} else  model[name]=0;
           }
-
-
           params[name] = model[name];
-
-
          ClientSoaService.updateSoa(params, function () {
             promise.resolve(true);
          }, function () {
             promise.reject(false);
          });
-
-
-         return promise.promise;
-
-
-
+       return promise.promise;
  };
 
 //Options for the pagination
