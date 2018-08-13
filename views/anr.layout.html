@@ -23,7 +23,7 @@
                 <md-button class="anr-tools-button" title="{{ 'Tools' | translate }}" ng-click="openAnrToolsMenu($mdOpenMenu, $event)">
                     <md-icon md-menu-origin>more_vert</md-icon>
                 </md-button>
-                <md-menu-content width="4">
+                <md-menu-content width="4" class="anr-menu">
                     <md-menu-item>
                         <md-button ng-click="display.anrSelectedTabIndex = 0; updateInstances(); updateObjectsLibrary();" ui-sref="main.project.anr({modelId: model.anr.id})">{{ 'Risk analysis' | translate }}</md-button>
                     </md-menu-item>
@@ -40,11 +40,15 @@
                         <md-button ng-click="openInterviewTools($event)">{{ 'Interviews table' | translate }}</md-button>
                     </md-menu-item>
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">
+                        <md-button  ng-click="display.anrSelectedTabIndex = 4;"   ui-sref="main.project.anr.soa({modelId: model.anr.id})">{{ 'Statement of applicability' | translate }}</md-button>
+                    </md-menu-item>
+                    <md-menu-item ng-if="OFFICE_MODE == 'FO'">
                         <md-button ng-click="openSnapshotTools($event)">{{ 'Snapshots' | translate }}</md-button>
                     </md-menu-item>
+
                 </md-menu-content>
             </md-menu>
-            <md-tabs md-border-bottom="true" md-selected="display.anrSelectedTabIndex" md-dynamic-height id="anrMainTab">
+            <md-tabs md-border-bottom="true" md-selected="display.anrSelectedTabIndex" md-dynamic-height   id="anrMainTab">
                 <md-tab label="{{ 'Risk analysis' | translate }}">
                     <div ng-include="'views/anr/_anr.riskanalysis.html'"></div>
                 </md-tab>
@@ -59,6 +63,13 @@
 
                 <md-tab label="{{ 'Knowledge base' | translate }}" ng-if="OFFICE_MODE == 'FO'">
                     <div ng-include="'views/anr/_anr.kbmgmt.html'"></div>
+                </md-tab>
+
+                <md-tab label="{{ 'Statement of applicability' | translate }}" >
+                    <div ng-include="'views/anr/anr.soa.html'"></div>
+                </md-tab>
+                <md-tab label="{{ 'risks' | translate }}"  >
+                    <div ng-include="'views/anr/anr.soa.sheet.html'"   ></div>
                 </md-tab>
             </md-tabs>
         </md-card>

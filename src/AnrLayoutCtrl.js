@@ -33,6 +33,12 @@
                     case 'main.project.anr.knowledge':
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 3};
                         break;
+                    case 'main.project.anr.soa':
+                        $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 4};
+                        break;
+                    case 'main.project.anr.soa.sheet':
+                        $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 5};
+                        break;
                 }
             }
         }else{
@@ -704,6 +710,17 @@
                             $scope.$broadcast('setup-kb-mgmt');
                         });
                         break;
+                      case 4:
+                          $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
+                          $timeout(function() {
+                          $scope.goToSoa();
+                          });
+                        break;
+                      // case 5:
+                      //     $state.transitionTo('main.project.anr.soa.sheet',{modelId:$stateParams.modelId, soaId: soa.id},{inherit:true,notify:true,reload:false,location:'replace'});
+                      //     $timeout(function() {
+                      //     });
+                      //   break;
                 }
             });
             $scope.$watch('ToolsAnrService.currentTab',function(newValue, oldValue){
@@ -738,6 +755,7 @@
             $scope.clearSelectedInstAndObj();
             $scope.display.anrSelectedTabIndex = 0;
         }
+
 
 
 
@@ -1871,7 +1889,9 @@
         $scope.goToDashboard = function () {
             $state.transitionTo("main.project.anr.dashboard" , {modelId: $stateParams.modelId});
         };
-
+        $scope.goToSoa = function () {
+            $state.transitionTo("main.project.anr.soa" , {modelId: $stateParams.modelId});
+        }
         $scope.openInterviewTools = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
