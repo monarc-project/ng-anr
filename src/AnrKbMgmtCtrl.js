@@ -1007,7 +1007,6 @@
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-              
               // once we  delete a category the measure linked to this category have their category-id changed to null
               MeasureService.getMeasures({anr: $scope.model.anr.id}).then(function (data) {
                   $scope.measures_cat = data['measures'];
@@ -1084,28 +1083,6 @@
 
             });
         };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
          /*
           * AMVS TAB
