@@ -77,7 +77,7 @@
           $scope.exportSoaSheet = function () {
             finalArray=[];
             recLine = 0;
-            finalArray[recLine]= gettextCatalog.getString('asset');
+            finalArray[recLine]= gettextCatalog.getString('Asset');
             finalArray[recLine]+=','+gettextCatalog.getString('C Impact');
             finalArray[recLine]+=','+gettextCatalog.getString('I Impact');
             finalArray[recLine]+=','+gettextCatalog.getString('A Impact');

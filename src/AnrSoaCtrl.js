@@ -328,13 +328,13 @@ rowspan_calcul();
    finalArray=[];
    recLine = 0;
    finalArray[recLine]= gettextCatalog.getString('Category');
-   finalArray[recLine]+=','+gettextCatalog.getString('Ref');
+   finalArray[recLine]+=','+gettextCatalog.getString('Ref.');
    finalArray[recLine]+=','+gettextCatalog.getString('Control');
-   finalArray[recLine]+=','+gettextCatalog.getString('Inclusion/exclusion');
+   finalArray[recLine]+=','+gettextCatalog.getString('Inclusion/Exclusion');
    finalArray[recLine]+=','+gettextCatalog.getString('Remarks');
    finalArray[recLine]+=','+gettextCatalog.getString('Evidences');
    finalArray[recLine]+=','+gettextCatalog.getString('Actions');
-   finalArray[recLine]+=','+gettextCatalog.getString('level of compliance');
+   finalArray[recLine]+=','+gettextCatalog.getString('Level of compliance');
 
    soas = $scope.soas;
 
