@@ -116,6 +116,10 @@
             $scope.updateInstanceRisks();
         });
 
+        $scope.$on('risks-op-table-filters-changed', function () {
+            $scope.updateInstanceRisksOp()
+        });
+
         $scope.editInstanceDetails = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 

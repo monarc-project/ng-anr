@@ -17,6 +17,14 @@
             $scope.recommendations = data['recommandations-risks'];
         });
 
+        $scope.clearDate = function (model) {
+            //let ctrl = this;
+            console.log(this);
+            this.rec.duedate = null;
+
+            $scope.onTableEdited(this.rec, 'duedate');
+        }
+
         $scope.onTableEdited = function (model, name) {
             var promise = $q.defer();
 
@@ -26,8 +34,12 @@
             };
 
             if (name == 'duedate') {
-                new_date = new Date(model[name]);
-                model[name] = new_date.toLocaleString();
+                if (model[name] != null) {
+                    new_date = new Date(model[name]);
+                    model[name] = new_date.toDateString();
+                } else {
+                    model[name] = '';
+                }
             }
             params[name] = model[name];
 

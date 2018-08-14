@@ -173,7 +173,7 @@
                         anr: data,
                         showRolfBrut: data.cacheModelShowRolfBrut && data.showRolfBrut,
                     };
-
+                    $scope.rolfBrut = { show : $scope.model.showRolfBrut == 1 ? true: false}
                     $scope.isAnrReadOnly = (data.rwd == 0);
                     $scope.languages = ConfigService.getLanguages();
                     $scope.scales.language = data.language;
@@ -205,7 +205,9 @@
                     }
                 })
             }
+
         };
+
 
         $scope.updateAnrRisksTable = function (cb) {
             $scope.anr_risks_table_loading = true;
@@ -252,6 +254,16 @@
             };
         };
 
+        $scope.updateShowRolfBrut = function () {
+            service = $injector.get('ClientAnrService');
+            anr = angular.copy($scope.model.anr)
+            anr.showRolfBrut = $scope.rolfBrut.show == true ? 1 : 0;
+            service.patchAnr($scope.model.anr.id, anr, function () {
+                  $scope.model.showRolfBrut = anr.showRolfBrut;
+            });
+            $scope.model.anr = anr;
+        };
+
         $scope.updateAnrRisksOpTable = function (cb) {
             $scope.anr_risks_op_table_loading = true;
             AnrService.getAnrRisksOp($scope.model.anr.id, $scope.risks_op_filters).then(function (data) {
@@ -289,7 +301,7 @@
 
         $scope.resetRisksOpFilters = function () {
             $scope.risks_op_filters = {
-                order: 'maxRisk',
+                order: 'cacheNetRisk',
                 order_direction: 'desc',
                 thresholds: -1,
                 page: 1,
@@ -322,7 +334,7 @@
         }
 
         $scope.exportAnrRisksOpTable = function () {
-            var params = angular.copy($scope.risks_filters);
+            var params = angular.copy($scope.risks_op_filters);
             params.csv = true;
             var anr = 'anr';
             if ($scope.OFFICE_MODE == 'FO') {
@@ -336,7 +348,7 @@
         }
 
         $scope.exportInstanceOpTable = function () {
-            var params = angular.copy($scope.risks_filters);
+            var params = angular.copy($scope.risks_op_filters);
             params.csv = true;
             var anr = 'anr';
             if ($scope.OFFICE_MODE == 'FO') {
@@ -372,9 +384,18 @@
             if (newValue != oldValue) {
                 if ($state.current.name == "main.kb_mgmt.models.details" || $state.current.name == 'main.project.anr') {
                     $scope.updateAnrRisksTable();
-                    $scope.updateAnrRisksOpTable();
                 } else {
                     $scope.$broadcast('risks-table-filters-changed');
+                }
+            }
+        });
+
+        $scope.$watchGroup(['risks_op_filters.order', 'risks_op_filters.order_direction'], function (newValue, oldValue) {
+            if (newValue != oldValue) {
+                if ($state.current.name == "main.kb_mgmt.models.details" || $state.current.name == 'main.project.anr') {
+                    $scope.updateAnrRisksOpTable();
+                } else {
+                    $scope.$broadcast('risks-op-table-filters-changed');
                 }
             }
         });
@@ -1422,7 +1443,7 @@
         };
 
         $scope.onEditCustomColumn = function (id, newValue) {
-            AnrService.patchScaleType($scope.model.anr.id, id, newValue, $scope.scales.language, function () {
+            AnrService.patchScaleType($scope.model.anr.id, id, {label: newValue}, $scope.scales.language, function () {
                 $scope.updateScaleTypes(function () {
                     $timeout(function () {
                         var scroller = document.getElementById('horiz-scrollable');
@@ -1435,7 +1456,7 @@
         };
 
         $scope.setImpactVisibility = function (id, visible) {
-            AnrService.patchScaleType($scope.model.anr.id, id, {isHidden: visible ? 0 : 1}, function () {
+            AnrService.patchScaleType($scope.model.anr.id, id, {isHidden: visible ? 0 : 1}, $scope.scales.language, function () {
                 $scope.updateScaleTypes();
                 $scope.$broadcast('scales-impacts-type-changed');
             });
@@ -1484,12 +1505,8 @@
                     }
                     service.patchAnr($scope.model.anr.id, anr, function () {
                         toastr.success(gettextCatalog.getString("The risk analysis have been edited."), gettextCatalog.getString("Edition successful"));
-                        if ($scope.OFFICE_MODE == 'FO') {
-                            $scope.model.showRolfBrut = anr.showRolfBrut;
-                            $rootScope.$broadcast('fo-anr-changed');
-                        }
                     });
-                    $scope.model.anr = anr;
+                  $scope.model.anr = anr;
                 });
         };
 

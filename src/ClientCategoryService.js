@@ -12,7 +12,7 @@
         var makeResource = function () {
            var anr =  $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
-            self.ClientCategoryResource = $resource('api/' + anr + 'category/', {
+            self.ClientCategoryResource = $resource('api/' + anr + 'category/:categoryId', {
                     categoryId: '@id',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },

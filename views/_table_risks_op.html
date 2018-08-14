@@ -1,9 +1,12 @@
 <ng-include ng-if="object" src="'views/anr/_object.composition.html'"></ng-include>
 <br/>
 <div layout="row" layout-align="space-between center">
-    <p class="md-title md-padding-left" ng-if="!opsheet_risk" translate>{{ oprisks_total }} operational risks</p>
+  <div layout="column" layout-align="end start">
+    <span class="md-title md-padding-left" ng-if="!opsheet_risk" translate>{{ oprisks_total }} operational risks</span>
+    <md-switch ng-disabled="isAnrReadOnly" ng-if="!opsheet_risk && OFFICE_MODE == 'FO' && model.anr.cacheModelShowRolfBrut == 1" style="margin: 0" ng-model="rolfBrut.show" ng-change="updateShowRolfBrut()">{{ 'Show inherent operational risks' | translate }}</md-switch>
+  </div>
 
-    <md-card ng-if="(instmode == 'anr' || instmode == 'inst') && !opsheet_risk">
+    <md-card ng-if="(instmode == 'anr' || instmode == 'inst') && !opsheet_risk && OFFICE_MODE == 'FO'">
         <div layout="row" layout-align="center center" layout-wrap>
             <form layout="row" layout-align="center center" class="md-padding-left md-padding-right" layout-wrap ng-submit="updateInstanceRisksOp ? updateInstanceRisksOp() : updateAnrRisksOpTable()">
                 <input type="submit" style="position: absolute; left: -99999px">
@@ -40,6 +43,29 @@
                 <md-button class="md-icon-button md-primary" ng-click="resetRisksOpFilters(); updateInstanceRisksOp ? updateInstanceRisksOp() : updateAnrRisksOpTable()"><md-icon>settings_backup_restore</md-icon><md-tooltip>{{ 'Reset filter' | translate }}</md-tooltip></md-button>
                 <md-button ng-if="(instmode == 'anr' && OFFICE_MODE == 'FO' && !isAnrReadOnly)" class="md-icon-button" ng-click="exportInstanceRisks ? exportInstanceRisks() : exportAnrRisksOpTable()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip><</md-button>
                 <md-button ng-if="(instmode == 'inst' && OFFICE_MODE == 'FO' && !isAnrReadOnly)" class="md-icon-button" ng-click="exportInstanceOpTable()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip><</md-button>
+
+                <div style="width:1px; background:#EAEAEA;height:48px;margin-left:2px;margin-right:10px;"></div>
+
+                <md-input-container>
+                    <label translate>Sort</label>
+                    <md-select ng-model="risks_op_filters.order">
+                        <md-option value="instance" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'Asset' | translate }}</md-option>
+                        <md-option value="position" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'Position' | translate }}</md-option>
+                        <md-option value="brutProb"  ng-if="model.showRolfBrut" >{{ 'Inherent probability' | translate }}</md-option>
+                        <md-option value="cacheBrutRisk"  ng-if="model.showRolfBrut" >{{ 'Inherent risk' | translate }}</md-option>
+                        <md-option value="netProb">{{ 'Net probability' | translate }}</md-option>
+                        <md-option value="cacheNetRisk">{{ 'Net risk' | translate }}</md-option>
+                        <md-option value="cacheTargetedRisk">{{ 'Residual risk' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container>
+                    <label translate>Sort direction</label>
+                    <md-select ng-model="risks_op_filters.order_direction">
+                        <md-option value="asc">{{ 'Ascending' | translate }}</md-option>
+                        <md-option value="desc">{{ 'Descending' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
 
             </form>
         </div>
