@@ -77,18 +77,18 @@
           $scope.exportSoaSheet = function () {
             finalArray=[];
             recLine = 0;
-            finalArray[recLine]= gettextCatalog.getString('asset');
+            finalArray[recLine]= gettextCatalog.getString('Asset');
             finalArray[recLine]+=','+gettextCatalog.getString('C Impact');
             finalArray[recLine]+=','+gettextCatalog.getString('I Impact');
             finalArray[recLine]+=','+gettextCatalog.getString('A Impact');
-            finalArray[recLine]+=','+gettextCatalog.getString('threat');
-            finalArray[recLine]+=','+gettextCatalog.getString('prob.');
-            finalArray[recLine]+=','+gettextCatalog.getString('vulnerability');
+            finalArray[recLine]+=','+gettextCatalog.getString('Threat');
+            finalArray[recLine]+=','+gettextCatalog.getString('Prob.');
+            finalArray[recLine]+=','+gettextCatalog.getString('Vulnerability');
             finalArray[recLine]+=','+gettextCatalog.getString('Existing controls');
             finalArray[recLine]+=','+gettextCatalog.getString('Qualif.');
-            finalArray[recLine]+=','+gettextCatalog.getString('Current risk C');
-            finalArray[recLine]+=','+gettextCatalog.getString('Current risk I');
-            finalArray[recLine]+=','+gettextCatalog.getString('Current risk A');
+            finalArray[recLine]+=','+gettextCatalog.getString('Current risk')+' C';
+            finalArray[recLine]+=','+gettextCatalog.getString('Current risk')+' I';
+            finalArray[recLine]+=','+gettextCatalog.getString('Current risk')+' '+gettextCatalog.getString('A');
             finalArray[recLine]+=','+gettextCatalog.getString('Treatment');
             finalArray[recLine]+=','+gettextCatalog.getString('Residual risk');
 
