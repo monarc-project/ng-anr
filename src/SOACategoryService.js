@@ -2,9 +2,9 @@
 
     angular
         .module('AnrModule')
-        .factory('ClientCategoryService', [ '$resource', '$rootScope', 'MassDeleteService', ClientCategoryService ]);
+        .factory('SOACategoryService', [ '$resource', '$rootScope', 'MassDeleteService', SOACategoryService ]);
 
-    function ClientCategoryService($resource, $rootScope, MassDeleteService) {
+    function SOACategoryService($resource, $rootScope, MassDeleteService) {
         var self = this;
 
 

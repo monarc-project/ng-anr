@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrKbMgmtCtrl', [
             '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
-            'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'ClientSoaService', 'TagService', 'RiskService','ClientCategoryService',
+            'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'ClientSoaService', 'TagService', 'RiskService','SOACategoryService',
              '$state', '$timeout', '$rootScope',
             AnrKbMgmtCtrl
         ]);
@@ -14,7 +14,7 @@
      */
     function AnrKbMgmtCtrl($scope, $stateParams, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService,
                                   AssetService, ThreatService, VulnService, AmvService, MeasureService, ClientSoaService, TagService,
-                                  RiskService,ClientCategoryService, $state, $timeout, $rootScope) {
+                                  RiskService,SOACategoryService, $state, $timeout, $rootScope) {
         $scope.tab = -1;
         $scope.gettext = gettextCatalog.getString;
         TableHelperService.resetBookmarks();
@@ -693,7 +693,7 @@
 
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ClientCategoryService', 'ConfigService', 'measure', 'anrId', CreateMeasureDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'SOACategoryService', 'ConfigService', 'measure', 'anrId', CreateMeasureDialogCtrl],
                 templateUrl: 'views/anr/create.measures.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -741,7 +741,7 @@
 
             MeasureService.getMeasure(measure.id).then(function (measureData) {
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', 'ClientCategoryService', 'ConfigService', 'measure', 'anrId', CreateMeasureDialogCtrl],
+                    controller: ['$scope', '$mdDialog', 'SOACategoryService', 'ConfigService', 'measure', 'anrId', CreateMeasureDialogCtrl],
                     templateUrl: 'views/anr/create.measures.html',
                     targetEvent: ev,
                     preserveScope: false,
@@ -889,7 +889,7 @@
                 $scope.categories.query.page = query.page = 1;
                 $scope.categories.previousQueryOrder = $scope.categories.query.order;
             }
-            $scope.categories.promise = ClientCategoryService.getCategories(query);
+            $scope.categories.promise = SOACategoryService.getCategories(query);
             $scope.categories.promise.then(
                 function (data) {
                     $scope.categories.items = data;
@@ -921,7 +921,7 @@
            })
 
 
-            ClientCategoryService.patchCategory(category.id, {status: !category.status}, function () {
+            SOACategoryService.patchCategory(category.id, {status: !category.status}, function () {
                 category.status = !category.status;
             });
 
@@ -951,7 +951,7 @@
                         $scope.createNewCategory(ev);
                     }
 
-                    ClientCategoryService.createCategory(category,
+                    SOACategoryService.createCategory(category,
                         function () {
                             $scope.updateCategories();
                             toastr.success(gettextCatalog.getString('The category has been created successfully.',
@@ -968,7 +968,7 @@
         $scope.editCategory = function (ev, category) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-            ClientCategoryService.getCategory(category.id).then(function (categoryData) {
+            SOACategoryService.getCategory(category.id).then(function (categoryData) {
                 $mdDialog.show({
                     controller: ['$scope', '$mdDialog', 'ConfigService', 'category', CreateCategoryDialogCtrl],
                     templateUrl: 'views/anr/create.categories.html',
@@ -982,7 +982,7 @@
                     }
                 })
                     .then(function (category) {
-                        ClientCategoryService.updateCategory(category,
+                        SOACategoryService.updateCategory(category,
                             function () {
                                 $scope.updateCategories();
                                 toastr.success(gettextCatalog.getString('The category has been edited successfully.',
@@ -1025,7 +1025,7 @@
                          }
                        }
                   }
-                  ClientCategoryService.deleteCategory(item.id,
+                  SOACategoryService.deleteCategory(item.id,
                       function () {
                           $scope.updateCategories();
                           toastr.success(gettextCatalog.getString('The category has been deleted.',
@@ -1072,7 +1072,7 @@
                          }
                     }
                     }
-                    ClientCategoryService.deleteMassCategory(ids, function () {
+                    SOACategoryService.deleteMassCategory(ids, function () {
                         $scope.updateCategories();
                         toastr.success(gettextCatalog.getString('{{count}} categories have been deleted.',
                             {count: count}), gettextCatalog.getString('Deletion successful'));
@@ -2110,11 +2110,11 @@
         };
     }
 
-    function CreateMeasureDialogCtrl($scope, $mdDialog, ClientCategoryService, ConfigService, measure, anrId) {
+    function CreateMeasureDialogCtrl($scope, $mdDialog, SOACategoryService, ConfigService, measure, anrId) {
 
       $scope.languages = ConfigService.getLanguages();
       $scope.language = $scope.getAnrLanguage();
-      ClientCategoryService.getCategories({anr: anrId}).then(function (data) {
+      SOACategoryService.getCategories({anr: anrId}).then(function (data) {
          $scope.categories = data['categories'];
       });
 
@@ -2294,7 +2294,7 @@
         // Category
         $scope.queryCategorysSearch = function (query) {
             var promise = $q.defer();
-            ClientCategoryService.getCategory({filter: query}).then(function (e) {
+            SOACategoryService.getCategory({filter: query}).then(function (e) {
                 promise.resolve(e.categories);
             }, function (e) {
                 promise.reject(e);

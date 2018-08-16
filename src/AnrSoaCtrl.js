@@ -3,14 +3,14 @@
     angular
         .module('AnrModule')
         .controller('AnrSoaCtrl', [
-            '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state', 'MeasureService', 'ClientCategoryService' , 'ClientSoaService',  '$q',
+            '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state', 'MeasureService', 'SOACategoryService' , 'ClientSoaService',  '$q',
             AnrSoaCtrl
         ]);
 
     /**
      * ANR > STATEMENT OF APPLICABILITY
      */
-    function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, MeasureService, ClientCategoryService,
+    function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, MeasureService, SOACategoryService,
                                   ClientSoaService,  $q, $filter) {
 
 
@@ -28,7 +28,7 @@
 
 
       //get the list of categories
-      ClientCategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
+      SOACategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
           $scope.Categories = data['categories'];
           for (Category in $scope.Categories){
                 if($scope.Categories[Category].id >= $scope.id_cat)
