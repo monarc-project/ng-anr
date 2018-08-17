@@ -12,7 +12,7 @@
         var makeResource = function () {
            var anr =  $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
-            self.ClientCategoryResource = $resource('api/' + anr + 'category/:categoryId', {
+            self.ClientCategoryResource = $resource('api/' + anr + 'soacategory/:categoryId', {
                     categoryId: '@id',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
@@ -58,9 +58,9 @@
                 var deleteMassCategory = function (ids, success, error) {
 
                     if ($rootScope.OFFICE_MODE == 'FO') {
-                        MassDeleteService.deleteMass('api/client-anr/' + $rootScope.getUrlAnrId() + '/category', ids, success, error);
+                        MassDeleteService.deleteMass('api/client-anr/' + $rootScope.getUrlAnrId() + '/soacategory', ids, success, error);
                     } else {
-                        MassDeleteService.deleteMass('api/category', ids, success, error);
+                        MassDeleteService.deleteMass('api/soacategory', ids, success, error);
                     }
                 }
 
