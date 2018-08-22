@@ -1,7 +1,7 @@
 <div flex ng-controller="AnrKbMgmtCtrl" class="anr-kb-mgmt">
     <md-tabs md-dynamic-height="true" md-border-bottom="true" md-selected="currentTabIndex">
-        <md-tab label="{{ 'Asset types' | translate }}" md-on-select="selectAssetsTab()" md-on-deselect="deselectAssetsTab()">
 
+        <md-tab label="{{ 'Asset types' | translate }}" md-on-select="selectAssetsTab()" md-on-deselect="deselectAssetsTab()">
             <div layout="row" layout-align="start center" class="md-padding" ng-if="!assets.selected.length">
                 <h2 class="md-title md-padding-right md-padding-left">
                     <span translate>Asset types</span>
@@ -71,8 +71,6 @@
 
             <md-table-pagination md-limit="assets.query.limit" md-limit-options="[20, 30, 50, 100]" md-page="assets.query.page"
                                  md-total="{{assets.items.count}}" md-on-paginate="updateAssets" md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
-
-
         </md-tab>
 
         <md-tab label="{{ 'Threats' | translate }}" md-on-select="selectThreatsTab()" md-on-deselect="deselectThreatsTab()">
@@ -261,6 +259,7 @@
                         <th md-column md-order-by="status"><span translate>Status</span></th>
                         <th md-column md-order-by="code"><span translate>Code</span></th>
                         <th md-column md-order-by="description1"><span translate>Label</span></th>
+                        <th md-column md-order-by="category"><span translate>Category</span></th>
                         <th md-column class="actions-column" ng-if="!isAnrReadOnly"><span translate>Actions</span></th>
                     </tr>
                     </thead>
@@ -270,6 +269,7 @@
                         <td md-cell><md-button class="md-icon-button md-primary" ng-click="!isAnrReadOnly && toggleMeasureStatus(measure)"><md-icon>{{ measure.status ? 'done' : 'clear' }}</md-icon></md-button></td>
                         <td md-cell>{{ measure.code }}</td>
                         <td md-cell>{{ _langField(measure,'description') }}</td>
+                        <td md-cell>{{ _langField(measure.category,'label') }}</td>
                         <td md-cell ng-if="!isAnrReadOnly">
                             <md-button class="md-icon-button md-primary" ng-click="editMeasure($event, measure)"><md-icon>edit</md-icon></md-button>
                             <md-button class="md-icon-button md-warn" ng-click="deleteMeasure($event, measure)"><md-icon>delete</md-icon></md-button>
@@ -281,6 +281,75 @@
 
             <md-table-pagination md-limit="measures.query.limit" md-limit-options="[20, 30, 50, 100]" md-page="measures.query.page"
                                  md-total="{{measures.items.count}}" md-on-paginate="updateMeasures" md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
+        </md-tab>
+
+
+        <md-tab label="{{ 'Categories' | translate }}" md-on-select="selectCategoriesTab()" md-on-deselect="deselectCategoriesTab()">
+            <div layout="row" layout-align="start center" class="md-padding" ng-if="!categories.selected.length">
+                <h2 class="md-title md-padding-right md-padding-left">
+                    <span translate>Categories</span>
+                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'Add a category' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewCategory($event)">
+                        <md-tooltip md-direction="left">
+                            {{ 'Add a category' | translate }}
+                        </md-tooltip>
+                        <md-icon>add_to_photos</md-icon>
+                    </md-button>
+                </h2>
+
+                <form flex name="categories.filter.form">
+                    <md-input-container class="md-block md-padding-left md-padding-right">
+                        <label><md-icon>search</md-icon> {{ 'Search...' | translate }}</label>
+                        <input ng-model="categories.query.filter" ng-model-options="categories.filter.options">
+                    </md-input-container>
+                </form>
+
+                <md-select aria-label="filter" ng-model="categories.activeFilter">
+                    <md-option value="all">{{ 'Show all' | translate }}</md-option>
+                    <md-option value="0">{{ 'Show inactive only' | translate }}</md-option>
+                    <md-option value="1">{{ 'Show active only' | translate }}</md-option>
+                </md-select>
+
+                <md-button class="md-icon-button md-primary" ng-click="removecategoriesFilter()">
+                    <md-icon>settings_backup_restore</md-icon>
+                </md-button>
+            </div>
+
+            <md-toolbar class="md-table-toolbar alternate" ng-if="categories.selected.length">
+                <div class="md-toolbar-tools md-toolbar-pad" layout-align="space-between center">
+                    <div>{{categories.selected.length}} {{categories.selected.length > 1 ? 'items' : 'item'}} selected</div>
+                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-warn" ng-click="deleteCategoryMass($event)">
+                        <md-icon>delete</md-icon>
+                    </md-button>
+                </div>
+            </md-toolbar>
+
+            <md-table-container flex>
+                <table md-table md-row-select="! isAnrReadOnly" multiple ng-model="categories.selected" md-progress="categories.promise">
+                    <thead md-head md-order="categories.query.order" md-on-reorder="updateCategories">
+                    <tr md-row>
+                        <th md-column md-order-by="status"><span translate>Status</span></th>
+                        <th md-column md-order-by="reference"><span translate>Code</span></th>
+                        <th md-column md-order-by="label1"><span translate>Label</span></th>
+                        <th md-column class="actions-column" ng-if="!isAnrReadOnly"><span translate>Actions</span></th>
+                    </tr>
+                    </thead>
+
+                    <tbody md-body>
+                    <tr md-row md-select="category" md-select-id="id" ng-repeat="category in categories.items.categories">
+                        <td md-cell><md-button class="md-icon-button md-primary" ng-click="!isAnrReadOnly && toggleCategoryStatus(category)"><md-icon>{{ category.status ? 'done' : 'clear' }}</md-icon></md-button></td>
+                        <td md-cell>{{ category.reference }}</td>
+                        <td md-cell>{{ _langField(category,'label') }}</td>
+                        <td md-cell ng-if="!isAnrReadOnly">
+                            <md-button class="md-icon-button md-primary" ng-click="editCategory($event, category)"><md-icon>edit</md-icon></md-button>
+                            <md-button class="md-icon-button md-warn" ng-click="deleteCategory($event, category)"><md-icon>delete</md-icon></md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+
+            <md-table-pagination md-limit="categories.query.limit" md-limit-options="[20, 30, 50, 100]" md-page="categories.query.page"
+                                 md-total="{{categories.items.count}}" md-on-paginate="updateCategories" md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
         </md-tab>
 
         <md-tab label="{{ 'Information risks' | translate }}" md-on-select="selectAmvsTab()" md-on-deselect="deselectAmvsTab()">

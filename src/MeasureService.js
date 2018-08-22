@@ -37,7 +37,7 @@
         };
 
         var createMeasure = function (params, success, error) {
-            new self.MeasureResource(params).$save(success, error);
+          return  new self.MeasureResource(params).$save(success, error);
         };
 
         var updateMeasure = function (params, success, error) {
