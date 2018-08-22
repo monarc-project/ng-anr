@@ -1,9 +1,9 @@
 <md-dialog md-theme="light" class="dialog-width">
-    <form name="measureForm">
+    <form name="categoryForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 ng-if="!measure.id" translate>Add a control</h2>
-                <h2 ng-if="measure.id" translate>Edit control</h2>
+                <h2 ng-if="!category.id" translate>Add a category</h2>
+                <h2 ng-if="category.id" translate>Edit category</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -26,8 +26,8 @@
                 <md-input-container class="md-block" flex>
                     <label translate>Label</label>
                     <md-icon>label</md-icon>
-                    <input ng-model="measure['description' + language ]" name="description" required>
-                    <div ng-messages="measureForm.description.$error">
+                    <input ng-model="category['label' + language ]" name="label" required>
+                    <div ng-messages="categoryForm.label.$error">
                         <div ng-message="required">{{ 'The label may not be empty' | translate }}</div>
                     </div>
                 </md-input-container>
@@ -35,20 +35,12 @@
                 <md-input-container class="md-block" flex>
                     <label translate>Code</label>
                     <md-icon>language</md-icon>
-                    <input ng-model="measure.code" name="code" required>
-                    <div ng-messages="measureForm.code.$error">
+                    <input ng-model="category.reference" name="reference" required>
+                    <div ng-messages="categoryForm.reference.$error">
                         <div ng-message="required">{{ 'The code may not be empty' | translate }}</div>
                     </div>
                 </md-input-container>
-                <md-input-container class="md-block" layout="row" flex>
-                    <label translate>Category</label>
-                    <md-icon>turned_in</md-icon>
-                    <md-select ng-model="measure.category.id" name="catId" >
-                        <md-option ng-repeat="cat in categories" value="{{cat.id}}"  >{{_langField(cat,'label')}}</md-option>
 
-                    </md-select>
-
-                </md-input-container>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
@@ -56,10 +48,10 @@
             <md-button ng-click="cancel()">
                 {{ 'Cancel' | translate }}
             </md-button>
-            <md-button ng-click="create()" ng-disabled="measureForm.$error.required" type="submit" class="md-accent md-hue-3">
-                {{ (measure.id > 0 ? 'Save' : 'Create') | translate }}
+            <md-button ng-click="create()" ng-disabled="categoryForm.$error.required" type="submit" class="md-accent md-hue-3">
+                {{ (category.id > 0 ? 'Save' : 'Create') | translate }}
             </md-button>
-            <md-button ng-click="createAndContinue()" ng-disabled="measureForm.$error.required" ng-if="!measure.id" class="md-accent md-hue-3">
+            <md-button ng-click="createAndContinue()" ng-disabled="categoryForm.$error.required" ng-if="!category.id" class="md-accent md-hue-3">
                 {{ 'Create and continue' | translate }}
             </md-button>
         </md-dialog-actions>
