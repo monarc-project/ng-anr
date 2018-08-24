@@ -48,7 +48,7 @@
 
                 </md-menu-content>
             </md-menu>
-            <md-tabs md-border-bottom="true" md-selected="display.anrSelectedTabIndex" md-dynamic-height   id="anrMainTab">
+            <md-tabs md-enable-disconnect="true" md-border-bottom="true" md-selected="display.anrSelectedTabIndex" md-dynamic-height   id="anrMainTab">
                 <md-tab label="{{ 'Risk analysis' | translate }}">
                     <div ng-include="'views/anr/_anr.riskanalysis.html'"></div>
                 </md-tab>
@@ -67,9 +67,6 @@
 
                 <md-tab label="{{ 'Statement of applicability' | translate }}">
                     <div ng-include="'views/anr/anr.soa.html'"></div>
-                </md-tab>
-                <md-tab label="{{ 'Risks' | translate }}">
-                    <div ng-include="'views/anr/anr.soa.sheet.html'"   ></div>
                 </md-tab>
             </md-tabs>
         </md-card>
