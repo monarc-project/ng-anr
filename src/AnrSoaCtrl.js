@@ -240,17 +240,6 @@
   rowspan_calcul();
 }
 
-
-
-
-
-
-
-
-
-
-
-
  $scope.export = function () {
    finalArray=[];
    recLine = 0;
