@@ -1,4 +1,4 @@
-<div class="md-padding" ng-controller="AnrSoaSheetCtrl">
+<div class="md-padding" ng-controller="AnrSoaSheetCtrl" ng-if="tabSoaDisplayed">
     <md-button ng-click="backToList()" ui-sref="main.project.anr.soa({modelId: model.anr.id})"><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button>
     <div layout="row" layout-align="space-between end">
       <p class="md-title">{{ soa.measure.code }}-{{_langField(soa.measure,'description')}}  </p>

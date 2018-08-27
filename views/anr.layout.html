@@ -49,25 +49,25 @@
                 </md-menu-content>
             </md-menu>
             <md-tabs  md-enable-disconnect="true" md-border-bottom="true" md-selected="display.anrSelectedTabIndex" md-dynamic-height   id="anrMainTab">
-                <md-tab label="{{ 'Risk analysis' | translate }}">
+                <md-tab label="{{ 'Risk analysis' | translate }}" md-on-select="::tabRiskAnalysisDisplayed = true">
                     <div ng-include="'views/anr/_anr.riskanalysis.html'"></div>
                 </md-tab>
 
-                <md-tab label="{{ 'Dashboard' | translate }}">
+                <md-tab label="{{ 'Dashboard' | translate }}" md-on-select="::tabDashboardDisplayed = true">
                     <div ng-include="'views/anr/anr.dashboard.html'"></div>
                 </md-tab>
 
-                <md-tab label="{{ 'Evaluation scales' | translate }}">
+                <md-tab label="{{ 'Evaluation scales' | translate }}" md-on-select="::tabScalesDisplayed = true">
                     <div ng-include="'views/anr/_anr.evalscales.html'"></div>
                 </md-tab>
 
-                <md-tab label="{{ 'Knowledge base' | translate }}" ng-if="OFFICE_MODE == 'FO'">
+                <md-tab label="{{ 'Knowledge base' | translate }}" ng-if="OFFICE_MODE == 'FO'" md-on-select="::tabKBDisplayed = true">
                     <div ng-include="'views/anr/_anr.kbmgmt.html'"></div>
                 </md-tab>
-                <md-tab label="{{ 'Statement of applicability' | translate }}">
+                <md-tab label="{{ 'Statement of applicability' | translate }}" md-on-select="::tabSoaDisplayed = true">
                     <div ng-include="'views/anr/anr.soa.html'"></div>
                 </md-tab>
-                <md-tab label="{{ 'Risks' | translate }}">
+                <md-tab label="{{ 'Risks' | translate }}" md-on-select="::tabSoaDisplayed = true">
                     <div ng-include="'views/anr/anr.soa.sheet.html'"   ></div>
                 </md-tab>
             </md-tabs>
