@@ -67,6 +67,9 @@
                 <md-tab label="{{ 'Statement of applicability' | translate }}" md-on-select="::tabSoaDisplayed = true">
                     <div ng-include="'views/anr/anr.soa.html'"></div>
                 </md-tab>
+                <md-tab label="{{ 'Risks' | translate }}" md-on-select="::tabSoaSheetDisplayed = true">
+                    <div ng-include="'views/anr/anr.soa.sheet.html'"   ></div>
+                </md-tab>
             </md-tabs>
         </md-card>
     </div>
