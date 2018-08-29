@@ -3,7 +3,7 @@
 <div layout="row" layout-align="space-between center">
   <div layout="column" layout-align="end start">
     <span class="md-title md-padding-left" ng-if="!opsheet_risk" translate>{{ oprisks_total }} operational risks</span>
-    <md-switch ng-disabled="isAnrReadOnly" ng-if="!opsheet_risk && OFFICE_MODE == 'FO' && model.anr.cacheModelShowRolfBrut == 1" style="margin: 0" ng-model="rolfBrut.show" ng-change="updateShowRolfBrut()">{{ 'Show inherent operational risks' | translate }}</md-switch>
+    <md-switch ng-disabled="isAnrReadOnly" ng-if="(instmode == 'anr' || instmode == 'inst') && !opsheet_risk && OFFICE_MODE == 'FO' && model.anr.cacheModelShowRolfBrut == 1" style="margin: 0" ng-model="rolfBrut.show" ng-change="updateShowRolfBrut()">{{ 'Show inherent operational risks' | translate }}</md-switch>
   </div>
 
     <md-card ng-if="(instmode == 'anr' || instmode == 'inst') && !opsheet_risk && OFFICE_MODE == 'FO'">

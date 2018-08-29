@@ -179,6 +179,7 @@
             return self.CommonObjectResource.query({objectId: id}).$promise;
         };
 
+
         var importObjectCommon = function(id, mode, success, error) {
             self.CommonObjectResource.patch({objectId: id}, {object: id, mode: mode}, success, error);
         };
