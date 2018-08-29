@@ -121,10 +121,10 @@ function AnrRisksPlanHistoryCtrl($scope, toastr, $mdMedia, $mdDialog, $statePara
             else
               finalArray[recLine]+=','+"\""+' '+"\"";
           }
-          let csvContent = "data:text/csv;charset=utf-8,";
+          let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
           for(var j = 0; j < finalArray.length; ++j)
               {
-               let row = finalArray[j].toString()+","+"\r\n";
+               let row = finalArray[j].toString().replace(/\n|\r/g,' ')+","+"\r\n";
                csvContent += row ;
               }
 
