@@ -1157,7 +1157,7 @@
                             output.__children__.push(recurseFillTree(category.child[i], depth + 1));
                         }
                     }
-
+                    var tempChildren =[]; //temporary table to sort the "leaf object"
                     if (category.objects && category.objects.length > 0) {
                         for (var i = 0; i < category.objects.length; ++i) {
                             var obj = category.objects[i];
@@ -1171,11 +1171,18 @@
                             }
 
                             obj.__children__ = [];
-                            output.__children__.push(obj);
+                            tempChildren.push(obj); //making the leaf object
                             if($scope.first_object == null){
                                 $scope.first_object = obj;
                             }
                         }
+                        tempChildren.sort(function (a,b){ //sort the leaf object
+                              return ($scope._langField(a,'name')).localeCompare($scope._langField(b,'name'),{ignorePunctuation: true});
+                        });
+
+                        tempChildren.forEach(function(element) { //add the leaf objects to all the children
+                          output.__children__.push(element);
+                        });
                     }
 
                     return output;
@@ -1185,11 +1192,13 @@
                 $scope.first_object = null;
                 $scope.has_virtual_categ = false;
                 for (var v = 0; v < data.categories.length; ++v) {
-                    var cat = data.categories[v];
-                    if(cat.id == -1){
+                    if(data.categories[v].child || data.categories[v].objects.length > 0){ //do not show empty category
+                      var cat = data.categories[v];
+                      if(cat.id == -1){
                         $scope.has_virtual_categ = true;
                     }
                     lib_data.push(recurseFillTree(cat, 0));
+                  }
                 }
                 $scope.anr_obj_library_data = lib_data;
 
@@ -2801,13 +2810,28 @@
             }
         };
 
-        $scope.openCommonList = function () {
-            $scope.dialog_mode = 'common';
+        $scope.$watchGroup(['assets.filter'], function (newValue, oldValue) {
+            if (newValue != oldValue) {
+                    $scope.updateAssets();
+                }
 
-            ObjlibService.getObjectsCommon({limit: 0}).then(function (data) {
+        });
+
+        $scope.assets = {
+              filter:null
+        };
+
+        $scope.updateAssets = function () {
+            var filter =  angular.copy($scope.assets.filter);
+            ObjlibService.getObjectsCommon({filter : filter}).then(function (data) {
                 $scope.objects = data.objects;
             });
-        }
+        };
+
+        $scope.openCommonList = function () {
+            $scope.dialog_mode = 'common';
+            $scope.updateAssets();
+        };
 
         $scope.openObjectDetails = function (object) {
             $scope.dialog_mode = 'object_details';

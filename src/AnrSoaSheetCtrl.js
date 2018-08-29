@@ -23,11 +23,17 @@
       });
 
 
-      $scope.risks_filters.limit = -1;
-      $scope.risks_filters.page = 1;
+      $scope.soa_risks_filters = {
+        order: 'maxRisk',
+        order_direction: 'desc',
+        thresholds: -1,
+        page: 1,
+        limit: -1
+        };
+
 
       // get the full list of risks
-      AnrService.getInstanceRisks($scope.model.anr.id,null, $scope.risks_filters).then(function(data) {
+      AnrService.getInstanceRisks($scope.model.anr.id,null,$scope.soa_risks_filters).then(function(data) {
           if (!$scope.risks || data.risks.length != $scope.risks.length) {
               $scope.risks_total = data.count;
               $scope.risks = data.risks;

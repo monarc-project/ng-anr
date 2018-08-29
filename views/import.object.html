@@ -30,7 +30,7 @@
                 </div>
 
                 <div ng-if="dialog_mode == 'file'">
-                
+
                 <input type="file" name="file" ngf-drop ngf-select ng-repeat="i in range(0, file_range)"
                        ng-model="file[i]"
                        class="md-upload-dropbox md-padding md-whiteframe-3dp"
@@ -52,26 +52,27 @@
 
                 <div ng-if="dialog_mode == 'common'">
                     <p class="md-title" translate>List of common MONARC assets</p>
+
+                    <md-input-container class="md-block md-padding-left md-padding-right">
+                        <label><md-icon>search</md-icon> {{ 'Search an asset...' | translate }}</label>
+                        <input type="text" ng-model="assets.filter">
+                    </md-input-container>
+
                     <table class="md-html-table">
                         <thead>
                         <tr>
-                            <th translate>Category</th>
-                            <th translate>Label</th>
                             <th translate>Name</th>
-                            <th translate>Scope</th>
-                            <th translate>Asset</th>
+                            <th translate>Category</th>
+                            <th translate>Asset type</th>
                             <th translate>Actions</th>
                         </tr>
                         </thead>
 
                         <tbody>
                         <tr ng-repeat="object in objects">
+                            <td><md-icon ng-if="object.scope == 2" class="md-tree-global-icon">language</md-icon> {{ _langField(object,'name') }}</td>
                             <td>{{ _langField(object.category,'label') }}</td>
-                            <td>{{ _langField(object,'label') }}</td>
-                            <td>{{ _langField(object,'name') }}</td>
-                            <td ng-if="object.scope == 1" translate>Local</td>
-                            <td ng-if="object.scope == 2" translate>Global</td>
-                            <td>{{ _langField(object.asset,'label') }} - {{ _langField(object.asset,'description') }}</td>
+                            <td>{{ _langField(object.asset,'label') }}</td>
                             <td class="txtcenter"><md-button ng-click="openObjectDetails(object)" class="md-icon-button"><md-icon>open_in_new</md-icon></md-button></td>
                         </tr>
                         </tbody>
@@ -79,16 +80,53 @@
                 </div>
 
                 <div ng-if="dialog_mode == 'object_details'">
-                    <div layout="row" layout-align="start center">
-                        <md-button class="md-icon-button" ng-click="closeObjectDetails()"><md-icon>arrow_back</md-icon></md-button>
-                        <p class="md-title">{{ _langField(object_details,'name') }} - {{ _langField(object_details,'label') }}</p>
+                    <div layout="row" layout-align="space-between center">
+                      <div layout="row" layout-align="start center">
+                        <md-button class="md-primary md-light-theme" ng-click="closeObjectDetails()"><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button>
+                      </div>
+                      <div>
+                        <md-button class="md-raised md-primary" ng-click="importObjectCommon()">{{ 'Import asset' | translate }}</md-button>
+                      </div>
                     </div>
+                      <div layout="column">
+                        <span class="md-title md-padding-left"><md-icon ng-if="object_details.scope == 2" class="md-tree-global-icon">language</md-icon> {{ _langField(object_details,'name') }}</span>
+                        <span ng-if="object_details.risks != '' " class="md-subhead md-padding-left" translate>{{ object_details.risks.length }} information risks</span>
+                        <span ng-if="object_details.oprisks != '' " class="md-subhead md-padding-left" translate>{{ object_details.oprisks.length }} operational risks</span><br>
+                      </div>
 
-                    <p><strong translate>Scope:</strong> {{ (object_details.scope == 1 ? 'Local' : 'Global') | translate }}</p>
-                    <p><strong translate>Category:</strong> {{ _langField(object_details.category,'label') }}</p>
-                    <p><strong translate>Asset:</strong> {{ _langField(object_details.asset,'label') }}</p>
 
-                    <md-button class="md-raised md-primary" ng-click="importObjectCommon()">{{ 'Import asset' | translate }}</md-button>
+                    <table ng-if="object_details.risks != '' " class="md-html-table big-border-all">
+                        <thead class="big-border-bottom">
+                          <tr>
+                            <th colspan="1" class="big-border-left"><p translate>Threat</p></th>
+                            <th colspan="1" class="big-border-left"><p translate>Vulnerability</p></th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr ng-repeat="risk in object_details.risks">
+                          <td title="{{ _langField(risk,'threatDescription') }}">{{_langField(risk,'threatLabel')}}</td>
+                          <td title="{{ _langField(risk,'vulnDescription') }}"> {{_langField(risk,'vulnLabel')}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <table ng-if="object_details.oprisks != '' " class="md-html-table big-border-all">
+                        <thead class="big-border-bottom">
+                          <tr>
+                            <th colspan="1" class="big-border-left"><p translate>Risk description</p></th>
+                          </tr>
+                        </thead>
+
+                        <tbody>
+                        <tr ng-repeat="risk in object_details.oprisks">
+                            <td title="{{ _langField(risk,'description') }}">{{_langField(risk,'label')}}</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+
+
                 </div>
             </div>
 
