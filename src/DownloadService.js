@@ -22,7 +22,7 @@
                     if (typeF == undefined) {
                         typeF = 'application/octet-stream';
                     }
-                    var blob = new Blob([blobData], {type: typeF}),
+                    var blob = new Blob(['\ufeff' + blobData], {type: typeF}),
                         url = window.URL.createObjectURL(blob);
 
                     a.href = url;

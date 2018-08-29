@@ -2307,8 +2307,8 @@
         $scope.export = function () {
           finalArray=[];
           recLine = 0;
-          finalArray[recLine]= gettextCatalog.getString('Residual risk');
-          finalArray[recLine]+=','+gettextCatalog.getString('Description');
+          finalArray[recLine]= gettextCatalog.getString('Code');
+          finalArray[recLine]+=','+gettextCatalog.getString('Recommendation');
           finalArray[recLine]+=','+gettextCatalog.getString('Imp.');
           finalArray[recLine]+=','+gettextCatalog.getString('Asset');
           finalArray[recLine]+=','+gettextCatalog.getString('Existing controls');
@@ -2321,15 +2321,15 @@
                   for(risk in rec.risks)
                   {
                     recLine++;
-                    finalArray[recLine]="\""+rec.code.toString()+"\"";
+                    finalArray[recLine]="\""+rec.code+"\"";
                     if (rec.description !=null )
-                      finalArray[recLine]+=','+"\""+rec.description.toString()+"\"";
+                      finalArray[recLine]+=','+"\""+rec.description+"\"";
                     else
                       finalArray[recLine]+=','+"\""+' '+"\"";
-                    finalArray[recLine]+=','+"\""+rec.importance.toString()+"\"";
+                    finalArray[recLine]+=','+"\""+rec.importance+"\"";
                     finalArray[recLine]+=','+"\""+$scope._langField(rec.risks[risk].instance,'name')+"\"";
                     if (rec.risks[risk].comment !=null )
-                      finalArray[recLine]+=','+"\""+rec.risks[risk].comment.toString()+"\"";
+                      finalArray[recLine]+=','+"\""+rec.risks[risk].comment+"\"";
                     else
                       finalArray[recLine]+=','+"\""+' '+"\"";
                     if (rec.risks[risk].cacheMaxRisk.toString()=='-1')
@@ -2344,12 +2344,12 @@
                   for(riskop in rec.risksop)
                   {
                     recLine++;
-                    finalArray[recLine]="\""+rec.code.toString()+"\"";
-                    finalArray[recLine]+=','+"\""+rec.description.toString()+"\"";
-                    finalArray[recLine]+=','+"\""+rec.importance.toString()+"\"";
+                    finalArray[recLine]="\""+rec.code+"\"";
+                    finalArray[recLine]+=','+"\""+rec.description+"\"";
+                    finalArray[recLine]+=','+"\""+rec.importance+"\"";
                     finalArray[recLine]+=','+"\""+$scope._langField(rec.risksop[riskop].instance,'name')+"\"";
                     if (rec.risksop[riskop].comment !=null )
-                      finalArray[recLine]+=','+"\""+rec.risksop[riskop].comment.toString()+"\"";
+                      finalArray[recLine]+=','+"\""+rec.risksop[riskop].comment+"\"";
                     else
                       finalArray[recLine]+=','+"\""+' '+"\"";
                     if(rec.risksop[riskop].cacheNetRisk.toString()=='-1')
@@ -2362,10 +2362,10 @@
               }
             }
 
-          let csvContent = "data:text/csv;charset=utf-8,";
+          let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
           for(var j = 0; j < finalArray.length; ++j)
               {
-               let row = finalArray[j].toString()+","+"\r\n";
+               let row = finalArray[j].toString().replace(/\n|\r/g,' ')+","+"\r\n";
                csvContent += row ;
               }
 
