@@ -370,7 +370,8 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 }
 
 .tbl-risk-calc td, .tbl-risk-calc th {
-
+    width: 25px;
+    height: 25px;
     color: #333333;
     font-weight: bold;
 }

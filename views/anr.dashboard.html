@@ -1,4 +1,4 @@
-<div flex ng-controller="ClientDashboardCtrl"  md-theme="light">
+<div flex ng-controller="ClientDashboardCtrl"  md-theme="light" ng-if="tabDashboardDisplayed">
     <div layout="column" md-theme="light" class="md-padding-left md-padding-right">
         <md-card  ng-show="isAllowed('userfo')" md-theme-watch>
             <md-card-content layout="column">

@@ -1,4 +1,4 @@
-<div flex ng-controller="AnrKbMgmtCtrl" class="anr-kb-mgmt">
+<div flex ng-controller="AnrKbMgmtCtrl" class="anr-kb-mgmt" ng-if="tabKBDisplayed">
     <md-tabs md-dynamic-height="true" md-border-bottom="true" md-selected="currentTabIndex">
 
         <md-tab label="{{ 'Asset types' | translate }}" md-on-select="selectAssetsTab()" md-on-deselect="deselectAssetsTab()">

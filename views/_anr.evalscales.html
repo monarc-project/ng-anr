@@ -1,4 +1,4 @@
-<div class="md-padding-left md-padding-right" layout="column">
+<div class="md-padding-left md-padding-right" layout="column" ng-if="tabScalesDisplayed">
     <md-input-container ng-if="OFFICE_MODE == 'BO'">
         <md-icon>language</md-icon>
         <md-select ng-model="scales.language" ng-change="switchLanguage()">
