@@ -178,7 +178,7 @@
                               }else if (risks[risk].kindOfMeasure =='4') {
                                 finalArray[recLine]+=','+"\""+gettextCatalog.getString('Shared')+"\"";
 
-                              }else if (risks[risk].kindOfMeasure =='5') {
+                              }else {
                                 finalArray[recLine]+=','+"\""+gettextCatalog.getString('Not treated')+"\"";
 
                               }
