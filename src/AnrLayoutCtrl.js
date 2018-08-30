@@ -329,7 +329,7 @@
 
             $http.get("api/" + anr + "/" + $scope.model.anr.id + "/risks?" + $scope.serializeQueryString(params)).then(function (data) {
                 var contentT = data.headers('Content-Type');
-                DownloadService.downloadBlob(data.data, 'risks.csv',contentT);
+                DownloadService.downloadCSV(data.data, 'risks.csv',contentT);
             });
         }
 
@@ -343,7 +343,7 @@
 
             $http.get("api/"+anr+"/" + $scope.model.anr.id + "/risksop?" + $scope.serializeQueryString(params)).then(function (data) {
                 var contentT = data.headers('Content-Type');
-                DownloadService.downloadBlob(data.data, 'risks_op.csv',contentT);
+                DownloadService.downloadCSV(data.data, 'risks_op.csv',contentT);
             });
         }
 
@@ -357,7 +357,7 @@
 
             $http.get("api/"+anr+"/" + $scope.model.anr.id + "/instances/"+ $rootScope.anr_selected_instance_id +'?'+ $scope.serializeQueryString(params)).then(function (data) {
                 var contentT = data.headers('Content-Type');
-                DownloadService.downloadBlob(data.data, 'risks_op_inst.csv',contentT);
+                DownloadService.downloadCSV(data.data, 'risks_op_inst.csv',contentT);
             });
         }
 
@@ -371,7 +371,7 @@
 
             $http.get("api/"+anr+"/" + $scope.model.anr.id + "/instances/"+ $rootScope.anr_selected_instance_id +'?'+ $scope.serializeQueryString(params)).then(function (data) {
                 var contentT = data.headers('Content-Type');
-                DownloadService.downloadBlob(data.data, 'risks_inst.csv',contentT);
+                DownloadService.downloadCSV(data.data, 'risks_inst.csv',contentT);
             });
         }
 
