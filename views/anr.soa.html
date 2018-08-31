@@ -1,7 +1,7 @@
 <div class="md-padding" ng-controller="AnrSoaCtrl">
-    <p class="md-title md-padding-double" translate>Statement of applicability</p>
+    <p class="md-title md-padding-left" translate>Statement of applicability</p>
 
-    <div layout="row" layout-align="start center" class="md-padding-double" >
+    <div layout="row" layout-align="start center" class="md-padding-double" style="height:40px">
 
       <md-select ng-model="status" style="margin:0" ng-change="selectStatusCategory()">
         <md-option  value="1">{{ 'Show active only' | translate }}</md-option>
@@ -17,7 +17,7 @@
         </form>
 
         <md-select ng-model="selectedCategory" style="margin:0" ng-change="selectStatusCategory()" >
-          <md-option  value="all">{{ 'All measures' | translate }}</md-option>
+          <md-option  value="all">{{ 'All categories' | translate }}</md-option>
           <md-option ng-repeat="cat in Categories" value="{{cat.id}}" >{{_langField(cat,'label')}}</md-option>
 
         </md-select>
