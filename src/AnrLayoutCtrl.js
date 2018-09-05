@@ -817,9 +817,6 @@
 
         $scope.openMethodDeliverable = function (step, ev) {
             ev.preventDefault();
-            if ($scope.isAnrReadOnly) {
-                return;
-            }
 
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
