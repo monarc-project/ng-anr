@@ -34,18 +34,22 @@
                     <th></th>
                     <th ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">
                       <span class="text-blue" ng-if="type.type == 'CUS' && !isAnrReadOnly" inline-edit="column.name" inline-edit-callback="onEditCustomColumn(type.id, newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ type['label' + scales.language]? type['label' + scales.language] : '...' }}"></span>
-                      <span class="text-blue" ng-if="type.type != 'CUS' && !isAnrReadOnly">{{ type['label' + scales.language] }}</span>
+                      <span class="text-blue" ng-if="type.type != 'CUS'">{{ type['label' + scales.language] }}</span>
                       <md-button class="md-icon-button md-warn" ng-if="type.type == 'CUS' && !isAnrReadOnly" ng-click="deleteCustomScaleType(type.id)">
-                        <md-icon>delete</md-icon></md-button>
+                        <md-icon>delete</md-icon>
+                      </md-button>
                       <md-button class="md-icon-button md-primary" ng-if="type.type != 'CUS' && !isAnrReadOnly" ng-click="setImpactVisibility(type.id, !!type.isHidden)">
-                        <md-icon>{{ type.isHidden ? 'visibility' : 'visibility_off' }}</md-icon></md-button>
+                        <md-icon>{{ type.isHidden ? 'visibility' : 'visibility_off' }}</md-icon>
+                      </md-button>
                     </th>
-                    <th><span class="text-blue" inline-edit="newColumn.name" inline-edit-callback="onCreateNewColumn(newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ 'New column name' | translate }}"></span></th>
+                    <th ng-if="!isAnrReadOnly">
+                        <span class="text-blue" inline-edit="newColumn.name" inline-edit-callback="onCreateNewColumn(newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ 'New column name' | translate }}"></span>
+                    </th>
                 </tr>
             </thead>
 
             <tbody ng-if="scales.impacts.min != scales.impacts.max && scales.impacts.max > 0">
-            <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)" edit-model="comms.impact[i]">
+                <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)" edit-model="comms.impact[i]">
                     <th>{{ i }}</th>
                     <td class="preserve-newlines" ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types" edit-readonly="isAnrReadOnly" edit-field edit-ng-field="'comment' + scales.language" edit-localmodel="comms.impact[i][type.id]" edit-type="textarea"></td>
                 </tr>
