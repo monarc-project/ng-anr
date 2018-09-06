@@ -44,7 +44,7 @@
           <tr edit-model="soa" ng-repeat="soa in testt | filter:searchText">
             <td rowspan="{{Category[soa.measure.category.id-1]}}" style="max-width: 300px" class="txtleft" ng-if="$index == CategoryIndex[soa.measure.category.id-1] && order=='category' && (searchText==null || searchText=='')">{{soa.measure.category.reference}}-{{_langField(soa.measure.category,'label')}}</td>
             <td style="max-width: 300px" class="txtleft" ng-if=" order !='category'|| (searchText!=null && searchText!='') ">{{soa.measure.category.reference}}-{{_langField(soa.measure.category,'label')}}</td>
-            <td class="txtcenter"><md-button class="md-primary" ui-sref="main.project.anr.soa.sheet({soaId: soa.id})">{{ soa.measure.code }}</md-button></td>
+            <td class="txtcenter"><md-button class="md-primary" ui-sref="main.project.anr.soa.sheet({modelId: model.anr.id, soaId: soa.id})">{{ soa.measure.code }}</md-button></td>
             <td class="txtleft">{{_langField(soa.measure,'description')}}</td>
             <td class="btn">
               <button type="button" ng-model="soa.EX"  ng-click="onTableEdited(soa, 'EX')" ng-disabled="soa.LR || soa.CO || soa.BR || soa.BP|| soa.RRA " ng-class="{'bouton-true': soa.EX=='1' ,'bouton-false':soa.EX=='0'  }">{{ 'EX' | translate }}

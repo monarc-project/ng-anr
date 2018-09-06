@@ -713,14 +713,15 @@
                       case 4:
                           $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
                           $timeout(function() {
-                          $scope.goToSoa();
+                              $scope.goToSoa();
                           });
                         break;
-                      // case 5:
-                      //     $state.transitionTo('main.project.anr.soa.sheet',{modelId:$stateParams.modelId, soaId: soa.id},{inherit:true,notify:true,reload:false,location:'replace'});
-                      //     $timeout(function() {
-                      //     });
-                      //   break;
+                      case 5:
+                          $state.transitionTo('main.project.anr.soa.sheet', {modelId:$stateParams.modelId, soaId: $stateParams.soaId},{inherit:true,notify:true,reload:false,location:'replace'});
+                          // $timeout(function() {
+                          //     $scope.goToSoaSheet();
+                          // });
+                        break;
                 }
             });
             $scope.$watch('ToolsAnrService.currentTab',function(newValue, oldValue){
@@ -1578,7 +1579,7 @@
                 $scope.scaleThreat = ''; // Reset tooltip Prob. on table risks
                 $scope.scaleVul = ''; // Reset tooltip Qualif. on table risks
                 $scope.scaleR = ''; // Reset tooltip (R)Reputation on table risks
-					 $scope.scaleO = ''; // Reset tooltip (O)Operation on table risks
+                $scope.scaleO = ''; // Reset tooltip (O)Operation on table risks
                 $scope.scaleF = ''; // Reset tooltip (F)Finance on table risks
                 $scope.scaleL = ''; // Reset tooltip (L)Legal on table risks
                 $scope.scaleP = ''; // Reset tooltip (P)Person on table risks
@@ -1700,7 +1701,7 @@
         $scope.scaleThreat = '';
         $scope.scaleVul = '';
         $scope.scaleR = '';
-		  $scope.scaleO = '';
+		$scope.scaleO = '';
         $scope.scaleF = '';
         $scope.scaleL = '';
         $scope.scaleP = '';
@@ -1898,6 +1899,11 @@
         $scope.goToSoa = function () {
             $state.transitionTo("main.project.anr.soa" , {modelId: $stateParams.modelId});
         }
+        $scope.goToSoaSheet = function () {
+            console.log('goToSoaSheet');
+            console.log($stateParams);
+            $state.transitionTo('main.project.anr.soa.sheet', {modelId: $stateParams.modelId, soaId: $stateParams.soaId, anrId: $stateParams.modelId});
+        };
         $scope.openInterviewTools = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
