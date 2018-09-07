@@ -91,6 +91,7 @@
             }
         };
 
+
         // returns the soas that have the selected status  and category
         $scope.selectStatusCategory = function () {
             $scope.test=[];
@@ -102,6 +103,7 @@
            $scope.soas= $scope.test;
            rowspan_calcul();
         };
+
 
         // get the soas list
         ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
@@ -121,6 +123,7 @@
             $scope.selectStatusCategory();
         });
 
+
         //Sort by measures
         $scope.soasMeasures = function () {
             $scope.currentPage = 1; //reset to first page
@@ -138,25 +141,27 @@
                 $scope.orderMeasure = '-1';
             }
             rowspan_calcul();
-         };
+        };
 
-          //Sort by compliance
-          $scope.soasCompliance = function () {
-              $scope.currentPage = 1; //reset to first page
-              $scope.order="compliance";
-              if ($scope.orderCompliance=='-1') {
-                  $scope.soas.sort(function (a, b) {
-                      return a.compliance-b.compliance;
-                  });
-                  $scope.orderCompliance='1';
-              } else {
-                  $scope.soas.sort(function (a, b) {
-                      return b.compliance-a.compliance;
-                  });
-                  $scope.orderCompliance='-1';
-              }
-              rowspan_calcul();
-          };
+
+        //Sort by compliance
+        $scope.soasCompliance = function () {
+            $scope.currentPage = 1; //reset to first page
+            $scope.order="compliance";
+            if ($scope.orderCompliance=='-1') {
+                $scope.soas.sort(function (a, b) {
+                    return a.compliance-b.compliance;
+                });
+                $scope.orderCompliance='1';
+            } else {
+                $scope.soas.sort(function (a, b) {
+                    return b.compliance-a.compliance;
+                });
+                $scope.orderCompliance='-1';
+            }
+            rowspan_calcul();
+        };
+
 
         //Sort by reference
         $scope.soasReferences = function () {
