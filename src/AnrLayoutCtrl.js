@@ -712,16 +712,21 @@
                         break;
                       case 4:
                           $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
+                          // $timeout(function() {
+                          //     $scope.goToSoa();
+                          // });
                           $timeout(function() {
-                              $scope.goToSoa();
+                              if($scope.model && $scope.model.anr){
+
+                              }
                           });
                         break;
-                      case 5:
+                      // case 5:
                           // $state.transitionTo('main.project.anr.soa.sheet', {modelId:$stateParams.modelId, soaId: $stateParams.soaId},{inherit:true,notify:true,reload:false,location:'replace'});
                           // $timeout(function() {
                           //     $scope.goToSoaSheet();
                           // });
-                        break;
+                        // break;
                 }
             });
             $scope.$watch('ToolsAnrService.currentTab',function(newValue, oldValue){
@@ -1902,7 +1907,8 @@
         $scope.goToSoaSheet = function (modelId, soaId) {
             // console.log('goToSoaSheet');
             // console.log($stateParams);
-            $state.transitionTo('main.project.anr.soa.sheet', {modelId: modelId, soaId: soaId});
+            $state.transitionTo('main.project.anr.soa.sheet', {modelId: $scope.model.anr.id, soaId: soaId, anr: $scope.model.anr});
+
         };
         $scope.openInterviewTools = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
