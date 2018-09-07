@@ -229,16 +229,17 @@
      $scope.itemsPerPage = $scope.viewby;
      $scope.maxSize = 5; //Number of pager buttons to show
 
+
      //set the number of the page and recalculate the size of rawspans
      $scope.setPage = function (pageNo) {
-       $scope.currentPage = pageNo;
-       rowspan_calcul();
+         $scope.currentPage = pageNo;
+         rowspan_calcul();
      };
 
 
      //recalculate the size of rawspans when the page has changed
     $scope.pageChanged = function() {
-        console.log('Page changed to: ' + $scope.currentPage);
+        // console.log('Page changed to: ' + $scope.currentPage);
         rowspan_calcul();
     };
 
@@ -265,7 +266,6 @@
         finalArray[recLine]+=','+gettextCatalog.getString('Level of compliance');
 
         soas = $scope.soas;
-
         for (soa in soas) {
             recLine++;
 
@@ -292,25 +292,25 @@
 
             // Remarks
             if(soas[soa].remarks==null)
-                finalArray[recLine]+=','+"\""+' '+"\"";
+                finalArray[recLine] += ','+"\""+' '+"\"";
             else
-                finalArray[recLine]+=','+"\""+soas[soa].remarks+"\"";
+                finalArray[recLine] += ','+"\""+soas[soa].remarks+"\"";
 
             // evidences
             if(soas[soa].evidences==null)
-                finalArray[recLine]+=','+"\""+' '+"\"";
+                finalArray[recLine] += ','+"\""+' '+"\"";
             else
-                finalArray[recLine]+=','+"\""+soas[soa].evidences+"\"";
+                finalArray[recLine] += ','+"\""+soas[soa].evidences+"\"";
 
             // actions
             if (soas[soa].actions==null)
-                finalArray[recLine]+=','+"\""+' '+"\"";
+                finalArray[recLine] += ','+"\""+' '+"\"";
             else
-                finalArray[recLine]+=','+"\""+soas[soa].actions+"\"";
+                finalArray[recLine] += ','+"\""+soas[soa].actions+"\"";
 
             // compliance
-            if(soas[soa].compliance==null || soas[soa].EX == 1)
-                finalArray[recLine]+=','+"\""+' '+"\"";
+            if(soas[soa].compliance==null || soas[soa].EX==1)
+                finalArray[recLine] += ','+"\""+' '+"\"";
             else {
                 if(soas[soa].compliance == 1)
                     finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Initial') + "\"";
