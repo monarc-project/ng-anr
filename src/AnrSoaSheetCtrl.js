@@ -3,23 +3,15 @@
     angular
         .module('AnrModule')
         .controller('AnrSoaSheetCtrl', [
-            '$scope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state' , '$stateParams', 'ClientSoaService','AmvService', 'AnrService', '$q', '$rootScope',
+            '$scope', '$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state' , '$stateParams', 'ClientSoaService', 'AmvService', 'AnrService', '$q',
             AnrSoaSheetCtrl
         ]);
 
     /**
     * ANR > STATEMENT OF APPLICABILITY > Risks
     */
-    function AnrSoaSheetCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, $stateParams,
-                                ClientSoaService,AmvService,AnrService,  $q) {
-
-
-        ClientSoaService.getSoa({anr: $scope.model.anr.id, id: $stateParams.soaId}).then(function (data) {
-            $scope.soa = data;
-            $scope.soaDescription = $scope._langField(data.measure,'description');
-        });
-
-
+    function AnrSoaSheetCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, $stateParams,
+                                ClientSoaService, AmvService, AnrService,  $q) {
         $scope.soa_risks_filters = {
             order: 'maxRisk',
             order_direction: 'desc',
@@ -27,6 +19,11 @@
             page: 1,
             limit: -1
         };
+
+        ClientSoaService.getSoa({anr: $scope.model.anr.id, id: $stateParams.soaId}).then(function (data) {
+            $scope.soa = data;
+            $scope.soaDescription = $scope._langField(data.measure, 'description');
+        });
 
 
         // get the full list of risks
@@ -51,7 +48,7 @@
         });
 
 
-        $scope.empty="false";
+        $scope.empty = "false";
 
 
         $scope.onTableEdited = function (model, name) {
@@ -74,6 +71,7 @@
         };
 
 
+        // export to CSV
         $scope.exportSoaSheet = function () {
             finalArray=[];
             recLine = 0;

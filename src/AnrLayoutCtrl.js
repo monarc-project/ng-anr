@@ -717,7 +717,7 @@
                           });
                         break;
                       case 5:
-                          $state.transitionTo('main.project.anr.soa.sheet', {modelId:$stateParams.modelId, soaId: $stateParams.soaId},{inherit:true,notify:true,reload:false,location:'replace'});
+                          // $state.transitionTo('main.project.anr.soa.sheet', {modelId:$stateParams.modelId, soaId: $stateParams.soaId},{inherit:true,notify:true,reload:false,location:'replace'});
                           // $timeout(function() {
                           //     $scope.goToSoaSheet();
                           // });
@@ -1899,10 +1899,10 @@
         $scope.goToSoa = function () {
             $state.transitionTo("main.project.anr.soa" , {modelId: $stateParams.modelId});
         }
-        $scope.goToSoaSheet = function () {
-            console.log('goToSoaSheet');
-            console.log($stateParams);
-            $state.transitionTo('main.project.anr.soa.sheet', {modelId: $stateParams.modelId, soaId: $stateParams.soaId, anrId: $stateParams.modelId});
+        $scope.goToSoaSheet = function (modelId, soaId) {
+            // console.log('goToSoaSheet');
+            // console.log($stateParams);
+            $state.transitionTo('main.project.anr.soa.sheet', {modelId: modelId, soaId: soaId});
         };
         $scope.openInterviewTools = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
