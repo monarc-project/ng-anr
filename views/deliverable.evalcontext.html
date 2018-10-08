@@ -22,7 +22,7 @@
                 <md-input-container class="md-block">
                     <label translate>Template</label>
                     <md-select ng-model="deliverable.template" name="template" ng-required="true">
-                         <md-option ng-value="deliverymodel.id" ng-repeat="(index, deliverymodel) in deliveriesmodels" ng-if="deliverymodel.category===step.num" ng-selected="$first">{{ _langField(deliverymodel, 'description') }}</md-option>
+                         <md-option ng-value="deliverymodel.id" ng-repeat="(index, deliverymodel) in deliveriesmodels" ng-if="deliverymodel.category===step.num && deliverymodel['path' + getAnrLanguage()]" ng-selected="$first">{{ _langField(deliverymodel, 'description') }}</md-option>
                     </md-select>
                     <div ng-messages="evalContextForm.template.$error" role="alert">
                         <div ng-message="required">{{ 'You must select a template' | translate }}</div>
