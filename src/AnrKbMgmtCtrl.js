@@ -1972,7 +1972,7 @@
 
             $scope.threat.c = ($scope.threat.c == 1);
             $scope.threat.i = ($scope.threat.i == 1);
-            $scope.threat.a = ($scope.threat.d == 1);
+            $scope.threat.a = ($scope.threat.a == 1);
 
         } else {
             $scope.threat = {
