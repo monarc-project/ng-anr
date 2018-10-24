@@ -5,6 +5,10 @@ body{
     white-space: pre-wrap
 }
 
+.md-dialog-content-body {
+    white-space: pre-wrap
+}
+
 .md-tab, .md-button {
     text-transform: none;
 }
@@ -616,6 +620,15 @@ h1.md-toolbar-tools {
 }
 .md-padding-double {
     padding: 8px;
+}
+.md-theme-list {
+    padding-left: 8px;
+    font-style: italic;
+}
+
+.md-mandatory-field {
+    color: red;
+    font-style: italic;
 }
 md-chips.md-default-theme .md-chips, md-chips .md-chips {
     box-shadow: none !important;
