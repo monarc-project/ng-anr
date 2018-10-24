@@ -128,7 +128,7 @@
                         <td md-cell><md-button class="md-icon-button md-primary" ng-click="!isAnrReadOnly && toggleThreatStatus(threat)"><md-icon>{{ threat.status ? 'done' : 'clear' }}</md-icon></md-button></td>
                         <td md-cell>{{ _langField(threat,'label') }}</td>
                         <td md-cell>{{ threat.code }}</td>
-                        <td md-cell>{{ threat.c ? 'C' : '' }}{{ threat.i ? 'I' : '' }}{{ threat.d ? ('A' | translate) : ''  }}</td>
+                        <td md-cell>{{ threat.c ? 'C' : '' }}{{ threat.i ? 'I' : '' }}{{ threat.a ? ('A' | translate) : ''  }}</td>
                         <td md-cell>{{ _langField(threat,'description') }}</td>
                         <td md-cell ng-if="!isAnrReadOnly">
                             <md-button class="md-icon-button md-primary" ng-click="editThreat($event, threat)"><md-icon>edit</md-icon></md-button>
@@ -258,7 +258,7 @@
                     <tr md-row>
                         <th md-column md-order-by="status"><span translate>Status</span></th>
                         <th md-column md-order-by="code"><span translate>Code</span></th>
-                        <th md-column md-order-by="description1"><span translate>Label</span></th>
+                        <th md-column md-order-by="label1"><span translate>Label</span></th>
                         <th md-column md-order-by="category"><span translate>Category</span></th>
                         <th md-column class="actions-column" ng-if="!isAnrReadOnly"><span translate>Actions</span></th>
                     </tr>
@@ -268,7 +268,7 @@
                     <tr md-row md-select="measure" md-select-id="id" ng-repeat="measure in measures.items.measures">
                         <td md-cell><md-button class="md-icon-button md-primary" ng-click="!isAnrReadOnly && toggleMeasureStatus(measure)"><md-icon>{{ measure.status ? 'done' : 'clear' }}</md-icon></md-button></td>
                         <td md-cell>{{ measure.code }}</td>
-                        <td md-cell>{{ _langField(measure,'description') }}</td>
+                        <td md-cell>{{ _langField(measure,'label') }}</td>
                         <td md-cell>{{ _langField(measure.category,'label') }}</td>
                         <td md-cell ng-if="!isAnrReadOnly">
                             <md-button class="md-icon-button md-primary" ng-click="editMeasure($event, measure)"><md-icon>edit</md-icon></md-button>
@@ -328,7 +328,7 @@
                     <thead md-head md-order="categories.query.order" md-on-reorder="updateCategories">
                     <tr md-row>
                         <th md-column md-order-by="status"><span translate>Status</span></th>
-                        <th md-column md-order-by="reference"><span translate>Code</span></th>
+                        <th md-column md-order-by="code"><span translate>Code</span></th>
                         <th md-column md-order-by="label1"><span translate>Label</span></th>
                         <th md-column class="actions-column" ng-if="!isAnrReadOnly"><span translate>Actions</span></th>
                     </tr>
@@ -337,7 +337,7 @@
                     <tbody md-body>
                     <tr md-row md-select="category" md-select-id="id" ng-repeat="category in categories.items.categories">
                         <td md-cell><md-button class="md-icon-button md-primary" ng-click="!isAnrReadOnly && toggleCategoryStatus(category)"><md-icon>{{ category.status ? 'done' : 'clear' }}</md-icon></md-button></td>
-                        <td md-cell>{{ category.reference }}</td>
+                        <td md-cell>{{ category.code }}</td>
                         <td md-cell>{{ _langField(category,'label') }}</td>
                         <td md-cell ng-if="!isAnrReadOnly">
                             <md-button class="md-icon-button md-primary" ng-click="editCategory($event, category)"><md-icon>edit</md-icon></md-button>
@@ -412,9 +412,9 @@
                         <td md-cell>{{ amv.asset.code }} - {{ _langField(amv.asset,'label') }}</td>
                         <td md-cell>{{ amv.threat.code }} - {{ _langField(amv.threat,'label') }}</td>
                         <td md-cell>{{ amv.vulnerability.code }} - {{ _langField(amv.vulnerability,'label') }}</td>
-                        <td md-cell>{{ amv.measure1.code }} - {{ _langField(amv.measure1,'description') }}</td>
-                        <td md-cell>{{ amv.measure2.code }} - {{ _langField(amv.measure2,'description') }}</td>
-                        <td md-cell>{{ amv.measure3.code }} - {{ _langField(amv.measure3,'description') }}</td>
+                        <td md-cell>{{ amv.measure1.code }} - {{ _langField(amv.measure1,'label') }}</td>
+                        <td md-cell>{{ amv.measure2.code }} - {{ _langField(amv.measure2,'label') }}</td>
+                        <td md-cell>{{ amv.measure3.code }} - {{ _langField(amv.measure3,'label') }}</td>
                         <td md-cell ng-if="!isAnrReadOnly">
                             <md-button class="md-icon-button md-primary" ng-click="editAmv($event, amv)"><md-icon>edit</md-icon></md-button>
                             <md-button class="md-icon-button md-warn" ng-click="deleteAmv($event, amv)"><md-icon>delete</md-icon></md-button>
@@ -543,6 +543,7 @@
                         <th md-column><span translate>Tags</span></th>
                         <th md-column md-order-by="code"><span translate>Code</span></th>
                         <th md-column md-order-by="{{ _langField('label') }}"><span translate>Label</span></th>
+                        <th md-column md-order-by="{{ _langField('description') }}"><span translate>Description</span></th>
                         <th md-column ng-if="!isAnrReadOnly"><span translate>Actions</span></th>
                     </tr>
                     </thead>
@@ -553,6 +554,7 @@
                         <td md-cell><md-chips readonly="true" ng-model="risk.tags"><md-chip-template>{{$chip.code}}</md-chip-template></md-chips></td>
                         <td md-cell>{{ risk.code }}</td>
                         <td md-cell>{{ _langField(risk,'label') }}</td>
+                        <td md-cell>{{ _langField(risk,'description') }}</td>
                         <td md-cell ng-if="!isAnrReadOnly">
                             <md-button class="md-icon-button md-primary" ng-click="editRisk($event, risk)">
                                 <md-icon>edit</md-icon>

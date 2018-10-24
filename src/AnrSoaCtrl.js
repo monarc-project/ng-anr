@@ -25,7 +25,7 @@
             $scope.Categories = data['categories'];
             $scope.Categories.push({
                                         'id': null,
-                                        'reference': '-----',
+                                        'code': '-----',
                                         'label1': '-----',
                                         'label2': '-----',
                                         'label3': '-----',
@@ -112,7 +112,7 @@
                 if (element.measure.category == null) {
                     element.measure.category = {
                                                 'id':null,
-                                                'reference':'-----',
+                                                'code':'-----',
                                                 'label1':'-----',
                                                 'label2':'-----',
                                                 'label3':'-----',
@@ -202,7 +202,7 @@
     //Sort by reference  and calculate the rawspans size
     $scope.soasReference = function () {
         $scope.currentPage = 1; //reset to first page
-        $scope.order="reference";
+        $scope.order="code";
         $scope.soasReferences();
         rowspan_calcul();
     };

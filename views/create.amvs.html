@@ -96,12 +96,12 @@
                         md-search-text="m1SearchText"
                         md-selected-item-change="selectedMeasureItemChange(1, item)"
                         md-items="item in queryMeasureSearch(m1SearchText)"
-                        md-item-text="item.code + ' (' + _langField(item,'description') + ')'"
+                        md-item-text="item.code + ' (' + _langField(item,'label') + ')'"
                         md-delay="300"
                         md-min-length="0"
                         md-floating-label="{{ 'First control' | translate }}">
                     <md-item-template>
-                        <span md-highlight-text="m1SearchText" md-highlight-flags="^i">{{ item.code }} ({{ _langField(item,'description') }})</span>
+                        <span md-highlight-text="m1SearchText" md-highlight-flags="^i">{{ item.code }} ({{ _langField(item,'label') }})</span>
                     </md-item-template>
 
                     <md-not-found>
@@ -115,12 +115,12 @@
                         md-search-text="m2SearchText"
                         md-selected-item-change="selectedMeasureItemChange(2, item)"
                         md-items="item in queryMeasureSearch(m2SearchText)"
-                        md-item-text="item.code + ' (' + _langField(item,'description') + ')'"
+                        md-item-text="item.code + ' (' + _langField(item,'label') + ')'"
                         md-delay="300"
                         md-min-length="0"
                         md-floating-label="{{ 'Second control' | translate }}">
                     <md-item-template>
-                        <span md-highlight-text="m2SearchText" md-highlight-flags="^i">{{ item.code }} ({{ _langField(item,'description') }})</span>
+                        <span md-highlight-text="m2SearchText" md-highlight-flags="^i">{{ item.code }} ({{ _langField(item,'label') }})</span>
                     </md-item-template>
 
                     <md-not-found>
@@ -134,12 +134,12 @@
                         md-search-text="m3SearchText"
                         md-selected-item-change="selectedMeasureItemChange(3, item)"
                         md-items="item in queryMeasureSearch(m3SearchText)"
-                        md-item-text="item.code + ' (' + _langField(item,'description') + ')'"
+                        md-item-text="item.code + ' (' + _langField(item,'label') + ')'"
                         md-delay="300"
                         md-min-length="0"
                         md-floating-label="{{ 'Third control' | translate }}">
                     <md-item-template>
-                        <span md-highlight-text="m3SearchText" md-highlight-flags="^i">{{ item.code }} ({{ _langField(item,'description') }})</span>
+                        <span md-highlight-text="m3SearchText" md-highlight-flags="^i">{{ item.code }} ({{ _langField(item,'label') }})</span>
                     </md-item-template>
 
                     <md-not-found>
