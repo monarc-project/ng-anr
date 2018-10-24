@@ -1,0 +1,101 @@
+<md-dialog md-theme="light" class="dialog-width">
+    <form name="ImportCsvForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>File import center</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+          <div class="md-dialog-content" layout="row">
+            <div flex>
+              <div layout="row" layout-align="space-between center">
+                <input type="file"
+                       on-read-file="parseFile($fileContent)"
+                       accept=".csv, .xls, .xlsx, .ods"
+                       title="File types supported: .csv, .xlsx, .ods"
+                       class="md-upload-dropbox md-padding md-whiteframe-3dp">
+                </input>
+                <md-button class="ng-scope md-light-theme material-icons" ng-click="toggleGuide()"><md-icon>info</md-icon></md-button>
+              </div>
+              <div layout="row" layout-align="space-between center">
+                <span class="md-subhead md-padding-left">{{ importData ? importData.length : 0 }} {{ tab |translate }}</span>
+                <div>
+                      <md-button class="md-primary" ng-disabled="check || !importData" ng-click="uploadFile($event)">
+                      <md-icon>file_download</md-icon>
+                      {{ 'Import file' | translate }}
+                      </md-button>
+                </div>
+              </div>
+
+              <table class="md-html-table big-border-all">
+                  <thead class="big-border-bottom">
+                    <tr >
+                      <th ng-if="items[tab].code" colspan="1" class="big-border-left"><p>code</p></th>
+                      <th ng-if="items[tab].label" colspan="1" class="big-border-left"><p>label</p></th>
+                      <th ng-if="items[tab].description" colspan="1" class="big-border-left"><p>description</p></th>
+                      <th ng-if="items[tab].type" colspan="1" class="big-border-left"><p>type</p></th>
+                      <th ng-if="items[tab].c" colspan="1" class="big-border-left"><p>c</p></th>
+                      <th ng-if="items[tab].i" colspan="1" class="big-border-left"><p>i</p></th>
+                      <th ng-if="items[tab].a" colspan="1" class="big-border-left"><p>a</p></th>
+                      <th ng-if="items[tab].theme" colspan="1" class="big-border-left"><p>theme</p></th>
+                      <th ng-if="items[tab].category" colspan="1" class="big-border-left"><p>category</p></th>
+                      <th ng-if="items[tab].tags" colspan="1" class="big-border-left"><p>tags</p></th>
+                      <th ng-if="importData.length > 0 && check" colspan="1" class="big-border-left"><p>error</p></th>
+
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                  <tr ng-repeat="input in importData">
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].code">{{input.code}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].label">{{input.label}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].description">{{input.description}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].type">{{input.type}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].c">{{input.c}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].i">{{input.i}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].a">{{input.a}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].theme"><span ng-class="{'md-mandatory-field': input.alert}">{{input.theme}}</span></td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].category"><span ng-class="{'md-mandatory-field': input.alert}">{{input.category}}</span></td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].tags"><span ng-class="{'md-mandatory-field': input.alert}">{{input.tags}}</span></td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="importData.length > 0 && check" class="preserve-newlines">{{input.error}}</td>
+                  </tr>
+                  </tbody>
+              </table>
+            </div>
+            <md-card style="max-width: 320px;" ng-if="guideVisible">
+                <md-card-content >
+                    <p class="md-title" translate>File Schema (csv, xlsx, ods)</p>
+                    <md-list>
+                        <md-list-item ng-repeat="item in items[tab]" >
+                          <div class="md-list-item-text">
+                            <b>{{item.field}}</b>
+                            <span>[<i>{{item.type}}</i>]</span>
+                            <span class="md-mandatory-field" ng-if="item.required">*</span>
+                            <p ng-if="item.field != 'theme' && item.field != 'category' && item.field != 'tags'" translate>Example: <i class="preserve-newlines">{{item.example}}</i></p>
+                            <div ng-if="item.field == 'theme' || item.field == 'category' || item.field == 'tags'">
+                              <p class="preserve-newlines" translate>{{item.field == 'theme' ? 'List of themes:'
+                                          : item.field == 'category' ? 'List of categories:'
+                                          :'Multiple tags must be separated by a slash (/) \n\r\ Ex: Tag1/Tag2/Tag3  \n\r\n\r List of tags: '}}</p>
+                              <p class="md-theme-list" ng-repeat="label in labelsItems">{{label}}</p>
+                            </div>
+                          </div>
+                        </md-list-item>
+                    </md-list>
+                    <p class="md-mandatory-field txtright" translate>* Mandatory field</p>
+                </md-card-content>
+            </md-card>
+          </div>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
