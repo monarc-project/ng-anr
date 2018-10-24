@@ -26,8 +26,8 @@
                 <md-input-container class="md-block" flex>
                     <label translate>Label</label>
                     <md-icon>label</md-icon>
-                    <input ng-model="measure['description' + language ]" name="description" required>
-                    <div ng-messages="measureForm.description.$error">
+                    <input ng-model="measure['label' + language ]" name="label" required>
+                    <div ng-messages="measureForm.label.$error">
                         <div ng-message="required">{{ 'The label may not be empty' | translate }}</div>
                     </div>
                 </md-input-container>

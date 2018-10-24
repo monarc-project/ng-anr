@@ -35,8 +35,8 @@
                 <md-input-container class="md-block" flex>
                     <label translate>Code</label>
                     <md-icon>language</md-icon>
-                    <input ng-model="category.reference" name="reference" required>
-                    <div ng-messages="categoryForm.reference.$error">
+                    <input ng-model="category.code" name="code" required>
+                    <div ng-messages="categoryForm.code.$error">
                         <div ng-message="required">{{ 'The code may not be empty' | translate }}</div>
                     </div>
                 </md-input-container>
