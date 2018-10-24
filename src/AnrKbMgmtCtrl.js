@@ -635,7 +635,7 @@
         /*
          * 27002 CONTROLS TAB
          */
-        $scope.measures = TableHelperService.build('description1', 20, 1, '');
+        $scope.measures = TableHelperService.build('label1', 20, 1, '');
         $scope.measures.activeFilter = 1;
         var measuresFilterWatch;
 
@@ -717,7 +717,7 @@
                           $scope.measures.activeFilter=1;
                             $scope.updateMeasures();
                             toastr.success(gettextCatalog.getString('The control has been created successfully.',
-                                {measureLabel: $scope._langField(measure,'description')}), gettextCatalog.getString('Creation successful'));
+                                {measureLabel: $scope._langField(measure,'label')}), gettextCatalog.getString('Creation successful'));
                         },
 
                         function (err) {
@@ -758,7 +758,7 @@
                             function () {
                                 $scope.updateMeasures();
                                 toastr.success(gettextCatalog.getString('The control has been edited successfully.',
-                                    {measureLabel: $scope._langField(measure,'description')}), gettextCatalog.getString('Edition successful'));
+                                    {measureLabel: $scope._langField(measure,'label')}), gettextCatalog.getString('Edition successful'));
                             },
 
                             function () {
@@ -773,7 +773,7 @@
         $scope.deleteMeasure = function (ev, item) {
             var confirm = $mdDialog.confirm()
                 .title(gettextCatalog.getString('Are you sure you want to delete control?',
-                    {label: $scope._langField(item,'description')}))
+                    {label: $scope._langField(item,'label')}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
                 .theme('light')
@@ -797,7 +797,7 @@
                       function () {
                           $scope.updateMeasures();
                           toastr.success(gettextCatalog.getString('The control has been deleted.',
-                              {label: $scope._langField(item,'description')}), gettextCatalog.getString('Deletion successful'));
+                              {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                       }
                   );
               })
@@ -1972,7 +1972,7 @@
 
             $scope.threat.c = ($scope.threat.c == 1);
             $scope.threat.i = ($scope.threat.i == 1);
-            $scope.threat.d = ($scope.threat.d == 1);
+            $scope.threat.a = ($scope.threat.d == 1);
 
         } else {
             $scope.threat = {
@@ -1980,7 +1980,7 @@
                 code: '',
                 c: false,
                 i: false,
-                d: false,
+                a: false,
                 label1: '',
                 label2: '',
                 label3: '',
@@ -2102,10 +2102,10 @@
         } else {
             $scope.measure = {
                 code: '',
-                description1: '',
-                description2: '',
-                description3: '',
-                description4: '',
+                label1: '',
+                label2: '',
+                label3: '',
+                label4: '',
             };
         }
 
