@@ -12,6 +12,11 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
+                <md-card ng-if="OFFICE_MODE == 'FO' && !vuln.id">
+                  <md-button id="threatTab"class="md-primary" ng-click="importFile($event,'Vulnerabilties')"  ng-controller="AnrKbMgmtCtrl">
+                      <md-icon>play_for_work</md-icon><span>{{ 'Import from file' | translate }}</span>
+                  </md-button>
+                </md-card>
                 <md-subheader>{{ 'Labels and descriptions' | translate }}</md-subheader>
 
                 <md-input-container class="md-block"  ng-hide="OFFICE_MODE == 'FO'" flex>
