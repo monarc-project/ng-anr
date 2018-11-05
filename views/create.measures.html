@@ -40,15 +40,58 @@
                         <div ng-message="required">{{ 'The code may not be empty' | translate }}</div>
                     </div>
                 </md-input-container>
-                <md-input-container class="md-block" layout="row" flex>
-                    <label translate>Category</label>
-                    <md-icon>turned_in</md-icon>
-                    <md-select ng-model="measure.category.id" name="catId" >
-                        <md-option ng-repeat="cat in categories" value="{{cat.id}}"  >{{_langField(cat,'label')}}</md-option>
 
-                    </md-select>
+                <div class="md-block" layout="column" flex>
+                    <div layout="row" layout-align="center center">
+                        <md-icon style="margin-right: 8px;">turned_in</md-icon>
+                        <md-autocomplete
+                                flex
+                                required
+                                md-input-name="category"
+                                md-no-cache="true"
+                                md-selected-item="measure.category"
+                                md-search-text="categorySearchText"
+                                md-items="item in queryCategorySearch(categorySearchText)"
+                                md-item-text="_langField(item,'label')"
+                                md-min-length="0"
+                                md-selected-item-change="selectedCategoryItemChange(item)"
+                                md-floating-label="{{ 'Category' | translate }}">
+                            <md-item-template>
+                                <span md-highlight-text="categorySearchText" md-highlight-flags="^i">{{ _langField(item,'label') }}</span>
+                            </md-item-template>
 
-                </md-input-container>
+                            <md-not-found>
+                                {{ 'No category matching your search was found' | translate }}
+                                <md-button ng-click="createCategory(categorySearchText)">{{ 'Create this category' | translate }}</md-button>
+                            </md-not-found>
+                            <div ng-messages="measureForm.category.$error">
+                                <div ng-message="required">{{ 'The category may not be empty' | translate }}</div>
+                            </div>
+                        </md-autocomplete>
+
+                        <md-button class="md-icon-button md-primary" ng-click="createCategory(categorySearchText)" ng-disabled="categorySearchText.length <= 0" ng-show="!measure.soacategory.id">
+                            <md-icon>add</md-icon>
+                        </md-button>
+                        <md-button class="md-icon-button md-primary" ng-click="category_edit=measure.category" ng-show="measure.category.id">
+                            <md-icon>edit</md-icon>
+                        </md-button>
+                        <md-button class="md-icon-button md-warn" ng-click="deleteCategory(measure.category)" ng-show="measure.category.id">
+                            <md-icon>delete</md-icon>
+                        </md-button>
+                    </div>
+                </div>
+
+                <div layout="row" ng-if="category_edit" ng-disabled="category_edit_lock" layout-align="center center">
+                    <md-input-container class="md-block" flex>
+                        <label translate>Category label</label>
+                        <md-icon></md-icon>
+                        <input ng-model="_langField(category_edit,'label')">
+                    </md-input-container>
+                    <md-button class="md-icon-button" ng-click="updateCategory(category_edit)">
+                        <md-icon>check</md-icon>
+                    </md-button>
+                </div>
+
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
