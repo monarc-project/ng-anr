@@ -90,62 +90,30 @@
                     </div>
                 </md-autocomplete>
 
-                <md-autocomplete
-                        flex
-                        md-selected-item="amv.measure1"
-                        md-search-text="m1SearchText"
-                        md-selected-item-change="selectedMeasureItemChange(1, item)"
-                        md-items="item in queryMeasureSearch(m1SearchText)"
-                        md-item-text="item.code + ' (' + _langField(item,'label') + ')'"
-                        md-delay="300"
-                        md-min-length="0"
-                        md-floating-label="{{ 'First control' | translate }}">
-                    <md-item-template>
-                        <span md-highlight-text="m1SearchText" md-highlight-flags="^i">{{ item.code }} ({{ _langField(item,'label') }})</span>
-                    </md-item-template>
 
-                    <md-not-found>
-                        {{ 'No control matching your search was found' | translate }}
-                    </md-not-found>
-                </md-autocomplete>
+                <md-chips ng-model="amv.measures"
+                          md-autocomplete-snap
+                          md-require-match="true">
 
-                <md-autocomplete
-                        flex
-                        md-selected-item="amv.measure2"
-                        md-search-text="m2SearchText"
-                        md-selected-item-change="selectedMeasureItemChange(2, item)"
-                        md-items="item in queryMeasureSearch(m2SearchText)"
-                        md-item-text="item.code + ' (' + _langField(item,'label') + ')'"
-                        md-delay="300"
-                        md-min-length="0"
-                        md-floating-label="{{ 'Second control' | translate }}">
-                    <md-item-template>
-                        <span md-highlight-text="m2SearchText" md-highlight-flags="^i">{{ item.code }} ({{ _langField(item,'label') }})</span>
-                    </md-item-template>
+                    <md-autocomplete flex
+                                     md-selected-item="selectedMeasureItem"
+                                     md-search-text="measureSearchText"
+                                     md-items="item in queryMeasureSearch(measureSearchText)"
+                                     md-item-text="item.code + ' (' + _langField(item,'label') + ')'"
+                                     md-delay="300"
+                                     md-min-length="0"
+                                     md-no-cache="true"
+                                     placeholder= "{{ '+ Add controls' | translate }}">
+                        <span md-highlight-text="measuresSearchText">{{ item.code }} - {{ _langField(item,'label') }}</span>
+                    </md-autocomplete>
 
-                    <md-not-found>
-                        {{ 'No control matching your search was found' | translate }}
-                    </md-not-found>
-                </md-autocomplete>
-
-                <md-autocomplete
-                        flex
-                        md-selected-item="amv.measure3"
-                        md-search-text="m3SearchText"
-                        md-selected-item-change="selectedMeasureItemChange(3, item)"
-                        md-items="item in queryMeasureSearch(m3SearchText)"
-                        md-item-text="item.code + ' (' + _langField(item,'label') + ')'"
-                        md-delay="300"
-                        md-min-length="0"
-                        md-floating-label="{{ 'Third control' | translate }}">
-                    <md-item-template>
-                        <span md-highlight-text="m3SearchText" md-highlight-flags="^i">{{ item.code }} ({{ _langField(item,'label') }})</span>
-                    </md-item-template>
-
-                    <md-not-found>
-                        {{ 'No control matching your search was found' | translate }}
-                    </md-not-found>
-                </md-autocomplete>
+                    <md-chip-template>
+                        <span>
+                            <strong>{{$chip.code}}</strong>
+                            <em>{{_langField($chip,'label')}}</em>
+                        </span>
+                    </md-chip-template>
+                </md-chips>
 
                 <div layout="row">
                     <md-input-container class="md-block" layout="row" flex>
