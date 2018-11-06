@@ -23,32 +23,11 @@
                     </md-select>
                 </md-input-container>
 
-                <div class="md-block" layout="row" layout-align="center center">
-                    <md-icon style="margin-right: 8px;">label</md-icon>
-                    <md-autocomplete
-                            flex
-                            required
-                            md-input-name="referential"
-                            md-no-cache="true"
-                            md-selected-item="measure.referential"
-                            md-search-text="referentialSearchText"
-                            md-items="item in queryReferentialSearch(referentialSearchText)"
-                            md-item-text="_langField(item,'label')"
-                            md-min-length="0"
-                            md-selected-item-change="selectedReferentialItemChange(item)"
-                            md-floating-label="{{ 'Referential' | translate }}">
-                        <md-item-template>
-                            <span md-highlight-text="referentialSearchText" md-highlight-flags="^i">{{ _langField(item,'label') }}</span>
-                        </md-item-template>
-
-                        <md-not-found>
-                            {{ 'No referential matching your search was found' | translate }}
-                        </md-not-found>
-                        <div ng-messages="measureForm.referential.$error">
-                            <div ng-message="required">{{ 'The referential may not be empty' | translate }}</div>
-                        </div>
-                    </md-autocomplete>
-                </div>
+                <md-input-container class="md-block" flex>
+                    <label translate>Referential</label>
+                    <md-icon>label</md-icon>
+                    <input ng-model="measure.referential['label' + language ]" name="referential" ng-disabled="measure.referential.id" required >
+                </md-input-container>
 
                 <md-input-container class="md-block" flex>
                     <label translate>Label</label>
