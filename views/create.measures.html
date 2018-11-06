@@ -35,7 +35,7 @@
                             md-items="item in queryReferentialSearch(referentialSearchText)"
                             md-item-text="_langField(item,'label')"
                             md-min-length="0"
-                            md-selected-item-change="selectedReferentialItemChange(item)"
+                            md-selected-item-change="selectedReferentialItemChange(item.uniqid)"
                             md-floating-label="{{ 'Referential' | translate }}">
                         <md-item-template>
                             <span md-highlight-text="referentialSearchText" md-highlight-flags="^i">{{ _langField(item,'label') }}</span>
