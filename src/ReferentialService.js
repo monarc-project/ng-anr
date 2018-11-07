@@ -11,7 +11,7 @@
 
         var makeResource = function () {
             self.ReferentialResource = $resource('api/' + anr + 'referentials/:ReferentialId', {
-                    ReferentialId: '@id',
+                    ReferentialId: '@uniqid',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
                 {
