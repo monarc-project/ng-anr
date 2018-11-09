@@ -22,7 +22,7 @@
 
         ClientSoaService.getSoa({anr: $scope.model.anr.id, id: $stateParams.soaId}).then(function (data) {
             $scope.soa = data;
-            $scope.soaDescription = $scope._langField(data.measure, 'description');
+            $scope.soaDescription = $scope._langField(data.measure, 'label');
         });
 
 
