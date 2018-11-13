@@ -1,0 +1,67 @@
+<md-dialog md-theme="light" class="dialog-width">
+    <form name="referentialForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Match referentials</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+              <table class="md-html-table">
+                  <thead>
+                      <tr>
+                          <th>
+                            {{ _langField(referentialSelected,'label')}}
+                          </th>
+                          <th ng-repeat="ref in referentialsList.referentials" ng-if="ref.uniqid !== referentialSelected.uniqid">
+                            {{ _langField(ref,'label')}}
+                          </th>
+                      </tr>
+                  </thead>
+
+                  <tbody>
+                      <tr ng-repeat="measure in referentialSelected.measures" >
+                          <td>{{ _langField(measure,'label')}}</td>
+                          <td ng-repeat="ref in referentialsList.referentials" ng-if="ref.uniqid !== referentialSelected.uniqid">
+                            <md-chips ng-model="matchMeasures[ref.uniqid][measure.id]"
+                                      ng-value ="item.id"
+                                      md-autocomplete-snap
+                                      md-require-match="true">
+
+                                <md-autocomplete flex
+                                                 md-selected-item="matchedMeasureItem"
+                                                 md-search-text="measureSearchText"
+                                                 md-items="item in queryMeasureSearch(measureSearchText,ref.uniqid,measure.id)"
+                                                 md-item-text="item.code + ' (' + _langField(item,'label') + ')'"
+                                                 md-min-length="0"
+                                                 md-no-cache="true"
+                                                 placeholder= "{{ 'Match controls' | translate }}">
+                                    <span md-highlight-text="measuresSearchText">{{ item.code }} - {{ _langField(item,'label') }}</span>
+                                </md-autocomplete>
+
+                                <md-chip-template>
+                                    <span>
+                                        <strong>{{$chip.code}}</strong>
+                                    </span>
+                                </md-chip-template>
+                            </md-chips>
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="create()" ng-disabled="referentialForm.$error.required" type="submit" class="md-accent md-hue-3">
+                {{ 'Save' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

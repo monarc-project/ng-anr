@@ -8,6 +8,13 @@ body{
 .md-tab, .md-button {
     text-transform: none;
 }
+md-tab-data{
+  opacity: 1;
+  display: table;
+  right: 0;
+  left: initial;
+  z-index: 20;
+}
 
 md-option {
     height: 36px;
