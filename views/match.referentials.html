@@ -28,7 +28,6 @@
                           <td>{{ _langField(measure,'label')}}</td>
                           <td ng-repeat="ref in referentialsList.referentials" ng-if="ref.uniqid !== referentialSelected.uniqid">
                             <md-chips ng-model="matchMeasures[ref.uniqid][measure.id]"
-                                      ng-value ="item.id"
                                       md-autocomplete-snap
                                       md-require-match="true">
 
@@ -38,14 +37,14 @@
                                                  md-items="item in queryMeasureSearch(measureSearchText,ref.uniqid,measure.id)"
                                                  md-item-text="item.code + ' (' + _langField(item,'label') + ')'"
                                                  md-min-length="0"
-                                                 md-no-cache="true"
-                                                 placeholder= "{{ 'Match controls' | translate }}">
+                                                 md-no-cache="true">
                                     <span md-highlight-text="measuresSearchText">{{ item.code }} - {{ _langField(item,'label') }}</span>
                                 </md-autocomplete>
 
                                 <md-chip-template>
                                     <span>
                                         <strong>{{$chip.code}}</strong>
+                                        <em>{{_langField($chip,'label')}}</em>
                                     </span>
                                 </md-chip-template>
                             </md-chips>

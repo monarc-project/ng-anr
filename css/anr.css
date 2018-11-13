@@ -115,6 +115,7 @@ table.md-table tbody.md-body>tr.md-row:hover {
     padding: 0 6px;
     height: 26px;
     line-height: 26px;
+    clear:left;
 }
 
 .md-chip-content {
