@@ -33,7 +33,7 @@
         };
 
         var getMeasureMeasure = function (id) {
-            return self.MeasureResource.query({measureId: id}).$promise;
+            return self.MeasureResource.query({measuremeasureId: id}).$promise;
         };
 
         var createMeasureMeasure = function (params, success, error) {
@@ -45,7 +45,7 @@
         };
 
         var deleteMeasureMeasure = function (id, success, error) {
-            self.MeasureResource.delete({measureId: id}, success, error);
+            self.MeasureResource.delete({measuremeasureId: id}, success, error);
         };
 
         var deleteMassMeasureMeasure = function (ids, success, error) {
@@ -57,7 +57,7 @@
         }
 
         var patchMeasureMeasure = function (id, params, success, error) {
-            self.MeasureResource.patch({measureId: id}, params, success, error);
+            self.MeasureResource.patch({measuremeasureId: id}, params, success, error);
         }
 
         return {
