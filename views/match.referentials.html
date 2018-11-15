@@ -25,10 +25,12 @@
 
                   <tbody>
                       <tr ng-repeat="measure in referentialSelected.measures" >
-                          <td>{{ _langField(measure,'label')}}</td>
+                          <td><strong>{{measure.code}}</strong> - {{ _langField(measure,'label')}}</td>
                           <td ng-repeat="ref in referentialsList.referentials" ng-if="ref.uniqid !== referentialSelected.uniqid">
                             <md-chips ng-model="matchMeasures[ref.uniqid][measure.id]"
                                       md-autocomplete-snap
+                                      md-on-add="addMeasure(measure.id, $chip.id)"
+                                      md-on-remove="deleteMeasure(measure.id, $chip.id)"
                                       md-require-match="true">
 
                                 <md-autocomplete flex
