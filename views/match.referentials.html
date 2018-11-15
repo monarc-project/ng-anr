@@ -24,13 +24,13 @@
                   </thead>
 
                   <tbody>
-                      <tr ng-repeat="measure in referentialSelected.measures" >
+                      <tr ng-repeat="measure in measuresRefSelected" >
                           <td><strong>{{measure.code}}</strong> - {{ _langField(measure,'label')}}</td>
                           <td ng-repeat="ref in referentialsList.referentials" ng-if="ref.uniqid !== referentialSelected.uniqid">
                             <md-chips ng-model="matchMeasures[ref.uniqid][measure.id]"
                                       md-autocomplete-snap
-                                      md-on-add="addMeasure(measure.id, $chip.id)"
-                                      md-on-remove="deleteMeasure(measure.id, $chip.id)"
+                                      md-on-add="addMeasureLinked(measure.id, $chip.id)"
+                                      md-on-remove="deleteMeasureLinked(measure.id, $chip.id)"
                                       md-require-match="true">
 
                                 <md-autocomplete flex
@@ -55,14 +55,5 @@
                   </tbody>
               </table>
         </md-dialog-content>
-        <md-dialog-actions layout="row">
-            <span flex></span>
-            <md-button ng-click="cancel()">
-                {{ 'Cancel' | translate }}
-            </md-button>
-            <md-button ng-click="create()" ng-disabled="referentialForm.$error.required" type="submit" class="md-accent md-hue-3">
-                {{ 'Save' | translate }}
-            </md-button>
-        </md-dialog-actions>
     </form>
 </md-dialog>
