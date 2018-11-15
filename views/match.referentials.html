@@ -11,6 +11,12 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
+              <form flex name="matchReferential.filter.form">
+                  <md-input-container class="md-block md-padding-left md-padding-right">
+                      <label><md-icon>search</md-icon> {{ 'Search...' | translate }}</label>
+                      <input ng-model="matchRef_filter">
+                  </md-input-container>
+              </form>
               <table class="md-html-table">
                   <thead>
                       <tr>
@@ -24,7 +30,7 @@
                   </thead>
 
                   <tbody>
-                      <tr ng-repeat="measure in measuresRefSelected" >
+                      <tr ng-repeat="measure in measuresRefSelected | filter: matchRef_filter" >
                           <td><strong>{{measure.code}}</strong> - {{ _langField(measure,'label')}}</td>
                           <td ng-repeat="ref in referentialsList.referentials" ng-if="ref.uniqid !== referentialSelected.uniqid">
                             <md-chips ng-model="matchMeasures[ref.uniqid][measure.id]"
