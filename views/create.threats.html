@@ -53,46 +53,39 @@
                                 md-selected-item="threat.theme"
                                 md-search-text="themeSearchText"
                                 md-items="item in queryThemeSearch(themeSearchText)"
-                                md-item-text="_langField(item,'label')"
+                                md-item-text="item['label' + language]"
                                 md-min-length="0"
                                 md-selected-item-change="selectedThemeItemChange(item)"
                                 md-floating-label="{{ 'Theme' | translate }}">
                             <md-item-template>
-                                <span md-highlight-text="themeSearchText" md-highlight-flags="^i">{{ _langField(item,'label') }}</span>
+                                <span md-highlight-text="themeSearchText" md-highlight-flags="^i">{{item['label' + language]}}</span>
                             </md-item-template>
 
                             <md-not-found>
-                                {{ 'No theme matching your search was found' | translate }}
-                                <md-button ng-click="createTheme(themeSearchText)">{{ 'Create this theme' | translate }}</md-button>
+                                {{ 'No theme matching your search was found. Click on' | translate }}
+                                <md-icon>add_to_photos</md-icon>
+                                {{ 'to create it.' | translate }}
                             </md-not-found>
+
                             <div ng-messages="threatForm.theme.$error">
                                 <div ng-message="required">{{ 'The theme may not be empty' | translate }}</div>
                             </div>
                         </md-autocomplete>
 
-                        <md-button class="md-icon-button md-primary" ng-click="createTheme(themeSearchText)" ng-disabled="themeSearchText.length <= 0" ng-show="!threat.theme.id">
-                            <md-icon>add</md-icon>
+                        <md-button class="md-icon-button md-primary" ng-click="createNewTheme($event)" ng-show="!threat.theme.id">
+                          <md-tooltip md-direction="left">
+                              {{ 'Add a theme' | translate }}
+                          </md-tooltip>
+                            <md-icon>add_to_photos</md-icon>
                         </md-button>
-                        <md-button class="md-icon-button md-primary" ng-click="theme_edit=threat.theme" ng-show="threat.theme.id">
+                        <md-button class="md-icon-button md-primary" ng-click="editTheme($event,threat.theme)" ng-show="threat.theme.id">
                             <md-icon>edit</md-icon>
                         </md-button>
-                        <md-button class="md-icon-button md-warn" ng-click="deleteTheme(threat.theme)" ng-show="threat.theme.id">
+                        <md-button class="md-icon-button md-warn" ng-click="deleteTheme($event,threat.theme)" ng-show="threat.theme.id">
                             <md-icon>delete</md-icon>
                         </md-button>
                     </div>
                 </div>
-
-                <div layout="row" ng-if="theme_edit" ng-disabled="theme_edit_lock" layout-align="center center">
-                    <md-input-container class="md-block" flex>
-                        <label translate>Theme label</label>
-                        <md-icon></md-icon>
-                        <input ng-model="_langField(theme_edit,'label')">
-                    </md-input-container>
-                    <md-button class="md-icon-button" ng-click="updateTheme(theme_edit)">
-                        <md-icon>check</md-icon>
-                    </md-button>
-                </div>
-
 
                 <md-input-container class="md-block" layout="row" ng-if="OFFICE_MODE == 'BO'" flex>
                     <label translate>Mode</label>
