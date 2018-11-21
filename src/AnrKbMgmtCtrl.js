@@ -42,9 +42,9 @@
           })
         .controller('AnrKbMgmtCtrl', [
             '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
-            'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'ClientSoaService', 'TagService', 'RiskService','SOACategoryService',
-             '$state', '$timeout', '$rootScope',
-            AnrKbMgmtCtrl
+            'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'ClientSoaService', 'TagService',
+            'RiskService','SOACategoryService','$state', '$timeout', '$rootScope',
+             AnrKbMgmtCtrl
         ]);
     /**
      * ANR > KB
