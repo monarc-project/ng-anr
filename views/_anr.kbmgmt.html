@@ -233,7 +233,7 @@
               </md-tooltip>
               <md-icon>link</md-icon>
             </md-button>
-            <md-button class="md-icon-button md-warn" ng-if="!isAnrReadOnly && referentials.items.referentials.length > 0" ng-click="deleteReferential($event, referential_uniqid)">
+            <md-button class="md-icon-button md-warn" ng-if="!isAnrReadOnly && referentials.items.referentials.length > 1" ng-click="deleteReferential($event, referential_uniqid)">
               <md-tooltip md-direction="left">
                   {{ 'Delete referential' | translate }}
               </md-tooltip>

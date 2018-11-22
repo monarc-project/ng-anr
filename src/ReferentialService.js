@@ -41,6 +41,7 @@
         };
 
         var updateReferential = function (params, success, error) {
+            console.log('update referential');
             self.ReferentialResource.update(params, success, error);
         };
 

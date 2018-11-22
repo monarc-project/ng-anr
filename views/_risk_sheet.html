@@ -143,10 +143,11 @@
             </tr>
             <tr>
                 <td class="bold" translate>Security referential</td>
-                <td colspan="3">
-                    <div ng-if="sheet_risk.measure1">{{ sheet_risk.measure1 }}</div>
-                    <div ng-if="sheet_risk.measure2">{{ sheet_risk.measure2 }}</div>
-                    <div ng-if="sheet_risk.measure3">{{ sheet_risk.measure3 }}</div>
+                <td>
+                  <md-tab label="{{ 'Referential 1' | translate }}">
+                  </md-tab>
+                  <md-tab label="{{ 'Referential 2' | translate }}">
+                  </md-tab>
                 </td>
             </tr>
         </tbody>

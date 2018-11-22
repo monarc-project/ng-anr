@@ -641,7 +641,7 @@
         $scope.selectMeasuresTab = function () {
           $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'measures'});
           $scope.updatingReferentials = false;
-          ReferentialService.getReferentials({order: 'id'}).then(function (data) {
+          ReferentialService.getReferentials({order: 'uniqid'}).then(function (data) {
               $scope.referentials.items = data;
               $scope.updatingReferentials = true;
 
@@ -683,7 +683,7 @@
 
         $scope.updateReferentials = function () {
             $scope.updatingReferentials = false;
-            $scope.referentials.promise = ReferentialService.getReferentials({order: 'id'});
+            $scope.referentials.promise = ReferentialService.getReferentials({order: 'uniqid'});
             $scope.referentials.promise.then(
                 function (data) {
                     $scope.referentials.items = data;
@@ -996,7 +996,7 @@
 
         $scope.selectAmvsTab = function () {
             $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'amvs'});
-            ReferentialService.getReferentials({order: 'id'}).then(function (data) {
+            ReferentialService.getReferentials({order: 'uniqid'}).then(function (data) {
                 $scope.referentials_filter.items = data;
                 $scope.referentials_filter.selected = data['referentials'][0].uniqid;
             });
@@ -2418,7 +2418,6 @@
         $scope.languages = ConfigService.getLanguages();
         $scope.defaultLang = $scope.getAnrLanguage();
 
-
         $scope.queryAmvs = function (asset_id) {
             AmvService.getAmvs({limit: 0, asset: asset_id, order: 'position', amvid: $scope.amv.id}).then(function (data) {
                 $scope.asset_amvs = data.amvs;
@@ -2513,6 +2512,19 @@
                 $scope.amv.vulnerability = item;
             }
         }
+
+        // Referentials
+
+        $scope.queryReferentialsSearch = function (query) {
+            var promise = $q.defer();
+            ReferentialService.getReferentials({order: 'uniqid'}).then(function (e) {
+                promise.resolve(e.referentials);
+            }, function (e) {
+                promise.reject(e);
+            });
+
+            return promise.promise;
+        };
 
         $scope.selectedReferentialItemChange = function (item) {
             if (item) {
