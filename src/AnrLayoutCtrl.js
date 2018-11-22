@@ -6,7 +6,7 @@
             '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'TableHelperService',
             'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
             '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService', 'ClientRecommandationService',
-            AnrLayoutCtrl
+            'ReferentialService', 'AmvService', AnrLayoutCtrl
         ]);
 
     /**
@@ -14,7 +14,8 @@
      */
     function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, TableHelperService, ModelService,
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
-                           $transitions, DownloadService, $mdPanel, $injector, ConfigService,ClientRecommandationService) {
+                           $transitions, DownloadService, $mdPanel, $injector, ConfigService,ClientRecommandationService,
+                           ReferentialService, AmvService) {
 
 
         if ($scope.OFFICE_MODE == 'FO') {
@@ -46,6 +47,12 @@
         }
         $scope.scalesCanChange = false;
         $scope.isAnrReadOnly = true;
+        $scope.referentials = [];
+        ReferentialService.getReferentials({order: 'uniqid'}).then(function (data) {
+            $scope.referentials.items = data;
+            $scope.updatingReferentials = true;
+
+        });
 
         var self = this;
 
@@ -415,9 +422,13 @@
                 }
             }
             $timeout(function() {
+
                 $scope.ToolsAnrService.currentTab = 0;
                 $scope.opsheet_risk = undefined;
                 $scope.sheet_risk = angular.copy(risk);
+                AmvService.getAmv($scope.sheet_risk.amv).then(function (data) {
+                  $scope.sheet_risk.measures = data['measures'];
+                });
 
                 var reducAmount = [];
                 if($scope.scales.vulns != undefined){
@@ -429,10 +440,13 @@
                     }
                 }
                 $scope.reducAmount = reducAmount;
-
                 $scope._copyRecs = [];
                 $scope.updateSheetRiskTarget();
             });
+        };
+
+        $scope.selectReferential = function (referentialId) {
+            $scope.referential_uniqid = referentialId;
         };
 
         $scope.updateSheetRiskTarget = function () {
