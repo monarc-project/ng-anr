@@ -25,6 +25,18 @@
                         isArray: false
                     }
                 });
+            self.CommonReferentialsResource = $resource('api/referentials/:referentialId', { referentialId: '@uniqid'},
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'patch': {
+                        method: 'PATCH'
+                    },
+                    'query': {
+                        isArray: false
+                    }
+                });
         }
         makeResource();
 
@@ -34,6 +46,10 @@
 
         var getReferential = function (id) {
             return self.ReferentialResource.query({ReferentialId: id}).$promise;
+        };
+
+        var getReferentialsCommon = function (params) {
+            return self.CommonReferentialsResource.query(params).$promise;
         };
 
         var createReferential = function (params, success, error) {
@@ -63,6 +79,7 @@
         return {
             makeResource: makeResource,
             getReferentials: getReferentials,
+            getReferentialsCommon: getReferentialsCommon,
             getReferential: getReferential,
             createReferential: createReferential,
             deleteReferential: deleteReferential,

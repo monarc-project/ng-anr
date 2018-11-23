@@ -105,10 +105,23 @@ table.md-table tbody.md-body>tr.md-row:hover {
 
 .md-chips .md-chip-input-container {
     width: 100%;
+
 }
 
 .md-chips .md-chip-input-container md-autocomplete md-autocomplete-wrap {
     width: 100%;
+    padding-left: 10px;
+}
+
+.chips-horizontal md-chips-wrap {
+    padding-left: 30px;
+}
+
+.chips-horizontal md-chips-wrap md-chip {
+    padding: 0 6px;
+    height: 26px;
+    line-height: 26px;
+    clear: none;
 }
 
 .md-chips md-chip {

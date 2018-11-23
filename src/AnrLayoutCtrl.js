@@ -14,7 +14,7 @@
      */
     function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, TableHelperService, ModelService,
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
-                           $transitions, DownloadService, $mdPanel, $injector, ConfigService,ClientRecommandationService,
+                           $transitions, DownloadService, $mdPanel, $injector, ConfigService, ClientRecommandationService,
                            ReferentialService, AmvService) {
 
 
@@ -1506,14 +1506,8 @@
         $scope.editAnrInfo = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-            var controller = ['$scope', '$mdDialog', 'ConfigService', 'anr', '$stateParams', CreateAnrDialogCtrl];
-            if (CreateRiskAnalysisDialog) {
-                controller = ['$scope', '$mdDialog', '$http', 'toastr', 'gettext', 'gettextCatalog', 'ConfigService', 'ModelService',
-                    'ClientAnrService', 'anr', CreateRiskAnalysisDialog];
-            }
-
             $mdDialog.show({
-                controller: controller,
+                controller: ['$scope', '$mdDialog', 'ConfigService', 'anr', '$stateParams', CreateAnrDialogCtrl],
                 templateUrl: 'views/dialogs/create.anr.html',
                 targetEvent: ev,
                 preserveScope: false,
