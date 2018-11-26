@@ -33,13 +33,11 @@
 
 
                 var getCategories = function (params) {
-                    makeResource();
                     return self.ClientCategoryResource.query(params).$promise;
                 };
 
-                var getCategory = function (params) {
-                    makeResource();
-                    return self.ClientCategoryResource.query({'anr': params.anr, 'id': params.id}).$promise;
+                var getCategory = function (id) {
+                    return self.ClientCategoryResource.query({categoryId: id}).$promise;
                 };
 
                 var createCategory = function (params, success, error) {

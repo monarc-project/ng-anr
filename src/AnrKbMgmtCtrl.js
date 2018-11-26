@@ -836,7 +836,7 @@
                 locals: {
                     'measure': measure,
                     'referential' : $scope.referential,
-                    'anrId': $scope.model.anr.id
+                    'anrId': $scope.model.anr
                 }
             })
                 .then(function (measure) {
@@ -888,7 +888,7 @@
                     locals: {
                         'measure': measureData,
                         'referential' : $scope.referential,
-                        'anrId': $scope.model.anr.id
+                        'anrId': $scope.model.anr
                     }
                 })
                     .then(function (measure) {
@@ -2208,10 +2208,6 @@
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
         $scope.categorySearchText = '';
-        SOACategoryService.getCategories({anr: anrId}).then(function (data) {
-           $scope.categories = data['categories'];
-        });
-
         if (measure != undefined && measure != null) {
             $scope.measure = measure;
         } else {
@@ -2249,7 +2245,7 @@
         $scope.createNewCategory = function (ev, referential, category) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ConfigService','referential', 'category',  CreateCategoryDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'ConfigService','referential', 'category', 'anrId',  CreateCategoryDialogCtrl],
                 templateUrl: 'views/anr/create.categories.html',
                 targetEvent: ev,
                 multiple: true,
@@ -2259,7 +2255,9 @@
                 fullscreen: useFullScreen,
                 locals: {
                     'referential': referential,
-                    'category': category
+                    'category': category,
+                    'anrId': anrId,
+
                 }
             })
                 .then(function (category) {
@@ -2286,10 +2284,11 @@
 
         $scope.editCategory = function (ev, referential, category) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            //console.log(category);
 
             SOACategoryService.getCategory(category.id).then(function (categoryData) {
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', 'ConfigService','referential', 'category', CreateCategoryDialogCtrl],
+                    controller: ['$scope', '$mdDialog', 'ConfigService','referential', 'category', 'anrId', CreateCategoryDialogCtrl],
                     templateUrl: 'views/anr/create.categories.html',
                     targetEvent: ev,
                     preserveScope: false,
@@ -2299,7 +2298,8 @@
                     fullscreen: useFullScreen,
                     locals: {
                       'referential': referential,
-                      'category': category
+                      'category': categoryData,
+                      'anrId' : anrId
                     }
                 })
                     .then(function (category) {
@@ -2374,7 +2374,7 @@
 
     }
 
-    function CreateCategoryDialogCtrl($scope, $mdDialog,  ConfigService, referential, category) {
+    function CreateCategoryDialogCtrl($scope, $mdDialog,  ConfigService, referential, category, anrId) {
 
       $scope.languages = ConfigService.getLanguages();
       $scope.language = $scope.getAnrLanguage();
@@ -2383,7 +2383,7 @@
         if (category != undefined && category != null) {
             $scope.category = category;
             delete $scope.category.measures;
-            $scope.category.referential = referential;
+            delete $scope.category.referential;
         } else {
             $scope.category = {
               code: '',
@@ -2393,6 +2393,7 @@
               label3: '',
               label4: '',
             };
+            $scope.category.referential.anr = anrId;
         }
 
         $scope.cancel = function() {
@@ -2559,28 +2560,6 @@
 
             return promise.promise;
         };
-
-
-        $scope.selectedMeasureItemChange = function (idx, item) {
-            if (item) {
-                $scope.amv['measure' + idx] = item;
-            }
-        }
-
-
-
-        // Category
-        $scope.queryCategorysSearch = function (query) {
-            var promise = $q.defer();
-            SOACategoryService.getCategory({filter: query}).then(function (e) {
-                promise.resolve(e.categories);
-            }, function (e) {
-                promise.reject(e);
-            });
-
-            return promise.promise;
-        };
-
 
         $scope.cancel = function() {
             $mdDialog.cancel();
