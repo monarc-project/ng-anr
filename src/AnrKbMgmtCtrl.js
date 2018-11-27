@@ -2264,7 +2264,7 @@
                     var cont = category.cont;
                     category.cont = undefined;
                     if (cont) {
-                        $scope.createNewCategory(ev);
+                        $scope.createNewCategory(ev, referential);
                     }
 
                     SOACategoryService.createCategory(category,
@@ -2276,7 +2276,7 @@
                         },
 
                         function (err) {
-                            $scope.createNewCategory(ev, category);
+                            $scope.createNewCategory(ev, referential, category);
                         }
                     );
                 });
@@ -2312,7 +2312,7 @@
                             },
 
                             function () {
-                                $scope.editCategory(ev, category);
+                                $scope.editCategory(ev, referential, category);
                             }
                         );
                     });
