@@ -1507,7 +1507,8 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ConfigService', 'anr', '$stateParams', CreateAnrDialogCtrl],
+              controller: ['$scope', '$mdDialog', '$http', '$q', 'ConfigService', 'ModelService',
+                            'ClientAnrService', 'ReferentialService', 'anr', CreateRiskAnalysisDialog],
                 templateUrl: 'views/dialogs/create.anr.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -1987,28 +1988,6 @@
         $scope.setMethodStepStatus = setMethodStepStatus;
         $scope.openMethodDeliverable = openMethodDeliverable;
         $scope.step = step;
-    }
-
-    function CreateAnrDialogCtrl($scope, $mdDialog, ConfigService, anr, $stateParams) {
-        $scope.languages = ConfigService.getLanguages();
-        $scope.language = ConfigService.getDefaultLanguageIndex();
-
-        if (anr != undefined && anr != null) {
-            $scope.anr = anr;
-        } else {
-            $scope.anr = {
-                name: '',
-                description: ''
-            };
-        }
-
-        $scope.cancel = function () {
-            $mdDialog.cancel();
-        };
-
-        $scope.create = function () {
-            $mdDialog.hide($scope.anr);
-        };
     }
 
     var createAttachedObject = function ($scope, $mdDialog, $state, $location, $parentScope, AnrService, ev, objlib) {
