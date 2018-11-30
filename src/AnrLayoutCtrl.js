@@ -47,12 +47,6 @@
         }
         $scope.scalesCanChange = false;
         $scope.isAnrReadOnly = true;
-        $scope.referentials = [];
-        ReferentialService.getReferentials({order: 'uniqid'}).then(function (data) {
-            $scope.referentials.items = data;
-            $scope.updatingReferentials = true;
-
-        });
 
         var self = this;
 
@@ -75,7 +69,6 @@
                     ToolsAnrService.currentTab = 0;
                     $scope.display.anrSelectedTabIndex = 0;
                     e.preventDefault();
-
                 }
             });
         }
@@ -198,7 +191,9 @@
                         $scope.updateInstances();
                         $scope.updateObjectsLibrary();
                         $scope.updateScales();
+                        $scope.updateReferentials();
                         updateMethodProgress();
+
                     }
 
                     if ($rootScope.setAnrLanguage) {
@@ -215,6 +210,13 @@
 
         };
 
+        $scope.updateReferentials = function () {
+          $scope.referentials = [];
+          ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
+            $scope.referentials.items = data;
+            $scope.updatingReferentials = true;
+          });
+        };
 
         $scope.updateAnrRisksTable = function (cb) {
             $scope.anr_risks_table_loading = true;
@@ -422,7 +424,6 @@
                 }
             }
             $timeout(function() {
-
                 $scope.ToolsAnrService.currentTab = 0;
                 $scope.opsheet_risk = undefined;
                 $scope.sheet_risk = angular.copy(risk);
@@ -448,7 +449,6 @@
         $scope.selectReferential = function (referentialId) {
             $scope.referential_uniqid = referentialId;
         };
-
         $scope.updateSheetRiskTarget = function () {
             if(parseInt($scope.sheet_risk.threatRate) > -1 && parseInt($scope.sheet_risk.vulnerabilityRate) > -1){
                 $scope.sheet_risk.target_c = $scope.sheet_risk.c_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
@@ -1914,8 +1914,6 @@
             $state.transitionTo("main.project.anr.soa" , {modelId: $stateParams.modelId});
         }
         $scope.goToSoaSheet = function (modelId, soaId) {
-            // console.log('goToSoaSheet');
-            // console.log($stateParams);
             $state.transitionTo('main.project.anr.soa.sheet', {modelId: $scope.model.anr.id, soaId: soaId, anr: $scope.model.anr});
 
         };
