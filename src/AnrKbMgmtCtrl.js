@@ -641,7 +641,7 @@
         $scope.selectMeasuresTab = function () {
           $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'measures'});
           $scope.updatingReferentials = false;
-          ReferentialService.getReferentials({order: 'uniqid'}).then(function (data) {
+          ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
               $scope.referentials.items = data;
               $scope.updatingReferentials = true;
 
@@ -683,7 +683,7 @@
 
         $scope.updateReferentials = function () {
             $scope.updatingReferentials = false;
-            $scope.referentials.promise = ReferentialService.getReferentials({order: 'uniqid'});
+            $scope.referentials.promise = ReferentialService.getReferentials({order: 'createdAt'});
             $scope.referentials.promise.then(
                 function (data) {
                     $scope.referentials.items = data;
@@ -920,7 +920,7 @@
             $mdDialog.show(confirm).then(function() {
               //delete the soa associated to the measure
                 ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
-                  $scope.soas = data['Soa-list'];
+                  $scope.soas = data['soaMeasures'];
                   for (soa in $scope.soas){
                       if($scope.soas[soa].measure.id == item.id) {
 
@@ -962,7 +962,7 @@
                 }
                 //delete the soas associated to the measures
                 ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
-                  $scope.soas = data['Soa-list'];
+                  $scope.soas = data['soaMeasures'];
                     for (soa in $scope.soas){
                       for (var i = 0; i < ids.length; ++i) {
                           if($scope.soas[soa].measure.id == ids[i]) {
@@ -996,7 +996,7 @@
 
         $scope.selectAmvsTab = function () {
             $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'amvs'});
-            ReferentialService.getReferentials({order: 'uniqid'}).then(function (data) {
+            ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
                 $scope.referentials_filter.items = data;
                 $scope.referentials_filter.selected = data['referentials'][0].uniqid;
             });
@@ -2284,7 +2284,6 @@
 
         $scope.editCategory = function (ev, referential, category) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-            //console.log(category);
 
             SOACategoryService.getCategory(category.id).then(function (categoryData) {
                 $mdDialog.show({
@@ -2518,7 +2517,7 @@
 
         $scope.queryReferentialsSearch = function (query) {
             var promise = $q.defer();
-            ReferentialService.getReferentials({order: 'uniqid'}).then(function (e) {
+            ReferentialService.getReferentials({order: 'createdAt'}).then(function (e) {
                 promise.resolve(e.referentials);
             }, function (e) {
                 promise.reject(e);
