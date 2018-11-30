@@ -36,7 +36,6 @@
 
         $scope.updateSoaMeasures = function () {
             var query = angular.copy($scope.soa_measures.query);
-            query.referential = $scope.referential_uniqid;
 
             if ($scope.soa_measures.previousQueryOrder != $scope.soa_measures.query.order) {
                 $scope.soa_measures.query.page = query.page = 1;
