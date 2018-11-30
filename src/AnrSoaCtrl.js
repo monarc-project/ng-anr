@@ -3,7 +3,8 @@
     angular
         .module('AnrModule')
         .controller('AnrSoaCtrl', [
-            '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state', 'MeasureService', 'SOACategoryService' , 'ClientSoaService',  '$q',
+            '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state', 'MeasureService',
+            'SOACategoryService' , 'ClientSoaService',  '$q', 'ReferentialService', 'TableHelperService',
             AnrSoaCtrl
         ]);
 
@@ -11,17 +12,47 @@
      * ANR > STATEMENT OF APPLICABILITY
      */
     function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, MeasureService, SOACategoryService,
-                                  ClientSoaService,  $q, $filter) {
+                                  ClientSoaService,  $q, ReferentialService, TableHelperService, $filter) {
         // Options for Soa Table
+        $scope.soa_measures = TableHelperService.build('id', 20, 1, '');
         $scope.selectedCategory = "all";
-        $scope.order = "category";
-        $scope.status = "1";
+        //$scope.order = "category";
+        $scope.updatingReferentials = false;
         $scope.orderReference = $scope.orderMeasure = $scope.orderCompliance = $scope.orderCategory = "-1";
         $scope.Category = [0];
         $scope.CategoryIndex = [0];
+        $scope.referentials = [];
+        ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
+            $scope.referentials.items = data;
+            $scope.updatingReferentials = true;
+        })
 
+        $scope.selectReferential = function (referentialId) {
+            $scope.referential_uniqid = referentialId;
+            $scope.updateCategories(referentialId);
+            $scope.updateSoaMeasures();
+
+        };
+
+        $scope.updateSoaMeasures = function () {
+            var query = angular.copy($scope.soa_measures.query);
+            query.referential = $scope.referential_uniqid;
+
+            if ($scope.soa_measures.previousQueryOrder != $scope.soa_measures.query.order) {
+                $scope.soa_measures.query.page = query.page = 1;
+                $scope.soa_measures.previousQueryOrder = $scope.soa_measures.query.order;
+            }
+
+            $scope.soa_measures.promise = ClientSoaService.getSoas(query);
+            $scope.soa_measures.promise.then(
+                function (data) {
+                    $scope.soa_measures.items = data;
+                }
+            )
+        };
         // get the list of categories
-        SOACategoryService.getCategories({anr: $scope.model.anr.id}).then(function (data) {
+        $scope.updateCategories = function (ref) {
+          SOACategoryService.getCategories({referential: ref}).then(function (data) {
             $scope.Categories = data['categories'];
             $scope.Categories.push({
                                         'id': null,
@@ -31,10 +62,11 @@
                                         'label3': '-----',
                                         'label4': '-----'
                                     });
-        });
+            });
+          };
 
         // Sort by category ASC
-        function categories_sort(a, b) {
+        /*function categories_sort(a, b) {
             return a.measure.category.id-b.measure.category.id;
         };
 
@@ -72,7 +104,7 @@
             }
 
             // calculate the index of the beginning for each category
-            if($scope.orderCategory == '-1'){
+          if($scope.orderCategory == '-1'){
                 for (var i=1; i<$scope.Category.length; i++) {
                     if (!$scope.CategoryIndex[i-1])
                         $scope.CategoryIndex[i-1] = 0;
@@ -91,7 +123,6 @@
             }
         };
 
-
         // returns the soas that have the selected status  and category
         $scope.selectStatusCategory = function () {
             $scope.test=[];
@@ -107,7 +138,7 @@
 
         // get the soas list
         ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
-            $scope.soas_data = data['Soa-list'];
+            $scope.soas_data = data['soaMeasures'];
             $scope.soas_data.forEach(function(element) {
                 if (element.measure.category == null) {
                     element.measure.category = {
@@ -120,7 +151,7 @@
                                             };
                 }
             });
-            $scope.selectStatusCategory();
+            //$scope.selectStatusCategory();
         });
 
 
@@ -218,7 +249,7 @@
         } else {
             $scope.orderCategory='-1';
         }
-    };
+    };*/
 
 
     $scope.onTableEdited = function (model, name) {
@@ -241,7 +272,7 @@
     };
 
     //Options for the pagination
-    $scope.viewby = 20;
+    /*$scope.viewby = 20;
     $scope.currentPage = 1;
     $scope.itemsPerPage = $scope.viewby;
     $scope.maxSize = 5; //Number of pager buttons to show
@@ -267,7 +298,7 @@
         $scope.currentPage = 1; //reset to first page
         $scope.numPage = $scope.totalItems/num;
         rowspan_calcul();
-    }
+    }*/
 
 
     $scope.export = function () {
