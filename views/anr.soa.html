@@ -25,25 +25,25 @@
           </div>
 
           <md-table-container flex>
-          <table class="md-html-table soa-table"  editable callback="onTableEdited" >
-            <thead>
+          <table class="md-html-table soa-table" editable callback="onTableEdited">
+            <thead md-order="soa_measures.query.order" md-on-reorder="updateSoaMeasures">
               <tr>
-                <th style="width: 7%" ><button class="buttonsoa" ng-click="soasCategory()" > {{ 'Category'| translate }} </button></th>
-                <th style="width: 3%" ><button class="buttonsoa" ng-click="soasReference()"> {{ 'Ref.'| translate }} </button></th>
-                <th style="width: 14%" ><button class="buttonsoa" ng-click="soasMeasures()" > {{ 'Control'| translate }} </button></th>
-                <th style="width: 8%" translate>Inclusion/Exclusion</th>
-                <th style="width: 18%" translate>Remarks</th>
-                <th style="width: 18%" translate>Evidences</th>
-                <th style="width: 18%" >Actions</th>
-                <th style="width: 5%" ><button class="buttonsoa" ng-click="soasCompliance()" style="width: 110px;"> {{ 'Level of compliance'| translate }}</button></th>
+                <th style="width: 7%" md-order-by="{{ _langField('measure.category.label') }}"><span translate>Category</span></th>
+                <th style="width: 3%" md-order-by="measure.code"><span translate>Code</span></th>
+                <th style="width: 14%"  md-order-by="{{ _langField('measure.label') }}"><span translate>Control</span></th>
+                <th style="width: 8%"><span translate>Inclusion/Exclusion</span></th>
+                <th style="width: 18%"><span translate>Remarks</span></th>
+                <th style="width: 18%"><span translate>Evidences</span></th>
+                <th style="width: 18%"><span translate>Actions</span></th>
+                <th style="width: 5%"  md-order-by="compliance"><span translate>Level of compliance</span></th>
               </tr>
             </thead>
             <tbody>
-                <tr edit-model="soa" ng-repeat="soa in soa_measures.items.soaMeasures | filter:searchText" ng-if="soa.measure.referential.uniqid == referential_uniqid">
-                  <td style="max-width: 300px" class="txtleft">{{soa.measure.category.code}}-{{_langField(soa.measure.category,'label')}}</td>
-                  <td class="txtcenter"><md-button class="md-primary" ng-click="goToSoaSheet(model.anr.id, soa.id)">{{ soa.measure.code }}</md-button></td>
-                  <td class="txtleft">{{_langField(soa.measure,'label')}}</td>
-                  <td class="btn">
+                <tr edit-model="soa" ng-repeat="soa in soa_measures.items.soaMeasures | filter:searchText"> <!--ng-if="soa.measure.referential.uniqid == referential_uniqid">-->
+                  <td  style="max-width: 300px" class="txtleft">{{soa.measure.category.code}}-{{_langField(soa.measure.category,'label')}}</td>
+                  <td  class="txtcenter"><md-button class="md-primary" ng-click="goToSoaSheet(model.anr.id, soa.id)">{{ soa.measure.code }}</md-button></td>
+                  <td  class="txtleft">{{_langField(soa.measure,'label')}}</td>
+                  <td  class="btn">
                     <button type="button" ng-model="soa.EX"  ng-click="onTableEdited(soa, 'EX')" ng-disabled="soa.LR || soa.CO || soa.BR || soa.BP|| soa.RRA " ng-class="{'bouton-true': soa.EX=='1' ,'bouton-false':soa.EX=='0'  }">{{ 'EX' | translate }}
                       <md-tooltip>{{ 'Excluded' | translate }}</md-tooltip>
                     </button>
@@ -63,10 +63,10 @@
                       <md-tooltip>{{ 'Results of risk assessment' | translate }}</md-tooltip>
                     </button>
                   </td>
-                  <td edit-field="remarks" class="preserve-newlines"  edit-type="textarea"></td>
-                  <td edit-field="evidences" edit-type="textarea"></td>
-                  <td edit-field="actions"  edit-type="textarea"></td>
-                  <td class="tbl-soa"
+                  <td  edit-field="remarks" class="preserve-newlines"  edit-type="textarea"></td>
+                  <td  edit-field="evidences" edit-type="textarea"></td>
+                  <td  edit-field="actions"  edit-type="textarea"></td>
+                  <td  class="tbl-soa"
                      ng-class="{'green':  soa.compliance == '5' && soa.EX==0 ,
                                 'orange': (soa.compliance == '4' || soa.compliance == '3')&& soa.EX==0 ,
                                 'red': (soa.compliance == '2' || soa.compliance == '1')&& soa.EX==0  ,
