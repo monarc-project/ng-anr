@@ -14,13 +14,8 @@
     function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, MeasureService, SOACategoryService,
                                   ClientSoaService,  $q, ReferentialService, TableHelperService, $filter) {
         // Options for Soa Table
-        $scope.soa_measures = TableHelperService.build('id', 20, 1, '');
-        $scope.selectedCategory = "all";
-        //$scope.order = "category";
+        $scope.soa_measures = TableHelperService.build('measure', 20, 1, '');
         $scope.updatingReferentials = false;
-        $scope.orderReference = $scope.orderMeasure = $scope.orderCompliance = $scope.orderCategory = "-1";
-        $scope.Category = [0];
-        $scope.CategoryIndex = [0];
         $scope.referentials = [];
         ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
             $scope.referentials.items = data;
@@ -28,14 +23,19 @@
         })
 
         $scope.selectReferential = function (referentialId) {
+            $scope.soa_measures.selectedCategory = 0;
             $scope.referential_uniqid = referentialId;
             $scope.updateCategories(referentialId);
-            $scope.updateSoaMeasures();
-
         };
+
+        $scope.$watchGroup(['soa_measures.selectedCategory', 'referential_uniqid'], function(newValue, oldValue) {
+                $scope.updateSoaMeasures();
+        });
 
         $scope.updateSoaMeasures = function () {
             var query = angular.copy($scope.soa_measures.query);
+            query.category = $scope.soa_measures.selectedCategory;
+            query.referential = $scope.referential_uniqid;
 
             if ($scope.soa_measures.previousQueryOrder != $scope.soa_measures.query.order) {
                 $scope.soa_measures.query.page = query.page = 1;
@@ -49,207 +49,13 @@
                 }
             )
         };
+
         // get the list of categories
         $scope.updateCategories = function (ref) {
-          SOACategoryService.getCategories({referential: ref}).then(function (data) {
+          SOACategoryService.getCategories({order: $scope._langField('label') , referential: ref}).then(function (data) {
             $scope.Categories = data['categories'];
-            $scope.Categories.push({
-                                        'id': null,
-                                        'code': '-----',
-                                        'label1': '-----',
-                                        'label2': '-----',
-                                        'label3': '-----',
-                                        'label4': '-----'
-                                    });
-            });
-          };
-
-        // Sort by category ASC
-        /*function categories_sort(a, b) {
-            return a.measure.category.id-b.measure.category.id;
-        };
-
-        // Sort by category DESC
-        function categories_sortInv(a, b) {
-            return b.measure.category.id-a.measure.category.id;
-        };
-
-        //c alculate the rawspans for the sort by category
-        function rowspan_calcul() {
-            $scope.testt = [];
-            if ($scope.order=="category") {
-                $scope.soasReferences();
-                $scope.orderReference=- $scope.orderReference;
-                if ($scope.orderCategory=='-1') {
-                    //s ort by category_id
-                    $scope.soas.sort(categories_sort);
-                } else {
-                    // sort by category_id
-                    $scope.soas.sort(categories_sortInv);
-                }
-            }
-            $scope.totalItems = $scope.soas.length ;   //$scope.soas.length
-
-            // calculate the size of each category
-            $scope.testt = $scope.soas.slice(($scope.currentPage-1)*$scope.itemsPerPage,($scope.currentPage)*$scope.itemsPerPage);
-            for (Category in $scope.Categories) {
-                $scope.Category[$scope.Categories[Category].id-1] = 0;
-                $scope.CategoryIndex[$scope.Categories[Category].id-1] = 0;
-                for (soa in $scope.testt) {
-                    if ($scope.Categories[Category].id == $scope.testt[soa].measure.category.id) {
-                        $scope.Category[$scope.Categories[Category].id-1] = $scope.Category[$scope.Categories[Category].id-1]+1;
-                    }
-                }
-            }
-
-            // calculate the index of the beginning for each category
-          if($scope.orderCategory == '-1'){
-                for (var i=1; i<$scope.Category.length; i++) {
-                    if (!$scope.CategoryIndex[i-1])
-                        $scope.CategoryIndex[i-1] = 0;
-                    if (!$scope.Category[i-1])
-                        $scope.Category[i-1] = 0;
-                    $scope.CategoryIndex[i] = $scope.CategoryIndex[i-1] + $scope.Category[i-1];
-                }
-            } else {
-                for (var i=$scope.Category.length-1; i>0; i--) {
-                    if (!$scope.CategoryIndex[i+1])
-                        $scope.CategoryIndex[i+1] = 0;
-                    if (!$scope.Category[i+1])
-                        $scope.Category[i+1] = 0;
-                    $scope.CategoryIndex[i] = $scope.CategoryIndex[i+1] + $scope.Category[i+1];
-                }
-            }
-        };
-
-        // returns the soas that have the selected status  and category
-        $scope.selectStatusCategory = function () {
-            $scope.test=[];
-            $scope.currentPage = 1;
-            for (soa in $scope.soas_data) {
-                if(($scope.status == $scope.soas_data[soa].measure.status || $scope.status == "all") && ($scope.selectedCategory == $scope.soas_data[soa].measure.category.id || $scope.selectedCategory == "all") )
-                    $scope.test.push($scope.soas_data[soa]);
-            }
-           $scope.soas= $scope.test;
-           rowspan_calcul();
-        };
-
-
-        // get the soas list
-        ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
-            $scope.soas_data = data['soaMeasures'];
-            $scope.soas_data.forEach(function(element) {
-                if (element.measure.category == null) {
-                    element.measure.category = {
-                                                'id':null,
-                                                'code':'-----',
-                                                'label1':'-----',
-                                                'label2':'-----',
-                                                'label3':'-----',
-                                                'label4':'-----'
-                                            };
-                }
-            });
-            //$scope.selectStatusCategory();
-        });
-
-
-        //Sort by measures
-        $scope.soasMeasures = function () {
-            $scope.currentPage = 1; //reset to first page
-            $scope.order = "measure";
-            //sort by measure
-            if ($scope.orderMeasure == '-1') {
-                $scope.soas.sort(function (a, b) {
-                    return $scope._langField(a.measure, 'description').localeCompare($scope._langField(b.measure, 'description'));
-                });
-                $scope.orderMeasure = '1';
-            } else {
-                $scope.soas.sort(function (a, b) {
-                    return $scope._langField(b.measure, 'description').localeCompare($scope._langField(a.measure, 'description'));
-                });
-                $scope.orderMeasure = '-1';
-            }
-            rowspan_calcul();
-        };
-
-
-        //Sort by compliance
-        $scope.soasCompliance = function () {
-            $scope.currentPage = 1; //reset to first page
-            $scope.order="compliance";
-            if ($scope.orderCompliance=='-1') {
-                $scope.soas.sort(function (a, b) {
-                    return a.compliance-b.compliance;
-                });
-                $scope.orderCompliance='1';
-            } else {
-                $scope.soas.sort(function (a, b) {
-                    return b.compliance-a.compliance;
-                });
-                $scope.orderCompliance='-1';
-            }
-            rowspan_calcul();
-        };
-
-
-        //Sort by reference
-        $scope.soasReferences = function () {
-            for (soa in $scope.soas){
-                $scope.soas[soa].measure.code = $scope.soas[soa].measure.code.split(".");
-            }
-
-            if ($scope.orderReference=='-1') {
-                $scope.soas.sort(function (a, b) {
-                    if (a.measure.code[0]==b.measure.code[0]) {
-                        if(a.measure.code[1]==b.measure.code[1])
-                            return a.measure.code[2]-b.measure.code[2];
-                    else
-                        return a.measure.code[1]-b.measure.code[1];
-                } else {
-                  return a.measure.code[0]-b.measure.code[0];
-                }
-             });
-             $scope.orderReference='1';
-           } else {
-               $scope.soas.sort(function (a, b) {
-                   if (a.measure.code[0]==b.measure.code[0]) {
-                       if (a.measure.code[1]==b.measure.code[1])
-                            return b.measure.code[2]-a.measure.code[2];
-                    else
-                        return b.measure.code[1]-a.measure.code[1];
-                } else {
-                    return b.measure.code[0]-a.measure.code[0];
-                }
-            });
-                $scope.orderReference='-1';
-            }
-            for (soa in $scope.soas) {
-                $scope.soas[soa].measure.code=$scope.soas[soa].measure.code.join(".");
-            }
-        };
-
-    //Sort by reference  and calculate the rawspans size
-    $scope.soasReference = function () {
-        $scope.currentPage = 1; //reset to first page
-        $scope.order="code";
-        $scope.soasReferences();
-        rowspan_calcul();
-    };
-
-
-    //Sort by category  and calculate the rawspans size
-    $scope.soasCategory= function () {
-        $scope.order="category";
-        $scope.currentPage = 1; //reset to first page
-        rowspan_calcul();
-        if ($scope.orderCategory=='-1') {
-            $scope.orderCategory='1';
-        } else {
-            $scope.orderCategory='-1';
+          });
         }
-    };*/
-
 
     $scope.onTableEdited = function (model, name) {
         var promise = $q.defer();
@@ -269,36 +75,6 @@
         });
         return promise.promise;
     };
-
-    //Options for the pagination
-    /*$scope.viewby = 20;
-    $scope.currentPage = 1;
-    $scope.itemsPerPage = $scope.viewby;
-    $scope.maxSize = 5; //Number of pager buttons to show
-
-
-    //set the number of the page and recalculate the size of rawspans
-    $scope.setPage = function (pageNo) {
-        $scope.currentPage = pageNo;
-        rowspan_calcul();
-    };
-
-
-    //recalculate the size of rawspans when the page has changed
-    $scope.pageChanged = function() {
-        // console.log('Page changed to: ' + $scope.currentPage);
-        rowspan_calcul();
-    };
-
-
-    //set the number of items per page and recalculate the size of rawspans
-    $scope.setItemsPerPage = function(num) {
-        $scope.itemsPerPage = num;
-        $scope.currentPage = 1; //reset to first page
-        $scope.numPage = $scope.totalItems/num;
-        rowspan_calcul();
-    }*/
-
 
     $scope.export = function () {
         finalArray=[];
