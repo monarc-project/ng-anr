@@ -52,6 +52,7 @@
                         <md-icon style="margin-right: 8px;">turned_in</md-icon>
                         <md-autocomplete
                                 flex
+                                required
                                 md-input-name="category"
                                 md-no-cache="true"
                                 md-selected-item="measure.category"
@@ -64,6 +65,9 @@
                             <md-item-template>
                                 <span md-highlight-text="categorySearchText" md-highlight-flags="^i">{{item['label' + language]}}</span>
                             </md-item-template>
+                            <div ng-messages="measureForm.category.$error">
+                                <div ng-message="required">{{ 'The category may not be empty' | translate }}</div>
+                            </div>
 
                             <md-not-found>
                                 {{ 'No category matching your search was found. Click on' | translate }}

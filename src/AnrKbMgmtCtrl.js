@@ -2230,7 +2230,7 @@
 
         $scope.queryCategorySearch = function (query) {
             var promise = $q.defer();
-            SOACategoryService.getCategories({filter: query, referential: referential.uniqid}).then(function (data) {
+            SOACategoryService.getCategories({filter: query, order: $scope._langField('label'), referential: referential.uniqid}).then(function (data) {
                 promise.resolve(data['categories']);
             }, function () {
                 promise.reject();
