@@ -676,7 +676,7 @@
         };
 
         $scope.toggleMeasureStatus = function (measure) {
-            MeasureService.patchMeasure(measure.id, {status: !measure.status}, function () {
+            MeasureService.patchMeasure(measure.uniqid, {status: !measure.status}, function () {
                 measure.status = !measure.status;
             });
         }
@@ -874,7 +874,7 @@
         $scope.editMeasure = function (ev, measure) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-            MeasureService.getMeasure(measure.id).then(function (measureData) {
+            MeasureService.getMeasure(measure.uniqid).then(function (measureData) {
                 $mdDialog.show({
                     controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'SOACategoryService',
                                  'MeasureService', 'ReferentialService', 'ConfigService', '$q', 'measure', 'referential',
@@ -922,7 +922,8 @@
                 ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
                   $scope.soas = data['soaMeasures'];
                   for (soa in $scope.soas){
-                      if($scope.soas[soa].measure.id == item.id) {
+                    console.log($scope.soas[soa].measure);
+                      if($scope.soas[soa].measure.uniqid == item.uniqid) {
 
                            ClientSoaService.deleteSoa({anr: $scope.model.anr.id, id: $scope.soas[soa].id},
                              function () {
@@ -931,7 +932,7 @@
                            );
                          }
                   }
-                  MeasureService.deleteMeasure(item.id,
+                  MeasureService.deleteMeasure(item.uniqid,
                       function () {
                           $scope.updateMeasures();
                           toastr.success(gettextCatalog.getString('The control has been deleted.',
@@ -965,7 +966,7 @@
                   $scope.soas = data['soaMeasures'];
                     for (soa in $scope.soas){
                       for (var i = 0; i < ids.length; ++i) {
-                          if($scope.soas[soa].measure.id == ids[i]) {
+                          if($scope.soas[soa].measure.uniqid == ids[i]) {
                                 ClientSoaService.deleteSoa({anr: $scope.model.anr.id, id: $scope.soas[soa].id},
                                     function () {
                                         var query = angular.copy($scope.soas.query);
@@ -2135,16 +2136,16 @@
           if (ref.uniqid !== $scope.referentialSelected.uniqid ) {
             $scope.matchMeasures[ref.uniqid] = [];
             $scope.measuresRefSelected.forEach(function (measure){
-              $scope.matchMeasures[ref.uniqid][measure.id] = [];
+              $scope.matchMeasures[ref.uniqid][measure.uniqid] = [];
               if (Array.isArray(measure.measuresLinked)) {
                 measure.measuresLinked.forEach(function (measureLinked){
                   var measureFound = ref.measures.filter(ml => ml.id == measureLinked.id);
                   if (measureFound.length > 0) {
-                    $scope.matchMeasures[ref.uniqid][measure.id].push(measureLinked);
+                    $scope.matchMeasures[ref.uniqid][measure.uniqid].push(measureLinked);
                   }
                 })
               }
-              promise.resolve($scope.matchMeasures[ref.uniqid][measure.id]);
+              promise.resolve($scope.matchMeasures[ref.uniqid][measure.uniqid]);
             });
             return promise.promise;
           }
@@ -2541,7 +2542,7 @@
                   var found = false;
                   for (var i = 0; i < $scope.amv.measures[$scope.amv.referential.uniqid].length; ++i) {
 
-                      if ($scope.amv.measures[$scope.amv.referential.uniqid][i].id == e.measures[j].id) {
+                      if ($scope.amv.measures[$scope.amv.referential.uniqid][i].uniqid == e.measures[j].uniqid) {
                           found = true;
                           break;
                       }
@@ -2570,7 +2571,7 @@
               var promise = $q.defer();
               if ($scope.amv.measures[ref.uniqid] != undefined) {
                 $scope.amv.measures[ref.uniqid].forEach (function (measure) {
-                  promise.resolve($scope.amv.measures.push(measure.id));
+                  promise.resolve($scope.amv.measures.push(measure.uniqid));
                 })
               }
               return promise.promise;
@@ -2589,7 +2590,7 @@
               var promise = $q.defer();
               if ($scope.amv.measures[ref.uniqid] != undefined) {
                 $scope.amv.measures[ref.uniqid].forEach (function (measure) {
-                  promise.resolve($scope.amv.measures.push(measure.id));
+                  promise.resolve($scope.amv.measures.push(measure.uniqid));
                 })
               }
               return promise.promise;
