@@ -41,7 +41,7 @@
             <tbody>
                 <tr edit-model="soa" ng-repeat="soa in soa_measures.items.soaMeasures | filter:searchText">
                   <td style="max-width: 300px" class="txtleft">{{_langField(soa.measure.category,'label')}}</td>
-                  <td class="txtcenter"><md-button class="md-primary" ng-click="goToSoaSheet(model.anr.id, soa.id)">{{ soa.measure.code }}</md-button></td>
+                  <td class="txtcenter"><md-button class="md-primary" ng-click="goToSoaSheet(model.anr.id, soa.measure.uniqid)">{{ soa.measure.code }}</md-button></td>
                   <td class="txtleft">{{_langField(soa.measure,'label')}}</td>
                   <td class="btn">
                     <button type="button" ng-model="soa.EX"  ng-click="onTableEdited(soa, 'EX')"
