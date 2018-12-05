@@ -28,7 +28,7 @@
             $scope.updateCategories(referentialId);
         };
 
-        $scope.$watchGroup(['soa_measures.selectedCategory', 'referential_uniqid'], function(newValue, oldValue) {
+        $scope.$watchGroup(['soa_measures.selectedCategory', 'referential_uniqid', 'soa_measures.query.filter'], function(newValue, oldValue) {
                 $scope.updateSoaMeasures();
         });
 
@@ -59,21 +59,20 @@
 
     $scope.onTableEdited = function (model, name) {
         var promise = $q.defer();
+        params = {};
 
-        var params = {
-            anr: $scope.model.anr.id,
-            id: model.id,
-        };
         if (name === "EX" || name === "LR" || name === "CO" || name === "BR" || name === "BP" || name === "RRA" ) {
-            if (model[name] == 0) { model[name]=1} else  model[name]=0;
+            if (model[name] == 0) {
+              model[name] = 1
+            }else
+            model[name] = 0;
         }
         params[name] = model[name];
-        ClientSoaService.updateSoa(params, function () {
+        ClientSoaService.updateSoa(model.id, params, function () {
             promise.resolve(true);
         }, function () {
             promise.reject(false);
         });
-        return promise.promise;
     };
 
     $scope.export = function () {

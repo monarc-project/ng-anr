@@ -6,10 +6,10 @@
 
           <div layout="row" layout-align="start center" class="md-padding-double" style="height:40px">
 
-              <form flex >
+              <form flex name="soa.filter.form">
                   <md-input-container class="md-block md-padding-left md-padding-right">
                       <label><md-icon>search</md-icon> {{ 'Search...' | translate }}</label>
-                      <input ng-model="searchText" >
+                      <input ng-model="soa_measures.query.filter" ng-model-options="soa_measures.filter.options">
                   </md-input-container>
               </form>
 
@@ -39,7 +39,7 @@
               </tr>
             </thead>
             <tbody>
-                <tr edit-model="soa" ng-repeat="soa in soa_measures.items.soaMeasures | filter:searchText">
+                <tr edit-model="soa" ng-repeat="soa in soa_measures.items.soaMeasures">
                   <td style="max-width: 300px" class="txtleft">{{_langField(soa.measure.category,'label')}}</td>
                   <td class="txtcenter"><md-button class="md-primary" ng-click="goToSoaSheet(model.anr.id, soa.measure.uniqid)">{{ soa.measure.code }}</md-button></td>
                   <td class="txtleft">{{_langField(soa.measure,'label')}}</td>
