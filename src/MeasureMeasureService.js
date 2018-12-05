@@ -10,7 +10,7 @@
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
 
         var makeResource = function () {
-            self.MeasureResource = $resource('api/' + anr + 'measuremeasure/:measuremeasureId', {
+            self.MeasureResource = $resource('api/' + anr + 'measuresmeasures/:measuremeasureId', {
                     measuremeasureId: '@id',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
