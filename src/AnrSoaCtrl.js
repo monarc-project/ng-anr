@@ -95,13 +95,13 @@
         finalArray[recLine]+=','+gettextCatalog.getString('Actions');
         finalArray[recLine]+=','+gettextCatalog.getString('Level of compliance');
 
-        soas = $scope.soas;
+        soas = $scope.soa_measures.items['soaMeasures'];
         for (soa in soas) {
             recLine++;
 
             finalArray[recLine]="\""+$scope._langField(soas[soa].measure.category,'label')+"\"";
             finalArray[recLine]+=','+"\""+soas[soa].measure.code+"\"";
-            finalArray[recLine]+=','+"\""+$scope._langField(soas[soa].measure,'description')+"\"";
+            finalArray[recLine]+=','+"\""+$scope._langField(soas[soa].measure,'label')+"\"";
 
             //Inclusion/exclusion
 
