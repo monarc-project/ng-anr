@@ -22,6 +22,10 @@
               <md-button class="md-icon-button" ng-click="export()">
                   <md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip>
               </md-button>
+
+              <md-button class="md-icon-button" ng-click="copy()" ng-if="referentials.items.referentials.length > 1" ng-disabled="isAnrReadOnly">
+                  <md-icon class="md-primary">content_copy</md-icon><md-tooltip>{{ 'Copy' | translate }}</md-tooltip>
+              </md-button>
           </div>
 
           <md-table-container flex>
@@ -45,50 +49,52 @@
                   <td class="txtleft">{{_langField(soa.measure,'label')}}</td>
                   <td class="btn">
                     <button type="button" ng-model="soa.EX"  ng-click="onTableEdited(soa, 'EX')"
-                      ng-disabled="soa.LR || soa.CO || soa.BR || soa.BP|| soa.RRA "
+                      ng-disabled="soa.LR || soa.CO || soa.BR || soa.BP|| soa.RRA || isAnrReadOnly"
                       ng-class="{'bouton-true': soa.EX=='1' ,'bouton-false':soa.EX=='0'  }">
                       {{ 'EX' | translate }}
                       <md-tooltip>{{ 'Excluded' | translate }}</md-tooltip>
                     </button>
                     <button type="button" ng-model="soa.LR"  ng-click="onTableEdited(soa, 'LR')"
-                      ng-disabled="soa.EX"
+                      ng-disabled="soa.EX || isAnrReadOnly"
                       ng-class="{'bouton-true': soa.LR=='1' ,'bouton-false':soa.LR=='0'  }">
                       {{ 'LR' | translate }}
                       <md-tooltip>{{ 'Legal requirements' | translate }}</md-tooltip>
                     </button>
                     <button type="button" ng-model="soa.CO" ng-click="onTableEdited(soa, 'CO')"
-                      ng-disabled="soa.EX"
+                      ng-disabled="soa.EX || isAnrReadOnly"
                       ng-class="{'bouton-true': soa.CO=='1' ,'bouton-false':soa.CO=='0'  }">
                       {{ 'CO' | translate }}
                       <md-tooltip>{{ 'Contractual obligations' | translate }}</md-tooltip>
                     </button>
                     <button type="button" ng-model="soa.BR" ng-click="onTableEdited(soa, 'BR')"
-                      ng-disabled="soa.EX"
+                      ng-disabled="soa.EX || isAnrReadOnly"
                       ng-class="{'bouton-true': soa.BR=='1' ,'bouton-false':soa.BR=='0'  }">
                       {{ 'BR' | translate }}
                       <md-tooltip>{{ 'Business requirements' | translate }}</md-tooltip>
                     </button>
                     <button type="button" ng-model="soa.BP" ng-click="onTableEdited(soa, 'BP')"
-                     ng-disabled="soa.EX"
+                     ng-disabled="soa.EX || isAnrReadOnly"
                      ng-class="{'bouton-true': soa.BP=='1' ,'bouton-false':soa.BP=='0'  }">
                      {{ 'BP' | translate }}
                       <md-tooltip>{{ 'Best practices' | translate }}</md-tooltip>
                     </button>
                     <button type="button" ng-model="soa.RRA" ng-click="onTableEdited(soa, 'RRA')"
-                    ng-disabled="soa.EX" ng-class="{'bouton-true': soa.RRA=='1' ,'bouton-false':soa.RRA=='0'  }">{{ 'RRA' | translate }}
+                      ng-disabled="soa.EX || isAnrReadOnly"
+                      ng-class="{'bouton-true': soa.RRA=='1' ,'bouton-false':soa.RRA=='0'  }">
+                      {{ 'RRA' | translate }}
                       <md-tooltip>{{ 'Results of risk assessment' | translate }}</md-tooltip>
                     </button>
                   </td>
-                  <td  edit-field="remarks" class="preserve-newlines"  edit-type="textarea"></td>
-                  <td  edit-field="evidences" edit-type="textarea"></td>
-                  <td  edit-field="actions"  edit-type="textarea"></td>
+                  <td  edit-field="remarks" edit-readonly="isAnrReadOnly" class="preserve-newlines"  edit-type="textarea"></td>
+                  <td  edit-field="evidences" edit-readonly="isAnrReadOnly" edit-type="textarea"></td>
+                  <td  edit-field="actions"  edit-readonly="isAnrReadOnly" edit-type="textarea"></td>
                   <td  class="tbl-soa"
                      ng-class="{'green':  soa.compliance == '5' && soa.EX==0 ,
                                 'orange': (soa.compliance == '4' || soa.compliance == '3')&& soa.EX==0 ,
                                 'red': (soa.compliance == '2' || soa.compliance == '1')&& soa.EX==0  ,
                                 'gray': soa.EX==1 }">
-                      <md-input-container ng-if="soa.EX=='0'">
-                        <md-select ng-model="soa.compliance" ng-change="onTableEdited(soa, 'compliance') "  style="width: 110px;">
+                      <md-input-container ng-if="soa.EX=='0'" >
+                        <md-select ng-disabled="isAnrReadOnly" ng-model="soa.compliance" ng-change="onTableEdited(soa, 'compliance') "  style="width: 110px;">
                             <md-option value="1">{{ 'Initial' | translate }}</md-option>
                             <md-option value="2">{{ 'Developing' | translate }}</md-option>
                             <md-option value="3">{{ 'Defined' | translate }}</md-option>
