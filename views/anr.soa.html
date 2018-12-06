@@ -29,7 +29,7 @@
             <thead md-order="soa_measures.query.order" md-on-reorder="updateSoaMeasures">
               <tr>
                 <th style="width: 7%"><span translate>Category</span></th>
-                <th style="width: 3%"><span translate>Code</span></th>
+                <th style="width: 3%"><button class="buttonsoa" ng-click="sortByCode()"><span translate>Code</span></button></th>
                 <th style="width: 14%"><span translate>Control</span></th>
                 <th style="width: 8%"><span translate>Inclusion/Exclusion</span></th>
                 <th style="width: 18%"><span translate>Remarks</span></th>
@@ -103,36 +103,8 @@
         </md-table-container>
 
         <md-table-pagination md-limit="soa_measures.query.limit" md-limit-options="[20, 30, 50, 100]" md-page="soa_measures.query.page"
-                             md-total="{{soa_measures.items.count}}" md-on-paginate="updateSoaMeasures" md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
-
-          <!--<div layout="row" layout-align="end center" class="md-table-pagination">
-              <span flex></span>
-              <div class="page-select">
-                  <div class="label" translate>Page:</div>
-                  <md-select  class="md-table-select" md-container-class="md-pagination-select"   ng-model="currentPage" ng-change="setPage(currentPage)" aria-label="Page">
-                      <md-content>
-                          <md-option ng-repeat="i in range(1, ceil(totalItems / itemsPerPage))" ng-default="1" ng-value="i">{{i}}</md-option>
-                      </md-content>
-                  </md-select>
-              </div>
-
-              <div class="limit-select">
-                  <div class="label" translate>Rows per page:</div>
-                  <md-select class="md-table-select" md-container-class="md-pagination-select"   ng-model="viewby" ng-change="setItemsPerPage(viewby)" aria-label="Rows" >
-                      <md-option ng-repeat="option in [10, 20, 30, 50, 100]"  ng-value="option.value ? $pagination.eval(option.value) : option">{{::option.label ? option.label : option}}</md-option>
-                  </md-select>
-              </div>
-
-              <div class="buttons">
-                  <div class="label">{{ (currentPage - 1) * viewby + 1 }} - {{ totalItems < currentPage * viewby ? totalItems : currentPage * viewby }} {{ 'of' | translate }} {{ totalItems }}</div>
-                  <md-button class="md-icon-button" type="button" ng-disabled="currentPage <= 1" ng-click="currentPage = currentPage - 1; (pageChanged())" aria-label="Previous">
-                      <md-icon md-svg-icon="navigate-before.svg"></md-icon>
-                  </md-button>
-                  <md-button class="md-icon-button" type="button" ng-disabled="currentPage >= ceil(totalItems / viewby)" ng-click="currentPage = currentPage + 1; pageChanged()" aria-label="Next">
-                      <md-icon md-svg-icon="navigate-next.svg"></md-icon>
-                  </md-button>
-              </div>
-          </div>-->
+                             md-total="{{soa_measures.items.count}}" md-on-paginate="updateSoaMeasures" md-page-select md-label="{{paginationLabels}}">
+        </md-table-pagination>
       </md-tab>
   </md-tabs>
 </div>

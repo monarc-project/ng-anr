@@ -28,7 +28,7 @@
             $scope.updateCategories(referentialId);
         };
 
-        $scope.$watchGroup(['soa_measures.selectedCategory', 'referential_uniqid', 'soa_measures.query.filter'], function(newValue, oldValue) {
+        $scope.$watchGroup(['soa_measures.selectedCategory', 'referential_uniqid', 'soa_measures.query.filter', 'soa_measures.query.order'], function(newValue, oldValue) {
                 $scope.updateSoaMeasures();
         });
 
@@ -74,6 +74,14 @@
             promise.reject(false);
         });
     };
+
+    $scope.sortByCode = function() {
+      if ($scope.soa_measures.query.order == 'measure') {
+        $scope.soa_measures.query.order = '-measure';
+      }else {
+        $scope.soa_measures.query.order = 'measure';
+      }
+    }
 
     $scope.export = function () {
         finalArray=[];
