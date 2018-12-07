@@ -2139,7 +2139,7 @@
               $scope.matchMeasures[ref.uniqid][measure.uniqid] = [];
               if (Array.isArray(measure.measuresLinked)) {
                 measure.measuresLinked.forEach(function (measureLinked){
-                  var measureFound = ref.measures.filter(ml => ml.id == measureLinked.id);
+                  var measureFound = ref.measures.filter(ml => ml.uniqid == measureLinked.uniqid);
                   if (measureFound.length > 0) {
                     $scope.matchMeasures[ref.uniqid][measure.uniqid].push(measureLinked);
                   }
