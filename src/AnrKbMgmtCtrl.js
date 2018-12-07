@@ -2159,7 +2159,7 @@
                   var found = false;
                   for (var i = 0; i < $scope.matchMeasures[referential][measureId].length; ++i) {
 
-                      if ($scope.matchMeasures[referential][measureId][i].id == e.measures[j].id) {
+                      if ($scope.matchMeasures[referential][measureId][i].uniqid == e.measures[j].uniqid) {
                           found = true;
                           break;
                       }
