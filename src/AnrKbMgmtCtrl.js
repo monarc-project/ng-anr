@@ -858,15 +858,15 @@
                             $scope.createNewMeasure(ev, measure);
                         }
                     ).then(function (data) {
-                      $scope.measure_data = data;
-                      //create soa linked to the measure
-                      var soa = {
-                        'anr' : $scope.model.anr.id,
-                        'measure' : $scope.measure_data.id
-                      };
-                      ClientSoaService.createSoa(soa,
-                          function () {
-                          });
+                      // $scope.measure_data = data;
+                      // //create soa linked to the measure
+                      // var soa = {
+                      //   'anr' : $scope.model.anr.id,
+                      //   'measure' : $scope.measure_data.id
+                      // };
+                      // ClientSoaService.createSoa(soa,
+                      //     function () {
+                      //     });
                         });
                 });
         };
