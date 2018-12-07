@@ -57,116 +57,163 @@
           });
         }
 
-    $scope.onTableEdited = function (model, name) {
-        var promise = $q.defer();
-        params = {};
+        $scope.onTableEdited = function (model, name) {
+            var promise = $q.defer();
+            params = {};
 
-        if (name === "EX" || name === "LR" || name === "CO" || name === "BR" || name === "BP" || name === "RRA" ) {
-            if (model[name] == 0) {
-              model[name] = 1
-            }else
-            model[name] = 0;
+            if (name === "EX" || name === "LR" || name === "CO" || name === "BR" || name === "BP" || name === "RRA" ) {
+                if (model[name] == 0) {
+                  model[name] = 1
+                }else
+                model[name] = 0;
+            }
+            params[name] = model[name];
+            ClientSoaService.updateSoa(model.id, params, function () {
+                promise.resolve(true);
+            }, function () {
+                promise.reject(false);
+            });
+        };
+
+        $scope.sortByCode = function() {
+          if ($scope.soa_measures.query.order == 'measure') {
+            $scope.soa_measures.query.order = '-measure';
+          }else {
+            $scope.soa_measures.query.order = 'measure';
+          }
         }
-        params[name] = model[name];
-        ClientSoaService.updateSoa(model.id, params, function () {
-            promise.resolve(true);
-        }, function () {
-            promise.reject(false);
-        });
-    };
 
-    $scope.sortByCode = function() {
-      if ($scope.soa_measures.query.order == 'measure') {
-        $scope.soa_measures.query.order = '-measure';
-      }else {
-        $scope.soa_measures.query.order = 'measure';
-      }
+        $scope.import = function (ev,referential) {
+          var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+          $mdDialog.show({
+              controller: ['$scope', '$mdDialog', 'referentials', 'referential', 'anrId', importSoaFromDialogCtrl],
+              templateUrl: 'views/anr/import.soa.html',
+              targetEvent: ev,
+              preserveScope: false,
+              scope: $scope.$dialogScope.$new(),
+              clickOutsideToClose: false,
+              fullscreen: useFullScreen,
+              locals: {
+                'referentials' : $scope.referentials.items['referentials'],
+                'referential' : referential,
+                'anrId': $scope.model.anr.id
+              }
+          })
+              .then(function (importSoa) {
+                ClientSoaService.getSoas({referential:importSoa.refSelected}).then(function(data){
+                  fromReferential = data;
+                })
+                  
+              });
+        }
+        $scope.export = function () {
+            finalArray=[];
+            recLine = 0;
+            finalArray[recLine]= gettextCatalog.getString('Category');
+            finalArray[recLine]+=','+gettextCatalog.getString('Ref.');
+            finalArray[recLine]+=','+gettextCatalog.getString('Control');
+            finalArray[recLine]+=','+gettextCatalog.getString('Inclusion/Exclusion');
+            finalArray[recLine]+=','+gettextCatalog.getString('Remarks');
+            finalArray[recLine]+=','+gettextCatalog.getString('Evidences');
+            finalArray[recLine]+=','+gettextCatalog.getString('Actions');
+            finalArray[recLine]+=','+gettextCatalog.getString('Level of compliance');
+
+            soas = $scope.soa_measures.items['soaMeasures'];
+            for (soa in soas) {
+                recLine++;
+
+                finalArray[recLine]="\""+$scope._langField(soas[soa].measure.category,'label')+"\"";
+                finalArray[recLine]+=','+"\""+soas[soa].measure.code+"\"";
+                finalArray[recLine]+=','+"\""+$scope._langField(soas[soa].measure,'label')+"\"";
+
+                //Inclusion/exclusion
+
+                finalArray[recLine]+=','+"\""+' ';
+                if(soas[soa].EX == 1)
+                    finalArray[recLine] += gettextCatalog.getString('EX') + "- ";
+                if(soas[soa].LR == 1)
+                    finalArray[recLine] += gettextCatalog.getString('LR') + "- ";
+                if(soas[soa].CO == 1)
+                    finalArray[recLine] += gettextCatalog.getString('CO') + "- ";
+                if(soas[soa].BR == 1)
+                    finalArray[recLine] += gettextCatalog.getString('BR') + "- ";
+                if(soas[soa].BP == 1)
+                    finalArray[recLine] += gettextCatalog.getString('BP') + "- ";
+                if(soas[soa].RRA == 1)
+                    finalArray[recLine] += gettextCatalog.getString('RRA');
+                finalArray[recLine] += "\"";
+
+                // Remarks
+                if(soas[soa].remarks==null)
+                    finalArray[recLine] += ','+"\""+' '+"\"";
+                else
+                    finalArray[recLine] += ','+"\""+soas[soa].remarks+"\"";
+
+                // evidences
+                if(soas[soa].evidences==null)
+                    finalArray[recLine] += ','+"\""+' '+"\"";
+                else
+                    finalArray[recLine] += ','+"\""+soas[soa].evidences+"\"";
+
+                // actions
+                if (soas[soa].actions==null)
+                    finalArray[recLine] += ','+"\""+' '+"\"";
+                else
+                    finalArray[recLine] += ','+"\""+soas[soa].actions+"\"";
+
+                // compliance
+                if(soas[soa].compliance==null || soas[soa].EX==1)
+                    finalArray[recLine] += ','+"\""+' '+"\"";
+                else {
+                    if(soas[soa].compliance == 1)
+                        finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Initial') + "\"";
+                    if(soas[soa].compliance == 2)
+                        finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Developing') + "\"";
+                    if(soas[soa].compliance == 3)
+                        finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Defined') + "\"";
+                    if(soas[soa].compliance == 4)
+                        finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Managed') + "\"";
+                    if(soas[soa].compliance == 5)
+                        finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Optimized') + "\"";
+                }
+            }
+
+            let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
+            for(var j = 0; j < finalArray.length; ++j) {
+                let row = finalArray[j].toString().replace(/\n|\r/g,' ') + "," + "\r\n";
+                csvContent += row ;
+            }
+
+            var encodedUri = encodeURI(csvContent);
+            var link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", "soaslist.csv");
+            document.body.appendChild(link);
+            link.click();  // This will download the data file named "soaslist.csv".
+        };
     }
 
-    $scope.export = function () {
-        finalArray=[];
-        recLine = 0;
-        finalArray[recLine]= gettextCatalog.getString('Category');
-        finalArray[recLine]+=','+gettextCatalog.getString('Ref.');
-        finalArray[recLine]+=','+gettextCatalog.getString('Control');
-        finalArray[recLine]+=','+gettextCatalog.getString('Inclusion/Exclusion');
-        finalArray[recLine]+=','+gettextCatalog.getString('Remarks');
-        finalArray[recLine]+=','+gettextCatalog.getString('Evidences');
-        finalArray[recLine]+=','+gettextCatalog.getString('Actions');
-        finalArray[recLine]+=','+gettextCatalog.getString('Level of compliance');
+    function importSoaFromDialogCtrl($scope, $mdDialog, referentials, referential, anr) {
 
-        soas = $scope.soa_measures.items['soaMeasures'];
-        for (soa in soas) {
-            recLine++;
+        $scope.referential = referential;
+        $scope.referentials = referentials;
+        $scope.importSoa = {
+            refSelected: null,
+            justification: true,
+            remarks: true,
+            evidences: true,
+            actions: true,
+            compliance: true,
+            calcul: 'average'
+        };
 
-            finalArray[recLine]="\""+$scope._langField(soas[soa].measure.category,'label')+"\"";
-            finalArray[recLine]+=','+"\""+soas[soa].measure.code+"\"";
-            finalArray[recLine]+=','+"\""+$scope._langField(soas[soa].measure,'label')+"\"";
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
 
-            //Inclusion/exclusion
-
-            finalArray[recLine]+=','+"\""+' ';
-            if(soas[soa].EX == 1)
-                finalArray[recLine] += gettextCatalog.getString('EX') + "- ";
-            if(soas[soa].LR == 1)
-                finalArray[recLine] += gettextCatalog.getString('LR') + "- ";
-            if(soas[soa].CO == 1)
-                finalArray[recLine] += gettextCatalog.getString('CO') + "- ";
-            if(soas[soa].BR == 1)
-                finalArray[recLine] += gettextCatalog.getString('BR') + "- ";
-            if(soas[soa].BP == 1)
-                finalArray[recLine] += gettextCatalog.getString('BP') + "- ";
-            if(soas[soa].RRA == 1)
-                finalArray[recLine] += gettextCatalog.getString('RRA');
-            finalArray[recLine] += "\"";
-
-            // Remarks
-            if(soas[soa].remarks==null)
-                finalArray[recLine] += ','+"\""+' '+"\"";
-            else
-                finalArray[recLine] += ','+"\""+soas[soa].remarks+"\"";
-
-            // evidences
-            if(soas[soa].evidences==null)
-                finalArray[recLine] += ','+"\""+' '+"\"";
-            else
-                finalArray[recLine] += ','+"\""+soas[soa].evidences+"\"";
-
-            // actions
-            if (soas[soa].actions==null)
-                finalArray[recLine] += ','+"\""+' '+"\"";
-            else
-                finalArray[recLine] += ','+"\""+soas[soa].actions+"\"";
-
-            // compliance
-            if(soas[soa].compliance==null || soas[soa].EX==1)
-                finalArray[recLine] += ','+"\""+' '+"\"";
-            else {
-                if(soas[soa].compliance == 1)
-                    finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Initial') + "\"";
-                if(soas[soa].compliance == 2)
-                    finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Developing') + "\"";
-                if(soas[soa].compliance == 3)
-                    finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Defined') + "\"";
-                if(soas[soa].compliance == 4)
-                    finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Managed') + "\"";
-                if(soas[soa].compliance == 5)
-                    finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Optimized') + "\"";
-            }
-        }
-
-        let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
-        for(var j = 0; j < finalArray.length; ++j) {
-            let row = finalArray[j].toString().replace(/\n|\r/g,' ') + "," + "\r\n";
-            csvContent += row ;
-        }
-
-        var encodedUri = encodeURI(csvContent);
-        var link = document.createElement("a");
-        link.setAttribute("href", encodedUri);
-        link.setAttribute("download", "soaslist.csv");
-        document.body.appendChild(link);
-        link.click();  // This will download the data file named "soaslist.csv".
-    };
-}
+        $scope.create = function() {
+            $mdDialog.hide($scope.importSoa);
+        };
+    }
 })();
