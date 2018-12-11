@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrSoaCtrl', [
             '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state', 'MeasureService',
-            'SOACategoryService' , 'ClientSoaService',  '$q', 'ReferentialService', 'TableHelperService',
+            'SOACategoryService' , 'ClientSoaService',  '$q', 'ReferentialService', 'TableHelperService', 'MeasureMeasureService',
             AnrSoaCtrl
         ]);
 
@@ -12,7 +12,7 @@
      * ANR > STATEMENT OF APPLICABILITY
      */
     function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, MeasureService, SOACategoryService,
-                                  ClientSoaService,  $q, ReferentialService, TableHelperService, $filter) {
+                                  ClientSoaService,  $q, ReferentialService, TableHelperService, MeasureMeasureService) {
         // Options for Soa Table
         $scope.soa_measures = TableHelperService.build('measure', 20, 1, '');
         $scope.updatingReferentials = false;
@@ -85,6 +85,10 @@
 
         $scope.import = function (ev,referential) {
           var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+          var importOptions = ['remarks', 'evidences', 'actions'];
+          var justificationOptions = ['EX','LR', 'CO', 'BR', 'BP', 'RRA'];
+          var soaMerged = [];
+          var soaTemp = [];
 
           $mdDialog.show({
               controller: ['$scope', '$mdDialog', 'referentials', 'referential', 'anrId', importSoaFromDialogCtrl],
@@ -101,10 +105,71 @@
               }
           })
               .then(function (importSoa) {
-                ClientSoaService.getSoas({referential:importSoa.refSelected}).then(function(data){
-                  fromReferential = data;
-                })
-                  
+                MeasureMeasureService.getMeasuresMeasures().then(function (data) {
+                  var measuresLinked = data['measuresmeasures'];
+                  ClientSoaService.getSoas({referential:importSoa.refSelected}).then(function(data){
+                    var fromReferential = data['soaMeasures'];
+                    for (var i = 0; i < measuresLinked.length; i++) {
+                        if (soaMerged[measuresLinked[i].child.uniqid] == undefined) {
+                          soaMerged[measuresLinked[i].child.uniqid] = {
+                            'measure' : '',
+                            'remarks' : '',
+                            'evidences' : '',
+                            'actions' : '',
+                            'compliance' : '',
+                            'EX' : 0,
+                            'LR' : 0,
+                            'CO' : 0,
+                            'BR' : 0,
+                            'BP' : 0,
+                            'RRA' : 0
+                          };
+                        };
+
+                       soaTemp = fromReferential.find(function(soa){
+                        return soa.measure.uniqid == measuresLinked[i].father.uniqid;
+                      })
+                      importOptions.forEach(function(option){
+                        if (importSoa[option] && soaTemp[option]) {
+                          if (soaMerged[measuresLinked[i].child.uniqid][option]) {
+                            soaMerged[measuresLinked[i].child.uniqid][option] += "\r\n" + soaTemp[option] ;
+                          }else {
+                              soaMerged[measuresLinked[i].child.uniqid][option] = soaTemp[option];
+                          }
+                        }
+                      });
+
+                      if (importSoa.justification) {
+                        justificationOptions.forEach(function(option){
+                          if (soaTemp[option] == 1) {
+                            soaMerged[measuresLinked[i].child.uniqid][option] = soaTemp[option];
+                          }
+                        });
+                      }
+                      if (importSoa.compliance && soaTemp['compliance']) {
+                        switch (importSoa.calcul) {
+                          case 'average':
+                          if (soaMerged[measuresLinked[i].child.uniqid]['compliance']) {
+                            var avg = (soaMerged[measuresLinked[i].child.uniqid]['compliance'] + soaTemp['compliance']) / 2;
+                            soaMerged[measuresLinked[i].child.uniqid]['compliance'] = Math.floor(avg);
+                          }else {
+                              soaMerged[measuresLinked[i].child.uniqid]['compliance'] = soaTemp['compliance']
+                          }
+                          break;
+                          default:
+                            if (soaMerged[measuresLinked[i].child.uniqid]['compliance'] &&
+                                soaMerged[measuresLinked[i].child.uniqid]['compliance'] > soaTemp['compliance']) {
+                                soaMerged[measuresLinked[i].child.uniqid]['compliance'] = soaTemp['compliance'];
+                            }else {
+                                soaMerged[measuresLinked[i].child.uniqid]['compliance'] = soaTemp['compliance']
+                            }
+                        }
+                      }
+                      soaMerged[measuresLinked[i].child.uniqid]['measure'] = measuresLinked[i].child.uniqid;
+                    }
+
+                  })
+                });
               });
         }
         $scope.export = function () {
