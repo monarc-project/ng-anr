@@ -87,8 +87,7 @@
           var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
           var importOptions = ['remarks', 'evidences', 'actions'];
           var justificationOptions = ['EX','LR', 'CO', 'BR', 'BP', 'RRA'];
-          var soaMerged = [];
-          var soaTemp = [];
+          var avg = [];
 
           $mdDialog.show({
               controller: ['$scope', '$mdDialog', 'referentials', 'referential', 'anrId', importSoaFromDialogCtrl],
@@ -107,71 +106,69 @@
               .then(function (importSoa) {
                 MeasureMeasureService.getMeasuresMeasures().then(function (data) {
                   var measuresLinked = data['measuresmeasures'];
-                  ClientSoaService.getSoas({referential:importSoa.refSelected}).then(function(data){
-                    var fromReferential = data['soaMeasures'];
-                    for (var i = 0; i < measuresLinked.length; i++) {
-                        if (soaMerged[measuresLinked[i].child.uniqid] == undefined) {
-                          soaMerged[measuresLinked[i].child.uniqid] = {
-                            'measure' : '',
-                            'remarks' : '',
-                            'evidences' : '',
-                            'actions' : '',
-                            'compliance' : '',
-                            'EX' : 0,
-                            'LR' : 0,
-                            'CO' : 0,
-                            'BR' : 0,
-                            'BP' : 0,
-                            'RRA' : 0
-                          };
-                        };
+                  ClientSoaService.getSoas({referential:$scope.referential_uniqid }).then(function(data){
+                    var childrens = data['soaMeasures'];
+                    ClientSoaService.getSoas({referential: importSoa.refSelected }).then(function(data){
+                      var fathers = data['soaMeasures'];
+                      for (var i = 0; i < measuresLinked.length; i++) {
+                        fathers.forEach((father)=>childrens.forEach((child=>{
+                          if (father.measure.uniqid == measuresLinked[i].father.uniqid) {
+                            if (child.measure.uniqid == measuresLinked[i].child.uniqid) {
 
-                       soaTemp = fromReferential.find(function(soa){
-                        return soa.measure.uniqid == measuresLinked[i].father.uniqid;
-                      })
-                      importOptions.forEach(function(option){
-                        if (importSoa[option] && soaTemp[option]) {
-                          if (soaMerged[measuresLinked[i].child.uniqid][option]) {
-                            soaMerged[measuresLinked[i].child.uniqid][option] += "\r\n" + soaTemp[option] ;
-                          }else {
-                              soaMerged[measuresLinked[i].child.uniqid][option] = soaTemp[option];
-                          }
-                        }
-                      });
+                              importOptions.forEach(function(option){
+                                if (importSoa[option] && father[option]) {
+                                  if (child[option]) {
+                                    child[option] += "\r\n" + father[option] ;
+                                  }else {
+                                      child[option] = father[option];
+                                  }
+                                }
+                              });
 
-                      if (importSoa.justification) {
-                        justificationOptions.forEach(function(option){
-                          if (soaTemp[option] == 1) {
-                            soaMerged[measuresLinked[i].child.uniqid][option] = soaTemp[option];
-                          }
-                        });
-                      }
-                      if (importSoa.compliance && soaTemp['compliance']) {
-                        switch (importSoa.calcul) {
-                          case 'average':
-                          if (soaMerged[measuresLinked[i].child.uniqid]['compliance']) {
-                            var avg = (soaMerged[measuresLinked[i].child.uniqid]['compliance'] + soaTemp['compliance']) / 2;
-                            soaMerged[measuresLinked[i].child.uniqid]['compliance'] = Math.floor(avg);
-                          }else {
-                              soaMerged[measuresLinked[i].child.uniqid]['compliance'] = soaTemp['compliance']
-                          }
-                          break;
-                          default:
-                            if (soaMerged[measuresLinked[i].child.uniqid]['compliance'] &&
-                                soaMerged[measuresLinked[i].child.uniqid]['compliance'] > soaTemp['compliance']) {
-                                soaMerged[measuresLinked[i].child.uniqid]['compliance'] = soaTemp['compliance'];
-                            }else {
-                                soaMerged[measuresLinked[i].child.uniqid]['compliance'] = soaTemp['compliance']
+                              if (importSoa.justification) {
+                                justificationOptions.forEach(function(option){
+                                  if (father[option] == 1) {
+                                    child[option] = father[option];
+                                  }
+                                });
+                              }
+
+                              if (importSoa.compliance && father['compliance']) {
+
+                                switch (importSoa.calcul) {
+                                  case 'average':
+                                  if (child['compliance']) {
+                                    avg.push(child['compliance'] , father['compliance']);
+                                    var sum = avg.reduce(function(a, b) { return a + b; }, 0);
+                                    child['compliance'] = Math.round(sum / avg.length);
+                                  }else {
+                                      child['compliance'] = father['compliance']
+                                  }
+                                  break;
+                                  default:
+                                    if (child['compliance'] && child['compliance'] > father['compliance']) {
+                                        child['compliance'] = father['compliance'];
+                                    }else if (child['compliance'] && child['compliance'] < father['compliance']) {
+
+                                    }else {
+                                        child['compliance'] = father['compliance']
+                                    }
+                                }
+                              }
                             }
-                        }
+                          }
+                        })));
                       }
-                      soaMerged[measuresLinked[i].child.uniqid]['measure'] = measuresLinked[i].child.uniqid;
-                    }
 
-                  })
+                      for (var i = 0; i < childrens.length; i++) {
+                        ClientSoaService.updateSoa(childrens[i].id, childrens[i]);
+                      }
+                    })
+                  });
                 });
               });
         }
+
         $scope.export = function () {
             finalArray=[];
             recLine = 0;
