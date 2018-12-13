@@ -127,12 +127,15 @@
                               if (importSoa.justification) {
                                 justificationOptions.forEach(function(option){
                                   if (father[option] == 1) {
+                                    if (child['EX'] && father[option] != 'EX') {
+                                      child['EX'] = 0;
+                                    }
                                     child[option] = father[option];
                                   }
                                 });
                               }
 
-                              if (importSoa.compliance && father['compliance']) {
+                              if (importSoa.compliance && father['compliance'] && !child['EX']) {
 
                                 switch (importSoa.calcul) {
                                   case 'average':
