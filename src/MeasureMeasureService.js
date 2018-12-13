@@ -44,8 +44,8 @@
             self.MeasureResource.update(params, success, error);
         };
 
-        var deleteMeasureMeasure = function (id, success, error) {
-            self.MeasureResource.delete({measuremeasureId: id}, success, error);
+        var deleteMeasureMeasure = function (params, success, error) {
+            self.MeasureResource.delete(params, success, error);
         };
 
         var deleteMassMeasureMeasure = function (ids, success, error) {

@@ -2188,8 +2188,12 @@
 
         $scope.deleteMeasureLinked = function(fatherId,childId) {
           MeasureMeasureService.getMeasuresMeasures({fatherId:fatherId, childId: childId}).then(function(e) {
-            if (e.MeasureMeasure.length > 0) {
-              MeasureMeasureService.deleteMeasureMeasure(e.MeasureMeasure[0].uniqid);
+            if (e.count > 0) {
+              var id  = {
+                  father: fatherId,
+                  child: childId,
+              };
+              MeasureMeasureService.deleteMeasureMeasure(id);
             }
           });
         };
