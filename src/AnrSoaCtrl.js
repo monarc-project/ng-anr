@@ -46,7 +46,6 @@
             $scope.soa_measures.promise.then(
                 function (data) {
                     $scope.soa_measures.items = data;
-                    console.log($scope.soa_measures.items);
                 }
             )
         };
