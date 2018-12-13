@@ -14,7 +14,7 @@
     function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, MeasureService, SOACategoryService,
                                   ClientSoaService,  $q, ReferentialService, TableHelperService, MeasureMeasureService) {
         // Options for Soa Table
-        $scope.soa_measures = TableHelperService.build('measure', 20, 1, '');
+        $scope.soa_measures = TableHelperService.build('m.code', 20, 1, '');
         $scope.updatingReferentials = false;
         $scope.referentials = [];
         ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
@@ -75,10 +75,10 @@
         };
 
         $scope.sortByCode = function() {
-          if ($scope.soa_measures.query.order == 'measure') {
-            $scope.soa_measures.query.order = '-measure';
+          if ($scope.soa_measures.query.order == 'm.code') { // set m.code because it's a joined table and his alias is m for measure
+            $scope.soa_measures.query.order = '-m.code';
           }else {
-            $scope.soa_measures.query.order = 'measure';
+            $scope.soa_measures.query.order = 'm.code';
           }
         }
 
