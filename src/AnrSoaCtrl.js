@@ -46,6 +46,7 @@
             $scope.soa_measures.promise.then(
                 function (data) {
                     $scope.soa_measures.items = data;
+                    console.log($scope.soa_measures.items);
                 }
             )
         };
@@ -59,7 +60,6 @@
 
         $scope.onTableEdited = function (model, name) {
             var promise = $q.defer();
-            params = {};
 
             if (name === "EX" || name === "LR" || name === "CO" || name === "BR" || name === "BP" || name === "RRA" ) {
                 if (model[name] == 0) {
@@ -67,12 +67,12 @@
                 }else
                 model[name] = 0;
             }
-            params[name] = model[name];
-            ClientSoaService.updateSoa(model.id, params, function () {
+            ClientSoaService.updateSoa(model.id, model, function () {
                 promise.resolve(true);
             }, function () {
                 promise.reject(false);
             });
+            return promise.promise;
         };
 
         $scope.sortByCode = function() {
@@ -161,7 +161,11 @@
                       }
 
                       for (var i = 0; i < childrens.length; i++) {
-                        ClientSoaService.updateSoa(childrens[i].id, childrens[i]);
+                        ClientSoaService.updateSoa(childrens[i].id, childrens[i], function () {
+                            if (i = childrens.length - 1) {
+                              $scope.updateSoaMeasures();
+                            }
+                        });
                       }
                     })
                   });
