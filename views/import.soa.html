@@ -2,7 +2,7 @@
     <form name="importSoaForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 translate>Import a Statement of applicability</h2>
+                <h2 translate>Import a statement of applicability (SOA)</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -13,17 +13,27 @@
             <div class="md-dialog-content">
               <md-card class="md-card-info">
                   <md-card-content translate>
-                      <h3> Import Rules</h3>
-                      <p> bla bla bla </p>
+                      <p>A SOA can be completed from another one that is in the same risk analysis.<p>
+                      <h4>Before importing an SOA</h4>
+                      <li>Match the controls between the two referentials on knowledge base (Referentials Tab)</li>
+                      <li>Take a snapshot of risk analysis if necessary.</li>
+                      <h4>Import Options</h4>
+                      <p>You can select which fields of the SOA you want to import.</p>
+                      <p>If there is a multiple matching:</p>
+                      <li>The information of each control will be appended.</li>
+                      <li>For level of compliance, you can choose import mode calculation. (Average or worse level)</li>
                   </md-card-content>
               </md-card>
+              <div layout="row" class="md-block">
+                <div flex class="md-padding-right">
                 <md-subheader class="md-subheader">{{ 'From referential' | translate }}</md-subheader>
                 <md-select ng-model="importSoa.refSelected" placeholder="{{ 'Select a referential' | translate }}" required>
                   <md-option ng-repeat="ref in referentials" ng-value="ref.uniqid" ng-if="ref.uniqid != referential">
                     {{ _langField(ref,'label') }}
                   </md-option>
                 </md-select>
-                <div ayout="column" class="md-block" flex>
+                </div>
+                <div layout="column" class="md-block md-padding-left">
                     <md-subheader class="md-subheader">{{ 'Import Options' | translate }}</md-subheader>
                     <div layout="row">
                         <div>
@@ -35,14 +45,15 @@
                           <md-switch ng-model="importSoa.actions">{{ 'Actions' | translate }}</md-switch>
                         </div>
                         <div>
-                          <md-switch ng-model="importSoa.compliance">{{ 'Level of compliance' | translate }}</md-switch>
-                          <md-radio-group  ng-if="importSoa.compliance" ng-model="importSoa.calcul">
-                              <md-radio-button value="average">{{ 'Average of levels' | translate }}</md-radio-button>
-                              <md-radio-button value="worse">{{ 'Worse level' | translate }}</md-radio-button>
+                          <md-switch ng-model="importSoa.compliance" style="margin-bottom: 8px">{{ 'Level of compliance' | translate }}</md-switch>
+                          <md-radio-group ng-if="importSoa.compliance" ng-model="importSoa.calcul">
+                              <md-radio-button value="average" class="radio-button-compliance">{{ 'Average of levels' | translate }}</md-radio-button>
+                              <md-radio-button value="worse" class="radio-button-compliance">{{ 'Worse level' | translate }}</md-radio-button>
                           </md-radio-group>
                         </div>
                     </div>
                 </div>
+              </div>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
