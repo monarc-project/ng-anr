@@ -29,7 +29,7 @@
           </div>
 
           <md-table-container flex>
-          <table editable callback="onTableEdited" class="md-html-table soa-table" ng-if="soa_measures.items.soaMeasures.length > 0" >
+          <table editable callback="onTableEdited" class="md-html-table soa-table" ng-if="soaIsUpdating" >
             <thead md-order="soa_measures.query.order" md-on-reorder="updateSoaMeasures">
               <tr>
                 <th style="width: 7%"><span translate>Category</span></th>
@@ -95,6 +95,7 @@
                                 'gray': soa.EX==1 }">
                       <md-input-container ng-if="soa.EX=='0'" >
                         <md-select ng-disabled="isAnrReadOnly" ng-model="soa.compliance" ng-change="onTableEdited(soa, 'compliance') "  style="width: 110px;">
+                            <md-option value=""></md-option>
                             <md-option value="1">{{ 'Initial' | translate }}</md-option>
                             <md-option value="2">{{ 'Developing' | translate }}</md-option>
                             <md-option value="3">{{ 'Defined' | translate }}</md-option>

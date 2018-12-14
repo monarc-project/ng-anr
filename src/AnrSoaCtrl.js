@@ -33,6 +33,7 @@
         });
 
         $scope.updateSoaMeasures = function () {
+            $scope.soaIsUpdating = false;
             var query = angular.copy($scope.soa_measures.query);
             query.category = $scope.soa_measures.selectedCategory;
             query.referential = $scope.referential_uniqid;
@@ -46,6 +47,7 @@
             $scope.soa_measures.promise.then(
                 function (data) {
                     $scope.soa_measures.items = data;
+                    $scope.soaIsUpdating = true;
                 }
             )
         };
@@ -162,13 +164,9 @@
                         })));
                       }
 
-                      for (var i = 0; i < childrens.length; i++) {
-                        ClientSoaService.updateSoa(childrens[i].id, childrens[i], function () {
-                            if (i = childrens.length - 1) {
+                        ClientSoaService.updateSoa(null,childrens, function () {
                               $scope.updateSoaMeasures();
-                            }
                         });
-                      }
                     })
                   });
                 });
