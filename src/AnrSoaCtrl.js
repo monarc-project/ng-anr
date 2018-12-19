@@ -33,7 +33,6 @@
         });
 
         $scope.updateSoaMeasures = function () {
-            $scope.soaIsUpdating = false;
             var query = angular.copy($scope.soa_measures.query);
             query.category = $scope.soa_measures.selectedCategory;
             query.referential = $scope.referential_uniqid;
@@ -47,7 +46,6 @@
             $scope.soa_measures.promise.then(
                 function (data) {
                     $scope.soa_measures.items = data;
-                    $scope.soaIsUpdating = true;
                 }
             )
         };
@@ -113,8 +111,8 @@
                       var fathers = data['soaMeasures'];
                       for (var i = 0; i < measuresLinked.length; i++) {
                         fathers.forEach((father)=>childrens.forEach((child=>{
-                          if (father.measure.uniqid == measuresLinked[i].father.uniqid) {
-                            if (child.measure.uniqid == measuresLinked[i].child.uniqid) {
+                          if (father.measure.uniqid == measuresLinked[i].father) {
+                            if (child.measure.uniqid == measuresLinked[i].child) {
 
                               importOptions.forEach(function(option){
                                 if (importSoa[option] && father[option]) {
