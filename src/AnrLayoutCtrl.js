@@ -6,7 +6,7 @@
             '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'TableHelperService',
             'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
             '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService', 'ClientRecommandationService',
-            AnrLayoutCtrl
+            'ReferentialService', 'AmvService', AnrLayoutCtrl
         ]);
 
     /**
@@ -14,7 +14,8 @@
      */
     function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, TableHelperService, ModelService,
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
-                           $transitions, DownloadService, $mdPanel, $injector, ConfigService,ClientRecommandationService) {
+                           $transitions, DownloadService, $mdPanel, $injector, ConfigService, ClientRecommandationService,
+                           ReferentialService, AmvService) {
 
 
         if ($scope.OFFICE_MODE == 'FO') {
@@ -68,7 +69,6 @@
                     ToolsAnrService.currentTab = 0;
                     $scope.display.anrSelectedTabIndex = 0;
                     e.preventDefault();
-
                 }
             });
         }
@@ -191,7 +191,9 @@
                         $scope.updateInstances();
                         $scope.updateObjectsLibrary();
                         $scope.updateScales();
+                        $scope.updateReferentials();
                         updateMethodProgress();
+
                     }
 
                     if ($rootScope.setAnrLanguage) {
@@ -208,6 +210,13 @@
 
         };
 
+        $scope.updateReferentials = function () {
+          $scope.referentials = [];
+          ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
+            $scope.referentials.items = data;
+            $scope.updatingReferentials = true;
+          });
+        };
 
         $scope.updateAnrRisksTable = function (cb) {
             $scope.anr_risks_table_loading = true;
@@ -418,6 +427,9 @@
                 $scope.ToolsAnrService.currentTab = 0;
                 $scope.opsheet_risk = undefined;
                 $scope.sheet_risk = angular.copy(risk);
+                AmvService.getAmv($scope.sheet_risk.amv).then(function (data) {
+                  $scope.sheet_risk.measures = data['measures'];
+                });
 
                 var reducAmount = [];
                 if($scope.scales.vulns != undefined){
@@ -429,12 +441,14 @@
                     }
                 }
                 $scope.reducAmount = reducAmount;
-
                 $scope._copyRecs = [];
                 $scope.updateSheetRiskTarget();
             });
         };
 
+        $scope.selectReferential = function (referentialId) {
+            $scope.referential_uniqid = referentialId;
+        };
         $scope.updateSheetRiskTarget = function () {
             if(parseInt($scope.sheet_risk.threatRate) > -1 && parseInt($scope.sheet_risk.vulnerabilityRate) > -1){
                 $scope.sheet_risk.target_c = $scope.sheet_risk.c_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
@@ -1492,14 +1506,9 @@
         $scope.editAnrInfo = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-            var controller = ['$scope', '$mdDialog', 'ConfigService', 'anr', '$stateParams', CreateAnrDialogCtrl];
-            if (CreateRiskAnalysisDialog) {
-                controller = ['$scope', '$mdDialog', '$http', 'toastr', 'gettext', 'gettextCatalog', 'ConfigService', 'ModelService',
-                    'ClientAnrService', 'anr', CreateRiskAnalysisDialog];
-            }
-
             $mdDialog.show({
-                controller: controller,
+              controller: ['$scope', '$mdDialog', '$http', '$q', 'ConfigService', 'ModelService',
+                            'ClientAnrService', 'ReferentialService', 'anr', CreateRiskAnalysisDialog],
                 templateUrl: 'views/dialogs/create.anr.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -1905,8 +1914,6 @@
             $state.transitionTo("main.project.anr.soa" , {modelId: $stateParams.modelId});
         }
         $scope.goToSoaSheet = function (modelId, soaId) {
-            // console.log('goToSoaSheet');
-            // console.log($stateParams);
             $state.transitionTo('main.project.anr.soa.sheet', {modelId: $scope.model.anr.id, soaId: soaId, anr: $scope.model.anr});
 
         };
@@ -1979,28 +1986,6 @@
         $scope.setMethodStepStatus = setMethodStepStatus;
         $scope.openMethodDeliverable = openMethodDeliverable;
         $scope.step = step;
-    }
-
-    function CreateAnrDialogCtrl($scope, $mdDialog, ConfigService, anr, $stateParams) {
-        $scope.languages = ConfigService.getLanguages();
-        $scope.language = ConfigService.getDefaultLanguageIndex();
-
-        if (anr != undefined && anr != null) {
-            $scope.anr = anr;
-        } else {
-            $scope.anr = {
-                name: '',
-                description: ''
-            };
-        }
-
-        $scope.cancel = function () {
-            $mdDialog.cancel();
-        };
-
-        $scope.create = function () {
-            $mdDialog.hide($scope.anr);
-        };
     }
 
     var createAttachedObject = function ($scope, $mdDialog, $state, $location, $parentScope, AnrService, ev, objlib) {

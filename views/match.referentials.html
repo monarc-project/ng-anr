@@ -1,0 +1,65 @@
+<md-dialog md-theme="light" class="dialog-width">
+    <form name="referentialForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Match referentials</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+              <form flex name="matchReferential.filter.form">
+                  <md-input-container class="md-block md-padding-left md-padding-right">
+                      <label><md-icon>search</md-icon> {{ 'Search...' | translate }}</label>
+                      <input ng-model="matchRef_filter">
+                  </md-input-container>
+              </form>
+              <table class="md-html-table">
+                  <thead>
+                      <tr>
+                          <th>
+                            {{ _langField(referentialSelected,'label')}}
+                          </th>
+                          <th ng-repeat="ref in referentialsList.referentials" ng-if="ref.uniqid !== referentialSelected.uniqid">
+                            {{ _langField(ref,'label')}}
+                          </th>
+                      </tr>
+                  </thead>
+
+                  <tbody>
+                      <tr ng-repeat="measure in measuresRefSelected | filter: matchRef_filter" >
+                          <td><strong>{{measure.code}}</strong> - {{ _langField(measure,'label')}}</td>
+                          <td ng-repeat="ref in referentialsList.referentials" ng-if="ref.uniqid !== referentialSelected.uniqid">
+                            <md-chips ng-model="matchMeasures[ref.uniqid][measure.uniqid]"
+                                      md-autocomplete-snap
+                                      md-on-add="addMeasureLinked(measure.uniqid, $chip.uniqid)"
+                                      md-on-remove="deleteMeasureLinked(measure.uniqid, $chip.uniqid)"
+                                      md-require-match="true">
+
+                                <md-autocomplete flex
+                                                 md-selected-item="matchedMeasureItem"
+                                                 md-search-text="measureSearchText"
+                                                 md-items="item in queryMeasureSearch(measureSearchText,ref.uniqid,measure.uniqid)"
+                                                 md-item-text="item.code + ' (' + _langField(item,'label') + ')'"
+                                                 md-min-length="0"
+                                                 md-no-cache="true">
+                                    <span md-highlight-text="measuresSearchText">{{ item.code }} - {{ _langField(item,'label') }}</span>
+                                </md-autocomplete>
+
+                                <md-chip-template>
+                                    <span>
+                                        <strong>{{$chip.code}}</strong>
+                                        <em>{{_langField($chip,'label')}}</em>
+                                    </span>
+                                </md-chip-template>
+                            </md-chips>
+                          </td>
+                      </tr>
+                  </tbody>
+              </table>
+        </md-dialog-content>
+    </form>
+</md-dialog>

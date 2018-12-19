@@ -42,16 +42,17 @@
           })
         .controller('AnrKbMgmtCtrl', [
             '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
-            'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'ClientSoaService', 'TagService',
-            'RiskService','SOACategoryService','$state', '$timeout', '$rootScope',
-             AnrKbMgmtCtrl
+            'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'ClientSoaService',
+            'TagService', 'RiskService','SOACategoryService', 'ReferentialService', 'MeasureMeasureService',
+             '$state', '$timeout', '$rootScope',
+            AnrKbMgmtCtrl
         ]);
     /**
      * ANR > KB
      */
     function AnrKbMgmtCtrl($scope, $stateParams, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService,
                                   AssetService, ThreatService, VulnService, AmvService, MeasureService, ClientSoaService, TagService,
-                                  RiskService,SOACategoryService, $state, $timeout, $rootScope) {
+                                  RiskService,SOACategoryService, ReferentialService, MeasureMeasureService, $state, $timeout, $rootScope) {
         $scope.tab = -1;
         $scope.gettext = gettextCatalog.getString;
         TableHelperService.resetBookmarks();
@@ -80,11 +81,8 @@
                 case 'measures': $scope.currentTabIndex = 3; break;
                 case 'amvs': $scope.currentTabIndex = 4; break;
                 case 'objlibs': $scope.currentTabIndex = 5; break;
-                case 'categories': $scope.currentTabIndex = 6; break;
-
             }
         }
-        //$scope.selectTab($scope.tab);
 
         $scope.$on('setup-kb-mgmt', function () {
             if ($scope.tab == -1) {
@@ -344,7 +342,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$q', 'ModelService', 'ThreatService', 'ConfigService', 'threat', CreateThreatDialogCtrl],
+                controller: ['$scope', 'toastr', '$mdMedia',  '$mdDialog', 'gettextCatalog', '$q', 'ModelService', 'ThreatService', 'ConfigService', 'threat', CreateThreatDialogCtrl],
                 templateUrl: 'views/anr/create.threats.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -357,13 +355,13 @@
             })
                 .then(function (threat) {
                     var themeBackup = threat.theme;
+                    var cont = threat.cont;
+                    threat.cont = undefined;
 
                     if (threat.theme) {
                         threat.theme = threat.theme.id;
                     }
 
-                    var cont = threat.cont;
-                    threat.cont = undefined;
                     if (cont) {
                         $scope.createNewThreat(ev);
                     }
@@ -396,7 +394,7 @@
             ThreatService.getThreat(threat.id).then(function (threatData) {
                 $scope.controls = [{}];//hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', '$q', 'ModelService', 'ThreatService', 'ConfigService', 'threat', CreateThreatDialogCtrl],
+                    controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'ModelService', 'ThreatService', 'ConfigService', 'threat', CreateThreatDialogCtrl],
                     templateUrl: 'views/anr/create.threats.html',
                     targetEvent: ev,
                     preserveScope: false,
@@ -671,67 +669,202 @@
         };
 
         /*
-         * 27002 CONTROLS TAB
+         * REFERENTIALS TAB
          */
-        $scope.measures = TableHelperService.build('label1', 20, 1, '');
+        $scope.measures = TableHelperService.build('code', 20, 1, '');
         $scope.measures.activeFilter = 1;
+        $scope.referentials = [];
         var measuresFilterWatch;
 
         $scope.selectMeasuresTab = function () {
-            $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'measures'});
-            var initMeasuresFilter = true;
-            initMeasuresFilter = $scope.$watch('measures.activeFilter', function() {
-                if (initMeasuresFilter) {
-                    initMeasuresFilter = false;
+          $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'measures'});
+          $scope.updatingReferentials = false;
+          ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
+              $scope.referentials.items = data;
+              $scope.updatingReferentials = true;
 
-                } else {
-                    $scope.updateMeasures();
-                }
-            });
-
-            TableHelperService.watchSearch($scope, 'measures.query.filter', $scope.measures.query, $scope.updateMeasures, $scope.measures);
+          });
         };
 
         $scope.deselectMeasuresTab = function () {
             TableHelperService.unwatchSearch($scope.measures);
         };
 
+        $scope.selectReferential = function (referentialId) {
+            $scope.referential_uniqid = referentialId;
+            ReferentialService.getReferential(referentialId).then(function (data) {
+                $scope.referential = data;
+            });
+            MeasureService.getMeasures({referential:referentialId, order:'code'}).then(function (data) {
+                $scope.measuresRefSelected = data;
+            });
+            var initMeasuresFilter = true;
+            initMeasuresFilter = $scope.$watch('measures.activeFilter', function() {
+                if (initMeasuresFilter) {
+                    initMeasuresFilter = false;
+                } else {
+                    $scope.updateMeasures();
+                }
+            });
+            TableHelperService.watchSearch($scope, 'measures.query.filter', $scope.measures.query, $scope.updateMeasures, $scope.measures);
+        };
+
+        $scope.removeMeasuresFilter = function () {
+            TableHelperService.removeFilter($scope.measures);
+        };
+
+        $scope.toggleMeasureStatus = function (measure) {
+            MeasureService.patchMeasure(measure.uniqid, {status: !measure.status}, function () {
+                measure.status = !measure.status;
+            });
+        }
+
+        $scope.updateReferentials = function () {
+            $scope.updatingReferentials = false;
+            $scope.referentials.promise = ReferentialService.getReferentials({order: 'createdAt'});
+            $scope.referentials.promise.then(
+                function (data) {
+                    $scope.referentials.items = data;
+                    $scope.updatingReferentials = true;
+                }
+            )
+        };
+
+        $scope.createNewReferential = function (ev, referential) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'ReferentialService', 'ConfigService', 'referential', 'anrId', CreateReferentialDialogCtrl],
+                templateUrl: 'views/anr/create.referentials.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                  'referential' : referential,
+                  'anrId': $scope.model.anr.id
+                }
+            })
+                .then(function (referential) {
+                    var cont = referential.cont;
+                    referential.cont = undefined;
+
+                    if (cont) {
+                        $scope.createNewReferential(ev);
+                    }
+
+                    ReferentialService.createReferential(referential,
+                        function () {
+                          $scope.updateReferentials();
+                          toastr.success(gettextCatalog.getString('The referential has been created successfully.',
+                                  {referntialLabel: $scope._langField(referential,'label')}), gettextCatalog.getString('Creation successful'));
+                        },
+
+                        function () {
+                            $scope.createNewReferential(ev, referential);
+                        }
+                    );
+                });
+        };
+
+        $scope.editReferential = function (ev, referential) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            ReferentialService.getReferential(referential).then(function (referentialData) {
+                $mdDialog.show({
+                    controller: ['$scope', '$mdDialog', 'ReferentialService', 'ConfigService', 'referential', 'anrId', CreateReferentialDialogCtrl],
+                    templateUrl: 'views/anr/create.referentials.html',
+                    targetEvent: ev,
+                    preserveScope: false,
+                    scope: $scope.$dialogScope.$new(),
+                    clickOutsideToClose: false,
+                    fullscreen: useFullScreen,
+                    locals: {
+                        'referential': referentialData,
+                        'anrId': $scope.model.anr.id
+                    }
+                })
+                    .then(function (referential) {
+                        ReferentialService.updateReferential(referential,
+                            function () {
+                                $scope.updateReferentials();
+                                toastr.success(gettextCatalog.getString('The referential has been edited successfully.',
+                                    {referentialLabel: referential.label1}), gettextCatalog.getString('Edition successful'));
+                            },
+
+                            function () {
+                                $scope.editReferential(ev, referential);
+                            }
+                        );
+                    });
+            });
+        };
+
+        $scope.matchReferential = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'ReferentialService', 'MeasureService','ConfigService', 'MeasureMeasureService', '$q', 'measures', 'referentials', 'referentialSelected', MatchReferentialDialogCtrl],
+                templateUrl: 'views/anr/match.referentials.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                onRemoving : function(){$scope.selectReferential($scope.referential.uniqid)},
+                locals: {
+                    'measures' : $scope.measuresRefSelected,
+                    'referentials': $scope.referentials.items,
+                    'referentialSelected' : $scope.referential
+                }
+            })
+        };
+
+        $scope.deleteReferential = function (ev, item) {
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Are you sure you want to delete referential?',
+                    {label: item.label1}))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .targetEvent(ev)
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                ReferentialService.deleteReferential(item,
+                    function () {
+                        $scope.updateReferentials();
+                        toastr.success(gettextCatalog.getString('The referential has been deleted.',
+                                    {label: item.label1}), gettextCatalog.getString('Deletion successful'));
+                    }
+                );
+            });
+        };
 
         $scope.updateMeasures = function () {
             var query = angular.copy($scope.measures.query);
             query.status = $scope.measures.activeFilter;
+            query.referential = $scope.referential_uniqid;
 
             if ($scope.measures.previousQueryOrder != $scope.measures.query.order) {
                 $scope.measures.query.page = query.page = 1;
                 $scope.measures.previousQueryOrder = $scope.measures.query.order;
             }
+
             $scope.measures.promise = MeasureService.getMeasures(query);
             $scope.measures.promise.then(
                 function (data) {
-                    $scope.measures.items = data;
+                  $scope.measures.items = data;
                 }
             )
-
-
         };
-        $scope.removeMeasuresFilter = function () {
-            TableHelperService.removeFilter($scope.vulns);
-        };
-
-
-        $scope.toggleMeasureStatus = function (measure) {
-            MeasureService.patchMeasure(measure.id, {status: !measure.status}, function () {
-                measure.status = !measure.status;
-            });
-        }
-
 
         $scope.createNewMeasure = function (ev, measure) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'SOACategoryService', 'ConfigService', 'measure', 'anrId', CreateMeasureDialogCtrl],
+                controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'SOACategoryService',
+                             'MeasureService', 'ReferentialService', 'ConfigService', '$q', 'measure', 'referential',
+                             'anrId', CreateMeasureDialogCtrl],
                 templateUrl: 'views/anr/create.measures.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -740,7 +873,8 @@
                 fullscreen: useFullScreen,
                 locals: {
                     'measure': measure,
-                    'anrId': $scope.model.anr.id
+                    'referential' : $scope.referential,
+                    'anrId': $scope.model.anr
                 }
             })
                 .then(function (measure) {
@@ -752,7 +886,7 @@
 
                     MeasureService.createMeasure(measure,
                         function () {
-                          $scope.measures.activeFilter=1;
+                            $scope.measures.activeFilter = 1;
                             $scope.updateMeasures();
                             toastr.success(gettextCatalog.getString('The control has been created successfully.',
                                 {measureLabel: $scope._langField(measure,'label')}), gettextCatalog.getString('Creation successful'));
@@ -762,24 +896,27 @@
                             $scope.createNewMeasure(ev, measure);
                         }
                     ).then(function (data) {
-                      $scope.measure_data=data;
-                      //create soa linked to the measure
-                      var  soa={ "anr" : $scope.model.anr.id , "measure" : $scope.measure_data.id };
-                      ClientSoaService.createSoa(soa,
-                          function () {
-                          });
+                      // $scope.measure_data = data;
+                      // //create soa linked to the measure
+                      // var soa = {
+                      //   'anr' : $scope.model.anr.id,
+                      //   'measure' : $scope.measure_data.id
+                      // };
+                      // ClientSoaService.createSoa(soa,
+                      //     function () {
+                      //     });
                         });
-
-
                 });
         };
 
         $scope.editMeasure = function (ev, measure) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-            MeasureService.getMeasure(measure.id).then(function (measureData) {
+            MeasureService.getMeasure(measure.uniqid).then(function (measureData) {
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', 'SOACategoryService', 'ConfigService', 'measure', 'anrId', CreateMeasureDialogCtrl],
+                    controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'SOACategoryService',
+                                 'MeasureService', 'ReferentialService', 'ConfigService', '$q', 'measure', 'referential',
+                                 'anrId', CreateMeasureDialogCtrl],
                     templateUrl: 'views/anr/create.measures.html',
                     targetEvent: ev,
                     preserveScope: false,
@@ -788,7 +925,8 @@
                     fullscreen: useFullScreen,
                     locals: {
                         'measure': measureData,
-                        'anrId': $scope.model.anr.id
+                        'referential' : $scope.referential,
+                        'anrId': $scope.model.anr
                     }
                 })
                     .then(function (measure) {
@@ -818,7 +956,22 @@
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-                  MeasureService.deleteMeasure(item.id,
+
+              //delete the soa associated to the measure
+                ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
+                  $scope.soas = data['soaMeasures'];
+                  for (soa in $scope.soas){
+                    console.log($scope.soas[soa].measure);
+                      if($scope.soas[soa].measure.uniqid == item.uniqid) {
+
+                           ClientSoaService.deleteSoa({anr: $scope.model.anr.id, id: $scope.soas[soa].id},
+                             function () {
+                                 var query = angular.copy($scope.soas.query);
+                             }
+                           );
+                         }
+                  }
+                  MeasureService.deleteMeasure(item.uniqid,
                       function () {
                           $scope.updateMeasures();
                           toastr.success(gettextCatalog.getString('The control has been deleted.',
@@ -845,246 +998,32 @@
                 for (var i = 0; i < $scope.measures.selected.length; ++i) {
                     ids.push($scope.measures.selected[i].id);
                 }
-                MeasureService.deleteMassMeasure(ids, function () {
-                    $scope.updateMeasures();
-                    toastr.success(gettextCatalog.getString('{{count}} controls have been deleted.',
-                        {count: count}), gettextCatalog.getString('Deletion successful'));
-                });
 
-                $scope.measures.selected = [];
-            });
-        };
-
-        // /*
-        //  * CATEGORIES TAB
-        //  */
-        //
-
-        $scope.categories = TableHelperService.build('label1', 20, 1, '');
-        $scope.categories.activeFilter = 1;
-        var categoriesFilterWatch;
-
-        $scope.selectCategoriesTab = function () {
-            $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'categories'});
-            var initCategoriesFilter = true;
-            initCategoriesFilter = $scope.$watch('categories.activeFilter', function() {
-                if (initCategoriesFilter) {
-                    initCategoriesFilter = false;
-                } else {
-                    $scope.updateCategories();
-                }
-            });
-
-            TableHelperService.watchSearch($scope, 'categories.query.filter', $scope.categories.query, $scope.updateCategories, $scope.categories);
-        };
-
-        $scope.deselectCategoriesTab = function () {
-            TableHelperService.unwatchSearch($scope.categories);
-        };
-
-
-        $scope.updateCategories = function () {
-            var query = angular.copy($scope.categories.query);
-            query.status = $scope.categories.activeFilter;
-
-            if ($scope.categories.previousQueryOrder != $scope.categories.query.order) {
-                $scope.categories.query.page = query.page = 1;
-                $scope.categories.previousQueryOrder = $scope.categories.query.order;
-            }
-            $scope.categories.promise = SOACategoryService.getCategories(query);
-            $scope.categories.promise.then(
-                function (data) {
-                    $scope.categories.items = data;
-                }
-            )
-
-
-        };
-        $scope.removeCategoriesFilter = function () {
-            TableHelperService.removeFilter($scope.vulns);
-        };
-
-        //the new status of the category is also assigned to the measure
-        $scope.toggleCategoryStatus = function (category) {
-
-           MeasureService.getMeasures({anr: $scope.model.anr.id}).then(function (data) {
-               $scope.measures_cat = data['measures'];
-               for (measure in $scope.measures_cat){
-                 if( $scope.measures_cat[measure].category !=null ) {
-                   if( $scope.measures_cat[measure].category.id==category.id ) {
-                         MeasureService.patchMeasure($scope.measures_cat[measure].id, {status: category.status}, function () {
-                             $scope.measures_cat[measure].status = !category.status;
-                          })
-
-                    }
-                  }
-                }
-
-           })
-
-
-            SOACategoryService.patchCategory(category.id, {status: !category.status}, function () {
-                category.status = !category.status;
-            });
-
-        }
-
-
-        $scope.createNewCategory = function (ev, category) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
-
-            $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ConfigService', 'category', CreateCategoryDialogCtrl],
-                templateUrl: 'views/anr/create.categories.html',
-                targetEvent: ev,
-                preserveScope: false,
-                scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: false,
-                fullscreen: useFullScreen,
-                locals: {
-                    'category': category
-                }
-            })
-                .then(function (category) {
-                    var cont = category.cont;
-                    category.cont = undefined;
-                    if (cont) {
-                        $scope.createNewCategory(ev);
-                    }
-
-                    SOACategoryService.createCategory(category,
-                        function () {
-                            $scope.updateCategories();
-                            toastr.success(gettextCatalog.getString('The category has been created successfully.',
-                                {categoryLabel: $scope._langField(category,'label')}), gettextCatalog.getString('Creation successful'));
-                        },
-
-                        function (err) {
-                            $scope.createNewCategory(ev, category);
-                        }
-                    );
-                });
-        };
-
-        $scope.editCategory = function (ev, category) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
-            SOACategoryService.getCategory(category.id).then(function (categoryData) {
-                $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', 'ConfigService', 'category', CreateCategoryDialogCtrl],
-                    templateUrl: 'views/anr/create.categories.html',
-                    targetEvent: ev,
-                    preserveScope: false,
-                    scope: $scope.$dialogScope.$new(),
-                    clickOutsideToClose: false,
-                    fullscreen: useFullScreen,
-                    locals: {
-                        'category': category
-                    }
-                })
-                    .then(function (category) {
-                        SOACategoryService.updateCategory(category,
-                            function () {
-                                $scope.updateCategories();
-                                toastr.success(gettextCatalog.getString('The category has been edited successfully.',
-                                    {categoryLabel: $scope._langField(category,'label')}), gettextCatalog.getString('Edition successful'));
-                            },
-
-                            function () {
-                                $scope.editCategory(ev, category);
-                            }
-                        );
-                    });
-            });
-
-        };
-        $scope.deleteCategory = function (ev, item) {
-            var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete category?',
-                    {label: $scope._langField(item,'label')}))
-                .textContent(gettextCatalog.getString('This operation is irreversible.'))
-                .targetEvent(ev)
-                .theme('light')
-                .ok(gettextCatalog.getString('Delete'))
-                .cancel(gettextCatalog.getString('Cancel'));
-            $mdDialog.show(confirm).then(function() {
-              // once we  delete a category the measure linked to this category have their category-id changed to null
-              MeasureService.getMeasures({anr: $scope.model.anr.id}).then(function (data) {
-                  $scope.measures_cat = data['measures'];
-                  for (measure in $scope.measures_cat){
-                    if( $scope.measures_cat[measure].category !=null ) {
-                      if($scope.measures_cat[measure].category.id == item.id) {
-                         $scope.measures_cat[measure].category =null;
-
-                         MeasureService.updateMeasure($scope.measures_cat[measure],
-                             function () {
-
-                                 var query = angular.copy($scope.categories.query);
-                              }
-                         );
-                         }
-                       }
-                  }
-                  SOACategoryService.deleteCategory(item.id,
-                      function () {
-                          $scope.updateCategories();
-                          toastr.success(gettextCatalog.getString('The category has been deleted.',
-                              {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
-                      }
-                  );
-              })
-            });
-
-
-        };
-
-        $scope.deleteCategoryMass = function (ev, item) {
-            var outpromise = null;
-            var count = $scope.categories.selected.length;
-
-            var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete the {{count}} selected categories?',
-                    {count: count}))
-                .textContent(gettextCatalog.getString('This operation is irreversible.'))
-                .targetEvent(ev)
-                .theme('light')
-                .ok(gettextCatalog.getString('Delete'))
-                .cancel(gettextCatalog.getString('Cancel'));
-            $mdDialog.show(confirm).then(function() {
-                var ids = [];
-                for (var i = 0; i < $scope.categories.selected.length; ++i) {
-                    ids.push($scope.categories.selected[i].id);
-                }
-                MeasureService.getMeasures({anr: $scope.model.anr.id}).then(function (data) {
-                    $scope.measures_cat = data['measures'];
-                    for (measure in $scope.measures_cat){
+                //delete the soas associated to the measures
+                ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
+                  $scope.soas = data['soaMeasures'];
+                    for (soa in $scope.soas){
                       for (var i = 0; i < ids.length; ++i) {
-                     if( $scope.measures_cat[measure].category !=null ) {
-                        if($scope.measures_cat[measure].category.id == ids[i]) {
-                           $scope.measures_cat[measure].category =null;
+                          if($scope.soas[soa].measure.uniqid == ids[i]) {
+                                ClientSoaService.deleteSoa({anr: $scope.model.anr.id, id: $scope.soas[soa].id},
+                                    function () {
+                                        var query = angular.copy($scope.soas.query);
+                                    }
+                                );
 
-                           MeasureService.updateMeasure($scope.measures_cat[measure],
-                             function () {
-                                 var query = angular.copy($scope.categories.query);
                               }
-                           );
-                           }
                          }
                     }
-                    }
-                    SOACategoryService.deleteMassCategory(ids, function () {
-                        $scope.updateCategories();
-                        toastr.success(gettextCatalog.getString('{{count}} categories have been deleted.',
+                    MeasureService.deleteMassMeasure(ids, function () {
+                        $scope.updateMeasures();
+                        toastr.success(gettextCatalog.getString('{{count}} controls have been deleted.',
                             {count: count}), gettextCatalog.getString('Deletion successful'));
                     });
-
-                    $scope.categories.selected = [];
+                    $scope.measures.selected = [];
                 })
-
-
             });
         };
+
 
          /*
           * AMVS TAB
@@ -1092,20 +1031,23 @@
         $scope.amvs = TableHelperService.build('status', 20, 1, '');
         $scope.amvs.activeFilter = 1;
         var amvsFilterWatch;
+        $scope.referentials_filter = [];
 
         $scope.selectAmvsTab = function () {
             $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'amvs'});
+            ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
+                $scope.referentials_filter.items = data;
+                $scope.referentials_filter.selected = data['referentials'][0].uniqid;
+            });
             var initAmvsFilter = true;
-            initAmvsFilter = $scope.$watch('amvs.activeFilter', function() {
+            initAmvsFilter = $scope.$watchGroup(['amvs.activeFilter', 'referentials_filter.selected', 'amvs.query.filter'], function(newValue, oldValue) {
                 if (initAmvsFilter) {
                     initAmvsFilter = false;
                 } else {
                     $scope.updateAmvs();
                 }
             });
-
-            TableHelperService.watchSearch($scope, 'amvs.query.filter', $scope.amvs.query, $scope.updateAmvs, $scope.amvs);
-        };
+        }
 
         $scope.deselectAmvsTab = function () {
             TableHelperService.unwatchSearch($scope.amvs);
@@ -1114,6 +1056,7 @@
         $scope.updateAmvs = function () {
             var query = angular.copy($scope.amvs.query);
             query.status = $scope.amvs.activeFilter;
+            query.referential = $scope.referentials_filter.selected;
 
             if ($scope.amvs.previousQueryOrder != $scope.amvs.query.order) {
                 $scope.amvs.query.page = query.page = 1;
@@ -1144,7 +1087,9 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService', 'ConfigService', 'AmvService', '$q', 'amv', CreateAmvDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService',
+                             'MeasureService', 'ReferentialService', 'ConfigService', 'AmvService',
+                             '$q', 'amv', 'referentials', CreateAmvDialogCtrl],
                 templateUrl: 'views/anr/create.amvs.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -1152,21 +1097,13 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                    'amv': amv
+                    'amv': amv,
+                    'referentials': $scope.referentials_filter.items['referentials']
                 }
             })
                 .then(function (amv) {
                     var amvBackup = angular.copy(amv);
 
-                    if (amv.measure1) {
-                        amv.measure1 = amv.measure1.id;
-                    }
-                    if (amv.measure2) {
-                        amv.measure2 = amv.measure2.id;
-                    }
-                    if (amv.measure3) {
-                        amv.measure3 = amv.measure3.id;
-                    }
                     if (amv.threat) {
                         amv.threat = amv.threat.id;
                     }
@@ -1186,7 +1123,8 @@
                     AmvService.createAmv(amv,
                         function () {
                             $scope.updateAmvs();
-                            toastr.success(gettextCatalog.getString('The risk has been created successfully.'), gettextCatalog.getString('Creation successful'));
+                            toastr.success(gettextCatalog.getString('The risk has been created successfully.'),
+                              gettextCatalog.getString('Creation successful'));
                         },
 
                         function () {
@@ -1207,7 +1145,9 @@
 
             AmvService.getAmv(amv).then(function (amvData) {
                 $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService', 'ConfigService', 'AmvService', '$q', 'amv', CreateAmvDialogCtrl],
+                    controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService',
+                                 'MeasureService', 'ReferentialService', 'ConfigService', 'AmvService',
+                                 '$q', 'amv', 'referentials', CreateAmvDialogCtrl],
                     templateUrl: 'views/anr/create.amvs.html',
                     targetEvent: ev,
                     preserveScope: false,
@@ -1215,20 +1155,12 @@
                     clickOutsideToClose: false,
                     fullscreen: useFullScreen,
                     locals: {
-                        'amv': amvData
+                        'amv': amvData,
+                        'referentials' : $scope.referentials_filter.items['referentials']
                     }
                 })
                     .then(function (amv) {
                         var amvBackup = angular.copy(amv);
-                        if (amv.measure1) {
-                            amv.measure1 = amv.measure1.id;
-                        }
-                        if (amv.measure2) {
-                            amv.measure2 = amv.measure2.id;
-                        }
-                        if (amv.measure3) {
-                            amv.measure3 = amv.measure3.id;
-                        }
                         if (amv.threat) {
                             amv.threat = amv.threat.id;
                         }
@@ -1243,7 +1175,8 @@
                         AmvService.updateAmv(amv,
                             function () {
                                 $scope.updateAmvs();
-                                toastr.success(gettextCatalog.getString('The risk has been edited successfully.'), gettextCatalog.getString('Edition successful'));
+                                toastr.success(gettextCatalog.getString('The risk has been edited successfully.'),
+                                  gettextCatalog.getString('Edition successful'));
                             },
 
                             function () {
@@ -1271,7 +1204,8 @@
                 AmvService.deleteAmv(item.id,
                     function () {
                         $scope.updateAmvs();
-                        toastr.success(gettextCatalog.getString('The risk has been deleted.'), gettextCatalog.getString('Deletion successful'));
+                        toastr.success(gettextCatalog.getString('The risk has been deleted.'),
+                          gettextCatalog.getString('Deletion successful'));
                     }
                 );
             });
@@ -1980,7 +1914,7 @@
         };
     }
 
-    function CreateThreatDialogCtrl($scope, $mdDialog, $q, ModelService, ThreatService, ConfigService, threat) {
+    function CreateThreatDialogCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $q, ModelService, ThreatService, ConfigService, threat) {
         ModelService.getModels({isGeneric:0}).then(function (data) {
             $scope.models = data.models;
         });
@@ -2021,6 +1955,12 @@
             };
         }
 
+        $scope.$watch('language', function() {
+          if ($scope.threat.theme) {
+            $scope.themeSearchText = $scope.threat.theme['label' + $scope.language];
+          }
+        });
+
         $scope.queryThemeSearch = function (query) {
             var promise = $q.defer();
             ThreatService.getThemes({filter: query}).then(function (data) {
@@ -2035,35 +1975,94 @@
             $scope.threat.theme = item;
         }
 
-        $scope.createTheme = function (label) {
-            var themeData = {
-                ['label' + $scope.language] : label
-              };
-            ThreatService.createTheme(themeData, function (data) {
-                ThreatService.getTheme(data.id).then(function (theme) {
-                    $scope.threat.theme = theme;
+        $scope.createNewTheme = function (ev, theme) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'ConfigService', 'theme', CreateThemeDialogCtrl],
+                templateUrl: 'views/anr/create.themes.html',
+                targetEvent: ev,
+                multiple: true,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    'theme': theme
+                }
+            })
+                .then(function (theme) {
+                    var cont = theme.cont;
+                    theme.cont = undefined;
+                    if (cont) {
+                        $scope.createNewTheme(ev);
+                    }
+                    ThreatService.createTheme(theme,
+                        function (status) {
+                        theme.id = status.id;
+                        $scope.selectedThemeItemChange(theme);
+                        toastr.success(gettextCatalog.getString('The theme has been created successfully.',
+                            {themeLabel: $scope._langField(theme,'label')}), gettextCatalog.getString('Creation successful'));
+                        },
+                        function (err) {
+                            $scope.createNewTheme(ev, theme);
+                        }
+                    );
+                });
+        };
+
+        $scope.editTheme = function (ev, theme) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            ThreatService.getTheme(theme.id).then(function (themeData) {
+                $mdDialog.show({
+                    controller: ['$scope', '$mdDialog', 'ConfigService','theme', CreateThemeDialogCtrl],
+                    templateUrl: 'views/anr/create.themes.html',
+                    targetEvent: ev,
+                    preserveScope: false,
+                    multiple: true,
+                    scope: $scope.$dialogScope.$new(),
+                    clickOutsideToClose: false,
+                    fullscreen: useFullScreen,
+                    locals: {
+                      'theme': theme
+                    }
                 })
+                    .then(function (theme) {
+                        ThreatService.updateTheme(theme,
+                            function () {
+                                $scope.themeSearchText = theme['label' + $scope.language];
+                                $scope.selectedThemeItemChange(theme);
+                                toastr.success(gettextCatalog.getString('The theme has been edited successfully.',
+                                    {themeLabel: $scope._langField(theme,'label')}), gettextCatalog.getString('Edition successful'));
+                            },
+
+                            function () {
+                                $scope.editTheme(ev, theme);
+                            }
+                        );
+                    });
             });
         };
 
-        $scope.updateTheme = function (theme) {
-            $scope.theme_edit_lock = true;
-            ThreatService.updateTheme(theme, function () {
-                ThreatService.getTheme(theme.id).then(function (theme) {
-                    $scope.threat.theme = theme;
-                    $scope.theme_edit_lock = false;
-                    $scope.theme_edit = null;
-                });
+        $scope.deleteTheme= function (ev, theme) {
+            var confirm = $mdDialog.confirm()
+                .multiple(true)
+                .title(gettextCatalog.getString('Are you sure you want to delete theme?',
+                    {label: $scope._langField(theme,'label')}))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .targetEvent(ev)
+                .theme('light')
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                  ThreatService.deleteTheme(theme.id,
+                      function () {
+                        $scope.selectedThemeItemChange();
+                         toastr.success(gettextCatalog.getString('The theme has been deleted.',
+                         {label: $scope._langField(theme,'label')}), gettextCatalog.getString('Deletion successful'));
+                      }
+                  );
             });
-        }
-
-        $scope.deleteTheme = function (theme) {
-            ThreatService.deleteTheme(theme.id, function () {
-                $scope.threat.theme = null;
-                $scope.theme_edit = null;
-                $scope.themeSearchText = null;
-            });
-        }
+        };
 
         $scope.cancel = function() {
             $mdDialog.cancel();
@@ -2078,6 +2077,35 @@
         };
     }
 
+    function CreateThemeDialogCtrl($scope, $mdDialog,  ConfigService, theme) {
+
+      $scope.languages = ConfigService.getLanguages();
+      $scope.language = $scope.getAnrLanguage();
+
+        if (theme != undefined && theme != null) {
+            $scope.theme = theme;
+        } else {
+            $scope.theme = {
+                label1: '',
+                label2: '',
+                label3: '',
+                label4: '',
+            };
+        }
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.create = function() {
+            $mdDialog.hide($scope.theme);
+        };
+        $scope.createAndContinue = function() {
+            $scope.category.cont = true;
+            $mdDialog.hide($scope.theme);
+        };
+
+    }
 
     function CreateVulnDialogCtrl($scope, $mdDialog, ModelService, ConfigService, vuln) {
         ModelService.getModels({isGeneric:0}).then(function (data) {
@@ -2119,28 +2147,286 @@
         };
     }
 
-    function CreateMeasureDialogCtrl($scope, $mdDialog, SOACategoryService, ConfigService, measure, anrId) {
+    function CreateReferentialDialogCtrl($scope, $mdDialog, ReferentialService, ConfigService, referential) {
+        $scope.languages = ConfigService.getLanguages();
+        $scope.language = ConfigService.getDefaultLanguageIndex();
+        var defaultLang = angular.copy($scope.language);
 
-      $scope.languages = ConfigService.getLanguages();
-      $scope.language = $scope.getAnrLanguage();
-      SOACategoryService.getCategories({anr: anrId}).then(function (data) {
-         $scope.categories = data['categories'];
-         $scope.listCategories = angular.copy($scope.categories);
-      });
+        if (referential != undefined && referential != null) {
+            $scope.referential = referential;
+            delete $scope.referential.measures;
+        } else {
+          $scope.referential = {
+              label1: '',
+              label2: '',
+              label3: '',
+              label4: '',
+          };
+        }
 
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
 
+        $scope.create = function() {
+            for (var i = 1; i <=4; i++) {
+              if ($scope.referential['label' + i] == '' && i != defaultLang) {
+                $scope.referential['label' + i] = $scope.referential['label' + defaultLang];
+              }
+            }
+            $mdDialog.hide($scope.referential);
+        };
+        $scope.createAndContinue = function () {
+            for (var i = 1; i <=4; i++) {
+              if ($scope.referential['label' + i] == '' && i != defaultLang) {
+                $scope.referential['label' + i] = $scope.referential['label' + defaultLang];
+              }
+            }
+            $scope.referential.cont = true;
+            $mdDialog.hide($scope.referential);
+        }
+    }
+    function MatchReferentialDialogCtrl($scope, $mdDialog, ReferentialService, MeasureService, ConfigService, MeasureMeasureService, $q, measures, referentials, referentialSelected) {
+        $scope.languages = ConfigService.getLanguages();
+        $scope.language = ConfigService.getDefaultLanguageIndex();
+        $scope.measuresRefSelected = measures.measures;
+        $scope.referentialsList = referentials;
+        $scope.referentialSelected = referentialSelected;
+        $scope.matchMeasures = [];
+        $scope.matchRef_filter = '';
 
+        $scope.referentialsList.referentials.forEach(function (ref){
+          var promise = $q.defer();
+          if (ref.uniqid !== $scope.referentialSelected.uniqid ) {
+            $scope.matchMeasures[ref.uniqid] = [];
+            $scope.measuresRefSelected.forEach(function (measure){
+              $scope.matchMeasures[ref.uniqid][measure.uniqid] = [];
+              if (Array.isArray(measure.measuresLinked)) {
+                measure.measuresLinked.forEach(function (measureLinked){
+                  var measureFound = ref.measures.filter(ml => ml.uniqid == measureLinked.uniqid);
+                  if (measureFound.length > 0) {
+                    $scope.matchMeasures[ref.uniqid][measure.uniqid].push(measureLinked);
+                  }
+                })
+              }
+              promise.resolve($scope.matchMeasures[ref.uniqid][measure.uniqid]);
+            });
+            return promise.promise;
+          }
+        });
+
+        $scope.queryMeasureSearch = function (query, referential, measureId ) {
+            var promise = $q.defer();
+            MeasureService.getMeasures({filter: query, referential: referential, order: 'code'}).then(function (e) {
+              var filtered = [];
+              for (var j = 0; j < e.measures.length; ++j) {
+                  var found = false;
+                  for (var i = 0; i < $scope.matchMeasures[referential][measureId].length; ++i) {
+
+                      if ($scope.matchMeasures[referential][measureId][i].uniqid == e.measures[j].uniqid) {
+                          found = true;
+                          break;
+                      }
+                  }
+
+                  if (!found) {
+                      filtered.push(e.measures[j]);
+                  }
+              }
+
+              promise.resolve(filtered);
+            }, function (e) {
+                promise.reject(e);
+            });
+
+            return promise.promise;
+        };
+
+        $scope.addMeasureLinked = function(fatherId,childId) {
+          var measuremeasure  = {
+              father: fatherId,
+              child: childId,
+          };
+          MeasureMeasureService.createMeasureMeasure(measuremeasure);
+        };
+
+        $scope.deleteMeasureLinked = function(fatherId,childId) {
+          MeasureMeasureService.getMeasuresMeasures({fatherId:fatherId, childId: childId}).then(function(e) {
+            if (e.count > 0) {
+              var id  = {
+                  father: fatherId,
+                  child: childId,
+              };
+              MeasureMeasureService.deleteMeasureMeasure(id);
+            }
+          });
+        };
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.create = function() {
+            $mdDialog.hide($scope.matchMeasures);
+        };
+    }
+
+    function CreateMeasureDialogCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, SOACategoryService,
+                                    MeasureService, ReferentialService, ConfigService, $q, measure, referential,
+                                    anrId) {
+        $scope.languages = ConfigService.getLanguages();
+        $scope.language = $scope.getAnrLanguage();
+        $scope.categorySearchText = '';
         if (measure != undefined && measure != null) {
             $scope.measure = measure;
         } else {
             $scope.measure = {
+                referential: referential,
                 code: '',
                 label1: '',
                 label2: '',
                 label3: '',
                 label4: '',
+                category: '',
             };
         }
+
+        $scope.$watch('language', function() {
+          if ($scope.measure.category) {
+            $scope.categorySearchText = $scope.measure.category['label' + $scope.language];
+          }
+        });
+
+        $scope.queryCategorySearch = function (query) {
+            var promise = $q.defer();
+            SOACategoryService.getCategories({filter: query, order: $scope._langField('label'), referential: referential.uniqid}).then(function (data) {
+                promise.resolve(data['categories']);
+            }, function () {
+                promise.reject();
+            });
+            return promise.promise;
+        };
+
+        $scope.selectedCategoryItemChange = function (item) {
+            $scope.measure.category = item;
+        }
+
+        $scope.createNewCategory = function (ev, referential, category) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'ConfigService','referential', 'category', 'anrId',  CreateCategoryDialogCtrl],
+                templateUrl: 'views/anr/create.categories.html',
+                targetEvent: ev,
+                multiple: true,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    'referential': referential,
+                    'category': category,
+                    'anrId': anrId,
+
+                }
+            })
+                .then(function (category) {
+                    var cont = category.cont;
+                    category.cont = undefined;
+                    if (cont) {
+                        $scope.createNewCategory(ev, referential);
+                    }
+
+                    SOACategoryService.createCategory(category,
+                        function (status) {
+                          category.id = status.id;
+                          $scope.selectedCategoryItemChange(category);
+                            toastr.success(gettextCatalog.getString('The category has been created successfully.',
+                                {categoryLabel: $scope._langField(category,'label')}), gettextCatalog.getString('Creation successful'));
+                        },
+
+                        function (err) {
+                            $scope.createNewCategory(ev, referential, category);
+                        }
+                    );
+                });
+        };
+
+        $scope.editCategory = function (ev, referential, category) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            SOACategoryService.getCategory(category.id).then(function (categoryData) {
+                $mdDialog.show({
+                    controller: ['$scope', '$mdDialog', 'ConfigService','referential', 'category', 'anrId', CreateCategoryDialogCtrl],
+                    templateUrl: 'views/anr/create.categories.html',
+                    targetEvent: ev,
+                    preserveScope: false,
+                    multiple: true,
+                    scope: $scope.$dialogScope.$new(),
+                    clickOutsideToClose: false,
+                    fullscreen: useFullScreen,
+                    locals: {
+                      'referential': referential,
+                      'category': categoryData,
+                      'anrId' : anrId
+                    }
+                })
+                    .then(function (category) {
+                        SOACategoryService.updateCategory(category,
+                            function () {
+                                $scope.categorySearchText = category['label' + $scope.language];
+                                $scope.selectedCategoryItemChange(category);
+                                toastr.success(gettextCatalog.getString('The category has been edited successfully.',
+                                    {categoryLabel: $scope._langField(category,'label')}), gettextCatalog.getString('Edition successful'));
+                            },
+
+                            function () {
+                                $scope.editCategory(ev, referential, category);
+                            }
+                        );
+                    });
+            });
+        };
+
+        $scope.deleteCategory = function (ev, category) {
+            var confirm = $mdDialog.confirm()
+                .multiple(true)
+                .title(gettextCatalog.getString('Are you sure you want to delete category?',
+                    {label: $scope._langField(category,'label')}))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .targetEvent(ev)
+                .theme('light')
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+              // once we  delete a category the measure linked to this category have their category-id changed to null
+              MeasureService.getMeasures({category: category.id}).then(function (data) {
+                if (data.count > 0) {
+                  data.measures.forEach( function(measure){
+                    measure.category = null;
+                     MeasureService.updateMeasure(measure,
+                         function () {
+                           SOACategoryService.deleteCategory(category.id,
+                               function () {
+                                 $scope.selectedCategoryItemChange();
+                                  toastr.success(gettextCatalog.getString('The category has been deleted.',
+                                  {label: $scope._langField(category,'label')}), gettextCatalog.getString('Deletion successful'));
+                               }
+                           );
+                          }
+                     );
+                  })
+                } else {
+                  SOACategoryService.deleteCategory(category.id,
+                      function () {
+                        $scope.selectedCategoryItemChange();
+                         toastr.success(gettextCatalog.getString('The category has been deleted.',
+                         {label: $scope._langField(category,'label')}), gettextCatalog.getString('Deletion successful'));
+                      }
+                  );
+                }
+              })
+            });
+        };
 
         $scope.cancel = function() {
             $mdDialog.cancel();
@@ -2156,8 +2442,7 @@
 
     }
 
-
-    function CreateCategoryDialogCtrl($scope, $mdDialog,  ConfigService, category) {
+    function CreateCategoryDialogCtrl($scope, $mdDialog,  ConfigService, referential, category, anrId) {
 
       $scope.languages = ConfigService.getLanguages();
       $scope.language = $scope.getAnrLanguage();
@@ -2165,14 +2450,18 @@
 
         if (category != undefined && category != null) {
             $scope.category = category;
+            delete $scope.category.measures;
+            delete $scope.category.referential;
         } else {
             $scope.category = {
-                reference: '',
-                label1: '',
-                label2: '',
-                label3: '',
-                label4: '',
+              code: '',
+              referential: referential,
+              label1: '',
+              label2: '',
+              label3: '',
+              label4: '',
             };
+            $scope.category.referential.anr = anrId;
         }
 
         $scope.cancel = function() {
@@ -2192,10 +2481,11 @@
 
 
 
-    function CreateAmvDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService, MeasureService, ConfigService, AmvService, $q, amv) {
+    function CreateAmvDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService,
+                                MeasureService, ReferentialService, ConfigService, AmvService,
+                                $q, amv, referentials) {
         $scope.languages = ConfigService.getLanguages();
         $scope.defaultLang = $scope.getAnrLanguage();
-
 
         $scope.queryAmvs = function (asset_id) {
             AmvService.getAmvs({limit: 0, asset: asset_id, order: 'position', amvid: $scope.amv.id}).then(function (data) {
@@ -2212,14 +2502,26 @@
             if (amv.previous && amv.previous.id) {
                 $scope.amv.previous = $scope.amv.previous.id;
             }
+            if (amv.measures.length == undefined) {
+              $scope.amv.measures = [];
+              referentials.forEach(function (ref){
+                $scope.amv.measures[ref.uniqid] = [];
+              })
+            } else {
+              var measuresBackup = $scope.amv.measures;
+              $scope.amv.measures = [];
+              referentials.forEach(function (ref){
+                $scope.amv.measures[ref.uniqid] = measuresBackup.filter(function (measure) {
+                    return (measure.referential.uniqid == ref.uniqid);
+                })
+              })
+            }
         } else {
             $scope.amv = {
                 asset: null,
                 threat: null,
                 vulnerability: null,
-                measure1: null,
-                measure2: null,
-                measure3: null,
+                measures: [],
                 implicitPosition: 2,
                 status: 1
             };
@@ -2280,65 +2582,88 @@
             }
         }
 
+        // Referentials
+
+        $scope.queryReferentialsSearch = function (query) {
+            var promise = $q.defer();
+            ReferentialService.getReferentials({order: 'createdAt'}).then(function (e) {
+                promise.resolve(e.referentials);
+            }, function (e) {
+                promise.reject(e);
+            });
+
+            return promise.promise;
+        };
+
+        $scope.selectedReferentialItemChange = function (item) {
+            if (item) {
+                $scope.amv.referential = item;
+            }
+        }
+
         // Measures
         $scope.queryMeasureSearch = function (query) {
             var promise = $q.defer();
-            MeasureService.getMeasures({filter: query}).then(function (e) {
-                promise.resolve(e.measures);
+            MeasureService.getMeasures({filter: query, referential: $scope.amv.referential.uniqid, order: 'code'}).then(function (e) {
+              var filtered = [];
+              for (var j = 0; j < e.measures.length; ++j) {
+                  var found = false;
+                  for (var i = 0; i < $scope.amv.measures[$scope.amv.referential.uniqid].length; ++i) {
+
+                      if ($scope.amv.measures[$scope.amv.referential.uniqid][i].uniqid == e.measures[j].uniqid) {
+                          found = true;
+                          break;
+                      }
+                  }
+
+                  if (!found) {
+                      filtered.push(e.measures[j]);
+                  }
+              }
+
+              promise.resolve(filtered);
             }, function (e) {
                 promise.reject(e);
             });
 
             return promise.promise;
         };
-
-
-        $scope.selectedMeasureItemChange = function (idx, item) {
-            if (item) {
-                $scope.amv['measure' + idx] = item;
-            }
-        }
-
-
-
-        // Category
-        $scope.queryCategorysSearch = function (query) {
-            var promise = $q.defer();
-            SOACategoryService.getCategory({filter: query}).then(function (e) {
-                promise.resolve(e.categories);
-            }, function (e) {
-                promise.reject(e);
-            });
-
-            return promise.promise;
-        };
-
-
-        $scope.selectedCategoryItemChange = function (idx, item) {
-            if (item) {
-              // $scope.amv.category = item;
-
-                $scope.amv['category' + idx] = item;
-            }
-        }
-
-
-
-
-        ////
 
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
 
         $scope.create = function() {
+
+            referentials.forEach(function (ref){
+              var promise = $q.defer();
+              if ($scope.amv.measures[ref.uniqid] != undefined) {
+                $scope.amv.measures[ref.uniqid].forEach (function (measure) {
+                  promise.resolve($scope.amv.measures.push(measure.uniqid));
+                })
+              }
+              return promise.promise;
+
+            })
+
             if ($scope.amv.implicitPosition == 3 && !$scope.amv.previous) {
                 $scope.amv.implicitPosition = 1;
             }
 
             $mdDialog.hide($scope.amv);
         };
-        $scope.createAndContinue = function() {
+        $scope.createAndContinue = function () {
+
+            referentials.forEach(function (ref){
+              var promise = $q.defer();
+              if ($scope.amv.measures[ref.uniqid] != undefined) {
+                $scope.amv.measures[ref.uniqid].forEach (function (measure) {
+                  promise.resolve($scope.amv.measures.push(measure.uniqid));
+                })
+              }
+              return promise.promise;
+            })
+
             if ($scope.amv.implicitPosition == 3 && !$scope.amv.previous) {
                 $scope.amv.implicitPosition = 1;
             }

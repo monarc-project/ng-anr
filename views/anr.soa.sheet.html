@@ -2,7 +2,7 @@
     <md-button class="md-primary md-light-theme" ng-click="backToList()" ui-sref="main.project.anr.soa({modelId: model.anr.id})"><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button>
 
     <div layout="row" layout-align="space-between end">
-        <span class="md-title md-padding-double">{{ soa.measure.code }}-{{_langField(soa.measure,'description')}}</span>
+        <span class="md-title md-padding-double">{{ soaMeasureSheet.code }} - {{_langField(soaMeasureSheet,'label')}}</span>
         <md-button class="md-icon-button" ng-click="exportSoaSheet()"><md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip></md-button>
     </div>
 
@@ -33,8 +33,8 @@
          </thead>
 
          <tbody>
-           <tr class="txtleft" ng-repeat="risk in risks" ng-if="risk.measure1==soa.measure.code+' - '+soaDescription || risk.measure2==soa.measure.code+' - '+soaDescription || risk.measure3==soa.measure.code+' - '+soaDescription">
-             <td  class="txtleft" ng-repeat="instance in instanceCache" ng-if="instance.id ==risk.instance" ><a ui-sref="main.project.anr.instance({modelId: model.anr.id, instId: instance.id})" href="javascript:;"> {{_langField(instance,'name')}}</a></td>
+           <tr class="txtleft" ng-repeat="risk in soaMeasureRisks" ng-if="soaMeasureAmvIds.length > 0">
+             <td  class="txtleft" ng-repeat="instance in instanceCache" ng-if="instance.id == risk.instance" ><a ui-sref="main.project.anr.instance({modelId: model.anr.id, instId: instance.id})" href="javascript:;"> {{_langField(instance,'name')}}</a></td>
              <td  class="txtcenter">{{risk.c_impact|dashnull}}</td>
              <td  class="txtcenter">{{risk.i_impact|dashnull}}</td>
              <td  class="txtcenter">{{risk.d_impact|dashnull}}</td>

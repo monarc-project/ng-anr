@@ -12,6 +12,13 @@ body{
 .md-tab, .md-button {
     text-transform: none;
 }
+md-tab-data{
+  opacity: 1;
+  display: table;
+  right: 0;
+  left: initial;
+  z-index: 20;
+}
 
 md-option {
     height: 36px;
@@ -102,16 +109,30 @@ table.md-table tbody.md-body>tr.md-row:hover {
 
 .md-chips .md-chip-input-container {
     width: 100%;
+
 }
 
 .md-chips .md-chip-input-container md-autocomplete md-autocomplete-wrap {
     width: 100%;
+    padding-left: 10px;
+}
+
+.chips-horizontal md-chips-wrap {
+    padding-left: 30px;
+}
+
+.chips-horizontal md-chips-wrap md-chip {
+    padding: 0 6px;
+    height: 26px;
+    line-height: 26px;
+    clear: none;
 }
 
 .md-chips md-chip {
     padding: 0 6px;
     height: 26px;
     line-height: 26px;
+    clear:left;
 }
 
 .md-chip-content {
@@ -422,10 +443,6 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
     font-size: 16px;
 }
 
-/* .tbl-soa td.wide {
-    width: 72px;
-} */
-
 .tbl-soa .green, .tbl-soa.green {
     background: #D6F107;
     color: black;
@@ -461,6 +478,11 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 }
 .buttonsoa:hover {background-color: #e7e7e7;}
 
+.radio-button-compliance{
+  margin : 0 0 8px 16px;
+  font-style: italic;
+  color: #666666;
+}
 
 /** soaTable inclusion/exclusion  */
 .btn {

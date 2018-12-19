@@ -142,11 +142,16 @@
                 </td>
             </tr>
             <tr>
-                <td class="bold" translate>Security referential</td>
+                <td class="bold" translate>Security referentials</td>
                 <td colspan="3">
-                    <div ng-if="sheet_risk.measure1">{{ sheet_risk.measure1 }}</div>
-                    <div ng-if="sheet_risk.measure2">{{ sheet_risk.measure2 }}</div>
-                    <div ng-if="sheet_risk.measure3">{{ sheet_risk.measure3 }}</div>
+                  <md-tabs md-dynamic-height="true">
+                    <md-tab ng-repeat="ref in referentials.items.referentials" label="{{ _langField(ref,'label')}}"
+                            md-on-select="selectReferential(ref.uniqid)" md-on-deselect="deselectReferentialsTab()">
+                        <p ng-repeat="measure in sheet_risk.measures" ng-if="measure.referential.uniqid == referential_uniqid">
+                          {{ measure.code }} - {{ _langField(measure,'label') }}
+                        </p>
+                    </md-tab>
+                </md-tabs>
                 </td>
             </tr>
         </tbody>
