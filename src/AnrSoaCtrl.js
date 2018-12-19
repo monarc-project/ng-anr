@@ -164,6 +164,8 @@
 
                         ClientSoaService.updateSoa(null,childrens, function () {
                               $scope.updateSoaMeasures();
+                              toastr.success(gettextCatalog.getString('The SOA has been imported successfully.'),
+                                  gettextCatalog.getString('Import successful'));
                         });
                     })
                   });
