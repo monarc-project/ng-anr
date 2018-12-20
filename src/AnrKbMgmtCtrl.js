@@ -3294,7 +3294,6 @@
 
         function successCreateObject(result){
 
-          console.log($scope.importData);
           toastr.success(gettextCatalog.getString((result.id.length ? result.id.length : 1) + ' ' + tab + ' ' + 'have been created successfully.'),
                          gettextCatalog.getString('Creation successful'));
           $mdDialog.cancel();

@@ -18,8 +18,6 @@
         });
 
         $scope.clearDate = function (model) {
-            //let ctrl = this;
-            console.log(this);
             this.rec.duedate = null;
 
             $scope.onTableEdited(this.rec, 'duedate');
