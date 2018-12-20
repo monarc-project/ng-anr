@@ -12,7 +12,7 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-card ng-if="OFFICE_MODE == 'FO' && !measure.id">
+                <md-card ng-if="OFFICE_MODE == 'FO' && !measure.uniqid">
                   <md-button id="threatTab"class="md-primary" ng-click="importFile($event,'Controls')"  ng-controller="AnrKbMgmtCtrl">
                       <md-icon>play_for_work</md-icon><span>{{ 'Import from file' | translate }}</span>
                   </md-button>

@@ -1845,7 +1845,7 @@
                 'tab': tab,
                 'themes' : $scope.listThemes,
                 'categories' : $scope.listCategories,
-                'referential' : $scope.measure.referential.uniqid,
+                'referential' : $scope.RefSelected,
                 'tags' : $scope.listTags
             }
         });
@@ -2271,6 +2271,7 @@
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
         $scope.categorySearchText = '';
+        $scope.RefSelected = referential.uniqid;
         if (measure != undefined && measure != null) {
             $scope.measure = measure;
         } else {
