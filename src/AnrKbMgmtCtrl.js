@@ -44,9 +44,7 @@
             '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
             'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'ClientSoaService',
             'TagService', 'RiskService','SOACategoryService', 'ReferentialService', 'MeasureMeasureService',
-             '$state', '$timeout', '$rootScope',
-            AnrKbMgmtCtrl
-        ]);
+             '$state', '$timeout', '$rootScope', AnrKbMgmtCtrl ]);
     /**
      * ANR > KB
      */
@@ -880,6 +878,7 @@
                 .then(function (measure) {
                     var cont = measure.cont;
                     measure.cont = undefined;
+                    measure.referential = $scope.referential.uniqid;
                     if (cont) {
                         $scope.createNewMeasure(ev);
                     }
@@ -891,21 +890,10 @@
                             toastr.success(gettextCatalog.getString('The control has been created successfully.',
                                 {measureLabel: $scope._langField(measure,'label')}), gettextCatalog.getString('Creation successful'));
                         },
-
                         function (err) {
                             $scope.createNewMeasure(ev, measure);
                         }
-                    ).then(function (data) {
-                      // $scope.measure_data = data;
-                      // //create soa linked to the measure
-                      // var soa = {
-                      //   'anr' : $scope.model.anr.id,
-                      //   'measure' : $scope.measure_data.id
-                      // };
-                      // ClientSoaService.createSoa(soa,
-                      //     function () {
-                      //     });
-                        });
+                    );
                 });
         };
 
@@ -930,6 +918,7 @@
                     }
                 })
                     .then(function (measure) {
+                        measure.referential = $scope.referential.uniqid;
                         MeasureService.updateMeasure(measure,
                             function () {
                                 $scope.updateMeasures();
@@ -961,7 +950,6 @@
                 ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
                   $scope.soas = data['soaMeasures'];
                   for (soa in $scope.soas){
-                    console.log($scope.soas[soa].measure);
                       if($scope.soas[soa].measure.uniqid == item.uniqid) {
 
                            ClientSoaService.deleteSoa({anr: $scope.model.anr.id, id: $scope.soas[soa].id},
@@ -978,6 +966,7 @@
                               {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                       }
                   );
+                });
             });
         };
 
@@ -1844,7 +1833,7 @@
         var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
         $mdDialog.show({
             controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService',
-                        'SOACategoryService', 'TagService', 'RiskService', 'toastr', 'gettextCatalog', '$q', 'tab', 'themes', 'categories', 'tags',  ImportFileDialogCtrl],
+                        'SOACategoryService', 'TagService', 'RiskService', 'toastr', 'gettextCatalog', '$q', 'tab', 'themes', 'categories', 'referential' ,'tags',  ImportFileDialogCtrl],
             templateUrl: 'views/anr/import.file.html',
             targetEvent: ev,
             scope: $scope.$dialogScope.$new(),
@@ -1856,6 +1845,7 @@
                 'tab': tab,
                 'themes' : $scope.listThemes,
                 'categories' : $scope.listCategories,
+                'referential' : $scope.measure.referential.uniqid,
                 'tags' : $scope.listTags
             }
         });
@@ -2274,6 +2264,10 @@
     function CreateMeasureDialogCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, SOACategoryService,
                                     MeasureService, ReferentialService, ConfigService, $q, measure, referential,
                                     anrId) {
+
+        SOACategoryService.getCategories({order: $scope._langField('label'), referential: referential.uniqid}).then(function (data) {
+           $scope.listCategories = data['categories'];
+        });
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
         $scope.categorySearchText = '';
@@ -2792,7 +2786,7 @@
     }
 
     function ImportFileDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService, MeasureService, SOACategoryService,
-                                  TagService, RiskService, toastr, gettextCatalog, $q, tab, themes, categories, tags) {
+                                  TagService, RiskService, toastr, gettextCatalog, $q, tab, themes, categories, referential, tags) {
 
       $scope.tab = tab;
       $scope.guideVisible = false;
@@ -3066,8 +3060,14 @@
           if ($scope.extItemToCreate && $scope.extItemToCreate.length > 0) {
             for (let i = 0; i < $scope.extItemToCreate.length; i++) {
                categoryData[i] = {
-               ['label' + $scope.language] : $scope.extItemToCreate[i]
+                 code: 'Temp' + i,
+                 referential: referential,
+                 label1: '',
+                 label2: '',
+                 label3: '',
+                 label4: '',
                };
+               categoryData[i]['label' + $scope.language] = $scope.extItemToCreate[i];
             }
             SOACategoryService.createCategory(categoryData, function(){
                SOACategoryService.getCategories().then(function (e) {
@@ -3233,6 +3233,9 @@
                 postData[cia[i]] = true;
               }
             }
+          }
+          if (tab == 'Controls') {
+            postData.referential = referential;
           }
           if (postData['category']) {
             postData.category = $scope.getCategories.find(c => c['label' + $scope.language].toLowerCase() === postData.category.toLowerCase()).id;
