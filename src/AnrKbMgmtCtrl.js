@@ -241,11 +241,13 @@
             $mdDialog.show(confirm).then(function() {
                 AssetService.deleteAsset(item.id,
                     function () {
-                        $scope.updateAssets();
                         toastr.success(gettextCatalog.getString('The asset type has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
+                        $scope.updateAssets();
+                        $scope.assets.selected = [];
                     }
                 );
+
             });
         };
 
@@ -269,10 +271,8 @@
                     toastr.success(gettextCatalog.getString('{{count}} assets have been deleted.',
                         {count: count}), gettextCatalog.getString('Deletion successful'));
                     $scope.updateAssets();
+                    $scope.assets.selected = [];
                 });
-
-                $scope.assets.selected = [];
-
             });
         };
 
@@ -445,9 +445,10 @@
             $mdDialog.show(confirm).then(function() {
                 ThreatService.deleteThreat(item.id,
                     function () {
-                        $scope.updateThreats();
                         toastr.success(gettextCatalog.getString('The threat has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
+                        $scope.updateThreats();
+                        $scope.threats.selected = [];
                     }
                 );
             });
@@ -472,13 +473,11 @@
                 }
 
                 ThreatService.deleteMassThreat(ids, function () {
-                    $scope.updateThreats();
                     toastr.success(gettextCatalog.getString('{{count}} threats have been deleted.',
                         {count: ids.length}), gettextCatalog.getString('Deletion successful'));
+                    $scope.updateThreats();
+                    $scope.threats.selected = [];
                 });
-
-                $scope.threats.selected = [];
-
             });
         };
 
@@ -629,9 +628,10 @@
             $mdDialog.show(confirm).then(function() {
                 VulnService.deleteVuln(item.id,
                     function () {
-                        $scope.updateVulns();
                         toastr.success(gettextCatalog.getString('The vulnerability has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
+                        $scope.updateVulns();
+                        $scope.vulns.selected = [];
                     }
                 );
             });
@@ -656,13 +656,11 @@
                 }
 
                 VulnService.deleteMassVuln(ids, function () {
-                    $scope.updateVulns();
                     toastr.success(gettextCatalog.getString('{{count}} vulnerabilities have been deleted.',
                         {count: ids.length}), gettextCatalog.getString('Deletion successful'));
+                    $scope.updateVulns();
+                    $scope.vulns.selected = [];
                 });
-
-                $scope.vulns.selected = [];
-
             });
         };
 
@@ -961,9 +959,10 @@
                   }
                   MeasureService.deleteMeasure(item.uniqid,
                       function () {
-                          $scope.updateMeasures();
                           toastr.success(gettextCatalog.getString('The control has been deleted.',
                               {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
+                          $scope.updateMeasures();
+                          $scope.measures.selected = [];
                       }
                   );
                 });
@@ -1004,11 +1003,11 @@
                          }
                     }
                     MeasureService.deleteMassMeasure(ids, function () {
-                        $scope.updateMeasures();
                         toastr.success(gettextCatalog.getString('{{count}} controls have been deleted.',
                             {count: count}), gettextCatalog.getString('Deletion successful'));
+                        $scope.updateMeasures();
+                        $scope.measures.selected = [];
                     });
-                    $scope.measures.selected = [];
                 })
             });
         };
@@ -1192,9 +1191,10 @@
             $mdDialog.show(confirm).then(function() {
                 AmvService.deleteAmv(item.id,
                     function () {
-                        $scope.updateAmvs();
                         toastr.success(gettextCatalog.getString('The risk has been deleted.'),
                           gettextCatalog.getString('Deletion successful'));
+                        $scope.updateAmvs();
+                        $scope.amvs.selected = [];
                     }
                 );
             });
@@ -1222,10 +1222,8 @@
                     toastr.success(gettextCatalog.getString('{{ count }} risks have been deleted.',
                         {count: count}), gettextCatalog.getString('Deletion successful'));
                     $scope.updateAmvs();
+                    $scope.amvs.selected = [];
                 });
-
-                $scope.amvs.selected = [];
-
             }, function() {
             });
         };
@@ -1595,11 +1593,13 @@
             $mdDialog.show(confirm).then(function() {
                 TagService.deleteTag(item.id,
                     function () {
-                        $scope.updateTags();
                         toastr.success(gettextCatalog.getString('The tag has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
+                        $scope.tags.selected = [];
+                        $scope.updateTags();
                     }
                 );
+
             });
         };
 
@@ -1793,9 +1793,11 @@
             $mdDialog.show(confirm).then(function() {
                 RiskService.deleteRisk(item.id,
                     function () {
-                        $scope.updateRisks();
                         toastr.success(gettextCatalog.getString('The risk has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
+                        $scope.risks.selected = [];
+                        $scope.updateRisks();
+
                     }
                 );
             });
@@ -1820,7 +1822,6 @@
                     toastr.success(gettextCatalog.getString('{{count}} risks have been deleted.',
                         {count: $scope.risks.selected.length}), gettextCatalog.getString('Deletion successful'));
                     $scope.risks.selected = [];
-
                     $scope.updateRisks();;
                 });
             }, function() {
