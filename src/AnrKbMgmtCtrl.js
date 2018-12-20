@@ -3061,7 +3061,7 @@
           if ($scope.extItemToCreate && $scope.extItemToCreate.length > 0) {
             for (let i = 0; i < $scope.extItemToCreate.length; i++) {
                categoryData[i] = {
-                 code: 'Temp' + i,
+                 code: 'Temp' + Math.floor(Math.random() * 1000), //Ramdon code
                  referential: referential,
                  label1: '',
                  label2: '',
