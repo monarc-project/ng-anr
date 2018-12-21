@@ -2533,6 +2533,9 @@
                 implicitPosition: 2,
                 status: 1
             };
+            referentials.forEach(function (ref){
+              $scope.amv.measures[ref.uniqid] = [];
+            })
         }
 
         // Asset
