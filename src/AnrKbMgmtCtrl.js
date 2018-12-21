@@ -984,7 +984,7 @@
             $mdDialog.show(confirm).then(function() {
                 var ids = [];
                 for (var i = 0; i < $scope.measures.selected.length; ++i) {
-                    ids.push($scope.measures.selected[i].id);
+                    ids.push($scope.measures.selected[i].uniqid);
                 }
 
                 //delete the soas associated to the measures
