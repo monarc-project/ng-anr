@@ -263,7 +263,7 @@
                       <md-option value="1">{{ 'Show active only' | translate }}</md-option>
                   </md-select>
 
-                  <md-button class="md-icon-button md-primary" ng-click="removemeasuresFilter()">
+                  <md-button class="md-icon-button md-primary" ng-click="removeMeasuresFilter()">
                       <md-icon>settings_backup_restore</md-icon>
                   </md-button>
               </div>
@@ -337,7 +337,7 @@
                   <md-option ng-repeat="ref in referentials_filter.items.referentials" ng-value="ref.uniqid">
                     {{ _langField(ref,'label') }}
                   </md-option>
-                </md-select
+                </md-select>
 
                 <md-button class="md-icon-button md-primary" ng-click="removeAmvsFilter()">
                     <md-icon>settings_backup_restore</md-icon>

@@ -118,6 +118,7 @@
                 assetsFilterWatch();
             }
             TableHelperService.unwatchSearch($scope.assets);
+            $scope.assets.selected = [];
         };
 
         $scope.updateAssets = function () {
@@ -306,6 +307,7 @@
         $scope.deselectThreatsTab = function () {
             threatsFilterWatch();
             TableHelperService.unwatchSearch($scope.threats);
+            $scope.threats.selected = [];
         };
 
         $scope.updateThreats = function () {
@@ -505,6 +507,7 @@
 
         $scope.deselectVulnsTab = function () {
             TableHelperService.unwatchSearch($scope.vulns);
+            $scope.vulns.selected = [];
         };
 
         $scope.updateVulns = function () {
@@ -684,6 +687,7 @@
 
         $scope.deselectMeasuresTab = function () {
             TableHelperService.unwatchSearch($scope.measures);
+            $scope.measures.selected = [];
         };
 
         $scope.selectReferential = function (referentialId) {
@@ -703,6 +707,11 @@
                 }
             });
             TableHelperService.watchSearch($scope, 'measures.query.filter', $scope.measures.query, $scope.updateMeasures, $scope.measures);
+        };
+
+        $scope.deselectReferentialsTab = function () {
+            TableHelperService.removeFilter($scope.measures);
+            $scope.measures.selected = [];
         };
 
         $scope.removeMeasuresFilter = function () {
@@ -1039,6 +1048,7 @@
 
         $scope.deselectAmvsTab = function () {
             TableHelperService.unwatchSearch($scope.amvs);
+            $scope.amvs.selected = [];
         };
 
         $scope.updateAmvs = function () {
@@ -1517,6 +1527,7 @@
 
         $scope.deselectTagsTab = function () {
             TableHelperService.unwatchSearch($scope.tags);
+            $scope.tags.selected = [];
         };
 
         $scope.createNewTag = function (ev, tag) {
@@ -1690,6 +1701,7 @@
         $scope.deselectRisksTab = function () {
             risksTabSelected = false;
             TableHelperService.unwatchSearch($scope.risks);
+            $scope.risks.selected = [];
         };
 
         $scope.createNewRisk = function (ev, risk) {
