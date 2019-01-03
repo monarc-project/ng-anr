@@ -13,11 +13,14 @@
         <md-dialog-content>
             <div class="md-dialog-content">
               <md-card ng-if="!risk.id">
-                <md-button class="md-primary" ng-click="importFile($event,'Operational Risks')"  ng-controller="AnrKbMgmtCtrl">
+                <md-button ng-if="OFFICE_MODE == 'FO'" class="md-primary" ng-click="importFile($event,'Operational Risks')"  ng-controller="AnrKbMgmtCtrl">
+                    <md-icon>play_for_work</md-icon><span>{{ 'Import from file' | translate }}</span>
+                </md-button>
+                <md-button ng-if="OFFICE_MODE == 'BO'" class="md-primary" ng-click="importFile($event,'Operational Risks')"  ng-controller="BackofficeKbInfoCtrl">
                     <md-icon>play_for_work</md-icon><span>{{ 'Import from file' | translate }}</span>
                 </md-button>
               </md-card>
-                <md-input-container class="md-block" ng-hide="OFFICE_MODE == 'FO'" flex>
+                <md-input-container class="md-block" ng-if="OFFICE_MODE == 'BO'" flex>
                     <label translate>Language</label>
                     <md-icon>language</md-icon>
                     <md-select ng-model="language">
