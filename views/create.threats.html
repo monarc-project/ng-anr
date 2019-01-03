@@ -13,13 +13,16 @@
         <md-dialog-content>
             <div class="md-dialog-content">
                 <md-card ng-if="!threat.id">
-                  <md-button class="md-primary" ng-click="importFile($event,'Threats')"  ng-controller="AnrKbMgmtCtrl">
+                  <md-button ng-if="OFFICE_MODE == 'FO'" class="md-primary" ng-click="importFile($event,'Threats')"  ng-controller="AnrKbMgmtCtrl">
+                      <md-icon>play_for_work</md-icon><span>{{ 'Import from file' | translate }}</span>
+                  </md-button>
+                  <md-button ng-if="OFFICE_MODE == 'BO'" class="md-primary" ng-click="importFile($event,'Threats')"  ng-controller="BackofficeKbInfoCtrl">
                       <md-icon>play_for_work</md-icon><span>{{ 'Import from file' | translate }}</span>
                   </md-button>
                 </md-card>
                 <md-subheader>{{ 'Labels and descriptions' | translate }}</md-subheader>
 
-                <md-input-container class="md-block" ng-hide="OFFICE_MODE == 'FO'" flex>
+                <md-input-container class="md-block" ng-if="OFFICE_MODE == 'BO'" flex>
                     <label translate>Language</label>
                     <md-icon>language</md-icon>
                     <md-select ng-model="language" ng-change="switchLanguage()">
