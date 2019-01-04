@@ -90,7 +90,7 @@
                               <p class="preserve-newlines" translate>{{item.field == 'theme' ? 'List of themes:'
                                           : item.field == 'category' ? 'List of categories:'
                                           :'Multiple tags must be separated by a slash (/) \n\r\ Ex: Tag1/Tag2/Tag3  \n\r\n\r List of tags: '}}</p>
-                              <p class="md-theme-list" ng-repeat="label in labelsItems">{{label}}</p>
+                              <p class="md-theme-list" ng-repeat="label in labelsItems">{{label['label' + language]}}</p>
                             </div>
                           </div>
                         </md-list-item>
