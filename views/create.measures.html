@@ -20,7 +20,7 @@
                       <md-icon>play_for_work</md-icon><span>{{ 'Import from file' | translate }}</span>
                   </md-button>
                 </md-card>
-                <md-input-container class="md-block"  ng-if="OFFICE_MODE == 'BO'" flex>
+                <md-input-container class="md-block"  ng-hide="OFFICE_MODE == 'FO'" flex>
                     <label translate>Language</label>
                     <md-icon>language</md-icon>
                     <md-select ng-model="language" ng-change="switchLanguage()">
