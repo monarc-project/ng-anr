@@ -21,6 +21,16 @@
                 </input>
                 <md-button class="ng-scope md-light-theme material-icons" ng-click="toggleGuide()"><md-icon>info</md-icon></md-button>
               </div>
+              <md-input-container class="md-block" ng-if="OFFICE_MODE == 'BO'" flex>
+                  <label translate>Language</label>
+                  <md-icon>language</md-icon>
+                  <md-select ng-model="language" ng-change="switchLanguage()">
+                      <md-option ng-repeat="(lang_idx, lang) in languages" value="{{ lang_idx }}" ng-controller="BackofficeAccountCtrl">
+                        <countryflag country="{{ countriesCode[lang_idx] }}"></countryflag>
+                        {{ languagesNames[lang_idx] }}
+                      </md-option>
+                  </md-select>
+              </md-input-container>
               <div layout="row" layout-align="space-between center">
                 <span class="md-subhead md-padding-left">{{ importData ? importData.length : 0 }} {{ tab |translate }}</span>
                 <div>
