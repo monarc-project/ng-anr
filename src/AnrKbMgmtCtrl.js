@@ -2818,9 +2818,8 @@
           var getService = ThreatService.getThreats();
           var items = 'threats';
           var externalItem = 'theme';
-          var actualExternalItems = themes;
+          $scope.actualExternalItems = themes;
           var extItemLabel = gettextCatalog.getString('themes');
-          $scope.labelsItems = themes.map(th => th['label' + $scope.language]);
         break;
         case 'Vulnerabilties':
           var getService = VulnService.getVulns();
@@ -2829,9 +2828,8 @@
           var getService = MeasureService.getMeasures();
           var items = 'measures';
           var externalItem = 'category';
-          var actualExternalItems = categories;
+          $scope.actualExternalItems = categories;
           var extItemLabel = gettextCatalog.getString('categories');
-          $scope.labelsItems = categories.map(c => c['label' + $scope.language]);
         break;
         case 'Categories':
           var getService = SOACategoryService.getCategories();
@@ -2843,9 +2841,8 @@
         case 'Operational Risks':
           var getService = RiskService.getRisks();
           var externalItem = 'tags';
-          var actualExternalItems = tags;
+          $scope.actualExternalItems = tags;
           var extItemLabel = gettextCatalog.getString('tags');
-          $scope.labelsItems = tags.map(t => t['label' + $scope.language]);
           var items = 'risks'; break;
         default:
       }
@@ -2918,7 +2915,7 @@
               'field' : 'theme',
               'required' : true,
               'type' : 'text',
-              'example' : $scope.labelsItems
+              'example' : $scope.actualExternalItems
             }
         },
         'Vulnerabilties' :  {
@@ -2958,7 +2955,7 @@
               'field' : 'category',
               'required' : false,
               'type' : 'text',
-              'example' : $scope.labelsItems
+              'example' : $scope.actualExternalItems
             }
         },
         'Categories' :  {
@@ -3012,7 +3009,7 @@
               'field' : 'tags',
               'required' : false,
               'type' : 'text',
-              'example' : gettextCatalog.getString('Separed by /') + $scope.labelsItems
+              'example' : gettextCatalog.getString('Separed by /') + $scope.actualExternalItems
             }
         }
       };
@@ -3149,7 +3146,7 @@
             }
 
             for (let label of uniqueLabels)
-              if(label && !actualExternalItems.find(ei=> ei['label' + $scope.language].toLowerCase() === label.toLowerCase().trim())){
+              if(label && !$scope.actualExternalItems.find(ei=> ei['label' + $scope.language].toLowerCase() === label.toLowerCase().trim())){
                 $scope.extItemToCreate.push(label);
               }
           }
