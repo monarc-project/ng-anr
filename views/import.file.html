@@ -45,12 +45,15 @@
                   <thead class="big-border-bottom">
                     <tr >
                       <th ng-if="items[tab].code" colspan="1" class="big-border-left"><p>code</p></th>
-                      <th ng-if="items[tab].label" colspan="1" class="big-border-left"><p>label</p></th>
-                      <th ng-if="items[tab].description" colspan="1" class="big-border-left"><p>description</p></th>
+                      <th ng-if="items[tab].label && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'label' + language}}</p></th>
+                      <th ng-if="items[tab].label && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>label</p></th>
+                      <th ng-if="items[tab].description && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'description' + language}}</p></th>
+                      <th ng-if="items[tab].description && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>description</p></th>
                       <th ng-if="items[tab].type" colspan="1" class="big-border-left"><p>type</p></th>
                       <th ng-if="items[tab].c" colspan="1" class="big-border-left"><p>c</p></th>
                       <th ng-if="items[tab].i" colspan="1" class="big-border-left"><p>i</p></th>
                       <th ng-if="items[tab].a" colspan="1" class="big-border-left"><p>a</p></th>
+                      <th ng-if="items[tab].mode" colspan="1" class="big-border-left"><p>mode</p></th>
                       <th ng-if="items[tab].theme" colspan="1" class="big-border-left"><p>theme</p></th>
                       <th ng-if="items[tab].category" colspan="1" class="big-border-left"><p>category</p></th>
                       <th ng-if="items[tab].tags" colspan="1" class="big-border-left"><p>tags</p></th>
@@ -62,12 +65,15 @@
                   <tbody>
                   <tr ng-repeat="input in importData">
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].code">{{input.code}}</td>
-                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].label">{{input.label}}</td>
-                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].description">{{input.description}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].label && OFFICE_MODE == 'BO'">{{input['label' + language]}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].label && OFFICE_MODE == 'FO'">{{input.label}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].description&& OFFICE_MODE == 'BO'">{{input['description' + language]}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].description && OFFICE_MODE == 'FO'">{{input.description}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].type">{{input.type}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].c">{{input.c}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].i">{{input.i}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].a">{{input.a}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].mode"><span ng-class="{'md-mandatory-field': input.alert}">{{input.mode}}</span></td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].theme"><span ng-class="{'md-mandatory-field': input.alert}">{{input.theme}}</span></td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].category"><span ng-class="{'md-mandatory-field': input.alert}">{{input.category}}</span></td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].tags"><span ng-class="{'md-mandatory-field': input.alert}">{{input.tags}}</span></td>
@@ -96,13 +102,13 @@
                         </md-list-item>
                     </md-list>
                     <p class="md-mandatory-field txtright" translate>* Mandatory field</p>
+                    <p class="md-mandatory-field txtright" ng-if="OFFICE_MODE == 'BO'" translate>1:FR,2:EN,3:DE,4:NL</p>
                 </md-card-content>
             </md-card>
           </div>
         </md-dialog-content>
 
         <md-dialog-actions layout="row">
-            <span flex></span>
             <md-button ng-click="cancel()">
                 {{ 'Cancel' | translate }}
             </md-button>
