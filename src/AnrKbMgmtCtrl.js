@@ -89,10 +89,12 @@
             }
         });
 
+        $scope.language = $scope.getAnrLanguage();
+
         /*
          * ASSETS TAB
          */
-        $scope.assets = TableHelperService.build('label1', 20, 1, '');
+        $scope.assets = TableHelperService.build('label' + $scope.language, 20, 1, '');
         $scope.assets.activeFilter = 1;
         var assetsFilterWatch;
 
@@ -287,7 +289,7 @@
         /*
          * THREATS TAB
          */
-        $scope.threats = TableHelperService.build('label1', 20, 1, '');
+        $scope.threats = TableHelperService.build('label' + $scope.language, 20, 1, '');
         $scope.threats.activeFilter = 1;
         var threatsFilterWatch;
 
@@ -486,7 +488,7 @@
         /*
          * VULNS TAB
          */
-        $scope.vulns = TableHelperService.build('label1', 20, 1, '');
+        $scope.vulns = TableHelperService.build('label' + $scope.language, 20, 1, '');
         $scope.vulns.activeFilter = 1;
         var vulnsFilterWatch;
 
@@ -1242,7 +1244,7 @@
          * ASSETS LIBRARY TAB
          */
         var objLibTabSelected = false;
-        $scope.objlibs = TableHelperService.build('name1', 20, 1, '');
+        $scope.objlibs = TableHelperService.build('name' + $scope.language, 20, 1, '');
 
         if ($rootScope.objlibs_query) {
             $scope.objlibs.query = $rootScope.objlibs_query;
@@ -1506,7 +1508,7 @@
         /**
          * TAGS
          */
-        $scope.tags = TableHelperService.build('label1', 20, 1, '');
+        $scope.tags = TableHelperService.build('label' + $scope.language, 20, 1, '');
 
         $scope.updateTags = function () {
             $scope.tags.promise = TagService.getTags($scope.tags.query);
@@ -1643,7 +1645,7 @@
         /**
          * RISKS
          */
-        $scope.risks = TableHelperService.build('label1', 20, 1, '');
+        $scope.risks = TableHelperService.build('label' + $scope.language, 20, 1, '');
 
         var risksTabSelected = false;
 
