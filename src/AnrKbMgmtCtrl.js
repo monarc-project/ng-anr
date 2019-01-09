@@ -247,7 +247,7 @@
                         toastr.success(gettextCatalog.getString('The asset type has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                         $scope.updateAssets();
-                        $scope.assets.selected = [];
+                        $scope.assets.selected = $scope.assets.selected.filter(assetSelected => assetSelected.id != item.id);
                     }
                 );
 
@@ -452,7 +452,7 @@
                         toastr.success(gettextCatalog.getString('The threat has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                         $scope.updateThreats();
-                        $scope.threats.selected = [];
+                        $scope.threats.selected = $scope.threats.selected.filter(threatSelected => threatSelected.id != item.id);
                     }
                 );
             });
@@ -636,7 +636,7 @@
                         toastr.success(gettextCatalog.getString('The vulnerability has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                         $scope.updateVulns();
-                        $scope.vulns.selected = [];
+                        $scope.vulns.selected = $scope.vulns.selected.filter(vulSelected => vulSelected.id != item.id);
                     }
                 );
             });
@@ -973,7 +973,7 @@
                           toastr.success(gettextCatalog.getString('The control has been deleted.',
                               {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                           $scope.updateMeasures();
-                          $scope.measures.selected = [];
+                          $scope.measures.selected = $scope.measures.selected.filter(measureSelected => measureSelected.uniqid != item.uniqid);
                       }
                   );
                 });
@@ -1206,7 +1206,7 @@
                         toastr.success(gettextCatalog.getString('The risk has been deleted.'),
                           gettextCatalog.getString('Deletion successful'));
                         $scope.updateAmvs();
-                        $scope.amvs.selected = [];
+                        $scope.amvs.selected = $scope.amvs.selected.filter(amvSelected => amvSelected.id != item.id);
                     }
                 );
             });
@@ -1608,8 +1608,9 @@
                     function () {
                         toastr.success(gettextCatalog.getString('The tag has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
-                        $scope.tags.selected = [];
                         $scope.updateTags();
+                        $scope.tags.selected = $scope.tags.selected.filter(tagSelected => tagSelected.id != item.id);
+
                     }
                 );
 
@@ -1809,9 +1810,8 @@
                     function () {
                         toastr.success(gettextCatalog.getString('The risk has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
-                        $scope.risks.selected = [];
                         $scope.updateRisks();
-
+                        $scope.risks.selected = $scope.risks.selected.filter(riskSelected => riskSelected.id != item.id);
                     }
                 );
             });

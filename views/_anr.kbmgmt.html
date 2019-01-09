@@ -277,7 +277,7 @@
               </md-toolbar>
 
               <md-table-container flex>
-                  <table md-table md-row-select multiple ng-model="measures.selected" md-progress="measures.promise">
+                  <table md-table md-row-select="! isAnrReadOnly" multiple ng-model="measures.selected" md-progress="measures.promise">
                       <thead md-head md-order="measures.query.order" md-on-reorder="updateMeasures">
                       <tr md-row>
                           <th md-column md-order-by="code"><span translate>Code</span></th>
@@ -288,7 +288,7 @@
                       </thead>
 
                       <tbody md-body>
-                      <tr md-row md-select="measure" md-select-id="id" ng-repeat="measure in measures.items.measures">
+                      <tr md-row md-select="measure" md-select-id="uniqid" ng-repeat="measure in measures.items.measures">
                           <td md-cell>{{ measure.code }}</td>
                           <td md-cell>{{ _langField(measure,'label') }}</td>
                           <td md-cell>{{ _langField(measure.category,'label') }}</td>
