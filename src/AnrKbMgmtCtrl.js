@@ -51,11 +51,10 @@
     function AnrKbMgmtCtrl($scope, $stateParams, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService,
                                   AssetService, ThreatService, VulnService, AmvService, MeasureService, ClientSoaService, TagService,
                                   RiskService,SOACategoryService, ReferentialService, MeasureMeasureService, $state, $timeout, $rootScope) {
-        $scope.tab = -1;
+
+
         $scope.gettext = gettextCatalog.getString;
         TableHelperService.resetBookmarks();
-
-        $scope.risk_tag_filter = null;
 
 
         /**** FO ADDITIONS ****/
@@ -82,13 +81,6 @@
             }
         }
 
-        $scope.$on('setup-kb-mgmt', function () {
-            if ($scope.tab == -1) {
-                $scope.tab = 0;
-                $scope.selectAssetsTab();
-            }
-        });
-
         $scope.language = $scope.getAnrLanguage();
 
         /*
@@ -99,9 +91,6 @@
         var assetsFilterWatch;
 
         $scope.selectAssetsTab = function () {
-            if ($scope.tab == -1) {
-                return;
-            }
 
             var initAssetsFilter = true;
             assetsFilterWatch = $scope.$watch('assets.activeFilter', function() {
@@ -1647,6 +1636,8 @@
          * RISKS
          */
         $scope.risks = TableHelperService.build('label' + $scope.language, 20, 1, '');
+        $scope.risk_tag_filter = null;
+
 
         var risksTabSelected = false;
 

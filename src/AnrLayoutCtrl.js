@@ -719,10 +719,6 @@
                         break;
                     case 3:
                         $state.transitionTo('main.project.anr.knowledge',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
-                        $timeout(function() {
-                            // Init KB Mgmt, if needed
-                            $scope.$broadcast('setup-kb-mgmt');
-                        });
                         break;
                       case 4:
                           $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
