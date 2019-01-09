@@ -686,9 +686,7 @@
             ReferentialService.getReferential(referentialId).then(function (data) {
                 $scope.referential = data;
             });
-            MeasureService.getMeasures({referential:referentialId, order:'code'}).then(function (data) {
-                $scope.measuresRefSelected = data;
-            });
+
             var initMeasuresFilter = true;
             initMeasuresFilter = $scope.$watch('measures.activeFilter', function() {
                 if (initMeasuresFilter) {
@@ -844,6 +842,10 @@
                 $scope.measures.query.page = query.page = 1;
                 $scope.measures.previousQueryOrder = $scope.measures.query.order;
             }
+
+            MeasureService.getMeasures({referential: $scope.referential_uniqid, order:'code'}).then(function (data) {
+                $scope.measuresRefSelected = data;
+            });
 
             $scope.measures.promise = MeasureService.getMeasures(query);
             $scope.measures.promise.then(
