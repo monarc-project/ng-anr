@@ -3155,7 +3155,7 @@
           if ($scope.extItemToCreate && $scope.extItemToCreate.length > 0) {
             for (let i = 0; i < $scope.extItemToCreate.length; i++) {
                tagsData[i] = {
-               ['code'] : $scope.extItemToCreate[i],
+               ['code'] : $scope.extItemToCreate[i] + Math.floor(Math.random() * 1000),
                ['label' + $scope.language] : $scope.extItemToCreate[i]
                };
             }
