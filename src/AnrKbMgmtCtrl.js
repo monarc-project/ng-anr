@@ -2503,7 +2503,7 @@
 
       $scope.languages = ConfigService.getLanguages();
       $scope.language = $scope.getAnrLanguage();
-
+      $scope.RefSelected = referential;
 
         if (category != undefined && category != null) {
             $scope.category = category;
@@ -3300,6 +3300,9 @@
             }
           }
           if (tab == 'Controls') {
+            postData.referential = referential;
+          }
+          if (tab == 'Categories') {
             postData.referential = referential;
           }
           if (postData['category']) {
