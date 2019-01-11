@@ -722,21 +722,11 @@
                         break;
                       case 4:
                           $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
-                          // $timeout(function() {
-                          //     $scope.goToSoa();
-                          // });
                           $timeout(function() {
-                              if($scope.model && $scope.model.anr){
-
-                              }
+                            // Update measures of SOA
+                            $scope.$broadcast('updateSoa');
                           });
                         break;
-                      // case 5:
-                          // $state.transitionTo('main.project.anr.soa.sheet', {modelId:$stateParams.modelId, soaId: $stateParams.soaId},{inherit:true,notify:true,reload:false,location:'replace'});
-                          // $timeout(function() {
-                          //     $scope.goToSoaSheet();
-                          // });
-                        // break;
                 }
             });
             $scope.$watch('ToolsAnrService.currentTab',function(newValue, oldValue){

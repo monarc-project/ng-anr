@@ -22,6 +22,10 @@
             $scope.updatingReferentials = true;
         })
 
+        $scope.$on('updateSoa', function () {
+               $scope.updateSoaMeasures();
+         });
+
         $scope.selectReferential = function (referentialId) {
             $scope.soa_measures.selectedCategory = 0;
             $scope.referential_uniqid = referentialId;
