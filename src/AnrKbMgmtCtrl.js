@@ -2368,7 +2368,7 @@
             $scope.measure.category = item;
         }
 
-        $scope.createNewCategory = function (ev, referential, label) {
+        $scope.createNewCategory = function (ev, referential, category, label) {
             category = {
               ['label' + $scope.language] : label,
               referential: referential
