@@ -2368,44 +2368,20 @@
             $scope.measure.category = item;
         }
 
-        $scope.createNewCategory = function (ev, referential, category) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-            $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ConfigService','referential', 'category', 'anrId',  CreateCategoryDialogCtrl],
-                templateUrl: 'views/anr/create.categories.html',
-                targetEvent: ev,
-                multiple: true,
-                preserveScope: false,
-                scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: false,
-                fullscreen: useFullScreen,
-                locals: {
-                    'referential': referential,
-                    'category': category,
-                    'anrId': anrId,
+        $scope.createNewCategory = function (ev, referential, label) {
+            category = {
+              ['label' + $scope.language] : label,
+              referential: referential
+            };
 
+            SOACategoryService.createCategory(category,
+                function (status) {
+                  category.id = status.id;
+                  $scope.selectedCategoryItemChange(category);
+                    toastr.success(gettextCatalog.getString('The category has been created successfully.',
+                        {categoryLabel: $scope._langField(category,'label')}), gettextCatalog.getString('Creation successful'));
                 }
-            })
-                .then(function (category) {
-                    var cont = category.cont;
-                    category.cont = undefined;
-                    if (cont) {
-                        $scope.createNewCategory(ev, referential);
-                    }
-
-                    SOACategoryService.createCategory(category,
-                        function (status) {
-                          category.id = status.id;
-                          $scope.selectedCategoryItemChange(category);
-                            toastr.success(gettextCatalog.getString('The category has been created successfully.',
-                                {categoryLabel: $scope._langField(category,'label')}), gettextCatalog.getString('Creation successful'));
-                        },
-
-                        function (err) {
-                            $scope.createNewCategory(ev, referential, category);
-                        }
-                    );
-                });
+            );
         };
 
         $scope.editCategory = function (ev, referential, category) {
@@ -2511,7 +2487,6 @@
             delete $scope.category.referential;
         } else {
             $scope.category = {
-              code: '',
               referential: referential,
               label1: '',
               label2: '',

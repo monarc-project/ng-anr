@@ -84,7 +84,7 @@
                             </md-not-found>
                         </md-autocomplete>
 
-                        <md-button class="md-icon-button md-primary" ng-click="createNewCategory($event, measure.referential.uniqid)" ng-show="!measure.category.id">
+                        <md-button class="md-icon-button md-primary" ng-click="createNewCategory($event, measure.referential.uniqid, categorySearchText, language)" ng-show="!measure.category.id && categorySearchText">
                           <md-tooltip md-direction="left">
                               {{ 'Add a category' | translate }}
                           </md-tooltip>
