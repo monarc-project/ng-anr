@@ -80,7 +80,7 @@
                             </div>
                         </md-autocomplete>
 
-                        <md-button class="md-icon-button md-primary" ng-click="createNewTheme($event)" ng-show="!threat.theme.id">
+                        <md-button class="md-icon-button md-primary" ng-click="createNewTheme($event, theme, themeSearchText)" ng-show="!threat.theme.id && themeSearchText">
                           <md-tooltip md-direction="left">
                               {{ 'Add a theme' | translate }}
                           </md-tooltip>

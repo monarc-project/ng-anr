@@ -2027,39 +2027,18 @@
             $scope.threat.theme = item;
         }
 
-        $scope.createNewTheme = function (ev, theme) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-            $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ConfigService', 'theme', CreateThemeDialogCtrl],
-                templateUrl: 'views/anr/create.themes.html',
-                targetEvent: ev,
-                multiple: true,
-                preserveScope: false,
-                scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: false,
-                fullscreen: useFullScreen,
-                locals: {
-                    'theme': theme
+        $scope.createNewTheme = function (ev, theme, label) {
+            theme = {
+              ['label' + $scope.language] : label,
+            };
+            ThreatService.createTheme(theme,
+                function (status) {
+                theme.id = status.id;
+                $scope.selectedThemeItemChange(theme);
+                toastr.success(gettextCatalog.getString('The theme has been created successfully.',
+                    {themeLabel: $scope._langField(theme,'label')}), gettextCatalog.getString('Creation successful'));
                 }
-            })
-                .then(function (theme) {
-                    var cont = theme.cont;
-                    theme.cont = undefined;
-                    if (cont) {
-                        $scope.createNewTheme(ev);
-                    }
-                    ThreatService.createTheme(theme,
-                        function (status) {
-                        theme.id = status.id;
-                        $scope.selectedThemeItemChange(theme);
-                        toastr.success(gettextCatalog.getString('The theme has been created successfully.',
-                            {themeLabel: $scope._langField(theme,'label')}), gettextCatalog.getString('Creation successful'));
-                        },
-                        function (err) {
-                            $scope.createNewTheme(ev, theme);
-                        }
-                    );
-                });
+            );
         };
 
         $scope.editTheme = function (ev, theme) {
