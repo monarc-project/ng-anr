@@ -2932,7 +2932,7 @@
               'field' : 'label',
               'required' : true,
               'type' : 'text',
-              'example' : gettextCatalog.getString('')
+              'example' : gettextCatalog.getString('Access control policy')
             },
             'category' : {
               'field' : 'category',
@@ -2942,18 +2942,12 @@
             }
         },
         'Categories' :  {
-            'code' : {
-              'field' : 'code',
-              'required' : true,
-              'type' : 'text',
-              'example' : 'C16, 123, CAZ, C-12'
-            },
             'label' : {
               'field' : 'label',
               'required' : true,
               'type' : 'text',
-              'example' : gettextCatalog.getString('')
-            }
+              'example' : gettextCatalog.getString('Operations security')
+            },
         },
         'Tags' :  {
             'code' : {
@@ -2966,7 +2960,7 @@
               'field' : 'label',
               'required' : true,
               'type' : 'text',
-              'example' : gettextCatalog.getString('')
+              'example' : gettextCatalog.getString('Governance')
             }
         },
         'Operational Risks' :  {
@@ -2980,13 +2974,13 @@
               'field' : 'label',
               'required' : true,
               'type' : 'text',
-              'example' : gettextCatalog.getString('')
+              'example' : gettextCatalog.getString('The applicable legal and regulatory requirements are not determined, understood and consistently met')
             },
             'description' : {
               'field' : 'description',
               'required' : false,
               'type' : 'text',
-              'example' : gettextCatalog.getString('')
+              'example' : gettextCatalog.getString('Product Compliance Customer agreement')
             },
             'tags' : {
               'field' : 'tags',
@@ -3057,7 +3051,6 @@
           if ($scope.extItemToCreate && $scope.extItemToCreate.length > 0) {
             for (let i = 0; i < $scope.extItemToCreate.length; i++) {
                categoryData[i] = {
-                 code: 'Temp' + Math.floor(Math.random() * 1000), //Ramdon code
                  referential: referential,
                  label1: '',
                  label2: '',
@@ -3261,7 +3254,7 @@
       };
 
       $scope.cancel = function() {
-      $mdDialog.cancel();
+        $mdDialog.cancel();
       };
     }
 })();
