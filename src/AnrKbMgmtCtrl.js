@@ -2232,7 +2232,7 @@
             $scope.matchMeasures[ref.uniqid] = [];
             $scope.measuresRefSelected.forEach(function (measure){
               $scope.matchMeasures[ref.uniqid][measure.uniqid] = [];
-              if (Array.isArray(measure.measuresLinked)) {
+              if (Array.isArray(measure.measuresLinked) && Array.isArray(ref.measures)) {
                 measure.measuresLinked.forEach(function (measureLinked){
                   var measureFound = ref.measures.filter(ml => ml.uniqid == measureLinked.uniqid);
                   if (measureFound.length > 0) {
