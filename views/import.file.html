@@ -19,7 +19,7 @@
                        title="File types supported: .csv, .xlsx, .ods"
                        class="md-upload-dropbox md-padding md-whiteframe-3dp">
                 </input>
-                <md-button class="ng-scope md-light-theme material-icons" ng-click="toggleGuide()"><md-icon>info</md-icon></md-button>
+                <md-button class="ng-scope md-light-theme material-icons md-primary" ng-click="toggleGuide()"><md-icon>info</md-icon></md-button>
               </div>
               <md-input-container class="md-block" ng-hide="OFFICE_MODE == 'FO'" flex>
                   <label translate>Language</label>
@@ -104,6 +104,12 @@
                     <p class="md-mandatory-field txtright" translate>* Mandatory field</p>
                     <p class="md-mandatory-field txtright" ng-if="OFFICE_MODE == 'BO'" translate>1:FR,2:EN,3:DE,4:NL</p>
                 </md-card-content>
+                <md-card-actions align="right">
+                    <md-button class="md-primary" ng-click="downloadExempleFile()">
+                    <md-icon>file_download</md-icon>
+                    {{ 'Example File' | translate }}
+                    </md-button>
+                </md-card-actions>
             </md-card>
           </div>
         </md-dialog-content>

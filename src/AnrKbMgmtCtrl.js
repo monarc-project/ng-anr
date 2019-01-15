@@ -3249,6 +3249,22 @@
 
       };
 
+      $scope.downloadExempleFile = function(){
+
+        var fields = [];
+        for(var index in $scope.items[tab]) {
+          if ($scope.items[tab][index]['field']) {
+            fields.push($scope.items[tab][index]['field']);
+          }
+        }
+        data = encodeURI('data:text/csv;charset=UTF-8,\uFEFF' + fields.join());
+        link = document.createElement('a');
+        link.setAttribute('href', data);
+        link.setAttribute('download', 'ExampleFile.csv');
+        document.body.appendChild(link);
+        link.click();
+      }
+
       $scope.toggleGuide = function () {
           $scope.guideVisible = !$scope.guideVisible;
       };
