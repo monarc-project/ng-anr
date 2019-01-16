@@ -382,7 +382,8 @@
             simple_mode: true,
             assessments: 0,
             controls: true,
-            recommendations: true
+            recommendations: true,
+            soas: true
         };
 
         $scope.cancel = function() {

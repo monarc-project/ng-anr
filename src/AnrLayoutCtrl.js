@@ -2160,7 +2160,8 @@
             methodSteps: true,
             interviews: true,
             controls: true,
-            recommendations: true
+            recommendations: true,
+            soas: true
         };
 
         $scope.cancel = function() {
