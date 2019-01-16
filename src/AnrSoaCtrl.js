@@ -15,15 +15,13 @@
                                   ClientSoaService,  $q, ReferentialService, TableHelperService, MeasureMeasureService) {
         // Options for Soa Table
         $scope.soa_measures = TableHelperService.build('m.code', 20, 1, '');
-        $scope.updatingReferentials = false;
-        $scope.referentials = [];
-        ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
-            $scope.referentials.items = data;
-            $scope.updatingReferentials = true;
-        })
+        $scope.updatingReferentials = true;
 
         $scope.$on('updateSoa', function () {
-               $scope.updateSoaMeasures();
+            $scope.updatingReferentials = false;
+            $scope.updateSoaReferentials();
+            $scope.updateSoaMeasures();
+            $scope.updatingReferentials = true;
          });
 
         $scope.selectReferential = function (referentialId) {
@@ -35,6 +33,12 @@
         $scope.$watchGroup(['soa_measures.selectedCategory', 'referential_uniqid', 'soa_measures.query.filter', 'soa_measures.query.order'], function(newValue, oldValue) {
                 $scope.updateSoaMeasures();
         });
+
+        $scope.updateSoaReferentials = function () {
+            ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
+                $scope.referentials.items = data;
+            })
+        };
 
         $scope.updateSoaMeasures = function () {
             var query = angular.copy($scope.soa_measures.query);
