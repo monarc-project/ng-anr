@@ -946,29 +946,14 @@
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-
-              //delete the soa associated to the measure
-                ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
-                  $scope.soas = data['soaMeasures'];
-                  for (soa in $scope.soas){
-                      if($scope.soas[soa].measure.uniqid == item.uniqid) {
-
-                           ClientSoaService.deleteSoa({anr: $scope.model.anr.id, id: $scope.soas[soa].id},
-                             function () {
-                                 var query = angular.copy($scope.soas.query);
-                             }
-                           );
-                         }
-                  }
-                  MeasureService.deleteMeasure(item.uniqid,
-                      function () {
-                          toastr.success(gettextCatalog.getString('The control has been deleted.',
-                              {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
-                          $scope.updateMeasures();
-                          $scope.measures.selected = $scope.measures.selected.filter(measureSelected => measureSelected.uniqid != item.uniqid);
-                      }
-                  );
-                });
+                MeasureService.deleteMeasure(item.uniqid,
+                    function () {
+                        toastr.success(gettextCatalog.getString('The control has been deleted.',
+                            {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
+                        $scope.updateMeasures();
+                        $scope.measures.selected = $scope.measures.selected.filter(measureSelected => measureSelected.uniqid != item.uniqid);
+                    }
+                );
             });
         };
 
@@ -989,29 +974,12 @@
                 for (var i = 0; i < $scope.measures.selected.length; ++i) {
                     ids.push($scope.measures.selected[i].uniqid);
                 }
-
-                //delete the soas associated to the measures
-                ClientSoaService.getSoas({anr: $scope.model.anr.id}).then(function (data) {
-                  $scope.soas = data['soaMeasures'];
-                    for (soa in $scope.soas){
-                      for (var i = 0; i < ids.length; ++i) {
-                          if($scope.soas[soa].measure.uniqid == ids[i]) {
-                                ClientSoaService.deleteSoa({anr: $scope.model.anr.id, id: $scope.soas[soa].id},
-                                    function () {
-                                        var query = angular.copy($scope.soas.query);
-                                    }
-                                );
-
-                              }
-                         }
-                    }
-                    MeasureService.deleteMassMeasure(ids, function () {
-                        toastr.success(gettextCatalog.getString('{{count}} controls have been deleted.',
-                            {count: count}), gettextCatalog.getString('Deletion successful'));
-                        $scope.updateMeasures();
-                        $scope.measures.selected = [];
-                    });
-                })
+                MeasureService.deleteMassMeasure(ids, function () {
+                    toastr.success(gettextCatalog.getString('{{count}} controls have been deleted.',
+                        {count: count}), gettextCatalog.getString('Deletion successful'));
+                    $scope.updateMeasures();
+                    $scope.measures.selected = [];
+                });
             });
         };
 
