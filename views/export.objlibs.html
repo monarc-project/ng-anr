@@ -46,7 +46,6 @@
                         <md-option ng-value="1">{{ 'Yes' | translate }}</md-option>
                         <md-option ng-value="0">{{ 'No' | translate }}</md-option>
                     </md-select>
-
                 </md-input-container>
                 <div ng-if="exportData.assessments" == 1 layout="column" class="md-block" flex>
                   <label translate>Options</label>
@@ -60,7 +59,13 @@
                         <md-switch ng-model="exportData.recommendations">{{ 'Recommendations' | translate }}</md-switch>
                       </div>
                   </div>
+                  <div layout="row">
+                      <div>
+                        <md-switch ng-if="mode == 'anr'" ng-model="exportData.soas">{{ 'Statement of applicability' | translate }}</md-switch>
+                      </div>
+                  </div>
                 </div>
+
 
             </div>
         </md-dialog-content>
