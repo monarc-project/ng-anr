@@ -722,10 +722,6 @@
                         break;
                       case 4:
                           $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
-                          $timeout(function() {
-                            // Update measures of SOA
-                            $scope.$broadcast('updateSoa');
-                          });
                         break;
                 }
             });

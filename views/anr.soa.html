@@ -29,7 +29,7 @@
           </div>
 
           <md-table-container flex>
-          <table editable callback="onTableEdited" class="md-html-table soa-table"  >
+          <table editable callback="onTableEdited" class="md-html-table soa-table" ng-hide="updatingMeasures" >
             <thead md-order="soa_measures.query.order" md-on-reorder="updateSoaMeasures">
               <tr>
                 <th style="width: 7%"><span translate>Category</span></th>
