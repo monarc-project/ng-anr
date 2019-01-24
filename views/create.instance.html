@@ -12,9 +12,8 @@
         <md-dialog-content>
             <div class="md-dialog-content">
                 <div layout="row">
-
                     <div layout="column">
-                        <p style="height: 93px;">&nbsp;</p>
+                        <p style="height: 90px;">&nbsp;</p>
                         <div layout="column" style="border: 1px solid #DFDFDF; padding: 1em; margin-left: 20px; margin-right: 20px;">
                             <p>
                                 <span title="{{scaleCommCache[1][calculeImpact('c')]}}"><b>{{ 'Confidentiality' | translate }}</b><br /> <br style="line-height: 36px" /></span>
@@ -55,10 +54,9 @@
                         </div>
                     </div>
                     <div layout="column">
-                        <br style="line-height: 46px" />
+                        <p style="height: 40px;">&nbsp;</p>
                         <div layout="column" style="border: 1px solid #DFDFDF; padding: 1em; text-align: center; margin-right: 20px;">
                             <p>
-                                <br style="line-height: 0px" />
                                 <span>{{ 'Max' | translate }}<br style="line-height: 57px" /></span>
                                 <span title="{{scaleCommCache[1][calculeImpact('c')]}}"><b>{{ calculeImpact('c') > -1 ? (calculeImpact('c') | dashnull) : '-' }}</b><br style="line-height: 50px" /></span>
                                 <span title="{{scaleCommCache[2][calculeImpact('i')]}}"><b>{{ calculeImpact('i') > -1 ? (calculeImpact('i') | dashnull) : '-'}}</b><br style="line-height: 50px" /></span>
