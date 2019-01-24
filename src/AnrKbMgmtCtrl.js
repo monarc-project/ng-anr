@@ -753,6 +753,7 @@
                           $scope.updateReferentials();
                           toastr.success(gettextCatalog.getString('The referential has been created successfully.',
                                   {referntialLabel: $scope._langField(referential,'label')}), gettextCatalog.getString('Creation successful'));
+                          $rootScope.$broadcast('referentialsUpdated');
                         },
 
                         function () {
@@ -785,6 +786,7 @@
                                 $scope.updateReferentials();
                                 toastr.success(gettextCatalog.getString('The referential has been edited successfully.',
                                     {referentialLabel: referential.label1}), gettextCatalog.getString('Edition successful'));
+                                $rootScope.$broadcast('referentialsUpdated');
                             },
 
                             function () {
@@ -829,6 +831,7 @@
                         $scope.updateReferentials();
                         toastr.success(gettextCatalog.getString('The referential has been deleted.',
                                     {label: item.label1}), gettextCatalog.getString('Deletion successful'));
+                        $rootScope.$broadcast('referentialsUpdated');
                     }
                 );
             });
@@ -890,6 +893,7 @@
                             $scope.updateMeasures();
                             toastr.success(gettextCatalog.getString('The control has been created successfully.',
                                 {measureLabel: $scope._langField(measure,'label')}), gettextCatalog.getString('Creation successful'));
+                            $rootScope.$broadcast('controlsUpdated');
                         },
                         function (err) {
                             $scope.createNewMeasure(ev, measure);
@@ -925,6 +929,7 @@
                                 $scope.updateMeasures();
                                 toastr.success(gettextCatalog.getString('The control has been edited successfully.',
                                     {measureLabel: $scope._langField(measure,'label')}), gettextCatalog.getString('Edition successful'));
+                                $rootScope.$broadcast('controlsUpdated');
                             },
 
                             function () {
@@ -952,6 +957,7 @@
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                         $scope.updateMeasures();
                         $scope.measures.selected = $scope.measures.selected.filter(measureSelected => measureSelected.uniqid != item.uniqid);
+                        $rootScope.$broadcast('controlsUpdated');
                     }
                 );
             });
@@ -979,6 +985,7 @@
                         {count: count}), gettextCatalog.getString('Deletion successful'));
                     $scope.updateMeasures();
                     $scope.measures.selected = [];
+                    $rootScope.$broadcast('controlsUpdated');
                 });
             });
         };
@@ -1850,6 +1857,7 @@
                MeasureService.createMeasure(importData, function (result){
                  $scope.$parent.updateMeasures();
                  successCreateObject(result)
+                 $rootScope.$broadcast('controlsUpdated');
                });
                break;
              case 'Categories':
