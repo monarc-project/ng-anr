@@ -15,42 +15,38 @@
                                   ClientSoaService,  $q, ReferentialService, TableHelperService, MeasureMeasureService) {
         // Options for Soa Table
         $scope.soa_measures = TableHelperService.build('m.code', 20, 1, '');
-        $scope.referential_uniqid = null
-        $scope.updatingReferentials = false;
-        $scope.updatingMeasures = true;
-        $scope.referentials = [];
 
         $scope.updateSoaReferentials = function () {
+            $scope.updatingReferentials = false;
             ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
                 $scope.referentials.items = data;
                 $scope.updatingReferentials = true;
-                $scope.referential_uniqid = $scope.referentials.items.referentials[0].uniqid;
             })
         };
 
         $scope.updateSoaReferentials();
 
         $rootScope.$on('referentialsUpdated', function () {
-            $scope.referential_uniqid = null;
-            $scope.updatingReferentials = false;
-            $scope.updatingMeasures = true;
-            $scope.updateSoaReferentials();
+            $scope.referentialsUpdated = true;
          });
 
          $rootScope.$on('controlsUpdated', function () {
-             $scope.updatingMeasures = true;
              $scope.updateSoaMeasures();
-             $scope.updateCategories($scope.referential_uniqid);
           });
 
         $scope.selectReferential = function (referentialId) {
             $scope.soa_measures.selectedCategory = 0;
             $scope.referential_uniqid = referentialId;
+            $scope.updateSoaMeasures();
             $scope.updateCategories(referentialId);
         };
 
-        $scope.$watchGroup(['soa_measures.selectedCategory', 'referential_uniqid', 'soa_measures.query.filter', 'soa_measures.query.order'], function(newValue, oldValue) {
-          if ($scope.referential_uniqid) {
+        $scope.$watchGroup(['soa_measures.selectedCategory', 'referentialsUpdated', 'soa_measures.query.filter', 'soa_measures.query.order'], function(newValue, oldValue) {
+          if ($scope.referentialsUpdated) {
+              $scope.updatingReferentials = false;
+              $scope.updateSoaReferentials();
+              $scope.referentialsUpdated = false;
+          }else {
               $scope.updateSoaMeasures();
           }
         });
@@ -59,11 +55,11 @@
             ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
                 $scope.referentials.items = data;
                 $scope.updatingReferentials = true;
-                $scope.referential_uniqid = $scope.referentials.items.referentials[0].uniqid;
             })
         };
 
         $scope.updateSoaMeasures = function () {
+            $scope.updatingMeasures = false;
             var query = angular.copy($scope.soa_measures.query);
             query.category = $scope.soa_measures.selectedCategory;
             query.referential = $scope.referential_uniqid;
@@ -77,7 +73,7 @@
             $scope.soa_measures.promise.then(
                 function (data) {
                     $scope.soa_measures.items = data;
-                    $scope.updatingMeasures = false;
+                    $scope.updatingMeasures = true;
                 }
             )
         };
