@@ -95,11 +95,11 @@
                                 'gray': soa.EX==1 }">
                       <md-input-container ng-if="soa.EX=='0'" >
                         <md-select ng-disabled="isAnrReadOnly" ng-model="soa.compliance" ng-change="onTableEdited(soa, 'compliance') "  style="width: 110px;">
-                            <md-option value=""></md-option>
+                            <md-option value="">{{ 'Non-existent' | translate }}</md-option>
                             <md-option value="1">{{ 'Initial' | translate }}</md-option>
-                            <md-option value="2">{{ 'Developing' | translate }}</md-option>
+                            <md-option value="2">{{ 'Managed' | translate }}</md-option>
                             <md-option value="3">{{ 'Defined' | translate }}</md-option>
-                            <md-option value="4">{{ 'Managed' | translate }}</md-option>
+                            <md-option value="4">{{ 'Quantitatively Managed' | translate }}</md-option>
                             <md-option value="5">{{ 'Optimized' | translate }}</md-option>
                         </md-select>
                     </md-input-container>
