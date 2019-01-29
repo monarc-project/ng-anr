@@ -205,10 +205,10 @@
             finalArray=[];
             recLine = 0;
             finalArray[recLine]= gettextCatalog.getString('Category');
-            finalArray[recLine]+=','+gettextCatalog.getString('Ref.');
+            finalArray[recLine]+=','+gettextCatalog.getString('Code');
             finalArray[recLine]+=','+gettextCatalog.getString('Control');
             finalArray[recLine]+=','+gettextCatalog.getString('Inclusion/Exclusion');
-            finalArray[recLine]+=','+gettextCatalog.getString('Remarks');
+            finalArray[recLine]+=','+gettextCatalog.getString('Remarks/Justification');
             finalArray[recLine]+=','+gettextCatalog.getString('Evidences');
             finalArray[recLine]+=','+gettextCatalog.getString('Actions');
             finalArray[recLine]+=','+gettextCatalog.getString('Level of compliance');
@@ -225,17 +225,17 @@
 
                 finalArray[recLine]+=','+"\""+' ';
                 if(soas[soa].EX == 1)
-                    finalArray[recLine] += gettextCatalog.getString('EX') + "- ";
+                    finalArray[recLine] += gettextCatalog.getString('Excluded');
                 if(soas[soa].LR == 1)
-                    finalArray[recLine] += gettextCatalog.getString('LR') + "- ";
+                    finalArray[recLine] += gettextCatalog.getString('Legal requirements') + "  ";
                 if(soas[soa].CO == 1)
-                    finalArray[recLine] += gettextCatalog.getString('CO') + "- ";
+                    finalArray[recLine] += gettextCatalog.getString('Contractual obligations') + "  ";
                 if(soas[soa].BR == 1)
-                    finalArray[recLine] += gettextCatalog.getString('BR') + "- ";
+                    finalArray[recLine] += gettextCatalog.getString('Business requirements') + "  ";
                 if(soas[soa].BP == 1)
-                    finalArray[recLine] += gettextCatalog.getString('BP') + "- ";
+                    finalArray[recLine] += gettextCatalog.getString('Best practices') + "  ";
                 if(soas[soa].RRA == 1)
-                    finalArray[recLine] += gettextCatalog.getString('RRA');
+                    finalArray[recLine] += gettextCatalog.getString('Results of risk assessment') + "  ";
                 finalArray[recLine] += "\"";
 
                 // Remarks
@@ -263,11 +263,11 @@
                     if(soas[soa].compliance == 1)
                         finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Initial') + "\"";
                     if(soas[soa].compliance == 2)
-                        finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Developing') + "\"";
+                        finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Managed') + "\"";
                     if(soas[soa].compliance == 3)
                         finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Defined') + "\"";
                     if(soas[soa].compliance == 4)
-                        finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Managed') + "\"";
+                        finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Quantitatively Managed') + "\"";
                     if(soas[soa].compliance == 5)
                         finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Optimized') + "\"";
                 }
@@ -282,9 +282,9 @@
             var encodedUri = encodeURI(csvContent);
             var link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "soaslist.csv");
+            link.setAttribute("download", "soa.csv");
             document.body.appendChild(link);
-            link.click();  // This will download the data file named "soaslist.csv".
+            link.click();  // This will download the data file named "soa.csv".
         };
     }
 
