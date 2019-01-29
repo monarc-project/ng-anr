@@ -11,7 +11,7 @@
 
         var makeResource = function () {
             self.MeasureResource = $resource('api/' + anr + 'measures/:measureId', {
-                    measureId: '@uniqid',
+                    measureId: '@uuid',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
                 {

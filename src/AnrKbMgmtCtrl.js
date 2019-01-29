@@ -682,7 +682,7 @@
         };
 
         $scope.selectReferential = function (referentialId) {
-            $scope.referential_uniqid = referentialId;
+            $scope.referential_uuid = referentialId;
             ReferentialService.getReferential(referentialId).then(function (data) {
                 $scope.referential = data;
             });
@@ -708,7 +708,7 @@
         };
 
         $scope.toggleMeasureStatus = function (measure) {
-            MeasureService.patchMeasure(measure.uniqid, {status: !measure.status}, function () {
+            MeasureService.patchMeasure(measure.uuid, {status: !measure.status}, function () {
                 measure.status = !measure.status;
             });
         }
@@ -807,7 +807,7 @@
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
-                onRemoving : function(){$scope.selectReferential($scope.referential.uniqid)},
+                onRemoving : function(){$scope.selectReferential($scope.referential.uuid)},
                 locals: {
                     'measures' : $scope.measuresRefSelected,
                     'referentials': $scope.referentials.items,
@@ -840,14 +840,14 @@
         $scope.updateMeasures = function () {
             var query = angular.copy($scope.measures.query);
             query.status = $scope.measures.activeFilter;
-            query.referential = $scope.referential_uniqid;
+            query.referential = $scope.referential_uuid;
 
             if ($scope.measures.previousQueryOrder != $scope.measures.query.order) {
                 $scope.measures.query.page = query.page = 1;
                 $scope.measures.previousQueryOrder = $scope.measures.query.order;
             }
 
-            MeasureService.getMeasures({referential: $scope.referential_uniqid, order:'code'}).then(function (data) {
+            MeasureService.getMeasures({referential: $scope.referential_uuid, order:'code'}).then(function (data) {
                 $scope.measuresRefSelected = data;
             });
 
@@ -882,7 +882,7 @@
                 .then(function (measure) {
                     var cont = measure.cont;
                     measure.cont = undefined;
-                    measure.referential = $scope.referential.uniqid;
+                    measure.referential = $scope.referential.uuid;
                     if (cont) {
                         $scope.createNewMeasure(ev);
                     }
@@ -905,7 +905,7 @@
         $scope.editMeasure = function (ev, measure) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-            MeasureService.getMeasure(measure.uniqid).then(function (measureData) {
+            MeasureService.getMeasure(measure.uuid).then(function (measureData) {
                 $mdDialog.show({
                     controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'SOACategoryService',
                                  'MeasureService', 'ReferentialService', 'ConfigService', '$q', 'measure', 'referential',
@@ -923,7 +923,7 @@
                     }
                 })
                     .then(function (measure) {
-                        measure.referential = $scope.referential.uniqid;
+                        measure.referential = $scope.referential.uuid;
                         MeasureService.updateMeasure(measure,
                             function () {
                                 $scope.updateMeasures();
@@ -951,12 +951,12 @@
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-                MeasureService.deleteMeasure(item.uniqid,
+                MeasureService.deleteMeasure(item.uuid,
                     function () {
                         toastr.success(gettextCatalog.getString('The control has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                         $scope.updateMeasures();
-                        $scope.measures.selected = $scope.measures.selected.filter(measureSelected => measureSelected.uniqid != item.uniqid);
+                        $scope.measures.selected = $scope.measures.selected.filter(measureSelected => measureSelected.uuid != item.uuid);
                         $rootScope.$broadcast('controlsUpdated');
                     }
                 );
@@ -978,7 +978,7 @@
             $mdDialog.show(confirm).then(function() {
                 var ids = [];
                 for (var i = 0; i < $scope.measures.selected.length; ++i) {
-                    ids.push($scope.measures.selected[i].uniqid);
+                    ids.push($scope.measures.selected[i].uuid);
                 }
                 MeasureService.deleteMassMeasure(ids, function () {
                     toastr.success(gettextCatalog.getString('{{count}} controls have been deleted.',
@@ -1003,7 +1003,7 @@
             $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'amvs'});
             ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
                 $scope.referentials_filter.items = data;
-                $scope.referentials_filter.selected = data['referentials'][0].uniqid;
+                $scope.referentials_filter.selected = data['referentials'][0].uuid;
             });
             var initAmvsFilter = true;
             initAmvsFilter = $scope.$watchGroup(['amvs.activeFilter', 'referentials_filter.selected', 'amvs.query.filter'], function(newValue, oldValue) {
@@ -2205,19 +2205,19 @@
 
         $scope.referentialsList.referentials.forEach(function (ref){
           var promise = $q.defer();
-          if (ref.uniqid !== $scope.referentialSelected.uniqid ) {
-            $scope.matchMeasures[ref.uniqid] = [];
+          if (ref.uuid !== $scope.referentialSelected.uuid ) {
+            $scope.matchMeasures[ref.uuid] = [];
             $scope.measuresRefSelected.forEach(function (measure){
-              $scope.matchMeasures[ref.uniqid][measure.uniqid] = [];
+              $scope.matchMeasures[ref.uuid][measure.uuid] = [];
               if (Array.isArray(measure.measuresLinked) && Array.isArray(ref.measures)) {
                 measure.measuresLinked.forEach(function (measureLinked){
-                  var measureFound = ref.measures.filter(ml => ml.uniqid == measureLinked.uniqid);
+                  var measureFound = ref.measures.filter(ml => ml.uuid == measureLinked.uuid);
                   if (measureFound.length > 0) {
-                    $scope.matchMeasures[ref.uniqid][measure.uniqid].push(measureLinked);
+                    $scope.matchMeasures[ref.uuid][measure.uuid].push(measureLinked);
                   }
                 })
               }
-              promise.resolve($scope.matchMeasures[ref.uniqid][measure.uniqid]);
+              promise.resolve($scope.matchMeasures[ref.uuid][measure.uuid]);
             });
             return promise.promise;
           }
@@ -2231,7 +2231,7 @@
                   var found = false;
                   for (var i = 0; i < $scope.matchMeasures[referential][measureId].length; ++i) {
 
-                      if ($scope.matchMeasures[referential][measureId][i].uniqid == e.measures[j].uniqid) {
+                      if ($scope.matchMeasures[referential][measureId][i].uuid == e.measures[j].uuid) {
                           found = true;
                           break;
                       }
@@ -2283,13 +2283,13 @@
                                     MeasureService, ReferentialService, ConfigService, $q, measure, referential,
                                     anrId) {
 
-        SOACategoryService.getCategories({order: $scope._langField('label'), referential: referential.uniqid}).then(function (data) {
+        SOACategoryService.getCategories({order: $scope._langField('label'), referential: referential.uuid}).then(function (data) {
            $scope.listCategories = data['categories'];
         });
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
         $scope.categorySearchText = '';
-        $scope.RefSelected = referential.uniqid;
+        $scope.RefSelected = referential.uuid;
         if (measure != undefined && measure != null) {
             $scope.measure = measure;
         } else {
@@ -2312,7 +2312,7 @@
 
         $scope.queryCategorySearch = function (query) {
             var promise = $q.defer();
-            SOACategoryService.getCategories({filter: query, order: $scope._langField('label'), referential: referential.uniqid}).then(function (data) {
+            SOACategoryService.getCategories({filter: query, order: $scope._langField('label'), referential: referential.uuid}).then(function (data) {
                 promise.resolve(data['categories']);
             }, function () {
                 promise.reject();
@@ -2473,14 +2473,14 @@
             if (amv.measures.length == undefined) {
               $scope.amv.measures = [];
               referentials.forEach(function (ref){
-                $scope.amv.measures[ref.uniqid] = [];
+                $scope.amv.measures[ref.uuid] = [];
               })
             } else {
               var measuresBackup = $scope.amv.measures;
               $scope.amv.measures = [];
               referentials.forEach(function (ref){
-                $scope.amv.measures[ref.uniqid] = measuresBackup.filter(function (measure) {
-                    return (measure.referential.uniqid == ref.uniqid);
+                $scope.amv.measures[ref.uuid] = measuresBackup.filter(function (measure) {
+                    return (measure.referential.uuid == ref.uuid);
                 })
               })
             }
@@ -2494,7 +2494,7 @@
                 status: 1
             };
             referentials.forEach(function (ref){
-              $scope.amv.measures[ref.uniqid] = [];
+              $scope.amv.measures[ref.uuid] = [];
             })
         }
 
@@ -2575,13 +2575,13 @@
         // Measures
         $scope.queryMeasureSearch = function (query) {
             var promise = $q.defer();
-            MeasureService.getMeasures({filter: query, referential: $scope.amv.referential.uniqid, order: 'code'}).then(function (e) {
+            MeasureService.getMeasures({filter: query, referential: $scope.amv.referential.uuid, order: 'code'}).then(function (e) {
               var filtered = [];
               for (var j = 0; j < e.measures.length; ++j) {
                   var found = false;
-                  for (var i = 0; i < $scope.amv.measures[$scope.amv.referential.uniqid].length; ++i) {
+                  for (var i = 0; i < $scope.amv.measures[$scope.amv.referential.uuid].length; ++i) {
 
-                      if ($scope.amv.measures[$scope.amv.referential.uniqid][i].uniqid == e.measures[j].uniqid) {
+                      if ($scope.amv.measures[$scope.amv.referential.uuid][i].uuid == e.measures[j].uuid) {
                           found = true;
                           break;
                       }
@@ -2608,9 +2608,9 @@
 
             referentials.forEach(function (ref){
               var promise = $q.defer();
-              if ($scope.amv.measures[ref.uniqid] != undefined) {
-                $scope.amv.measures[ref.uniqid].forEach (function (measure) {
-                  promise.resolve($scope.amv.measures.push(measure.uniqid));
+              if ($scope.amv.measures[ref.uuid] != undefined) {
+                $scope.amv.measures[ref.uuid].forEach (function (measure) {
+                  promise.resolve($scope.amv.measures.push(measure.uuid));
                 })
               }
               return promise.promise;
@@ -2627,9 +2627,9 @@
 
             referentials.forEach(function (ref){
               var promise = $q.defer();
-              if ($scope.amv.measures[ref.uniqid] != undefined) {
-                $scope.amv.measures[ref.uniqid].forEach (function (measure) {
-                  promise.resolve($scope.amv.measures.push(measure.uniqid));
+              if ($scope.amv.measures[ref.uuid] != undefined) {
+                $scope.amv.measures[ref.uuid].forEach (function (measure) {
+                  promise.resolve($scope.amv.measures.push(measure.uuid));
                 })
               }
               return promise.promise;

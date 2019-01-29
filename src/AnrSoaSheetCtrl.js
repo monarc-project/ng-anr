@@ -13,9 +13,9 @@
 
         $scope.soaMeasureAmvIds = [];
 
-        getSoaRisks = function(MeasureUniqid){
+        getSoaRisks = function(Measureuuid){
             var promise = $q.defer();
-            MeasureService.getMeasure(MeasureUniqid).then(function (measure) {
+            MeasureService.getMeasure(Measureuuid).then(function (measure) {
               $scope.soaMeasureSheet = measure;
               if (measure.amvs) {
                 for (var i = 0; i < measure.amvs.length; i++) {

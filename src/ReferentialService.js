@@ -11,7 +11,7 @@
 
         var makeResource = function () {
             self.ReferentialResource = $resource('api/' + anr + 'referentials/:ReferentialId', {
-                    ReferentialId: '@uniqid',
+                    ReferentialId: '@uuid',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
                 {
@@ -25,7 +25,7 @@
                         isArray: false
                     }
                 });
-            self.CommonReferentialsResource = $resource('api/referentials/:referentialId', { referentialId: '@uniqid'},
+            self.CommonReferentialsResource = $resource('api/referentials/:referentialId', { referentialId: '@uuid'},
                 {
                     'update': {
                         method: 'PUT'

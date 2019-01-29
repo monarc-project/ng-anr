@@ -28,7 +28,7 @@
                 <div flex class="md-padding-right">
                 <md-subheader class="md-subheader">{{ 'From referential' | translate }}</md-subheader>
                 <md-select ng-model="importSoa.refSelected" placeholder="{{ 'Select a referential' | translate }}" required>
-                  <md-option ng-repeat="ref in referentials" ng-value="ref.uniqid" ng-if="ref.uniqid != referential">
+                  <md-option ng-repeat="ref in referentials" ng-value="ref.uuid" ng-if="ref.uuid != referential">
                     {{ _langField(ref,'label') }}
                   </md-option>
                 </md-select>

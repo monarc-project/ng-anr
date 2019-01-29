@@ -447,7 +447,7 @@
         };
 
         $scope.selectReferential = function (referentialId) {
-            $scope.referential_uniqid = referentialId;
+            $scope.referential_uuid = referentialId;
         };
         $scope.updateSheetRiskTarget = function () {
             if(parseInt($scope.sheet_risk.threatRate) > -1 && parseInt($scope.sheet_risk.vulnerabilityRate) > -1){

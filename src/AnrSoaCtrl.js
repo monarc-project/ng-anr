@@ -36,7 +36,7 @@
 
         $scope.selectReferential = function (referentialId) {
             $scope.soa_measures.selectedCategory = 0;
-            $scope.referential_uniqid = referentialId;
+            $scope.referential_uuid = referentialId;
             $scope.updateSoaMeasures();
             $scope.updateCategories(referentialId);
         };
@@ -62,7 +62,7 @@
             $scope.updatingMeasures = false;
             var query = angular.copy($scope.soa_measures.query);
             query.category = $scope.soa_measures.selectedCategory;
-            query.referential = $scope.referential_uniqid;
+            query.referential = $scope.referential_uuid;
 
             if ($scope.soa_measures.previousQueryOrder != $scope.soa_measures.query.order) {
                 $scope.soa_measures.query.page = query.page = 1;
@@ -133,14 +133,14 @@
               .then(function (importSoa) {
                 MeasureMeasureService.getMeasuresMeasures().then(function (data) {
                   var measuresLinked = data['measuresmeasures'];
-                  ClientSoaService.getSoas({referential:$scope.referential_uniqid }).then(function(data){
+                  ClientSoaService.getSoas({referential:$scope.referential_uuid }).then(function(data){
                     var childrens = data['soaMeasures'];
                     ClientSoaService.getSoas({referential: importSoa.refSelected }).then(function(data){
                       var fathers = data['soaMeasures'];
                       for (var i = 0; i < measuresLinked.length; i++) {
                         fathers.forEach((father)=>childrens.forEach((child=>{
-                          if (father.measure.uniqid == measuresLinked[i].father) {
-                            if (child.measure.uniqid == measuresLinked[i].child) {
+                          if (father.measure.uuid == measuresLinked[i].father) {
+                            if (child.measure.uuid == measuresLinked[i].child) {
 
                               importOptions.forEach(function(option){
                                 if (importSoa[option] && father[option]) {
