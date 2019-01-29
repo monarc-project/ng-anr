@@ -799,21 +799,24 @@
 
         $scope.matchReferential = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-            $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ReferentialService', 'MeasureService','ConfigService', 'MeasureMeasureService', '$q', 'measures', 'referentials', 'referentialSelected', MatchReferentialDialogCtrl],
-                templateUrl: 'views/anr/match.referentials.html',
-                targetEvent: ev,
-                preserveScope: false,
-                scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: false,
-                fullscreen: useFullScreen,
-                onRemoving : function(){$scope.selectReferential($scope.referential.uuid)},
-                locals: {
-                    'measures' : $scope.measuresRefSelected,
-                    'referentials': $scope.referentials.items,
-                    'referentialSelected' : $scope.referential
-                }
-            })
+            ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
+                $scope.matchReferentials = data;
+                $mdDialog.show({
+                    controller: ['$scope', '$mdDialog', 'ReferentialService', 'MeasureService','ConfigService', 'MeasureMeasureService', '$q', 'measures', 'referentials', 'referentialSelected', MatchReferentialDialogCtrl],
+                    templateUrl: 'views/anr/match.referentials.html',
+                    targetEvent: ev,
+                    preserveScope: false,
+                    scope: $scope.$dialogScope.$new(),
+                    clickOutsideToClose: false,
+                    fullscreen: useFullScreen,
+                    onRemoving : function(){$scope.selectReferential($scope.referential.uuid)},
+                    locals: {
+                        'measures' : $scope.measuresRefSelected,
+                        'referentials': $scope.matchReferentials,
+                        'referentialSelected' : $scope.referential
+                    }
+                })
+            });
         };
 
         $scope.deleteReferential = function (ev, item) {
