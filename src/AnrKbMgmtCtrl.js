@@ -37,12 +37,21 @@
                           }
               					});
             				};
-                    var isJson = false;
-                    if (onChangeEvent.target.files[0].type == "application/json") {
-                      reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
-                      isJson = true;
-                    }else {
-                      reader.readAsBinaryString((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
+                    var fileTypes = ['json', 'csv', 'xlsx', 'xls'];
+                    var extension = onChangeEvent.target.files[0].name.split('.').pop().toLowerCase();
+                    var isSuccess = fileTypes.indexOf(extension) > -1;
+
+                    if (isSuccess) {
+                      var isJson = false;
+                      if (extension == "json") {
+                        reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
+                        isJson = true;
+                      }else {
+                        reader.readAsBinaryString((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
+                      }
+                    }
+                    else {
+                        alert('File Type is not supported');
                     }
                     onChangeEvent.srcElement.value = null;
           			});
@@ -2982,33 +2991,37 @@
 
       $scope.parseFile = function (fileContent) {
         $scope.check = false;
-        if (typeof fileContent === 'object') {
-          if (Array.isArray(fileContent)) {
-            var fileContentJson = {data : fileContent };
-            $scope.importData = $scope.checkFile(fileContentJson);
-          }else {
+        if (Array.isArray(fileContent)) {
+            if (typeof fileContent === 'object') {
+
+                var fileContentJson = {data : fileContent };
+                $scope.importData = $scope.checkFile(fileContentJson);
+
+            } else {
+                Papa.parse(fileContent, {
+                                  header: true,
+                                  skipEmptyLines: true,
+                                  trimHeaders : true,
+                                  beforeFirstChunk: function( chunk ) {
+                                    var rows = chunk.split( /\r\n|\r|\n/ );
+                                    rows[0] = rows[0].toLowerCase();
+                                    return rows.join( '\n' );
+                                  },
+                                  complete: function(importData) {
+                                            $scope.importData = $scope.checkFile(importData);
+                                  }
+                          });
+            }
+        } else {
             var alert = $mdDialog.alert()
                 .multiple(true)
                 .title(gettextCatalog.getString('Error File'))
-                .textContent(gettextCatalog.getString('Wrong JSON Schema'))
+                .textContent(gettextCatalog.getString('Wrong Schema'))
                 .theme('light')
                 .ok(gettextCatalog.getString('Close'))
-            $mdDialog.show(alert);
-          }
-        } else {
-          Papa.parse(fileContent, {
-                            header: true,
-                            skipEmptyLines: true,
-                            trimHeaders : true,
-                            beforeFirstChunk: function( chunk ) {
-                              var rows = chunk.split( /\r\n|\r|\n/ );
-                              rows[0] = rows[0].toLowerCase();
-                              return rows.join( '\n' );
-                            },
-                            complete: function(importData) {
-                                      $scope.importData = $scope.checkFile(importData);
-                            }
-                    });
+            $mdDialog.show(alert).then(function() {
+              $scope.importData = [];
+            });
         }
       };
 
