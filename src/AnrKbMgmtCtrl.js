@@ -50,10 +50,10 @@
                     else {
                       var alert = $mdDialog.alert()
                           .multiple(true)
-                          .title(gettextCatalog.getString('Error File'))
-                          .textContent(gettextCatalog.getString('File Type is not supported'))
+                          .title(gettextCatalog.getString('File error'))
+                          .textContent(gettextCatalog.getString('File type not supported'))
                           .theme('light')
-                          .ok(gettextCatalog.getString('Close'))
+                          .ok(gettextCatalog.getString('Cancel'))
                       $mdDialog.show(alert);
                     }
                     onChangeEvent.srcElement.value = null;
@@ -3001,10 +3001,10 @@
           } else {
               var alert = $mdDialog.alert()
                   .multiple(true)
-                  .title(gettextCatalog.getString('Error File'))
-                  .textContent(gettextCatalog.getString('Wrong Schema'))
+                  .title(gettextCatalog.getString('File error'))
+                  .textContent(gettextCatalog.getString('Wrong schema'))
                   .theme('light')
-                  .ok(gettextCatalog.getString('Close'))
+                  .ok(gettextCatalog.getString('Cancel'))
               $mdDialog.show(alert);
               $scope.importData = [];
               $scope.check = true;
@@ -3192,10 +3192,10 @@
           } else {
             var alert = $mdDialog.alert()
                 .multiple(true)
-                .title(gettextCatalog.getString('Error File'))
-                .textContent(gettextCatalog.getString('Wrong Schema'))
+                .title(gettextCatalog.getString('File error'))
+                .textContent(gettextCatalog.getString('Wrong schema'))
                 .theme('light')
-                .ok(gettextCatalog.getString('Close'))
+                .ok(gettextCatalog.getString('Cancel'))
             $mdDialog.show(alert);
             $scope.importData = [];
             $scope.check = true;
