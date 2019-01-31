@@ -3152,7 +3152,7 @@
               requiredFields.push($scope.items[tab][index]['field']);
             }
           }
-          if (!file.meta || file.meta.fields.some(rf=> requiredFields.includes(rf))) {
+          if (!file.meta || file.meta.fields.some(rf=> requiredFields.includes(rf)) && file.data.length > 0) {
               for (var i = 0; i < file.data.length; i++) {
                 file.data[i].error = '';
                 file.data[i].alert = false;
