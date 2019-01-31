@@ -2991,12 +2991,21 @@
 
       $scope.parseFile = function (fileContent) {
         $scope.check = false;
-        if (Array.isArray(fileContent)) {
             if (typeof fileContent === 'object') {
-
+              if (Array.isArray(fileContent)) {
                 var fileContentJson = {data : fileContent };
                 $scope.importData = $scope.checkFile(fileContentJson);
-
+              } else {
+                  var alert = $mdDialog.alert()
+                      .multiple(true)
+                      .title(gettextCatalog.getString('Error File'))
+                      .textContent(gettextCatalog.getString('Wrong Schema'))
+                      .theme('light')
+                      .ok(gettextCatalog.getString('Close'))
+                  $mdDialog.show(alert).then(function() {
+                    $scope.importData = [];
+                  });
+              }
             } else {
                 Papa.parse(fileContent, {
                                   header: true,
@@ -3012,17 +3021,6 @@
                                   }
                           });
             }
-        } else {
-            var alert = $mdDialog.alert()
-                .multiple(true)
-                .title(gettextCatalog.getString('Error File'))
-                .textContent(gettextCatalog.getString('Wrong Schema'))
-                .theme('light')
-                .ok(gettextCatalog.getString('Close'))
-            $mdDialog.show(alert).then(function() {
-              $scope.importData = [];
-            });
-        }
       };
 
       $scope.getItems = function (){
