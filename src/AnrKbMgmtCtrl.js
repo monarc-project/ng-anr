@@ -3158,13 +3158,13 @@
                 file.data[i].alert = false;
 
                 if (file.data[i]['code'] && codes.includes(file.data[i]['code'].toLowerCase().trim())) {
-                    file.data[i].error += gettextCatalog.getString('code is already in use\n');
+                    file.data[i].error += gettextCatalog.getString('code is already in use') + "\n";
                     $scope.check = true;
                 }
 
                 for (var j = 0; j < requiredFields.length; j++) {
                   if (!file.data[i][requiredFields[j]]) {
-                    file.data[i].error += requiredFields[j] + gettextCatalog.getString(' is mandatory\n');
+                    file.data[i].error += requiredFields[j] + " " + gettextCatalog.getString('is mandatory') + "\n";
                     $scope.check = true;
                   }
                 }
