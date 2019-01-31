@@ -2,7 +2,7 @@
 
     angular
         .module('AnrModule')
-        .directive('onReadFile', function ($parse) {
+        .directive('onReadFile', ['$parse','$mdDialog', 'gettextCatalog', function ($parse, $mdDialog, gettextCatalog) {
 
           	return {
           		restrict: 'A',
@@ -21,19 +21,16 @@
                             var workbook = XLSX.read(data, {
                               type: 'binary'
                             });
-
-                            workbook.SheetNames.forEach(function(sheetName) {
-                                if (workbook.Sheets[sheetName].hasOwnProperty('!ref')) {
-                                  var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
-                                  var chartset = jschardet.detect(csv);
-
-                                    if (chartset.encoding == 'UTF-8') {
-                                      fn(scope, {$fileContent:decodeURIComponent(escape(csv))});
-                                    }else {
-                                      fn(scope, {$fileContent:csv});
-                                    }
+                            var sheetName = workbook.SheetNames[0];
+                            if (workbook.Sheets[sheetName].hasOwnProperty('!ref')) {
+                              var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+                              var chartset = jschardet.detect(csv);
+                                if (chartset.encoding == 'UTF-8') {
+                                  fn(scope, {$fileContent:decodeURIComponent(escape(csv))});
+                                }else {
+                                  fn(scope, {$fileContent:csv});
                                 }
-                            });
+                            }
                           }
               					});
             				};
@@ -51,13 +48,19 @@
                       }
                     }
                     else {
-                        alert('File Type is not supported');
+                      var alert = $mdDialog.alert()
+                          .multiple(true)
+                          .title(gettextCatalog.getString('Error File'))
+                          .textContent(gettextCatalog.getString('File Type is not supported'))
+                          .theme('light')
+                          .ok(gettextCatalog.getString('Close'))
+                      $mdDialog.show(alert);
                     }
                     onChangeEvent.srcElement.value = null;
           			});
           		}
           	};
-          })
+          }])
         .controller('AnrKbMgmtCtrl', [
             '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
             'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'ClientSoaService',
@@ -3004,6 +3007,7 @@
                   .ok(gettextCatalog.getString('Close'))
               $mdDialog.show(alert);
               $scope.importData = [];
+              $scope.check = true;
           }
         } else {
             Papa.parse(fileContent, {
@@ -3194,6 +3198,7 @@
                 .ok(gettextCatalog.getString('Close'))
             $mdDialog.show(alert);
             $scope.importData = [];
+            $scope.check = true;
           }
         });
         return file.data;
