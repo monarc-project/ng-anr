@@ -3157,7 +3157,7 @@
                 file.data[i].error = '';
                 file.data[i].alert = false;
 
-                if (file.data[i]['code'] && codes.includes(file.data[i]['code'].toLowerCase())) {
+                if (file.data[i]['code'] && codes.includes(file.data[i]['code'].toLowerCase().trim())) {
                     file.data[i].error += gettextCatalog.getString('code is already in use\n');
                     $scope.check = true;
                 }
