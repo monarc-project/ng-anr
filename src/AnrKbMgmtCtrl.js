@@ -2991,36 +2991,35 @@
 
       $scope.parseFile = function (fileContent) {
         $scope.check = false;
-            if (typeof fileContent === 'object') {
-              if (Array.isArray(fileContent)) {
-                var fileContentJson = {data : fileContent };
-                $scope.importData = $scope.checkFile(fileContentJson);
-              } else {
-                  var alert = $mdDialog.alert()
-                      .multiple(true)
-                      .title(gettextCatalog.getString('Error File'))
-                      .textContent(gettextCatalog.getString('Wrong Schema'))
-                      .theme('light')
-                      .ok(gettextCatalog.getString('Close'))
-                  $mdDialog.show(alert).then(function() {
-                    $scope.importData = [];
-                  });
-              }
-            } else {
-                Papa.parse(fileContent, {
-                                  header: true,
-                                  skipEmptyLines: true,
-                                  trimHeaders : true,
-                                  beforeFirstChunk: function( chunk ) {
-                                    var rows = chunk.split( /\r\n|\r|\n/ );
-                                    rows[0] = rows[0].toLowerCase();
-                                    return rows.join( '\n' );
-                                  },
-                                  complete: function(importData) {
-                                            $scope.importData = $scope.checkFile(importData);
-                                  }
-                          });
-            }
+        if (typeof fileContent === 'object') {
+          if (Array.isArray(fileContent)) {
+            var fileContentJson = {data : fileContent };
+            $scope.importData = $scope.checkFile(fileContentJson);
+          } else {
+              var alert = $mdDialog.alert()
+                  .multiple(true)
+                  .title(gettextCatalog.getString('Error File'))
+                  .textContent(gettextCatalog.getString('Wrong Schema'))
+                  .theme('light')
+                  .ok(gettextCatalog.getString('Close'))
+              $mdDialog.show(alert);
+              $scope.importData = [];
+          }
+        } else {
+            Papa.parse(fileContent, {
+                              header: true,
+                              skipEmptyLines: true,
+                              trimHeaders : true,
+                              beforeFirstChunk: function( chunk ) {
+                                var rows = chunk.split( /\r\n|\r|\n/ );
+                                rows[0] = rows[0].toLowerCase();
+                                return rows.join( '\n' );
+                              },
+                              complete: function(importData) {
+                                        $scope.importData = $scope.checkFile(importData);
+                              }
+                      });
+        }
       };
 
       $scope.getItems = function (){
@@ -3149,41 +3148,52 @@
               requiredFields.push($scope.items[tab][index]['field']);
             }
           }
-          for (var i = 0; i < file.data.length; i++) {
-            file.data[i].error = '';
-            file.data[i].alert = false;
+          if (!file.meta || file.meta.fields.some(rf=> requiredFields.includes(rf))) {
+              for (var i = 0; i < file.data.length; i++) {
+                file.data[i].error = '';
+                file.data[i].alert = false;
 
-            if (file.data[i]['code'] && codes.includes(file.data[i]['code'].toLowerCase())) {
-                file.data[i].error += gettextCatalog.getString('code is already in use\n');
-                $scope.check = true;
-            }
+                if (file.data[i]['code'] && codes.includes(file.data[i]['code'].toLowerCase())) {
+                    file.data[i].error += gettextCatalog.getString('code is already in use\n');
+                    $scope.check = true;
+                }
 
-            for (var j = 0; j < requiredFields.length; j++) {
-              if (!file.data[i][requiredFields[j]]) {
-                file.data[i].error += requiredFields[j] + gettextCatalog.getString(' is mandatory\n');
-                $scope.check = true;
+                for (var j = 0; j < requiredFields.length; j++) {
+                  if (!file.data[i][requiredFields[j]]) {
+                    file.data[i].error += requiredFields[j] + gettextCatalog.getString(' is mandatory\n');
+                    $scope.check = true;
+                  }
+                }
+                if (!$scope.check && $scope.extItemToCreate.length > 0 && $scope.extItemToCreate.includes(file.data[i][externalItem])) {
+                    file.data[i].alert = true;
+                }
+
+                codes.push(file.data[i]['code'].toLowerCase());
               }
-            }
-            if (!$scope.check && $scope.extItemToCreate.length > 0 && $scope.extItemToCreate.includes(file.data[i][externalItem])) {
-                file.data[i].alert = true;
-            }
-
-            codes.push(file.data[i]['code'].toLowerCase());
-          }
-          if (!$scope.check && $scope.extItemToCreate.length > 0) {
-            var confirm = $mdDialog.confirm()
+              if (!$scope.check && $scope.extItemToCreate.length > 0) {
+                var confirm = $mdDialog.confirm()
+                    .multiple(true)
+                    .title(gettextCatalog.getString('New {{extItemLabel}}',
+                            {extItemLabel: extItemLabel}))
+                    .textContent(gettextCatalog.getString('Do you want to create {{count}} new {{extItemLabel}} ?',
+                                  {count: $scope.extItemToCreate.length, extItemLabel: extItemLabel}) + '\n\r\n\r' +
+                                   $scope.extItemToCreate.toString().replace(/,/g,'\n\r'))
+                    .theme('light')
+                    .ok(gettextCatalog.getString('Create & Import'))
+                    .cancel(gettextCatalog.getString('Cancel'));
+                $mdDialog.show(confirm).then(function() {
+                  $scope.uploadFile();
+                });
+              }
+          } else {
+            var alert = $mdDialog.alert()
                 .multiple(true)
-                .title(gettextCatalog.getString('New {{extItemLabel}}',
-                        {extItemLabel: extItemLabel}))
-                .textContent(gettextCatalog.getString('Do you want to create {{count}} new {{extItemLabel}} ?',
-                              {count: $scope.extItemToCreate.length, extItemLabel: extItemLabel}) + '\n\r\n\r' +
-                               $scope.extItemToCreate.toString().replace(/,/g,'\n\r'))
+                .title(gettextCatalog.getString('Error File'))
+                .textContent(gettextCatalog.getString('Wrong Schema'))
                 .theme('light')
-                .ok(gettextCatalog.getString('Create & Import'))
-                .cancel(gettextCatalog.getString('Cancel'));
-            $mdDialog.show(confirm).then(function() {
-              $scope.uploadFile();
-            });
+                .ok(gettextCatalog.getString('Close'))
+            $mdDialog.show(alert);
+            $scope.importData = [];
           }
         });
         return file.data;
