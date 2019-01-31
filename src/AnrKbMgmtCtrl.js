@@ -34,17 +34,18 @@
                           }
               					});
             				};
-                    var fileTypes = ['json', 'csv', 'xlsx', 'xls'];
-                    var extension = onChangeEvent.target.files[0].name.split('.').pop().toLowerCase();
-                    var isSuccess = fileTypes.indexOf(extension) > -1;
+                    var fileTypes = ['json', 'csv', 'xlsx', 'xls']; // File types supported
+                    var extension = onChangeEvent.target.files[0].name.split('.').pop().toLowerCase(); //Extract extension of file
+                    var isSuccess = fileTypes.indexOf(extension) > -1; // Check file type
+                    var size = onChangeEvent.target.files[0].size < 1e6; // Check fize size being less 1M
 
-                    if (isSuccess) {
+                    if (isSuccess && size) {
                       var isJson = false;
                       if (extension == "json") {
-                        reader.readAsText((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
+                        reader.readAsText(onChangeEvent.target.files[0]);
                         isJson = true;
                       }else {
-                        reader.readAsBinaryString((onChangeEvent.srcElement || onChangeEvent.target).files[0]);
+                        reader.readAsBinaryString(onChangeEvent.target.files[0]);
                       }
                     }
                     else {
@@ -56,7 +57,7 @@
                           .ok(gettextCatalog.getString('Cancel'))
                       $mdDialog.show(alert);
                     }
-                    onChangeEvent.srcElement.value = null;
+                    onChangeEvent.target.value = null;
           			});
           		}
           	};
