@@ -2,18 +2,18 @@
     <p class="md-title md-padding-left" translate>Statement of applicability</p>
     <md-tabs md-dynamic-height="true" ng-if="updatingReferentials">
       <md-tab ng-repeat="ref in referentials.items.referentials" label="{{ _langField(ref,'label')}}"
-              md-on-select="selectReferential(ref.uuid)">
+              md-on-select="selectReferential(ref.uuid)" >
 
           <div layout="row" layout-align="start center" class="md-padding-double" style="height:40px">
 
               <form flex name="soa.filter.form">
                   <md-input-container class="md-block md-padding-left md-padding-right">
                       <label><md-icon>search</md-icon> {{ 'Search...' | translate }}</label>
-                      <input ng-model="soa_measures.query.filter" ng-model-options="soa_measures.filter.options">
+                      <input ng-model="soa_measures[ref.uuid].query.filter" ng-model-options="soa_measures[ref.uuid].filter.options">
                   </md-input-container>
               </form>
 
-              <md-select ng-model="soa_measures.selectedCategory" style="margin:0">
+              <md-select ng-model="soa_measures[ref.uuid].selectedCategory" style="margin:0">
                 <md-option ng-value="0">{{ 'All categories' | translate }}</md-option>
                 <md-option ng-value="-1">{{ 'Uncategorized' | translate }}</md-option>
                 <md-option ng-repeat="cat in Categories" ng-value="cat.id" >{{_langField(cat,'label')}}</md-option>
@@ -29,8 +29,8 @@
           </div>
 
           <md-table-container flex>
-          <table editable callback="onTableEdited" class="md-html-table soa-table" ng-if="updatingMeasures" >
-            <thead md-order="soa_measures.query.order" md-on-reorder="updateSoaMeasures">
+          <table editable callback="onTableEdited" class="md-html-table soa-table" ng-if="updatingMeasures">
+            <thead md-order="soa_measures[ref.uuid].query.order" md-on-reorder="updateSoaMeasures">
               <tr>
                 <th style="width: 7%"><span translate>Category</span></th>
                 <th style="width: 3%"><button class="buttonsoa" ng-click="sortByCode()"><span translate>Code</span></button></th>
@@ -43,7 +43,7 @@
               </tr>
             </thead>
             <tbody>
-                <tr edit-model="soa" ng-repeat="soa in soa_measures.items.soaMeasures">
+                <tr edit-model="soa" ng-repeat="soa in soa_measures[ref.uuid].items.soaMeasures">
                   <td style="max-width: 300px" class="txtleft">{{_langField(soa.measure.category,'label')}}</td>
                   <td class="txtcenter"><md-button class="md-primary" ng-click="goToSoaSheet(model.anr.id, soa.measure.uuid)">{{ soa.measure.code }}</md-button></td>
                   <td class="txtleft">{{_langField(soa.measure,'label')}}</td>
@@ -109,8 +109,8 @@
           </table>
         </md-table-container>
 
-        <md-table-pagination md-limit="soa_measures.query.limit" md-limit-options="[20, 30, 50, 100]" md-page="soa_measures.query.page"
-                             md-total="{{soa_measures.items.count}}" md-on-paginate="updateSoaMeasures" md-page-select md-label="{{paginationLabels}}">
+        <md-table-pagination md-limit="soa_measures[ref.uuid].query.limit" md-limit-options="[20, 30, 50, 100]" md-page="soa_measures[ref.uuid].query.page"
+                             md-total="{{soa_measures[ref.uuid].items.count}}" md-on-paginate="updateSoaMeasures" md-page-select md-label="{{paginationLabels}}">
         </md-table-pagination>
       </md-tab>
   </md-tabs>

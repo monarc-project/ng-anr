@@ -13,13 +13,17 @@
      */
     function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, MeasureService, SOACategoryService,
                                   ClientSoaService,  $q, ReferentialService, TableHelperService, MeasureMeasureService) {
-        // Options for Soa Table
-        $scope.soa_measures = TableHelperService.build('m.code', 20, 1, '');
 
         $scope.updateSoaReferentials = function () {
+            $scope.soa_measures = [];
             $scope.updatingReferentials = false;
             ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
                 $scope.referentials.items = data;
+                $scope.referentials.items.referentials.forEach(function (ref){
+                  let uuid = ref.uuid;
+                  $scope.soa_measures[uuid] = TableHelperService.build('m.code', 20, 1, '');
+                  $scope.soa_measures[uuid].selectedCategory = 0;
+                });
                 $scope.updatingReferentials = true;
             })
         };
@@ -35,44 +39,40 @@
           });
 
         $scope.selectReferential = function (referentialId) {
-            $scope.soa_measures.selectedCategory = 0;
             $scope.referential_uuid = referentialId;
             $scope.updateSoaMeasures();
             $scope.updateCategories(referentialId);
+
+            $scope.$watchGroup(["soa_measures["+ "'" + referentialId + "'" +"].selectedCategory" ,
+                                "soa_measures["+ "'" + referentialId + "'" +"].query.filter",
+                                "soa_measures["+ "'" + referentialId + "'" +"].query.order"], function() {
+
+                  $scope.updateSoaMeasures();
+            });
         };
 
-        $scope.$watchGroup(['soa_measures.selectedCategory', 'referentialsUpdated', 'soa_measures.query.filter', 'soa_measures.query.order'], function(newValue, oldValue) {
+        $scope.$watch('referentialsUpdated', function() {
           if ($scope.referentialsUpdated) {
-              $scope.updatingReferentials = false;
-              $scope.updateSoaReferentials();
-              $scope.referentialsUpdated = false;
-          }else {
-              $scope.updateSoaMeasures();
+            $scope.updateSoaReferentials();
+            $scope.referentialsUpdated = false
           }
         });
 
-        $scope.updateSoaReferentials = function () {
-            ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
-                $scope.referentials.items = data;
-                $scope.updatingReferentials = true;
-            })
-        };
-
         $scope.updateSoaMeasures = function () {
             $scope.updatingMeasures = false;
-            var query = angular.copy($scope.soa_measures.query);
-            query.category = $scope.soa_measures.selectedCategory;
+            var query = angular.copy($scope.soa_measures[$scope.referential_uuid].query);
+            query.category = $scope.soa_measures[$scope.referential_uuid].selectedCategory;
             query.referential = $scope.referential_uuid;
 
-            if ($scope.soa_measures.previousQueryOrder != $scope.soa_measures.query.order) {
-                $scope.soa_measures.query.page = query.page = 1;
-                $scope.soa_measures.previousQueryOrder = $scope.soa_measures.query.order;
+            if ($scope.soa_measures[$scope.referential_uuid].previousQueryOrder != $scope.soa_measures[$scope.referential_uuid].query.order) {
+                $scope.soa_measures[$scope.referential_uuid].query.page = query.page = 1;
+                $scope.soa_measures[$scope.referential_uuid].previousQueryOrder = $scope.soa_measures[$scope.referential_uuid].query.order;
             }
 
-            $scope.soa_measures.promise = ClientSoaService.getSoas(query);
-            $scope.soa_measures.promise.then(
+            $scope.soa_measures[$scope.referential_uuid].promise = ClientSoaService.getSoas(query);
+            $scope.soa_measures[$scope.referential_uuid].promise.then(
                 function (data) {
-                    $scope.soa_measures.items = data;
+                    $scope.soa_measures[$scope.referential_uuid].items = data;
                     $scope.updatingMeasures = true;
                 }
             )
@@ -103,10 +103,10 @@
         };
 
         $scope.sortByCode = function() {
-          if ($scope.soa_measures.query.order == 'm.code') { // set m.code because it's a joined table and his alias is m for measure
-            $scope.soa_measures.query.order = '-m.code';
+          if ($scope.soa_measures[$scope.referential_uuid].query.order == 'm.code') { // set m.code because it's a joined table and his alias is m for measure
+            $scope.soa_measures[$scope.referential_uuid].query.order = '-m.code';
           }else {
-            $scope.soa_measures.query.order = 'm.code';
+            $scope.soa_measures[$scope.referential_uuid].query.order = 'm.code';
           }
         }
 
@@ -213,7 +213,7 @@
             finalArray[recLine]+=','+gettextCatalog.getString('Actions');
             finalArray[recLine]+=','+gettextCatalog.getString('Level of compliance');
 
-            soas = $scope.soa_measures.items['soaMeasures'];
+            soas = $scope.soa_measures[$scope.referential_uuid].items['soaMeasures'];
             for (soa in soas) {
                 recLine++;
 
