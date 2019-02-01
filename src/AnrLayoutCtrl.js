@@ -253,6 +253,14 @@
             });
         };
 
+        $rootScope.$on('referentialsUpdated', function () {
+            $scope.updateReferentials();
+         });
+
+         $rootScope.$on('amvUpdated', function () {
+           $scope.updateAnrRisksTable();
+          });
+
         $scope.resetRisksFilters = function () {
             $scope.risks_filters = {
                 order: 'maxRisk',

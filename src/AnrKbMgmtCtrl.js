@@ -1169,6 +1169,7 @@
                                 $scope.updateAmvs();
                                 toastr.success(gettextCatalog.getString('The risk has been edited successfully.'),
                                   gettextCatalog.getString('Edition successful'));
+                                $rootScope.$broadcast('amvUpdated');
                             },
 
                             function () {
