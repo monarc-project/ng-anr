@@ -3211,11 +3211,13 @@
       $scope.uploadFile = async function () {
 
         var itemsToImport = $scope.importData.length;
+        var itemFields= [];
         switch (tab) {
           case 'Threats':
             $scope.getThemes = await $scope.createThemes();
             break;
           case 'Controls':
+            itemFields.push('uuid');
             $scope.getCategories = await $scope.createCategories();
             break;
           case 'Operational risks':
@@ -3224,7 +3226,6 @@
           default:
         }
         var cia = ['c','i','a'];
-        var itemFields= [];
         for(var index in $scope.items[tab]) {
             itemFields.push($scope.items[tab][index]['field']);
         }
