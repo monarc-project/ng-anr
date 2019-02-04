@@ -1899,7 +1899,7 @@
                  successCreateObject(result)
                });
                break;
-             case 'Operational Risks':
+             case 'Operational risks':
                RiskService.createRisk(importData, function (result){
                  $scope.$parent.updateRisks();
                  successCreateObject(result)
@@ -2826,7 +2826,7 @@
         case 'Tags':
           var getService = TagService.getTags();
           var items = 'tags'; break;
-        case 'Operational Risks':
+        case 'Operational risks':
           var getService = RiskService.getRisks();
           var externalItem = 'tags';
           $scope.actualExternalItems = tags;
@@ -2968,7 +2968,7 @@
               'example' : gettextCatalog.getString('Governance')
             }
         },
-        'Operational Risks' :  {
+        'Operational risks' :  {
             'code' : {
               'field' : 'code',
               'required' : true,
@@ -3218,7 +3218,7 @@
           case 'Controls':
             $scope.getCategories = await $scope.createCategories();
             break;
-          case 'Operational Risks':
+          case 'Operational risks':
             $scope.getTags = await $scope.createTags();
             break;
           default:
