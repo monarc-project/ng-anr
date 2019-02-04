@@ -3140,7 +3140,7 @@
               });
               var uniqueLabels = new Set(tags);
             }else{
-              var uniqueLabels = new Set(file.data.map(item => item[externalItem]));
+              var uniqueLabels = new Set(file.data.map(item => item[externalItem].trim()));
             }
 
             for (let label of uniqueLabels)
