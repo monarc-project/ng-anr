@@ -703,7 +703,8 @@
             $scope.measures.selected = [];
         };
 
-        $scope.selectReferential = function (referentialId) {
+        $scope.selectReferential = function (referentialId,index) {
+            $scope.refTabSelected = index;
             $scope.referential_uuid = referentialId;
             ReferentialService.getReferential(referentialId).then(function (data) {
                 $scope.referential = data;
@@ -772,6 +773,7 @@
 
                     ReferentialService.createReferential(referential,
                         function () {
+                          $scope.refTabSelected = $scope.referentials.items.count + 1;
                           $scope.updateReferentials();
                           toastr.success(gettextCatalog.getString('The referential has been created successfully.',
                                   {referntialLabel: $scope._langField(referential,'label')}), gettextCatalog.getString('Creation successful'));
