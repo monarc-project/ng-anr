@@ -3135,7 +3135,7 @@
               file.data.forEach(function(list){
                 var tag = list['tags'].toString().split("/");
                 tag.forEach(function(t){
-                  tags.push(t);
+                  tags.push(t.trim());
                 })
               });
               var uniqueLabels = new Set(tags);
@@ -3144,8 +3144,8 @@
             }
 
             for (let label of uniqueLabels)
-              if(label && !$scope.actualExternalItems.find(ei=> ei['label' + $scope.language].toLowerCase() === label.toLowerCase().trim())){
-                $scope.extItemToCreate.push(label);
+              if(label && !$scope.actualExternalItems.find(ei=> ei['label' + $scope.language].toLowerCase().trim() === label.toLowerCase().trim())){
+                $scope.extItemToCreate.push(label.trim());
               }
           }
 
@@ -3246,7 +3246,7 @@
             delete postData['description'];
           }
           if (postData['theme']) {
-            postData.theme = $scope.getThemes.find(t => t['label' + $scope.language].toLowerCase() === postData.theme.toLowerCase()).id;
+            postData.theme = $scope.getThemes.find(t => t['label' + $scope.language].toLowerCase().trim() === postData.theme.toLowerCase().trim()).id;
           }
 
           if (tab == 'Threats') {
@@ -3265,13 +3265,13 @@
             postData.referential = referential;
           }
           if (postData['category']) {
-            postData.category = $scope.getCategories.find(c => c['label' + $scope.language].toLowerCase() === postData.category.toLowerCase()).id;
+            postData.category = $scope.getCategories.find(c => c['label' + $scope.language].toLowerCase().trim() === postData.category.toLowerCase().trim()).id;
           }
           if (postData['tags']) {
             var tag = postData.tags.toString().split("/");
             var tagsId = [];
             tag.forEach(function(tag){
-              tagsId.push($scope.getTags.find(t => t['label' + $scope.language].toLowerCase() === tag.toLowerCase()).id);
+              tagsId.push($scope.getTags.find(t => t['label' + $scope.language].toLowerCase().trim() === tag.toLowerCase().trim()).id);
             })
             postData.tags = tagsId;
           }
