@@ -1845,7 +1845,7 @@
         var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
         $mdDialog.show({
             controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService',
-                        'SOACategoryService', 'TagService', 'RiskService', 'toastr', 'gettextCatalog', '$q', 'tab', 'themes', 'categories', 'referential' ,'tags',  ImportFileDialogCtrl],
+                        'SOACategoryService', 'TagService', 'RiskService', 'MeasureMeasureService', 'toastr', 'gettextCatalog', '$q', 'tab', 'themes', 'categories', 'referential' ,'tags',  ImportFileDialogCtrl],
             templateUrl: 'views/anr/import.file.html',
             targetEvent: ev,
             scope: $scope.$dialogScope.$new(),
@@ -1904,6 +1904,18 @@
                  $scope.$parent.updateRisks();
                  successCreateObject(result)
                });
+               break;
+             case 'Matches':
+                importData.forEach(function(measureLinked){
+                  var measuremeasure  = {
+                      father: measureLinked.fatherId,
+                      child: measureLinked.childId,
+                  };
+                  MeasureMeasureService.createMeasureMeasure(measuremeasure, function (result){
+                    $scope.$parent.updateReferentials();
+                    successCreateObject(result)
+                  });
+                })
                break;
 
              default:
@@ -2296,6 +2308,32 @@
               MeasureMeasureService.deleteMeasureMeasure(id);
             }
           });
+        };
+
+        $scope.exportMatchRefs = function(){
+            var csv = '';
+            MeasureMeasureService.getMeasuresMeasures().then(function(data) {
+              var measuresLinked = data.measuresmeasures;
+              keys = ['father','child'];
+              var csv = 'father,child\n';
+
+              measuresLinked.forEach(function(item) {
+                  ctr = 0;
+                  keys.forEach(function(key) {
+                      if (ctr > 0) csv += ',';
+                      csv += item[key];
+                      ctr++;
+                  });
+                  csv += '\n';
+              });
+
+              data = encodeURI('data:text/csv;charset=UTF-8,\uFEFF' + csv);
+              link = document.createElement('a');
+              link.setAttribute('href', data);
+              link.setAttribute('download', 'matchReferentials.csv');
+              document.body.appendChild(link);
+              link.click();
+            })
         };
 
         $scope.cancel = function() {
@@ -2791,7 +2829,7 @@
     }
 
     function ImportFileDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService, MeasureService, SOACategoryService,
-                                  TagService, RiskService, toastr, gettextCatalog, $q, tab, themes, categories, referential, tags) {
+                                  TagService, RiskService, MeasureMeasureService, toastr, gettextCatalog, $q, tab, themes, categories, referential, tags) {
 
       $scope.tab = tab;
       $scope.guideVisible = false;
@@ -2832,6 +2870,13 @@
           $scope.actualExternalItems = tags;
           var extItemLabel = gettextCatalog.getString('tags');
           var items = 'risks'; break;
+          case 'Matches':
+            var getService = MeasureMeasureService.getMeasuresMeasures();
+            var items = 'measuresmeasures';
+            MeasureService.getMeasures().then(function (data) {
+              $scope.allMeasures = data.measures;
+            });
+            break;
         default:
       }
 
@@ -2993,6 +3038,20 @@
               'type' : 'text',
               'example' : gettextCatalog.getString('Separed by /') + $scope.actualExternalItems
             }
+        },
+        'Matches' :  {
+            'father' : {
+              'field' : 'father',
+              'required' : true,
+              'type' : 'text',
+              'example' : 'C16, 123, CAZ, C-12'
+            },
+            'child' : {
+              'field' : 'child',
+              'required' : true,
+              'type' : 'text',
+              'example' : gettextCatalog.getString('Network')
+            }
         }
       };
 
@@ -3149,7 +3208,6 @@
               }
           }
 
-          var codes = items.map(item => item.code.toLowerCase());
           var requiredFields = [];
           for(var index in $scope.items[tab]) {
             if ($scope.items[tab][index]['required']) {
@@ -3161,9 +3219,49 @@
                 file.data[i].error = '';
                 file.data[i].alert = false;
 
-                if (file.data[i]['code'] && codes.includes(file.data[i]['code'].toLowerCase().trim())) {
-                    file.data[i].error += gettextCatalog.getString('code is already in use') + "\n";
+                if (requiredFields.includes('code')) {
+                  var codes = items.map(item => item.code.toLowerCase());
+                  if (file.data[i]['code'] && codes.includes(file.data[i]['code'].toLowerCase().trim())) {
+                      file.data[i].error += gettextCatalog.getString('code is already in use') + "\n";
+                      $scope.check = true;
+                  }else {
+                    codes.push(file.data[i]['code'].toLowerCase());
+                  }
+                }
+
+                if (requiredFields.includes('father') && file.data[i]['father'] && file.data[i]['child']) {
+                  var matches = items.map(item => item.father.toLowerCase() + item.child.toLowerCase());
+                  var uuids = $scope.allMeasures.map(item => item.uuid);
+
+                  if (!uuids.includes(file.data[i]['father'].toLowerCase().trim())) {
+                    file.data[i]['father'] = '-';
+                    file.data[i].error += gettextCatalog.getString('control father not existing') + "\n";
                     $scope.check = true;
+                  }
+                  if (!uuids.includes(file.data[i]['child'].toLowerCase().trim())) {
+                    file.data[i]['child'] = '-';
+                    file.data[i].error += gettextCatalog.getString('control child not existing') + "\n";
+                    $scope.check = true;
+                  }
+                  if (matches.includes(file.data[i]['father'].toLowerCase().trim() + file.data[i]['child'].toLowerCase().trim())) {
+                      var measure = $scope.allMeasures.filter(measure => measure.uuid == file.data[i]['father'].toLowerCase().trim())
+                      file.data[i]['fatherId'] = file.data[i]['father'];
+                      file.data[i]['father'] = measure[0].referential.label1 + " : " + measure[0].code;
+
+                      var measure = $scope.allMeasures.filter(measure => measure.uuid == file.data[i]['child'].toLowerCase().trim())
+                      file.data[i]['childId'] = file.data[i]['child'];
+                      file.data[i]['child'] = measure[0].referential.label1 + " : " + measure[0].code;
+                      file.data[i].error += gettextCatalog.getString('match is already in use') + "\n";
+                      $scope.check = true;
+                  }else {
+                    var measure = $scope.allMeasures.filter(measure => measure.uuid == file.data[i]['father'].toLowerCase().trim())
+                    file.data[i]['fatherId'] = file.data[i]['father'];
+                    file.data[i]['father'] = measure[0].referential['label' + $scope.language] + " : " + measure[0].code;
+
+                    var measure = $scope.allMeasures.filter(measure => measure.uuid == file.data[i]['child'].toLowerCase().trim())
+                    file.data[i]['childId'] = file.data[i]['child'];
+                    file.data[i]['child'] = measure[0].referential['label' + $scope.language] + " : " + measure[0].code;
+                  }
                 }
 
                 for (var j = 0; j < requiredFields.length; j++) {
@@ -3176,7 +3274,6 @@
                     file.data[i].alert = true;
                 }
 
-                codes.push(file.data[i]['code'].toLowerCase());
               }
               if (!$scope.check && $scope.extItemToCreate.length > 0) {
                 var confirm = $mdDialog.confirm()
@@ -3223,6 +3320,9 @@
           case 'Operational risks':
             $scope.getTags = await $scope.createTags();
             break;
+            case 'Matches':
+              itemFields.push('fatherid','childid');
+              break;
           default:
         }
         var cia = ['c','i','a'];

@@ -11,12 +11,29 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-              <form flex name="matchReferential.filter.form">
-                  <md-input-container class="md-block md-padding-left md-padding-right">
-                      <label><md-icon>search</md-icon> {{ 'Search...' | translate }}</label>
-                      <input ng-model="matchRef_filter">
-                  </md-input-container>
-              </form>
+                  <form name="matchReferential.filter.form">
+                    <div layout="row" layout-align="start center">
+                      <md-input-container flex class="md-block md-padding-left md-padding-right">
+                          <label><md-icon>search</md-icon> {{ 'Search...' | translate }}</label>
+                          <input ng-model="matchRef_filter">
+                      </md-input-container>
+                      <div>
+                        <md-button class="md-icon-button md-primary" ng-click="exportMatchRefs()">
+                           <md-tooltip md-direction="left">
+                               {{ 'Export Match referentials' | translate }}
+                           </md-tooltip>
+                           <md-icon>call_made</md-icon>
+                         </md-button>
+                         <md-button  class="md-icon-button md-primary" ng-click="importFile($event,'Matches')" ng-controller="AnrKbMgmtCtrl">
+                           <md-tooltip md-direction="left">
+                               {{ 'Import Match referentials' | translate }}
+                           </md-tooltip>
+                           <md-icon>play_for_work</md-icon>
+                         </md-button>
+                     </div>
+                   </div>
+                  </form>
+
               <table class="md-html-table">
                   <thead>
                       <tr>
@@ -60,6 +77,7 @@
                       </tr>
                   </tbody>
               </table>
+            </div>
         </md-dialog-content>
     </form>
 </md-dialog>
