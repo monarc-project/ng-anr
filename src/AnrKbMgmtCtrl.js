@@ -3255,12 +3255,16 @@
                       $scope.check = true;
                   }else {
                     var measure = $scope.allMeasures.filter(measure => measure.uuid == file.data[i]['father'].toLowerCase().trim())
-                    file.data[i]['fatherId'] = file.data[i]['father'];
-                    file.data[i]['father'] = measure[0].referential['label' + $scope.language] + " : " + measure[0].code;
+                    if (measure.length > 0) {
+                      file.data[i]['fatherId'] = file.data[i]['father'];
+                      file.data[i]['father'] = measure[0].referential['label' + $scope.language] + " : " + measure[0].code;
+                    }
 
                     var measure = $scope.allMeasures.filter(measure => measure.uuid == file.data[i]['child'].toLowerCase().trim())
-                    file.data[i]['childId'] = file.data[i]['child'];
-                    file.data[i]['child'] = measure[0].referential['label' + $scope.language] + " : " + measure[0].code;
+                    if (measure.length > 0) {
+                      file.data[i]['childId'] = file.data[i]['child'];
+                      file.data[i]['child'] = measure[0].referential['label' + $scope.language] + " : " + measure[0].code;
+                    }
                   }
                 }
 
