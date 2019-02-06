@@ -3233,8 +3233,8 @@
                     $scope.check = true;
                   }
                   if (!uuids.includes(file.data[i]['match'].toLowerCase().trim())) {
-                    file.data[i]['child'] = '-';
-                    file.data[i].error += gettextCatalog.getString('control does not exist') + "\n";
+                    file.data[i]['match'] = '-';
+                    file.data[i].error += gettextCatalog.getString('match does not exist') + "\n";
                     $scope.check = true;
                   }
                   if (matches.includes(file.data[i]['control'].toLowerCase().trim() + file.data[i]['match'].toLowerCase().trim())) {
