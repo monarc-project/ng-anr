@@ -2316,8 +2316,10 @@
               var measuresLinked = data.measuresmeasures;
               keys = ['father','child'];
               var csv = 'father,child\n';
+              var uuids = $scope.measuresRefSelected.map(item => item.uuid);
+              var measuresLinkedRefSelected = measuresLinked.filter(measure => uuids.includes(measure.father));
 
-              measuresLinked.forEach(function(item) {
+              measuresLinkedRefSelected.forEach(function(item) {
                   ctr = 0;
                   keys.forEach(function(key) {
                       if (ctr > 0) csv += ',';
