@@ -57,8 +57,8 @@
                       <th ng-if="items[tab].theme" colspan="1" class="big-border-left"><p>theme</p></th>
                       <th ng-if="items[tab].category" colspan="1" class="big-border-left"><p>category</p></th>
                       <th ng-if="items[tab].tags" colspan="1" class="big-border-left"><p>tags</p></th>
-                      <th ng-if="items[tab].father" colspan="1" class="big-border-left"><p>father</p></th>
-                      <th ng-if="items[tab].child" colspan="1" class="big-border-left"><p>child</p></th>
+                      <th ng-if="items[tab].control" colspan="1" class="big-border-left"><p>control</p></th>
+                      <th ng-if="items[tab].match" colspan="1" class="big-border-left"><p>match</p></th>
                       <th ng-if="importData.length > 0 && check" colspan="1" class="big-border-left"><p>error</p></th>
 
                     </tr>
@@ -79,8 +79,8 @@
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].theme"><span ng-class="{'md-mandatory-field': input.alert}">{{input.theme}}</span></td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].category"><span ng-class="{'md-mandatory-field': input.alert}">{{input.category}}</span></td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].tags"><span ng-class="{'md-mandatory-field': input.alert}">{{input.tags}}</span></td>
-                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].father">{{input.father}}</td>
-                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].child">{{input.child}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].control">{{input.control}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].match">{{input.match}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="importData.length > 0 && check" class="preserve-newlines">{{input.error}}</td>
                   </tr>
                   </tbody>

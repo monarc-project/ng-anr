@@ -824,22 +824,24 @@
         $scope.matchReferential = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
-                $scope.matchReferentials = data;
-                $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', 'ReferentialService', 'MeasureService','ConfigService', 'MeasureMeasureService', '$q', 'measures', 'referentials', 'referentialSelected', MatchReferentialDialogCtrl],
-                    templateUrl: 'views/anr/match.referentials.html',
-                    targetEvent: ev,
-                    preserveScope: false,
-                    scope: $scope.$dialogScope.$new(),
-                    clickOutsideToClose: false,
-                    fullscreen: useFullScreen,
-                    onRemoving : function(){$scope.selectReferential($scope.referential.uuid)},
-                    locals: {
-                        'measures' : $scope.measuresRefSelected,
-                        'referentials': $scope.matchReferentials,
-                        'referentialSelected' : $scope.referential
-                    }
-                })
+                var matchReferentials = data;
+                MeasureService.getMeasures({referential: $scope.referential_uuid, order:'code'}).then(function (data) {
+                    var measuresRefSelected = data;
+                    $mdDialog.show({
+                        controller: ['$scope', '$mdDialog', 'ReferentialService', 'MeasureService','ConfigService', 'MeasureMeasureService', '$q', 'measures', 'referentials', 'referentialSelected', MatchReferentialDialogCtrl],
+                        templateUrl: 'views/anr/match.referentials.html',
+                        targetEvent: ev,
+                        preserveScope: false,
+                        scope: $scope.$dialogScope.$new(),
+                        clickOutsideToClose: false,
+                        fullscreen: useFullScreen,
+                        locals: {
+                            'measures' : measuresRefSelected,
+                            'referentials': matchReferentials,
+                            'referentialSelected' : $scope.referential
+                        }
+                    })
+                });
             });
         };
 
@@ -873,10 +875,6 @@
                 $scope.measures.query.page = query.page = 1;
                 $scope.measures.previousQueryOrder = $scope.measures.query.order;
             }
-
-            MeasureService.getMeasures({referential: $scope.referential_uuid, order:'code'}).then(function (data) {
-                $scope.measuresRefSelected = data;
-            });
 
             $scope.measures.promise = MeasureService.getMeasures(query);
             $scope.measures.promise.then(
@@ -1906,16 +1904,9 @@
                });
                break;
              case 'Matches':
-                importData.forEach(function(measureLinked){
-                  var measuremeasure  = {
-                      father: measureLinked.fatherId,
-                      child: measureLinked.childId,
-                  };
-                  MeasureMeasureService.createMeasureMeasure(measuremeasure, function (result){
-                    $scope.$parent.updateReferentials();
-                    successCreateObject(result)
-                  });
-                })
+                MeasureMeasureService.createMeasureMeasure(importData, function (result){
+                  successCreateObject(result)
+                });
                break;
 
              default:
@@ -2315,7 +2306,7 @@
             MeasureMeasureService.getMeasuresMeasures().then(function(data) {
               var measuresLinked = data.measuresmeasures;
               keys = ['father','child'];
-              var csv = 'father,child\n';
+              var csv = 'control,match\n';
               var uuids = $scope.measuresRefSelected.map(item => item.uuid);
               var measuresLinkedRefSelected = measuresLinked.filter(measure => uuids.includes(measure.father));
 
@@ -2872,13 +2863,13 @@
           $scope.actualExternalItems = tags;
           var extItemLabel = gettextCatalog.getString('tags');
           var items = 'risks'; break;
-          case 'Matches':
-            var getService = MeasureMeasureService.getMeasuresMeasures();
-            var items = 'measuresmeasures';
-            MeasureService.getMeasures().then(function (data) {
-              $scope.allMeasures = data.measures;
-            });
-            break;
+        case 'Matches':
+          var getService = MeasureMeasureService.getMeasuresMeasures();
+          var items = 'measuresmeasures';
+          MeasureService.getMeasures().then(function (data) {
+            $scope.allMeasures = data.measures;
+          });
+          break;
         default:
       }
 
@@ -2988,7 +2979,7 @@
             },
             'category' : {
               'field' : 'category',
-              'required' : false,
+              'required' : true,
               'type' : 'text',
               'example' : $scope.actualExternalItems
             }
@@ -3042,17 +3033,17 @@
             }
         },
         'Matches' :  {
-            'father' : {
-              'field' : 'father',
+            'control' : {
+              'field' : 'control',
               'required' : true,
-              'type' : 'text',
-              'example' : 'C16, 123, CAZ, C-12'
+              'type' : 'uuid',
+              'example' : ''
             },
-            'child' : {
-              'field' : 'child',
+            'match' : {
+              'field' : 'match',
               'required' : true,
-              'type' : 'text',
-              'example' : gettextCatalog.getString('Network')
+              'type' : 'uuid',
+              'example' : ''
             }
         }
       };
@@ -3190,26 +3181,6 @@
         $scope.extItemToCreate = [];
         $scope.getItems().then(async function(items){
 
-          if (externalItem) {
-            if (externalItem == 'tags') {
-              var tags = [];
-              file.data.forEach(function(list){
-                var tag = list['tags'].toString().split("/");
-                tag.forEach(function(t){
-                  tags.push(t.trim());
-                })
-              });
-              var uniqueLabels = new Set(tags);
-            }else{
-              var uniqueLabels = new Set(file.data.map(item => item[externalItem].trim()));
-            }
-
-            for (let label of uniqueLabels)
-              if(label && !$scope.actualExternalItems.find(ei=> ei['label' + $scope.language].toLowerCase().trim() === label.toLowerCase().trim())){
-                $scope.extItemToCreate.push(label.trim());
-              }
-          }
-
           var requiredFields = [];
           for(var index in $scope.items[tab]) {
             if ($scope.items[tab][index]['required']) {
@@ -3217,6 +3188,27 @@
             }
           }
           if (!file.meta || file.meta.fields.some(rf=> requiredFields.includes(rf)) && file.data.length > 0) {
+              if (externalItem) {
+                if (externalItem == 'tags') {
+                  var tags = [];
+                  file.data.forEach(function(list){
+                    if (list['tags']) {
+                      var tag = list['tags'].toString().split("/");
+                      tag.forEach(function(t){
+                        tags.push(t.trim());
+                      })
+                    }
+                  });
+                  var uniqueLabels = new Set(tags);
+                }else{
+                  var uniqueLabels = new Set(file.data.map(item => item[externalItem].trim()));
+                }
+
+                for (let label of uniqueLabels)
+                  if(label && !$scope.actualExternalItems.find(ei=> ei['label' + $scope.language].toLowerCase().trim() === label.toLowerCase().trim())){
+                    $scope.extItemToCreate.push(label.trim());
+                  }
+              }
               for (var i = 0; i < file.data.length; i++) {
                 file.data[i].error = '';
                 file.data[i].alert = false;
@@ -3231,41 +3223,41 @@
                   }
                 }
 
-                if (requiredFields.includes('father') && file.data[i]['father'] && file.data[i]['child']) {
+                if (requiredFields.includes('match') && file.data[i]['control'] && file.data[i]['match']) {
                   var matches = items.map(item => item.father.toLowerCase() + item.child.toLowerCase());
                   var uuids = $scope.allMeasures.map(item => item.uuid);
 
-                  if (!uuids.includes(file.data[i]['father'].toLowerCase().trim())) {
-                    file.data[i]['father'] = '-';
-                    file.data[i].error += gettextCatalog.getString('control father not existing') + "\n";
+                  if (!uuids.includes(file.data[i]['control'].toLowerCase().trim())) {
+                    file.data[i]['control'] = '-';
+                    file.data[i].error += gettextCatalog.getString('control does not exist') + "\n";
                     $scope.check = true;
                   }
-                  if (!uuids.includes(file.data[i]['child'].toLowerCase().trim())) {
+                  if (!uuids.includes(file.data[i]['match'].toLowerCase().trim())) {
                     file.data[i]['child'] = '-';
-                    file.data[i].error += gettextCatalog.getString('control child not existing') + "\n";
+                    file.data[i].error += gettextCatalog.getString('control does not exist') + "\n";
                     $scope.check = true;
                   }
-                  if (matches.includes(file.data[i]['father'].toLowerCase().trim() + file.data[i]['child'].toLowerCase().trim())) {
-                      var measure = $scope.allMeasures.filter(measure => measure.uuid == file.data[i]['father'].toLowerCase().trim())
-                      file.data[i]['fatherId'] = file.data[i]['father'];
-                      file.data[i]['father'] = measure[0].referential.label1 + " : " + measure[0].code;
+                  if (matches.includes(file.data[i]['control'].toLowerCase().trim() + file.data[i]['match'].toLowerCase().trim())) {
+                      var measure = $scope.allMeasures.filter(measure => measure.uuid == file.data[i]['control'].toLowerCase().trim())
+                      file.data[i]['father'] = file.data[i]['control'];
+                      file.data[i]['control'] = measure[0].referential['label' + $scope.language] + " : " + measure[0].code + " - " + measure[0]['label' + $scope.language];
 
-                      var measure = $scope.allMeasures.filter(measure => measure.uuid == file.data[i]['child'].toLowerCase().trim())
-                      file.data[i]['childId'] = file.data[i]['child'];
-                      file.data[i]['child'] = measure[0].referential.label1 + " : " + measure[0].code;
-                      file.data[i].error += gettextCatalog.getString('match is already in use') + "\n";
+                      var measure = $scope.allMeasures.filter(measure => measure.uuid == file.data[i]['match'].toLowerCase().trim())
+                      file.data[i]['child'] = file.data[i]['match'];
+                      file.data[i]['match'] = measure[0].referential['label' + $scope.language] + " : " + measure[0].code + " - " + measure[0]['label' + $scope.language];
+                      file.data[i].error += gettextCatalog.getString('this matching is already in use') + "\n";
                       $scope.check = true;
                   }else {
-                    var measure = $scope.allMeasures.filter(measure => measure.uuid == file.data[i]['father'].toLowerCase().trim())
+                    var measure = $scope.allMeasures.filter(measure => measure.uuid == file.data[i]['control'].toLowerCase().trim())
                     if (measure.length > 0) {
-                      file.data[i]['fatherId'] = file.data[i]['father'];
-                      file.data[i]['father'] = measure[0].referential['label' + $scope.language] + " : " + measure[0].code;
+                      file.data[i]['father'] = file.data[i]['control'];
+                      file.data[i]['control'] = measure[0].referential['label' + $scope.language] + " : " + measure[0].code + " - " + measure[0]['label' + $scope.language];
                     }
 
-                    var measure = $scope.allMeasures.filter(measure => measure.uuid == file.data[i]['child'].toLowerCase().trim())
+                    var measure = $scope.allMeasures.filter(measure => measure.uuid == file.data[i]['match'].toLowerCase().trim())
                     if (measure.length > 0) {
-                      file.data[i]['childId'] = file.data[i]['child'];
-                      file.data[i]['child'] = measure[0].referential['label' + $scope.language] + " : " + measure[0].code;
+                      file.data[i]['child'] = file.data[i]['match'];
+                      file.data[i]['match'] = measure[0].referential['label' + $scope.language] + " : " + measure[0].code + " - " + measure[0]['label' + $scope.language];
                     }
                   }
                 }
@@ -3327,7 +3319,7 @@
             $scope.getTags = await $scope.createTags();
             break;
             case 'Matches':
-              itemFields.push('fatherid','childid');
+              itemFields.push('father','child');
               break;
           default:
         }
