@@ -2290,15 +2290,11 @@
         };
 
         $scope.deleteMeasureLinked = function(fatherId,childId) {
-          MeasureMeasureService.getMeasuresMeasures({fatherId:fatherId, childId: childId}).then(function(e) {
-            if (e.count > 0) {
-              var id  = {
-                  father: fatherId,
-                  child: childId,
-              };
-              MeasureMeasureService.deleteMeasureMeasure(id);
-            }
-          });
+          var measuremeasure  = {
+              father: fatherId,
+              child: childId,
+          };
+          MeasureMeasureService.deleteMeasureMeasure(measuremeasure);
         };
 
         $scope.exportMatchRefs = function(){
