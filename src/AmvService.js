@@ -58,7 +58,11 @@
 
         var patchAmv = function (id, params, success, error) {
             self.AmvResource.patch({amvId: id}, params, success, error);
-        }
+        };
+
+        var patchAmvs = function (params, success, error) {
+            self.AmvResource.patch(params, success, error);
+        };
 
         return {
             makeResource: makeResource,
@@ -68,7 +72,8 @@
             deleteAmv: deleteAmv,
             deleteMassAmv: deleteMassAmv,
             updateAmv: updateAmv,
-            patchAmv: patchAmv
+            patchAmv: patchAmv,
+            patchAmvs: patchAmvs
         };
     }
 

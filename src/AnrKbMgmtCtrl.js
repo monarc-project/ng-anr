@@ -1074,6 +1074,28 @@
             })
         }
 
+        $scope.updateMeasuresAMV = function (ev){
+          var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+          $mdDialog.show({
+              controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService',
+                           'MeasureService', 'ReferentialService', 'ConfigService', 'AmvService',
+                           '$q', 'referentials', updateMeasuresAMVDialogCtrl],
+              templateUrl: 'views/anr/updateMeasures.amvs.html',
+              targetEvent: ev,
+              preserveScope: false,
+              scope: $scope.$dialogScope.$new(),
+              clickOutsideToClose: false,
+              fullscreen: useFullScreen,
+              locals: {
+                  'referentials': $scope.referentials_filter.items['referentials'],
+              }
+          })
+
+              .then(function (params) {
+                AmvService.patchAmvs(params);
+              });
+        }
 
         $scope.createNewAmv = function (ev, amv) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
@@ -2502,7 +2524,28 @@
     }
 
 
+    function updateMeasuresAMVDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService,
+                                MeasureService, ReferentialService, ConfigService, AmvService,
+                                $q, referentials) {
 
+        $scope.referentials = referentials;
+        $scope.fromReferential = [];
+        $scope.toReferential = [];
+
+        $scope.update = function (){
+          var params = {
+            fromReferential: $scope.fromReferential,
+            toReferential: $scope.toReferential
+          };
+          $mdDialog.hide(params);
+        }
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+
+    }
 
     function CreateAmvDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService,
                                 MeasureService, ReferentialService, ConfigService, AmvService,
