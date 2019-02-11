@@ -12,17 +12,17 @@
         <md-dialog-content>
             <div class="md-dialog-content" layout="column">
                 <div flex class="md-padding-right">
-                <md-subheader class="md-subheader">{{ 'From referential' | translate }}</md-subheader>
-                <md-select ng-model="fromReferential" placeholder="{{ 'Select a referential' | translate }}" required>
-                  <md-option ng-repeat="ref in referentials" ng-value="ref.uuid" ng-if="ref.uuid != toReferential">
+                <md-subheader class="md-subheader">{{ 'Referential to update' | translate }}</md-subheader>
+                <md-select ng-model="toReferential" placeholder="{{ 'Select a referential' | translate }}" required>
+                  <md-option ng-repeat="ref in referentials" ng-value="ref.uuid" ng-if="ref.uuid != fromReferential">
                     {{ _langField(ref,'label') }}
                   </md-option>
                 </md-select>
                 </div>
                 <div flex class="md-padding-right">
-                <md-subheader class="md-subheader">{{ 'To referential' | translate }}</md-subheader>
-                <md-select ng-model="toReferential" placeholder="{{ 'Select a referential' | translate }}" required>
-                  <md-option ng-repeat="ref in referentials" ng-value="ref.uuid" ng-if="ref.uuid != fromReferential">
+                <md-subheader class="md-subheader">{{ 'From referential matched' | translate }}</md-subheader>
+                <md-select ng-model="fromReferential" placeholder="{{ 'Select a referential' | translate }}" required>
+                  <md-option ng-repeat="ref in referentials" ng-value="ref.uuid" ng-if="ref.uuid != toReferential">
                     {{ _langField(ref,'label') }}
                   </md-option>
                 </md-select>
