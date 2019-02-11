@@ -90,54 +90,35 @@
                     </div>
                 </md-autocomplete>
 
-                <md-autocomplete
-                        flex
-                        md-selected-item="amv.referential"
-                        md-search-text="referentialSearchText"
-                        md-selected-item-change="selectedReferentialItemChange(item)"
-                        md-items="item in queryReferentialsSearch(referentialSearchText)"
-                        md-item-text="_langField(item,'label')"
-                        md-delay="300"
-                        md-min-length="0"
-                        md-input-name="referential"
-                        md-floating-label="{{ 'Referential' | translate }}">
-                    <md-item-template>
-                        <span md-highlight-text="referentialSearchText" md-highlight-flags="^i">{{ _langField(item,'label') }}</span>
-                    </md-item-template>
+                <md-tabs md-dynamic-height="true">
+                  <md-tab ng-repeat="ref in amvReferentials" label="{{ _langField(ref,'label')}}"
+                          md-on-select="selectAmvReferential(ref)">
+                          
+                          <md-chips ng-model="amv.measures[ref.uuid]"
+                                    md-autocomplete-snap
+                                    md-require-match="true">
 
-                    <md-not-found>
-                        {{ 'No referential matching your search was found' | translate }}
-                    </md-not-found>
+                              <md-autocomplete flex
+                                               md-selected-item="selectedMeasureItem"
+                                               md-search-text="measureSearchText"
+                                               md-items="item in queryMeasureSearch(measureSearchText)"
+                                               md-item-text="item.code + ' (' + _langField(item,'label') + ')'"
+                                               md-delay="300"
+                                               md-min-length="0"
+                                               md-no-cache="true"
+                                               placeholder= "{{ '+ Add controls from referential' | translate }} {{_langField(amv.referential,'label')}}">
+                                  <span md-highlight-text="measuresSearchText">{{ item.code }} - {{ _langField(item,'label') }}</span>
+                              </md-autocomplete>
 
-                    <div ng-messages="amvForm.referential.$error">
-                        <div ng-message="required">{{ 'You must select a referential' | translate }}</div>
-                    </div>
-                </md-autocomplete>
-
-                <md-chips ng-model="amv.measures[amv.referential.uuid]"
-                          md-autocomplete-snap
-                          md-require-match="true"
-                          ng-if="amv.referential">
-
-                    <md-autocomplete flex
-                                     md-selected-item="selectedMeasureItem"
-                                     md-search-text="measureSearchText"
-                                     md-items="item in queryMeasureSearch(measureSearchText)"
-                                     md-item-text="item.code + ' (' + _langField(item,'label') + ')'"
-                                     md-delay="300"
-                                     md-min-length="0"
-                                     md-no-cache="true"
-                                     placeholder= "{{ '+ Add controls from referential' | translate }} {{_langField(amv.referential,'label')}}">
-                        <span md-highlight-text="measuresSearchText">{{ item.code }} - {{ _langField(item,'label') }}</span>
-                    </md-autocomplete>
-
-                    <md-chip-template>
-                        <span>
-                            <strong>{{$chip.code}}</strong>
-                            <em>{{_langField($chip,'label')}}</em>
-                        </span>
-                    </md-chip-template>
-                </md-chips>
+                              <md-chip-template>
+                                  <span>
+                                      <strong>{{$chip.code}}</strong>
+                                      <em>{{_langField($chip,'label')}}</em>
+                                  </span>
+                              </md-chip-template>
+                          </md-chips>
+                  </md-tab>
+              </md-tabs>
 
                 <div layout="row">
                     <md-input-container class="md-block" layout="row" flex>

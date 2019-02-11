@@ -333,7 +333,7 @@
                     <md-option value="1">{{ 'Show active only' | translate }}</md-option>
                 </md-select>
 
-                <md-select ng-model="referentials_filter.selected">
+                <md-select ng-model="referentials_filter.selected" ng-if="referentials_filter.items.referentials.length > 1">
                   <md-option ng-repeat="ref in referentials_filter.items.referentials" ng-value="ref.uuid">
                     {{ _langField(ref,'label') }}
                   </md-option>
