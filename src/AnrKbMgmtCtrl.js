@@ -1078,9 +1078,7 @@
           var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
           $mdDialog.show({
-              controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService',
-                           'MeasureService', 'ReferentialService', 'ConfigService', 'AmvService',
-                           '$q', 'referentials', updateMeasuresAMVDialogCtrl],
+              controller: ['$scope', '$mdDialog', 'referentials', updateMeasuresAMVDialogCtrl],
               templateUrl: 'views/anr/updateMeasures.amvs.html',
               targetEvent: ev,
               preserveScope: false,
@@ -1093,7 +1091,13 @@
           })
 
               .then(function (params) {
-                AmvService.patchAmvs(params);
+                AmvService.patchAmvs(params,
+                  function () {
+                    $scope.updateAmvs();
+                    toastr.success(gettextCatalog.getString('The risks have been edited successfully.'),
+                      gettextCatalog.getString('Edition successful'));
+                    $rootScope.$broadcast('amvUpdated');
+                });
               });
         }
 
@@ -2524,9 +2528,7 @@
     }
 
 
-    function updateMeasuresAMVDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService,
-                                MeasureService, ReferentialService, ConfigService, AmvService,
-                                $q, referentials) {
+    function updateMeasuresAMVDialogCtrl($scope, $mdDialog, referentials) {
 
         $scope.referentials = referentials;
         $scope.fromReferential = [];
