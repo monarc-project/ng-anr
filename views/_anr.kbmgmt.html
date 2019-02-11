@@ -283,7 +283,7 @@
                           <th md-column md-order-by="code"><span translate>Code</span></th>
                           <th md-column md-order-by="{{ _langField('label') }}"><span translate>Label</span></th>
                           <th md-column md-order-by="category"><span translate>Category</span></th>
-                          <th md-column class="actions-column"><span translate>Actions</span></th>
+                          <th md-column class="actions-column" ng-if="!isAnrReadOnly"><span translate>Actions</span></th>
                       </tr>
                       </thead>
 
@@ -341,6 +341,14 @@
 
                 <md-button class="md-icon-button md-primary" ng-click="removeAmvsFilter()">
                     <md-icon>settings_backup_restore</md-icon>
+                </md-button>
+
+                <md-button ng-if="!isAnrReadOnly && referentials_filter.items.referentials.length > 1"
+                          class="md-icon-button md-primary" ng-click="updateMeasuresAMV($event)">
+                    <md-tooltip md-direction="left">
+                        {{ 'Update measures' | translate }}
+                    </md-tooltip>
+                    <md-icon>update</md-icon>
                 </md-button>
             </div>
 
