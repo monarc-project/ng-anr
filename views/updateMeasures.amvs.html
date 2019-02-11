@@ -1,0 +1,43 @@
+<md-dialog md-theme="light" class="dialog-width">
+    <form name="updateMeasuresAmvForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Update controls</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <div flex class="md-padding-right">
+                <md-subheader class="md-subheader">{{ 'From referential' | translate }}</md-subheader>
+                <md-select ng-model="fromReferential" placeholder="{{ 'Select a referential' | translate }}" required>
+                  <md-option ng-repeat="ref in referentials" ng-value="ref.uuid" ng-if="ref.uuid != toReferential">
+                    {{ _langField(ref,'label') }}
+                  </md-option>
+                </md-select>
+                </div>
+                <div flex class="md-padding-right">
+                <md-subheader class="md-subheader">{{ 'To referential' | translate }}</md-subheader>
+                <md-select ng-model="toReferential" placeholder="{{ 'Select a referential' | translate }}" required>
+                  <md-option ng-repeat="ref in referentials" ng-value="ref.uuid" ng-if="ref.uuid != fromReferential">
+                    {{ _langField(ref,'label') }}
+                  </md-option>
+                </md-select>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="update()" ng-disabled="updateMeasuresAmvForm.$error.required" type="submit" class="md-accent md-hue-3">
+                {{ 'Update' | translate }}
+            </md-button>
+
+        </md-dialog-actions>
+    </form>
+</md-dialog>
