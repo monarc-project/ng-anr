@@ -12,6 +12,11 @@ body{
 .md-tab, .md-button {
     text-transform: none;
 }
+
+label.md-placeholder {
+    color: rgba(0,0,0,0.38);
+}
+
 md-tab-data{
   opacity: 1;
   display: table;
