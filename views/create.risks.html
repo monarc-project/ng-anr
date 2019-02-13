@@ -56,6 +56,36 @@
                     </div>
                 </md-input-container>
 
+                <md-tabs md-dynamic-height="true">
+                  <md-tab ng-repeat="ref in riskopReferentials" label="{{ _langField(ref,'label')}}"
+                          md-on-select="selectRiskopReferential(ref)">
+
+                          <md-chips ng-model="risk.measures[ref.uuid]"
+                                    md-autocomplete-snap
+                                    md-require-match="true">
+
+                              <md-autocomplete flex
+                                               md-selected-item="selectedMeasureItem"
+                                               md-search-text="measureSearchText"
+                                               md-items="item in queryMeasureSearch(measureSearchText)"
+                                               md-item-text="item.code + ' (' + _langField(item,'label') + ')'"
+                                               md-delay="300"
+                                               md-min-length="0"
+                                               md-no-cache="true"
+                                               placeholder= "{{ '+ Add controls from referential' | translate }} {{_langField(risk.referential,'label')}}">
+                                  <span md-highlight-text="measuresSearchText">{{ item.code }} - {{ _langField(item,'label') }}</span>
+                              </md-autocomplete>
+
+                              <md-chip-template>
+                                  <span>
+                                      <strong>{{$chip.code}}</strong>
+                                      <em>{{_langField($chip,'label')}}</em>
+                                  </span>
+                              </md-chip-template>
+                          </md-chips>
+                  </md-tab>
+              </md-tabs>
+
                 <md-chips ng-model="risk.tags"
                           md-autocomplete-snap
                           md-require-match="true">

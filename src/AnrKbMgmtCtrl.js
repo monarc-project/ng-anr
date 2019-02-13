@@ -1734,90 +1734,96 @@
 
         $scope.createNewRisk = function (ev, risk) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
+              var referentials = data['referentials'];
+              $mdDialog.show({
+                  controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'TagService', 'MeasureService', 'risk', 'referentials', CreateRiskDialogCtrl],
+                  templateUrl: 'views/anr/create.risks.html',
+                  targetEvent: ev,
+                  preserveScope: true,
+                  scope: $scope,
+                  clickOutsideToClose: false,
+                  fullscreen: useFullScreen,
+                  locals: {
+                      'risk': risk,
+                      'referentials': referentials
+                  }
+              })
+                  .then(function (risk) {
+                      var riskBackup = angular.copy(risk);
 
-            $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'TagService', 'risk', CreateRiskDialogCtrl],
-                templateUrl: 'views/anr/create.risks.html',
-                targetEvent: ev,
-                preserveScope: true,
-                scope: $scope,
-                clickOutsideToClose: false,
-                fullscreen: useFullScreen,
-                locals: {
-                    'risk': risk
-                }
-            })
-                .then(function (risk) {
-                    var riskBackup = angular.copy(risk);
+                      var riskTagIds = [];
+                      for (var i = 0; i < risk.tags.length; ++i) {
+                          riskTagIds.push(risk.tags[i].id);
+                      }
 
-                    var riskTagIds = [];
-          for (var i = 0; i < risk.tags.length; ++i) {
-                        riskTagIds.push(risk.tags[i].id);
-                    }
+                      risk.tags = riskTagIds;
 
+                      var cont = risk.cont;
+                      risk.cont = undefined;
 
-                    risk.tags = riskTagIds;
+                      RiskService.createRisk(risk,
+                          function () {
+                              $scope.updateRisks();
+                              toastr.success(gettextCatalog.getString('The risk has been created successfully.',
+                                  {riskLabel: $scope._langField(risk,'label')}), gettextCatalog.getString('Creation successful'));
 
-                    var cont = risk.cont;
-                    risk.cont = undefined;
+                              if (cont) {
+                                  $scope.createNewRisk(ev);
+                              }
+                          },
 
-                    RiskService.createRisk(risk,
-                        function () {
-                            $scope.updateRisks();
-                            toastr.success(gettextCatalog.getString('The risk has been created successfully.',
-                                {riskLabel: $scope._langField(risk,'label')}), gettextCatalog.getString('Creation successful'));
-
-                            if (cont) {
-                                $scope.createNewRisk(ev);
-                            }
-                        },
-
-                        function () {
-                            $scope.createNewRisk(ev, riskBackup);
-                        }
-                    );
-                });
+                          function () {
+                              $scope.createNewRisk(ev, riskBackup);
+                          }
+                      );
+                  });
+            });
         };
 
         $scope.editRisk = function (ev, risk) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
+              var referentials = data['referentials'];
 
-            RiskService.getRisk(risk.id).then(function (riskData) {
-                $mdDialog.show({
-                    controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'TagService', 'risk', CreateRiskDialogCtrl],
-                    templateUrl: 'views/anr/create.risks.html',
-                    targetEvent: ev,
-                    preserveScope: false,
-                    scope: $scope.$dialogScope.$new(),
-                    clickOutsideToClose: false,
-                    fullscreen: useFullScreen,
-                    locals: {
-                        'risk': riskData
-                    }
-                })
-                    .then(function (risk) {
-                        var riskBackup = angular.copy(risk);
-                        var riskTagIds = [];
+              RiskService.getRisk(risk.id).then(function (riskData) {
+                  $mdDialog.show({
+                      controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'TagService', 'MeasureService', 'risk', 'referentials', CreateRiskDialogCtrl],
+                      templateUrl: 'views/anr/create.risks.html',
+                      targetEvent: ev,
+                      preserveScope: false,
+                      scope: $scope.$dialogScope.$new(),
+                      clickOutsideToClose: false,
+                      fullscreen: useFullScreen,
+                      locals: {
+                          'risk': riskData,
+                          'referentials': referentials
+                      }
+                  })
+                      .then(function (risk) {
+                          var riskBackup = angular.copy(risk);
+                          var riskTagIds = [];
 
-                        for (var i = 0; i < risk.tags.length; ++i) {
-                            riskTagIds.push(risk.tags[i].id);
-                        }
+                          for (var i = 0; i < risk.tags.length; ++i) {
+                              riskTagIds.push(risk.tags[i].id);
+                          }
 
 
-                        risk.tags = riskTagIds;
+                          risk.tags = riskTagIds;
 
-                        RiskService.updateRisk(risk,
-                            function () {
-                                $scope.updateRisks();
-                                toastr.success(gettextCatalog.getString('The risk has been edited successfully.',
-                                    {riskLabel: $scope._langField(risk,'label')}), gettextCatalog.getString('Edition successful'));
-                            },
+                          RiskService.updateRisk(risk,
+                              function () {
+                                  $scope.updateRisks();
+                                  toastr.success(gettextCatalog.getString('The risk has been edited successfully.',
+                                      {riskLabel: $scope._langField(risk,'label')}), gettextCatalog.getString('Edition successful'));
+                              },
 
-                            function () {
-                                $scope.editRisk(ev, riskBackup);
-                            }
-                        );
-                    });
+                              function () {
+                                  $scope.editRisk(ev, riskBackup);
+                              }
+                          );
+                      });
+              });
             });
         };
 
@@ -2779,9 +2785,10 @@
         };
     }
 
-    function CreateRiskDialogCtrl($scope, $mdDialog, $q, ConfigService, TagService, risk) {
+    function CreateRiskDialogCtrl($scope, $mdDialog, $q, ConfigService, TagService, MeasureService, risk, referentials) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
+        $scope.riskopReferentials = referentials;
 
         TagService.getTags().then(function (data) {
            $scope.listTags = data['tags'];
@@ -2824,6 +2831,20 @@
             else {
               $scope.risk.tags=[];
             }
+            if (risk.measures.length == undefined) {
+              $scope.risk.measures = [];
+              referentials.forEach(function (ref){
+                $scope.risk.measures[ref.uuid] = [];
+              })
+            } else {
+              var measuresBackup = $scope.risk.measures;
+              $scope.risk.measures = [];
+              referentials.forEach(function (ref){
+                $scope.risk.measures[ref.uuid] = measuresBackup.filter(function (measure) {
+                    return (measure.referential.uuid == ref.uuid);
+                })
+              })
+            }
 
         } else {
             $scope.risk = {
@@ -2836,15 +2857,64 @@
                 description2: '',
                 description3: '',
                 description4: '',
+                measures: [],
                 tags: [],
             };
+            referentials.forEach(function (ref){
+              $scope.risk.measures[ref.uuid] = [];
+            })
         }
+
+        $scope.selectRiskopReferential = function (referential) {
+            $scope.risk.referential = referential;
+        }
+
+        // Measures
+        $scope.queryMeasureSearch = function (query) {
+            var promise = $q.defer();
+            MeasureService.getMeasures({filter: query, referential: $scope.risk.referential.uuid, order: 'code'}).then(function (e) {
+              var filtered = [];
+              for (var j = 0; j < e.measures.length; ++j) {
+                  var found = false;
+                  for (var i = 0; i < $scope.risk.measures[$scope.risk.referential.uuid].length; ++i) {
+
+                      if ($scope.risk.measures[$scope.risk.referential.uuid][i].uuid == e.measures[j].uuid) {
+                          found = true;
+                          break;
+                      }
+                  }
+
+                  if (!found) {
+                      filtered.push(e.measures[j]);
+                  }
+              }
+
+              promise.resolve(filtered);
+            }, function (e) {
+                promise.reject(e);
+            });
+
+            return promise.promise;
+        };
 
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
 
         $scope.create = function() {
+
+            referentials.forEach(function (ref){
+              var promise = $q.defer();
+              if ($scope.risk.measures[ref.uuid] != undefined) {
+                $scope.risk.measures[ref.uuid].forEach (function (measure) {
+                  promise.resolve($scope.risk.measures.push(measure.uuid));
+                })
+              }
+              return promise.promise;
+
+            })
+
+            delete $scope.risk.referential;
             $mdDialog.hide($scope.risk);
         };
 
