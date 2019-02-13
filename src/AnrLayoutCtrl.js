@@ -437,6 +437,7 @@
                 $scope.sheet_risk = angular.copy(risk);
                 AmvService.getAmv($scope.sheet_risk.amv).then(function (data) {
                   $scope.sheet_risk.measures = data['measures'];
+                  console.log($scope.sheet_risk.measures);
                 });
 
                 var reducAmount = [];
