@@ -112,6 +112,19 @@
                         </md-input-container>
                     </td>
                 </tr>
+                <tr>
+                    <td class="bold" translate>Security referentials</td>
+                    <td colspan="7">
+                      <md-tabs md-dynamic-height="true">
+                        <md-tab ng-repeat="ref in referentials.items.referentials" label="{{ _langField(ref,'label')}}"
+                                md-on-select="selectReferential(ref.uuid)" md-on-deselect="deselectReferentialsTab()">
+                            <p ng-repeat="measure in opsheet_risk.measures | orderBy : 'code'" ng-if="measure.referential.uuid == referential_uuid">
+                              {{ measure.code }} - {{ _langField(measure,'label') }}
+                            </p>
+                        </md-tab>
+                    </md-tabs>
+                    </td>
+                </tr>
             </tbody>
         </table>
     </div>

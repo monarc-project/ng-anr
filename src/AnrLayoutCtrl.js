@@ -6,7 +6,7 @@
             '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'TableHelperService',
             'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
             '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService', 'ClientRecommandationService',
-            'ReferentialService', 'AmvService', AnrLayoutCtrl
+            'ReferentialService', 'AmvService', 'RiskService', AnrLayoutCtrl
         ]);
 
     /**
@@ -15,7 +15,7 @@
     function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, TableHelperService, ModelService,
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
                            $transitions, DownloadService, $mdPanel, $injector, ConfigService, ClientRecommandationService,
-                           ReferentialService, AmvService) {
+                           ReferentialService, AmvService, RiskService) {
 
 
         if ($scope.OFFICE_MODE == 'FO') {
@@ -441,7 +441,6 @@
                 $scope.sheet_risk = angular.copy(risk);
                 AmvService.getAmv($scope.sheet_risk.amv).then(function (data) {
                   $scope.sheet_risk.measures = data['measures'];
-                  console.log($scope.sheet_risk.measures);
                 });
 
                 var reducAmount = [];
@@ -500,7 +499,12 @@
             $timeout(function() {
                 $scope.ToolsAnrService.currentTab = 1;
                 $scope.sheet_risk = undefined;
-                $scope.opsheet_risk = risk;
+                $scope.opsheet_risk = angular.copy(risk);
+                console.log(risk);
+
+                RiskService.getRisk($scope.opsheet_risk.rolfRiskId).then(function (data) {
+                  $scope.opsheet_risk.measures = data['measures'];
+                });
                 $scope._copyRecs = [];
             });
         };
