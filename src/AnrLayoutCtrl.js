@@ -500,8 +500,6 @@
                 $scope.ToolsAnrService.currentTab = 1;
                 $scope.sheet_risk = undefined;
                 $scope.opsheet_risk = angular.copy(risk);
-                console.log(risk);
-
                 RiskService.getRisk($scope.opsheet_risk.rolfRiskId).then(function (data) {
                   $scope.opsheet_risk.measures = data['measures'];
                 });
