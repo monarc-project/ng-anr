@@ -12,16 +12,24 @@
     function AnrSoaSheetCtrl($scope, gettextCatalog, $stateParams, AnrService, MeasureService, $q) {
 
         $scope.soaMeasureAmvIds = [];
+        $scope.soaMeasureRolfRiskIds = [];
 
         getSoaRisks = function(Measureuuid){
             var promise = $q.defer();
             MeasureService.getMeasure(Measureuuid).then(function (measure) {
               $scope.soaMeasureSheet = measure;
+              console.log(measure);
               if (measure.amvs) {
                 for (var i = 0; i < measure.amvs.length; i++) {
                   $scope.soaMeasureAmvIds.push(measure.amvs[i].id);
                 }
               }
+              if (measure.rolfRisks) {
+                for (var i = 0; i < measure.rolfRisks.length; i++) {
+                  $scope.soaMeasureRolfRiskIds.push(measure.rolfRisks[i].id);
+                }
+              }
+
               soa_risks_filters = {
                   limit: -1,
                   amvs : [$scope.soaMeasureAmvIds]
@@ -30,6 +38,16 @@
               AnrService.getInstanceRisks($scope.model.anr.id,null,soa_risks_filters).then(function(data) {
                   $scope.soaMeasureRisks = data.risks;
               });
+
+              soa_opRisks_filters = {
+                  limit: -1,
+                  rolfRisks : [$scope.soaMeasureRolfRiskIds]
+              };
+
+              AnrService.getInstanceRisksOp($scope.model.anr.id,null,soa_opRisks_filters).then(function(data) {
+                  $scope.soaMeasureOpRisks = data.oprisks;
+              });
+
               promise.resolve(true);
             });
         };
@@ -38,7 +56,7 @@
         getSoaRisks($stateParams.soaId);
 
         // export to CSV
-        $scope.exportSoaSheet = function () {
+        $scope.exportSoaSheet = function (KindOfRisk) {
             finalArray=[];
             recLine = 0;
             finalArray[recLine]= gettextCatalog.getString('Asset');
