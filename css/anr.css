@@ -140,6 +140,34 @@ table.md-table tbody.md-body>tr.md-row:hover {
     clear:left;
 }
 
+.chips-input md-chips-wrap {
+    padding-left: 32px;
+}
+
+.chips-input label {
+    padding-left:8px;
+}
+
+.chips-input md-icon {
+    color: rgba(0, 0, 0, 0.87);
+}
+
+.controls-input{
+    padding-top:16px;
+}
+
+.controls-input label{
+    padding-left:8px;
+}
+
+.controls-input md-icon {
+    color: rgba(0, 0, 0, 0.87);
+}
+
+.controls-input md-tabs{
+    padding-left:32px;
+}
+
 .md-chip-content {
     font-size: 12px;
 }

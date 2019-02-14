@@ -55,7 +55,36 @@
                         <div ng-message="required">{{ 'The code may not be empty' | translate }}</div>
                     </div>
                 </md-input-container>
-                <div class="md-block" flex>
+
+                <div class="md-block chips-input" flex>
+                  <md-icon>turned_in</md-icon>
+                  <label class="md-placeholder" translate>Tags</label>
+                  <md-chips ng-model="risk.tags"
+                            md-autocomplete-snap
+                            md-require-match="true">
+                      <md-autocomplete flex
+                                       md-selected-item="selectedTagItem"
+                                       md-search-text="tagSearchText"
+                                       md-items="item in queryTagSearch(tagSearchText)"
+                                       md-item-text="item.code"
+                                       md-min-length="0"
+                                       md-no-cache="true"
+                                       placeholder="{{ '+ Add tags' | translate }}">
+                          <span md-highlight-text="tagSearchText">{{ item.code }} - {{item['label' + language]}}</span>
+                      </md-autocomplete>
+
+                      <md-chip-template>
+                          <span>
+                              <strong>{{$chip.code}}</strong>
+                              <em>{{$chip['label' + language]}}</em>
+                          </span>
+                      </md-chip-template>
+                  </md-chips>
+                </div>
+
+                <md-divider style="margin-left:32px"></md-divider>
+
+                <div class="md-block controls-input" flex>
                   <md-icon>turned_in</md-icon>
                   <label class="md-placeholder" translate>Controls</label>
                   <md-tabs md-dynamic-height="true">
@@ -86,35 +115,7 @@
                                 </md-chip-template>
                             </md-chips>
                     </md-tab>
-                </div>
-                </md-tabs>
-
-                <md-divider></md-divider>
-
-                <div class="md-block"  style="padding-top:16px" flex>
-                  <md-icon>turned_in</md-icon>
-                  <label class="md-placeholder" translate>Tags</label>
-                  <md-chips ng-model="risk.tags"
-                            md-autocomplete-snap
-                            md-require-match="true">
-                      <md-autocomplete flex
-                                       md-selected-item="selectedTagItem"
-                                       md-search-text="tagSearchText"
-                                       md-items="item in queryTagSearch(tagSearchText)"
-                                       md-item-text="item.code"
-                                       md-min-length="0"
-                                       md-no-cache="true"
-                                       placeholder="{{ '+ Add tags' | translate }}">
-                          <span md-highlight-text="tagSearchText">{{ item.code }} - {{item['label' + language]}}</span>
-                      </md-autocomplete>
-
-                      <md-chip-template>
-                          <span>
-                              <strong>{{$chip.code}}</strong>
-                              <em>{{$chip['label' + language]}}</em>
-                          </span>
-                      </md-chip-template>
-                  </md-chips>
+                  </md-tabs>
                 </div>
             </div>
         </md-dialog-content>
