@@ -261,6 +261,10 @@
            $scope.updateAnrRisksTable();
           });
 
+          $rootScope.$on('opRiskUpdated', function () {
+            $scope.updateAnrRisksOpTable();
+           });
+
         $scope.resetRisksFilters = function () {
             $scope.risks_filters = {
                 order: 'maxRisk',

@@ -18,6 +18,9 @@
                     'update': {
                         method: 'PUT'
                     },
+                    'patch': {
+                        method: 'PATCH'
+                    },
                     'query': {
                         isArray: false
                     }
@@ -53,6 +56,10 @@
             }
         };
 
+        var patchRisks = function (params, success, error) {
+            self.RiskResource.patch(params, success, error);
+        };
+
         return {
             makeResource: makeResource,
             getRisks: getRisks,
@@ -60,7 +67,8 @@
             createRisk: createRisk,
             deleteRisk: deleteRisk,
             deleteMassRisk: deleteMassRisk,
-            updateRisk: updateRisk
+            updateRisk: updateRisk,
+            patchRisks: patchRisks
         };
     }
 

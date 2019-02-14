@@ -491,9 +491,24 @@
                     <md-option ng-repeat="tag in risk_tags" ng-value="tag.id">{{ tag.code }} ({{ _langField(tag,'label') }})</md-option>
                 </md-select>
 
+                <md-select ng-model="opRisksRef_filter.selected" ng-if="opRisksRef_filter.items.referentials.length > 1">
+                  <md-option ng-repeat="ref in opRisksRef_filter.items.referentials" ng-value="ref.uuid">
+                    {{ _langField(ref,'label') }}
+                  </md-option>
+                </md-select>
+
                 <md-button class="md-icon-button md-primary" ng-click="removeRisksFilter()">
                     <md-icon>settings_backup_restore</md-icon>
                 </md-button>
+
+                <md-button ng-if="!isAnrReadOnly && opRisksRef_filter.items.referentials.length > 1"
+                          class="md-icon-button md-primary" ng-click="updateMeasuresOpRisks($event)">
+                    <md-tooltip md-direction="left">
+                        {{ 'Update controls' | translate }}
+                    </md-tooltip>
+                    <md-icon>update</md-icon>
+                </md-button>
+
             </div>
 
             <md-toolbar class="md-table-toolbar alternate" ng-show="risks.selected.length">
@@ -514,6 +529,7 @@
                         <th md-column md-order-by="code"><span translate>Code</span></th>
                         <th md-column md-order-by="{{ _langField('label') }}"><span translate>Label</span></th>
                         <th md-column md-order-by="{{ _langField('description') }}"><span translate>Description</span></th>
+                        <th md-column><span translate>Controls</span></th>
                         <th md-column ng-if="!isAnrReadOnly"><span translate>Actions</span></th>
                     </tr>
                     </thead>
@@ -525,6 +541,11 @@
                         <td md-cell>{{ risk.code }}</td>
                         <td md-cell>{{ _langField(risk,'label') }}</td>
                         <td md-cell>{{ _langField(risk,'description') }}</td>
+                        <td md-cell>
+                          <p ng-repeat="measure in risk.measures" ng-if="measure.referential.uuid == opRisksRef_filter.selected">
+                            {{ measure.code }} - {{ _langField(measure,'label') }}
+                          </p>
+                        </td>
                         <td md-cell ng-if="!isAnrReadOnly">
                             <md-button class="md-icon-button md-primary" ng-click="editRisk($event, risk)">
                                 <md-icon>edit</md-icon>

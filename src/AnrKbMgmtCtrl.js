@@ -1052,7 +1052,6 @@
         $scope.updateAmvs = function () {
             var query = angular.copy($scope.amvs.query);
             query.status = $scope.amvs.activeFilter;
-            query.referential = $scope.referentials_filter.selected;
 
             if ($scope.amvs.previousQueryOrder != $scope.amvs.query.order) {
                 $scope.amvs.query.page = query.page = 1;
@@ -1671,11 +1670,11 @@
          */
         $scope.risks = TableHelperService.build('label' + $scope.language, 20, 1, '');
         $scope.risk_tag_filter = null;
-
+        $scope.opRisksRef_filter = [];
 
         var risksTabSelected = false;
 
-        $scope.$watchGroup(['risk_tag_filter'], function (newValue, oldValue) {
+        $scope.$watchGroup(['risk_tag_filter', 'opRisksRef_filter.selected'], function (newValue, oldValue) {
             if (risksTabSelected) {
                 // Refresh contents
                 $scope.updateRisks();
@@ -1721,6 +1720,15 @@
             risksTabSelected = true;
             TableHelperService.watchSearch($scope, 'risks.query.filter', $scope.risks.query, $scope.updateRisks, $scope.risks);
 
+            ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
+                $scope.opRisksRef_filter.items = data;
+                if (data['referentials'][0]) {
+                  $scope.opRisksRef_filter.selected = data['referentials'][0].uuid;
+                }else {
+                  $scope.updateRisks();
+                }
+            });
+
             TagService.getTags({limit: 0, order: '-label1'}).then(function (tags) {
                 $scope.risk_tags = tags.tags;
             })
@@ -1732,24 +1740,49 @@
             $scope.risks.selected = [];
         };
 
+        $scope.updateMeasuresOpRisks = function (ev){
+          var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+          $mdDialog.show({
+              controller: ['$scope', '$mdDialog', 'referentials', updateMeasuresAMVDialogCtrl],
+              templateUrl: 'views/anr/updateMeasures.amvs.html',
+              targetEvent: ev,
+              preserveScope: false,
+              scope: $scope.$dialogScope.$new(),
+              clickOutsideToClose: false,
+              fullscreen: useFullScreen,
+              locals: {
+                  'referentials': $scope.opRisksRef_filter.items['referentials'],
+              }
+          })
+
+              .then(function (params) {
+                RiskService.patchRisks(params,
+                  function () {
+                    $scope.updateRisks();
+                    toastr.success(gettextCatalog.getString('The risks have been edited successfully.'),
+                      gettextCatalog.getString('Edition successful'));
+                    $rootScope.$broadcast('opRiskUpdated');
+                });
+              });
+        }
+
         $scope.createNewRisk = function (ev, risk) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-            ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
-              var referentials = data['referentials'];
-              $mdDialog.show({
-                  controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'TagService', 'MeasureService', 'risk', 'referentials', CreateRiskDialogCtrl],
-                  templateUrl: 'views/anr/create.risks.html',
-                  targetEvent: ev,
-                  preserveScope: true,
-                  scope: $scope,
-                  clickOutsideToClose: false,
-                  fullscreen: useFullScreen,
-                  locals: {
-                      'risk': risk,
-                      'referentials': referentials
-                  }
-              })
-                  .then(function (risk) {
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'TagService', 'MeasureService', 'risk', 'referentials', CreateRiskDialogCtrl],
+                templateUrl: 'views/anr/create.risks.html',
+                targetEvent: ev,
+                preserveScope: true,
+                scope: $scope,
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    'risk': risk,
+                    'referentials': $scope.opRisksRef_filter.items['referentials']
+                }
+            })
+                .then(function (risk) {
                       var riskBackup = angular.copy(risk);
 
                       var riskTagIds = [];
@@ -1778,15 +1811,11 @@
                           }
                       );
                   });
-            });
         };
 
         $scope.editRisk = function (ev, risk) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-            ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
-              var referentials = data['referentials'];
-
-              RiskService.getRisk(risk.id).then(function (riskData) {
+            RiskService.getRisk(risk.id).then(function (riskData) {
                   $mdDialog.show({
                       controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'TagService', 'MeasureService', 'risk', 'referentials', CreateRiskDialogCtrl],
                       templateUrl: 'views/anr/create.risks.html',
@@ -1797,7 +1826,7 @@
                       fullscreen: useFullScreen,
                       locals: {
                           'risk': riskData,
-                          'referentials': referentials
+                          'referentials': $scope.opRisksRef_filter.items['referentials']
                       }
                   })
                       .then(function (risk) {
@@ -1816,6 +1845,7 @@
                                   $scope.updateRisks();
                                   toastr.success(gettextCatalog.getString('The risk has been edited successfully.',
                                       {riskLabel: $scope._langField(risk,'label')}), gettextCatalog.getString('Edition successful'));
+                                  $rootScope.$broadcast('opRiskUpdated');
                               },
 
                               function () {
@@ -1824,7 +1854,6 @@
                           );
                       });
               });
-            });
         };
 
         $scope.deleteRisk = function (ev, item) {
