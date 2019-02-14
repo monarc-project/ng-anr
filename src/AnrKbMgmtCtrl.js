@@ -1030,12 +1030,11 @@
                 $scope.referentials_filter.items = data;
                 if (data['referentials'][0]) {
                   $scope.referentials_filter.selected = data['referentials'][0].uuid;
-                }else {
-                  $scope.updateAmvs();
                 }
+                $scope.updateAmvs();
             });
             var initAmvsFilter = true;
-            initAmvsFilter = $scope.$watchGroup(['amvs.activeFilter', 'referentials_filter.selected', 'amvs.query.filter'], function(newValue, oldValue) {
+            initAmvsFilter = $scope.$watchGroup(['amvs.activeFilter', 'amvs.query.filter'], function(newValue, oldValue) {
                 if (initAmvsFilter) {
                     initAmvsFilter = false;
                 } else {
@@ -1674,7 +1673,7 @@
 
         var risksTabSelected = false;
 
-        $scope.$watchGroup(['risk_tag_filter', 'opRisksRef_filter.selected'], function (newValue, oldValue) {
+        $scope.$watchGroup(['risk_tag_filter'], function (newValue, oldValue) {
             if (risksTabSelected) {
                 // Refresh contents
                 $scope.updateRisks();
