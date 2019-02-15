@@ -440,7 +440,11 @@
                 $scope.opsheet_risk = undefined;
                 $scope.sheet_risk = angular.copy(risk);
                 AmvService.getAmv($scope.sheet_risk.amv).then(function (data) {
-                  $scope.sheet_risk.measures = data['measures'];
+                  if (!angular.equals(data['measures'], {})) {
+                    $scope.sheet_risk.measures = data['measures'];
+                  }else {
+                    $scope.sheet_risk.measures = [];
+                  }
                 });
 
                 var reducAmount = [];
@@ -501,7 +505,11 @@
                 $scope.sheet_risk = undefined;
                 $scope.opsheet_risk = angular.copy(risk);
                 RiskService.getRisk($scope.opsheet_risk.rolfRiskId).then(function (data) {
-                  $scope.opsheet_risk.measures = data['measures'];
+                  if (!angular.equals(data['measures'], {})) {
+                    $scope.opsheet_risk.measures = data['measures'];
+                  }else {
+                    $scope.opsheet_risk.measures = [];
+                  }
                 });
                 $scope._copyRecs = [];
             });
