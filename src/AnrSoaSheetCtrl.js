@@ -18,7 +18,6 @@
             var promise = $q.defer();
             MeasureService.getMeasure(Measureuuid).then(function (measure) {
               $scope.soaMeasureSheet = measure;
-              console.log(measure);
               if (measure.amvs) {
                 for (var i = 0; i < measure.amvs.length; i++) {
                   $scope.soaMeasureAmvIds.push(measure.amvs[i].id);
@@ -57,8 +56,10 @@
 
         // export to CSV
         $scope.exportSoaSheet = function (KindOfRisk) {
-            finalArray=[];
-            recLine = 0;
+
+          finalArray=[];
+          recLine = 0;
+          if (KindOfRisk === 'InfoRisk') {
             finalArray[recLine]= gettextCatalog.getString('Asset');
             finalArray[recLine]+=','+gettextCatalog.getString('C Impact');
             finalArray[recLine]+=','+gettextCatalog.getString('I Impact');
@@ -148,6 +149,136 @@
                 finalArray[recLine]+=','+"\""+risks[risk].target_risk+"\"";
                 }
             }
+          } else {
+            finalArray[recLine]= gettextCatalog.getString('Asset');
+            finalArray[recLine]+=','+gettextCatalog.getString('Risk description');
+            if ($scope.model.anr.showRolfBrut) {
+              finalArray[recLine]+=','+gettextCatalog.getString('Prob.(Inherent risk)');
+              finalArray[recLine]+=','+gettextCatalog.getString('R (Inherent risk)');
+              finalArray[recLine]+=','+gettextCatalog.getString('O (Inherent risk)');
+              finalArray[recLine]+=','+gettextCatalog.getString('L (Inherent risk)');
+              finalArray[recLine]+=','+gettextCatalog.getString('F (Inherent risk)');
+              finalArray[recLine]+=','+gettextCatalog.getString('P (Inherent risk)');
+              finalArray[recLine]+=','+gettextCatalog.getString('Current risk (Inherent risk)');
+            }
+            finalArray[recLine]+=','+gettextCatalog.getString('Prob.(Net risk)');
+            finalArray[recLine]+=','+gettextCatalog.getString('R (Net risk)');
+            finalArray[recLine]+=','+gettextCatalog.getString('O (Net risk)');
+            finalArray[recLine]+=','+gettextCatalog.getString('L (Net risk)');
+            finalArray[recLine]+=','+gettextCatalog.getString('F (Net risk)');
+            finalArray[recLine]+=','+gettextCatalog.getString('P (Net risk)');
+            finalArray[recLine]+=','+gettextCatalog.getString('Current risk (Net risk)');
+            finalArray[recLine]+=','+gettextCatalog.getString('Existing controls');
+            finalArray[recLine]+=','+gettextCatalog.getString('Treatment');
+            finalArray[recLine]+=','+gettextCatalog.getString('Residual risk');
+
+            risks = $scope.soaMeasureOpRisks;
+
+            for (risk in risks) {
+                recLine++;
+                finalArray[recLine]="\""+$scope._langField(risks[risk]['instanceInfos'],'name')	+"\"";
+                finalArray[recLine]+=','+"\""+$scope._langField(risks[risk],'description')+"\"";
+                if ($scope.model.anr.showRolfBrut) {
+                    if (risks[risk].brutProb =='-1') {
+                        finalArray[recLine]+=','+"\""+' '+"\"";
+                    } else {
+                    finalArray[recLine]+=','+"\""+risks[risk].brutProb+"\"";}
+
+                    if (risks[risk].brutR =='-1') {
+                        finalArray[recLine]+=','+"\""+' '+"\"";
+                    } else {
+                    finalArray[recLine]+=','+"\""+risks[risk].brutR+"\"";}
+
+                    if (risks[risk].brutO =='-1') {
+                        finalArray[recLine]+=','+"\""+' '+"\"";
+                    } else {
+                    finalArray[recLine]+=','+"\""+risks[risk].brutO+"\"";}
+
+                    if (risks[risk].brutL =='-1') {
+                        finalArray[recLine]+=','+"\""+' '+"\"";
+                    } else {
+                    finalArray[recLine]+=','+"\""+risks[risk].brutL+"\"";}
+
+                    if (risks[risk].brutF =='-1') {
+                        finalArray[recLine]+=','+"\""+' '+"\"";
+                    } else {
+                    finalArray[recLine]+=','+"\""+risks[risk].brutF+"\"";}
+
+                    if (risks[risk].brutP =='-1') {
+                        finalArray[recLine]+=','+"\""+' '+"\"";
+                    } else {
+                    finalArray[recLine]+=','+"\""+risks[risk].brutP+"\"";}
+
+                    if (risks[risk].cacheBrutRisk =='-1' ) {
+                        finalArray[recLine]+=','+"\""+' '+"\"";
+                    } else {
+                    finalArray[recLine]+=','+"\""+risks[risk].cacheBrutRisk+"\"";}
+                }
+
+                if (risks[risk].netProb =='-1') {
+                    finalArray[recLine]+=','+"\""+' '+"\"";
+                } else {
+                finalArray[recLine]+=','+"\""+risks[risk].netProb+"\"";}
+
+                if (risks[risk].netR =='-1') {
+                    finalArray[recLine]+=','+"\""+' '+"\"";
+                } else {
+                finalArray[recLine]+=','+"\""+risks[risk].netR+"\"";}
+
+                if (risks[risk].netO =='-1') {
+                    finalArray[recLine]+=','+"\""+' '+"\"";
+                } else {
+                finalArray[recLine]+=','+"\""+risks[risk].netO+"\"";}
+
+                if (risks[risk].netL =='-1') {
+                    finalArray[recLine]+=','+"\""+' '+"\"";
+                } else {
+                finalArray[recLine]+=','+"\""+risks[risk].netL+"\"";}
+
+                if (risks[risk].netF =='-1') {
+                    finalArray[recLine]+=','+"\""+' '+"\"";
+                } else {
+                finalArray[recLine]+=','+"\""+risks[risk].netF+"\"";}
+
+                if (risks[risk].netP =='-1') {
+                    finalArray[recLine]+=','+"\""+' '+"\"";
+                } else {
+                finalArray[recLine]+=','+"\""+risks[risk].netP+"\"";}
+
+                if (risks[risk].icacheNetRisk =='-1') {
+                    finalArray[recLine]+=','+"\""+' '+"\"";
+                } else {
+                finalArray[recLine]+=','+"\""+risks[risk].cacheNetRisk+"\"";}
+
+                if (risks[risk].comment ==null) {
+                    finalArray[recLine]+=','+"\""+' '+"\"";
+                } else {
+                finalArray[recLine]+=','+"\""+risks[risk].comment+"\"";}
+
+                if (risks[risk].kindOfMeasure =='1') {
+                    finalArray[recLine]+=','+"\""+gettextCatalog.getString('Reduction')+"\"";
+
+                } else if (risks[risk].kindOfMeasure =='2') {
+                    finalArray[recLine]+=','+"\""+gettextCatalog.getString('Denied')+"\"";
+
+                } else if (risks[risk].kindOfMeasure =='3') {
+                    finalArray[recLine]+=','+"\""+gettextCatalog.getString('Accepted')+"\"";
+
+                } else if (risks[risk].kindOfMeasure =='4') {
+                    finalArray[recLine]+=','+"\""+gettextCatalog.getString('Shared')+"\"";
+
+                } else {
+                    finalArray[recLine]+=','+"\""+gettextCatalog.getString('Not treated')+"\"";
+                }
+
+                if (risks[risk].cacheTargetedRisk =='-1' && risks[risk].cacheNetRisk =='-1') {
+                    finalArray[recLine]+=','+"\""+' '+"\"";
+                } else if (risks[risk].cacheTargetedRisk =='-1') {
+                finalArray[recLine]+=','+"\""+risks[risk].cacheNetRisk+"\"";
+                } else {
+                finalArray[recLine]+=','+"\""+risks[risk].cacheTargetedRisk+"\"";}
+            }
+          }
 
             let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
             for (var j = 0; j < finalArray.length; ++j) {
@@ -158,13 +289,14 @@
             var encodedUri = encodeURI(csvContent);
             var link = document.createElement("a");
             link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "soaRisks.csv");
+            link.setAttribute("download", (KindOfRisk === 'InfoRisk') ? "soaInformationRisks.csv" : "soaOperationalRisks.csv");
             document.body.appendChild(link);
             link.click(); // This will download the data file named "soaRisks.csv".
         };
 
         $scope.backToList = function () {
-            $scope.display.anrSelectedTabIndex = 4;
+            $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
+            //$scope.display.anrSelectedTabIndex = 4;
         };
     }
 })();
