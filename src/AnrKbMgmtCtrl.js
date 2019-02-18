@@ -2948,6 +2948,19 @@
 
         $scope.createAndContinue = function() {
             $scope.risk.cont = true;
+
+            referentials.forEach(function (ref){
+              var promise = $q.defer();
+              if ($scope.risk.measures[ref.uuid] != undefined) {
+                $scope.risk.measures[ref.uuid].forEach (function (measure) {
+                  promise.resolve($scope.risk.measures.push(measure.uuid));
+                })
+              }
+              return promise.promise;
+
+            })
+
+            delete $scope.risk.referential;
             $mdDialog.hide($scope.risk);
         };
     }
