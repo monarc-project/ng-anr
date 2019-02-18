@@ -157,6 +157,8 @@
                         $scope.updateInstances();
                         $scope.updateObjectsLibrary();
                         $scope.updateScales();
+                        $scope.updateReferentials();
+
                     }
 
                     isModelLoading = false;
