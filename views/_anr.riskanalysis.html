@@ -34,7 +34,7 @@
                     </div>
 
                      <ol class="no-list-style treeview2 instances" ui-tree-nodes="" ng-model="anr_obj_instances_data" id="inst-tree-root">
-                        <li ng-repeat="node in anr_obj_instances_data" ui-tree-node data-collapsed="{{node.__collapsed__}}" ng-include="'tree_node_renderer.html'"></li>
+                        <li ng-repeat="node in anr_obj_instances_data" ui-tree-node data-collapsed="{{node.__collapsed__}}" ng-include="'tree_node_renderer.html'" ng-click="resetFilters()"></li>
                     </ol>
                 </div>
             </div>

@@ -1127,6 +1127,10 @@ md-select-menu md-content
     z-index: 1;
 }
 
+.treeview2.instances li:focus{
+    outline:none;
+}
+
 .treeview2 .tree-toggler{
     background-color: #F1F1F1;
     border: 1px solid #DEDEDE;

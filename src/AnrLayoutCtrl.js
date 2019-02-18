@@ -73,6 +73,11 @@
             });
         }
 
+        $scope.resetFilters = function () {
+            $scope.resetRisksFilters();
+            $scope.resetRisksOpFilters();
+        }
+
         $transitions.onBefore({}, function () {
             if($scope.OFFICE_MODE == 'FO'){
                 if(($state.$current.name == 'main.project.anr.risk' && $stateParams.riskId) ||
@@ -82,14 +87,15 @@
                 }else if($scope.display.anrSelectedTabIndex == 0){
                     $scope.resetSheet(true);
                     $scope.resetOpSheet(true);
-                    $scope.resetRisksFilters(true);
-                    $scope.resetRisksOpFilters(true)
+
+                    if (!$scope.risks_filters || !$scope.risks_op_filters ) { //Initilizing filters
+                      $scope.resetFilters();
+                    }
                   }
             }else{
                 $scope.resetSheet();
                 $scope.resetOpSheet();
-                $scope.resetRisksFilters();
-                $scope.resetRisksOpFilters();
+                $scope.resetFilters();
             }
 
             $timeout(function () {
@@ -375,8 +381,7 @@
             });
         }
 
-        $scope.resetRisksFilters();
-        $scope.resetRisksOpFilters();
+        $scope.resetFilters();
         $scope.updateModel();
         $scope.instmode = 'anr';
 
@@ -404,6 +409,7 @@
         $scope.clearSelectedInstAndObj = function () {
             $rootScope.anr_selected_instance_id = null;
             $rootScope.anr_selected_object_id = null;
+            $scope.resetFilters();
         }
 
         $scope.openRiskSheet = function (risk) {
