@@ -728,9 +728,7 @@
                     case 1:
                         $state.transitionTo('main.project.anr.dashboard',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
                         $timeout(function() {
-                            if($scope.model && $scope.model.anr){
-
-                            }
+                            $scope.$broadcast('Dashboard');
                         });
                         break;
                     case 2:
