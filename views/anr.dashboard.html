@@ -31,6 +31,9 @@
                         </md-select >
                     </md-input-container>
                     <div id="currentRisksChartExport"></div>
+                    <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphCurrentRisks', 'currentRisksChartBy' + displayCurrentRisksBy)">
+                        <md-icon class="md-warn">file_download</md-icon>
+                    </md-button>
                 </div>
 
                 <div layout='row' ng-show="displayCurrentRisksBy=='parentAsset'">
@@ -75,6 +78,9 @@
                     </md-input-container>
 
                     <div id="targetRisksChartExport"></div>
+                    <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphTargetRisks', 'targetRisksChartBy' + displayTargetRisksBy)">
+                        <md-icon class="md-warn">file_download</md-icon>
+                    </md-button>
                 </div>
 
                 <div layout='row' ng-show="displayTargetRisksBy=='parentAsset'">
@@ -91,7 +97,7 @@
                       {{dashboard.targetRisksBreadcrumb[(dashboard.targetRisksBreadcrumb.length < 4) ? 3 : 3 + dashboard.targetRisksBreadcrumb.length - 4]}}</md-button>
                 </div>
 
-                <nvd3 nid="graphTargetRisks" options="initOptionBis" data="initDataBis" api="graphTargetRisks"  config="{refreshDataOnly: true}"></nvd3>
+                <nvd3 id="graphTargetRisks" options="initOptionBis" data="initDataBis" api="graphTargetRisks"  config="{refreshDataOnly: true}"></nvd3>
             </div>
           </div>
         </md-tab>
@@ -116,6 +122,9 @@
               </md-input-container>
 
               <div id="threatsChartExport"></div>
+              <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphThreats', 'threatsChartBy' + displayThreatsBy)">
+                  <md-icon class="md-warn">file_download</md-icon>
+              </md-button>
           </div>
           <nvd3 id="graphThreats" options="initOptionThreats" data="initDataThreats"  api="graphThreats" config="{refreshDataOnly: true}"></nvd3>
         </md-tab>
@@ -153,6 +162,9 @@
               </md-input-container>
 
               <div id="vulnerabilitiesChartExport"></div>
+              <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphVulnerabilities', 'vulnerabilitiesChartBy' + displayVulnerabilitiesBy)">
+                  <md-icon class="md-warn">file_download</md-icon>
+              </md-button>
           </div>
           <nvd3 id="graphVulnerabilities" options="initOptionVuln" data="initDataVuln "  api="graphVulnerabilities" config="{refreshDataOnly: true}"></nvd3>
         </md-tab>
@@ -168,6 +180,9 @@
               </md-input-container>
 
               <div id="cartographyChartExport"></div>
+              <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphCartography', 'cartographyChartBy' + cartographyRisksType)">
+                  <md-icon class="md-warn">file_download</md-icon>
+              </md-button>
           </div>
           <nvd3 id="graphCartography" options="initOptionCarto" data="initDataCarto "  api="graphCartography" config="{refreshDataOnly: true}"></nvd3>
         </md-tab>
