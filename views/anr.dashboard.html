@@ -30,7 +30,7 @@
                             <md-option value="optionsCartoRisk_pieChart" >{{ 'Donut Chart' | translate }}</md-option>
                         </md-select >
                     </md-input-container>
-                    <div id="currentRisksChartExport"></div>
+
                     <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphCurrentRisks', 'currentRisksChartBy' + displayCurrentRisksBy)">
                         <md-icon class="md-warn">file_download</md-icon>
                     </md-button>
@@ -77,7 +77,6 @@
                         </md-select>
                     </md-input-container>
 
-                    <div id="targetRisksChartExport"></div>
                     <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphTargetRisks', 'targetRisksChartBy' + displayTargetRisksBy)">
                         <md-icon class="md-warn">file_download</md-icon>
                     </md-button>
@@ -121,7 +120,6 @@
                   </md-select>
               </md-input-container>
 
-              <div id="threatsChartExport"></div>
               <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphThreats', 'threatsChartBy' + displayThreatsBy)">
                   <md-icon class="md-warn">file_download</md-icon>
               </md-button>
@@ -161,7 +159,6 @@
                   </md-select>
               </md-input-container>
 
-              <div id="vulnerabilitiesChartExport"></div>
               <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphVulnerabilities', 'vulnerabilitiesChartBy' + displayVulnerabilitiesBy)">
                   <md-icon class="md-warn">file_download</md-icon>
               </md-button>
@@ -179,7 +176,6 @@
                   </md-select>
               </md-input-container>
 
-              <div id="cartographyChartExport"></div>
               <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphCartography', 'cartographyChartBy' + cartographyRisksType)">
                   <md-icon class="md-warn">file_download</md-icon>
               </md-button>
