@@ -19,10 +19,6 @@
                         </md-select>
                     </md-input-container>
 
-                    <md-button class="md-primary" ng-show="dashboard.currentRisksParentAssetMemoryTab.length>1 && displayCurrentRisksBy=='parentAsset'" ng-click="goBackCurrentRisksParentAsset()">
-                      {{ 'Return' | translate }}
-                    </md-button>
-
                     <md-input-container id="riskTab" ng-show ="displayCurrentRisksBy=='level'">
                         <label translate >Chart type</label>
                         <md-select ng-model="currentRisksChartOptions" >
@@ -33,6 +29,10 @@
 
                     <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphCurrentRisks', 'currentRisksChartBy' + displayCurrentRisksBy)">
                         <md-icon class="md-warn">file_download</md-icon>
+                    </md-button>
+
+                    <md-button class="md-icon-button" title="{{ 'Go back' | translate }}" ng-show="dashboard.currentRisksParentAssetMemoryTab.length>1 && displayCurrentRisksBy=='parentAsset'" ng-click="goBackCurrentRisksParentAsset()">
+                      <md-icon class="md-primary">arrow_back</md-icon>
                     </md-button>
                 </div>
 
@@ -65,10 +65,6 @@
                         </md-select>
                     </md-input-container>
 
-                    <md-button class="md-primary" ng-show="dashboard.targetRisksParentAssetMemoryTab.length>1 && displayTargetRisksBy=='parentAsset'" ng-click="goBackTargetRisksParentAsset()">
-                      {{ 'Return' | translate }}
-                    </md-button>
-
                     <md-input-container id="riskTab" ng-show ="displayTargetRisksBy=='level'">
                         <label translate>Chart type</label>
                         <md-select ng-model="targetRisksChartOptions">
@@ -77,8 +73,12 @@
                         </md-select>
                     </md-input-container>
 
-                    <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphTargetRisks', 'targetRisksChartBy' + displayTargetRisksBy)">
+                    <md-button class="md-icon-button" title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphTargetRisks', 'targetRisksChartBy' + displayTargetRisksBy)">
                         <md-icon class="md-warn">file_download</md-icon>
+                    </md-button>
+
+                    <md-button class="md-icon-button" title="{{ 'Go back' | translate }}" ng-show="dashboard.targetRisksParentAssetMemoryTab.length>1 && displayTargetRisksBy=='parentAsset'" ng-click="goBackTargetRisksParentAsset()">
+                      <md-icon class="md-primary">arrow_back</md-icon>
                     </md-button>
                 </div>
 
@@ -196,6 +196,9 @@
 
             <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphCompliance', 'ComplianceChart')">
                 <md-icon class="md-warn">file_download</md-icon>
+            </md-button>
+            <md-button id="goBack" class="md-icon-button" title="{{ 'Go back' | translate }}" ng-click="goBackChartCompliance()">
+                <md-icon class="md-primary">arrow_back</md-icon>
             </md-button>
           </div>
           <ndv3 id="graphCompliance"></nvd3>
