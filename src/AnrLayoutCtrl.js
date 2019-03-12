@@ -135,7 +135,6 @@
 
         $scope.updateModel = function (justCore, cb) {
             isModelLoading = true;
-
             if ($scope.OFFICE_MODE == 'BO') {
                 ModelService.getModel($stateParams.modelId).then(function (data) {
                     $scope.model = data;
@@ -743,8 +742,8 @@
                     case 3:
                         $state.transitionTo('main.project.anr.knowledge',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
                         break;
-                      case 4:
-                          $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
+                    case 4:
+                        $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
                         break;
                 }
             });
@@ -1912,16 +1911,6 @@
             });
         }
 
-        $scope.goToDashboard = function () {
-            $state.transitionTo("main.project.anr.dashboard" , {modelId: $stateParams.modelId});
-        };
-        $scope.goToSoa = function () {
-            $state.transitionTo("main.project.anr.soa" , {modelId: $stateParams.modelId});
-        }
-        $scope.goToSoaSheet = function (modelId, soaId) {
-            $state.transitionTo('main.project.anr.soa.sheet', {modelId: $scope.model.anr.id, soaId: soaId, anr: $scope.model.anr});
-
-        };
         $scope.openInterviewTools = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 

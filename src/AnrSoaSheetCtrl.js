@@ -3,18 +3,21 @@
     angular
         .module('AnrModule')
         .controller('AnrSoaSheetCtrl', [
-            '$scope', 'gettextCatalog', '$stateParams', 'AnrService', 'MeasureService', '$q',
+            '$scope', '$rootScope', 'gettextCatalog', '$state', '$stateParams', 'AnrService', 'MeasureService', '$q',
             AnrSoaSheetCtrl]);
 
     /**
     * ANR > STATEMENT OF APPLICABILITY > Risks
     */
-    function AnrSoaSheetCtrl($scope, gettextCatalog, $stateParams, AnrService, MeasureService, $q) {
+    function AnrSoaSheetCtrl($scope, $rootScope, gettextCatalog, $state, $stateParams, AnrService, MeasureService, $q) {
 
-        $scope.soaMeasureAmvIds = [];
-        $scope.soaMeasureRolfRiskIds = [];
+
+        $scope.soaSheetfirstRefresh = true;
+
 
         getSoaRisks = function(Measureuuid){
+            $scope.soaMeasureAmvIds = [];
+            $scope.soaMeasureRolfRiskIds = [];
             var promise = $q.defer();
             MeasureService.getMeasure(Measureuuid).then(function (measure) {
               $scope.soaMeasureSheet = measure;
@@ -52,7 +55,15 @@
         };
 
         // Get risks related to SOA Measure
-        getSoaRisks($stateParams.soaId);
+        var soaSheetListener = $rootScope.$on('soaSheet', function (event, soaId) {
+          if (!$scope.soaSheetfirstRefresh) {
+              getSoaRisks(soaId);
+          }
+         });
+
+         if ($scope.soaSheetfirstRefresh) {
+           getSoaRisks($stateParams.soaId);
+         }
 
         // export to CSV
         $scope.exportSoaSheet = function (KindOfRisk) {
@@ -295,8 +306,16 @@
         };
 
         $scope.backToList = function () {
-            $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
-            //$scope.display.anrSelectedTabIndex = 4;
+          $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
+          $scope.display.anrSelectedTabIndex = 4;
+          $scope.soaSheetfirstRefresh = false;
+          $scope.$on('$destroy', soaSheetListener);
+
+        };
+        $scope.goToInstance = function (instId) {
+          $state.transitionTo('main.project.anr.instance', {modelId: $stateParams.modelId, instId: instId},{inherit:true,notify:true,reload:false,location:'replace'});
+          $scope.display.anrSelectedTabIndex = 0;
+
         };
     }
 })();

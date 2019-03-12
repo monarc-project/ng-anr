@@ -3,7 +3,7 @@
     angular
         .module('AnrModule')
         .controller('AnrSoaCtrl', [
-            '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state', 'MeasureService',
+            '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state', '$stateParams', 'MeasureService',
             'SOACategoryService' , 'ClientSoaService',  '$q', 'ReferentialService', 'TableHelperService', 'MeasureMeasureService',
             AnrSoaCtrl
         ]);
@@ -11,7 +11,7 @@
     /**
      * ANR > STATEMENT OF APPLICABILITY
      */
-    function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, MeasureService, SOACategoryService,
+    function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, $stateParams, MeasureService, SOACategoryService,
                                   ClientSoaService,  $q, ReferentialService, TableHelperService, MeasureMeasureService) {
 
         $scope.updateSoaReferentials = function () {
@@ -109,6 +109,12 @@
             $scope.soa_measures[$scope.referential_uuid].query.order = 'm.code';
           }
         }
+
+        $scope.goToSoaSheet = function (soaId) {
+            $state.transitionTo('main.project.anr.soa.sheet', {modelId: $stateParams.modelId, soaId: soaId},{inherit:true,notify:true,reload:false,location:'replace'});
+            $rootScope.$broadcast('soaSheet', soaId);
+            $scope.display.anrSelectedTabIndex = 5;
+        };
 
         $scope.import = function (ev,referential) {
           var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
