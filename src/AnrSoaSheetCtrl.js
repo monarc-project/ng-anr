@@ -310,12 +310,14 @@
           $scope.display.anrSelectedTabIndex = 4;
           $scope.soaSheetfirstRefresh = false;
           $scope.$on('$destroy', soaSheetListener);
-
         };
-        $scope.goToInstance = function (instId) {
+
+        $scope.goToInstance = function (instId, KindOfRisk) {
           $state.transitionTo('main.project.anr.instance', {modelId: $stateParams.modelId, instId: instId},{inherit:true,notify:true,reload:false,location:'replace'});
           $scope.display.anrSelectedTabIndex = 0;
-
+          if (KindOfRisk === 'OperRisk') {
+            $scope.ToolsAnrService.currentTab = 1;
+          }
         };
     }
 })();

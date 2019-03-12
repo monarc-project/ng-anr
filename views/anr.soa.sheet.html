@@ -46,7 +46,7 @@
 
          <tbody>
            <tr class="txtleft" ng-repeat="risk in soaMeasureRisks" ng-if="soaMeasureAmvIds.length > 0">
-             <td  class="txtleft clickable-rows"><a ng-click="goToInstance(risk.instance)"> {{_langField(risk,'instanceName')}}</a></td>
+             <td  class="txtleft clickable-rows"><a ng-click="goToInstance(risk.instance, 'InfoRisk')"> {{_langField(risk,'instanceName')}}</a></td>
              <td  class="txtcenter" title="{{ scaleCommCache[1][risk.c_impact] }}">{{risk.c_impact|dashnull}}</td>
              <td  class="txtcenter" title="{{ scaleCommCache[2][risk.i_impact] }}">{{risk.i_impact|dashnull}}</td>
              <td  class="txtcenter" title="{{ scaleCommCache[3][risk.d_impact] }}">{{risk.d_impact|dashnull}}</td>
@@ -129,7 +129,7 @@
 
          <tbody>
          <tr ng-repeat="risk in soaMeasureOpRisks">
-             <td title="{{instanceCache[risk.instanceInfos.id].completePath}}" class="preserve-newlines">{{ _langField(risk.instanceInfos,'name') }}</td>
+             <td title="{{instanceCache[risk.instanceInfos.id].completePath}}" class="preserve-newlines clickable-rows"><a ng-click="goToInstance(risk.instanceInfos.id,'OperRisk')">{{ _langField(risk.instanceInfos,'name') }}</td>
      	       <td class="preserve-newlines" title="{{ _langField(risk,'description') }}">{{ _langField(risk,'label') || _langField(risk,'label') }}</td>
              <td ng-if="model.showRolfBrut" class="big-border-left txtcenter" title="{{threatCommCache[risk.brutProb]}}">{{risk.brutProb | dashnull}}</td>
              <td ng-if="model.showRolfBrut">{{risk.brutR | dashnull}}</td>
