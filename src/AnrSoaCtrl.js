@@ -49,6 +49,10 @@
 
                   $scope.updateSoaMeasures();
             });
+            $scope.step = { // Deliverable data
+              num:5,
+              referential : $scope.referential_uuid
+             };
         };
 
         $scope.$watch('referentialsUpdated', function() {

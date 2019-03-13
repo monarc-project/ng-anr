@@ -2747,6 +2747,9 @@
                 $scope.deliverable.consultants = $scope.deliverable.respCustomer;
                 $scope.deliverable.template = $scope.deliverable.template;
             }
+            if (step.referential) {
+              $scope.deliverable.referential = step.referential;
+            }
         });
 
         $scope.save = function () {

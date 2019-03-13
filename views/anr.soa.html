@@ -19,9 +19,18 @@
                 <md-option ng-repeat="cat in Categories" ng-value="cat.id" >{{_langField(cat,'label')}}</md-option>
               </md-select>
 
-              <md-button class="md-icon-button" ng-click="export()">
-                  <md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip>
-              </md-button>
+              <md-menu>
+                <md-button class="md-icon-button" ng-click="$mdOpenMenu()">
+                    <md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }}</md-tooltip>
+                </md-button>
+                <md-menu-content>
+                  <md-menu-item>
+                    <md-button ng-click="openMethodDeliverable(step, $event)">.docx</md-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-button ng-click="export()">.csv</md-button>
+                  </md-menu-item>
+              </md-menu>
 
               <md-button class="md-icon-button" ng-click="import($event, ref.uuid)" ng-if="!isAnrReadOnly && referentials.items.referentials.length > 1">
                   <md-icon class="md-primary">play_for_work</md-icon><md-tooltip>{{ 'Import from other referential' | translate }}</md-tooltip>
