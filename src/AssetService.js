@@ -11,7 +11,7 @@
 
         var makeResource = function () {
             self.AssetResource = $resource('api/' + anr + 'assets/:assetId', {
-                    assetId: '@id',
+                    assetId: '@uuid',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
                 {
@@ -26,7 +26,7 @@
                     }
                 });
 
-            self.CommonAssetResource = $resource('api/' + anr + 'assets/importcomm/:assetId', { assetId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
+            self.CommonAssetResource = $resource('api/' + anr + 'assets/importcomm/:assetId', { assetId: '@uuid', urlAnrId: $rootScope.getUrlAnrId() },
                 {
                     'update': {
                         method: 'PUT'

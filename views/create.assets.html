@@ -2,8 +2,8 @@
     <form name="assetForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 ng-if="!asset.id" translate>Add an asset type</h2>
-                <h2 ng-if="asset.id" translate>Edit asset type</h2>
+                <h2 ng-if="!asset.uuid" translate>Add an asset type</h2>
+                <h2 ng-if="asset.uuid" translate>Edit asset type</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -12,7 +12,7 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-card ng-if="!asset.id">
+                <md-card ng-if="!asset.uuid">
                   <md-button ng-if="OFFICE_MODE == 'FO'" class="md-primary" ng-click="importFile($event,'Asset types')" ng-controller="AnrKbMgmtCtrl">
                       <md-icon>play_for_work</md-icon><span>{{ 'Import from file' | translate }}</span>
                   </md-button>
@@ -100,9 +100,9 @@
                 {{ 'Cancel' | translate }}
             </md-button>
             <md-button ng-click="create()" ng-disabled="assetForm.$error.required" type="submit" class="md-accent md-hue-3">
-                {{ (asset.id > 0 ? 'Save' : 'Create') | translate }}
+                {{ (asset.uuid > 0 ? 'Save' : 'Create') | translate }}
             </md-button>
-            <md-button ng-click="createAndContinue()" ng-disabled="assetForm.$error.required" ng-if="!asset.id" class="md-accent md-hue-3">
+            <md-button ng-click="createAndContinue()" ng-disabled="assetForm.$error.required" ng-if="!asset.uuid" class="md-accent md-hue-3">
                 {{ 'Create and continue' | translate }}
             </md-button>
         </md-dialog-actions>
