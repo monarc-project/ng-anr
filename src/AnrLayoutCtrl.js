@@ -1530,6 +1530,7 @@
                     }
                     service.patchAnr($scope.model.anr.id, anr, function () {
                         toastr.success(gettextCatalog.getString("The risk analysis have been edited."), gettextCatalog.getString("Edition successful"));
+                        $rootScope.$broadcast('referentialsUpdated');
                     });
                   $scope.model.anr = anr;
                 });
