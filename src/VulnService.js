@@ -11,7 +11,7 @@
 
         var makeResource = function () {
             self.VulnResource = $resource('api/' + anr + 'vulnerabilities/:vulnId', {
-                    vulnId: '@id',
+                    vulnId: '@uuid',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
                 {

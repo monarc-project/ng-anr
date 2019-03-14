@@ -11,7 +11,7 @@
 
         var makeResource = function () {
             self.ThreatResource = $resource('api/' + anr + 'threats/:threatId', {
-                    threatId: '@id',
+                    threatId: '@uuid',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
                 {
@@ -105,7 +105,7 @@
 
         return {
             makeResource: makeResource,
-            
+
             getThreats: getThreats,
             getThreat: getThreat,
             createThreat: createThreat,
