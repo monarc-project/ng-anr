@@ -207,7 +207,7 @@
 
         $scope.editAsset = function (ev, asset) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-            AssetService.getAsset(asset.id).then(function (assetData) {
+            AssetService.getAsset(asset.uuid).then(function (assetData) {
                 $mdDialog.show({
                     controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'asset', CreateAssetDialogCtrl],
                     templateUrl: 'views/anr/create.assets.html',
@@ -253,12 +253,12 @@
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-                AssetService.deleteAsset(item.id,
+                AssetService.deleteAsset(item.uuid,
                     function () {
                         toastr.success(gettextCatalog.getString('The asset type has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                         $scope.updateAssets();
-                        $scope.assets.selected = $scope.assets.selected.filter(assetSelected => assetSelected.id != item.id);
+                        $scope.assets.selected = $scope.assets.selected.filter(assetSelected => assetSelected.uuid != item.uuid);
                     }
                 );
 
@@ -278,7 +278,7 @@
             $mdDialog.show(confirm).then(function() {
                 var ids = [];
                 for (var i = 0; i < $scope.assets.selected.length; ++i) {
-                    ids.push($scope.assets.selected[i].id);
+                    ids.push($scope.assets.selected[i].uuid);
                 }
 
                 AssetService.deleteMassAsset(ids, function () {
@@ -346,7 +346,7 @@
 
 
         $scope.toggleThreatStatus = function (threat) {
-            ThreatService.patchThreat(threat.id, {status: !threat.status}, function () {
+            ThreatService.patchThreat(threat.uuid, {status: !threat.status}, function () {
                 threat.status = !threat.status;
             });
         };
@@ -404,7 +404,7 @@
         $scope.editThreat = function (ev, threat) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $scope.controls = [];//hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
-            ThreatService.getThreat(threat.id).then(function (threatData) {
+            ThreatService.getThreat(threat.uuid).then(function (threatData) {
                 $scope.controls = [{}];//hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
                 $mdDialog.show({
                     controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'ModelService', 'ThreatService', 'ConfigService', 'threat', CreateThreatDialogCtrl],
@@ -458,12 +458,12 @@
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-                ThreatService.deleteThreat(item.id,
+                ThreatService.deleteThreat(item.uuid,
                     function () {
                         toastr.success(gettextCatalog.getString('The threat has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                         $scope.updateThreats();
-                        $scope.threats.selected = $scope.threats.selected.filter(threatSelected => threatSelected.id != item.id);
+                        $scope.threats.selected = $scope.threats.selected.filter(threatSelected => threatSelected.uuid != item.uuid);
                     }
                 );
             });
@@ -484,7 +484,7 @@
             $mdDialog.show(confirm).then(function() {
                 var ids = [];
                 for (var i = 0; i < $scope.threats.selected.length; ++i) {
-                    ids.push($scope.threats.selected[i].id);
+                    ids.push($scope.threats.selected[i].uuid);
                 }
 
                 ThreatService.deleteMassThreat(ids, function () {
@@ -595,7 +595,7 @@
         $scope.editVuln = function (ev, vuln) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $scope.controls = [];//hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
-            VulnService.getVuln(vuln.id).then(function (vulnData) {
+            VulnService.getVuln(vuln.uuid).then(function (vulnData) {
                 $scope.controls = [{}];//hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
                 $mdDialog.show({
                     controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'vuln', CreateVulnDialogCtrl],
@@ -642,12 +642,12 @@
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-                VulnService.deleteVuln(item.id,
+                VulnService.deleteVuln(item.uuid,
                     function () {
                         toastr.success(gettextCatalog.getString('The vulnerability has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                         $scope.updateVulns();
-                        $scope.vulns.selected = $scope.vulns.selected.filter(vulSelected => vulSelected.id != item.id);
+                        $scope.vulns.selected = $scope.vulns.selected.filter(vulSelected => vulSelected.uuid != item.uuid);
                     }
                 );
             });
@@ -668,7 +668,7 @@
             $mdDialog.show(confirm).then(function() {
                 var ids = [];
                 for (var i = 0; i < $scope.vulns.selected.length; ++i) {
-                    ids.push($scope.vulns.selected[i].id);
+                    ids.push($scope.vulns.selected[i].uuid);
                 }
 
                 VulnService.deleteMassVuln(ids, function () {
