@@ -156,7 +156,7 @@
         };
 
         $scope.toggleAssetStatus = function (asset) {
-            AssetService.patchAsset(asset.id, {status: !asset.status}, function () {
+            AssetService.patchAsset(asset.uuid, {status: !asset.status}, function () {
                 asset.status = !asset.status;
             });
         };
@@ -1125,13 +1125,13 @@
                     var amvBackup = angular.copy(amv);
 
                     if (amv.threat) {
-                        amv.threat = amv.threat.id;
+                        amv.threat = amv.threat.uuid;
                     }
                     if (amv.asset) {
-                        amv.asset = amv.asset.id;
+                        amv.asset = amv.asset.uuid;
                     }
                     if (amv.vulnerability) {
-                        amv.vulnerability = amv.vulnerability.id;
+                        amv.vulnerability = amv.vulnerability.uuid;
                     }
 
                     var cont = amv.cont;
@@ -1182,13 +1182,13 @@
                     .then(function (amv) {
                         var amvBackup = angular.copy(amv);
                         if (amv.threat) {
-                            amv.threat = amv.threat.id;
+                            amv.threat = amv.threat.uuid;
                         }
                         if (amv.asset) {
-                            amv.asset = amv.asset.id;
+                            amv.asset = amv.asset.uuid;
                         }
                         if (amv.vulnerability) {
-                            amv.vulnerability = amv.vulnerability.id;
+                            amv.vulnerability = amv.vulnerability.uuid;
                         }
 
 
@@ -1385,7 +1385,7 @@
                         var objlibBackup = angular.copy(objlib);
 
                         if (objlib.asset) {
-                            objlib.asset = objlib.asset.id;
+                            objlib.asset = objlib.asset.uuid;
                         }
 
                         if (objlib.rolfTag) {
@@ -2603,8 +2603,8 @@
 
         if (amv != undefined && amv != null) {
             $scope.amv = amv;
-            if (amv.asset && amv.asset.id) {
-                $scope.queryAmvs(amv.asset.id);
+            if (amv.asset && amv.asset.uuid) {
+                $scope.queryAmvs(amv.asset.uuid);
             }
             if (amv.previous && amv.previous.id) {
                 $scope.amv.previous = $scope.amv.previous.id;
