@@ -5,10 +5,6 @@
       <span class="md-title md-padding-double">{{ soaMeasureSheet.code }} - {{_langField(soaMeasureSheet,'label')}}</span>
     </div>
 
-    <div ng-if="(!soaMeasureRisks || !soaMeasureRisks.length) && (!soaMeasureOpRisks || !soaMeasureOpRisks.length)" class="md-subtitle md-padding-double">
-        <p>{{ 'There are no risks for this control.' | translate }}</p>
-    </div>
-
     <div ng-if="soaMeasureRisks.length > 0">
       <div layout="row" layout-align="space-between end">
         <span class="md-title md-padding-double" translate>Information risks</span>
@@ -45,7 +41,7 @@
          </thead>
 
          <tbody>
-           <tr class="txtleft" ng-repeat="risk in soaMeasureRisks" ng-if="soaMeasureAmvIds.length > 0">
+           <tr class="txtleft" ng-repeat="risk in soaMeasureRisks" ng-if="soaMeasureRisks.length > 0">
              <td  class="txtleft clickable-rows"><a ng-click="goToInstance(risk.instance, 'InfoRisk')"> {{_langField(risk,'instanceName')}}</a></td>
              <td  class="txtcenter" title="{{ scaleCommCache[1][risk.c_impact] }}">{{risk.c_impact|dashnull}}</td>
              <td  class="txtcenter" title="{{ scaleCommCache[2][risk.i_impact] }}">{{risk.i_impact|dashnull}}</td>
