@@ -18,7 +18,7 @@
                 </div>
 
                 <md-menu>
-                    <md-button ng-click="openObjectMenu($mdOpenMenu, $event);">
+                    <md-button ng-click="openObjectMenu($mdMenu.open, $event);">
                         <md-tooltip md-direction="bottom">{{ 'Asset actions' | translate }}</md-tooltip>
                         <md-icon class="material-icons md-48 size-auto" md-menu-origin>more_vert</md-icon>
                     </md-button>
@@ -64,7 +64,7 @@
                 <table class="md-html-table big-border-all">
                     <thead class="big-border-bottom">
                     <tr>
-							<th colspan="1" class="big-border-left"><p translate>Asset</p></th>                        
+							<th colspan="1" class="big-border-left"><p translate>Asset</p></th>
 							<th colspan="1" class="big-border-left"><p translate>Threat</p></th>
                     	<th colspan="1" class="big-border-left"><p translate>Vulnerability</p></th>
                     </tr>
