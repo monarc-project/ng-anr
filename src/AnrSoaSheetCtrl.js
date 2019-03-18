@@ -3,66 +3,38 @@
     angular
         .module('AnrModule')
         .controller('AnrSoaSheetCtrl', [
-            '$scope', '$rootScope', 'gettextCatalog', '$state', '$stateParams', 'AnrService', 'MeasureService', '$q',
+            '$scope', '$rootScope', 'gettextCatalog', '$state', '$stateParams',
             AnrSoaSheetCtrl]);
 
     /**
     * ANR > STATEMENT OF APPLICABILITY > Risks
     */
-    function AnrSoaSheetCtrl($scope, $rootScope, gettextCatalog, $state, $stateParams, AnrService, MeasureService, $q) {
-
+    function AnrSoaSheetCtrl($scope, $rootScope, gettextCatalog, $state, $stateParams) {
 
         $scope.soaSheetfirstRefresh = true;
 
-
-        getSoaRisks = function(Measureuuid){
-            $scope.soaMeasureAmvIds = [];
-            $scope.soaMeasureRolfRiskIds = [];
-            var promise = $q.defer();
-            MeasureService.getMeasure(Measureuuid).then(function (measure) {
-              $scope.soaMeasureSheet = measure;
-              if (measure.amvs) {
-                for (var i = 0; i < measure.amvs.length; i++) {
-                  $scope.soaMeasureAmvIds.push(measure.amvs[i].id);
-                }
-              }
-              if (measure.rolfRisks) {
-                for (var i = 0; i < measure.rolfRisks.length; i++) {
-                  $scope.soaMeasureRolfRiskIds.push(measure.rolfRisks[i].id);
-                }
-              }
-
-              soa_risks_filters = {
-                  limit: -1,
-                  amvs : [$scope.soaMeasureAmvIds]
-              };
-
-              AnrService.getInstanceRisks($scope.model.anr.id,null,soa_risks_filters).then(function(data) {
-                  $scope.soaMeasureRisks = data.risks;
-              });
-
-              soa_opRisks_filters = {
-                  limit: -1,
-                  rolfRisks : [$scope.soaMeasureRolfRiskIds]
-              };
-
-              AnrService.getInstanceRisksOp($scope.model.anr.id,null,soa_opRisks_filters).then(function(data) {
-                  $scope.soaMeasureOpRisks = data.oprisks;
-              });
-
-              promise.resolve(true);
-            });
+        getSoaRisks = function(measure){
+          $scope.soaMeasureSheet = measure;
+          $scope.soaMeasureRisks = measure.amvs;
+          $scope.soaMeasureOpRisks = measure.rolfRisks;
         };
 
+
         // Get risks related to SOA Measure
-        var soaSheetListener = $rootScope.$on('soaSheet', function (event, soaId) {
+        var soaSheetListener = $rootScope.$on('soaSheet', function (event, measure) {
           if (!$scope.soaSheetfirstRefresh) {
-              getSoaRisks(soaId);
+              getSoaRisks(measure);
           }
          });
 
          if ($scope.soaSheetfirstRefresh) {
-           getSoaRisks($stateParams.soaId);
+           if ($state.current.data) {
+             getSoaRisks($state.current.data);
+           }else {
+             $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
+             $scope.display.anrSelectedTabIndex = 4;
+             $scope.soaSheetfirstRefresh = false;
+           }
          }
 
         // export to CSV

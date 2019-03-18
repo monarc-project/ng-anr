@@ -114,9 +114,10 @@
           }
         }
 
-        $scope.goToSoaSheet = function (soaId) {
-            $state.transitionTo('main.project.anr.soa.sheet', {modelId: $stateParams.modelId, soaId: soaId},{inherit:true,notify:true,reload:false,location:'replace'});
-            $rootScope.$broadcast('soaSheet', soaId);
+        $scope.goToSoaSheet = function (measure) {
+            $state.get('main.project.anr.soa.sheet').data = measure;
+            $rootScope.$broadcast('soaSheet', measure);
+            $state.transitionTo('main.project.anr.soa.sheet', {modelId: $stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
             $scope.display.anrSelectedTabIndex = 5;
         };
 
