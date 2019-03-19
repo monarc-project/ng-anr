@@ -18,9 +18,9 @@
                         <md-option ng-value="1">{{ 'Final' | translate}}</md-option>
                     </md-select>
                 </md-input-container>
-
-                <md-input-container class="md-block">
-                    <label translate>Template</label>
+                <div  layout="row" layout-align="space-between center">
+                <md-input-container class="md-block" flex="{{step.num == 5 ? 75 : 100}}">
+                  <label translate>Template</label>
                     <md-select ng-model="deliverable.template" name="template" ng-required="true">
                          <md-option ng-value="deliverymodel.id" ng-repeat="(index, deliverymodel) in deliveriesmodels" ng-if="deliverymodel.category===step.num && deliverymodel['path' + getAnrLanguage()]" ng-selected="$first">{{ _langField(deliverymodel, 'description') }}</md-option>
                     </md-select>
@@ -28,6 +28,8 @@
                         <div ng-message="required">{{ 'You must select a template' | translate }}</div>
                     </div>
                 </md-input-container>
+                <md-switch ng-show="step.num == 5" ng-model="deliverable.risksByControl" flex>{{ 'Risks by control' | translate }}</md-switch>
+                </div>
 
                 <md-input-container class="md-block">
                     <label translate>Version</label>

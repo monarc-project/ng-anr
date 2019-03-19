@@ -2738,6 +2738,7 @@
             'consultants': '',
             'summaryEvalRisk': '',
             'typedoc': step.num,
+            'risksByControl': false,
         };
 
         $http.get('api/client-anr/' + anr.id + '/deliverable/' + step.num).then(function (data) {
