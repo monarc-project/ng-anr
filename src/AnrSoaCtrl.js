@@ -24,6 +24,10 @@
                   $scope.soa_measures[uuid] = TableHelperService.build('m.code', 20, 1, '');
                   $scope.soa_measures[uuid].selectedCategory = 0;
                 });
+                if (!$scope.referential_uuid && $scope.referentials.items.referentials.length > 0) {
+                  $scope.referential_uuid = $scope.referentials.items.referentials[0].uuid;
+                }
+                $scope.selectReferential($scope.referential_uuid);
                 $scope.updatingReferentials = true;
             })
         };

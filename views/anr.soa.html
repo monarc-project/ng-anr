@@ -2,7 +2,7 @@
     <p class="md-title md-padding-left" translate>Statement of applicability</p>
     <md-tabs md-dynamic-height="true" ng-if="updatingReferentials">
       <md-tab ng-repeat="ref in referentials.items.referentials" label="{{ _langField(ref,'label')}}"
-              md-on-select="selectReferential(ref.uuid)" >
+              ng-click="selectReferential(ref.uuid)">
 
           <div layout="row" layout-align="start center" class="md-padding-double" style="height:40px">
 
