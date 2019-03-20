@@ -747,6 +747,46 @@
             )
         };
 
+        $scope.importNewReferential = function (ev, referential) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$http', '$mdDialog', 'ReferentialService', 'ConfigService', 'referential', 'anrId', ImportReferentialDialogCtrl],
+                templateUrl: 'views/anr/import.referentials.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                  'referential' : referential,
+                  'anrId': $scope.model.anr.id
+                }
+            })
+                .then(function (referential) {
+                    var cont = referential.cont;
+                    referential.cont = undefined;
+
+                    if (cont) {
+                        $scope.createNewReferential(ev);
+                    }
+
+                    ReferentialService.createReferential(referential,
+                        function () {
+                          $scope.refTabSelected = $scope.referentials.items.count + 1;
+                          $scope.updateReferentials();
+                          toastr.success(gettextCatalog.getString('The referential has been imported successfully.',
+                                  {referntialLabel: $scope._langField(referential,'label')}), gettextCatalog.getString('Creation successful'));
+                          $rootScope.$broadcast('referentialsUpdated');
+                        },
+
+                        function () {
+                            $scope.createNewReferential(ev, referential);
+                        }
+                    );
+                });
+        };
+
         $scope.createNewReferential = function (ev, referential) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
@@ -2247,6 +2287,30 @@
         $scope.createAndContinue = function() {
             $scope.vuln.cont = true;
             $mdDialog.hide($scope.vuln);
+        };
+    }
+
+    function ImportReferentialDialogCtrl($scope, $http, $mdDialog, ReferentialService, ConfigService, referential) {
+        $scope.languages = ConfigService.getLanguages();
+        $scope.language = ConfigService.getDefaultLanguageIndex();
+        var defaultLang = angular.copy($scope.language);
+
+        $http.jsonp("https://objects.monarc.lu/api/v1/schema/12")
+        .then(function(json) {
+            $scope.mosp_referentials = json.data.data.objects;
+        });
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.import = function() {
+            $scope.referential = $scope.mosp_referentials.find(r => r['id'] === $scope.referential.id);
+
+            for (var i = 1; i <=4; i++) {
+                $scope.referential['label' + i] = $scope.referential['name'];
+            }
+            $mdDialog.hide($scope.referential);
         };
     }
 

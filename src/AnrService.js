@@ -3,7 +3,14 @@
     angular
         .module('AnrModule')
         .factory('AnrService', [ '$resource', '$rootScope', 'ObjlibService', AnrService ])
-       .controller('AnrService', ['$scope', 'ConfigService']);
+       .controller('AnrService', ['$scope', 'ConfigService'])
+       .config(function($sceDelegateProvider) {
+          $sceDelegateProvider.resourceUrlWhitelist([
+            // Allow same origin resource loads.
+            'self',
+            // Allow loading from our assets domain.  Notice the difference between * and **.
+            'https://objects.monarc.lu/**'
+        ])});
 
     function AnrService($resource, $rootScope, ObjlibService) {
         var self = this;

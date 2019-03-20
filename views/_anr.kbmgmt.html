@@ -215,6 +215,12 @@
 
         <md-tab label="{{ 'Referentials' | translate }}" md-on-select="selectMeasuresTab()" md-on-deselect="deselectMeasuresTab()">
           <md-tabs md-dynamic-height="true" md-border-bottom="" ng-if="updatingReferentials" md-selected="refTabSelected">
+            <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="importNewReferential($event)">
+              <md-tooltip md-direction="left">
+                    {{ 'Import a referential' | translate }}
+              </md-tooltip>
+              <md-icon class="md-icon-button md-primary">get_app</md-icon>
+            </md-button>
             <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="createNewReferential($event)">
               <md-tooltip md-direction="left">
                   {{ 'Add a referential' | translate }}
