@@ -73,7 +73,7 @@
             });
         }
 
-        $transitions.onBefore({}, function () {
+        var onBeforeHook = $transitions.onBefore({}, function () {
             if($scope.OFFICE_MODE == 'FO'){
                 if(($state.$current.name == 'main.project.anr.risk' && $stateParams.riskId) ||
                     ($state.$current.name == 'main.project.anr.riskop' && $stateParams.riskopId) ||
@@ -98,8 +98,11 @@
                     $rootScope.anr_selected_object_id = null;
 
                     if ($scope.model && $scope.model.anr && $scope.model.anr.id && $stateParams.modelId == $scope.model.anr.id) {
-                        $scope.updateAnrRisksTable();
-                        $scope.updateAnrRisksOpTable();
+                        if (ToolsAnrService.currentTab == 0) {
+                          $scope.updateAnrRisksTable();
+                        }else {
+                          $scope.updateAnrRisksOpTable();
+                        }
                     }
                 }
             });
@@ -111,6 +114,8 @@
             $mdDialog.cancel();
 
         });
+
+        $scope.$on("$destroy", onBeforeHook);
 
         $scope.ceil = Math.ceil;
 
