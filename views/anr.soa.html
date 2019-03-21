@@ -2,7 +2,7 @@
     <p class="md-title md-padding-left" translate>Statement of applicability</p>
     <md-tabs md-dynamic-height="true" ng-if="updatingReferentials">
       <md-tab ng-repeat="ref in referentials.items.referentials" label="{{ _langField(ref,'label')}}"
-              md-on-select="selectReferential(ref.uuid)" >
+              ng-click="selectReferential(ref.uuid)">
 
           <div layout="row" layout-align="start center" class="md-padding-double" style="height:40px">
 
@@ -19,9 +19,18 @@
                 <md-option ng-repeat="cat in Categories" ng-value="cat.id" >{{_langField(cat,'label')}}</md-option>
               </md-select>
 
-              <md-button class="md-icon-button" ng-click="export()">
-                  <md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip>
-              </md-button>
+              <md-menu>
+                <md-button class="md-icon-button" ng-click="$mdMenu.open()">
+                    <md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }}</md-tooltip>
+                </md-button>
+                <md-menu-content>
+                  <md-menu-item>
+                    <md-button ng-click="openMethodDeliverable(step, $event)">.docx</md-button>
+                  </md-menu-item>
+                  <md-menu-item>
+                    <md-button ng-click="export()">.csv</md-button>
+                  </md-menu-item>
+              </md-menu>
 
               <md-button class="md-icon-button" ng-click="import($event, ref.uuid)" ng-if="!isAnrReadOnly && referentials.items.referentials.length > 1">
                   <md-icon class="md-primary">play_for_work</md-icon><md-tooltip>{{ 'Import from other referential' | translate }}</md-tooltip>
@@ -45,7 +54,7 @@
             <tbody>
                 <tr edit-model="soa" ng-repeat="soa in soa_measures[ref.uuid].items.soaMeasures">
                   <td style="max-width: 300px" class="txtleft">{{_langField(soa.measure.category,'label')}}</td>
-                  <td class="txtcenter"><md-button class="md-primary" ng-click="goToSoaSheet(model.anr.id, soa.measure.uuid)">{{ soa.measure.code }}</md-button></td>
+                  <td class="txtcenter"><md-button ng-disabled="soa.measure.amvs.length == 0 && soa.measure.rolfRisks.length == 0" class="md-primary" ng-click="goToSoaSheet(soa.measure)">{{ soa.measure.code }}</md-button></td>
                   <td class="txtleft">{{_langField(soa.measure,'label')}}</td>
                   <td class="btn">
                     <button type="button" ng-model="soa.EX"  ng-click="onTableEdited(soa, 'EX')"

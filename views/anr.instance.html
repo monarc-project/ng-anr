@@ -12,7 +12,7 @@
                 </div>
 
                 <md-menu>
-                    <md-button ng-click="openAnrToolsMenu($mdOpenMenu, $event);" class="min-size-auto">
+                    <md-button ng-click="openAnrToolsMenu($mdMenu.open, $event);" class="min-size-auto">
                         <md-tooltip md-direction="bottom">{{ 'Asset actions' | translate }}</md-tooltip>
                         <md-icon class="material-icons md-48 size-auto" md-menu-origin>more_vert</md-icon>
                     </md-button>
@@ -103,4 +103,3 @@
             ng-include="'objlibs.tree_item_template.html'"></li>
     </ul>
 </script>
-

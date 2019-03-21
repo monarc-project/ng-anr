@@ -73,7 +73,7 @@
             });
         }
 
-        $transitions.onBefore({}, function () {
+        var onBeforeHook = $transitions.onBefore({}, function () {
             if($scope.OFFICE_MODE == 'FO'){
                 if(($state.$current.name == 'main.project.anr.risk' && $stateParams.riskId) ||
                     ($state.$current.name == 'main.project.anr.riskop' && $stateParams.riskopId) ||
@@ -98,8 +98,11 @@
                     $rootScope.anr_selected_object_id = null;
 
                     if ($scope.model && $scope.model.anr && $scope.model.anr.id && $stateParams.modelId == $scope.model.anr.id) {
-                        $scope.updateAnrRisksTable();
-                        $scope.updateAnrRisksOpTable();
+                        if (ToolsAnrService.currentTab == 0) {
+                          $scope.updateAnrRisksTable();
+                        }else {
+                          $scope.updateAnrRisksOpTable();
+                        }
                     }
                 }
             });
@@ -111,6 +114,8 @@
             $mdDialog.cancel();
 
         });
+
+        $scope.$on("$destroy", onBeforeHook);
 
         $scope.ceil = Math.ceil;
 
@@ -135,7 +140,6 @@
 
         $scope.updateModel = function (justCore, cb) {
             isModelLoading = true;
-
             if ($scope.OFFICE_MODE == 'BO') {
                 ModelService.getModel($stateParams.modelId).then(function (data) {
                     $scope.model = data;
@@ -743,8 +747,8 @@
                     case 3:
                         $state.transitionTo('main.project.anr.knowledge',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
                         break;
-                      case 4:
-                          $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
+                    case 4:
+                        $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
                         break;
                 }
             });
@@ -1531,6 +1535,7 @@
                     }
                     service.patchAnr($scope.model.anr.id, anr, function () {
                         toastr.success(gettextCatalog.getString("The risk analysis have been edited."), gettextCatalog.getString("Edition successful"));
+                        $rootScope.$broadcast('referentialsUpdated');
                     });
                   $scope.model.anr = anr;
                 });
@@ -1912,16 +1917,6 @@
             });
         }
 
-        $scope.goToDashboard = function () {
-            $state.transitionTo("main.project.anr.dashboard" , {modelId: $stateParams.modelId});
-        };
-        $scope.goToSoa = function () {
-            $state.transitionTo("main.project.anr.soa" , {modelId: $stateParams.modelId});
-        }
-        $scope.goToSoaSheet = function (modelId, soaId) {
-            $state.transitionTo('main.project.anr.soa.sheet', {modelId: $scope.model.anr.id, soaId: soaId, anr: $scope.model.anr});
-
-        };
         $scope.openInterviewTools = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
@@ -2748,6 +2743,7 @@
             'consultants': '',
             'summaryEvalRisk': '',
             'typedoc': step.num,
+            'risksByControl': false,
         };
 
         $http.get('api/client-anr/' + anr.id + '/deliverable/' + step.num).then(function (data) {
@@ -2757,6 +2753,9 @@
                 $scope.deliverable.managers = $scope.deliverable.respSmile;
                 $scope.deliverable.consultants = $scope.deliverable.respCustomer;
                 $scope.deliverable.template = $scope.deliverable.template;
+            }
+            if (step.referential) {
+              $scope.deliverable.referential = step.referential;
             }
         });
 

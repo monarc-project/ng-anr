@@ -3,7 +3,7 @@
     angular
         .module('AnrModule')
         .controller('AnrSoaCtrl', [
-            '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state', 'MeasureService',
+            '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state', '$stateParams', 'MeasureService',
             'SOACategoryService' , 'ClientSoaService',  '$q', 'ReferentialService', 'TableHelperService', 'MeasureMeasureService',
             AnrSoaCtrl
         ]);
@@ -11,7 +11,7 @@
     /**
      * ANR > STATEMENT OF APPLICABILITY
      */
-    function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, MeasureService, SOACategoryService,
+    function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, $stateParams, MeasureService, SOACategoryService,
                                   ClientSoaService,  $q, ReferentialService, TableHelperService, MeasureMeasureService) {
 
         $scope.updateSoaReferentials = function () {
@@ -24,6 +24,10 @@
                   $scope.soa_measures[uuid] = TableHelperService.build('m.code', 20, 1, '');
                   $scope.soa_measures[uuid].selectedCategory = 0;
                 });
+                if (!$scope.referential_uuid && $scope.referentials.items.referentials.length > 0) {
+                  $scope.referential_uuid = $scope.referentials.items.referentials[0].uuid;
+                }
+                $scope.selectReferential($scope.referential_uuid);
                 $scope.updatingReferentials = true;
             })
         };
@@ -49,6 +53,10 @@
 
                   $scope.updateSoaMeasures();
             });
+            $scope.step = { // Deliverable data
+              num:5,
+              referential : $scope.referential_uuid
+             };
         };
 
         $scope.$watch('referentialsUpdated', function() {
@@ -109,6 +117,13 @@
             $scope.soa_measures[$scope.referential_uuid].query.order = 'm.code';
           }
         }
+
+        $scope.goToSoaSheet = function (measure) {
+            $state.get('main.project.anr.soa.sheet').data = measure;
+            $rootScope.$broadcast('soaSheet', measure);
+            $state.transitionTo('main.project.anr.soa.sheet', {modelId: $stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
+            $scope.display.anrSelectedTabIndex = 5;
+        };
 
         $scope.import = function (ev,referential) {
           var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
@@ -213,78 +228,81 @@
             finalArray[recLine]+=','+gettextCatalog.getString('Actions');
             finalArray[recLine]+=','+gettextCatalog.getString('Level of compliance');
 
-            soas = $scope.soa_measures[$scope.referential_uuid].items['soaMeasures'];
-            for (soa in soas) {
-                recLine++;
+            ClientSoaService.getSoas({referential:$scope.referential_uuid, order: 'm.code'}).then(function (data) {
+                soas = data['soaMeasures'];
+                for (soa in soas) {
+                    recLine++;
 
-                finalArray[recLine]="\""+$scope._langField(soas[soa].measure.category,'label')+"\"";
-                finalArray[recLine]+=','+"\""+soas[soa].measure.code+"\"";
-                finalArray[recLine]+=','+"\""+$scope._langField(soas[soa].measure,'label')+"\"";
+                    finalArray[recLine]="\""+$scope._langField(soas[soa].measure.category,'label')+"\"";
+                    finalArray[recLine]+=','+"\""+soas[soa].measure.code+"\"";
+                    finalArray[recLine]+=','+"\""+$scope._langField(soas[soa].measure,'label')+"\"";
 
-                //Inclusion/exclusion
+                    //Inclusion/exclusion
 
-                finalArray[recLine]+=','+"\""+' ';
-                if(soas[soa].EX == 1)
-                    finalArray[recLine] += gettextCatalog.getString('Excluded');
-                if(soas[soa].LR == 1)
-                    finalArray[recLine] += gettextCatalog.getString('Legal requirements') + "  ";
-                if(soas[soa].CO == 1)
-                    finalArray[recLine] += gettextCatalog.getString('Contractual obligations') + "  ";
-                if(soas[soa].BR == 1)
-                    finalArray[recLine] += gettextCatalog.getString('Business requirements') + "  ";
-                if(soas[soa].BP == 1)
-                    finalArray[recLine] += gettextCatalog.getString('Best practices') + "  ";
-                if(soas[soa].RRA == 1)
-                    finalArray[recLine] += gettextCatalog.getString('Results of risk assessment') + "  ";
-                finalArray[recLine] += "\"";
+                    finalArray[recLine]+=','+"\""+' ';
+                    if(soas[soa].EX == 1)
+                        finalArray[recLine] += gettextCatalog.getString('Excluded');
+                    if(soas[soa].LR == 1)
+                        finalArray[recLine] += gettextCatalog.getString('Legal requirements') + "  ";
+                    if(soas[soa].CO == 1)
+                        finalArray[recLine] += gettextCatalog.getString('Contractual obligations') + "  ";
+                    if(soas[soa].BR == 1)
+                        finalArray[recLine] += gettextCatalog.getString('Business requirements') + "  ";
+                    if(soas[soa].BP == 1)
+                        finalArray[recLine] += gettextCatalog.getString('Best practices') + "  ";
+                    if(soas[soa].RRA == 1)
+                        finalArray[recLine] += gettextCatalog.getString('Results of risk assessment') + "  ";
+                    finalArray[recLine] += "\"";
 
-                // Remarks
-                if(soas[soa].remarks==null)
-                    finalArray[recLine] += ','+"\""+' '+"\"";
-                else
-                    finalArray[recLine] += ','+"\""+soas[soa].remarks+"\"";
+                    // Remarks
+                    if(soas[soa].remarks==null)
+                        finalArray[recLine] += ','+"\""+' '+"\"";
+                    else
+                        finalArray[recLine] += ','+"\""+soas[soa].remarks+"\"";
 
-                // evidences
-                if(soas[soa].evidences==null)
-                    finalArray[recLine] += ','+"\""+' '+"\"";
-                else
-                    finalArray[recLine] += ','+"\""+soas[soa].evidences+"\"";
+                    // evidences
+                    if(soas[soa].evidences==null)
+                        finalArray[recLine] += ','+"\""+' '+"\"";
+                    else
+                        finalArray[recLine] += ','+"\""+soas[soa].evidences+"\"";
 
-                // actions
-                if (soas[soa].actions==null)
-                    finalArray[recLine] += ','+"\""+' '+"\"";
-                else
-                    finalArray[recLine] += ','+"\""+soas[soa].actions+"\"";
+                    // actions
+                    if (soas[soa].actions==null)
+                        finalArray[recLine] += ','+"\""+' '+"\"";
+                    else
+                        finalArray[recLine] += ','+"\""+soas[soa].actions+"\"";
 
-                // compliance
-                if(soas[soa].compliance==null || soas[soa].EX==1)
-                    finalArray[recLine] += ','+"\""+' '+"\"";
-                else {
-                    if(soas[soa].compliance == 1)
-                        finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Initial') + "\"";
-                    if(soas[soa].compliance == 2)
-                        finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Managed') + "\"";
-                    if(soas[soa].compliance == 3)
-                        finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Defined') + "\"";
-                    if(soas[soa].compliance == 4)
-                        finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Quantitatively Managed') + "\"";
-                    if(soas[soa].compliance == 5)
-                        finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Optimized') + "\"";
+                    // compliance
+                    if(soas[soa].compliance==null || soas[soa].EX==1)
+                        finalArray[recLine] += ','+"\""+' '+"\"";
+                    else {
+                        if(soas[soa].compliance == 1)
+                            finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Initial') + "\"";
+                        if(soas[soa].compliance == 2)
+                            finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Managed') + "\"";
+                        if(soas[soa].compliance == 3)
+                            finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Defined') + "\"";
+                        if(soas[soa].compliance == 4)
+                            finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Quantitatively Managed') + "\"";
+                        if(soas[soa].compliance == 5)
+                            finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Optimized') + "\"";
+                    }
                 }
-            }
 
-            let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
-            for(var j = 0; j < finalArray.length; ++j) {
-                let row = finalArray[j].toString().replace(/\n|\r/g,' ') + "," + "\r\n";
-                csvContent += row ;
-            }
+                let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
+                for(var j = 0; j < finalArray.length; ++j) {
+                    let row = finalArray[j].toString().replace(/\n|\r/g,' ') + "," + "\r\n";
+                    csvContent += row ;
+                }
 
-            var encodedUri = encodeURI(csvContent);
-            var link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", "soa.csv");
-            document.body.appendChild(link);
-            link.click();  // This will download the data file named "soa.csv".
+                var encodedUri = encodeURI(csvContent);
+                var link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "soa.csv");
+                document.body.appendChild(link);
+                link.click();  // This will download the data file named "soa.csv".
+            });
+
         };
     }
 

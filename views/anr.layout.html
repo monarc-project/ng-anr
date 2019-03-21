@@ -20,7 +20,7 @@
         <md-card>
             <div ng-include="'views/anr/_anr.infosnapshot.html'"></div>
             <md-menu md-position-mode="target-right target">
-                <md-button class="anr-tools-button" title="{{ 'Tools' | translate }}" ng-click="openAnrToolsMenu($mdOpenMenu, $event)">
+                <md-button class="anr-tools-button" title="{{ 'Tools' | translate }}" ng-click="openAnrToolsMenu($mdMenu.open, $event)">
                     <md-icon md-menu-origin>more_vert</md-icon>
                 </md-button>
                 <md-menu-content width="4" class="anr-menu">
@@ -45,7 +45,6 @@
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">
                         <md-button ng-click="openSnapshotTools($event)">{{ 'Snapshots' | translate }}</md-button>
                     </md-menu-item>
-
                 </md-menu-content>
             </md-menu>
             <md-tabs  md-enable-disconnect="true" md-border-bottom="true" md-selected="display.anrSelectedTabIndex" md-dynamic-height id="anrMainTab">
@@ -68,7 +67,7 @@
                     <div ng-include="'views/anr/anr.soa.html'"></div>
                 </md-tab>
                 <md-tab label="{{ 'Risks' | translate }}" md-on-select="::tabSoaSheetDisplayed = true">
-                    <div ng-include="'views/anr/anr.soa.sheet.html'"style="min-height:80vh"></div>
+                    <div ng-include="'views/anr/anr.soa.sheet.html'"></div>
                 </md-tab>
             </md-tabs>
         </md-card>
