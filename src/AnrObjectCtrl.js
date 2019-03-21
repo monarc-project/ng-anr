@@ -248,7 +248,7 @@
                 .then(function (objlib) {
                     if (objlib) {
                         if (objlib.asset) {
-                            objlib.asset = objlib.asset.id;
+                            objlib.asset = objlib.asset.uuid;
                         }
 
                         if (objlib.rolfTag) {
