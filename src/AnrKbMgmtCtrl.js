@@ -2307,6 +2307,8 @@
         $scope.import = function() {
             $scope.referential = $scope.mosp_referentials.find(r => r['id'] === $scope.referential.id);
 
+            console.log($scope.referential['uuid']);
+
             for (var i = 1; i <=4; i++) {
                 $scope.referential['label' + i] = $scope.referential['name'];
             }
