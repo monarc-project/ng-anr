@@ -264,8 +264,8 @@
             }).then(function (risk) {
                 risk.instance = $stateParams.instId;
                 risk.specific = 1;
-                risk.threat = risk.threat.id;
-                risk.vulnerability = risk.vulnerability.id;
+                risk.threat = risk.threat.uuid;
+                risk.vulnerability = risk.vulnerability.uuid;
                 AnrService.createInstanceRisk($scope.model.anr.id, risk, function () {
                     toastr.success(gettextCatalog.getString("The specific risk has been successfully created"));
                     $scope.updateInstanceRisks();

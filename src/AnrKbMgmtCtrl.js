@@ -2652,7 +2652,7 @@
         $scope.selectedAssetItemChange = function (item) {
             if (item) {
                 $scope.amv.asset = item;
-                $scope.queryAmvs(item.id);
+                $scope.queryAmvs(item.uuid);
             }
         }
 
