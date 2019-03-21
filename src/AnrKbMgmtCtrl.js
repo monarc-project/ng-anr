@@ -751,7 +751,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$http', '$mdDialog', 'ReferentialService', 'ConfigService', 'referential', 'anrId', ImportReferentialDialogCtrl],
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ReferentialService', 'ConfigService', 'referential', 'anrId', ImportReferentialDialogCtrl],
                 templateUrl: 'views/anr/import.referentials.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -2290,12 +2290,14 @@
         };
     }
 
-    function ImportReferentialDialogCtrl($scope, $http, $mdDialog, ReferentialService, ConfigService, referential) {
+    function ImportReferentialDialogCtrl($rootScope, $scope, $http, $mdDialog, ReferentialService, ConfigService, referential) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = ConfigService.getDefaultLanguageIndex();
         var defaultLang = angular.copy($scope.language);
 
-        $http.jsonp("https://objects.monarc.lu/api/v1/schema/12")
+        // Retrieve the security referentials from MOSP via its API
+        var referentials_mosp_query = 'json_object?q={"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Security referentials"}}';
+        $http.jsonp($rootScope.mospApiUrl + referentials_mosp_query)
         .then(function(json) {
             $scope.mosp_referentials = json.data.data.objects;
         });
@@ -2307,9 +2309,11 @@
         $scope.import = function() {
             $scope.referential = $scope.mosp_referentials.find(r => r['id'] === $scope.referential.id);
 
-            console.log($scope.referential['uuid']);
+            // $scope.referential['uuid'] = $scope.referential.json_object.uuid; // set the UUID of the selected referential to be imported
+            // $scope.referential['measures'] = $scope.referential.json_object.measures; // for the creation of the related meausres in a second step
 
             for (var i = 1; i <=4; i++) {
+                // set the labels for the different languages
                 $scope.referential['label' + i] = $scope.referential['name'];
             }
             $mdDialog.hide($scope.referential);
