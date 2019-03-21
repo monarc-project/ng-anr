@@ -2316,6 +2316,10 @@
                 // set the labels for the different languages
                 $scope.referential['label' + i] = $scope.referential['name'];
             }
+
+            // SOACategoryService.createCategory()
+            // MeasureService.createMeasure()
+
             $mdDialog.hide($scope.referential);
         };
     }
