@@ -2335,6 +2335,11 @@
                    promise.resolve(e.categories);
                    // creation of measures
                    // MeasureService.createMeasure()
+                   MeasureService.createMeasure(measures, function (result){
+                     $scope.$parent.updateMeasures();
+                     successCreateObject(result)
+                     $rootScope.$broadcast('controlsUpdated');
+                   });
                }, function (e) {
                    promise.reject();
                });
