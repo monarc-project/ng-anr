@@ -2325,7 +2325,7 @@
                     // set the labels for the different languages
                     category['label'+i] = measure.label;
                 }
-                category['uuid'] = measure.uuid;
+                category['referential'] = $scope.referential.json_object.uuid;
                 categories.push(category);
             })
             console.log(categories);
