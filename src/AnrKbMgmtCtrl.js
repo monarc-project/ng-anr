@@ -2295,12 +2295,21 @@
         $scope.language = ConfigService.getDefaultLanguageIndex();
         var defaultLang = angular.copy($scope.language);
 
-        // Retrieve the security referentials from MOSP via its API
-        var referentials_mosp_query = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Security referentials"}},{"name":"organization","op":"has","val":{"name":"name","op":"eq","val": "MONARC"}}]}';
-        $http.jsonp($rootScope.mospApiUrl + referentials_mosp_query)
+        var mosp_query_organizations = 'organization' ;
+        $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(json) {
-            $scope.mosp_referentials = json.data.data.objects;
+            $scope.organizations = json.data.data.objects;
         });
+
+        $scope.selectOrganization = function() {
+            // Retrieve the security referentials from the selected organization from MOSP via its API
+            var mosp_query_referentials = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Security referentials"}},' +
+                    '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}';
+            $http.jsonp($rootScope.mospApiUrl + mosp_query_referentials)
+            .then(function(json) {
+                $scope.mosp_referentials = json.data.data.objects;
+            });
+        }
 
         $scope.cancel = function() {
             $mdDialog.cancel();

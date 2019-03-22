@@ -23,6 +23,14 @@
                 </md-input-container>
 
                 <md-input-container class="md-block" flex>
+                    <md-icon style="color: rgba(0,0,0,0.54)">account_balance</md-icon>
+                    <label translate>Organization</label>
+                    <md-select ng-model="organization['id']" required ng-change="selectOrganization()">
+                        <md-option ng-repeat="org in organizations" ng-value="org.id">{{ org.name }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block" flex>
                     <md-icon style="color: rgba(0,0,0,0.54)">class</md-icon>
                     <label translate>Referential</label>
                     <md-select ng-model="referential['id']" required>
