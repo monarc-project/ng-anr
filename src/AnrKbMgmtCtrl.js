@@ -2296,7 +2296,7 @@
         var defaultLang = angular.copy($scope.language);
 
         // Retrieve the security referentials from MOSP via its API
-        var referentials_mosp_query = 'json_object?q={"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Security referentials"}}';
+        var referentials_mosp_query = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Security referentials"}}]}';
         $http.jsonp($rootScope.mospApiUrl + referentials_mosp_query)
         .then(function(json) {
             $scope.mosp_referentials = json.data.data.objects;
