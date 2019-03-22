@@ -751,7 +751,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ReferentialService', 'SOACategoryService', 'ConfigService', 'referential', 'anrId', ImportReferentialDialogCtrl],
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ReferentialService', 'SOACategoryService', 'MeasureService', 'ConfigService', 'referential', 'anrId', ImportReferentialDialogCtrl],
                 templateUrl: 'views/anr/import.referentials.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -2290,7 +2290,7 @@
         };
     }
 
-    function ImportReferentialDialogCtrl($rootScope, $scope, $http, $mdDialog, ReferentialService, SOACategoryService, ConfigService, referential) {
+    function ImportReferentialDialogCtrl($rootScope, $scope, $http, $mdDialog, ReferentialService, SOACategoryService, MeasureService, ConfigService, referential) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = ConfigService.getDefaultLanguageIndex();
         var defaultLang = angular.copy($scope.language);
