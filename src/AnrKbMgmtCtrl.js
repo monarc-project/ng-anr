@@ -751,7 +751,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ReferentialService', 'ConfigService', 'referential', 'anrId', ImportReferentialDialogCtrl],
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ReferentialService', 'SOACategoryService', 'ConfigService', 'referential', 'anrId', ImportReferentialDialogCtrl],
                 templateUrl: 'views/anr/import.referentials.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -2290,7 +2290,7 @@
         };
     }
 
-    function ImportReferentialDialogCtrl($rootScope, $scope, $http, $mdDialog, ReferentialService, ConfigService, referential) {
+    function ImportReferentialDialogCtrl($rootScope, $scope, $http, $mdDialog, ReferentialService, SOACategoryService, ConfigService, referential) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = ConfigService.getDefaultLanguageIndex();
         var defaultLang = angular.copy($scope.language);
@@ -2317,8 +2317,29 @@
                 $scope.referential['label' + i] = $scope.referential['name'];
             }
 
-            // SOACategoryService.createCategory()
-            // MeasureService.createMeasure()
+            var measures = $scope.referential['measures'] = $scope.referential.json_object.measures
+            var categories = [];
+            measures.map(function(measure) {
+                var category = {};
+                for (var i = 1; i <=4; i++) {
+                    // set the labels for the different languages
+                    category['label'+i] = measure.label;
+                }
+                category['uuid'] = measure.uuid;
+                categories.push(category);
+            })
+            console.log(categories);
+            // creation of categories
+            SOACategoryService.createCategory(categories, function(){
+               SOACategoryService.getCategories({referential: referential}).then(function (e) {
+                   promise.resolve(e.categories);
+                   // creation of measures
+                   // MeasureService.createMeasure()
+               }, function (e) {
+                   promise.reject();
+               });
+            })
+
 
             $mdDialog.hide($scope.referential);
         };
