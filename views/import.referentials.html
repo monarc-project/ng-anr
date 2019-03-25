@@ -22,7 +22,7 @@
                 <md-input-container class="md-block" flex>
                     <md-icon style="color: rgba(0,0,0,0.54)">class</md-icon>
                     <label translate>Referential</label>
-                    <md-select ng-model="referential['id']" required>
+                    <md-select ng-model="referential['id']" ng-disabled="!mosp_referentials.length" required>
                         <md-option ng-repeat="ref in mosp_referentials" ng-value="ref.id">{{ ref.name }}</md-option>
                     </md-select>
                 </md-input-container>
