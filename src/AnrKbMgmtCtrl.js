@@ -781,7 +781,7 @@
                         },
 
                         function () {
-                            $scope.createNewReferential(ev, referential);
+                            $scope.importNewReferential(ev, referential);
                         }
                     );
                 });
