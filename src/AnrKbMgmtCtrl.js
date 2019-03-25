@@ -743,6 +743,7 @@
             $scope.referentials.promise.then(
                 function (data) {
                     $scope.referentials.items = data;
+                    $rootScope.referentials_uuid = $scope.referentials.items.referentials.map(function(referential){return referential.uuid});
                     $scope.updatingReferentials = true;
                 }
             )
