@@ -751,7 +751,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ReferentialService', 'SOACategoryService', 'MeasureService', 'ConfigService', 'referential', 'anrId', ImportReferentialDialogCtrl],
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ReferentialService', 'SOACategoryService', 'MeasureService', 'ConfigService', 'referential', 'anrId', ImportReferentialDialogCtrl],
                 templateUrl: 'views/anr/import.referentials.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -763,23 +763,31 @@
                   'anrId': $scope.model.anr.id
                 }
             })
-                .then(function (referential) {
-                    var cont = referential.cont;
-                    referential.cont = undefined;
-
-                    if (cont) {
-                        $scope.createNewReferential(ev);
-                    }
+                .then(function (result) {
+                    var referential = result.referential;
+                    var categories = result.categories;
+                    var measures = result.measures;
 
                     ReferentialService.createReferential(referential,
                         function () {
-                          $scope.refTabSelected = $scope.referentials.items.count + 1;
-                          $scope.updateReferentials();
-                          toastr.success(gettextCatalog.getString('The referential has been imported successfully.',
-                                  {referntialLabel: $scope._langField(referential,'label')}), gettextCatalog.getString('Creation successful'));
-                          $rootScope.$broadcast('referentialsUpdated');
+                            SOACategoryService.createCategory(categories, function(){
+                                SOACategoryService.getCategories({order: $scope._langField('label'), referential: referential.uuid}).then(function (data) {
+                                    measures.map(function(measure) {
+                                        measure.category = data.categories.find( c => c['label' + $scope.language].toLowerCase().trim() === measure.category.toLowerCase().trim() ).id;
+                                    })
+                                    MeasureService.createMeasure(measures, function (result){
+                                        $scope.refTabSelected = $scope.referentials.items.count + 1;
+                                        $scope.updateReferentials();
+                                        toastr.success(gettextCatalog.getString('The referential has been imported successfully.',
+                                            {referntialLabel: $scope._langField(referential,'label')}), gettextCatalog.getString('Creation successful'));
+                                        $scope.$parent.updateMeasures();
+                                        //successCreateObject(result)
+                                        $rootScope.$broadcast('referentialsUpdated');
+                                        $rootScope.$broadcast('controlsUpdated');
+                                    });
+                                });
+                            })
                         },
-
                         function () {
                             $scope.importNewReferential(ev, referential);
                         }
@@ -2290,12 +2298,12 @@
         };
     }
 
-    function ImportReferentialDialogCtrl($rootScope, $scope, $http, $mdDialog, ReferentialService, SOACategoryService, MeasureService, ConfigService, referential) {
+    function ImportReferentialDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ReferentialService, SOACategoryService, MeasureService, ConfigService, referential) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = ConfigService.getDefaultLanguageIndex();
         var defaultLang = angular.copy($scope.language);
 
-        var mosp_query_organizations = 'organization' ;
+        var mosp_query_organizations = 'organization';
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(json) {
             $scope.organizations = json.data.data.objects;
@@ -2316,46 +2324,34 @@
         };
 
         $scope.import = function() {
-            $scope.referential = $scope.mosp_referentials.find(r => r['id'] === $scope.referential.id);
+            var ref_temp = $scope.mosp_referentials.find(r => r['id'] === $scope.referential.id);
 
-            // $scope.referential['uuid'] = $scope.referential.json_object.uuid; // set the UUID of the selected referential to be imported
-            // $scope.referential['measures'] = $scope.referential.json_object.measures; // for the creation of the related meausres in a second step
-
+            $scope.referential['uuid'] = ref_temp.json_object.uuid;
             for (var i = 1; i <=4; i++) {
-                // set the labels for the different languages
-                $scope.referential['label' + i] = $scope.referential['name'];
+                $scope.referential['label' + i] = ref_temp['name'];
             }
 
-            var measures = $scope.referential['measures'] = $scope.referential.json_object.measures
-            var categories = [];
+            var measures = ref_temp.json_object.measures
+
+            $scope.categories = [];
             measures.map(function(measure) {
                 var category = {};
                 for (var i = 1; i <=4; i++) {
-                    // set the labels for the different languages
-                    category['label'+i] = measure.label;
+                    measure['label'+i] = measure.label;
+                    measure['referential'] = ref_temp.json_object.uuid;
+                    category['label'+i] = measure.category;
                 }
-                category['referential'] = $scope.referential.json_object.uuid;
-                categories.push(category);
-            })
-            console.log(categories);
-            // creation of categories
-            SOACategoryService.createCategory(categories, function(){
-               SOACategoryService.getCategories({referential: referential}).then(function (e) {
-                   promise.resolve(e.categories);
-                   // creation of measures
-                   // MeasureService.createMeasure()
-                   MeasureService.createMeasure(measures, function (result){
-                     $scope.$parent.updateMeasures();
-                     successCreateObject(result)
-                     $rootScope.$broadcast('controlsUpdated');
-                   });
-               }, function (e) {
-                   promise.reject();
-               });
+                category['referential'] = ref_temp.json_object.uuid;
+                $scope.categories.push(category);
             })
 
+            result = {
+                referential: $scope.referential,
+                categories: $scope.categories,
+                measures: measures
+            }
 
-            $mdDialog.hide($scope.referential);
+            $mdDialog.hide(result);
         };
     }
 
