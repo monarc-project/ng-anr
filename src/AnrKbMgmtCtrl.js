@@ -693,6 +693,7 @@
           $scope.updatingReferentials = false;
           ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
               $scope.referentials.items = data;
+              $rootScope.referentials_uuid = $scope.referentials.items.referentials.map(function(referential){return referential.uuid});
               $scope.updatingReferentials = true;
 
           });
@@ -780,7 +781,7 @@
                                         $scope.updateReferentials();
                                         toastr.success(gettextCatalog.getString('The referential has been imported successfully.',
                                             {referntialLabel: $scope._langField(referential,'label')}), gettextCatalog.getString('Creation successful'));
-                                        $scope.$parent.updateMeasures();
+                                        // $scope.$parent.updateMeasures();
                                         //successCreateObject(result)
                                         $rootScope.$broadcast('referentialsUpdated');
                                         $rootScope.$broadcast('controlsUpdated');
