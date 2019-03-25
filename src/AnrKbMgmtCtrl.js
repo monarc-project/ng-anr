@@ -2310,7 +2310,8 @@
         });
 
         $scope.selectOrganization = function() {
-            // Retrieve the security referentials from the selected organization from MOSP via its API
+            // Retrieve the security referentials from the selected organization
+            // from MOSP via its API
             var mosp_query_referentials = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Security referentials"}},' +
                     '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}';
             $http.jsonp($rootScope.mospApiUrl + mosp_query_referentials)
