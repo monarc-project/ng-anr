@@ -11,7 +11,7 @@
 
         var makeResource = function () {
             self.AmvResource = $resource('api/' + anr + 'amvs/:amvId', {
-                    amvId: '@id',
+                    amvId: '@uuid',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
                 {
