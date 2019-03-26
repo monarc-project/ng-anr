@@ -23,7 +23,7 @@
                     <md-icon style="color: rgba(0,0,0,0.54)">class</md-icon>
                     <label translate>Referential</label>
                     <md-select ng-model="referential['id']" ng-disabled="!mosp_referentials.length" required>
-                        <md-option ng-repeat="ref in mosp_referentials" ng-value="ref.id" ng-disabled="referentials_uuid.includes(ref.json_object.uuid)">{{ ref.name }} (composed of {{ ref.json_object.measures.length }} controls)</md-option>
+                        <md-option ng-repeat="ref in mosp_referentials" ng-value="ref.id" ng-disabled="referentials_uuid.includes(ref.json_object.uuid)">{{ ref.name }}</md-option>
                     </md-select>
                 </md-input-container>
             </div>
