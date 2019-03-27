@@ -2528,7 +2528,7 @@
             $scope.threatLoading = true;
             var threat = $scope.threats[$scope.display.currentThreat];
             $scope.currentThreatObj = threat;
-            ThreatService.getThreat(threat.id).then(function (data) {
+            ThreatService.getThreat(threat.uuid).then(function (data) {
                 $scope.threatLoading = false;
                 $scope.currentThreatObj = data;
             })
