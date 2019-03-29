@@ -1184,11 +1184,11 @@
                             var obj = category.objects[i];
                             obj.type = 'lib';
 
-                            if ($scope.collapseCache[obj.type + obj.id] !== undefined) {
-                                obj.__collapsed__ = $scope.collapseCache[obj.type + obj.id];
+                            if ($scope.collapseCache[obj.type + obj.uuid] !== undefined) {
+                                obj.__collapsed__ = $scope.collapseCache[obj.type + obj.uuid];
                             } else {
                                 obj.__collapsed__ = true;
-                                $scope.collapseCache[obj.type + obj.id] = true;
+                                $scope.collapseCache[obj.type + obj.uuid] = true;
                             }
 
                             obj.__children__ = [];
@@ -1226,9 +1226,9 @@
                 if (gotofirst != undefined && gotofirst) {
                     if ($scope.first_object != null) {
                         if ($scope.OFFICE_MODE == 'BO') {
-                            $location.path('/backoffice/kb/models/' + $stateParams.modelId + '/object/' + $scope.first_object.id);
+                            $location.path('/backoffice/kb/models/' + $stateParams.modelId + '/object/' + $scope.first_object.uuid);
                         } else {
-                            $location.path('/client/project/' + $stateParams.modelId + '/anr/object/' + $scope.first_object.id);
+                            $location.path('/client/project/' + $stateParams.modelId + '/anr/object/' + $scope.first_object.uuid);
                         }
                     } else {
                         if ($scope.OFFICE_MODE == 'BO') {
@@ -1556,9 +1556,9 @@
                 })
                     .then(function (objlib) {
                         if (objlib && objlib.id) {
-                            AnrService.addExistingObjectToLibrary($scope.model.anr.id, objlib.id, function () {
+                            AnrService.addExistingObjectToLibrary($scope.model.anr.id, objlib.uuid, function () {
                                 $scope.updateObjectsLibrary(false, function () {
-                                    $location.path('/backoffice/kb/models/' + $scope.model.id + '/object/' + objlib.id);
+                                    $location.path('/backoffice/kb/models/' + $scope.model.id + '/object/' + objlib.uuid);
                                 });
                                 toastr.success(gettextCatalog.getString("The asset has been added to the library."), gettextCatalog.getString("Asset added successfully"));
                             });
@@ -2025,9 +2025,9 @@
                 AnrService.addNewObjectToLibrary(anr.id, objlib, function (data) {
                     $parentScope.updateObjectsLibrary(false, function(){
                         if ($scope.OFFICE_MODE == 'FO') {
-                            $state.transitionTo('main.project.anr.object', {modelId: anr.id, objectId: data.id});
+                            $state.transitionTo('main.project.anr.object', {modelId: anr.id, objectId: data.uuid});
                         } else {
-                            $location.path('/backoffice/kb/models/'+$parentScope.model.id+'/object/'+data.id);
+                            $location.path('/backoffice/kb/models/'+$parentScope.model.id+'/object/'+data.uuid);
                         }
                         if(cont){
                             createAttachedObject($scope, $mdDialog, $state, $location, $parentScope, AnrService, ev);
@@ -2830,7 +2830,7 @@
             $scope.dialog_mode = 'object_details';
             $scope.object_details = object;
 
-            ObjlibService.getObjectCommon(object.id).then(function (data) {
+            ObjlibService.getObjectCommon(object.uuid).then(function (data) {
                 $scope.object_details = data;
             })
         };

@@ -130,7 +130,7 @@
             })
             .then(function () {
                 if ($scope.OFFICE_MODE == 'FO') {
-                    ObjlibService.deleteObjlib($scope.object.id, function () {
+                    ObjlibService.deleteObjlib($scope.object.uuid, function () {
                         toastr.success(gettextCatalog.getString('The asset has been successfully deleted'));
                         if ($rootScope.hookUpdateObjlib) {
                             $rootScope.hookUpdateObjlib();
@@ -138,7 +138,7 @@
                         $state.transitionTo('main.project.anr', {modelId: $stateParams.modelId});
                     });
                 } else {
-                    AnrService.removeObjectFromLibrary($rootScope.anr_id, $scope.object.id, function () {
+                    AnrService.removeObjectFromLibrary($rootScope.anr_id, $scope.object.uuid, function () {
                         toastr.success(gettextCatalog.getString('The asset has been detached from the library.'));
                         if ($rootScope.hookUpdateObjlib) {
                             $rootScope.hookUpdateObjlib(true);//true pour retouner sur la fiche du premier objet de la bibliothèque
@@ -177,7 +177,7 @@
                 })
             } else if ($scope.mode == 'anr') {
                 //parents is a promise
-                AnrObject.parents({anrid: $scope.model.anr.id, id: $scope.object.id}, function(parents){
+                AnrObject.parents({anrid: $scope.model.anr.id, id: $scope.object.uuid}, function(parents){
                     if ($scope.object.replicas.length > 0 || parents.length > 0) {
                         $scope.openDetachObjectDialog(ev, parents);
                     } else {
@@ -210,7 +210,7 @@
                                     $state.transitionTo('main.project.anr', {modelId: $stateParams.modelId});
                                 });
                             } else {
-                                AnrService.removeObjectFromLibrary($rootScope.anr_id, $scope.object.id, function () {
+                                AnrService.removeObjectFromLibrary($rootScope.anr_id, $scope.object.uuid, function () {
                                     toastr.success(gettextCatalog.getString('The asset has been detached from the library.'));
                                     if ($rootScope.hookUpdateObjlib) {
                                         $rootScope.hookUpdateObjlib();
@@ -286,11 +286,11 @@
         };
 
         $scope.editObjlib = function (ev, objlib, dontFetch) {
-            if (objlib && objlib.id) {
+            if (objlib && objlib.uuid) {
                 if (dontFetch) {
                     $scope.createNewObjlib(ev, objlib);
                 } else {
-                    ObjlibService.getObjlib(objlib.id).then(function (objlibData) {
+                    ObjlibService.getObjlib(objlib.uuid).then(function (objlibData) {
                         $scope.createNewObjlib(ev, objlibData);
                     });
                 }
@@ -317,7 +317,7 @@
                 .then(function (exports) {
                     var url = 'api/objects-export';
                     if ($scope.OFFICE_MODE == 'FO') {
-                        url = 'api/client-anr/' + $scope.model.anr.id + '/objects/' + $scope.object.id + '/export';
+                        url = 'api/client-anr/' + $scope.model.anr.id + '/objects/' + $scope.object.uuid + '/export';
                     }
                     $http.post(url, {id: $scope.object.id, password: exports.password}).then(function (data) {
                         var contentD = data.headers('Content-Disposition'),
@@ -339,7 +339,7 @@
             if ($scope.OFFICE_MODE == 'FO') {
                 url = 'api/client-anr/' + $scope.model.anr.id + '/objects-duplication';
             }
-            $http.post(url, {id: $scope.object.id, implicitPosition: 2}).then(function (data) {
+            $http.post(url, {id: $scope.object.uuid, implicitPosition: 2}).then(function (data) {
                 toastr.success(gettextCatalog.getString('The asset has been duplicated successfully.'), gettextCatalog.getString('Duplication successful'));
 
                 if ($rootScope.hookUpdateObjlib) {
@@ -347,9 +347,9 @@
                 }
 
                 if ($scope.OFFICE_MODE == 'BO') {
-                    $state.transitionTo("main.kb_mgmt.models.details.object", {modelId: $scope.model.id, objectId: data.data.id});
+                    $state.transitionTo("main.kb_mgmt.models.details.object", {modelId: $scope.model.id, objectId: data.data.uuid});
                 } else {
-                    $state.transitionTo("main.project.anr.object", {modelId: $scope.model.anr.id, objectId: data.data.id});
+                    $state.transitionTo("main.project.anr.object", {modelId: $scope.model.anr.id, objectId: data.data.uuid});
                 }
             });
         };
@@ -372,7 +372,7 @@
             })
                 .then(function (objlib) {
                     if (objlib) {
-                        objlib.father = $scope.object.id;
+                        objlib.father = $scope.object.uuid;
 
                         ObjlibService.createObjlibNode(objlib,
                             function () {
@@ -399,7 +399,7 @@
 
 
         $scope.$on('object-instancied', function(e, args){
-            if(args.oid == $scope.object.id){
+            if(args.oid == $scope.object.uuid){
                 $scope.updateObjlib();
             }
         });
@@ -424,7 +424,7 @@
 
         $scope.create = function() {
             if ($scope.component.child) {
-                $scope.component.child = $scope.component.child.id;
+                $scope.component.child = $scope.component.child.uuid;
             }
 
             if ($scope.component.previous) {
@@ -442,7 +442,7 @@
                     var objects_filtered = [];
 
                     for (var i = 0; i < x.objects.length; ++i) {
-                        if (x.objects[i].id != myself.id) {
+                        if (x.objects[i].uuid != myself.uuid) {
                             objects_filtered.push(x.objects[i]);
                         }
                     }

@@ -64,7 +64,7 @@
                 <table class="md-html-table big-border-all">
                     <thead class="big-border-bottom">
                     <tr>
-							<th colspan="1" class="big-border-left"><p translate>Asset</p></th>                        
+							<th colspan="1" class="big-border-left"><p translate>Asset</p></th>
 							<th colspan="1" class="big-border-left"><p translate>Threat</p></th>
                     	<th colspan="1" class="big-border-left"><p translate>Vulnerability</p></th>
                     </tr>
@@ -88,8 +88,8 @@
 </div>
 
 <script type="text/ng-template" id="objlibs.tree_item_template.html">
-    <a ng-if="mode == 'bdc'" ui-sref="main.kb_mgmt.info_risk.object({objectId: node.id})">{{ _langField(node,'name') }}</a>
-    <a ng-if="mode == 'anr'" ui-sref="main.kb_mgmt.models.details.object({objectId: node.id})"><md-icon ng-if="node.scope == 2" style="vertical-align:top;" ng-class="{'md-tree-global-icon': node.scope == 2}">language</md-icon>{{ _langField(node,'name') }}</a>
+    <a ng-if="mode == 'bdc'" ui-sref="main.kb_mgmt.info_risk.object({objectId: node.uuid})">{{ _langField(node,'name') }}</a>
+    <a ng-if="mode == 'anr'" ui-sref="main.kb_mgmt.models.details.object({objectId: node.uuid})"><md-icon ng-if="node.scope == 2" style="vertical-align:top;" ng-class="{'md-tree-global-icon': node.scope == 2}">language</md-icon>{{ _langField(node,'name') }}</a>
 
 
     <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="moveComponent(node, 'up')" ng-disabled="$index==0"><md-icon>arrow_upward</md-icon></md-button>
