@@ -30,12 +30,32 @@
                     </md-select>
                 </md-input-container>
 
-                <md-input-container class="md-block" flex>
+                <!-- <md-input-container class="md-block" flex>
                     <md-icon style="color: rgba(0,0,0,0.54)">class</md-icon>
                     <label translate>Referential</label>
                     <md-select ng-model="referential['id']" ng-disabled="!mosp_referentials.length" required>
                         <md-option ng-repeat="ref in mosp_referentials" ng-value="ref.id" ng-disabled="referentials_uuid.includes(ref.json_object.uuid)">{{ ref.name }}</md-option>
                     </md-select>
+                </md-input-container> -->
+
+                <md-input-container class="md-block" md-no-float flex>
+                    <md-icon style="color: rgba(0,0,0,0.54)">class</md-icon>
+                    <label translate>Referential</label>
+                    <md-autocomplete
+                        flex
+                        md-no-cache="true"
+                        md-selected-item="referential"
+                        md-search-text="searchText"
+                        md-items="item in getMatches(searchText)"
+                        md-item-text="item.name"
+                        md-min-length="0"
+                        <md-item-template>
+                            <span md-highlight-text="searchText" md-highlight-flags="^i">{{ item.name }}</span>
+                        </md-item-template>
+                        <md-not-found>
+                             {{ 'No referential matching your search was found' | translate }}
+                        </md-not-found>
+                    </md-autocomplete>
                 </md-input-container>
             </div>
         </md-dialog-content>
