@@ -66,15 +66,13 @@
             '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
             'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'ClientSoaService',
             'TagService', 'RiskService','SOACategoryService', 'ReferentialService', 'MeasureMeasureService',
-             '$state', '$timeout', '$rootScope', AnrKbMgmtCtrl ]);
+             '$state', '$timeout', '$rootScope', AnrKbMgmtCtrl ])
     /**
      * ANR > KB
      */
     function AnrKbMgmtCtrl($scope, $stateParams, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService,
                                   AssetService, ThreatService, VulnService, AmvService, MeasureService, ClientSoaService, TagService,
                                   RiskService,SOACategoryService, ReferentialService, MeasureMeasureService, $state, $timeout, $rootScope) {
-
-
         $scope.gettext = gettextCatalog.getString;
         TableHelperService.resetBookmarks();
 
@@ -2317,9 +2315,14 @@
                     '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}';
             $http.jsonp($rootScope.mospApiUrl + mosp_query_referentials)
             .then(function(json) {
-                $scope.mosp_referentials = json.data.data.objects;
+                // filter from the results the referentials already in the analysis
+                $scope.mosp_referentials = json.data.data.objects.filter(referential => !$scope.referentials_uuid.includes(referential.json_object.uuid))
             });
         }
+
+        $scope.getMatches = function(searchText) {
+            return $scope.mosp_referentials.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()));
+        };
 
         $scope.cancel = function() {
             $mdDialog.cancel();
