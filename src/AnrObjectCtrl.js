@@ -161,7 +161,7 @@
                     .cancel(gettextCatalog.getString('Cancel'));
 
                 $mdDialog.show(confirm).then(function () {
-                    ObjlibService.deleteObjlib($scope.object.id, function () {
+                    ObjlibService.deleteObjlib($scope.object.uuid, function () {
                         if ($scope.OFFICE_MODE == 'BO') {
                             $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'objlibs'});
                         } else {
@@ -202,7 +202,7 @@
 
                         $mdDialog.show(confirm).then(function () {
                             if ($scope.OFFICE_MODE == 'FO') {
-                                ObjlibService.deleteObjlib($scope.object.id, function () {
+                                ObjlibService.deleteObjlib($scope.object.uuid, function () {
                                     toastr.success(gettextCatalog.getString('The asset has been successfully deleted'));
                                     if ($rootScope.hookUpdateObjlib) {
                                         $rootScope.hookUpdateObjlib();
@@ -228,7 +228,7 @@
         $scope.createNewObjlib = function (ev, objlib) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-            var isUpdate = (objlib && objlib.id);
+            var isUpdate = (objlib && objlib.uuid);
 
             $scope.objLibDialog = $mdDialog;
             $scope.objLibDialog.show({
@@ -319,7 +319,7 @@
                     if ($scope.OFFICE_MODE == 'FO') {
                         url = 'api/client-anr/' + $scope.model.anr.id + '/objects/' + $scope.object.uuid + '/export';
                     }
-                    $http.post(url, {id: $scope.object.id, password: exports.password}).then(function (data) {
+                    $http.post(url, {id: $scope.object.uuid, password: exports.password}).then(function (data) {
                         var contentD = data.headers('Content-Disposition'),
                             contentT = data.headers('Content-Type');
                         contentD = contentD.substring(0,contentD.length-1).split('filename="');

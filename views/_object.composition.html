@@ -52,7 +52,7 @@
                     <td md-cell>{{ _langField(node,'label') ? _langField(node,'label') : _langField(node,'name') }}</td>
                     <td md-cell>
                         <!-- <a aria-title="{{ _langField(node,'name') }}" ng-click="showInModel(node.id, object.id)"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ _langField(node,'name') }}</md-tooltip></a> -->
-                        <md-button class="md-icon-button" aria-title="{{ _langField(node,'name') }}" ui-sref="main.kb_mgmt.models.details.object({modelId: node.id, objectId: object.id})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ _langField(node,'name') }}</md-tooltip></md-button>
+                        <md-button class="md-icon-button" aria-title="{{ _langField(node,'name') }}" ui-sref="main.kb_mgmt.models.details.object({modelId: node.id, objectId: object.uuid})"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ _langField(node,'name') }}</md-tooltip></md-button>
                          <!--"-->
                     </td>
                 </tr>

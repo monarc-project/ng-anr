@@ -1085,11 +1085,11 @@
                     var obj = e.source.nodeScope.$modelValue;
 
                     $scope.anr_instance_tree_is_patching = true;
-                    AnrService.moveInstance($scope.model.anr.id, obj.id, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
+                    AnrService.moveInstance($scope.model.anr.id, obj.uuid, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
                         $scope.updateInstances(function () {
                             $scope.anr_instance_tree_is_patching = false;
                         });
-                        $scope.$broadcast('instance-moved', obj.id);
+                        $scope.$broadcast('instance-moved', obj.uuid);
                     });
 
                     return true;
@@ -1139,7 +1139,7 @@
 
                     // Also, tell the server to instantiate the object
                     $scope.anr_instance_tree_is_patching = true;
-                    AnrService.addInstance($scope.model.anr.id, copy.id, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
+                    AnrService.addInstance($scope.model.anr.id, copy.uuid, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
                         $scope.updateAnrRisksTable();
                         $scope.updateAnrRisksOpTable();
                         $scope.updateInstances(function () {
@@ -1147,7 +1147,7 @@
                             e.source.nodeScope.$modelValue.disableclick = false;
                         });
 
-                        $scope.$broadcast('object-instancied', {oid: copy.id});
+                        $scope.$broadcast('object-instancied', {oid: copy.uuid});
                     });
 
                     return true;
@@ -1555,7 +1555,7 @@
                     }
                 })
                     .then(function (objlib) {
-                        if (objlib && objlib.id) {
+                        if (objlib && objlib.uuid) {
                             AnrService.addExistingObjectToLibrary($scope.model.anr.id, objlib.uuid, function () {
                                 $scope.updateObjectsLibrary(false, function () {
                                     $location.path('/backoffice/kb/models/' + $scope.model.id + '/object/' + objlib.uuid);
