@@ -1083,13 +1083,13 @@
             dropped: function (e) {
                 if (e.source.nodesScope.$treeScope.$id == e.dest.nodesScope.$treeScope.$id) {
                     var obj = e.source.nodeScope.$modelValue;
-
+                    console.log(obj);
                     $scope.anr_instance_tree_is_patching = true;
-                    AnrService.moveInstance($scope.model.anr.id, obj.uuid, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
+                    AnrService.moveInstance($scope.model.anr.id, obj.id, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
                         $scope.updateInstances(function () {
                             $scope.anr_instance_tree_is_patching = false;
                         });
-                        $scope.$broadcast('instance-moved', obj.uuid);
+                        $scope.$broadcast('instance-moved', obj.id);
                     });
 
                     return true;
@@ -1101,24 +1101,26 @@
 
         $scope.libTreeCallbacks = {
             beforeDrag: function (scopeDrag) {
-                return !$scope.isAnrReadOnly && (scopeDrag.$modelValue.type != 'libcat' || scopeDrag.$modelValue.depth == 0) && (scopeDrag.$modelValue.id > 0) && !$scope.anr_instance_tree_is_patching;
+                return !$scope.isAnrReadOnly && (scopeDrag.$modelValue.type != 'libcat' || scopeDrag.$modelValue.depth == 0) && (scopeDrag.$modelValue.uuid != null) && !$scope.anr_instance_tree_is_patching;
             },
 
             accept: function (sourceNodeScope, destNodeScope, destIndex) {
+
+
                 return (sourceNodeScope.$treeScope.$id == destNodeScope.$treeScope.$id
                 && sourceNodeScope.$modelValue.depth == 0
                 && destNodeScope.$parent.$type == 'uiTree');
             },
 
             dropped: function (e) {
+
                 if (e.source.nodesScope.$treeScope.$id == e.dest.nodesScope.$treeScope.$id) {
                     if(e.source.nodeScope.$modelValue.type == 'libcat'){//si on bouge un objet, ça n'a pas d'intérêt de patcher les catégories
                         // We moved something locally inside the objects library (a first-level node), patch it
-
                         var total_categ = $scope.has_virtual_categ ? $scope.anr_obj_library_data.length - 1 : $scope.anr_obj_library_data.length;
                         var impPos = e.dest.index == 0 ? 1 : (e.dest.index >= total_categ - 1 ? 2 : 3);
 
-                        AnrService.patchLibraryCategory($scope.model.anr.id, e.source.nodeScope.$modelValue.id, {
+                        AnrService.patchLibraryCategory($scope.model.anr.id, e.source.nodeScope.$modelValue.uuid, {
                             implicitPosition: impPos,
                             //e.dest.index starts to 0 so previous is e.dest.index + 1 - 1.
                             //Give position instead of id because we don't have the id of the anr_object_category entity
@@ -1136,10 +1138,9 @@
                     e.source.nodeScope.$modelValue.disableclick = true;
 
                     e.source.nodesScope.$modelValue.push(copy);
-
                     // Also, tell the server to instantiate the object
                     $scope.anr_instance_tree_is_patching = true;
-                    AnrService.addInstance($scope.model.anr.id, copy.uuid, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
+                    AnrService.addInstance($scope.model.anr.id, copy.uuid, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.uuid : 0, e.dest.index, function () {
                         $scope.updateAnrRisksTable();
                         $scope.updateAnrRisksOpTable();
                         $scope.updateInstances(function () {
