@@ -1360,7 +1360,7 @@
         $scope.createNewObjlib = function (ev, objlib) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-            var isUpdate = (objlib && objlib.id);
+            var isUpdate = (objlib && objlib.uuid);
 
             $scope.objLibDialog = $mdDialog;
             $scope.objLibDialog.show({
@@ -1437,11 +1437,11 @@
         };
 
         $scope.editObjlib = function (ev, objlib, dontFetch) {
-            if (objlib && objlib.id) {
+            if (objlib && objlib.uuid) {
                 if (dontFetch) {
                     $scope.createNewObjlib(ev, objlib);
                 } else {
-                    ObjlibService.getObjlib(objlib.id).then(function (objlibData) {
+                    ObjlibService.getObjlib(objlib.uuid).then(function (objlibData) {
                         $scope.createNewObjlib(ev, objlibData);
                     });
                 }

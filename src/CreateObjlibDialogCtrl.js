@@ -206,7 +206,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
         ObjlibService.getObjlibs({filter: query, category: $scope.objlib.category, lock: true}).then(function (x) {
             var objFiltered = [];
             for (var i = 0; i < x.objects.length; ++i) {
-                if (x.objects[i].id != $scope.objlib.id) {
+                if (x.objects[i].uuid != $scope.objlib.uuid) {
                     objFiltered.push(x.objects[i]);
                 }
             }

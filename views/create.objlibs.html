@@ -2,8 +2,8 @@
     <form name="objlibForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 ng-if="!objlib.id" translate>Add an asset</h2>
-                <h2 ng-if="objlib.id" translate>Edit asset</h2>
+                <h2 ng-if="!objlib.uuid" translate>Add an asset</h2>
+                <h2 ng-if="objlib.uuid" translate>Edit asset</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -12,7 +12,7 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-card ng-if="!objlib.id && OFFICE_MODE == 'FO'">
+                <md-card ng-if="!objlib.uuid && OFFICE_MODE == 'FO'">
                     <md-button class="md-primary" ng-click="importObject($event)">
                         <md-icon>play_for_work</md-icon><span>{{ 'Import an asset' | translate }}</span>
                     </md-button>
@@ -53,7 +53,7 @@
                 <md-input-container class="md-block" layout="row" flex>
                     <label translate>Scope</label>
                     <md-icon>view_list</md-icon>
-                    <md-select ng-model="objlib.scope" ng-disabled="objlib.id">
+                    <md-select ng-model="objlib.scope" ng-disabled="objlib.uuid">
                         <md-option value="1">{{ 'Local' | translate }}</md-option>
                         <md-option value="2">{{ 'Global' | translate }}</md-option>
                     </md-select>
@@ -119,7 +119,7 @@
                         <md-autocomplete
                                 flex
                                 required
-                                ng-disabled="objlib.id"
+                                ng-disabled="objlib.uuid"
                                 md-no-cache="true"
                                 md-selected-item="objlib.asset"
                                 md-search-text="assetSearchText"
@@ -141,7 +141,7 @@
                                 <div ng-message="required">{{ 'You must select an asset type' | translate }}</div>
                             </div>
                         </md-autocomplete>
-                        <md-button class="md-icon-button" ng-show="objlib.asset.uuid > 0 && !objlib.id" ng-click="objlib.asset = null"><md-icon>close</md-icon></md-button>
+                        <md-button class="md-icon-button" ng-show="objlib.asset.uuid > 0 && !objlib.uuid" ng-click="objlib.asset = null"><md-icon>close</md-icon></md-button>
                     </div>
                 </div>
 
@@ -150,7 +150,7 @@
                         <md-icon style="color: rgba(0,0,0,0.54)">class</md-icon>
                         <label translate>Category</label>
                         <md-select required ng-model="objlib.category">
-                            <md-option ng-if="objlib.category == 'null' && objlib.id > 0" ng-value="null">{{ 'Not set' | translate }}</md-option>
+                            <md-option ng-if="objlib.category == 'null' && objlib.uuid > 0" ng-value="null">{{ 'Not set' | translate }}</md-option>
                             <md-option ng-repeat="cat in categories" ng-value="cat.id">{{ _langField(cat,'label') }}</md-option>
                         </md-select>
                     </md-input-container>
@@ -227,9 +227,9 @@
                 {{ 'Cancel' | translate }}
             </md-button>
             <md-button ng-click="create()" ng-disabled="objlibForm.$error.required" type="submit" class="md-accent md-hue-3">
-                {{ (objlib.id > 0 ? 'Save' : 'Create') | translate }}
+                {{ (objlib.uuid > 0 ? 'Save' : 'Create') | translate }}
             </md-button>
-            <md-button ng-if="!objlib.id" ng-click="createAndContinue()" ng-disabled="objlibForm.$error.required" class="md-accent md-hue-3">
+            <md-button ng-if="!objlib.uuid" ng-click="createAndContinue()" ng-disabled="objlibForm.$error.required" class="md-accent md-hue-3">
                 {{ 'Create and continue' | translate }}
             </md-button>
         </md-dialog-actions>
