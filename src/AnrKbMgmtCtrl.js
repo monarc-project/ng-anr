@@ -2320,6 +2320,13 @@
             });
         }
 
+       /**
+        * Returns a filtered list of referentials from MOSP with all the
+        * referentials matching with 'searchText' as name.
+        *
+        * @param  searchText  the name of the referential to search for
+        * @return             the list of available referentials to import
+        */
         $scope.getMatches = function(searchText) {
             return $scope.mosp_referentials.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()));
         };

@@ -11,7 +11,7 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-input-container class="md-block"  ng-hide="OFFICE_MODE == 'FO'" flex>
+                <md-input-container class="md-block" ng-hide="OFFICE_MODE == 'FO'" flex>
                     <label translate>Language</label>
                     <md-icon>language</md-icon>
                     <md-select ng-model="language" ng-change="switchLanguage()">
@@ -30,9 +30,10 @@
                     </md-select>
                 </md-input-container>
 
-                <md-input-container class="md-block" flex>
+                <md-input-container class="md-block" md-no-float flex>
                     <md-icon style="color: rgba(0,0,0,0.54)">class</md-icon>
                     <label translate>Referential</label>
+
                     <md-autocomplete
                         flex
                         md-no-cache="true"
