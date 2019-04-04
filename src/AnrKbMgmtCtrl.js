@@ -2350,9 +2350,9 @@
                 var category = {};
                 for (var i = 1; i <=4; i++) {
                     measure['label'+i] = measure.label;
-                    measure['referential'] = ref_temp.json_object.uuid;
                     category['label'+i] = measure.category;
                 }
+                measure['referential'] = ref_temp.json_object.uuid;
                 category['referential'] = ref_temp.json_object.uuid;
                 $scope.categories.push(category);
             })
