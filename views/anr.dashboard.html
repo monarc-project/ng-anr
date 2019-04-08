@@ -171,16 +171,35 @@
               <md-input-container flex>
                   <label translate>Type of risks</label>
                   <md-select ng-model="cartographyRisksType">
-                      <md-option value="info_risks" selected>{{ 'Information risks' | translate }}</md-option>
-                      <md-option value="op_risks" >{{ 'Operational risks' | translate }}</md-option>
+                      <md-option value="info_risks" ng-disabled="!dashboard.riskInfo" selected>{{ 'Information risks' | translate }}</md-option>
+                      <md-option value="op_risks" ng-disabled="!dashboard.riskOp" >{{ 'Operational risks' | translate }}</md-option>
                   </md-select>
               </md-input-container>
 
-              <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphCartography', 'cartographyChartBy' + cartographyRisksType)">
-                  <md-icon class="md-warn">file_download</md-icon>
-              </md-button>
+
           </div>
-          <nvd3 id="graphCartography" options="initOptionCarto" data="initDataCarto "  api="graphCartography" config="{refreshDataOnly: true}"></nvd3>
+          <div layout="row" layout-align="start center">
+            <div layout="column" layout-align="start center" flex>
+              <div layout="row" layout-align="start center">
+                <p class="md-title" translate>Current risks</p>
+                <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphCartographyCurrent', 'cartographyChartCurrentBy' + cartographyRisksType)">
+                    <md-icon class="md-warn">file_download</md-icon>
+                </md-button>
+              </div>
+              <nvd3 id="graphCartographyCurrent" options="initOptionCartoCurrent" data="initDataCartoCurrent "  api="graphCartographyCurrent" config="{refreshDataOnly: true}"></nvd3>
+            </div>
+            <div layout="column" layout-align="start center" flex>
+              <div layout="row" layout-align="start center">
+                <p class="md-title" translate>Residual risks</p>
+                <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphCartographyTarget', 'cartographyChartTargetBy' + cartographyRisksType)">
+                    <md-icon class="md-warn">file_download</md-icon>
+                </md-button>
+              </div>
+              <nvd3 id="graphCartographyTarget" options="initOptionCartoTarget" data="initDataCartoTarget"  api="graphCartographyTarget" config="{refreshDataOnly: true}"></nvd3>
+            </div>
+          </div>
+
+
         </md-tab>
 
         <md-tab label="{{ 'Compliance' | translate }}" md-on-select="selectGraphCompliance()">
