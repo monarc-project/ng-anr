@@ -1083,7 +1083,6 @@
             dropped: function (e) {
                 if (e.source.nodesScope.$treeScope.$id == e.dest.nodesScope.$treeScope.$id) {
                     var obj = e.source.nodeScope.$modelValue;
-                    console.log(obj);
                     $scope.anr_instance_tree_is_patching = true;
                     AnrService.moveInstance($scope.model.anr.id, obj.id, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
                         $scope.updateInstances(function () {
@@ -1140,7 +1139,7 @@
                     e.source.nodesScope.$modelValue.push(copy);
                     // Also, tell the server to instantiate the object
                     $scope.anr_instance_tree_is_patching = true;
-                    AnrService.addInstance($scope.model.anr.id, copy.uuid, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.uuid : 0, e.dest.index, function () {
+                    AnrService.addInstance($scope.model.anr.id, copy.uuid, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
                         $scope.updateAnrRisksTable();
                         $scope.updateAnrRisksOpTable();
                         $scope.updateInstances(function () {
