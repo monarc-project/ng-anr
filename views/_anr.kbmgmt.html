@@ -153,6 +153,12 @@
                         </md-tooltip>
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
+                    <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="importNewVulnerability($event)">
+                      <md-tooltip md-direction="left">
+                            {{ 'Import a vulnerability' | translate }}
+                      </md-tooltip>
+                      <md-icon class="md-icon-button md-primary">get_app</md-icon>
+                    </md-button>
                 </h2>
 
                 <form flex name="vulns.filter.form">
