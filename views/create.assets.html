@@ -100,7 +100,7 @@
                 {{ 'Cancel' | translate }}
             </md-button>
             <md-button ng-click="create()" ng-disabled="assetForm.$error.required" type="submit" class="md-accent md-hue-3">
-                {{ (asset.uuid > 0 ? 'Save' : 'Create') | translate }}
+                {{ (asset.uuid ? 'Save' : 'Create') | translate }}
             </md-button>
             <md-button ng-click="createAndContinue()" ng-disabled="assetForm.$error.required" ng-if="!asset.uuid" class="md-accent md-hue-3">
                 {{ 'Create and continue' | translate }}

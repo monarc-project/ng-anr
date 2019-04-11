@@ -227,7 +227,7 @@
                 {{ 'Cancel' | translate }}
             </md-button>
             <md-button ng-click="create()" ng-disabled="objlibForm.$error.required" type="submit" class="md-accent md-hue-3">
-                {{ (objlib.uuid > 0 ? 'Save' : 'Create') | translate }}
+                {{ (objlib.uuid ? 'Save' : 'Create') | translate }}
             </md-button>
             <md-button ng-if="!objlib.uuid" ng-click="createAndContinue()" ng-disabled="objlibForm.$error.required" class="md-accent md-hue-3">
                 {{ 'Create and continue' | translate }}
