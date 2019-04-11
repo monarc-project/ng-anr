@@ -24,7 +24,14 @@
                   $scope.soa_measures[uuid] = TableHelperService.build('m.code', 20, 1, '');
                   $scope.soa_measures[uuid].selectedCategory = 0;
                 });
+                if (!$scope.referential_uuid && $scope.referentials.items.referentials.length > 0) {
+                  $scope.referential_uuid = $scope.referentials.items.referentials[0].uuid;
+                  $scope.selectReferential($scope.referential_uuid);
+                }
                 $scope.updatingReferentials = true;
+                if (document.querySelector('#tabRef')) {
+                  document.querySelector('#tabRef').click(); //Force ng-click over first referential
+                }
             })
         };
 
@@ -114,9 +121,10 @@
           }
         }
 
-        $scope.goToSoaSheet = function (soaId) {
-            $state.transitionTo('main.project.anr.soa.sheet', {modelId: $stateParams.modelId, soaId: soaId},{inherit:true,notify:true,reload:false,location:'replace'});
-            $rootScope.$broadcast('soaSheet', soaId);
+        $scope.goToSoaSheet = function (measure) {
+            $state.get('main.project.anr.soa.sheet').data = measure;
+            $rootScope.$broadcast('soaSheet', measure);
+            $state.transitionTo('main.project.anr.soa.sheet', {modelId: $stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
             $scope.display.anrSelectedTabIndex = 5;
         };
 

@@ -66,15 +66,13 @@
             '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
             'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'ClientSoaService',
             'TagService', 'RiskService','SOACategoryService', 'ReferentialService', 'MeasureMeasureService',
-             '$state', '$timeout', '$rootScope', AnrKbMgmtCtrl ]);
+             '$state', '$timeout', '$rootScope', AnrKbMgmtCtrl ])
     /**
      * ANR > KB
      */
     function AnrKbMgmtCtrl($scope, $stateParams, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService,
                                   AssetService, ThreatService, VulnService, AmvService, MeasureService, ClientSoaService, TagService,
                                   RiskService,SOACategoryService, ReferentialService, MeasureMeasureService, $state, $timeout, $rootScope) {
-
-
         $scope.gettext = gettextCatalog.getString;
         TableHelperService.resetBookmarks();
 
@@ -693,8 +691,8 @@
           $scope.updatingReferentials = false;
           ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
               $scope.referentials.items = data;
+              $rootScope.referentials_uuid = $scope.referentials.items.referentials.map(function(referential){return referential.uuid});
               $scope.updatingReferentials = true;
-
           });
         };
 
@@ -742,9 +740,58 @@
             $scope.referentials.promise.then(
                 function (data) {
                     $scope.referentials.items = data;
+                    $rootScope.referentials_uuid = $scope.referentials.items.referentials.map(function(referential){return referential.uuid});
                     $scope.updatingReferentials = true;
                 }
             )
+        };
+
+        $scope.importNewReferential = function (ev, referential) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ReferentialService', 'SOACategoryService', 'MeasureService', 'ConfigService', 'referential', 'anrId', ImportReferentialDialogCtrl],
+                templateUrl: 'views/anr/import.referentials.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                  'referential' : referential,
+                  'anrId': $scope.model.anr.id
+                }
+            })
+                .then(function (result) {
+                    var referential = result.referential;
+                    var categories = result.categories;
+                    var measures = result.measures;
+
+                    ReferentialService.createReferential(referential,
+                        function () {
+                            SOACategoryService.createCategory(categories, function(){
+                                SOACategoryService.getCategories({order: $scope._langField('label'), referential: referential.uuid}).then(function (data) {
+                                    measures.map(function(measure) {
+                                        measure.category = data.categories.find( c => c['label' + $scope.language].toLowerCase().trim() === measure.category.toLowerCase().trim() ).id;
+                                    })
+                                    MeasureService.createMeasure(measures, function (result){
+                                        $scope.refTabSelected = $scope.referentials.items.count + 1;
+                                        $scope.updateReferentials();
+                                        toastr.success(gettextCatalog.getString('The referential has been imported successfully.',
+                                            {referntialLabel: $scope._langField(referential,'label')}), gettextCatalog.getString('Creation successful'));
+                                        // $scope.$parent.updateMeasures();
+                                        //successCreateObject(result)
+                                        $rootScope.$broadcast('referentialsUpdated');
+                                        $rootScope.$broadcast('controlsUpdated');
+                                    });
+                                });
+                            })
+                        },
+                        function () {
+                            $scope.importNewReferential(ev, referential);
+                        }
+                    );
+                });
         };
 
         $scope.createNewReferential = function (ev, referential) {
@@ -2247,6 +2294,76 @@
         $scope.createAndContinue = function() {
             $scope.vuln.cont = true;
             $mdDialog.hide($scope.vuln);
+        };
+    }
+
+    function ImportReferentialDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ReferentialService, SOACategoryService, MeasureService, ConfigService, referential) {
+        $scope.languages = ConfigService.getLanguages();
+        $scope.language = ConfigService.getDefaultLanguageIndex();
+        var defaultLang = angular.copy($scope.language);
+
+        var mosp_query_organizations = 'organization';
+        $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
+        .then(function(json) {
+            $scope.organizations = json.data.data.objects;
+        });
+
+        $scope.selectOrganization = function() {
+            // Retrieve the security referentials from the selected organization
+            // from MOSP via its API
+            var mosp_query_referentials = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Security referentials"}},' +
+                    '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}';
+            $http.jsonp($rootScope.mospApiUrl + mosp_query_referentials)
+            .then(function(json) {
+                // filter from the results the referentials already in the analysis
+                $scope.mosp_referentials = json.data.data.objects.filter(referential => !$scope.referentials_uuid.includes(referential.json_object.uuid))
+            });
+        }
+
+       /**
+        * Returns a filtered list of referentials from MOSP with all the
+        * referentials matching with 'searchText' as name.
+        *
+        * @param  searchText  the name of the referential to search for
+        * @return             the list of available referentials to import
+        */
+        $scope.getMatches = function(searchText) {
+            return $scope.mosp_referentials.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()));
+        };
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.import = function() {
+            var ref_temp = $scope.mosp_referentials.find(r => r['id'] === $scope.referential.id);
+
+            $scope.referential['uuid'] = ref_temp.json_object.uuid;
+            for (var i = 1; i <=4; i++) {
+                $scope.referential['label' + i] = ref_temp['name'];
+            }
+
+            var measures = ref_temp.json_object.measures
+
+            $scope.categories = [];
+            measures.map(function(measure) {
+                var category = {};
+                for (var i = 1; i <=4; i++) {
+                    measure['label'+i] = measure.label;
+                    category['label'+i] = measure.category;
+                }
+                measure['referential'] = ref_temp.json_object.uuid;
+                category['referential'] = ref_temp.json_object.uuid;
+                $scope.categories.push(category);
+            })
+
+            result = {
+                referential: $scope.referential,
+                categories: $scope.categories,
+                measures: measures
+            }
+
+            $mdDialog.hide(result);
         };
     }
 
