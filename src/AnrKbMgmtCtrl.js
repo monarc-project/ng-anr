@@ -533,7 +533,14 @@
             $scope.vulns.promise.then(
                 function (data) {
                     $scope.vulns.items = data;
-                    $rootScope.vulnerabilities_uuid = $scope.vulns.items.vulnerabilities.map(function(vulnerability){return vulnerability.uuid});
+                }
+            )
+
+            query.limit = -1;
+            $scope.vulns.promise = VulnService.getVulns(query);
+            $scope.vulns.promise.then(
+                function (data) {
+                    $rootScope.vulnerabilities_uuid = data.vulnerabilities.map(function(vulnerability){return vulnerability.uuid});
                 }
             )
         };
