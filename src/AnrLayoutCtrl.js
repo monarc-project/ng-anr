@@ -2753,9 +2753,11 @@
                 $scope.deliverable.managers = $scope.deliverable.respSmile;
                 $scope.deliverable.consultants = $scope.deliverable.respCustomer;
                 $scope.deliverable.template = $scope.deliverable.template;
+
             }
             if (step.referential) {
               $scope.deliverable.referential = step.referential;
+              $scope.deliverable.risksByControl = false;
             }
         });
 
