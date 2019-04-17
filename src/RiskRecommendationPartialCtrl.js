@@ -12,7 +12,7 @@
                                             $state, $q, $attrs, $timeout, ClientRecommandationService) {
         var riskMode = $attrs.monarcMode; // information / operational
         var isOpRiskMode = (riskMode == 'operational');
-        var riskId = (isOpRiskMode ? $scope.opsheet_risk.id : $scope.sheet_risk.id);
+        var riskId = (isOpRiskMode ? $stateParams.riskopId : $stateParams.riskId);
         var updateDebounce = false;
 
         $scope.createRecommandation = function (ev) {

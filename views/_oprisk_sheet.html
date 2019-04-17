@@ -1,6 +1,4 @@
 <div class="md-padding-left md-padding-right" layout="column">
-    <h3 layout="row" layout-align="start center"><md-button class="md-primary md-light-theme" ng-click="resetOpSheet()"><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button></h3>
-
     <div layout="row">
         <table class="md-html-table" editable callback="changeRiskOp">
             <thead>
@@ -128,8 +126,18 @@
             </tbody>
         </table>
     </div>
-    <div layout="row" layout-align="end center">
-        <md-button class="md-accent md-hue-3" ng-disabled="isAnrReadOnly" ng-click="saveOpRiskSheet(opsheet_risk)">{{ 'Save' | translate }}</md-button>
+    <div layout="row" layout-align="space-around center">
+          <md-button ng-click="previousOpRisk()" class="md-accent md-hue-3" ng-disabled="idxOpRisks <= 0">
+              <md-icon>chevron_left</md-icon>
+              {{ 'Previous' | translate }}
+          </md-button>
+
+          <md-button class="md-accent md-hue-3" ng-click="resetOpSheet()">{{ 'Back to the list' | translate }}</md-button>
+
+          <md-button ng-click="nextOpRisk()" class="md-accent md-hue-3" ng-disabled="idxOpRisks >= oprisks.length - 1">
+              {{ 'Next' | translate }}
+              <md-icon>chevron_right</md-icon>
+          </md-button>
     </div>
 
     <!-- <ng-include ng-if="OFFICE_MODE == 'FO'" monarc-mode="operational" ng-controller="RiskRecommendationPartialCtrl" src="'views/anr/_risk_rec_create_form.html'"></ng-include>

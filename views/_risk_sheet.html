@@ -1,7 +1,4 @@
-<div class="md-padding-left md-padding-right">
-    <h3 layout="row" layout-align="start center"><md-button class="md-primary md-light-theme" ng-click="resetSheet()"><md-icon>arrow_back</md-icon> {{ 'Back to the list' | translate }}</md-button></h3>
-    <span class="md-subhead md-padding-left" translate>Risk sheet</span>
-
+<div class="md-padding-double">
      <div layout="row">
         <table class="md-html-table">
         <thead>
@@ -133,7 +130,7 @@
             <tr>
                 <td class="bold" translate>Vulnerability reduction</td>
                 <td colspan="3" style="padding-top:0px;padding-bottom:0px">
-                    <md-input-container ng-if="sheet_risk.vulnerabilityRate > -1" style="width: 850px; margin:0px">
+                    <md-input-container ng-if="sheet_risk.vulnerabilityRate > -1 && reductionVuln" style="width: 850px; margin:0px">
                         <md-icon>trending_down</md-icon>
                         <md-select ng-model="sheet_risk.reductionAmount" ng-disabled="isAnrReadOnly">
                             <md-option ng-repeat="i in reducAmount" ng-value="{{ reducAmount[reducAmount.length - 1] - i }}"><strong>{{ i }}</strong> - {{_langField(comms.vuln[i],'comment')}}</md-option>
@@ -157,8 +154,20 @@
         </tbody>
         </table>
     </div>
-    <div layout="row" layout-align="end center">
-        <md-button class="md-accent md-hue-3" ng-disabled="isAnrReadOnly" ng-click="saveRiskSheet(sheet_risk)">{{ 'Save' | translate }}</md-button>
+
+    <div layout="row" layout-align="space-around center">
+        <md-button ng-click="previousRisk()" class="md-accent md-hue-3" ng-disabled="idxRisks <= 0">
+            <md-icon>chevron_left</md-icon>
+            {{ 'Previous' | translate }}
+        </md-button>
+
+        <md-button class="md-accent md-hue-3" ng-click="resetSheet()">{{ 'Back to the list' | translate }}</md-button>
+
+        <md-button ng-click="nextRisk()" class="md-accent md-hue-3" ng-disabled="idxRisks >= risks.length - 1">
+            {{ 'Next' | translate }}
+            <md-icon>chevron_right</md-icon>
+        </md-button>
+
     </div>
 
 
