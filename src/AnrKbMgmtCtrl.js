@@ -533,16 +533,20 @@
             $scope.vulns.promise.then(
                 function (data) {
                     $scope.vulns.items = data;
+
+                    // we want to know the UUIDs of all the vulnerabilites already
+                    // imported in the analysis
+                    query.limit = -1;
+                    $scope.vulns.promise = VulnService.getVulns(query);
+                    $scope.vulns.promise.then(
+                        function (data) {
+                            $rootScope.vulnerabilities_uuid = data.vulnerabilities.map(function(vulnerability){return vulnerability.uuid});
+                        }
+                    )
                 }
             )
 
-            query.limit = -1;
-            $scope.vulns.promise = VulnService.getVulns(query);
-            $scope.vulns.promise.then(
-                function (data) {
-                    $rootScope.vulnerabilities_uuid = data.vulnerabilities.map(function(vulnerability){return vulnerability.uuid});
-                }
-            )
+
         };
         $scope.removeVulnsFilter = function () {
             TableHelperService.removeFilter($scope.vulns);
@@ -558,7 +562,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ConfigService', 'vulnerability', 'anrId', ImportVulnerabilityDialogCtrl],
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'vulnerability', 'anrId', ImportVulnerabilityDialogCtrl],
                 templateUrl: 'views/anr/import.vulnerability.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -584,7 +588,6 @@
                                     {vulnLabel: $scope._langField(vuln,'label')}), gettextCatalog.getString('Creation successful'));
                             }
                         },
-
                         function () {
                             $scope.importNewVulnerability(ev, vuln);
                         }
@@ -785,6 +788,8 @@
             $scope.referentials.promise.then(
                 function (data) {
                     $scope.referentials.items = data;
+                    // we want to know the UUIDs of all the referentials already
+                    // imported in the analysis
                     $rootScope.referentials_uuid = $scope.referentials.items.referentials.map(function(referential){return referential.uuid});
                     $scope.updatingReferentials = true;
                 }
@@ -824,8 +829,6 @@
                                         $scope.updateReferentials();
                                         toastr.success(gettextCatalog.getString('The referential has been imported successfully.',
                                             {referntialLabel: $scope._langField(referential,'label')}), gettextCatalog.getString('Creation successful'));
-                                        // $scope.$parent.updateMeasures();
-                                        //successCreateObject(result)
                                         $rootScope.$broadcast('referentialsUpdated');
                                         $rootScope.$broadcast('controlsUpdated');
                                     });
@@ -2343,11 +2346,7 @@
     }
 
 
-    function ImportVulnerabilityDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ConfigService, vulnerability) {
-        $scope.languages = ConfigService.getLanguages();
-        $scope.language = ConfigService.getDefaultLanguageIndex();
-        var defaultLang = angular.copy($scope.language);
-
+    function ImportVulnerabilityDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, vulnerability) {
         var mosp_query_organizations = 'organization';
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(json) {
@@ -2411,7 +2410,7 @@
             $http.jsonp($rootScope.mospApiUrl + mosp_query_referentials)
             .then(function(json) {
                 // filter from the results the referentials already in the analysis
-                $scope.mosp_referentials = json.data.data.objects.filter(referential => !$scope.referentials_uuid.includes(referential.json_object.uuid))
+                $scope.mosp_referentials = json.data.data.objects.filter(referential => !$scope.referentials_uuid.includes(referential.json_object.uuid));
             });
         }
 
