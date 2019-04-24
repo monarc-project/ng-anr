@@ -73,6 +73,11 @@
             });
         }
 
+        $scope.resetFilters = function () {
+            $scope.resetRisksFilters();
+            $scope.resetRisksOpFilters();
+        }
+
         var onBeforeHook = $transitions.onBefore({}, function () {
             if($scope.OFFICE_MODE == 'FO'){
                 if(($state.$current.name == 'main.project.anr.risk' && $stateParams.riskId) ||
@@ -82,14 +87,15 @@
                 }else if($scope.display.anrSelectedTabIndex == 0){
                     $scope.resetSheet(true);
                     $scope.resetOpSheet(true);
-                    $scope.resetRisksFilters(true);
-                    $scope.resetRisksOpFilters(true)
-                  }
+
+                    if (!$scope.risks_filters || !$scope.risks_op_filters ) { //Initilizing filters
+                      $scope.resetFilters();
+                    }
+                }
             }else{
                 $scope.resetSheet();
                 $scope.resetOpSheet();
-                $scope.resetRisksFilters();
-                $scope.resetRisksOpFilters();
+                $scope.resetFilters();
             }
 
             $timeout(function () {
@@ -402,8 +408,7 @@
             });
         }
 
-        $scope.resetRisksFilters();
-        $scope.resetRisksOpFilters();
+        $scope.resetFilters();
         $scope.updateModel();
         $scope.instmode = 'anr';
 
@@ -433,7 +438,8 @@
             $rootScope.anr_selected_object_id = null;
         }
 
-        $scope.openRiskSheet = function (risk) {
+        $scope.openRiskSheet = function (risk, risks) {
+            $scope.risks_instance = risks;
             if($scope.OFFICE_MODE == 'FO'){
                 if($stateParams.instId){
                     $state.transitionTo('main.project.anr.instance.risk',{modelId:$stateParams.modelId, instId:$stateParams.instId, riskId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
@@ -464,6 +470,7 @@
                 }
                 $scope.reducAmount = reducAmount;
                 $scope._copyRecs = [];
+                $scope.idxRisks = risks.findIndex(risk => risk.id == $stateParams.riskId);
                 $scope.updateSheetRiskTarget();
             });
         };
@@ -472,6 +479,7 @@
             $scope.referential_uuid = referentialId;
         };
         $scope.updateSheetRiskTarget = function () {
+          if ($scope.sheet_risk) {
             if(parseInt($scope.sheet_risk.threatRate) > -1 && parseInt($scope.sheet_risk.vulnerabilityRate) > -1){
                 $scope.sheet_risk.target_c = $scope.sheet_risk.c_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
                 $scope.sheet_risk.target_i = $scope.sheet_risk.i_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
@@ -479,11 +487,13 @@
             }else{
                 $scope.sheet_risk.target_c = $scope.sheet_risk.target_i = $scope.sheet_risk.target_d = "-";
             }
+          }
         };
 
         $scope.resetSheet = function (redir) {
             if($scope.sheet_risk){
                 if($scope.OFFICE_MODE == 'FO'){
+                    $scope.saveRiskSheet($scope.sheet_risk);
                     if(!redir){
                         if($stateParams.instId){
                             $state.transitionTo('main.project.anr.instance',{modelId:$stateParams.modelId, instId:$stateParams.instId},{inherit:true,notify:true,reload:false,location:'replace'});
@@ -492,13 +502,17 @@
                         }
                     }
                 }
+
                 $timeout(function() {
+                  if ($state.$current.name !== 'main.project.anr.instance.risk') {
                     $scope.sheet_risk = undefined;
+                  }
                 });
             }
         };
 
-        $scope.openOpRiskSheet = function (risk) {
+        $scope.openOpRiskSheet = function (risk, oprisks) {
+            $scope.opRisks_instance = oprisks;
             if($scope.OFFICE_MODE == 'FO'){
                 if($stateParams.instId){
                     $state.transitionTo('main.project.anr.instance.riskop',{modelId:$stateParams.modelId, instId:$stateParams.instId, riskopId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
@@ -507,9 +521,16 @@
                 }
             }
             $timeout(function() {
+                let fieldsOpRisk = ['R','O','L','F','P','Prob'];
                 $scope.ToolsAnrService.currentTab = 1;
                 $scope.sheet_risk = undefined;
                 $scope.opsheet_risk = angular.copy(risk);
+                fieldsOpRisk.forEach(function(field){
+                  if ($scope.opsheet_risk['targeted'+field] == -1 && $scope.opsheet_risk['net'+field] !== -1) {
+                    $scope.opsheet_risk['targeted'+field] = $scope.opsheet_risk['net'+field];
+                    $scope.changeRiskOp($scope.opsheet_risk,'targeted'+field);
+                  }
+                });
                 RiskService.getRisk($scope.opsheet_risk.rolfRiskId).then(function (data) {
                   if (!angular.equals(data['measures'], {})) {
                     $scope.opsheet_risk.measures = data['measures'];
@@ -518,12 +539,15 @@
                   }
                 });
                 $scope._copyRecs = [];
+                $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.id == $stateParams.riskopId);
+
             });
         };
 
         $scope.resetOpSheet = function (redir) {
             if($scope.opsheet_risk){
                 if($scope.OFFICE_MODE == 'FO'){
+                  $scope.saveOpRiskSheet($scope.opsheet_risk);
                     if(!redir){
                         if($stateParams.instId){
                             $state.transitionTo('main.project.anr.instance',{modelId:$stateParams.modelId, instId:$stateParams.instId},{inherit:true,notify:true,reload:false,location:'replace'});
@@ -533,10 +557,29 @@
                     }
                 }
                 $timeout(function() {
+                  if ($state.$current.name !== 'main.project.anr.instance.riskop') {
                     $scope.opsheet_risk = undefined;
+                  }
                 });
             }
         };
+
+        $scope.$watch('sheet_risk.reductionAmount', function () {
+          if ($state.$current.name == 'main.project.anr.instance.risk' || $state.$current.name == 'main.project.anr.risk') {
+            $scope.updateSheetRiskTarget();
+          }
+        });
+
+        $scope.$watch('sheet_risk.kindOfMeasure', function (newValue) {
+          if ($state.$current.name == 'main.project.anr.instance.risk' || $state.$current.name == 'main.project.anr.risk') {
+            if (newValue == 5 || newValue == 3) {
+              $scope.sheet_risk.reductionAmount = 0;
+              $scope.reductionVuln = false;
+            }else {
+              $scope.reductionVuln = true;
+            }
+          }
+        });
 
         $scope.treatmentStr = function (treatment) {
             switch (parseInt(treatment)) {
@@ -548,12 +591,41 @@
             }
         };
 
+        $scope.previousRisk = function(){
+          $scope.reducAmount = [];
+          let previousRisk = $scope.risks_instance[$scope.idxRisks - 1];
+          $scope.risks_instance[$scope.idxRisks] = $scope.sheet_risk;
+          $scope.openRiskSheet(previousRisk, $scope.risks_instance);
+          $scope.saveRiskSheet($scope.sheet_risk);
+        };
+
+        $scope.nextRisk = function(){
+          $scope.reducAmount = [];
+          let nextRisk = $scope.risks_instance[$scope.idxRisks + 1];
+          $scope.risks_instance[$scope.idxRisks] = $scope.sheet_risk;
+          $scope.openRiskSheet(nextRisk, $scope.risks_instance);
+          $scope.saveRiskSheet($scope.sheet_risk);
+        };
+
+        $scope.previousOpRisk = function(){
+          let previousOpRisk = $scope.opRisks_instance[$scope.idxOpRisks - 1];
+          $scope.opRisks_instance[$scope.idxOpRisks] = $scope.opsheet_risk;
+          $scope.openOpRiskSheet(previousOpRisk, $scope.opRisks_instance);
+          $scope.saveOpRiskSheet($scope.opsheet_risk);
+        };
+
+        $scope.nextOpRisk = function(){
+          let nextOpRisk = $scope.opRisks_instance[$scope.idxOpRisks + 1];
+          $scope.opRisks_instance[$scope.idxOpRisks] = $scope.opsheet_risk;
+          $scope.openOpRiskSheet(nextOpRisk, $scope.opRisks_instance);
+          $scope.saveOpRiskSheet($scope.opsheet_risk);
+        };
+
         $scope.saveRiskSheet = function (sheet) {
             AnrService.updateInstanceRisk($scope.model.anr.id, sheet.id, sheet, function () {
                 $scope.$broadcast('risks-table-edited');
                 $scope.updateAnrRisksTable();
                 $scope.updateSheetRiskTarget();
-                toastr.success(gettextCatalog.getString('The risk sheet changes have been saved successfully'), gettextCatalog.getString('Save successful'));
             })
         };
 
@@ -561,7 +633,6 @@
             AnrService.updateInstanceOpRisk($scope.model.anr.id, sheet.id, sheet, function () {
                 $scope.$broadcast('risks-table-edited');
                 $scope.updateAnrRisksOpTable();
-                toastr.success(gettextCatalog.getString('The operational risk sheet changes have been saved successfully'), gettextCatalog.getString('Save successful'));
             })
         };
 
@@ -2753,9 +2824,11 @@
                 $scope.deliverable.managers = $scope.deliverable.respSmile;
                 $scope.deliverable.consultants = $scope.deliverable.respCustomer;
                 $scope.deliverable.template = $scope.deliverable.template;
+
             }
             if (step.referential) {
               $scope.deliverable.referential = step.referential;
+              $scope.deliverable.risksByControl = false;
             }
         });
 

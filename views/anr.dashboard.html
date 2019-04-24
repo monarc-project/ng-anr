@@ -1,9 +1,21 @@
 <div class="md-padding-left md-padding-right" ng-controller="ClientDashboardCtrl" md-theme="light" ng-if="tabDashboardDisplayed">
     <md-tabs md-dynamic-height="true" md-border-bottom="true" md-selected="dashboard.currentTabIndex">
-        <md-button class="md-icon-button" ng-click="generateXlsxData()" style="margin-right: 50px">
-          <md-icon class="md-warn">file_download</md-icon>
-          <md-tooltip> {{ 'Export the whole dashboard' | translate }} (xlsx)</md-tooltip>
-        </md-button>
+        <nvd3 id="loadPptx" options="initOptionPptx" data="initDataPptx"  api="loadPptx" config="{refreshDataOnly: true}" ng-show="false"></nvd3>
+        <div style="margin-right: 50px" ng-if="loadingPptx">
+          <md-progress-circular md-indeterminate="true"></md-progress-circular>
+        </div>
+        <md-menu style="margin-right: 50px" ng-if="!loadingPptx">
+          <md-button class="md-icon-button" ng-click="$mdMenu.open()" ng-disabled="!dashboard.riskInfo || !loadCompliance" >
+              <md-icon class="md-warn" >file_download</md-icon><md-tooltip>{{ 'Export' | translate }}</md-tooltip>
+          </md-button>
+          <md-menu-content>
+            <md-menu-item>
+              <md-button ng-click="generatePptxSildes()">.pptx</md-button>
+            </md-menu-item>
+            <md-menu-item>
+              <md-button ng-click="generateXlsxData()">.xlsx</md-button>
+            </md-menu-item>
+        </md-menu>
         <md-tab label="{{ 'Risks' | translate }}" md-on-select="selectGraphRisks()">
           <div layout="row" layout-align="space-around">
             <div layout="column" flex="35">
@@ -171,16 +183,35 @@
               <md-input-container flex>
                   <label translate>Type of risks</label>
                   <md-select ng-model="cartographyRisksType">
-                      <md-option value="info_risks" selected>{{ 'Information risks' | translate }}</md-option>
-                      <md-option value="op_risks" >{{ 'Operational risks' | translate }}</md-option>
+                      <md-option value="info_risks" ng-disabled="!dashboard.riskInfo" selected>{{ 'Information risks' | translate }}</md-option>
+                      <md-option value="op_risks" ng-disabled="!dashboard.riskOp" >{{ 'Operational risks' | translate }}</md-option>
                   </md-select>
               </md-input-container>
 
-              <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphCartography', 'cartographyChartBy' + cartographyRisksType)">
-                  <md-icon class="md-warn">file_download</md-icon>
-              </md-button>
+
           </div>
-          <nvd3 id="graphCartography" options="initOptionCarto" data="initDataCarto "  api="graphCartography" config="{refreshDataOnly: true}"></nvd3>
+          <div layout="row" layout-align="start center">
+            <div layout="column" layout-align="start center" flex>
+              <div layout="row" layout-align="start center">
+                <p class="md-title" translate>Current risks</p>
+                <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphCartographyCurrent', 'cartographyChartCurrentBy' + cartographyRisksType)">
+                    <md-icon class="md-warn">file_download</md-icon>
+                </md-button>
+              </div>
+              <nvd3 id="graphCartographyCurrent" options="initOptionCartoCurrent" data="initDataCartoCurrent "  api="graphCartographyCurrent" config="{refreshDataOnly: true}"></nvd3>
+            </div>
+            <div layout="column" layout-align="start center" flex>
+              <div layout="row" layout-align="start center">
+                <p class="md-title" translate>Residual risks</p>
+                <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphCartographyTarget', 'cartographyChartTargetBy' + cartographyRisksType)">
+                    <md-icon class="md-warn">file_download</md-icon>
+                </md-button>
+              </div>
+              <nvd3 id="graphCartographyTarget" options="initOptionCartoTarget" data="initDataCartoTarget"  api="graphCartographyTarget" config="{refreshDataOnly: true}"></nvd3>
+            </div>
+          </div>
+
+
         </md-tab>
 
         <md-tab label="{{ 'Compliance' | translate }}" md-on-select="selectGraphCompliance()">
