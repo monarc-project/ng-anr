@@ -2252,7 +2252,7 @@
 
     function CreateReferentialDialogCtrl($scope, $mdDialog, ReferentialService, ConfigService, referential) {
         $scope.languages = ConfigService.getLanguages();
-        $scope.language = ConfigService.getDefaultLanguageIndex();
+        $scope.language = $scope.getAnrLanguage();
         var defaultLang = angular.copy($scope.language);
 
         if (referential != undefined && referential != null) {
