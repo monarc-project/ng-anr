@@ -401,6 +401,14 @@
         $scope.instance = instance;
         $scope.scales = scales;
         $scope.scaleCommCache = scaleCommCache;
+        $scope.tooltipScale = [];
+
+        for (var i = 1; i <= Object.keys(scaleCommCache).length; i++) {
+            $scope.tooltipScale[i] = '';
+            for (var j = $scope.scales.impacts.min; j <= $scope.scales.impacts.max; j++) {
+              $scope.tooltipScale[i] += j + ' : ' + scaleCommCache[i][j] + "\n";
+            }
+        }
 
         $scope.cancel = function () {
             $mdDialog.cancel();
