@@ -2817,8 +2817,8 @@
             if (amv.asset && amv.asset.uuid) {
                 $scope.queryAmvs(amv.asset.uuid);
             }
-            if (amv.previous && amv.previous.id) {
-                $scope.amv.previous = $scope.amv.previous.id;
+            if (amv.previous && amv.previous.uuid) {
+                $scope.amv.previous = $scope.amv.previous.uuid;
             }
             if (amv.measures.length == undefined) {
               $scope.amv.measures = [];
