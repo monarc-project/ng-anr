@@ -136,7 +136,7 @@
                     </md-input-container>
 
                     <md-select ng-model="amv.previous" ng-if="amv.implicitPosition == 3" flex>
-                        <md-option ng-repeat="link in asset_amvs" ng-value="link.id">{{ link.position }} - {{ link.asset.code }} x {{ link.threat.code }} x {{ link.vulnerability.code }}</md-option>
+                        <md-option ng-repeat="link in asset_amvs" ng-value="link.uuid">{{ link.position }} - {{ link.asset.code }} x {{ link.threat.code }} x {{ link.vulnerability.code }}</md-option>
                     </md-select>
                 </div>
 
