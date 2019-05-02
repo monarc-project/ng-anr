@@ -148,7 +148,7 @@
                 {{ 'Cancel' | translate }}
             </md-button>
             <md-button ng-click="create()" ng-disabled="amvForm.$error.required" type="submit" class="md-accent md-hue-3">
-                {{ (amv.uuid > 0 ? 'Save' : 'Create') | translate }}
+                {{ (amv.uuid ? 'Save' : 'Create') | translate }}
             </md-button>
             <md-button ng-click="createAndContinue()" ng-disabled="amvForm.$error.required" ng-if="!amv.uuid" class="md-accent md-hue-3">
                 {{ 'Create and continue' | translate }}

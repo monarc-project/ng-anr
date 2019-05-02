@@ -91,7 +91,7 @@
                 {{ 'Cancel' | translate }}
             </md-button>
             <md-button ng-click="create()" ng-disabled="vulnForm.$error.required" type="submit" class="md-accent md-hue-3">
-                {{ (vuln.uuid > 0 ? 'Save' : 'Create') | translate }}
+                {{ (vuln.uuid ? 'Save' : 'Create') | translate }}
             </md-button>
             <md-button ng-click="createAndContinue()" ng-disabled="vulnForm.$error.required" ng-if="!vuln.uuid" class="md-accent md-hue-3">
                 {{ 'Create and continue' | translate }}
