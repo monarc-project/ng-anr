@@ -141,7 +141,7 @@
                 {{ 'Cancel' | translate }}
             </md-button>
             <md-button ng-click="create()" ng-disabled="threatForm.$error.required" type="submit" class="md-accent md-hue-3">
-                {{ (threat.uuid > 0 ? 'Save' : 'Create') | translate }}
+                {{ (threat.uuid ? 'Save' : 'Create') | translate }}
             </md-button>
             <md-button ng-click="createAndContinue()" ng-disabled="threatForm.$error.required" ng-if="!threat.uuid" class="md-accent md-hue-3">
                 {{ 'Create and continue' | translate }}
