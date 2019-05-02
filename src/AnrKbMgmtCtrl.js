@@ -413,7 +413,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ThreatService', 'threat', 'anrId', ImportThreatDialogCtrl],
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ConfigService', 'ThreatService', 'threat', 'anrId', ImportThreatDialogCtrl],
                 templateUrl: 'views/anr/import.threat.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -612,7 +612,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'vulnerability', 'anrId', ImportVulnerabilityDialogCtrl],
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ConfigService', 'vulnerability', 'anrId', ImportVulnerabilityDialogCtrl],
                 templateUrl: 'views/anr/import.vulnerability.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -2325,8 +2325,10 @@
         };
     }
 
-    function ImportThreatDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ThreatService, threat) {
+    function ImportThreatDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ConfigService, ThreatService, threat) {
+        $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
+
         var mosp_query_organizations = 'organization';
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(json) {
@@ -2341,7 +2343,10 @@
             $http.jsonp($rootScope.mospApiUrl + mosp_query_threats)
             .then(function(json) {
                 // filter from the results the threats already in the analysis
-                $scope.mosp_threats = json.data.data.objects.filter(threat => !$rootScope.threats_uuid.includes(threat.json_object.uuid));
+                $scope.mosp_threats = json.data.data.objects.filter(
+                    threat => !$rootScope.threats_uuid.includes(threat.json_object.uuid) &&
+                    threat.json_object.language == $scope.languages[$scope.language].toUpperCase()
+                );
             });
         }
 
@@ -2442,7 +2447,10 @@
     }
 
 
-    function ImportVulnerabilityDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, vulnerability) {
+    function ImportVulnerabilityDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ConfigService, vulnerability) {
+        $scope.languages = ConfigService.getLanguages();
+        $scope.language = $scope.getAnrLanguage();
+
         var mosp_query_organizations = 'organization';
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(json) {
@@ -2457,7 +2465,16 @@
             $http.jsonp($rootScope.mospApiUrl + mosp_query_vulnerabilities)
             .then(function(json) {
                 // filter from the results the referentials already in the analysis
-                $scope.mosp_vulnerabilities = json.data.data.objects.filter(vulnerability => !$rootScope.vulnerabilities_uuid.includes(vulnerability.json_object.uuid));
+                if ($scope.languages[$scope.language].toUpperCase() != 'EN') {
+                    $scope.mosp_vulnerabilities = json.data.data.objects.filter(
+                        vulnerability => !$rootScope.vulnerabilities_uuid.includes(vulnerability.json_object.uuid) &&
+                        vulnerability.json_object.language == $scope.languages[$scope.language].toUpperCase()
+                    );
+                } else {
+                    $scope.mosp_vulnerabilities = json.data.data.objects.filter(
+                        vulnerability => !$rootScope.vulnerabilities_uuid.includes(vulnerability.json_object.uuid)
+                    );
+                }
             });
         }
 
