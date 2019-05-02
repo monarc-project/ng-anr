@@ -336,6 +336,16 @@
                     $scope.threats.items = data;
                 }
             )
+
+            // we want to know the UUIDs of all the threats already
+            // imported in the analysis
+            query.limit = -1;
+            $scope.threats.promise = ThreatService.getThreats(query);
+            $scope.threats.promise.then(
+                function (data) {
+                    $rootScope.threats_uuid = data.threats.map(function(threat){return threat.uuid});
+                }
+            )
         };
 
         $scope.removeThreatsFilter = function () {
@@ -394,6 +404,46 @@
                         function () {
                             threat.theme = themeBackup;
                             $scope.createNewThreat(ev, threat);
+                        }
+                    );
+                });
+        };
+
+        $scope.importNewThreat = function (ev, threat) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ThreatService', 'threat', 'anrId', ImportThreatDialogCtrl],
+                templateUrl: 'views/anr/import.threat.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                  'threat' : threat,
+                  'anrId': $scope.model.anr.id
+                }
+            })
+                .then(function (threat) {
+                    console.log(threat);
+                    ThreatService.createThreat(threat,
+                        function () {
+                            $scope.updateThreats();
+
+                            if (threat.mode == 0 && threat.models && threat.models.length > 0) {
+                                // If we create a generic threat, but we still have specific models, we should warn
+                                toastr.warning(gettextCatalog.getString('The threat has been created successfully, however without models, the element may not be specific.',
+                                    {threatLabel: $scope._langField(threat,'label')}));
+                            } else {
+                                toastr.success(gettextCatalog.getString('The threat has been created successfully.',
+                                    {threatLabel: $scope._langField(threat,'label')}), gettextCatalog.getString('Creation successful'));
+                            }
+                        },
+
+                        function () {
+                            threat.theme = themeBackup;
+                            $scope.importNewThreat(ev, threat);
                         }
                     );
                 });
@@ -2272,6 +2322,52 @@
         $scope.createAndContinue = function() {
             $scope.threat.cont = true;
             $mdDialog.hide($scope.threat);
+        };
+    }
+
+    function ImportThreatDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ThreatService, threat) {
+        $scope.language = $scope.getAnrLanguage();
+        var mosp_query_organizations = 'organization';
+        $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
+        .then(function(json) {
+            $scope.organizations = json.data.data.objects;
+        });
+
+        $scope.selectOrganization = function() {
+            // Retrieve the security referentials from the selected organization
+            // from MOSP via its API
+            var mosp_query_threats = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Threats"}},' +
+                    '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}&results_per_page=1000';
+            $http.jsonp($rootScope.mospApiUrl + mosp_query_threats)
+            .then(function(json) {
+                // filter from the results the threats already in the analysis
+                $scope.mosp_threats = json.data.data.objects.filter(threat => !$rootScope.threats_uuid.includes(threat.json_object.uuid));
+            });
+        }
+
+        ThreatService.getThemes().then(function (data) {
+            $scope.listThemes = data['themes'];
+        });
+
+        $scope.getMatches = function(searchText) {
+            // filter on the name and and the theme
+            return $scope.mosp_threats.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()) ||
+                    r['json_object']['theme'].toLowerCase().includes(searchText.toLowerCase()));
+        };
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.import = function() {
+            var threat = $scope.threat.json_object;
+            theme_id = $scope.listThemes.find(c => c['label' + $scope.language].toLowerCase().trim() === threat.theme.toLowerCase().trim() ).id;
+            threat['theme'] = theme_id;
+            for (var i = 1; i <=4; i++) {
+                threat['label'+i] = threat.label;
+                threat['description'+i] = threat.description;
+            }
+            $mdDialog.hide(threat);
         };
     }
 
