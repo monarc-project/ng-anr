@@ -147,6 +147,16 @@
                     $scope.assets.items = data;
                 }
             )
+
+            // we want to know the UUIDs of all the assets already
+            // imported in the analysis
+            query.limit = -1;
+            $scope.assets.promise = AssetService.getAssets(query);
+            $scope.assets.promise.then(
+                function (data) {
+                    $rootScope.assets_uuid = data.assets.map(function(asset){return asset.uuid});
+                }
+            )
         };
 
         $scope.removeAssetsFilter = function () {
@@ -198,6 +208,44 @@
 
                         function () {
                             $scope.createNewAsset(ev, asset);
+                        }
+                    );
+                });
+        };
+
+        $scope.importNewAsset = function (ev, asset) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ConfigService', 'AssetService', 'asset', 'anrId', ImportAssetDialogCtrl],
+                templateUrl: 'views/anr/import.asset.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                  'asset' : asset,
+                  'anrId': $scope.model.anr.id
+                }
+            })
+                .then(function (asset) {
+                    AssetService.createAsset(asset,
+                        function () {
+                            $scope.updateAssets();
+
+                            if (asset.mode == 0 && asset.models && asset.models.length > 0) {
+                                // If we create a generic asset, but we still have specific models, we should warn
+                                toastr.warning(gettextCatalog.getString('The asset type has been created successfully, however without models, the element may not be specific.',
+                                    {assetLabel: $scope._langField(asset,'label')}));
+                            } else {
+                                toastr.success(gettextCatalog.getString('The asset type has been created successfully.',
+                                    {assetLabel: $scope._langField(asset,'label')}), gettextCatalog.getString('Creation successful'));
+                            }
+                        },
+
+                        function () {
+                            $scope.importNewAsset(ev, asset);
                         }
                     );
                 });
@@ -426,7 +474,6 @@
                 }
             })
                 .then(function (threat) {
-                    console.log(threat);
                     ThreatService.createThreat(threat,
                         function () {
                             $scope.updateThreats();
@@ -2180,6 +2227,51 @@
                 $scope.asset.cont = true;
                 $mdDialog.hide($scope.asset);
             }
+        };
+    }
+
+    function ImportAssetDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ConfigService, AssetService, asset) {
+        $scope.languages = ConfigService.getLanguages();
+        $scope.language = $scope.getAnrLanguage();
+
+        var mosp_query_organizations = 'organization';
+        $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
+        .then(function(json) {
+            $scope.organizations = json.data.data.objects;
+        });
+
+        $scope.selectOrganization = function() {
+            // Retrieve the assets from the selected organization
+            // from MOSP via its API
+            var mosp_query_threats = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Assets"}},' +
+                    '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}&results_per_page=1000';
+            $http.jsonp($rootScope.mospApiUrl + mosp_query_threats)
+            .then(function(json) {
+                // filter from the results the threats already in the analysis
+                $scope.mosp_assets = json.data.data.objects.filter(
+                    asset => !$rootScope.assets_uuid.includes(asset.json_object.uuid) &&
+                    asset.json_object.language == $scope.languages[$scope.language].toUpperCase()
+                );
+            });
+        }
+
+        $scope.getMatches = function(searchText) {
+            // filter on the name and and the theme
+            return $scope.mosp_assets.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()));
+        };
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.import = function() {
+            var asset = $scope.asset.json_object;
+            for (var i = 1; i <=4; i++) {
+                asset['label'+i] = asset.label;
+                asset['description'+i] = asset.description;
+            }
+            asset['type'] = asset['type'] == 'Primary' ? 1 : 2;
+            $mdDialog.hide(asset);
         };
     }
 
