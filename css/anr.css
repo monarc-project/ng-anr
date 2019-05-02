@@ -5,6 +5,32 @@ body{
     white-space: pre-wrap
 }
 
+#loading-bar .bar {
+  height: 5px;
+  overflow: hidden;
+  background-color: #ffde7d;
+ }
+
+#loading-bar .bar:before{
+  display: block;
+  position: absolute;
+  content: "";
+  left: -200px;
+  width: 200px;
+  height: 5px;
+  background-color: #ffc107;
+  animation: loading-bar 2s linear infinite;
+}
+
+ @keyframes loading-bar {
+    from {left: -200px; width: 30%;}
+    50% {width: 30%;}
+    70% {width: 70%;}
+    80% { left: 50%;}
+    95% {left: 120%;}
+    to {left: 100%;}
+}
+
 .md-dialog-content-body {
     white-space: pre-wrap
 }
