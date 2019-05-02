@@ -2506,8 +2506,7 @@
 
     function ImportReferentialDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ReferentialService, SOACategoryService, MeasureService, ConfigService, referential) {
         $scope.languages = ConfigService.getLanguages();
-        $scope.language = ConfigService.getDefaultLanguageIndex();
-        var defaultLang = angular.copy($scope.language);
+        $scope.language = $scope.getAnrLanguage();
 
         var mosp_query_organizations = 'organization';
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
@@ -2523,7 +2522,10 @@
             $http.jsonp($rootScope.mospApiUrl + mosp_query_referentials)
             .then(function(json) {
                 // filter from the results the referentials already in the analysis
-                $scope.mosp_referentials = json.data.data.objects.filter(referential => !$scope.referentials_uuid.includes(referential.json_object.uuid));
+                $scope.mosp_referentials = json.data.data.objects.filter(
+                    referential => !$scope.referentials_uuid.includes(referential.json_object.uuid) &&
+                    referential.json_object.language == $scope.languages[$scope.language].toUpperCase()
+                )
             });
         }
 
