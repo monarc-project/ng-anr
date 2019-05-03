@@ -2244,7 +2244,7 @@
             // Retrieve the assets from the selected organization
             // from MOSP via its API
             var mosp_query_threats = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Assets"}},' +
-                    '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}&results_per_page=1000';
+                    '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}&results_per_page=3000';
             $http.jsonp($rootScope.mospApiUrl + mosp_query_threats)
             .then(function(json) {
                 // filter from the results the threats already in the analysis
@@ -2428,10 +2428,10 @@
         });
 
         $scope.selectOrganization = function() {
-            // Retrieve the security referentials from the selected organization
+            // Retrieve the threats from the selected organization
             // from MOSP via its API
             var mosp_query_threats = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Threats"}},' +
-                    '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}&results_per_page=1000';
+                    '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}&results_per_page=3000';
             $http.jsonp($rootScope.mospApiUrl + mosp_query_threats)
             .then(function(json) {
                 // filter from the results the threats already in the analysis
@@ -2553,7 +2553,7 @@
             // Retrieve the security referentials from the selected organization
             // from MOSP via its API
             var mosp_query_vulnerabilities = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Vulnerabilities"}},' +
-                    '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}&results_per_page=1000';
+                    '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}&results_per_page=3000';
             $http.jsonp($rootScope.mospApiUrl + mosp_query_vulnerabilities)
             .then(function(json) {
                 // filter from the results the referentials already in the analysis
