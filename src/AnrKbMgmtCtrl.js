@@ -2550,7 +2550,7 @@
         });
 
         $scope.selectOrganization = function() {
-            // Retrieve the security referentials from the selected organization
+            // Retrieve the vulnerabilities from the selected organization
             // from MOSP via its API
             var mosp_query_vulnerabilities = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Vulnerabilities"}},' +
                     '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}&results_per_page=3000';
