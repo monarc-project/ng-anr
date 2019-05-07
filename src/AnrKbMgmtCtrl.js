@@ -650,7 +650,7 @@
         };
 
         $scope.toggleVulnStatus = function (vuln) {
-            VulnService.patchVuln(vuln.id, {status: !vuln.status}, function () {
+            VulnService.patchVuln(vuln.uuid, {status: !vuln.status}, function () {
                 vuln.status = !vuln.status;
             });
         }
