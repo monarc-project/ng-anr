@@ -12,6 +12,14 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
+                <md-card ng-if="!referential.uuid" layout="row">
+                    <span flex></span>
+                    <md-button class="md-primary" ng-if="!isAnrReadOnly" ng-click="importNewReferential($event)" ng-controller="AnrKbMgmtCtrl">
+                        <md-icon>cloud_download</md-icon><span>&nbsp;{{ 'Import from MOSP' | translate }}</span>
+                    </md-button>
+                    <span flex></span>
+                </md-card>
+
                 <md-input-container class="md-block"  ng-hide="OFFICE_MODE == 'FO'" flex>
                     <label translate>Language</label>
                     <md-icon>language</md-icon>

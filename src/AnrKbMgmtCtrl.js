@@ -897,7 +897,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ReferentialService', 'SOACategoryService', 'MeasureService', 'ConfigService', 'referential', 'anrId', ImportReferentialDialogCtrl],
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ReferentialService', 'SOACategoryService', 'MeasureService', 'ConfigService', 'referential', ImportReferentialDialogCtrl],
                 templateUrl: 'views/anr/import.referentials.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -905,8 +905,7 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                  'referential' : referential,
-                  'anrId': $scope.model.anr.id
+                  'referential' : referential
                 }
             })
                 .then(function (result) {
@@ -1253,6 +1252,16 @@
             $scope.amvs.promise.then(
                 function (data) {
                     $scope.amvs.items = data;
+                }
+            )
+
+            // we want to know the UUIDs of all the amvs already
+            // imported in the analysis
+            query.limit = -1;
+            $scope.amvs.promise = AmvService.getAmvs(query);
+            $scope.amvs.promise.then(
+                function (data) {
+                    $rootScope.amvs_uuid = data.amvs.map(function(amv){return amv.uuid});
                 }
             )
         };
@@ -1897,6 +1906,7 @@
                 }
             )
         };
+
         $scope.removeRisksFilter = function () {
             TableHelperService.removeFilter($scope.risks);
         };
@@ -2002,6 +2012,26 @@
                           }
                       );
                   });
+        };
+
+        $scope.importNewAmv = function (ev, amv) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ConfigService', 'AssetService', 'amv', ImportAmvDialogCtrl],
+                templateUrl: 'views/anr/import.amv.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                  'amv' : amv
+                }
+            })
+            .then(function (amv) {
+                console.log(amv);
+            });
         };
 
         $scope.editRisk = function (ev, risk) {
@@ -3382,6 +3412,46 @@
             $mdDialog.hide($scope.risk);
         };
     }
+
+    function ImportAmvDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ConfigService, AssetService, amv) {
+            $scope.languages = ConfigService.getLanguages();
+            $scope.language = $scope.getAnrLanguage();
+
+            var mosp_query_organizations = 'organization';
+            $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
+            .then(function(json) {
+                $scope.organizations = json.data.data.objects;
+            });
+
+            $scope.selectOrganization = function() {
+                // Retrieve the amvs from the selected organization
+                // from MOSP via its API
+                var mosp_query_amvs = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Risks"}},' +
+                        '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}&results_per_page=5000';
+                $http.jsonp($rootScope.mospApiUrl + mosp_query_amvs)
+                .then(function(json) {
+                    // filter from the results the threats already in the analysis
+                    $scope.mosp_amvs = json.data.data.objects.filter(
+                        amv => !$rootScope.amvs_uuid.includes(amv.json_object.uuid)
+                    );
+                });
+            }
+
+            $scope.getMatches = function(searchText) {
+                // filter on the description and and the name (for an AMV, generally an UUID)
+                return $scope.mosp_amvs.filter(r => r['description'].toLowerCase().includes(searchText.toLowerCase()) ||
+                                                r['name'].toLowerCase().includes(searchText.toLowerCase()));
+            };
+
+            $scope.cancel = function() {
+                $mdDialog.cancel();
+            };
+
+            $scope.import = function() {
+                var amv = $scope.amv.json_object;
+                $mdDialog.hide(amv);
+            };
+        }
 
     function ImportFileDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService, MeasureService, SOACategoryService,
                                   TagService, RiskService, MeasureMeasureService, toastr, gettextCatalog, $q, tab, themes, categories, referential, tags) {

@@ -12,6 +12,14 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content" layout="column">
+                <md-card ng-if="!referential.uuid" layout="row">
+                    <span flex></span>
+                    <md-button class="md-primary" ng-if="!isAnrReadOnly" ng-click="importNewAmv($event)" ng-controller="AnrKbMgmtCtrl">
+                        <md-icon>cloud_download</md-icon><span>&nbsp;{{ 'Import from MOSP' | translate }}</span>
+                    </md-button>
+                    <span flex></span>
+                </md-card>
+
                 <md-autocomplete
                         ng-if="OFFICE_MODE == 'BO' || !amv.uuid"
                         flex
