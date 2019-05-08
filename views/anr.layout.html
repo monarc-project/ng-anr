@@ -20,7 +20,7 @@
         <md-card>
             <div ng-include="'views/anr/_anr.infosnapshot.html'"></div>
             <md-menu md-position-mode="target-right target">
-                <md-button class="anr-tools-button" title="{{ 'Tools' | translate }}" ng-click="openAnrToolsMenu($mdMenu.open, $event)">
+                <md-button class="anr-tools-button" title="{{ 'Tools' | translate }}" ng-click="openAnrToolsMenu($mdMenu.open, $event)" ng-disabled="updatingANR">
                     <md-icon md-menu-origin>more_vert</md-icon>
                 </md-button>
                 <md-menu-content width="4" class="anr-menu">

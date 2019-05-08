@@ -1604,9 +1604,12 @@
                     if ($scope.OFFICE_MODE == 'FO') {
                         service = $injector.get('ClientAnrService');
                     }
+                    $scope.updatingANR = true;
                     service.patchAnr($scope.model.anr.id, anr, function () {
                         toastr.success(gettextCatalog.getString("The risk analysis have been edited."), gettextCatalog.getString("Edition successful"));
                         $rootScope.$broadcast('referentialsUpdated');
+                        $rootScope.$broadcast('anrUpdated');
+                        $scope.updatingANR = false;
                     });
                   $scope.model.anr = anr;
                 });
@@ -1642,7 +1645,6 @@
                     });
             } else {
                 $scope.createAttachedObject = createAttachedObject;
-                //$scope, $mdDialog, $state, $location, $parentScope, AnrService
                 createAttachedObject($scope, $mdDialog, $state, $location, $scope, AnrService, ev)
             }
         };
