@@ -15,8 +15,8 @@
             </div>
 
             <md-menu ng-if="OFFICE_MODE == 'FO'">
-                <md-button ng-click="openAnrMenu($mdMenu.open, $event);">
-                    <md-tooltip md-direction="bottom">{{ 'Asset actions' | translate }}</md-tooltip>
+                <md-button ng-click="openAnrMenu($mdMenu.open, $event);" ng-disabled="updatingANR">
+                    <md-tooltip md-direction="bottom">{{ 'Actions' | translate }}</md-tooltip>
                     <md-icon class="material-icons md-48 size-auto" md-menu-origin>more_vert</md-icon>
                 </md-button>
                 <md-menu-content>

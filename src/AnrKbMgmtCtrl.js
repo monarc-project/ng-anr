@@ -846,6 +846,13 @@
             $scope.measures.selected = [];
         };
 
+        $rootScope.$on('anrUpdated', function () {
+          if ($scope.currentTabIndex == 3) {
+            $scope.deselectMeasuresTab();
+            $scope.selectMeasuresTab();
+          }
+         });
+
         $scope.selectReferential = function (referentialId,index) {
             $scope.refTabSelected = index;
             $scope.referential_uuid = referentialId;
