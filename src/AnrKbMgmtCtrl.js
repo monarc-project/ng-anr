@@ -2018,7 +2018,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ConfigService', 'AssetService', 'amv', ImportAmvDialogCtrl],
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ConfigService', 'AssetService', 'ThreatService', 'VulnService', 'amv', ImportAmvDialogCtrl],
                 templateUrl: 'views/anr/import.amv.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -2030,8 +2030,25 @@
                 }
             })
             .then(function (amv) {
-                console.log(amv);
-            });
+                var new_amv = {
+                    id: amv.amv.uuid,
+                    asset: amv.amv.asset,
+                    threat: amv.amv.threat,
+                    vulnerability: amv.amv.vulnerability,
+                    status: 1
+                };
+                AmvService.createAmv(new_amv,
+                    function () {
+                        $scope.updateAmvs();
+                        toastr.success(gettextCatalog.getString('The risk has been created successfully.'),
+                          gettextCatalog.getString('Creation successful'));
+                    },
+                    function () {
+                        $scope.importNewAmv(ev, amv);
+                    }
+                );
+
+            })
         };
 
         $scope.editRisk = function (ev, risk) {
@@ -2604,7 +2621,7 @@
          * Returns a filtered list of referentials from MOSP with all the
          * vulnerabilites matching with 'searchText' as name.
          *
-         * @param  searchText  the name of the vulnerabilitye to search for
+         * @param  searchText  the name of the vulnerability to search for
          * @return             the list of available vulnerabilites to import
          */
          $scope.getMatches = function(searchText) {
@@ -3413,7 +3430,7 @@
         };
     }
 
-    function ImportAmvDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ConfigService, AssetService, amv) {
+    function ImportAmvDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ConfigService, AssetService, ThreatService, VulnService, amv) {
             $scope.languages = ConfigService.getLanguages();
             $scope.language = $scope.getAnrLanguage();
 
@@ -3447,9 +3464,52 @@
                 $mdDialog.cancel();
             };
 
+            $scope.getAsset = function (id) {
+                var promise = $q.defer();
+                AssetService.getAsset(id).then(function (e) {
+                    promise.resolve(e);
+                }, function (e) {
+                    promise.reject(e);
+                });
+                return promise.promise;
+            };
+
+            $scope.getThreat = function (id) {
+                var promise = $q.defer();
+                ThreatService.getThreat(id).then(function (e) {
+                    promise.resolve(e);
+                }, function (e) {
+                    promise.reject(e);
+                });
+                return promise.promise;
+            };
+
+            $scope.getVulnerability = function (id) {
+                var promise = $q.defer();
+                VulnService.getVuln(id).then(function (e) {
+                    promise.resolve(e);
+                }, function (e) {
+                    promise.reject(e);
+                });
+                return promise.promise;
+            };
+
             $scope.import = function() {
                 var amv = $scope.amv.json_object;
-                $mdDialog.hide(amv);
+                var result = {};
+                result.amv = amv;
+
+                $scope.getAsset(amv.asset).then(function(e) {
+                    result.asset = e;
+                    $scope.getThreat(amv.threat).then(function(e) {
+                        result.threat = e;
+                    }).then(function(e) {
+                        $scope.getVulnerability(amv.vulnerability).then(function(e) {
+                            result.vulnerability = e;
+                            $mdDialog.hide(result);
+                        })
+                    })
+                });
             };
         }
 
