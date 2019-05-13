@@ -2038,7 +2038,7 @@
             })
             .then(function (amv) {
                 var new_amv = {
-                    id: amv.amv.uuid,
+                    uuid: amv.amv.uuid,
                     asset: amv.amv.asset,
                     threat: amv.amv.threat,
                     vulnerability: amv.amv.vulnerability,
