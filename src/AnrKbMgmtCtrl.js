@@ -2042,7 +2042,8 @@
                     asset: amv.amv.asset,
                     threat: amv.amv.threat,
                     vulnerability: amv.amv.vulnerability,
-                    status: 1
+                    status: 1,
+                    implicitPosition: 1
                 };
                 AmvService.createAmv(new_amv,
                     function () {
