@@ -87,7 +87,7 @@
         };
 
         $scope.attachRecommandation = function () {
-            ClientRecommandationService.attachToRisk($scope.model.anr.id, $scope.rec_edit.rec.id, riskId, isOpRiskMode,
+            ClientRecommandationService.attachToRisk($scope.model.anr.id, $scope.rec_edit.rec.uuid, riskId, isOpRiskMode,
                 function () {
                     toastr.success(gettextCatalog.getString("The recommandation has been attached to this risk."));
                     $scope.rec_edit.rec = null;
@@ -153,7 +153,7 @@
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-                ClientRecommandationService.deleteRecommandation({anr: $scope.model.anr.id, id: recommandation.recommandation.id},
+                ClientRecommandationService.deleteRecommandation({anr: $scope.model.anr.id, id: recommandation.recommandation.uuid},
                     function () {
                         updateRecommandations();
                         toastr.success(gettextCatalog.getString('The recommendation has been deleted successfully'),
@@ -177,7 +177,7 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
             }).then(function (measure_id) {
-                ClientRecommandationService.attachMeasureToRecommandation($scope.model.anr.id, recommandation.recommandation.id, measure_id, function () {
+                ClientRecommandationService.attachMeasureToRecommandation($scope.model.anr.id, recommandation.recommandation.uuid, measure_id, function () {
                     toastr.success(gettextCatalog.getString("Control attached to recommendation"));
                     updateRecommandations();
                 });

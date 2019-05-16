@@ -2,8 +2,8 @@
     <form name="riskForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 ng-if="!recommandation.recommandation.id" translate>Add a recommendation</h2>
-                <h2 ng-if="recommandation.recommandation.id" translate>Edit a recommendation</h2>
+                <h2 ng-if="!recommandation.recommandation.uuid" translate>Add a recommendation</h2>
+                <h2 ng-if="recommandation.recommandation.uuid" translate>Edit a recommendation</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -12,7 +12,7 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-input-container ng-if="!recommandation.recommandation.id" class="md-block" style="margin-right: 10px;">
+                <md-input-container ng-if="!recommandation.recommandation.uuid" class="md-block" style="margin-right: 10px;">
                     <label translate>Search a recommendation to create one from an existing</label>
                     <md-select flex ng-model="recommandation.recommandation" md-on-open="loadOptions($event, recommandation.recommandation)" md-on-close="setSelectedRecommendation($event, recommandation.recommandation)">
                         <md-option ng-repeat="item in options" ng-value="item">{{ item.code }} - {{ item.description }}</md-option>
@@ -43,13 +43,13 @@
             <md-button ng-click="cancel()">
                 {{ 'Cancel' | translate }}
             </md-button>
-            <md-button ng-click="deleteRecommandation($event, recommandation)" ng-if="recommandation.recommandation.id && !isRecoContext" type="submit" class="md-warn md-hue-3">
+            <md-button ng-click="deleteRecommandation($event, recommandation)" ng-if="recommandation.recommandation.uuid && !isRecoContext" type="submit" class="md-warn md-hue-3">
                 {{ 'Delete' | translate }}
             </md-button>
-            <md-button ng-if="recommandation.recommandation.id && !isRecoContext" ng-click="detachRecommandation($event, recommandation)">{{ 'Detach' | translate }}</md-button>
-            <!-- <md-button ng-if="recommandation.recommandation.id" ng-click="copyRecommandation($event, recommandation)" >{{ 'Copy' | translate }}</md-button> -->
+            <md-button ng-if="recommandation.recommandation.uuid && !isRecoContext" ng-click="detachRecommandation($event, recommandation)">{{ 'Detach' | translate }}</md-button>
+            <!-- <md-button ng-if="recommandation.recommandation.uuid" ng-click="copyRecommandation($event, recommandation)" >{{ 'Copy' | translate }}</md-button> -->
             <md-button ng-click="create()" ng-disabled="riskForm.$invalid" type="submit" class="md-accent md-hue-3">
-                {{ (recommandation.recommandation.id > 0 ? 'Save' : 'Create') | translate }}
+                {{ (recommandation.recommandation.uuid > 0 ? 'Save' : 'Create') | translate }}
             </md-button>
         </md-dialog-actions>
     </form>
