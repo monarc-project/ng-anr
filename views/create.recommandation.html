@@ -49,7 +49,7 @@
             <md-button ng-if="recommandation.recommandation.uuid && !isRecoContext" ng-click="detachRecommandation($event, recommandation)">{{ 'Detach' | translate }}</md-button>
             <!-- <md-button ng-if="recommandation.recommandation.uuid" ng-click="copyRecommandation($event, recommandation)" >{{ 'Copy' | translate }}</md-button> -->
             <md-button ng-click="create()" ng-disabled="riskForm.$invalid" type="submit" class="md-accent md-hue-3">
-                {{ (recommandation.recommandation.uuid > 0 ? 'Save' : 'Create') | translate }}
+                {{ (recommandation.recommandation.uuid ? 'Save' : 'Create') | translate }}
             </md-button>
         </md-dialog-actions>
     </form>

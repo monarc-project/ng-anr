@@ -2328,24 +2328,25 @@
             draggable: '.draggable',
             forceFallback: true,
             onUpdate: function (evt) {
+                console.log(evt);
                 if (evt.newIndex == 0) {
                     ClientRecommandationService.updateRecommandation({
                         anr: anr.id,
-                        id: evt.model.id,
+                        uuid: evt.model.uuid,
                         implicitPosition: 1
                     });
                 } else if (evt.newIndex == $scope.recommendations.length - 1) {
                     ClientRecommandationService.updateRecommandation({
                         anr: anr.id,
-                        id: evt.model.id,
+                        uuid: evt.model.uuid,
                         implicitPosition: 2
                     });
                 } else {
                     ClientRecommandationService.updateRecommandation({
                         anr: anr.id,
-                        id: evt.model.id,
+                        uuid: evt.model.uuid,
                         implicitPosition: 3,
-                        previous: $scope.recommendations[evt.newIndex - 1].id
+                        previous: $scope.recommendations[evt.newIndex - 1].uuid
                     });
                 }
 
