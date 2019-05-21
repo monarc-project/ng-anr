@@ -27,7 +27,7 @@
                   <span flex></span>
                 </md-card>
 
-                <md-subheader layout="row" layout-align="center"><strong>Manual creation</strong></md-subheader><br />
+                <md-subheader ng-if="!vuln.uuid" layout="row" layout-align="center"><strong>Manual creation</strong></md-subheader><br />
 
                 <md-subheader>{{ 'Labels and descriptions' | translate }}</md-subheader>
 
