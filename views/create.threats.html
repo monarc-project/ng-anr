@@ -14,14 +14,14 @@
             <div class="md-dialog-content">
                 <md-card ng-if="!threat.uuid" layout="row">
                   <span flex></span>
-                  <md-button ng-if="OFFICE_MODE == 'FO'" class="md-primary" ng-click="importFile($event,'Threats')"  ng-controller="AnrKbMgmtCtrl">
+                  <md-button ng-if="OFFICE_MODE == 'FO'" class="md-primary" ng-click="importFile($event,'Threats')" ng-controller="AnrKbMgmtCtrl">
                       <md-icon>play_for_work</md-icon><span>{{ 'Import from file' | translate }}</span>
                   </md-button>
-                  <md-button ng-if="OFFICE_MODE == 'BO'" class="md-primary" ng-click="importFile($event,'Threats')"  ng-controller="BackofficeKbInfoCtrl">
+                  <md-button ng-if="OFFICE_MODE == 'BO'" class="md-primary" ng-click="importFile($event,'Threats')" ng-controller="BackofficeKbInfoCtrl">
                       <md-icon>play_for_work</md-icon><span>{{ 'Import from file' | translate }}</span>
                   </md-button>
                   <span flex></span>
-                  <md-button class="md-primary" ng-if="!isAnrReadOnly" ng-click="importNewThreat($event)">
+                  <md-button ng-if="OFFICE_MODE == 'FO'" class="md-primary" ng-click="importNewThreat($event)" ng-controller="AnrKbMgmtCtrl">
                       <md-icon>cloud_download</md-icon><span>&nbsp;{{ 'Import from MOSP' | translate }}</span>
                   </md-button>
                   <span flex></span>

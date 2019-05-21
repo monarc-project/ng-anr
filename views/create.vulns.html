@@ -21,7 +21,7 @@
                       <md-icon>play_for_work</md-icon><span>&nbsp;{{ 'Import from file' | translate }}</span>
                   </md-button>
                   <span flex></span>
-                  <md-button class="md-primary" ng-if="!isAnrReadOnly" ng-click="importNewVulnerability($event)">
+                  <md-button ng-if="OFFICE_MODE == 'FO'" class="md-primary" ng-click="importNewVulnerability($event)" ng-controller="AnrKbMgmtCtrl">
                       <md-icon>cloud_download</md-icon><span>&nbsp;{{ 'Import from MOSP' | translate }}</span>
                   </md-button>
                   <span flex></span>
