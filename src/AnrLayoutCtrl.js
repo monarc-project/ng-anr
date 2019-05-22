@@ -519,12 +519,12 @@
                 }else{
                     $state.transitionTo('main.project.anr.riskop',{modelId:$stateParams.modelId, riskopId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
                 }
+                $scope.opsheet_risk = angular.copy(risk);
             }
             $timeout(function() {
                 let fieldsOpRisk = ['R','O','L','F','P','Prob'];
                 $scope.ToolsAnrService.currentTab = 1;
                 $scope.sheet_risk = undefined;
-                $scope.opsheet_risk = angular.copy(risk);
                 fieldsOpRisk.forEach(function(field){
                   if ($scope.opsheet_risk['targeted'+field] == -1 && $scope.opsheet_risk['net'+field] !== -1) {
                     $scope.opsheet_risk['targeted'+field] = $scope.opsheet_risk['net'+field];
