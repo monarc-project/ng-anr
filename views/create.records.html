@@ -1,0 +1,158 @@
+<md-dialog md-theme="light" class="dialog-width">
+    <form name="recordForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 ng-if="!record.uuid" translate>Add a record</h2>
+                <h2 ng-if="record.uuid" translate>Edit record</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-subheader layout="row" layout-align="center"><strong>Manual creation</strong></md-subheader>
+
+                <md-input-container class="md-block"  ng-hide="OFFICE_MODE == 'FO'" flex>
+                    <label translate>Language</label>
+                    <md-icon>language</md-icon>
+                    <md-select ng-model="language" ng-change="switchLanguage()">
+                      <md-option ng-repeat="(lang_idx, lang) in languages" value="{{ lang_idx }}" ng-controller="BackofficeAccountCtrl">
+                        <countryflag country="{{ countriesCode[lang_idx] }}"></countryflag>
+                        {{ languagesNames[lang_idx] }}
+                      </md-option>
+                    </md-select>
+                </md-input-container> <br/>
+
+                <md-input-container class="md-block" flex>
+                    <label translate>Label</label>
+                    <md-icon>label</md-icon>
+                    <input ng-model="record['label' + language ]" name="label" required>
+                    <div ng-messages="record.label.$error">
+                        <div ng-message="required">{{ 'The label may not be empty' | translate }}</div>
+                    </div>
+                </md-input-container>
+
+                <md-subheader layout="row" layout-align="left"><strong>Controller</strong></md-subheader>
+                <md-input-container class="md-block" flex>
+                    <label translate>Name</label>
+                    <input ng-model="record.controller['label' + language ]" name="controllerName" required>
+                    <div ng-messages="record.controllerName.$error">
+                        <div ng-message="required">{{ 'The name may not be empty' | translate }}</div>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block" flex>
+                    <label translate>Contact</label>
+                    <input ng-model="record.controller['contact']" name="controllerContact" required>
+                    <div ng-messages="record.controllerContact.$error">
+                        <div ng-message="required">{{ 'The contact may not be empty' | translate }}</div>
+                    </div>
+                </md-input-container>
+                <div>
+                    <ul>
+                        <li ng-repeat="jointControllers in record.jointControllers">
+                            {{jointControllers}}
+                            <span ng-click="removeJointController($index)">
+                                <md-icon aria-label="{{ 'Remove jointController' | translate }}">close</md-icon>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <md-input-container class="md-block" flex>
+                    <label translate>Joint Controller</label>
+                    <input ng-model="jointController" name="jointController">
+                    <md-button class="md-icon-button" ng-click="addJointController()" layout-align="right">
+                        <md-icon aria-label="{{ 'Add joint controller' | translate }}">add</md-icon>
+                    </md-button>
+                </md-input-container>
+                <md-input-container class="md-block" flex>
+                    <label translate>Controller's representative</label>
+                    <input ng-model="record['representative']" name="representative">
+                </md-input-container>
+                <md-input-container class="md-block" flex>
+                    <label translate>Data Protection Officer</label>
+                    <input ng-model="record['dpo']" name="dpo">
+                </md-input-container>
+                <md-input-container class="md-block" flex>
+                    <label translate>Purposes of the processing</label>
+                    <md-icon>subject</md-icon>
+                    <textarea ng-model="record['purposes']" rows="2"></textarea>
+                </md-input-container>
+                <md-input-container class="md-block" flex>
+                    <label translate>Description of the categories of data subjects and of the categories of personal data</label>
+                    <md-icon>subject</md-icon>
+                    <textarea ng-model="record['description']" rows="4"></textarea>
+                </md-input-container>
+                <label translate>Categories of recipients : </label>
+                <div>
+                    <ul>
+                        <li ng-repeat="recipient in record.recipients">
+                            {{recipient}}
+                            <span ng-click="removeRecipient($index)">
+                                <md-icon aria-label="{{ 'Remove recipient' | translate }}">close</md-icon>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <md-input-container class="md-block" flex>
+                    <label translate>Recipient</label>
+                    <input ng-model="recipient" name="recipient">
+                    <md-button class="md-icon-button" ng-click="addRecipient()" layout-align="right">
+                        <md-icon aria-label="{{ 'Add recipient' | translate }}">add</md-icon>
+                    </md-button>
+                </md-input-container>
+                <label translate> Is there transfers of personal data to a third country or an international organisation?
+                    <input ng-model="checkboxInternational" type="checkbox">
+                </label>
+                <md-input-container class="md-block" ng-if="checkboxInternational" flex>
+                    <md-input-container class="md-block" flex>
+                        <label translate>Identification</label>
+                        <input ng-model="record['idThirdCountry']" name="idThirdCountry">
+                    </md-input-container>
+                    <md-input-container class="md-block" flex>
+                        <label translate>Data Protection Officer</label>
+                        <input ng-model="record['dpoThirdCountry']" name="dpoThirdCountry">
+                    </md-input-container>
+                </md-input-container>
+                <md-input-container class="md-block" flex>
+                    <label translate>Time limits for erasure</label>
+                    <input ng-model="record['erasure']" name="erasure" type="date" required>
+                </md-input-container>
+                <md-input-container class="md-block" flex>
+                    <label translate>Technical and organisational security measures</label>
+                    <md-icon>subject</md-icon>
+                    <textarea ng-model="record['secMeasures']" rows="2"></textarea>
+                </md-input-container>
+
+                <md-subheader layout="row" layout-align="left"><strong>Processors</strong></md-subheader>
+                <label translate>List of processors : </label>
+                <div>
+                    <ul>
+                        <li ng-repeat="processor in record.processors">
+                            {{processor['label' + language ]}}
+                            <span ng-click="removeProcessor($index)">
+                                <md-icon aria-label="{{ 'Remove processor' | translate }}">close</md-icon>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <md-button class="md-icon-button" ng-click="addNewProcessor()" layout-align="right">
+                    <md-icon aria-label="{{ 'Add new processor' | translate }}">add</md-icon>
+                </md-button>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="create()" ng-disabled="recordForm.$error.required" type="submit" class="md-accent md-hue-3">
+                {{ (record.uuid ? 'Save' : 'Create') | translate }}
+            </md-button>
+            <md-button ng-click="createAndContinue()" ng-disabled="recordForm.$error.required" ng-if="!record.uuid" class="md-accent md-hue-3">
+                {{ 'Create and continue' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

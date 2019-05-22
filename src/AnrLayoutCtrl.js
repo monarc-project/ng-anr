@@ -34,11 +34,14 @@
                     case 'main.project.anr.knowledge':
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 3};
                         break;
-                    case 'main.project.anr.soa':
+                    case 'main.project.anr.ropa':
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 4};
                         break;
-                    case 'main.project.anr.soa.sheet':
+                    case 'main.project.anr.soa':
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 5};
+                        break;
+                    case 'main.project.anr.soa.sheet':
+                        $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 6};
                         break;
                 }
             }
@@ -819,6 +822,9 @@
                         $state.transitionTo('main.project.anr.knowledge',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
                         break;
                     case 4:
+                        $state.transitionTo('main.project.anr.ropa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
+                        break;
+                    case 5:
                         $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
                         break;
                 }
