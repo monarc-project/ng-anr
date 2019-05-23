@@ -127,6 +127,7 @@
               label2: '',
               label3: '',
               label4: '',
+              controller: {},
               recipientCategories: [],
               processors: [],
               jointControllers: [],
@@ -156,7 +157,14 @@
             $mdDialog.hide($scope.record);
         };
         $scope.controllerItemSelected = function () {
-            $scope.record.controller = $scope.selectedController;
+            if ($scope.selectedController !== null)
+                $scope.record.controller = $scope.selectedController;
+            else {
+                $scope.record.controller = {};
+            }
+        };
+        $scope.controllerTextChanged = function () {
+            $scope.record.controller['label'] = $scope.controllerSearchText;
         };
         $scope.queryRecordControllerSearch = function (query) {
             var promise = $q.defer();

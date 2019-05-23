@@ -38,24 +38,26 @@
                 <md-input-container class="md-block" flex>
                     <label translate>Name</label>
                     <md-autocomplete flex
-                                     md-selected-item="record.controller"
+                                     md-selected-item="selectedController"
                                      md-search-text="controllerSearchText"
                                      md-items="item in queryRecordControllerSearch(controllerSearchText)"
                                      md-item-text="item['label']"
                                      md-min-length="0"
                                      md-no-cache="true"
+                                     md-selected-item-change="controllerItemSelected()"
+                                     md-search-text-change="controllerTextChanged()"
                                      placeholder="{{ 'Select controller' | translate }}">
                         <md-item-template>
                             <span md-highlight-text="controllerSearchText" md-highlight-flags="^i">{{item['label']}}</span>
                         </md-item-template>
                         <md-not-found>
-                            {{ 'No controller matching your search was found. }}
+                            {{ 'No controller matching your search was found.' }}
                         </md-not-found>
                     </md-autocomplete>
                 </md-input-container>
                 <md-input-container class="md-block" flex>
                     <label translate>Contact</label>
-                    <input ng-model="record.controller['contact']" name="controllerContact" required>
+                    <input ng-model="record.controller['contact']" ng-disabled="selectedController.id" name="controllerContact" required>
                     <div ng-messages="record.controllerContact.$error">
                         <div ng-message="required">{{ 'The contact may not be empty' | translate }}</div>
                     </div>
