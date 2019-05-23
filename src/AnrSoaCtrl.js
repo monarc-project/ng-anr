@@ -38,6 +38,7 @@
         $scope.updateSoaReferentials();
 
         $rootScope.$on('referentialsUpdated', function () {
+            $scope.referential_uuid = null;
             $scope.referentialsUpdated = true;
          });
 
@@ -54,7 +55,9 @@
                                 "soa_measures["+ "'" + referentialId + "'" +"].query.filter",
                                 "soa_measures["+ "'" + referentialId + "'" +"].query.order"], function() {
 
-                  $scope.updateSoaMeasures();
+                  if ($scope.referential_uuid) {
+                    $scope.updateSoaMeasures();
+                  }
             });
             $scope.step = { // Deliverable data
               num:5,
