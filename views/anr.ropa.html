@@ -20,8 +20,8 @@
         </md-tooltip>
         <md-icon>delete</md-icon>
       </md-button>
-      <md-tab id="tabRecord" ng-repeat="record in processingRecords.items.records" label="{{ _langField(record,'label')}}"
-              ng-click="selectRecord(record.uuid)">
+      <md-tab id="tabRecord" ng-repeat="record in records.items.records" label="{{ _langField(record,'label')}}"
+              ng-click="selectRecord(record.id)">
 
           <div layout="row" layout-align="start center" class="md-padding-double" style="height:40px">
               <md-menu>

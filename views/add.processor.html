@@ -26,7 +26,7 @@
                 <md-input-container class="md-block" flex>
                     <label translate>Label</label>
                     <md-icon>label</md-icon>
-                    <input ng-model="processor['label' + language ]" name="label" required>
+                    <input ng-model="processor['label']" name="label" required>
                     <div ng-messages="processor.label.$error">
                         <div ng-message="required">{{ 'The label may not be empty' | translate }}</div>
                     </div>
@@ -38,39 +38,62 @@
                         <div ng-message="required">{{ 'The contact details may not be empty' | translate }}</div>
                     </div>
                 </md-input-container>
-                <label translate>Controllers on behalf of which the processor is acting : </label>
-                <md-button class="md-icon-button" ng-click="addNewController = true" layout-align="right">
-                    <md-icon aria-label="{{ 'Add new controller' | translate }}">add</md-icon>
-                </md-button>
-                <div>
-                    <ul>
-                        <li ng-repeat="controller in processor.controllers">
-                            {{controller.name}}
-                            <span ng-click="removeController($index)">
-                                <md-icon aria-label="{{ 'Remove controller' | translate }}">close</md-icon>
-                            </span>
-                        </li>
-                    </ul>
-                </div>
-                <div ng-if="addNewController">
+                <md-input-container class="md-block" flex>
+                    <div layout="row" layout-align="center center">
+                        <md-chips ng-model="processor.controllers"
+                                  md-autocomplete-snap
+                                  md-require-match="true">
+                            <md-autocomplete flex
+                                             md-selected-item="selectedBehalfController"
+                                             md-search-text="behalfControllerSearchText"
+                                             md-items="item in queryRecordControllerSearch(behalfControllerSearchText)"
+                                             md-item-text="item['label']"
+                                             md-min-length="0"
+                                             md-no-cache="true"
+                                             placeholder="{{ 'Add controllers on behalf of which this processor is acting on' | translate }}">
+                                <md-item-template>
+                                    <span md-highlight-text="behalfControllerSearchText" md-highlight-flags="^i">{{item['label']}}</span>
+                                </md-item-template>
+                                <md-not-found>
+                                    {{ 'No controller matching your search was found. Click on' | translate }}
+                                    <md-icon>add_to_photos</md-icon>
+                                    {{ 'to create it.' | translate }}
+                                </md-not-found>
+                            </md-autocomplete>
+
+                            <md-chip-template>
+                                <span>
+                                    <em>{{$chip['label']}}</em>
+                                </span>
+                            </md-chip-template>
+                        </md-chips>
+                        <md-button class="md-icon-button md-primary" ng-click="toggleBehalfControllerOn()">
+                            <md-tooltip md-direction="left">
+                                {{ 'Add a new controller on behalf of which this processor is acting on' | translate }}
+                            </md-tooltip>
+                            <md-icon>add_to_photos</md-icon>
+                        </md-button>
+                    </div>
+                </md-input-container>
+                <div ng-if="addBehalfController">
                     <md-input-container class="md-block" flex>
                         <label translate>Name</label>
                         <input ng-model="behalf.name" name="behalfName" required>
-                        <div ng-messages="processor.behalfName.$error">
+                        <div ng-messages="behalfName.$error">
                             <div ng-message="required">{{ 'The name may not be empty' | translate }}</div>
                         </div>
                     </md-input-container>
                     <md-input-container class="md-block" flex>
                         <label translate>Contact</label>
                         <input ng-model="behalf.contact" name="behalfContact" required>
-                        <div ng-messages="processor.behalfContact.$error">
+                        <div ng-messages="behalfContact.$error">
                             <div ng-message="required">{{ 'The contact details may not be empty' | translate }}</div>
                         </div>
                     </md-input-container>
-                    <md-button ng-click="cancelNewBehalfController()">
+                    <md-button ng-click="toggleBehalfControllerOff()">
                         {{ 'Cancel' | translate }}
                     </md-button>
-                    <md-button class="md-accent md-hue-3" ng-click="addBehalfController()" layout-align="right">
+                    <md-button class="md-accent md-hue-3" ng-disabled="behalfName.$error.required||behalfContact.$error.required" ng-click="addNewBehalfController()" layout-align="right">
                         {{ 'Add' | translate }}
                     </md-button>
                 </div>
