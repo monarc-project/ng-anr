@@ -168,6 +168,8 @@
                         $scope.updateObjectsLibrary();
                         $scope.updateScales();
                         $scope.updateReferentials();
+                        $scope.updateRecommandationSets();
+                        
 
                     }
 
@@ -204,8 +206,9 @@
                         $scope.updateObjectsLibrary();
                         $scope.updateScales();
                         $scope.updateReferentials();
+                        $scope.updateRecommandationSets();
                         updateMethodProgress();
-
+                    
                     }
 
                     if ($rootScope.setAnrLanguage) {
@@ -229,6 +232,14 @@
             $scope.updatingReferentials = true;
           });
         };
+
+        $scope.updateRecommandationSets = function () {
+            $scope.recommandationSets = [];
+            ClientRecommandationService.getRecommandationSets({anr: $scope.model.anr.id}).then(function (data) {
+              $scope.recommandationSets = data['recommandations-sets'];
+              $scope.updatingRecommandationSets = true;
+            });
+          };
 
         $scope.updateAnrRisksTable = function (cb) {
             $scope.anr_risks_table_loading = true;
@@ -264,6 +275,10 @@
                 $scope.anr_risks_table_loading = false;
             });
         };
+
+        $rootScope.$on('recommandationSetsUpdated', function () {
+            $scope.updateRecommandationSets();
+         });
 
         $rootScope.$on('referentialsUpdated', function () {
             $scope.updateReferentials();
@@ -478,6 +493,12 @@
         $scope.selectReferential = function (referentialId) {
             $scope.referential_uuid = referentialId;
         };
+
+        $scope.selectRecommandationSet = function (recommandationSetId) {
+            $scope.recommandation_set_uuid = recommandationSetId;
+        };
+
+
         $scope.updateSheetRiskTarget = function () {
           if ($scope.sheet_risk) {
             if(parseInt($scope.sheet_risk.threatRate) > -1 && parseInt($scope.sheet_risk.vulnerabilityRate) > -1){

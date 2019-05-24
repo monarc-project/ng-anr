@@ -246,6 +246,13 @@
             return $scope.options;
         };
 
+        $scope.loadSetOptions = function(ev, anrID) {
+            ClientRecommandationService.getRecommandationSets({anr: anrId}).then(function (data) {
+                $scope.setOptions = data['recommandations-sets'];
+            });
+            return $scope.setOptions;
+        };
+
         $scope.setSelectedRecommendation = function(ev, selectedRec) {
             if (selectedRec !== undefined) {
                 $scope.recommandation = selectedRec;
@@ -253,6 +260,12 @@
                 $scope.recommandation['recommandation']['code'] = selectedRec.code;
                 $scope.recommandation['recommandation']['importance'] = selectedRec.importance;
                 $scope.recommandation['recommandation']['description'] = selectedRec.description;
+            }
+        };
+
+        $scope.setSelectedRecommendationSet = function(ev, selectedRecSet) {
+            if (selectedRecSet !== undefined) {
+                $scope.recommandationSet = selectedRecSet['uuid'];
             }
         };
 
@@ -265,6 +278,7 @@
         };
 
         $scope.create = function () {
+            $scope.recommandation['recommandation']['recommandationSet'] = $scope.recommandationSet;
             $mdDialog.hide($scope.recommandation);
         };
 
