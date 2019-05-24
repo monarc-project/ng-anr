@@ -13,14 +13,10 @@
     function AnrRopaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog,
         $state, $stateParams, $q, RecordService, TableHelperService) {
         $scope.language = $scope.getAnrLanguage();
-        $scope.records = {};
-        RecordService.getRecords({order: 'label1'}).then(function (data) {
-            $scope.records.items = data;
-            if (data['records'][0]) {
-                $scope.records.selected = data['records'][0].id;
-                $scope.recordTabSelected = 0;
-            }
-        });
+        $scope.records = {
+            'items' : [],
+            'selected' : -1
+        };
 
         $scope.createNewRecord = function (ev, record) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
@@ -29,8 +25,8 @@
                 controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'RecordService', 'ConfigService', 'record', 'anrId', CreateRecordDialogCtrl],
                 templateUrl: 'views/anr/create.records.html',
                 targetEvent: ev,
-                preserveScope: false,
-                scope: $scope.$dialogScope.$new(),
+                preserveScope: true,
+                scope: $scope,
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
@@ -40,13 +36,13 @@
             })
             .then(function (record) {
                 var cont = record.cont;
-                record.cont = undefined;
-                console.log(record);
+                record.cont = undefined
                 RecordService.createRecord(record,
                     function (status) {
+                        $scope.updateRecords();
                         $scope.records.selected = status.id;
-                        $scope.recordTabSelected = $scope.records.items.count + 1;
-                        console.log("abasdasd");
+                        console.log($scope.records.items.count);
+                        $scope.recordTabSelected = $scope.records.items.count + 1 ;
                         toastr.success(gettextCatalog.getString('The record has been created successfully.',
                               {recordLabel: $scope._langField(record,'label')}), gettextCatalog.getString('Creation successful'));
                         if (cont) {
@@ -55,7 +51,6 @@
                     },
 
                     function () {
-                        console.log("wqeeeeeeeeeeeee");
                         $scope.createNewRecord(ev, record);
                     }
                 );
@@ -113,6 +108,24 @@
                 );
             });
         };
+        $scope.selectRecord = function(recordId) {
+            RecordService.getRecord(recordId).then(function (data) {
+                $scope.records.selected = recordId;
+                $scope.record = data;
+            });
+        };
+
+        $scope.updateRecords = function() {
+            RecordService.getRecords({order: 'label1'}).then(function (data) {
+                $scope.records.items = data;
+            });
+        };
+        $scope.updateRecords();
+        if ($scope.records.items[0]) {
+            $scope.selectRecord($scope.records.items[0].id);
+            $scope.recordTabSelected = 0;
+        }
+
     }
     function CreateRecordDialogCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $q, RecordService, ConfigService, record) {
         $scope.languages = ConfigService.getLanguages();
@@ -120,6 +133,7 @@
         var defaultLang = angular.copy($scope.language);
 
         if (record != undefined && record != null) {
+            $scope.controllerSearchText = record.controller.label;
             $scope.record = record;
         } else {
           $scope.record = {
@@ -206,7 +220,6 @@
                     $scope.record.jointControllers.push({   'id': status.id,
                                                             'label' : newJoint.label,
                                                             'contact' : newJoint.contact});
-                    console.log($scope.record);
                     toastr.success(gettextCatalog.getString('The joint controller has been created successfully.',
                     {controllerLabel: $scope._langField(newJoint,'label')}), gettextCatalog.getString('Creation successful'));
                 }
@@ -308,19 +321,12 @@
                 );
             })
             .finally( function () {
-                $mdDialog.show({
-                    controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'RecordService', 'ConfigService', 'record', 'anrId', CreateRecordDialogCtrl],
-                    templateUrl: 'views/anr/create.records.html',
-                    targetEvent: ev,
-                    preserveScope: false,
-                    scope: $scope.$dialogScope.$new(),
-                    clickOutsideToClose: false,
-                    fullscreen: useFullScreen,
-                    locals: {
-                        'record' : $scope.record,
-                        'anrId': $scope.anrId
-                    }
-                })
+                if(!$scope.record.id) {
+                    $scope.createNewRecord(ev, $scope.record);
+                }
+                else {
+                    $scope.editRecord(ev, $scope.record);
+                }
             });
         };
     }
