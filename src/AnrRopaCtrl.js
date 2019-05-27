@@ -41,8 +41,7 @@
                     function (status) {
                         $scope.updateRecords();
                         $scope.records.selected = status.id;
-                        console.log($scope.records.items.count);
-                        $scope.recordTabSelected = $scope.records.items.count + 1 ;
+                        $scope.recordTabSelected = $scope.records.items.count;
                         toastr.success(gettextCatalog.getString('The record has been created successfully.',
                               {recordLabel: $scope._langField(record,'label')}), gettextCatalog.getString('Creation successful'));
                         if (cont) {
@@ -65,8 +64,8 @@
                     controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'RecordService', 'ConfigService', 'record', 'anrId', CreateRecordDialogCtrl],
                     templateUrl: 'views/anr/create.records.html',
                     targetEvent: ev,
-                    preserveScope: false,
-                    scope: $scope.$dialogScope.$new(),
+                    preserveScope: true,
+                    scope: $scope,
                     clickOutsideToClose: false,
                     fullscreen: useFullScreen,
                     locals: {
@@ -78,6 +77,7 @@
                     RecordService.updateRecord(record,
                         function () {
                             $scope.updateRecords();
+                            $scope.records.selected = record.id;
                             toastr.success(gettextCatalog.getString('The record has been edited successfully.',
                                 {recordLabel: record.label1}), gettextCatalog.getString('Edition successful'));
                         },
@@ -116,15 +116,15 @@
         };
 
         $scope.updateRecords = function() {
-            RecordService.getRecords({order: 'label1'}).then(function (data) {
+            RecordService.getRecords({order: 'id'}).then(function (data) {
                 $scope.records.items = data;
+                if ($scope.records.items.count>0 && $scope.records.selected === -1) {
+                    $scope.selectRecord($scope.records.items.records[0].id);
+                    $scope.recordTabSelected = 0;
+                }
             });
         };
         $scope.updateRecords();
-        if ($scope.records.items[0]) {
-            $scope.selectRecord($scope.records.items[0].id);
-            $scope.recordTabSelected = 0;
-        }
 
     }
     function CreateRecordDialogCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $q, RecordService, ConfigService, record) {
@@ -136,16 +136,17 @@
             $scope.controllerSearchText = record.controller.label;
             $scope.record = record;
         } else {
-          $scope.record = {
-              label1: '',
-              label2: '',
-              label3: '',
-              label4: '',
-              controller: {},
-              recipientCategories: [],
-              processors: [],
-              jointControllers: [],
-          };
+            $scope.controllerSearchText = "";
+            $scope.record = {
+                label1: '',
+                label2: '',
+                label3: '',
+                label4: '',
+                controller: {},
+                recipientCategories: [],
+                processors: [],
+                jointControllers: [],
+            };
         }
 
         $scope.cancel = function() {
@@ -213,17 +214,8 @@
             $scope.addJointController = false;
         };
         $scope.addNewJointController = function () {
-            var newJoint = {'label' : $scope.joint.name,
-                            'contact' : $scope.joint.contact};
-            RecordService.createRecordController(newJoint,
-                function (status) {
-                    $scope.record.jointControllers.push({   'id': status.id,
-                                                            'label' : newJoint.label,
-                                                            'contact' : newJoint.contact});
-                    toastr.success(gettextCatalog.getString('The joint controller has been created successfully.',
-                    {controllerLabel: $scope._langField(newJoint,'label')}), gettextCatalog.getString('Creation successful'));
-                }
-            );
+            $scope.record.jointControllers.push({   'label' : $scope.joint.name,
+                                                    'contact' : $scope.joint.contact });
             $scope.joint  = {};
             $scope.addJointController = false;
         };
@@ -253,18 +245,8 @@
             });
             return promise.promise;
         };
-        $scope.createNewRecipientCategory = function (ev, recipientCategory) {
-            var newRecipientCategory = {'label' : $scope.recipientCategorySearchText};
-            RecordService.createRecordRecipientCategory(newRecipientCategory,
-                function (status) {
-                    $scope.record.recipientCategories.push({'id': status.id,
-                                                            'label' : newRecipientCategory['label']});
-                    toastr.success(gettextCatalog.getString('The recipient category has been created successfully.',
-                    {recipientCategoryLabel: $scope._langField(newRecipientCategory,'label')}), gettextCatalog.getString('Creation successful'));
-                }
-            );
-            $scope.joint  = {};
-            $scope.addJointController = false;
+        $scope.createNewRecipientCategory = function (ev, recipientCategorySearchText) {
+            $scope.record.recipientCategories.push({'label' : $scope.recipientCategorySearchText});
         };
 
 
@@ -310,22 +292,14 @@
                 }
             })
             .then(function (processor) {
-                RecordService.createRecordProcessor(processor,
-                    function (status) {
-                        processor['id'] = status.id;
-                        $scope.record.processors.push(processor);
-                        console.log($scope.record);
-                        toastr.success(gettextCatalog.getString('The processor has been created successfully.',
-                        {processorLabel: $scope._langField(processor,'label')}), gettextCatalog.getString('Creation successful'));
-                    }
-                );
+                $scope.record.processors.push(processor);
             })
             .finally( function () {
                 if(!$scope.record.id) {
                     $scope.createNewRecord(ev, $scope.record);
                 }
                 else {
-                    $scope.editRecord(ev, $scope.record);
+                    $scope.editRecord(ev, $scope.record.id);
                 }
             });
         };
@@ -383,20 +357,10 @@
             $scope.addBehalfController = false;
         }
         $scope.addNewBehalfController = function () {
-            var newBehalf = {'label' : $scope.behalf.name,
-                             'contact' : $scope.behalf.contact};
-            RecordService.createRecordController(newBehalf,
-                function (status) {
-                    $scope.processor.controllers.push({ 'id': status.id,
-                                                        'label' : newBehalf.label,
-                                                        'contact' : newBehalf.contact});
-                    console.log($scope.processor);
-                    toastr.success(gettextCatalog.getString('The behalf controller has been created successfully.',
-                    {controllerLabel: $scope._langField(newBehalf,'label')}), gettextCatalog.getString('Creation successful'));
-                }
-            );
+            $scope.processor.controllers.push({ 'label' : $scope.behalf.name,
+                                                'contact' : $scope.behalf.contact});
             $scope.behalf = {};
-            $scope.addJointController = false;
+            $scope.addBehalfController = false;
         }
     }
 })();

@@ -12,8 +12,6 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-subheader layout="row" layout-align="center"><strong>Manual creation</strong></md-subheader>
-
                 <md-input-container class="md-block"  ng-hide="OFFICE_MODE == 'FO'" flex>
                     <label translate>Language</label>
                     <md-icon>language</md-icon>
@@ -66,7 +64,8 @@
                     <div layout="row" layout-align="center center">
                         <md-chips ng-model="record.jointControllers"
                                   md-autocomplete-snap
-                                  md-require-match="true">
+                                  md-require-match="true"
+                                  style="width:100%;">
                             <md-autocomplete flex
                                              md-selected-item="selectedJointController"
                                              md-search-text="jointControllerSearchText"
@@ -143,7 +142,8 @@
                     <div layout="row" layout-align="center center">
                         <md-chips ng-model="record.recipientCategories"
                                   md-autocomplete-snap
-                                  md-require-match="true">
+                                  md-require-match="false"
+                                  style="width:100%;">
                             <md-autocomplete flex
                                              md-selected-item="selectedRecipientCategory"
                                              md-search-text="recipientCategorySearchText"
@@ -161,23 +161,21 @@
                                     {{ 'to create it.' | translate }}
                                 </md-not-found>
                             </md-autocomplete>
-                            <md-button class="md-icon-button md-primary" ng-click="createNewRecipientCategory($event, recipientCategory)">
-                                <md-tooltip md-direction="left">
-                                    {{ 'Add a new recipient category' | translate }}
-                                </md-tooltip>
-                                <md-icon>add_to_photos</md-icon>
-                            </md-button>
                             <md-chip-template>
                                 <span>
                                     <em>{{$chip['label']}}</em>
                                 </span>
                             </md-chip-template>
                         </md-chips>
+                        <md-button class="md-icon-button md-primary" ng-click="createNewRecipientCategory($event,recipientCategorySearchText)">
+                            <md-tooltip md-direction="left">
+                                {{ 'Add a new recipient category' | translate }}
+                            </md-tooltip>
+                            <md-icon>add_to_photos</md-icon>
+                        </md-button>
                     </div>
                 </md-input-container>
-                <label translate> Is there transfers of personal data to a third country or an international organisation?
-                    <input ng-model="checkboxInternational" type="checkbox">
-                </label>
+                <md-switch style="margin: 0" ng-model="checkboxInternational">{{ 'Is there transfers of personal data to a third country or an international organisation?' | translate }}</md-switch>
                 <md-input-container class="md-block" ng-if="checkboxInternational" flex>
                     <md-input-container class="md-block" flex>
                         <label translate>Identification</label>
@@ -203,7 +201,8 @@
                     <div layout="row" layout-align="center center">
                         <md-chips ng-model="record.processors"
                                   md-autocomplete-snap
-                                  md-require-match="true">
+                                  md-require-match="true"
+                                  style="width:100%;">
                             <md-autocomplete flex
                                              md-selected-item="selectedProcessor"
                                              md-search-text="processorSearchText"

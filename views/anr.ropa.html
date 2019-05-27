@@ -113,53 +113,58 @@
                   </tbody>
               </table>
           </md-table-container>
-          <p class="md-title md-padding-left" translate>Processors</p>
-          <md-table-container ng-repeat="processor in record.processors" flex>
-              <table md-table>
-                  <tbody md-body>
-                      <tr md-row>
-                          <td md-cell width=20% > {{ 'Name' | translate }} </td>
-                          <td md-cell> {{ processor.label }} </td>
-                      </tr>
-                      <tr md-row>
-                          <td md-cell> {{ "Contact" | translate }} </td>
-                          <td md-cell> {{ processor.contact }} </td>
-                      </tr>
+          <p class="md-title md-padding-left" ng-if="record.processors.length > 0" translate>Processors</p>
+          <md-tabs md-dynamic-height="true" md-selected="processorTabSelected">
+              <md-tab id="tabRecord" ng-repeat="processor in record.processors" label="{{processor.label}}"
+                  md-on-select="selectProcessor(processor.id)">
+                  <md-table-container flex>
+                      <table md-table>
+                          <tbody md-body>
+                              <tr md-row>
+                                  <td md-cell width=20% > {{ 'Name' | translate }} </td>
+                                  <td md-cell> {{ processor.label }} </td>
+                              </tr>
+                              <tr md-row>
+                                  <td md-cell> {{ "Contact" | translate }} </td>
+                                  <td md-cell> {{ processor.contact }} </td>
+                              </tr>
 
-                      <tr md-row>
-                          <td md-cell > <span translate> Controllers on behalf this processor is acting on </span> </td>
-                          <td md-cell>
-                              <md-table-container ng-if="processor.controllers.length > 0" flex>
-                                  <table md-table>
-                                      <tbody md-body>
-                                          <tr md-row>
-                                              <th md-cell width="30%"><span translate>Name</span></th>
-                                              <th md-cell width="70%"><span translate>Contact</span></th>
-                                          </tr>
-                                          <tr md-row ng-repeat="bc in processor.controllers">
-                                              <td md-cell>{{ bc.label }}</td>
-                                              <td md-cell>{{ bc.contact }}</td>
-                                          </tr>
-                                      </tbody>
-                                  </table>
-                              </md-table-container>
-                          </td>
-                      </tr>
-                      <tr md-row ng-if="processor.idThirdCountry">
-                          <td md-cell> {{ 'Third country or international organisation Id' | translate }} </td>
-                          <td md-cell> {{ processor.idThirdCountry }} </td>
-                      </tr>
-                      <tr md-row ng-if="processor.dpoThirdCountry">
-                          <td md-cell> {{ 'Third country data protection officer' | translate }} </td>
-                          <td md-cell> {{ processor.dpoThirdCountry }} </td>
-                      </tr>
-                      <tr md-row ng-if="processor.secMeasures">
-                          <td md-cell> {{ "Technical and organisational security measures" | translate }} </td>
-                          <td md-cell> {{ processor.secMeasures }} </td>
-                      </tr>
-                </tbody>
-            </table>
-        </md-table-container>
+                              <tr md-row>
+                                  <td md-cell > <span translate> Controllers on behalf this processor is acting on </span> </td>
+                                  <td md-cell>
+                                      <md-table-container ng-if="processor.controllers.length > 0" flex>
+                                          <table md-table>
+                                              <tbody md-body>
+                                                  <tr md-row>
+                                                      <th md-cell width="30%"><span translate>Name</span></th>
+                                                      <th md-cell width="70%"><span translate>Contact</span></th>
+                                                  </tr>
+                                                  <tr md-row ng-repeat="bc in processor.controllers">
+                                                      <td md-cell>{{ bc.label }}</td>
+                                                      <td md-cell>{{ bc.contact }}</td>
+                                                  </tr>
+                                              </tbody>
+                                          </table>
+                                      </md-table-container>
+                                  </td>
+                              </tr>
+                              <tr md-row ng-if="processor.idThirdCountry">
+                                  <td md-cell> {{ 'Third country or international organisation Id' | translate }} </td>
+                                  <td md-cell> {{ processor.idThirdCountry }} </td>
+                              </tr>
+                              <tr md-row ng-if="processor.dpoThirdCountry">
+                                  <td md-cell> {{ 'Third country data protection officer' | translate }} </td>
+                                  <td md-cell> {{ processor.dpoThirdCountry }} </td>
+                              </tr>
+                              <tr md-row ng-if="processor.secMeasures">
+                                  <td md-cell> {{ "Technical and organisational security measures" | translate }} </td>
+                                  <td md-cell> {{ processor.secMeasures }} </td>
+                              </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+            </md-tab>
+        </md-tabs>
       </md-tab>
     </md-tabs>
 </div>

@@ -37,7 +37,6 @@
         };
 
         var createRisk = function (params, success, error) {
-            console.log(params);
             new self.RiskResource(params).$save(success, error);
         };
 
