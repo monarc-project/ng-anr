@@ -36,7 +36,7 @@
             })
             .then(function (record) {
                 var cont = record.cont;
-                record.cont = undefined
+                record.cont = undefined;
                 RecordService.createRecord(record,
                     function (status) {
                         $scope.updateRecords();
@@ -60,6 +60,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             RecordService.getRecord(record).then(function (recordData) {
+                recordData['erasure'] = (new Date(recordData['erasure']));
                 $mdDialog.show({
                     controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'RecordService', 'ConfigService', 'record', 'anrId', CreateRecordDialogCtrl],
                     templateUrl: 'views/anr/create.records.html',
@@ -110,6 +111,7 @@
         };
         $scope.selectRecord = function(recordId) {
             RecordService.getRecord(recordId).then(function (data) {
+                data['erasure'] = (new Date(data['erasure']));
                 $scope.records.selected = recordId;
                 $scope.record = data;
             });
@@ -117,6 +119,9 @@
 
         $scope.updateRecords = function() {
             RecordService.getRecords({order: 'id'}).then(function (data) {
+                for (var j = 0; j < data.records.length; ++j) {
+                    data['records'][j]['erasure'] = (new Date(data['records'][j]['erasure']));
+                }
                 $scope.records.items = data;
                 if ($scope.records.items.count>0 && $scope.records.selected === -1) {
                     $scope.selectRecord($scope.records.items.records[0].id);
