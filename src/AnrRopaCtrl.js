@@ -51,7 +51,7 @@
                         $scope.createNewRecord(ev, record);
                     }
                 );
-            });
+            }).catch(angular.noop);
         };
 
         $scope.editRecord = function (ev, record) {
@@ -85,7 +85,7 @@
                             $scope.editRecord(ev, record);
                         }
                     );
-                });
+                }).catch(angular.noop);
             });
         };
         $scope.deleteRecord = function (ev, item) {
@@ -105,7 +105,7 @@
                                     {label: item.label1}), gettextCatalog.getString('Deletion successful'));
                     }
                 );
-            });
+            }).catch(angular.noop);
         };
         $scope.selectRecord = function(recordId, index) {
             $scope.recordTabSelected = index;
@@ -237,6 +237,10 @@
         if (record != undefined && record != null) {
             $scope.controllerSearchText = record.controller.label;
             $scope.record = record;
+            if($scope.processor) {
+                $scope.record.processors.push($scope.processor);
+                $scope.processor = undefined;
+            }
             if(!Array.isArray($scope.record['jointControllers'])) {
                 $scope.record['jointControllers'] = [];
             }
@@ -415,7 +419,9 @@
             })
             .then(function (processor) {
                 $scope.record.processors.push(processor);
+                $scope.processor = processor;
             })
+            .catch(angular.noop)
             .finally( function () {
                 if(!$scope.record.id) {
                     $scope.createNewRecord(ev, $scope.record);
