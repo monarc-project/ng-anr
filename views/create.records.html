@@ -140,20 +140,20 @@
                 </md-input-container>
                 <md-input-container class="md-block" flex>
                     <div layout="row" layout-align="center center">
-                        <md-chips ng-model="record.recipientCategories"
+                        <md-chips ng-model="record.recipients"
                                   md-autocomplete-snap
                                   md-require-match="false"
                                   style="width:100%;">
                             <md-autocomplete flex
                                              md-selected-item="selectedRecipientCategory"
-                                             md-search-text="recipientCategorySearchText"
-                                             md-items="item in queryRecordRecipientCategorySearch(recipientCategorySearchText)"
+                                             md-search-text="$parent.recipientCategorySearchText"
+                                             md-items="item in queryRecordRecipientCategorySearch($parent.recipientCategorySearchText)"
                                              md-item-text="item['label']"
                                              md-min-length="0"
                                              md-no-cache="true"
                                              placeholder="{{ 'Add recipient category' | translate }}">
                                 <md-item-template>
-                                    <span md-highlight-text="recipientCategorySearchText" md-highlight-flags="^i">{{item['label']}}</span>
+                                    <span md-highlight-text="$parent.recipientCategorySearchText" md-highlight-flags="^i">{{item['label']}}</span>
                                 </md-item-template>
                                 <md-not-found>
                                     {{ 'No recipient category matching your search was found. Click on' | translate }}

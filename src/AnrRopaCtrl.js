@@ -148,7 +148,7 @@
                 label3: '',
                 label4: '',
                 controller: {},
-                recipientCategories: [],
+                recipients: [],
                 processors: [],
                 jointControllers: [],
             };
@@ -233,8 +233,8 @@
                 for (var j = 0; j < e['record-recipient-categories'].length; ++j) {
                     var found = false;
 
-                    for (var i = 0; i < $scope.record.recipientCategories.length; ++i) {
-                        if ($scope.record.recipientCategories[i].id == e['record-recipient-categories'][j].id) {
+                    for (var i = 0; i < $scope.record.recipients.length; ++i) {
+                        if ($scope.record.recipients[i].id == e['record-recipient-categories'][j].id) {
                             found = true;
                             break;
                         }
@@ -251,7 +251,8 @@
             return promise.promise;
         };
         $scope.createNewRecipientCategory = function (ev, recipientCategorySearchText) {
-            $scope.record.recipientCategories.push({'label' : $scope.recipientCategorySearchText});
+            $scope.record.recipients.push({'label' : recipientCategorySearchText});
+            $scope.recipientCategorySearchText="";
         };
 
 

@@ -39,23 +39,41 @@
                     <md-icon>delete</md-icon>
                 </md-button>
             </div>
-            <p class="md-title md-padding-left" translate>Controller</p>
+            <p class="md-title md-padding-left"> <b> {{ _langField(record,'label')}} </b> </p>
+            <p class="md-subhead md-padding-left" translate>Controller</p>
             <md-table-container flex>
                 <table md-table>
                     <tbody md-body>
                         <tr md-row>
-                            <td md-cell width=20% > {{ 'Name' | translate }} </td>
+                            <td md-cell> <b> {{ 'Name: ' | translate }} </b> </td>
                             <td md-cell> {{ record.controller.label }} </td>
-                        </tr>
-                        <tr md-row>
-                            <td md-cell> {{ "Contact" | translate }} </td>
+                            <td md-cell> <b> {{ 'Contact: ' | translate }} </b> </td>
                             <td md-cell> {{ record.controller.contact }} </td>
                         </tr>
-
                         <tr md-row>
-                            <td md-cell > <span translate>Joint Controllers </span> </td>
-                            <td md-cell>
-                                <md-table-container ng-if="record.jointControllers.length > 0" flex>
+                            <td md-cell> <b> {{ "Representative: " | translate }} </b> </td>
+                            <td md-cell> {{ record.representative}} </td>
+                            <td md-cell> <b> {{ "Data Protection Officer: " | translate }} </b> </td>
+                            <td md-cell> {{ record.dpo }} </td>
+                        </tr>
+                        <tr md-row>
+                        </tr>
+                        <tr md-row>
+                            <td md-cell>  <b> {{ "Purpose of the processing: " | translate }} </b> </td>
+                            <td md-cell> {{ record.purpose }} </td>
+                            <td md-cell>  <b> {{ "Categories of data subjects: " | translate }} </b> </td>
+                            <td md-cell> {{ record.description }} </td>
+                        </tr>
+                        <tr md-row>
+                            <td md-cell> <b> {{ "Time limits for erasure: " | translate }} </b> </td>
+                            <td md-cell> {{  record.erasure.toLocaleDateString() }} </td>
+                            <td md-cell> <b> {{ "Technical and organisational security measures: " | translate }} </b> </td>
+                            <td md-cell> {{ record.secMeasures }} </td>
+                        </tr>
+                        <tr md-row ng-if="record.jointControllers.length > 0" >
+                            <td md-cell > <span translate> <b> Joint Controllers: </b> </span> </td>
+                            <td md-cell colspan="3">
+                                <md-table-container flex>
                                     <table md-table>
                                         <tbody md-body>
                                             <tr md-row>
@@ -71,28 +89,12 @@
                                 </md-table-container>
                             </td>
                         </tr>
-                        <tr md-row>
-                            <td md-cell> {{ "Representative" | translate }} </td>
-                            <td md-cell> {{ record.representative}} </td>
+                        <tr md-row ng-if="record.recipients.length > 0" >
+                            <td md-cell rowspan="{{record.recipients.length}}">  <span translate> <b>Recipient Categories </b> </span> </td>
+                            <td colspan="3"> {{record.recipients[0]['label'] }} </td>
                         </tr>
-                        <tr md-row>
-                            <td md-cell> {{ "Data Protection Officer" | translate }} </td>
-                            <td md-cell> {{ record.dpo }} </td>
-                        </tr>
-                        <tr md-row>
-                            <td md-cell> {{ "Purpose of the processing" | translate }} </td>
-                            <td md-cell> {{ record.purpose }} </td>
-                        </tr>
-                        <tr md-row>
-                            <td md-cell> {{ "Categories of data subjects" | translate }} </td>
-                            <td md-cell> {{ record.description }} </td>
-                        </tr>
-                        <tr md-row >
-                            <td md-cell rowspan="{{record.recipients.length}}">  <span translate> Recipient Categories </span> </td>
-                            <td> {{record.recipients[0]}} </td>
-                        </tr>
-                        <tr ng-repeat="recipient in record.recipients.splice(1)" md-row>
-                            <td> {{recipient}} </td>
+                        <tr ng-repeat="recipient in record.recipients.slice(1)" md-row>
+                            <td colspan="3"> {{recipient['label'] }} </td>
                         </tr>
                         <tr md-row ng-if="record.idThirdCountry">
                             <td md-cell> {{ 'Third country or international organisation Id' | translate }} </td>
@@ -101,14 +103,6 @@
                         <tr md-row ng-if="record.dpoThirdCountry">
                             <td md-cell> {{ 'Third country data protection officer' | translate }} </td>
                             <td md-cell> {{ record.dpoThirdCountry }} </td>
-                        </tr>
-                        <tr md-row>
-                            <td md-cell> {{ "Time limits for erasure " | translate }} </td>
-                            <td md-cell> {{  record.erasure.toLocaleDateString() }} </td>
-                        </tr>
-                        <tr md-row>
-                            <td md-cell> {{ "Technical and organisational security measures" | translate }} </td>
-                            <td md-cell> {{ record.secMeasures }} </td>
                         </tr>
                   </tbody>
               </table>
