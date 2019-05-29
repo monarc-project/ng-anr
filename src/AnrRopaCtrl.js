@@ -19,7 +19,6 @@
         };
         $scope.createNewRecord = function (ev, record) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
             $mdDialog.show({
                 controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'RecordService', 'ConfigService', 'record', 'anrId', CreateRecordDialogCtrl],
                 templateUrl: 'views/anr/create.records.html',
@@ -230,11 +229,22 @@
     function CreateRecordDialogCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $q, RecordService, ConfigService, record) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
+        $scope.joint={};
+        $scope.addJointController = false;
         var defaultLang = angular.copy($scope.language);
 
         if (record != undefined && record != null) {
             $scope.controllerSearchText = record.controller.label;
             $scope.record = record;
+            if(!Array.isArray($scope.record['jointControllers'])) {
+                $scope.record['jointControllers'] = [];
+            }
+            if(!Array.isArray($scope.record['recipients'])) {
+                $scope.record['recipients'] = [];
+            }
+            if(!Array.isArray($scope.record['processors'])) {
+                $scope.record['processors'] = [];
+            }
         } else {
             $scope.controllerSearchText = "";
             $scope.record = {
@@ -246,6 +256,14 @@
                 recipients: [],
                 processors: [],
                 jointControllers: [],
+                representative: '',
+                dpo: '',
+                purposes: '',
+                description: '',
+                erasure: {},
+                secMeasures: '',
+                idThirdCountry: '',
+                dpoThirdCountry: '',
             };
         }
 
@@ -307,19 +325,21 @@
             return promise.promise;
         };
         $scope.toggleJointControllerOn = function () {
-            $scope.joint={};
             $scope.addJointController = true;
         };
         $scope.toggleJointControllerOff = function () {
+            $scope.joint={};
             $scope.addJointController = false;
         };
         $scope.addNewJointController = function () {
             $scope.record.jointControllers.push({   'label' : $scope.joint.name,
                                                     'contact' : $scope.joint.contact });
-            $scope.joint  = {};
-            $scope.addJointController = false;
+            $scope.toggleJointControllerOff();
         };
-
+        $scope.toggleCheckboxInternational = function () {
+            $scope.record.idThirdCountry = '';
+            $scope.record.dpoThirdCountry = '';
+        };
         $scope.queryRecordRecipientCategorySearch = function (query) {
             var promise = $q.defer();
             RecordService.getRecordRecipientCategories({filter: query}).then(function (e) {
@@ -463,5 +483,9 @@
             $scope.behalf = {};
             $scope.addBehalfController = false;
         }
+        $scope.toggleCheckboxInternational = function () {
+            $scope.processor.idThirdCountry = '';
+            $scope.processor.dpoThirdCountry = '';
+        };
     }
 })();

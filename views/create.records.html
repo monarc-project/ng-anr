@@ -102,21 +102,21 @@
                     <md-input-container class="md-block" flex>
                         <label translate>Name</label>
                         <input ng-model="joint.name" name="jointName" required>
-                        <div ng-messages="jointName.$error">
+                        <div ng-messages="recordForm.jointName.$error">
                             <div ng-message="required">{{ 'The name may not be empty' | translate }}</div>
                         </div>
                     </md-input-container>
                     <md-input-container class="md-block" flex>
                         <label translate>Contact</label>
                         <input ng-model="joint.contact" name="jointContact" required>
-                        <div ng-messages="jointContact.$error">
+                        <div ng-messages="recordForm.jointContact.$error">
                             <div ng-message="required">{{ 'The contact details may not be empty' | translate }}</div>
                         </div>
                     </md-input-container>
                     <md-button ng-click="toggleJointControllerOff()">
                         {{ 'Cancel' | translate }}
                     </md-button>
-                    <md-button class="md-accent md-hue-3" ng-disabled="jointName.$error.required||jointContact.$error.required" ng-click="addNewJointController()" layout-align="right">
+                    <md-button class="md-accent md-hue-3" ng-disabled="!(joint.name && joint.contact)" ng-click="addNewJointController()" layout-align="right">
                         {{ 'Add' | translate }}
                     </md-button>
                 </div>
@@ -167,7 +167,7 @@
                                 </span>
                             </md-chip-template>
                         </md-chips>
-                        <md-button class="md-icon-button md-primary" ng-click="createNewRecipientCategory($event,recipientCategorySearchText)">
+                        <md-button class="md-icon-button md-primary" ng-disabled="!recipientCategorySearchText" ng-click="createNewRecipientCategory($event,recipientCategorySearchText)">
                             <md-tooltip md-direction="left">
                                 {{ 'Add a new recipient category' | translate }}
                             </md-tooltip>
@@ -175,16 +175,14 @@
                         </md-button>
                     </div>
                 </md-input-container>
-                <md-switch style="margin: 0" ng-model="checkboxInternational">{{ 'Is there transfers of personal data to a third country or an international organisation?' | translate }}</md-switch>
+                <md-switch style="margin: 0" ng-model="checkboxInternational" ng-change="toggleCheckboxInternational()"> {{ 'Is there transfers of personal data to a third country or an international organisation?' | translate }}</md-switch>
                 <md-input-container class="md-block" ng-if="checkboxInternational" flex>
-                    <md-input-container class="md-block" flex>
-                        <label translate>Identification</label>
-                        <input ng-model="record['idThirdCountry']" name="idThirdCountry">
-                    </md-input-container>
-                    <md-input-container class="md-block" flex>
-                        <label translate>Data Protection Officer</label>
-                        <input ng-model="record['dpoThirdCountry']" name="dpoThirdCountry">
-                    </md-input-container>
+                    <label translate>Identification</label>
+                    <input ng-model="record['idThirdCountry']" name="idThirdCountry">
+                </md-input-container>
+                <md-input-container class="md-block" ng-if="checkboxInternational" flex>
+                    <label translate>Data Protection Officer</label>
+                    <input ng-model="record['dpoThirdCountry']" name="dpoThirdCountry">
                 </md-input-container>
                 <md-input-container class="md-block" flex>
                     <label translate>Time limits for erasure</label>

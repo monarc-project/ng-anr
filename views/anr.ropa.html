@@ -57,8 +57,8 @@
                             <td md-cell> {{ record.dpo }} </td>
                         </tr>
                         <tr md-row>
-                            <td md-cell>  <b> {{ "Purpose of the processing: " | translate }} </b> </td>
-                            <td md-cell> {{ record.purpose }} </td>
+                            <td md-cell>  <b> {{ "Purposes of the processing: " | translate }} </b> </td>
+                            <td md-cell> {{ record.purposes }} </td>
                             <td md-cell>  <b> {{ "Categories of data subjects: " | translate }} </b> </td>
                             <td md-cell> {{ record.description }} </td>
                         </tr>
@@ -74,15 +74,15 @@
                             <td md-cell> <b> {{ 'Third country data protection officer' | translate }} </b> </td>
                             <td md-cell> {{ record.dpoThirdCountry }} </td>
                         </tr>
-                        <tr md-row ng-if="record.jointControllers.length > 0" >
-                            <td md-cell > <span translate> <b> Joint Controllers: </b> </span> </td>
+                        <tr md-row ng-if="record.jointControllers.length>0 " >
+                            <td md-cell > <b> <span translate> Joint Controllers: </b> </span> </td>
                             <td md-cell colspan="3">
                                 <md-table-container flex>
                                     <table md-table>
                                         <tbody md-body>
                                             <tr md-row>
-                                                <th md-cell width="30%"><span translate>Name</span></th>
-                                                <th md-cell width="70%"><span translate>Contact</span></th>
+                                                <th md-cell width="30%"> <b> <span translate>Name</span> </b> </th>
+                                                <th md-cell width="70%"> <b> <span translate>Contact</span> </b> </th>
                                             </tr>
                                             <tr md-row ng-repeat="jc in record.jointControllers">
                                                 <td md-cell>{{ jc.label }}</td>
@@ -94,7 +94,7 @@
                             </td>
                         </tr>
                         <tr md-row ng-if="record.recipients.length > 0" >
-                            <td md-cell rowspan="{{record.recipients.length}}">  <span translate> <b>Recipient Categories </b> </span> </td>
+                            <td md-cell rowspan="{{record.recipients.length}}"> <b> <span translate>Recipient Categories </b> </span> </td>
                             <td colspan="3"> {{record.recipients[0]['label'] }} </td>
                         </tr>
                         <tr ng-repeat="recipient in record.recipients.slice(1)" md-row>
@@ -111,23 +111,23 @@
                       <table md-table>
                           <tbody md-body>
                               <tr md-row>
-                                  <td md-cell width=20% > {{ 'Name' | translate }} </td>
+                                  <td md-cell width=20% > <b> {{ 'Name' | translate }} </b> </td>
                                   <td md-cell> {{ processor.label }} </td>
                               </tr>
                               <tr md-row>
-                                  <td md-cell> {{ "Contact" | translate }} </td>
+                                  <td md-cell> <b> {{ "Contact" | translate }} </b> </td>
                                   <td md-cell> {{ processor.contact }} </td>
                               </tr>
 
                               <tr md-row>
-                                  <td md-cell > <span translate> Controllers on behalf this processor is acting on </span> </td>
+                                  <td md-cell > <b> <span translate> Controllers on behalf this processor is acting on </span> </td>
                                   <td md-cell>
                                       <md-table-container ng-if="processor.controllers.length > 0" flex>
                                           <table md-table>
                                               <tbody md-body>
                                                   <tr md-row>
-                                                      <th md-cell width="30%"><span translate>Name</span></th>
-                                                      <th md-cell width="70%"><span translate>Contact</span></th>
+                                                      <th md-cell width="30%"> <b> <span translate>Name</span> </b></th>
+                                                      <th md-cell width="70%"> <b> <span translate>Contact</span> </b></th>
                                                   </tr>
                                                   <tr md-row ng-repeat="bc in processor.controllers">
                                                       <td md-cell>{{ bc.label }}</td>
@@ -139,15 +139,15 @@
                                   </td>
                               </tr>
                               <tr md-row ng-if="processor.idThirdCountry">
-                                  <td md-cell> {{ 'Third country or international organisation Id' | translate }} </td>
+                                  <td md-cell> <b> {{ 'Third country or international organisation Id' | translate }} </b> </td>
                                   <td md-cell> {{ processor.idThirdCountry }} </td>
                               </tr>
                               <tr md-row ng-if="processor.dpoThirdCountry">
-                                  <td md-cell> {{ 'Third country data protection officer' | translate }} </td>
+                                  <td md-cell> <b> {{ 'Third country data protection officer' | translate }} </b> </td>
                                   <td md-cell> {{ processor.dpoThirdCountry }} </td>
                               </tr>
                               <tr md-row ng-if="processor.secMeasures">
-                                  <td md-cell> {{ "Technical and organisational security measures" | translate }} </td>
+                                  <td md-cell> <b> {{ "Technical and organisational security measures" | translate }} </b> </td>
                                   <td md-cell> {{ processor.secMeasures }} </td>
                               </tr>
                         </tbody>

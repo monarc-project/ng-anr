@@ -92,7 +92,7 @@
                     <md-button ng-click="toggleBehalfControllerOff()">
                         {{ 'Cancel' | translate }}
                     </md-button>
-                    <md-button class="md-accent md-hue-3" ng-disabled="behalfName.$error.required||behalfContact.$error.required" ng-click="addNewBehalfController()" layout-align="right">
+                    <md-button class="md-accent md-hue-3" ng-disabled="!(behalf.name && behalf.contact)" ng-click="addNewBehalfController()" layout-align="right">
                         {{ 'Add' | translate }}
                     </md-button>
                 </div>
@@ -101,16 +101,14 @@
                     <md-icon>subject</md-icon>
                     <textarea ng-model="processor['secMeasures']" rows="2"></textarea>
                 </md-input-container>
-                <md-switch style="margin: 0" ng-model="checkboxInternationalProcessor">{{ 'Is there transfers of personal data to a third country or an international organisation?' | translate }}</md-switch>
+                <md-switch style="margin: 0" ng-model="checkboxInternationalProcessor" ng-change="toggleCheckboxInternational()">{{ 'Is there transfers of personal data to a third country or an international organisation?' | translate }}</md-switch>
                 <md-input-container class="md-block" ng-if="checkboxInternationalProcessor" flex>
-                    <md-input-container class="md-block" flex>
-                        <label translate>Identification</label>
-                        <input ng-model="processor['idThirdCountry']" name="processorIdThirdCountry">
-                    </md-input-container>
-                    <md-input-container class="md-block" flex>
-                        <label translate>Data Protection Officer</label>
-                        <input ng-model="processor['dpoThirdCountry']" name="processorDpoThirdCountry">
-                    </md-input-container>
+                    <label translate>Identification</label>
+                    <input ng-model="processor['idThirdCountry']" name="processorIdThirdCountry">
+                </md-input-container>
+                <md-input-container class="md-block" ng-if="checkboxInternationalProcessor" flex>
+                    <label translate>Data Protection Officer</label>
+                    <input ng-model="processor['dpoThirdCountry']" name="processorDpoThirdCountry">
                 </md-input-container>
             </div>
         </md-dialog-content>
