@@ -564,5 +564,95 @@
                                  md-total="{{risks.items.count}}" md-on-paginate="updateRisks"
                                  md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
         </md-tab>
+
+        <md-tab label="{{ 'Recommandations Sets' | translate }}" md-on-select="selectRecommandationsTab()" md-on-deselect="deselectRecommandationsTab()">
+            <md-tabs md-dynamic-height="true" md-border-bottom="" ng-if="updatingRecommandationsSets" md-selected="recSetTabSelected">
+              <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="createNewRecommandationSet($event)">
+                <md-tooltip md-direction="left">
+                    {{ 'Add a recommendation set' | translate }}
+                </md-tooltip>
+                <md-icon class="md-icon-button md-primary">add_to_photos</md-icon>
+              </md-button>
+              <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly && recommandationsSets.items['recommandations-sets'].length > 0" ng-click="editRecommandationSet($event,recommandation_set_uuid)">
+                <md-tooltip md-direction="left">
+                    {{ 'Edit recommendation set' | translate }}
+                </md-tooltip>
+                <md-icon>edit</md-icon>
+              </md-button>
+              <md-button class="md-icon-button md-warn" ng-if="!isAnrReadOnly && recommandationsSets.items['recommandations-sets'].length > 0" ng-click="deleteRecommandationSet($event, recommandation_set_uuid)">
+                <md-tooltip md-direction="left">
+                    {{ 'Delete recommendation set' | translate }}
+                </md-tooltip>
+                <md-icon>delete</md-icon>
+              </md-button>
+              <md-tab ng-repeat="recSet in recommandationsSets.items['recommandations-sets']" label="{{ _langField(recSet,'label')}}" md-on-select="selectRecommandationSet(recSet.uuid,$index)" md-on-deselect="deselectRecommandationsSetsTab()">
+                <div layout="row" layout-align="start center" class="md-padding" ng-if="!recommandations.selected.length">
+                    <h2 class="md-title md-padding-right md-padding-left">
+                        <span translate>Recommendations</span>
+                        <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'Add a recommendation' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewRecommandation($event)">
+                            <md-tooltip md-direction="left">
+                                {{ 'Add a recommandation' | translate }}
+                            </md-tooltip>
+                            <md-icon>add_to_photos</md-icon>
+                        </md-button>
+                    </h2>
+                    <form flex name="recommandations.filter.form">
+                        <md-input-container class="md-block md-padding-left md-padding-right">
+                            <label><md-icon>search</md-icon> {{ 'Search...' | translate }}</label>
+                            <input ng-model="recommandations.query.filter" ng-model-options="recommandations.filter.options">
+                        </md-input-container>
+                    </form>
+  
+                    <md-select aria-label="filter" ng-model="recommandations.activeFilter">
+                        <md-option value="all">{{ 'Show all' | translate }}</md-option>
+                        <md-option value="0">{{ 'Show inactive only' | translate }}</md-option>
+                        <md-option value="1">{{ 'Show active only' | translate }}</md-option>
+                    </md-select>
+  
+                    <md-button class="md-icon-button md-primary" ng-click="removeRecommandationsFilter()">
+                        <md-icon>settings_backup_restore</md-icon>
+                    </md-button>
+                </div>
+                <md-toolbar class="md-table-toolbar alternate" ng-if="recommandations.selected.length">
+                    <div class="md-toolbar-tools md-toolbar-pad" layout-align="space-between center">
+                        <div>{{recommandations.selected.length}} {{recommandations.selected.length > 1 ? 'items' : 'item'}} selected</div>
+                        <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-warn" ng-click="deleteRecommandationMass($event)">
+                            <md-icon>delete</md-icon>
+                        </md-button>
+                    </div>
+                </md-toolbar>
+  
+                <md-table-container flex>
+                    <table md-table md-row-select="!isAnrReadOnly" multiple ng-model="recommandations.selected" md-progress="recommandations.promise">
+                        <thead md-head md-order="recommandations.query.order" md-on-reorder="updateRecommandations">
+                        <tr md-row>
+                            <th md-column md-order-by="status"><span translate>Status</span></th>
+                            <th md-column md-order-by="code"><span translate>Code</span></th>
+                            <th md-column md-order-by="description"><span translate>Description</span></th>
+                            <th md-column md-order-by="importance"><span translate>Importance</span></th>
+                            <th md-column class="actions-column" ng-if="!isAnrReadOnly"><span translate>Actions</span></th>
+                        </tr>
+                        </thead>
+  
+                        <tbody md-body>
+                        <tr md-row md-select="recommandation" md-select-id="uuid" ng-repeat="recommandation in recommandations.items.recommandations">
+                            <td md-cell><md-button class="md-icon-button md-primary" ng-click="!isAnrReadOnly && toggleRecommandationStatus(recommandation)"><md-icon>{{ recommandation.status ? 'done' : 'clear' }}</md-icon></md-button></td>
+                            <td md-cell>{{ recommandation.code }}</td>
+                            <td md-cell>{{ recommandation.description }}</td>
+                            <td md-cell><span class="anr-importance" ng-repeat="i in range(1, recommandation.importance)">&bull;</span></td>
+                            <td md-cell ng-if="!isAnrReadOnly">
+                                <md-button class="md-icon-button md-primary" ng-click="editRecommandation($event, recommandation)"><md-icon>edit</md-icon></md-button>
+                                <md-button class="md-icon-button md-warn" ng-click="deleteRecommandation($event, recommandation)"><md-icon>delete</md-icon></md-button>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+  
+                <md-table-pagination md-limit="recommandations.query.limit" md-limit-options="[20, 30, 50, 100]" md-page="recommandations.query.page"
+                                     md-total="{{recommandations.items.count}}" md-on-paginate="updateRecommandations" md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
+              </md-tab>
+            </md-tabs>
+          </md-tab>
     </md-tabs>
 </div>
