@@ -1,7 +1,7 @@
 <div class="md-padding-left md-padding-right" layout="column" ng-controller="AnrRopaCtrl" ng-if="tabRopaDisplayed">
     <p class="md-title md-padding-left" translate>Records of processing activities</p>
     <!--md-tabs md-dynamic-height="true" ng-if="updatingRecords"-->
-    <md-tabs md-dynamic-height="true" md-selected="recordTabSelected">
+    <md-tabs md-dynamic-height="true" md-selected="recordTabSelected" >
         <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="createNewRecord($event)">
             <md-tooltip md-direction="left">
                 {{ 'Add a record' | translate }}
@@ -10,7 +10,7 @@
         </md-button>
 
         <md-tab id="tabRecord" ng-repeat="record in records.items.records" label="{{ _langField(record,'label')}}"
-            md-on-select="selectRecord(record.id)">
+            md-on-select="selectRecord(record.id, $index)">
 
             <div layout="row" layout-align="end center" class="md-padding-double" style="height:40px">
                 <md-menu>
@@ -57,8 +57,6 @@
                             <td md-cell> {{ record.dpo }} </td>
                         </tr>
                         <tr md-row>
-                        </tr>
-                        <tr md-row>
                             <td md-cell>  <b> {{ "Purpose of the processing: " | translate }} </b> </td>
                             <td md-cell> {{ record.purpose }} </td>
                             <td md-cell>  <b> {{ "Categories of data subjects: " | translate }} </b> </td>
@@ -69,6 +67,12 @@
                             <td md-cell> {{  record.erasure.toLocaleDateString() }} </td>
                             <td md-cell> <b> {{ "Technical and organisational security measures: " | translate }} </b> </td>
                             <td md-cell> {{ record.secMeasures }} </td>
+                        </tr>
+                        <tr md-row ng-if="record.idThirdCountry">
+                            <td md-cell> <b> {{ 'Third country organisation Id' | translate }} </b> </td>
+                            <td md-cell> {{ record.idThirdCountry }} </td>
+                            <td md-cell> <b> {{ 'Third country data protection officer' | translate }} </b> </td>
+                            <td md-cell> {{ record.dpoThirdCountry }} </td>
                         </tr>
                         <tr md-row ng-if="record.jointControllers.length > 0" >
                             <td md-cell > <span translate> <b> Joint Controllers: </b> </span> </td>
@@ -95,14 +99,6 @@
                         </tr>
                         <tr ng-repeat="recipient in record.recipients.slice(1)" md-row>
                             <td colspan="3"> {{recipient['label'] }} </td>
-                        </tr>
-                        <tr md-row ng-if="record.idThirdCountry">
-                            <td md-cell> {{ 'Third country or international organisation Id' | translate }} </td>
-                            <td md-cell> {{ record.idThirdCountry }} </td>
-                        </tr>
-                        <tr md-row ng-if="record.dpoThirdCountry">
-                            <td md-cell> {{ 'Third country data protection officer' | translate }} </td>
-                            <td md-cell> {{ record.dpoThirdCountry }} </td>
                         </tr>
                   </tbody>
               </table>

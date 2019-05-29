@@ -17,7 +17,6 @@
             'items' : [],
             'selected' : -1
         };
-
         $scope.createNewRecord = function (ev, record) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
@@ -39,9 +38,9 @@
                 record.cont = undefined;
                 RecordService.createRecord(record,
                     function (status) {
-                        $scope.updateRecords();
                         $scope.records.selected = status.id;
-                        $scope.recordTabSelected = $scope.records.items.count;
+                        $scope.recordTabSelected = $scope.records.items.count + 1;
+                        $scope.updateRecords();
                         toastr.success(gettextCatalog.getString('The record has been created successfully.',
                               {recordLabel: $scope._langField(record,'label')}), gettextCatalog.getString('Creation successful'));
                         if (cont) {
@@ -77,8 +76,8 @@
                 .then(function (record) {
                     RecordService.updateRecord(record,
                         function () {
-                            $scope.updateRecords();
                             $scope.records.selected = record.id;
+                            $scope.updateRecords();
                             toastr.success(gettextCatalog.getString('The record has been edited successfully.',
                                 {recordLabel: record.label1}), gettextCatalog.getString('Edition successful'));
                         },
@@ -109,7 +108,8 @@
                 );
             });
         };
-        $scope.selectRecord = function(recordId) {
+        $scope.selectRecord = function(recordId, index) {
+            $scope.recordTabSelected = index;
             RecordService.getRecord(recordId).then(function (data) {
                 data['erasure'] = (new Date(data['erasure']));
                 $scope.records.selected = recordId;
@@ -118,7 +118,7 @@
         };
 
         $scope.updateRecords = function() {
-            RecordService.getRecords({order: 'id'}).then(function (data) {
+            RecordService.getRecords({order: 'created_at'}).then(function (data) {
                 for (var j = 0; j < data.records.length; ++j) {
                     data['records'][j]['erasure'] = (new Date(data['records'][j]['erasure']));
                 }
@@ -131,7 +131,102 @@
         };
         $scope.updateRecords();
 
+        $scope.export = function () {
+            finalArray=[];
+            recLine = 0;
+            RecordService.getRecord($scope.records.selected).then(function (data) {
+
+                finalArray[recLine]= gettextCatalog.getString('Record label');
+                finalArray[recLine]+=','+"\""+$scope._langField(data,'label')+"\"";
+                recLine++;
+                finalArray[recLine]= gettextCatalog.getString('Controller name');
+                finalArray[recLine]+=','+"\""+data.controller.label+"\"";
+                recLine++;
+                finalArray[recLine]= gettextCatalog.getString('Controller contact');
+                finalArray[recLine]+=','+"\""+data.controller.contact+"\"";
+                recLine++;
+                finalArray[recLine]= gettextCatalog.getString("Controller\'s representative");
+                finalArray[recLine]+=','+"\""+data.representative+"\"";
+                recLine++;
+                finalArray[recLine]= gettextCatalog.getString('Data protection officer');
+                finalArray[recLine]+=','+"\""+data.dpo+"\"";
+                recLine++;
+                finalArray[recLine]= gettextCatalog.getString('Purposes of the processing');
+                finalArray[recLine]+=','+"\""+data.purposes+"\"";
+                recLine++;
+                finalArray[recLine]= gettextCatalog.getString('Description of the categories of data subjects and of the categories of personal data');
+                finalArray[recLine]+=','+"\""+data.description+"\"";
+                if(data.idThirdCountry!=null) {
+                    recLine++;
+                    finalArray[recLine]= gettextCatalog.getString('ID of third country or internation organisation recipient');
+                    finalArray[recLine]+=','+"\""+data.idThirdCountry+"\"";
+                    recLine++;
+                    finalArray[recLine]= gettextCatalog.getString("Third country or internation organisation\'s data protection officer");
+                    finalArray[recLine]+=','+"\""+data.dpoThirdCountry+"\"";
+                }
+                recLine++;
+                finalArray[recLine]= gettextCatalog.getString('Time limits for erasure');
+                finalArray[recLine]+=','+"\""+data.erasure.slice(0,10)+"\"";
+                recLine++;
+                finalArray[recLine]= gettextCatalog.getString('Technical and organisational security measures');
+                finalArray[recLine]+=','+"\""+data.secMeasures+"\"";
+                if(data["jointControllers"].length > 0) {
+                    recLine++;
+                    finalArray[recLine]="\""+' '+"\"";
+                    recLine++;
+                    finalArray[recLine]= gettextCatalog.getString('Joint controllers');
+                    finalArray[recLine]+=','+gettextCatalog.getString('Name');
+                    finalArray[recLine]+=','+gettextCatalog.getString('Contact');
+                    for(var j = 0; j < data["jointControllers"].length; ++j) {
+                        recLine++;
+                        finalArray[recLine]="\""+' '+"\"";
+                        finalArray[recLine]+=','+"\""+data["jointControllers"][j].label+"\"";
+                        finalArray[recLine]+=','+"\""+data["jointControllers"][j].contact+"\"";
+                    }
+                }
+                if(data["recipients"].length > 0) {
+                    recLine++;
+                    finalArray[recLine]="\""+' '+"\"";
+                    recLine++;
+                    finalArray[recLine]= gettextCatalog.getString('Recipient Categories');
+                    for(var j = 0; j < data["recipients"].length; ++j) {
+                        finalArray[recLine]+=','+"\""+data["recipients"][j].label+"\"";
+                        if(j != data["recipients"].length -1) {
+                            recLine++;
+                            finalArray[recLine]="\""+' '+"\"";
+                        }
+                    }
+                }
+                if(data["processors"].length > 0) {
+                    recLine++;
+                    finalArray[recLine]="\""+' '+"\"";
+                    recLine++;
+                    finalArray[recLine]= gettextCatalog.getString('Data processors');
+                    finalArray[recLine]+=','+gettextCatalog.getString('Name');
+                    finalArray[recLine]+=','+gettextCatalog.getString('Contact');
+                    for(var j = 0; j < data["processors"].length; ++j) {
+                        recLine++;
+                        finalArray[recLine]="\""+' '+"\"";
+                        finalArray[recLine]+=','+"\""+data["processors"][j].label+"\"";
+                        finalArray[recLine]+=','+"\""+data["processors"][j].contact+"\"";
+                    }
+                }
+                let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
+                for(var j = 0; j < finalArray.length; ++j) {
+                    let row = finalArray[j].toString().replace(/\n|\r/g,' ') + "," + "\r\n";
+                    csvContent += row ;
+                }
+
+                var encodedUri = encodeURI(csvContent);
+                var link = document.createElement("a");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "recordOfProcessingActivities.csv");
+                document.body.appendChild(link);
+                link.click();  // This will download the data file named "soa.csv".
+            });
+        };
     }
+
     function CreateRecordDialogCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $q, RecordService, ConfigService, record) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
