@@ -168,7 +168,7 @@
                         $scope.updateObjectsLibrary();
                         $scope.updateScales();
                         $scope.updateReferentials();
-                        $scope.updateRecommandationSets();
+                        $scope.updateRecommandationsSets();
                         
 
                     }
@@ -206,7 +206,7 @@
                         $scope.updateObjectsLibrary();
                         $scope.updateScales();
                         $scope.updateReferentials();
-                        $scope.updateRecommandationSets();
+                        $scope.updateRecommandationsSets();
                         updateMethodProgress();
                     
                     }
@@ -233,11 +233,11 @@
           });
         };
 
-        $scope.updateRecommandationSets = function () {
-            $scope.recommandationSets = [];
-            ClientRecommandationService.getRecommandationSets({anr: $scope.model.anr.id}).then(function (data) {
-              $scope.recommandationSets = data['recommandations-sets'];
-              $scope.updatingRecommandationSets = true;
+        $scope.updateRecommandationsSets = function () {
+            $scope.recommandationsSets = [];
+            ClientRecommandationService.getRecommandationsSets({anr: $scope.model.anr.id}).then(function (data) {
+              $scope.recommandationsSets = data['recommandations-sets'];
+              $scope.updatingRecommandationsSets = true;
             });
           };
 
@@ -276,8 +276,8 @@
             });
         };
 
-        $rootScope.$on('recommandationSetsUpdated', function () {
-            $scope.updateRecommandationSets();
+        $rootScope.$on('recommandationsSetsUpdated', function () {
+            $scope.updateRecommandationsSets();
          });
 
         $rootScope.$on('referentialsUpdated', function () {
@@ -2349,7 +2349,6 @@
             draggable: '.draggable',
             forceFallback: true,
             onUpdate: function (evt) {
-                console.log(evt);
                 if (evt.newIndex == 0) {
                     ClientRecommandationService.updateRecommandation({
                         anr: anr.id,

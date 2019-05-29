@@ -88,7 +88,7 @@
                     </td>
                     <td colspan="7">
                         <md-tabs md-dynamic-height="true">
-                            <md-tab ng-repeat="recSet in recommandationSets" label="{{_langField(recSet,'label')}}"
+                            <md-tab ng-repeat="recSet in recommandationsSets" label="{{_langField(recSet,'label')}}"
                                 md-on-select="selectRecommandationSet(recSet.uuid)" md-on-deselect="deselectReferentialsTab()">
                                 <ul class="no-list-style no-padding no-margin">
                                         <li ng-repeat="recommandation in _copyRecs | orderBy : 'importance'" ng-if="recommandation.recommandation.recommandationSet.uuid == recommandation_set_uuid">

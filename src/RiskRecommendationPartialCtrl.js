@@ -247,7 +247,7 @@
         };
 
         $scope.loadSetOptions = function(ev, anrID) {
-            ClientRecommandationService.getRecommandationSets({anr: anrId}).then(function (data) {
+            ClientRecommandationService.getRecommandationsSets({anr: anrId}).then(function (data) {
                 $scope.setOptions = data['recommandations-sets'];
             });
             return $scope.setOptions;
