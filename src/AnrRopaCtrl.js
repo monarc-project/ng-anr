@@ -230,6 +230,7 @@
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
         $scope.joint={};
+        $scope.recipientCategorySearchText = "";
         $scope.addJointController = false;
         var defaultLang = angular.copy($scope.language);
 
@@ -260,7 +261,7 @@
                 dpo: '',
                 purposes: '',
                 description: '',
-                erasure: {},
+                erasure: null,
                 secMeasures: '',
                 idThirdCountry: '',
                 dpoThirdCountry: '',
