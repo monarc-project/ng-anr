@@ -13,6 +13,7 @@
     function AnrRopaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog,
         $state, DownloadService, $http, $stateParams, $q, RecordService, TableHelperService) {
         $scope.language = $scope.getAnrLanguage();
+        $scope.recordTabSelected = 0;
         $scope.records = {
             'items' : [],
             'selected' : -1
@@ -129,10 +130,9 @@
                 if ($scope.records.items.count>0 && $scope.records.selected === -1) {
                     $scope.selectRecord($scope.records.items.records[0].id, 0);
                 }
+                $scope.updatingRecords = false;
             });
-            $scope.updatingRecords = false;
         };
-        $scope.selectingRecord = false;
         $scope.updateRecords();
 
         $scope.jsonExport = function (ev) {

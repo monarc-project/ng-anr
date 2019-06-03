@@ -1,7 +1,7 @@
 <div class="md-padding-left md-padding-right" layout="column" ng-controller="AnrRopaCtrl" ng-if="tabRopaDisplayed">
     <p class="md-title md-padding-left" translate>Records of processing activities</p>
-    <md-tabs md-dynamic-height="true" md-selected="recordTabSelected" ng-if="!(updatingRecords)">
-        <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-disabled="selectingRecord" ng-click="createNewRecord($event)">
+    <md-tabs md-dynamic-height="true" md-selected="recordTabSelected" ng-if="!(updatingRecords)" >
+        <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-disabled="selectingRecord || updatingRecords" ng-click="createNewRecord($event)">
             <md-tooltip md-direction="left">
                 {{ 'Add a record' | translate }}
             </md-tooltip>
