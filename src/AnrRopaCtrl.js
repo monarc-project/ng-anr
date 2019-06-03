@@ -3,7 +3,7 @@
         .module('AnrModule')
         .controller('AnrRopaCtrl', [
             '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog',
-            '$state', '$stateParams', '$q', 'RecordService', 'TableHelperService',
+            '$state', 'DownloadService', '$http', '$stateParams', '$q', 'RecordService', 'TableHelperService',
             AnrRopaCtrl
         ]);
 
@@ -11,7 +11,7 @@
     * ANR > RECORD OF PROCESSING ACTIVITIES
     */
     function AnrRopaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog,
-        $state, $stateParams, $q, RecordService, TableHelperService) {
+        $state, DownloadService, $http, $stateParams, $q, RecordService, TableHelperService) {
         $scope.language = $scope.getAnrLanguage();
         $scope.records = {
             'items' : [],
@@ -37,9 +37,8 @@
                 record.cont = undefined;
                 RecordService.createRecord(record,
                     function (status) {
-                        $scope.records.selected = status.id;
-                        $scope.recordTabSelected = $scope.records.items.count + 1;
                         $scope.updateRecords();
+                        $scope.selectRecord(status.id, $scope.records.items.count);
                         toastr.success(gettextCatalog.getString('The record has been created successfully.',
                               {recordLabel: $scope._langField(record,'label')}), gettextCatalog.getString('Creation successful'));
                         if (cont) {
@@ -75,8 +74,8 @@
                 .then(function (record) {
                     RecordService.updateRecord(record,
                         function () {
-                            $scope.records.selected = record.id;
                             $scope.updateRecords();
+                            $scope.selectRecord(record.id);
                             toastr.success(gettextCatalog.getString('The record has been edited successfully.',
                                 {recordLabel: record.label1}), gettextCatalog.getString('Edition successful'));
                         },
@@ -107,28 +106,51 @@
                 );
             }).catch(angular.noop);
         };
-        $scope.selectRecord = function(recordId, index) {
-            $scope.recordTabSelected = index;
+        $scope.selectRecord = function(recordId, index = -1) {
+            $scope.selectingRecord = true;
             RecordService.getRecord(recordId).then(function (data) {
                 data['erasure'] = (new Date(data['erasure']));
                 $scope.records.selected = recordId;
                 $scope.record = data;
+                if(index !== -1) {
+                    $scope.recordTabSelected = index;
+                }
+                $scope.selectingRecord = false;
             });
         };
 
         $scope.updateRecords = function() {
+            $scope.updatingRecords = true;
             RecordService.getRecords({order: 'created_at'}).then(function (data) {
                 for (var j = 0; j < data.records.length; ++j) {
                     data['records'][j]['erasure'] = (new Date(data['records'][j]['erasure']));
                 }
                 $scope.records.items = data;
                 if ($scope.records.items.count>0 && $scope.records.selected === -1) {
-                    $scope.selectRecord($scope.records.items.records[0].id);
-                    $scope.recordTabSelected = 0;
+                    $scope.selectRecord($scope.records.items.records[0].id, 0);
                 }
             });
+            $scope.updatingRecords = false;
         };
+        $scope.selectingRecord = false;
         $scope.updateRecords();
+
+        $scope.jsonExport = function (ev) {
+            var cliAnr = '';
+            var method = $http.get;
+            if ($scope.OFFICE_MODE == 'FO') {
+                cliAnr = 'client-';
+                method = $http.post;
+            }
+            method('api/'+cliAnr+'anr/' + $scope.model.anr.id + '/records/' + $scope.record.id + '/export', {id: $scope.record.id}).then(function (data) {
+                var contentD = data.headers('Content-Disposition'),
+                    contentT = data.headers('Content-Type');
+                contentD = contentD.substring(0,contentD.length-1).split('filename="');
+                contentD = contentD[contentD.length-1];
+                DownloadService.downloadJSON(data.data, contentD);
+                toastr.success(gettextCatalog.getString('The asset has been exported successfully.'), gettextCatalog.getString('Export successful'));
+            })
+        }
 
         $scope.export = function () {
             finalArray=[];
@@ -231,16 +253,13 @@
         $scope.language = $scope.getAnrLanguage();
         $scope.joint={};
         $scope.recipientCategorySearchText = "";
+        $scope.toggleIcon = "add_to_photos";
         $scope.addJointController = false;
         var defaultLang = angular.copy($scope.language);
 
         if (record != undefined && record != null) {
             $scope.controllerSearchText = record.controller.label;
             $scope.record = record;
-            if($scope.processor) {
-                $scope.record.processors.push($scope.processor);
-                $scope.processor = undefined;
-            }
             if(!Array.isArray($scope.record['jointControllers'])) {
                 $scope.record['jointControllers'] = [];
             }
@@ -252,6 +271,7 @@
             }
         } else {
             $scope.controllerSearchText = "";
+            $scope.processor = undefined;
             $scope.record = {
                 label1: '',
                 label2: '',
@@ -270,6 +290,10 @@
                 idThirdCountry: '',
                 dpoThirdCountry: '',
             };
+        }
+        if($scope.processor) {
+            $scope.record.processors.push($scope.processor);
+            $scope.processor = undefined;
         }
 
         $scope.cancel = function() {
@@ -329,17 +353,20 @@
             });
             return promise.promise;
         };
-        $scope.toggleJointControllerOn = function () {
-            $scope.addJointController = true;
-        };
-        $scope.toggleJointControllerOff = function () {
-            $scope.joint={};
-            $scope.addJointController = false;
+        $scope.toggleJointController = function () {
+            if($scope.addJointController) {
+                $scope.joint={};
+                $scope.addJointController = false;
+                $scope.toggleIcon = "add_to_photos";
+            } else {
+                $scope.addJointController = true;
+                $scope.toggleIcon = "cancel";
+            }
         };
         $scope.addNewJointController = function () {
             $scope.record.jointControllers.push({   'label' : $scope.joint.name,
                                                     'contact' : $scope.joint.contact });
-            $scope.toggleJointControllerOff();
+            $scope.toggleJointController();
         };
         $scope.toggleCheckboxInternational = function () {
             $scope.record.idThirdCountry = '';
@@ -418,7 +445,6 @@
                 }
             })
             .then(function (processor) {
-                $scope.record.processors.push(processor);
                 $scope.processor = processor;
             })
             .catch(angular.noop)
@@ -477,18 +503,20 @@
             });
             return promise.promise;
         };
-        $scope.toggleBehalfControllerOn = function () {
-            $scope.behalf={};
-            $scope.addBehalfController = true;
-        }
-        $scope.toggleBehalfControllerOff = function () {
-            $scope.addBehalfController = false;
+        $scope.toggleBehalfController = function () {
+            if($scope.addBehalfController) {
+                $scope.behalf={};
+                $scope.addBehalfController = false;
+                $scope.toggleIcon = "add_to_photos";
+            } else {
+                $scope.addBehalfController = true;
+                $scope.toggleIcon = "cancel";
+            }
         }
         $scope.addNewBehalfController = function () {
             $scope.processor.controllers.push({ 'label' : $scope.behalf.name,
                                                 'contact' : $scope.behalf.contact});
-            $scope.behalf = {};
-            $scope.addBehalfController = false;
+            $scope.toggleBehalfController();
         }
         $scope.toggleCheckboxInternational = function () {
             $scope.processor.idThirdCountry = '';

@@ -90,11 +90,11 @@
                                 </span>
                             </md-chip-template>
                         </md-chips>
-                        <md-button class="md-icon-button md-primary" ng-click="toggleJointControllerOn()">
-                            <md-tooltip md-direction="left">
+                        <md-button class="md-icon-button md-primary" ng-click="toggleJointController()">
+                            <md-tooltip md-direction="left" ng-if="!addJointController">
                                 {{ 'Add a new joint controller' | translate }}
                             </md-tooltip>
-                            <md-icon>add_to_photos</md-icon>
+                            <md-icon> {{toggleIcon}} </md-icon>
                         </md-button>
                     </div>
                 </md-input-container>
@@ -113,12 +113,12 @@
                             <div ng-message="required">{{ 'The contact details may not be empty' | translate }}</div>
                         </div>
                     </md-input-container>
-                    <md-button ng-click="toggleJointControllerOff()">
-                        {{ 'Cancel' | translate }}
-                    </md-button>
-                    <md-button class="md-accent md-hue-3" ng-disabled="!(joint.name && joint.contact)" ng-click="addNewJointController()" layout-align="right">
-                        {{ 'Add' | translate }}
-                    </md-button>
+                    <div layout="row">
+                        <span flex></span>
+                        <md-button class="md-accent md-hue-3" ng-disabled="!(joint.name && joint.contact)" ng-click="addNewJointController()" layout-align="end end">
+                            {{ 'Add' | translate }}
+                        </md-button>
+                    </div>
                 </div>
                 <md-input-container class="md-block" flex>
                     <label translate>Controller's representative</label>

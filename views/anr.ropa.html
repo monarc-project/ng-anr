@@ -1,8 +1,7 @@
 <div class="md-padding-left md-padding-right" layout="column" ng-controller="AnrRopaCtrl" ng-if="tabRopaDisplayed">
     <p class="md-title md-padding-left" translate>Records of processing activities</p>
-    <!--md-tabs md-dynamic-height="true" ng-if="updatingRecords"-->
-    <md-tabs md-dynamic-height="true" md-selected="recordTabSelected" >
-        <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="createNewRecord($event)">
+    <md-tabs md-dynamic-height="true" md-selected="recordTabSelected" ng-if="!(updatingRecords)">
+        <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-disabled="selectingRecord" ng-click="createNewRecord($event)">
             <md-tooltip md-direction="left">
                 {{ 'Add a record' | translate }}
             </md-tooltip>
@@ -19,7 +18,7 @@
                     </md-button>
                     <md-menu-content>
                         <md-menu-item>
-                            <md-button ng-click="openMethodDeliverable(step, $event)">.docx</md-button>
+                            <md-button ng-click="jsonExport()">.json</md-button>
                         </md-menu-item>
                         <md-menu-item>
                             <md-button ng-click="export()">.csv</md-button>
@@ -103,7 +102,7 @@
                   </tbody>
               </table>
           </md-table-container>
-          <p class="md-title md-padding-left" ng-if="record.processors.length > 0" translate>Processors</p>
+          <p class="md-subhead md-padding-left" ng-if="record.processors.length > 0" translate>Processors</p>
           <md-tabs md-dynamic-height="true" md-selected="processorTabSelected">
               <md-tab id="tabRecord" ng-repeat="processor in record.processors" label="{{processor.label}}"
                   md-on-select="selectProcessor(processor.id)">
