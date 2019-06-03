@@ -118,10 +118,10 @@
                                   <td md-cell> {{ processor.contact }} </td>
                               </tr>
 
-                              <tr md-row>
+                              <tr md-row ng-if="processor.controllers.length>0">
                                   <td md-cell > <b> <span translate> Controllers on behalf this processor is acting on </span> </td>
                                   <td md-cell>
-                                      <md-table-container ng-if="processor.controllers.length > 0" flex>
+                                      <md-table-container flex>
                                           <table md-table>
                                               <tbody md-body>
                                                   <tr md-row>
