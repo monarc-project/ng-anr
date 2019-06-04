@@ -1,0 +1,46 @@
+<md-dialog md-theme="light">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Export record</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-align="start top">
+                <md-subheader class="md-subheader">{{ 'Encryption' | translate }}</md-subheader>
+
+                <p translate>You may enter a password to protect your processing activities record</p>
+
+                <md-radio-group ng-model="exportData.simple_mode">
+                    <md-radio-button ng-value="false">{{ 'Custom password' | translate }}</md-radio-button>
+
+                    <div layout="row" layout-align="center center">
+                        <md-input-container class="md-block" ng-init="display.password_type = 'password'" flex>
+                            <label translate>Password</label>
+                            <input type="{{ display.password_type }}" ng-disabled="exportData.simple_mode" ng-model="exportData.password">
+                        </md-input-container>
+                        <md-button class="md-icon-button" ng-disabled="exportData.simple_mode" ng-show="display.password_type == 'password'" ng-click="display.password_type = 'text'"><md-icon>visibility</md-icon></md-button>
+                        <md-button class="md-icon-button" ng-disabled="exportData.simple_mode" ng-show="display.password_type == 'text'" ng-click="display.password_type = 'password'"><md-icon>visibility_off</md-icon></md-button>
+                    </div>
+
+                    <md-radio-button ng-value="true">
+                        {{ 'Without password' | translate }}
+                    </md-radio-button>
+                </md-radio-group>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="export()" class="md-primary">
+                {{ 'Export' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

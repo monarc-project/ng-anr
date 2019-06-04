@@ -111,8 +111,8 @@
             $scope.selectingRecord = true;
             RecordService.getRecord(recordId).then(function (data) {
                 data['erasure'] = (new Date(data['erasure']));
-                $scope.records.selected = recordId;
                 $scope.record = data;
+                $scope.records.selected = recordId;
                 if(index !== -1) {
                     $scope.recordTabSelected = index;
                 }
@@ -136,20 +136,34 @@
         $scope.updateRecords();
 
         $scope.jsonExport = function (ev) {
-            var cliAnr = '';
-            var method = $http.get;
-            if ($scope.OFFICE_MODE == 'FO') {
-                cliAnr = 'client-';
-                method = $http.post;
-            }
-            method('api/'+cliAnr+'anr/' + $scope.model.anr.id + '/records/' + $scope.record.id + '/export', {id: $scope.record.id}).then(function (data) {
-                var contentD = data.headers('Content-Disposition'),
-                    contentT = data.headers('Content-Type');
-                contentD = contentD.substring(0,contentD.length-1).split('filename="');
-                contentD = contentD[contentD.length-1];
-                DownloadService.downloadJSON(data.data, contentD);
-                toastr.success(gettextCatalog.getString('The asset has been exported successfully.'), gettextCatalog.getString('Export successful'));
-            })
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', ExportRecordDialogCtrl],
+                templateUrl: 'views/anr/export.record.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                }
+            }).then(function (exports) {
+                var cliAnr = '';
+                var method = $http.get;
+                if ($scope.OFFICE_MODE == 'FO') {
+                    cliAnr = 'client-';
+                    method = $http.post;
+                }
+                method('api/'+cliAnr+'anr/' + $scope.model.anr.id + '/records/' + $scope.record.id + '/export', {id: $scope.record.id, password: exports.password}).then(function (data) {
+                    var contentD = data.headers('Content-Disposition'),
+                        contentT = data.headers('Content-Type');
+                    contentD = contentD.substring(0,contentD.length-1).split('filename="');
+                    contentD = contentD[contentD.length-1];
+                    DownloadService.downloadJSON(data.data, contentD);
+                    toastr.success(gettextCatalog.getString('The asset has been exported successfully.'), gettextCatalog.getString('Export successful'));
+                })
+            }).catch(angular.noop);
         }
 
         $scope.export = function () {
@@ -584,5 +598,21 @@
         $scope.cancel = function () {
             $mdDialog.cancel();
         };
+    }
+
+    function ExportRecordDialogCtrl($scope, $mdDialog) {
+        $scope.exportData = {
+            simple_mode: true,
+            password: ''
+        };
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.export = function() {
+            $mdDialog.hide($scope.exportData);
+        };
+
     }
 })();
