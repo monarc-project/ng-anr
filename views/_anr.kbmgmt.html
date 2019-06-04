@@ -565,7 +565,7 @@
                                  md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
         </md-tab>
 
-        <md-tab label="{{ 'Recommandations Sets' | translate }}" md-on-select="selectRecommandationsTab()" md-on-deselect="deselectRecommandationsTab()">
+        <md-tab label="{{ 'Recommendations Sets' | translate }}" md-on-select="selectRecommandationsTab()" md-on-deselect="deselectRecommandationsTab()">
             <md-tabs md-dynamic-height="true" md-border-bottom="" ng-if="updatingRecommandationsSets" md-selected="recSetTabSelected">
               <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="createNewRecommandationSet($event)">
                 <md-tooltip md-direction="left">
@@ -616,7 +616,7 @@
                 <md-toolbar class="md-table-toolbar alternate" ng-if="recommandations.selected.length">
                     <div class="md-toolbar-tools md-toolbar-pad" layout-align="space-between center">
                         <div>{{recommandations.selected.length}} {{recommandations.selected.length > 1 ? 'items' : 'item'}} selected</div>
-                        <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-warn" ng-click="deleteRecommandationMass($event)">
+                        <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-warn" ng-click="deleteMassRecommandation($event)">
                             <md-icon>delete</md-icon>
                         </md-button>
                     </div>
