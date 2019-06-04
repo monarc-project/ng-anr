@@ -297,6 +297,9 @@
         }
 
         $scope.cancel = function() {
+            if($scope.records.items.count > 0){
+                $scope.selectRecord($scope.records.items.records[$scope.recordTabSelected].id, $scope.recordTabSelected);
+            }
             $mdDialog.cancel();
         };
 
@@ -457,6 +460,23 @@
                 }
             });
         };
+
+        $scope.importRecord = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'AnrService', 'toastr', 'gettextCatalog', 'Upload', ImportRecordDialogCtrl],
+                templateUrl: 'views/anr/import.record.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                locals: {},
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+            }).then(function (id) {
+                $scope.updateRecords();
+                $scope.selectRecord(id, $scope.records.items.count);
+            }).catch(angular.noop);
+        };
     }
 
     function AddProcessorDialogCtrl($scope, toastr, $mdDialog, gettextCatalog, $q, RecordService, ConfigService) {
@@ -465,6 +485,7 @@
         $scope.behalf = {   name : '',
                             contactDetail : ''};
         var defaultLang = angular.copy($scope.language);
+        $scope.toggleIcon = "add_to_photos";
         $scope.processor = {
             label: '',
             controllers: [],
@@ -521,6 +542,47 @@
         $scope.toggleCheckboxInternational = function () {
             $scope.processor.idThirdCountry = '';
             $scope.processor.dpoThirdCountry = '';
+        };
+    }
+
+    function ImportRecordDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload) {
+        $scope.file = [];
+        $scope.file_range = 0;
+		$scope.isImportingIn = false;
+        $scope.import = {
+            password: '',
+        };
+
+        $scope.uploadFile = function (file) {
+        	$scope.isImportingIn = true;
+            file.upload = Upload.upload({
+                url: 'api/client-anr/' + $scope.getUrlAnrId() + '/records/import',
+                data: {file: file, password: $scope.import.password}
+            });
+
+            file.upload.then(function (response) {
+                $scope.isImportingIn = false;
+                if (response.data.errors && response.data.errors.length > 0) {
+                    toastr.warning(gettextCatalog.getString("Some files could not be imported"));
+                } else {
+                    toastr.success(gettextCatalog.getString("The record has been imported successfully"));
+                    $mdDialog.hide(response.data.id[0]);
+                }
+            });
+        }
+
+        $scope.upgradeFileRange = function () {
+            $scope.file_range++;
+
+            for (var i = 0; i <= $scope.file_range; ++i) {
+                if ($scope.file[i] == undefined) {
+                    $scope.file[i] = {};
+                }
+            }
+        };
+
+        $scope.cancel = function () {
+            $mdDialog.cancel();
         };
     }
 })();

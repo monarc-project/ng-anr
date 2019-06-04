@@ -23,6 +23,16 @@
                     </md-select>
                 </md-input-container> <br/>
 
+                <md-card ng-if="!record.id" layout="row">
+                  <span flex></span>
+                  <md-button class="md-primary" ng-click="importRecord($event)">
+                      <md-icon>play_for_work</md-icon><span>&nbsp;{{ 'Import from file' | translate }}</span>
+                  </md-button>
+                  <span flex></span>
+                </md-card>
+
+                <md-subheader class="md-primary" layout="row" layout-align="center"><strong>Manual creation</strong></md-subheader><br />
+
                 <md-input-container class="md-block" flex>
                     <label translate>Label</label>
                     <md-icon>label</md-icon>
