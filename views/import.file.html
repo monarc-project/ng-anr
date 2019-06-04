@@ -57,6 +57,7 @@
                       <th ng-if="items[tab].theme" colspan="1" class="big-border-left"><p>theme</p></th>
                       <th ng-if="items[tab].category" colspan="1" class="big-border-left"><p>category</p></th>
                       <th ng-if="items[tab].tags" colspan="1" class="big-border-left"><p>tags</p></th>
+                      <th ng-if="items[tab].importance" colspan="1" class="big-border-left"><p>importance</p></th>
                       <th ng-if="items[tab].control" colspan="1" class="big-border-left"><p>control</p></th>
                       <th ng-if="items[tab].match" colspan="1" class="big-border-left"><p>match</p></th>
                       <th ng-if="importData.length > 0 && check" colspan="1" class="big-border-left"><p>error</p></th>
@@ -76,6 +77,7 @@
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].i">{{input.i}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].a">{{input.a}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].mode"><span ng-class="{'md-mandatory-field': input.alert}">{{input.mode}}</span></td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].importance"><span ng-class="{'md-mandatory-field': input.alert}">{{input.importance}}</span></td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].theme"><span ng-class="{'md-mandatory-field': input.alert}">{{input.theme}}</span></td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].category"><span ng-class="{'md-mandatory-field': input.alert}">{{input.category}}</span></td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].tags"><span ng-class="{'md-mandatory-field': input.alert}">{{input.tags}}</span></td>

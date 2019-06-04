@@ -1,5 +1,5 @@
 <md-dialog md-theme="light" class="dialog-width">
-    <form name="riskForm">
+    <form name="recommandationForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 ng-if="!recommandation.uuid" translate>Add a recommendation</h2>
@@ -12,6 +12,12 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
+                <md-card ng-if="!recommandation.uuid">
+                    <md-button ng-if="OFFICE_MODE == 'FO'" class="md-primary" ng-click="importFile($event,'Recommendations')"  ng-controller="AnrKbMgmtCtrl">
+                        <md-icon>play_for_work</md-icon><span>{{ 'Import from file' | translate }}</span>
+                    </md-button>
+                </md-card>
+                
                 <md-input-container ng-if="!recommandation.uuid" class="md-block" style="margin-right: 10px;">
                     <label translate>Search a recommendation to create one from an existing</label>
                     <md-select flex ng-model="recommandation" md-on-open="loadOptions($event, recommandation)" md-on-close="setSelectedRecommendation($event, recommandation)">
