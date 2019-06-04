@@ -2387,16 +2387,6 @@
                   $scope.recommandations.items = data;
                 }
             )
-            
-            // we want to know the UUIDs of all the recommandations already
-            // imported in the analysis
-            query.limit = -1;
-            $scope.recommandations.promise = ClientRecommandationService.getRecommandations(query);
-            $scope.recommandations.promise.then(
-                function (data) {
-                    $rootScope.recommandations_uuid = data.recommandations.map(function(recommandation){return recommandation.uuid});
-                }
-            )
 
         };
 
