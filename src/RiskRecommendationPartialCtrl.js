@@ -165,45 +165,6 @@
             });
         }
 
-        $scope.attachMeasureToRecommandation = function (ev, recommandation) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
-            $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$q', 'MeasureService', MeasureRecommandationAttachDialog],
-                templateUrl: 'views/anr/create.recommandation-measure.html',
-                preserveScope: false,
-                targetEvent: ev,
-                scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: false,
-                fullscreen: useFullScreen,
-            }).then(function (measure_id) {
-                ClientRecommandationService.attachMeasureToRecommandation($scope.model.anr.id, recommandation.recommandation.uuid, measure_id, function () {
-                    toastr.success(gettextCatalog.getString("Control attached to recommendation"));
-                    updateRecommandations();
-                });
-            });
-        };
-
-        $scope.detachMeasureFromRecommandation = function (ev, recommandation, measure) {
-            var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to detach control of recommendation?',
-                    {measure: measure.code, code: recommandation.recommandation.code}))
-                .textContent(gettextCatalog.getString('This operation is irreversible.'))
-                .targetEvent(ev)
-                .theme('light')
-                .ok(gettextCatalog.getString('Detach'))
-                .cancel(gettextCatalog.getString('Cancel'));
-            $mdDialog.show(confirm).then(function() {
-                ClientRecommandationService.detachMeasureFromRecommandation($scope.model.anr.id, measure.id,
-                    function () {
-                        updateRecommandations();
-                        toastr.success(gettextCatalog.getString('The control has been detached.'),
-                            gettextCatalog.getString('Operation successful'));
-                    }
-                );
-            });
-        }
-
         var updateRecommandations = function () {
             // We need to debounce the update here as the view uses twice the controller. The data is shared
             // through the broadcast event, but we have no way to know which controller will take care of the actual
