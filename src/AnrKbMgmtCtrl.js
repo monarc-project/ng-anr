@@ -153,6 +153,8 @@
             // we want to know the UUIDs of all the assets already
             // imported in the analysis
             query.limit = -1;
+            query.filter = "";
+            query.status = "all";
             $scope.assets.promise = AssetService.getAssets(query);
             $scope.assets.promise.then(
                 function (data) {
@@ -245,7 +247,6 @@
                                     {assetLabel: $scope._langField(asset,'label')}), gettextCatalog.getString('Creation successful'));
                             }
                         },
-
                         function () {
                             $scope.importNewAsset(ev, asset);
                         }
@@ -390,6 +391,8 @@
             // we want to know the UUIDs of all the threats already
             // imported in the analysis
             query.limit = -1;
+            query.filter = "";
+            query.status = "all";
             $scope.threats.promise = ThreatService.getThreats(query);
             $scope.threats.promise.then(
                 function (data) {
@@ -636,6 +639,8 @@
                     // we want to know the UUIDs of all the vulnerabilites already
                     // imported in the analysis
                     query.limit = -1;
+                    query.filter = "";
+                    query.status = "all";
                     $scope.vulns.promise = VulnService.getVulns(query);
                     $scope.vulns.promise.then(
                         function (data) {
@@ -1267,6 +1272,8 @@
             // we want to know the UUIDs of all the amvs already
             // imported in the analysis
             query.limit = -1;
+            query.filter = "";
+            query.status = "all";
             $scope.amvs.promise = AmvService.getAmvs(query);
             $scope.amvs.promise.then(
                 function (data) {
