@@ -2,7 +2,8 @@
     <form name="processorForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 translate>Add a processor for this record</h2>
+                <h2 ng-if="!processor.id" translate>Add a processor for this record</h2>
+                <h2 ng-if="processor.id" translate>Edit processor</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -118,7 +119,7 @@
                 {{ 'Cancel' | translate }}
             </md-button>
             <md-button ng-click="addProcessor()" ng-disabled="processorForm.$error.required" type="submit" class="md-accent md-hue-3">
-                {{ 'Add' | translate }}
+                {{ (processor.id ? 'Save' : 'Add') | translate }}
             </md-button>
         </md-dialog-actions>
     </form>

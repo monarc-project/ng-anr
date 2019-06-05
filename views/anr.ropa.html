@@ -8,8 +8,8 @@
             <md-icon class="md-icon-button md-primary">add_to_photos</md-icon>
         </md-button>
 
-        <md-tab ng-repeat="record in records.items.records" label="{{ _langField(record,'label')}}"
-            md-on-select="selectRecord(record.id, $index)">
+        <md-tab ng-repeat="currentRecord in records.items.records" label="{{ _langField(currentRecord,'label')}}"
+            md-on-select="selectRecord(currentRecord.id, $index)">
 
             <div layout="row" layout-align="end center" class="md-padding-double" style="height:40px">
                 <md-menu>
@@ -25,55 +25,55 @@
                         </md-menu-item>
                     </md-menu-content>
                 </md-menu>
-                <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly && records.items.records.length > 0" ng-click="editRecord($event,record.id)">
+                <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly && records.items.records.length > 0" ng-click="editRecord($event,currentRecord.id)">
                     <md-tooltip md-direction="left">
                         {{ 'Edit record' | translate }}
                     </md-tooltip>
                     <md-icon>edit</md-icon>
                 </md-button>
-                <md-button class="md-icon-button md-warn" ng-if="!isAnrReadOnly && records.items.records.length > 0" ng-click="deleteRecord($event, record.id)">
+                <md-button class="md-icon-button md-warn" ng-if="!isAnrReadOnly && records.items.records.length > 0" ng-click="deleteRecord($event, currentRecord.id)">
                     <md-tooltip md-direction="left">
                         {{ 'Delete record' | translate }}
                     </md-tooltip>
                     <md-icon>delete</md-icon>
                 </md-button>
             </div>
-            <p class="md-title md-padding-left"> <b> {{ _langField(record,'label')}} </b> </p>
+            <p class="md-title md-padding-left"> <b> {{ _langField(currentRecord,'label')}} </b> </p>
             <p class="md-subhead md-padding-left" translate>Controller</p>
             <md-table-container flex>
                 <table md-table>
                     <tbody md-body>
                         <tr md-row>
                             <td md-cell> <b> {{ 'Name: ' | translate }} </b> </td>
-                            <td md-cell> {{ record.controller.label }} </td>
+                            <td md-cell> {{ currentRecord.controller.label }} </td>
                             <td md-cell> <b> {{ 'Contact: ' | translate }} </b> </td>
-                            <td md-cell> {{ record.controller.contact }} </td>
+                            <td md-cell> {{ currentRecord.controller.contact }} </td>
                         </tr>
                         <tr md-row>
                             <td md-cell> <b> {{ "Representative: " | translate }} </b> </td>
-                            <td md-cell> {{ record.representative}} </td>
+                            <td md-cell> {{ currentRecord.representative}} </td>
                             <td md-cell> <b> {{ "Data Protection Officer: " | translate }} </b> </td>
-                            <td md-cell> {{ record.dpo }} </td>
+                            <td md-cell> {{ currentRecord.dpo }} </td>
                         </tr>
                         <tr md-row>
                             <td md-cell>  <b> {{ "Purposes of the processing: " | translate }} </b> </td>
-                            <td md-cell> {{ record.purposes }} </td>
+                            <td md-cell> {{ currentRecord.purposes }} </td>
                             <td md-cell>  <b> {{ "Categories of data subjects: " | translate }} </b> </td>
-                            <td md-cell> {{ record.description }} </td>
+                            <td md-cell> {{ currentRecord.description }} </td>
                         </tr>
                         <tr md-row>
                             <td md-cell> <b> {{ "Time limits for erasure: " | translate }} </b> </td>
-                            <td md-cell> {{  record.erasure.toLocaleDateString() }} </td>
+                            <td md-cell> {{  currentRecord.erasure.toLocaleDateString() }} </td>
                             <td md-cell> <b> {{ "Technical and organisational security measures: " | translate }} </b> </td>
-                            <td md-cell> {{ record.secMeasures }} </td>
+                            <td md-cell> {{ currentRecord.secMeasures }} </td>
                         </tr>
-                        <tr md-row ng-if="record.idThirdCountry">
+                        <tr md-row ng-if="currentRecord.idThirdCountry">
                             <td md-cell> <b> {{ 'Third country organisation Id' | translate }} </b> </td>
-                            <td md-cell> {{ record.idThirdCountry }} </td>
+                            <td md-cell> {{ currentRecord.idThirdCountry }} </td>
                             <td md-cell> <b> {{ 'Third country data protection officer' | translate }} </b> </td>
-                            <td md-cell> {{ record.dpoThirdCountry }} </td>
+                            <td md-cell> {{ currentRecord.dpoThirdCountry }} </td>
                         </tr>
-                        <tr md-row ng-if="record.jointControllers.length>0 " >
+                        <tr md-row ng-if="currentRecord.jointControllers.length>0 " >
                             <td md-cell > <b> <span translate> Joint Controllers: </b> </span> </td>
                             <td md-cell colspan="3">
                                 <md-table-container flex>
@@ -83,7 +83,7 @@
                                                 <th md-cell width="30%"> <b> <span translate>Name</span> </b> </th>
                                                 <th md-cell width="70%"> <b> <span translate>Contact</span> </b> </th>
                                             </tr>
-                                            <tr md-row ng-repeat="jc in record.jointControllers">
+                                            <tr md-row ng-repeat="jc in currentRecord.jointControllers">
                                                 <td md-cell>{{ jc.label }}</td>
                                                 <td md-cell>{{ jc.contact }}</td>
                                             </tr>
@@ -92,20 +92,28 @@
                                 </md-table-container>
                             </td>
                         </tr>
-                        <tr md-row ng-if="record.recipients.length > 0" >
-                            <td md-cell rowspan="{{record.recipients.length}}"> <b> <span translate>Recipient Categories </b> </span> </td>
-                            <td colspan="3"> {{record.recipients[0]['label'] }} </td>
+                        <tr md-row ng-if="currentRecord.recipients.length > 0" >
+                            <td md-cell rowspan="{{currentRecord.recipients.length}}"> <b> <span translate>Recipient Categories </b> </span> </td>
+                            <td colspan="3"> {{currentRecord.recipients[0]['label'] }} </td>
                         </tr>
-                        <tr ng-repeat="recipient in record.recipients.slice(1)" md-row>
+                        <tr ng-repeat="recipient in currentRecord.recipients.slice(1)" md-row>
                             <td colspan="3"> {{recipient['label'] }} </td>
                         </tr>
                   </tbody>
               </table>
           </md-table-container>
-          <p class="md-subhead md-padding-left" ng-if="record.processors.length > 0" translate>Processors</p>
+          <p class="md-subhead md-padding-left" ng-if="currentRecord.processors.length > 0" translate>Processors</p>
           <md-tabs md-dynamic-height="true" md-selected="processorTabSelected">
-              <md-tab id="tabRecord" ng-repeat="processor in record.processors" label="{{processor.label}}"
+              <md-tab ng-repeat="processor in currentRecord.processors" label="{{processor.label}}"
                   md-on-select="selectProcessor(processor.id)">
+                  <div layout="row" layout-align="end center" class="md-padding-double" style="height:40px">
+                      <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="editProcessor($event,processor.id)">
+                          <md-tooltip md-direction="left">
+                              {{ 'Edit processor' | translate }}
+                          </md-tooltip>
+                          <md-icon>edit</md-icon>
+                      </md-button>
+                  </div>
                   <md-table-container flex>
                       <table md-table>
                           <tbody md-body>

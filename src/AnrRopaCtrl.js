@@ -18,7 +18,7 @@
             'items' : [],
             'selected' : -1
         };
-        $scope.createNewRecord = function (ev, record) {
+        $scope.createNewRecord = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'RecordService', 'ConfigService', 'record', 'anrId', CreateRecordDialogCtrl],
@@ -29,13 +29,14 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                    'record' : record,
+                    'record' : null,
                     'anrId': $scope.model.anr.id
                 }
             })
             .then(function (record) {
                 var cont = record.cont;
                 record.cont = undefined;
+                $scope.record = undefined;
                 RecordService.createRecord(record,
                     function (status) {
                         $scope.updateRecords();
@@ -54,10 +55,10 @@
             }).catch(angular.noop);
         };
 
-        $scope.editRecord = function (ev, record) {
+        $scope.editRecord = function (ev, recordId) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-            RecordService.getRecord(record).then(function (recordData) {
+            RecordService.getRecord(recordId).then(function (recordData) {
                 recordData['erasure'] = (new Date(recordData['erasure']));
                 $mdDialog.show({
                     controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'RecordService', 'ConfigService', 'record', 'anrId', CreateRecordDialogCtrl],
@@ -73,6 +74,7 @@
                     }
                 })
                 .then(function (record) {
+                    $scope.record = undefined;
                     RecordService.updateRecord(record,
                         function () {
                             $scope.updateRecords();
@@ -82,7 +84,7 @@
                         },
 
                         function () {
-                            $scope.editRecord(ev, record);
+                            $scope.editRecord(ev, recordId);
                         }
                     );
                 }).catch(angular.noop);
@@ -107,11 +109,47 @@
                 );
             }).catch(angular.noop);
         };
+
+        $scope.editProcessor = function (ev, processorId) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            RecordService.getRecordProcessor(processorId).then(function (processorData) {
+                $mdDialog.show({
+                    controller: ['$scope', 'toastr', '$mdDialog', 'gettextCatalog', '$q', 'RecordService', 'ConfigService', 'processor', 'anrId', AddProcessorDialogCtrl],
+                    templateUrl: 'views/anr/add.processor.html',
+                    targetEvent: ev,
+                    preserveScope: false,
+                    scope: $scope.$dialogScope.$new(),
+                    clickOutsideToClose: false,
+                    fullscreen: useFullScreen,
+                    locals: {
+                        'processor': processorData,
+                        'anrId': $scope.model.anr.id
+                    }
+                })
+                .then(function (processor) {
+                    console.log(processor);
+                    RecordService.updateRecordProcessor(processor,
+                        function () {
+                            $scope.updateRecords();
+                            $scope.selectRecord($scope.currentRecord.id);
+                            toastr.success(gettextCatalog.getString('The processor has been edited successfully.',
+                                {processorLabel: processor.label}), gettextCatalog.getString('Edition successful'));
+                        },
+
+                        function () {
+                            $scope.editProcessor(ev, processorId);
+                        }
+                    );
+                }).catch(angular.noop);
+            });
+        };
+
         $scope.selectRecord = function(recordId, index = -1) {
             $scope.selectingRecord = true;
             RecordService.getRecord(recordId).then(function (data) {
                 data['erasure'] = (new Date(data['erasure']));
-                $scope.record = data;
+                $scope.currentRecord = data;
                 $scope.records.selected = recordId;
                 if(index !== -1) {
                     $scope.recordTabSelected = index;
@@ -155,7 +193,7 @@
                     cliAnr = 'client-';
                     method = $http.post;
                 }
-                method('api/'+cliAnr+'anr/' + $scope.model.anr.id + '/records/' + $scope.record.id + '/export', {id: $scope.record.id, password: exports.password}).then(function (data) {
+                method('api/'+cliAnr+'anr/' + $scope.model.anr.id + '/records/' + $scope.currentRecord.id + '/export', {id: $scope.currentRecord.id, password: exports.password}).then(function (data) {
                     var contentD = data.headers('Content-Disposition'),
                         contentT = data.headers('Content-Type');
                     contentD = contentD.substring(0,contentD.length-1).split('filename="');
@@ -450,7 +488,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', 'toastr', '$mdDialog', 'gettextCatalog', '$q', 'RecordService', 'ConfigService', 'anrId', AddProcessorDialogCtrl],
+                controller: ['$scope', 'toastr', '$mdDialog', 'gettextCatalog', '$q', 'RecordService', 'ConfigService', 'processor', 'anrId', AddProcessorDialogCtrl],
                 templateUrl: 'views/anr/add.processor.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -458,6 +496,7 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
+                    'processor': null,
                     'anrId': $scope.anrId
                 }
             })
@@ -493,17 +532,26 @@
         };
     }
 
-    function AddProcessorDialogCtrl($scope, toastr, $mdDialog, gettextCatalog, $q, RecordService, ConfigService) {
+    function AddProcessorDialogCtrl($scope, toastr, $mdDialog, gettextCatalog, $q, RecordService, ConfigService, processor) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
         $scope.behalf = {   name : '',
                             contactDetail : ''};
         var defaultLang = angular.copy($scope.language);
         $scope.toggleIcon = "add_to_photos";
-        $scope.processor = {
-            label: '',
-            controllers: [],
-        };
+
+        if (processor != undefined && processor != null) {
+            $scope.processor = processor;
+            if(!Array.isArray($scope.processor['controllers'])) {
+                $scope.processor['controllers'] = [];
+            }
+        }
+        else {
+            $scope.processor = {
+                label: '',
+                controllers: [],
+            };
+        }
 
         $scope.cancel = function() {
             $mdDialog.cancel();
