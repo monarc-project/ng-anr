@@ -4296,7 +4296,7 @@
                 'field' : 'description',
                 'required' : false,
                 'type' : 'text',
-                'example' : gettextCatalog.getString('Product Compliance Customer agreement')
+                'example' : gettextCatalog.getString('Periodically review access permissions.')
             },
             'importance' : {
                 'field' : 'importance',
