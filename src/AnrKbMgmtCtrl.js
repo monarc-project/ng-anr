@@ -245,7 +245,6 @@
                                     {assetLabel: $scope._langField(asset,'label')}), gettextCatalog.getString('Creation successful'));
                             }
                         },
-
                         function () {
                             $scope.importNewAsset(ev, asset);
                         }
