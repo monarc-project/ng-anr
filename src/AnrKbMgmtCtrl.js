@@ -3872,7 +3872,7 @@
         };
 
         $scope.import = function() {
-            var recSet_temp = $scope.mosp_recommandations_sets.find(r => r['uuid'] === $scope.recommandationSet.uuid);
+            var recSet_temp = $scope.mosp_recommandations_sets.find(r => r['id'] === $scope.recommandationSet.id);
 
             $scope.recommandationSet['uuid'] = recSet_temp.json_object.uuid;
             for (var i = 1; i <=4; i++) {
