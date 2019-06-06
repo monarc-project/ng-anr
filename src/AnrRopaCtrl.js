@@ -321,6 +321,9 @@
             if(!Array.isArray($scope.record['processors'])) {
                 $scope.record['processors'] = [];
             }
+            if($scope.record["idThirdCountry"]) {
+                $scope.checkboxInternational = true;
+            }
         } else {
             $scope.controllerSearchText = "";
             $scope.processor = undefined;
@@ -544,6 +547,9 @@
             $scope.processor = processor;
             if(!Array.isArray($scope.processor['controllers'])) {
                 $scope.processor['controllers'] = [];
+            }
+            if($scope.processor["idThirdCountry"]) {
+                $scope.checkboxInternationalProcessor = true;
             }
         }
         else {
