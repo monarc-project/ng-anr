@@ -332,6 +332,7 @@
         $scope.toggleIcon = "add_to_photos";
         $scope.addJointController = false;
         var defaultLang = angular.copy($scope.language);
+        $scope.checkboxInternational = false;
 
         if (record != undefined && record != null) {
             $scope.controllerSearchText = record.controller.label;
@@ -566,6 +567,7 @@
                             contactDetail : ''};
         var defaultLang = angular.copy($scope.language);
         $scope.toggleIcon = "add_to_photos";
+        $scope.checkboxInternationalProcessor = false;
 
         if (processor != undefined && processor != null) {
             $scope.processor = processor;
