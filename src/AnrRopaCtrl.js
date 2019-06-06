@@ -80,7 +80,7 @@
                             $scope.updateRecords();
                             $scope.selectRecord(record.id);
                             toastr.success(gettextCatalog.getString('The record has been edited successfully.',
-                                {recordLabel: record.label1}), gettextCatalog.getString('Edition successful'));
+                                {recordLabel: $scope._langField(record,'label')}), gettextCatalog.getString('Edition successful'));
                         },
 
                         function () {
@@ -90,6 +90,7 @@
                 }).catch(angular.noop);
             });
         };
+
         $scope.deleteRecord = function (ev, item) {
             var confirm = $mdDialog.confirm()
                 .title(gettextCatalog.getString('Are you sure you want to delete record?',
@@ -104,7 +105,7 @@
                     function () {
                         $scope.updateRecords();
                         toastr.success(gettextCatalog.getString('The record has been deleted.',
-                                    {label: item.label1}), gettextCatalog.getString('Deletion successful'));
+                                    {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                     }
                 );
             }).catch(angular.noop);
@@ -128,7 +129,6 @@
                     }
                 })
                 .then(function (processor) {
-                    console.log(processor);
                     RecordService.updateRecordProcessor(processor,
                         function () {
                             $scope.updateRecords();
@@ -143,6 +143,30 @@
                     );
                 }).catch(angular.noop);
             });
+        };
+
+        $scope.unbindProcessor = function (ev, recordId, processorId) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            RecordService.getRecord(recordId).then(function (recordData) {
+                recordData['erasure'] = (new Date(recordData['erasure']));
+                for( var i = 0; i < recordData['processors'].length; i++){
+                   if ( recordData['processors'][i].id === processorId) {
+                       recordData['processors'].splice(i, 1);
+                   }
+                }
+                RecordService.updateRecord(recordData,
+                    function () {
+                        $scope.updateRecords();
+                        $scope.selectRecord(recordData['id']);
+                        toastr.success(gettextCatalog.getString('The processor has been detached successfully.'));
+                    },
+
+                    function () {
+                        $scope.editRecord(ev, recordId);
+                    }
+                );
+            }).catch(angular.noop);
         };
 
         $scope.selectRecord = function(recordId, index = -1) {
@@ -199,7 +223,7 @@
                     contentD = contentD.substring(0,contentD.length-1).split('filename="');
                     contentD = contentD[contentD.length-1];
                     DownloadService.downloadJSON(data.data, contentD);
-                    toastr.success(gettextCatalog.getString('The asset has been exported successfully.'), gettextCatalog.getString('Export successful'));
+                    toastr.success(gettextCatalog.getString('The record has been exported successfully.'), gettextCatalog.getString('Export successful'));
                 })
             }).catch(angular.noop);
         }

@@ -113,6 +113,12 @@
                           </md-tooltip>
                           <md-icon>edit</md-icon>
                       </md-button>
+                      <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="unbindProcessor($event,currentRecord.id,processor.id)">
+                          <md-tooltip md-direction="left">
+                              {{ 'Detach processor' | translate }}
+                          </md-tooltip>
+                          <md-icon>content_cut</md-icon>
+                      </md-button>
                   </div>
                   <md-table-container flex>
                       <table md-table>
