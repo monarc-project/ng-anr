@@ -2258,8 +2258,7 @@
                     ClientRecommandationService.createRecommandationSet(recommandationSet,
                         function () {
                             ClientRecommandationService.createRecommandationMass(recommandations, function (result){
-                                $scope.recSetTabSelected = $scope.recommandationsSets.items.count + 1;
-                                $scope.updateRecommandationsSets();
+                                $scope.$parent.updateRecommandationsSets();
                                 toastr.success(gettextCatalog.getString('The recommendation set has been imported successfully.',
                                     {recommandationSetLabel: $scope._langField(recommandationSet,'label')}), gettextCatalog.getString('Creation successful'));
                                 $rootScope.$broadcast('recommendationsSetsUpdated');
@@ -3845,7 +3844,7 @@
         $scope.selectOrganization = function() {
             // Retrieve the recommendations sets from the selected organization
             // from MOSP via its API
-            var mosp_query_recommandations_sets = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Recommendations sets"}},' +
+            var mosp_query_recommandations_sets = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Recommendations"}},' +
                     '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}';
             $http.jsonp($rootScope.mospApiUrl + mosp_query_recommandations_sets)
             .then(function(json) {
@@ -3879,6 +3878,8 @@
             for (var i = 1; i <=4; i++) {
                 $scope.recommandationSet['label' + i] = recSet_temp['name'];
             }
+            delete $scope.recommandationSet.id;
+            $scope.recommandationSet.anr = anrId;
             var recommandations = recSet_temp.json_object.recommandations;
             recommandations.anr = anrId;
             recommandations.map(function(recommandation) {
