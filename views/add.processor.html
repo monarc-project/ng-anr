@@ -105,11 +105,11 @@
                 <md-switch style="margin: 0" ng-model="checkboxInternationalProcessor" ng-change="toggleCheckboxInternational()">{{ 'Is there transfers of personal data to a third country or an international organisation?' | translate }}</md-switch>
                 <md-input-container class="md-block" ng-if="checkboxInternationalProcessor" flex>
                     <label translate>Identification</label>
-                    <input ng-model="processor['idThirdCountry']" name="processorIdThirdCountry">
+                    <input ng-model="processor['idThirdCountry']" name="processorIdThirdCountry" required>
                 </md-input-container>
                 <md-input-container class="md-block" ng-if="checkboxInternationalProcessor" flex>
                     <label translate>Data Protection Officer</label>
-                    <input ng-model="processor['dpoThirdCountry']" name="processorDpoThirdCountry">
+                    <input ng-model="processor['dpoThirdCountry']" name="processorDpoThirdCountry" required>
                 </md-input-container>
             </div>
         </md-dialog-content>

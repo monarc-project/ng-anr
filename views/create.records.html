@@ -188,11 +188,11 @@
                 <md-switch style="margin: 0" ng-model="checkboxInternational" ng-change="toggleCheckboxInternational()"> {{ 'Is there transfers of personal data to a third country or an international organisation?' | translate }}</md-switch>
                 <md-input-container class="md-block" ng-if="checkboxInternational" flex>
                     <label translate>Identification</label>
-                    <input ng-model="record['idThirdCountry']" name="idThirdCountry">
+                    <input ng-model="record['idThirdCountry']" name="idThirdCountry" required>
                 </md-input-container>
                 <md-input-container class="md-block" ng-if="checkboxInternational" flex>
                     <label translate>Data Protection Officer</label>
-                    <input ng-model="record['dpoThirdCountry']" name="dpoThirdCountry">
+                    <input ng-model="record['dpoThirdCountry']" name="dpoThirdCountry" required>
                 </md-input-container>
                 <md-input-container class="md-block" flex>
                     <label translate>Time limits for erasure</label>
