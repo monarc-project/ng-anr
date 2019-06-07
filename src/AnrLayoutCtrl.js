@@ -1934,7 +1934,7 @@
                         customUrl = 'api/client-anr/'+ $scope.model.anr.id +'/export';
                     }
 
-                    $http.post(customUrl, {id: $scope.model.anr.id, password: exports.password, assessments: exports.assessments, methodSteps: exports.methodSteps, interviews: exports.interviews, controls: exports.controls, recommendations: exports.recommendations, soas: exports.soas}).then(function (data) {
+                    $http.post(customUrl, {id: $scope.model.anr.id, password: exports.password, assessments: exports.assessments, methodSteps: exports.methodSteps, interviews: exports.interviews, controls: exports.controls, recommendations: exports.recommendations, soas: exports.soas, records: exports.records}).then(function (data) {
                         var contentD = data.headers('Content-Disposition'),
                             contentT = data.headers('Content-Type');
                         contentD = contentD.substring(0,contentD.length-1).split('filename="');
@@ -2254,7 +2254,8 @@
             interviews: true,
             controls: true,
             recommendations: true,
-            soas: true
+            soas: true,
+            records: true
         };
 
         $scope.cancel = function() {

@@ -37,7 +37,7 @@
                     <label translate>Label</label>
                     <md-icon>label</md-icon>
                     <input ng-model="record['label' + language ]" name="label" required>
-                    <div ng-messages="record.label.$error">
+                    <div ng-messages="recordForm.label.$error">
                         <div ng-message="required">{{ 'The label may not be empty' | translate }}</div>
                     </div>
                 </md-input-container>
@@ -54,7 +54,9 @@
                                      md-no-cache="true"
                                      md-selected-item-change="controllerItemSelected()"
                                      md-search-text-change="controllerTextChanged()"
-                                     placeholder="{{ 'Select controller' | translate }}">
+                                     placeholder="{{ 'Select controller' | translate }}"
+                                     name="controllerName"
+                                     required>
                         <md-item-template>
                             <span md-highlight-text="controllerSearchText" md-highlight-flags="^i">{{item['label']}}</span>
                         </md-item-template>
@@ -62,16 +64,22 @@
                             {{ 'No controller matching your search was found.' }}
                         </md-not-found>
                     </md-autocomplete>
+                    <div ng-messages="recordForm.controllerName.$error">
+                        <div ng-message="required">{{ 'The name may not be empty' | translate }}</div>
+                    </div>
                 </md-input-container>
                 <md-input-container class="md-block" flex>
                     <label translate>Contact</label>
-                    <input ng-model="record.controller['contact']" ng-disabled="selectedController.id" name="controllerContact" required>
-                    <div ng-messages="record.controllerContact.$error">
+                    <md-icon>email</md-icon>
+                    <input ng-model="record.controller['contact']" ng-disabled="selectedController.id" name="controllerContact" type="email" required>
+                    <div ng-messages="recordForm.controllerContact.$error">
                         <div ng-message="required">{{ 'The contact may not be empty' | translate }}</div>
+                        <div ng-message="email">{{ 'The contact must be an email address' | translate }}</div>
                     </div>
                 </md-input-container>
                 <md-input-container class="md-block" flex>
                     <div layout="row" layout-align="center center">
+                        <md-icon>people</md-icon>
                         <md-chips ng-model="record.jointControllers"
                                   md-autocomplete-snap
                                   md-require-match="true"
@@ -111,6 +119,7 @@
                 <div ng-if="addJointController">
                     <md-input-container class="md-block" flex>
                         <label translate>Name</label>
+                        <md-icon>person</md-icon>
                         <input ng-model="joint.name" name="jointName" required>
                         <div ng-messages="recordForm.jointName.$error">
                             <div ng-message="required">{{ 'The name may not be empty' | translate }}</div>
@@ -118,9 +127,11 @@
                     </md-input-container>
                     <md-input-container class="md-block" flex>
                         <label translate>Contact</label>
-                        <input ng-model="joint.contact" name="jointContact" required>
+                        <md-icon>email</md-icon>
+                        <input ng-model="joint.contact" name="jointContact" type="email" required>
                         <div ng-messages="recordForm.jointContact.$error">
-                            <div ng-message="required">{{ 'The contact details may not be empty' | translate }}</div>
+                            <div ng-message="required">{{ 'The contact may not be empty' | translate }}</div>
+                            <div ng-message="email">{{ 'The contact must be an email address' | translate }}</div>
                         </div>
                     </md-input-container>
                     <div layout="row">
@@ -132,10 +143,12 @@
                 </div>
                 <md-input-container class="md-block" flex>
                     <label translate>Controller's representative</label>
+                    <md-icon>person</md-icon>
                     <input ng-model="record['representative']" name="representative">
                 </md-input-container>
                 <md-input-container class="md-block" flex>
                     <label translate>Data Protection Officer</label>
+                    <md-icon>person</md-icon>
                     <input ng-model="record['dpo']" name="dpo">
                 </md-input-container>
                 <md-input-container class="md-block" flex>
@@ -189,13 +202,18 @@
                 <md-input-container class="md-block" ng-if="checkboxInternational" flex>
                     <label translate>Identification</label>
                     <input ng-model="record['idThirdCountry']" name="idThirdCountry" required>
+                    <div ng-messages="recordForm.idThirdCountry.$error">
+                        <div ng-message="required">{{ 'The id may not be empty' | translate }}</div>
+                    </div>
                 </md-input-container>
                 <md-input-container class="md-block" ng-if="checkboxInternational" flex>
                     <label translate>Data Protection Officer</label>
-                    <input ng-model="record['dpoThirdCountry']" name="dpoThirdCountry" required>
+                    <md-icon>person</md-icon>
+                    <input ng-model="record['dpoThirdCountry']" name="dpoThirdCountry">
                 </md-input-container>
                 <md-input-container class="md-block" flex>
                     <label translate>Time limits for erasure</label>
+                    <md-icon>date_range</md-icon>
                     <input ng-model="record['erasure']" name="erasure" type="date" required>
                 </md-input-container>
                 <md-input-container class="md-block" flex>
@@ -207,6 +225,7 @@
                 <md-subheader layout="row" layout-align="left"><strong>Processors</strong></md-subheader>
                 <md-input-container class="md-block" flex>
                     <div layout="row" layout-align="center center">
+                        <md-icon>people</md-icon>
                         <md-chips ng-model="record.processors"
                                   md-autocomplete-snap
                                   md-require-match="true"
