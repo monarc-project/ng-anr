@@ -2839,6 +2839,9 @@
               $scope.deliverable.referential = step.referential;
               $scope.deliverable.risksByControl = false;
             }
+            if (step.record) {
+              $scope.deliverable.record = step.record;
+            }
         });
 
         $scope.save = function () {

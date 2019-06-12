@@ -178,6 +178,10 @@
                 if(index !== -1) {
                     $scope.recordTabSelected = index;
                 }
+                $scope.step = { // Deliverable data
+                  num:6,
+                  record : recordId
+                };
                 $scope.selectingRecord = false;
             });
         };
