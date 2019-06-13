@@ -83,7 +83,7 @@
                         <md-chips ng-model="record.jointControllers"
                                   md-autocomplete-snap
                                   md-require-match="true"
-                                  style="width:100%;">
+                                  style="width:100%">
                             <md-autocomplete flex
                                              md-selected-item="selectedJointController"
                                              md-search-text="jointControllerSearchText"
@@ -157,7 +157,7 @@
                     <textarea ng-model="record['purposes']" rows="2"></textarea>
                 </md-input-container>
                 <md-input-container class="md-block" flex>
-                    <label translate>Description of the categories of data subjects and of the categories of personal data</label>
+                    <label translate>Description of the processing activity</label>
                     <md-icon>subject</md-icon>
                     <textarea ng-model="record['description']" rows="4"></textarea>
                 </md-input-container>
@@ -166,7 +166,7 @@
                         <md-chips ng-model="record.recipients"
                                   md-autocomplete-snap
                                   md-require-match="false"
-                                  style="width:100%;">
+                                  style="width:100%">
                             <md-autocomplete flex
                                              md-selected-item="selectedRecipientCategory"
                                              md-search-text="$parent.recipientCategorySearchText"
@@ -212,6 +212,29 @@
                     <input ng-model="record['dpoThirdCountry']" name="dpoThirdCountry">
                 </md-input-container>
                 <md-input-container class="md-block" flex>
+                    <div layout="row" layout-align="start center">
+                        <md-icon>people</md-icon>
+                        <md-chips ng-model="record.dataSubjects"
+                                  md-require-match="false"
+                                  md-enable-chip-edit="false"
+                                  flex>
+                              <input type="text" ng-model="$parent.dataSubject">
+                        </md-chips>
+                        <label translate>Data subjects</label>
+                        <md-button class="md-icon-button md-primary" ng-disabled="!dataSubject" ng-click="addDataSubject($event, dataSubject)">
+                            <md-tooltip md-direction="left">
+                                {{ 'Add a data subject' | translate }}
+                            </md-tooltip>
+                            <md-icon>add_to_photos</md-icon>
+                        </md-button>
+                    </div>
+                </md-input-container>
+                <md-input-container class="md-block" flex>
+                    <label translate>Personal data processed</label>
+                    <md-icon>subject</md-icon>
+                    <input ng-model="record['personalData']" name="personalData">
+                </md-input-container>
+                <md-input-container class="md-block" flex>
                     <label translate>Time limits for erasure</label>
                     <md-icon>date_range</md-icon>
                     <input ng-model="record['erasure']" name="erasure" type="date" required>
@@ -229,7 +252,7 @@
                         <md-chips ng-model="record.processors"
                                   md-autocomplete-snap
                                   md-require-match="true"
-                                  style="width:100%;">
+                                  style="width:100%">
                             <md-autocomplete flex
                                              md-selected-item="selectedProcessor"
                                              md-search-text="processorSearchText"

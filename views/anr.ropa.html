@@ -65,6 +65,12 @@
                             <td md-cell> {{ currentRecord.description }} </td>
                         </tr>
                         <tr md-row>
+                            <td md-cell>  <b> {{ "Personal data processed: " | translate }} </b> </td>
+                            <td md-cell> {{ currentRecord.personalData }} </td>
+                            <td md-cell> </td>
+                            <td md-cell> </td>
+                        </tr>
+                        <tr md-row>
                             <td md-cell> <b> {{ "Time limits for erasure: " | translate }} </b> </td>
                             <td md-cell> {{  currentRecord.erasure.toLocaleDateString() }} </td>
                             <td md-cell> <b> {{ "Technical and organisational security measures: " | translate }} </b> </td>
@@ -94,6 +100,13 @@
                                     </table>
                                 </md-table-container>
                             </td>
+                        </tr>
+                        <tr md-row ng-if="currentRecord.dataSubjects.length > 0" >
+                            <td md-cell rowspan="{{currentRecord.dataSubjects.length}}"> <b> <span translate>Data subjects </b> </span> </td>
+                            <td colspan="3"> {{currentRecord.dataSubjects[0] }} </td>
+                        </tr>
+                        <tr ng-repeat="dataSubject in currentRecord.dataSubjects.slice(1)" md-row>
+                            <td colspan="3"> {{dataSubject }} </td>
                         </tr>
                         <tr md-row ng-if="currentRecord.recipients.length > 0" >
                             <td md-cell rowspan="{{currentRecord.recipients.length}}"> <b> <span translate>Recipient Categories </b> </span> </td>

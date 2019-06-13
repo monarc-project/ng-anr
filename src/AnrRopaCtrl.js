@@ -332,7 +332,8 @@
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
         $scope.joint={};
-        $scope.recipientCategorySearchText = "";
+        $scope.recipientCategorySearchText = '';
+        $scope.dataSubject = '';
         $scope.toggleIcon = "add_to_photos";
         $scope.addJointController = false;
         var defaultLang = angular.copy($scope.language);
@@ -350,6 +351,9 @@
             if(!Array.isArray($scope.record['processors'])) {
                 $scope.record['processors'] = [];
             }
+            if(!Array.isArray($scope.record['dataSubjects'])) {
+                $scope.record['dataSubjects'] = [];
+            }
             if($scope.record["idThirdCountry"]) {
                 $scope.checkboxInternational = true;
             }
@@ -365,6 +369,7 @@
                 recipients: [],
                 processors: [],
                 jointControllers: [],
+                dataSubjects: [],
                 representative: '',
                 dpo: '',
                 purposes: '',
@@ -396,6 +401,7 @@
             $scope.record['cont'] = false;
             $mdDialog.hide($scope.record);
         };
+
         $scope.createAndContinue = function () {
             for (var i = 1; i <=4; i++) {
               if ($scope.record['label' + i] == '' && i != defaultLang) {
@@ -405,6 +411,7 @@
             $scope.record.cont = true;
             $mdDialog.hide($scope.record);
         };
+
         $scope.controllerItemSelected = function () {
             if ($scope.selectedController !== null)
                 $scope.record.controller = $scope.selectedController;
@@ -412,9 +419,11 @@
                 $scope.record.controller = {};
             }
         };
+
         $scope.controllerTextChanged = function () {
             $scope.record.controller['label'] = $scope.controllerSearchText;
         };
+
         $scope.queryRecordControllerSearch = function (query) {
             var promise = $q.defer();
             RecordService.getRecordControllers({filter: query}).then(function (e) {
@@ -440,6 +449,7 @@
             });
             return promise.promise;
         };
+
         $scope.toggleJointController = function () {
             if($scope.addJointController) {
                 $scope.joint={};
@@ -450,15 +460,18 @@
                 $scope.toggleIcon = "cancel";
             }
         };
+
         $scope.addNewJointController = function () {
             $scope.record.jointControllers.push({   'label' : $scope.joint.name,
                                                     'contact' : $scope.joint.contact });
             $scope.toggleJointController();
         };
+
         $scope.toggleCheckboxInternational = function () {
             $scope.record.idThirdCountry = '';
             $scope.record.dpoThirdCountry = '';
         };
+
         $scope.queryRecordRecipientCategorySearch = function (query) {
             var promise = $q.defer();
             RecordService.getRecordRecipientCategories({filter: query}).then(function (e) {
@@ -484,11 +497,16 @@
             });
             return promise.promise;
         };
+
         $scope.createNewRecipientCategory = function (ev, recipientCategorySearchText) {
             $scope.record.recipients.push({'label' : recipientCategorySearchText});
-            $scope.recipientCategorySearchText="";
+            $scope.recipientCategorySearchText = "";
         };
 
+        $scope.addDataSubject = function (ev, dataSubject) {
+            $scope.record.dataSubjects.push(dataSubject);
+            $scope.dataSubject = '';
+        };
 
         $scope.queryRecordProcessorSearch = function (query) {
             var promise = $q.defer();
