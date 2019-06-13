@@ -2462,7 +2462,7 @@
                     }
                 })
                     .then(function (recommandation) {
-                        recommandation.recommandationSet = $scope.recommandationSet.uuid;
+                        recommandation.recommandationSet = recommandation.recommandationSet.uuid;
                         recommandation.anr = $scope.model.anr.id;
                         ClientRecommandationService.updateRecommandation(recommandation,
                             function () {
@@ -3960,11 +3960,25 @@
             return $scope.options;
         };
 
+        $scope.loadSetOptions = function(ev, anrID) {
+            ClientRecommandationService.getRecommandationsSets({anr: anrId}).then(function (data) {
+                $scope.setOptions = data['recommandations-sets'];
+            });
+            return $scope.setOptions;
+        };
+
         $scope.setSelectedRecommendation = function(ev, selectedRec) {
             if (selectedRec !== undefined) {
                 $scope.recommandation['code'] = selectedRec.code;
                 $scope.recommandation['importance'] = selectedRec.importance;
                 $scope.recommandation['description'] = selectedRec.description;
+            }
+        };
+
+        $scope.setSelectedRecommendationSet = function(ev, selectedRecSet) {
+            if (selectedRecSet !== undefined) {
+                $scope.recommandation['recommandationSet'] = selectedRecSet;
+                $scope.RecSetSelected = selectedRecSet;
             }
         };
 

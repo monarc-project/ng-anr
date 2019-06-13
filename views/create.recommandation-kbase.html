@@ -25,6 +25,13 @@
                     </md-select>
                 </md-input-container>
 
+                <md-input-container ng-if="recommandation.uuid" class="md-block" style="margin-right: 10px;">
+                    <label translate>Select a recommendation set</label>
+                    <md-select flex ng-model="recommandationSet" md-on-open="loadSetOptions($event, recommandationSet)" md-on-close="setSelectedRecommendationSet($event, recommandationSet)" ng-required="true">
+                        <md-option ng-repeat="item in setOptions" ng-value="item">{{ _langField(item,'label') }}</md-option>
+                    </md-select>
+                </md-input-container>
+
                 <md-input-container class="md-block">
                     <md-icon>toc</md-icon>
                     <input type="text" ng-model="recommandation.code" ng-required="true">
