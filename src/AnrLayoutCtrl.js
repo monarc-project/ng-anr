@@ -2921,7 +2921,7 @@
         };
 
         $scope.importObjectCommon = function () {
-            ObjlibService.importObjectCommon($scope.object_details.id, $scope.import.mode, function () {
+            ObjlibService.importObjectCommon($scope.object_details.uuid, $scope.import.mode, function () {
                 toastr.success(gettextCatalog.getString("The asset has been imported successfully"));
                 hookUpdateObjlib();
                 $scope.dialog_mode = 'common';
