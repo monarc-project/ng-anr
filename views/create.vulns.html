@@ -24,13 +24,10 @@
                   <md-button ng-if="OFFICE_MODE == 'FO'" class="md-primary" ng-click="importNewVulnerability($event)" ng-controller="AnrKbMgmtCtrl">
                       <md-icon>cloud_download</md-icon><span>&nbsp;{{ 'Import from MOSP' | translate }}</span>
                   </md-button>
-                  <md-button ng-if="OFFICE_MODE == 'BO'" class="md-primary" ng-click="importNewVulnerability($event)" ng-controller="BackofficeKbInfoCtrl">
-                      <md-icon>cloud_download</md-icon><span>&nbsp;{{ 'Import from MOSP' | translate }}</span>
-                  </md-button>
                   <span flex></span>
                 </md-card>
 
-                <md-subheader ng-if="!vuln.uuid" layout="row" layout-align="center"><strong>Manual creation</strong></md-subheader><br />
+                <md-subheader ng-if="!vuln.uuid && OFFICE_MODE == 'FO'" layout="row" layout-align="center"><strong>Manual creation</strong></md-subheader><br />
 
                 <md-subheader>{{ 'Labels and descriptions' | translate }}</md-subheader>
 

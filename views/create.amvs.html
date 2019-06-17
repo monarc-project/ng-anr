@@ -20,7 +20,7 @@
                     <span flex></span>
                 </md-card>
 
-                <md-subheader ng-if="!amv.uuid" layout="row" layout-align="center"><strong>Manual creation</strong></md-subheader><br />
+                <md-subheader ng-if="!amv.uuid && OFFICE_MODE == 'FO'" layout="row" layout-align="center"><strong>Manual creation</strong></md-subheader><br />
 
                 <md-autocomplete
                         ng-if="OFFICE_MODE == 'BO' || !amv.uuid"
