@@ -153,6 +153,9 @@
                             toastr.success(gettextCatalog.getString("The asset has been edited"), gettextCatalog.getString("Edition successful"));
                         });
                     }
+                })
+                .catch(function () {
+                    $scope.updateInstance();
                 });
         };
 
