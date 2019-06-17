@@ -323,7 +323,7 @@
                 link.setAttribute("href", encodedUri);
                 link.setAttribute("download", "recordOfProcessingActivities.csv");
                 document.body.appendChild(link);
-                link.click();  // This will download the data file named "soa.csv".
+                link.click();  // This will download the data file named "record.csv".
             });
         };
     }
