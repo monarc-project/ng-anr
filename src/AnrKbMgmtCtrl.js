@@ -230,7 +230,7 @@
                 .then(function (asset) {
                     AssetService.createAsset(asset,
                         function () {
-                            $scope.updateAssets();
+                            $scope.$parent.updateAssets();
 
                             if (asset.mode == 0 && asset.models && asset.models.length > 0) {
                                 // If we create a generic asset, but we still have specific models, we should warn
@@ -467,7 +467,7 @@
                 .then(function (threat) {
                     ThreatService.createThreat(threat,
                         function () {
-                            $scope.updateThreats();
+                            $scope.$parent.updateThreats();
 
                             if (threat.mode == 0 && threat.models && threat.models.length > 0) {
                                 // If we create a generic threat, but we still have specific models, we should warn
@@ -657,7 +657,7 @@
                 .then(function (vuln) {
                     VulnService.createVuln(vuln,
                         function () {
-                            $scope.updateVulns();
+                            $scope.$parent.updateVulns();
 
                             if (vuln.mode == 0 && vuln.models && vuln.models.length > 0) {
                                 // If we create a generic vulnerability, but we still have specific models, we should warn
@@ -904,8 +904,7 @@
                                         measure.category = data.categories.find( c => c['label' + $scope.language].toLowerCase().trim() === measure.category.toLowerCase().trim() ).id;
                                     })
                                     MeasureService.createMeasure(measures, function (){
-                                        //$scope.refTabSelected = $scope.referentials.items.count + 1;
-                                        $scope.updateReferentials();
+                                        $scope.$parent.updateReferentials();
                                         toastr.success(gettextCatalog.getString('The referential has been imported successfully.'),
                                                        gettextCatalog.getString('Creation successful'));
                                          $rootScope.$broadcast('referentialsUpdated');
@@ -926,8 +925,8 @@
                 controller: ['$scope', '$mdDialog', 'ReferentialService', 'ConfigService', 'referential', 'anrId', CreateReferentialDialogCtrl],
                 templateUrl: 'views/anr/create.referentials.html',
                 targetEvent: ev,
-                preserveScope: false,
-                scope: $scope.$dialogScope.$new(),
+                preserveScope: true,
+                scope: $scope,
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
