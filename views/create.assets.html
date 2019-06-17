@@ -12,22 +12,24 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-card ng-if="!asset.uuid" layout="row">
+                <md-card ng-if="!asset.uuid && OFFICE_MODE == 'FO'" layout="row" >
                   <span flex></span>
-                  <md-button ng-if="OFFICE_MODE == 'FO'" class="md-primary" ng-click="importFile($event,'Asset types')" ng-controller="AnrKbMgmtCtrl">
-                      <md-icon>play_for_work</md-icon><span>&nbsp;{{ 'Import from file' | translate }}</span>
-                  </md-button>
-                  <md-button ng-if="OFFICE_MODE == 'BO'" class="md-primary" ng-click="importFile($event,'Asset types')" ng-controller="BackofficeKbInfoCtrl">
+                  <md-button class="md-primary" ng-click="importFile($event,'Asset types')" ng-controller="AnrKbMgmtCtrl">
                       <md-icon>play_for_work</md-icon><span>&nbsp;{{ 'Import from file' | translate }}</span>
                   </md-button>
                   <span flex></span>
-                  <md-button ng-if="OFFICE_MODE == 'FO'" class="md-primary" ng-click="importNewAsset($event)" ng-controller="AnrKbMgmtCtrl">
+                  <md-button class="md-primary" ng-click="importNewAsset($event)" ng-controller="AnrKbMgmtCtrl">
                       <md-icon>cloud_download</md-icon><span>&nbsp;{{ 'Import from MOSP' | translate }}</span>
                   </md-button>
                   <span flex></span>
                 </md-card>
+                <md-card ng-if="!asset.uuid && OFFICE_MODE == 'BO'" layout="row" layout-align="center center">
+                  <md-button class="md-primary" ng-click="importFile($event,'Asset types')" ng-controller="BackofficeKbInfoCtrl">
+                      <md-icon>play_for_work</md-icon><span>&nbsp;{{ 'Import from file' | translate }}</span>
+                  </md-button>
+                </md-card>
 
-                <md-subheader ng-if="!asset.uuid && OFFICE_MODE == 'FO'" class="md-primary" layout="row" layout-align="center"><strong>Manual creation</strong></md-subheader><br />
+                <md-subheader ng-if="!asset.uuid && OFFICE_MODE == 'FO'" layout="row" layout-align="center"><strong>{{ 'Manual creation' | translate }}</strong></md-subheader><br />
 
                 <md-subheader>{{ 'Labels and descriptions' | translate }}</md-subheader>
 
