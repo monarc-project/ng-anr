@@ -7,6 +7,22 @@
             </md-tooltip>
             <md-icon class="md-icon-button md-primary">add_to_photos</md-icon>
         </md-button>
+        <md-menu>
+            <md-button class="md-icon-button md-primary" ng-click="$mdMenu.open()">
+                <md-tooltip md-direction="left">
+                    {{ 'Export all records' | translate }}
+                </md-tooltip>
+                <md-icon class="md-icon-button md-primary">file_download</md-icon>
+            </md-button>
+            <md-menu-content>
+                <md-menu-item>
+                  <md-button ng-click="openMethodDeliverable(step, $event)">.docx</md-button>
+                </md-menu-item>
+                <md-menu-item>
+                    <md-button ng-click="jsonExportAll()">.json</md-button>
+                </md-menu-item>
+            </md-menu-content>
+        </md-menu>
 
         <md-tab ng-repeat="currentRecord in records.items.records" label="{{ _langField(currentRecord,'label')}}"
             md-on-select="selectRecord(currentRecord.id, $index)">
@@ -47,33 +63,33 @@
                 <table md-table>
                     <tbody md-body>
                         <tr md-row>
-                            <td md-cell width="25%"> <b> {{ 'Name: ' | translate }} </b> </td>
+                            <td md-cell width="25%"> <b> {{ 'Name:' | translate }} </b> </td>
                             <td md-cell width="25%"> {{ currentRecord.controller.label }} </td>
-                            <td md-cell width="25%"> <b> {{ 'Contact: ' | translate }} </b> </td>
+                            <td md-cell width="25%"> <b> {{ 'Contact:' | translate }} </b> </td>
                             <td md-cell width="25%"> {{ currentRecord.controller.contact }} </td>
                         </tr>
                         <tr md-row>
-                            <td md-cell> <b> {{ "Representative: " | translate }} </b> </td>
+                            <td md-cell> <b> {{ "Controller\'s representative:" | translate }} </b> </td>
                             <td md-cell> {{ currentRecord.representative}} </td>
-                            <td md-cell> <b> {{ "Data Protection Officer: " | translate }} </b> </td>
+                            <td md-cell> <b> {{ "Data Protection Officer:" | translate }} </b> </td>
                             <td md-cell> {{ currentRecord.dpo }} </td>
                         </tr>
                         <tr md-row>
-                            <td md-cell>  <b> {{ "Purposes of the processing: " | translate }} </b> </td>
+                            <td md-cell>  <b> {{ "Purposes of the processing:" | translate }} </b> </td>
                             <td md-cell> {{ currentRecord.purposes }} </td>
-                            <td md-cell>  <b> {{ "Categories of data subjects: " | translate }} </b> </td>
+                            <td md-cell>  <b> {{ "Categories of data subjects:" | translate }} </b> </td>
                             <td md-cell> {{ currentRecord.description }} </td>
                         </tr>
                         <tr md-row>
-                            <td md-cell>  <b> {{ "Personal data processed: " | translate }} </b> </td>
+                            <td md-cell>  <b> {{ "Personal data processed:" | translate }} </b> </td>
                             <td md-cell> {{ currentRecord.personalData }} </td>
                             <td md-cell> </td>
                             <td md-cell> </td>
                         </tr>
                         <tr md-row>
-                            <td md-cell> <b> {{ "Time limits for erasure: " | translate }} </b> </td>
+                            <td md-cell> <b> {{ "Time limits for erasure:" | translate }} </b> </td>
                             <td md-cell> {{  currentRecord.erasure.toLocaleDateString() }} </td>
-                            <td md-cell> <b> {{ "Technical and organisational security measures: " | translate }} </b> </td>
+                            <td md-cell> <b> {{ "Technical and organisational security measures:" | translate }} </b> </td>
                             <td md-cell> {{ currentRecord.secMeasures }} </td>
                         </tr>
                         <tr md-row ng-if="currentRecord.idThirdCountry">
