@@ -91,7 +91,7 @@
                                              md-item-text="item['label']"
                                              md-min-length="0"
                                              md-no-cache="true"
-                                             placeholder="{{ 'Add joint controllers' | translate }}">
+                                             placeholder="{{ 'Joint controllers' | translate }}">
                                 <md-item-template>
                                     <span md-highlight-text="jointControllerSearchText" md-highlight-flags="^i">{{item['label']}}</span>
                                 </md-item-template>
@@ -200,7 +200,7 @@
                 </md-input-container>
                 <md-switch style="margin: 0" ng-model="checkboxInternational" ng-change="toggleCheckboxInternational()"> {{ 'Is there transfers of personal data to a third country or an international organisation?' | translate }}</md-switch>
                 <md-input-container class="md-block" ng-if="checkboxInternational" flex>
-                    <label translate>Identification</label>
+                    <label translate>ID</label>
                     <input ng-model="record['idThirdCountry']" name="idThirdCountry" required>
                     <div ng-messages="recordForm.idThirdCountry.$error">
                         <div ng-message="required">{{ 'The id may not be empty' | translate }}</div>

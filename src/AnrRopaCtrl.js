@@ -255,14 +255,14 @@
                 finalArray[recLine]= gettextCatalog.getString('Purposes of the processing');
                 finalArray[recLine]+=','+"\""+data.purposes+"\"";
                 recLine++;
-                finalArray[recLine]= gettextCatalog.getString('Description of the categories of data subjects and of the categories of personal data');
+                finalArray[recLine]= gettextCatalog.getString('Description of the processing activity');
                 finalArray[recLine]+=','+"\""+data.description+"\"";
                 if(data.idThirdCountry!=null) {
                     recLine++;
-                    finalArray[recLine]= gettextCatalog.getString('ID of third country or internation organisation recipient');
+                    finalArray[recLine]= gettextCatalog.getString('ID of third country or international organisation recipient');
                     finalArray[recLine]+=','+"\""+data.idThirdCountry+"\"";
                     recLine++;
-                    finalArray[recLine]= gettextCatalog.getString("Third country or internation organisation\'s data protection officer");
+                    finalArray[recLine]= gettextCatalog.getString("Third country or international organisation\'s data protection officer");
                     finalArray[recLine]+=','+"\""+data.dpoThirdCountry+"\"";
                 }
                 recLine++;
