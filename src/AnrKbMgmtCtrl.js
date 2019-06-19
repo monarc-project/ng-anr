@@ -3850,8 +3850,7 @@
             .then(function(json) {
                 // filter from the results the recommendations sets already in the analysis
                 $scope.mosp_recommandations_sets = json.data.data.objects.filter(
-                    recommandationSet => !$scope.recommandations_sets_uuid.includes(recommandationSet.json_object.uuid) &&
-                    recommandationSet.json_object.language == $scope.languages[$scope.language].toUpperCase()
+                    recommandationSet => !$scope.recommandations_sets_uuid.includes(recommandationSet.json_object.uuid)
                 )
             });
         }
