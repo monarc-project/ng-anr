@@ -106,8 +106,10 @@
                     if ($scope.model && $scope.model.anr && $scope.model.anr.id && $stateParams.modelId == $scope.model.anr.id) {
                         if (ToolsAnrService.currentTab == 0) {
                           $scope.updateAnrRisksTable();
+                          $scope.updateRecommandationsSets();
                         }else {
                           $scope.updateAnrRisksOpTable();
+                          $scope.updateRecommandationsSets();
                         }
                     }
                 }
@@ -167,9 +169,7 @@
                         $scope.updateInstances();
                         $scope.updateObjectsLibrary();
                         $scope.updateScales();
-                        $scope.updateReferentials();
-                        $scope.updateRecommandationsSets();
-                        
+                        $scope.updateReferentials();                        
 
                     }
 
