@@ -2217,6 +2217,7 @@
         };
 
         $scope.toggleRecommandationStatus = function (recommandation) {
+            recommandation.anr = $scope.model.anr.id;
             ClientRecommandationService.updateRecommandation(recommandation.uuid, {status: !recommandation.status}, function () {
                 recommandation.status = !recommandation.status;
             });
@@ -4321,7 +4322,7 @@
             },
             'importance' : {
                 'field' : 'importance',
-                'required' : true,
+                'required' : false,
                 'type' : 'integer',
                 'example' : gettextCatalog.getString('1, 2 or 3')
             }
@@ -4505,7 +4506,7 @@
 
                 if (requiredFields.includes('importance')) {
                     file.data[i]['importance'] = Number(file.data[i]['importance']);
-                    if (file.data[i]['importance'] < 1 || file.data[i]['importance'] > 3) {
+                    if (file.data[i]['importance'] < 0 || file.data[i]['importance'] > 3) {
                         file.data[i].error += gettextCatalog.getString('importance must be between 1 and 3') + "\n";
                         $scope.check = true;
                     }

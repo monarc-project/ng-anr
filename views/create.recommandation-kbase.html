@@ -27,7 +27,7 @@
 
                 <md-input-container ng-if="recommandation.uuid" class="md-block" style="margin-right: 10px;">
                     <label translate>Select a recommendation set</label>
-                    <md-select flex ng-model="recommandationSet" md-on-open="loadSetOptions($event, recommandationSet)" md-on-close="setSelectedRecommendationSet($event, recommandationSet)" ng-required="true">
+                    <md-select flex ng-model="recommandationSet" md-on-open="loadSetOptions($event, recommandationSet)" md-on-close="setSelectedRecommendationSet($event, recommandationSet)">
                         <md-option ng-repeat="item in setOptions" ng-value="item">{{ _langField(item,'label') }}</md-option>
                     </md-select>
                 </md-input-container>
@@ -48,7 +48,7 @@
                 <md-input-container class="md-block">
                     <label translate>Description</label>
                     <md-icon>description</md-icon>
-                    <textarea rows="3" ng-model="recommandation.description" ng-required="true"></textarea>
+                    <textarea rows="3" ng-model="recommandation.description"></textarea>
                 </md-input-container>
             </div>
         </md-dialog-content>
