@@ -8,11 +8,11 @@
             <md-icon class="md-icon-button md-primary">add_to_photos</md-icon>
         </md-button>
         <md-menu>
-            <md-button class="md-icon-button md-primary" ng-click="$mdMenu.open()">
+            <md-button class="md-icon-button" ng-click="$mdMenu.open()">
                 <md-tooltip md-direction="left">
-                    {{ 'Export all records' | translate }}
+                    {{ 'Export all the records in one file' | translate }}
                 </md-tooltip>
-                <md-icon class="md-icon-button md-primary">file_download</md-icon>
+                <md-icon class="md-warn">file_download</md-icon>
             </md-button>
             <md-menu-content>
                 <md-menu-item>
@@ -24,8 +24,8 @@
             </md-menu-content>
         </md-menu>
 
-        <md-tab ng-repeat="currentRecord in records.items.records" label="{{ _langField(currentRecord,'label')}}"
-            md-on-select="selectRecord(currentRecord.id, $index)">
+        <md-tab ng-repeat="record in records.items.records" label="{{ record.label }}"
+            md-on-select="selectRecord(record.id, $index)">
 
             <div layout="row" layout-align="end center" class="md-padding-double" style="height:40px">
                 <md-menu>
@@ -44,12 +44,6 @@
                         </md-menu-item>
                     </md-menu-content>
                 </md-menu>
-                <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly && records.items.records.length > 0" ng-click="editRecord($event,currentRecord.id)">
-                    <md-tooltip md-direction="left">
-                        {{ 'Edit record' | translate }}
-                    </md-tooltip>
-                    <md-icon>edit</md-icon>
-                </md-button>
                 <md-button class="md-icon-button md-warn" ng-if="!isAnrReadOnly && records.items.records.length > 0" ng-click="deleteRecord($event, currentRecord.id)">
                     <md-tooltip md-direction="left">
                         {{ 'Delete record' | translate }}
@@ -57,140 +51,292 @@
                     <md-icon>delete</md-icon>
                 </md-button>
             </div>
-            <p class="md-title md-padding-left"> <b> {{ _langField(currentRecord,'label')}} </b> </p>
-            <p class="md-subhead md-padding-left" translate>Controller</p>
-            <md-table-container flex>
-                <table md-table>
-                    <tbody md-body>
-                        <tr md-row>
-                            <td md-cell width="25%"> <b> {{ 'Name:' | translate }} </b> </td>
-                            <td md-cell width="25%"> {{ currentRecord.controller.label }} </td>
-                            <td md-cell width="25%"> <b> {{ 'Contact:' | translate }} </b> </td>
-                            <td md-cell width="25%"> {{ currentRecord.controller.contact }} </td>
-                        </tr>
-                        <tr md-row>
-                            <td md-cell> <b> {{ "Controller\'s representative:" | translate }} </b> </td>
-                            <td md-cell> {{ currentRecord.representative}} </td>
-                            <td md-cell> <b> {{ "Data Protection Officer:" | translate }} </b> </td>
-                            <td md-cell> {{ currentRecord.dpo }} </td>
-                        </tr>
-                        <tr md-row>
-                            <td md-cell>  <b> {{ "Purposes of the processing:" | translate }} </b> </td>
-                            <td md-cell> {{ currentRecord.purposes }} </td>
-                            <td md-cell>  <b> {{ "Categories of data subjects:" | translate }} </b> </td>
-                            <td md-cell> {{ currentRecord.description }} </td>
-                        </tr>
-                        <tr md-row>
-                            <td md-cell>  <b> {{ "Personal data processed:" | translate }} </b> </td>
-                            <td md-cell> {{ currentRecord.personalData }} </td>
-                            <td md-cell> </td>
-                            <td md-cell> </td>
-                        </tr>
-                        <tr md-row>
-                            <td md-cell> <b> {{ "Time limits for erasure:" | translate }} </b> </td>
-                            <td md-cell> {{  currentRecord.erasure.toLocaleDateString() }} </td>
-                            <td md-cell> <b> {{ "Technical and organisational security measures:" | translate }} </b> </td>
-                            <td md-cell> {{ currentRecord.secMeasures }} </td>
-                        </tr>
-                        <tr md-row ng-if="currentRecord.idThirdCountry">
-                            <td md-cell> <b> {{ 'Third country organisation Id' | translate }} </b> </td>
-                            <td md-cell> {{ currentRecord.idThirdCountry }} </td>
-                            <td md-cell> <b> {{ 'Third country data protection officer' | translate }} </b> </td>
-                            <td md-cell> {{ currentRecord.dpoThirdCountry }} </td>
-                        </tr>
-                        <tr md-row ng-if="currentRecord.jointControllers.length>0" >
-                            <td md-cell rowspan="{{currentRecord.jointControllers.length}}"> <b> <span translate> Joint Controllers: </b> </span> </td>
-                            <td md-cell>{{ currentRecord.jointControllers[0].label }}</td>
-                            <td md-cell rowspan="{{currentRecord.jointControllers.length}}"> <b> <span translate> Contact: </b> </span> </td>
-                            <td md-cell>{{ currentRecord.jointControllers[0].contact }}</td>
-                        </tr>
-                        <tr md-row ng-repeat="jc in currentRecord.jointControllers.slice(1)">
-                            <td md-cell style="padding: 0px 56px 0px 0px">{{ jc.label }}</td>
-                            <td md-cell>{{ jc.contact }}</td>
-                        </tr>
-                        <tr md-row ng-if="currentRecord.dataSubjects.length > 0" >
-                            <td md-cell rowspan="{{currentRecord.dataSubjects.length}}"> <b> <span translate>Data subjects </b> </span> </td>
-                            <td colspan="3"> {{currentRecord.dataSubjects[0] }} </td>
-                        </tr>
-                        <tr md-row ng-repeat="dataSubject in currentRecord.dataSubjects.slice(1)">
-                            <td colspan="3"> {{dataSubject }} </td>
-                        </tr>
-                        <tr md-row ng-if="currentRecord.recipients.length > 0" >
-                            <td md-cell rowspan="{{currentRecord.recipients.length}}"> <b> <span translate>Recipient Categories </b> </span> </td>
-                            <td colspan="3"> {{currentRecord.recipients[0]['label'] }} </td>
-                        </tr>
-                        <tr md-row ng-repeat="recipient in currentRecord.recipients.slice(1)">
-                            <td colspan="3"> {{recipient['label'] }} </td>
-                        </tr>
-                  </tbody>
-              </table>
-          </md-table-container>
-          <p class="md-subhead md-padding-left" ng-if="currentRecord.processors.length > 0" translate>Processors</p>
-          <md-tabs md-dynamic-height="true" md-selected="processorTabSelected">
-              <md-tab ng-repeat="processor in currentRecord.processors" label="{{processor.label}}"
-                  md-on-select="selectProcessor(processor.id)">
-                  <div layout="row" layout-align="end center" class="md-padding-double" style="height:40px">
-                      <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="editProcessor($event,processor.id)">
-                          <md-tooltip md-direction="left">
-                              {{ 'Edit processor' | translate }}
-                          </md-tooltip>
-                          <md-icon>edit</md-icon>
-                      </md-button>
-                      <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="unbindProcessor($event,currentRecord.id,processor.id)">
-                          <md-tooltip md-direction="left">
-                              {{ 'Detach processor' | translate }}
-                          </md-tooltip>
-                          <md-icon>content_cut</md-icon>
-                      </md-button>
-                  </div>
-                  <md-table-container flex>
-                      <table md-table>
-                          <tbody md-body>
-                              <tr md-row>
-                                  <td md-cell width=20% > <b> {{ 'Name' | translate }} </b> </td>
-                                  <td md-cell> {{ processor.label }} </td>
-                              </tr>
-                              <tr md-row>
-                                  <td md-cell> <b> {{ "Contact" | translate }} </b> </td>
-                                  <td md-cell> {{ processor.contact }} </td>
-                              </tr>
-
-                              <tr md-row ng-if="processor.controllers.length>0">
-                                  <td md-cell > <b> <span translate> Controllers on behalf this processor is acting on </span> </td>
-                                  <td md-cell>
-                                      <md-table-container flex>
-                                          <table md-table>
-                                              <tbody md-body>
-                                                  <tr md-row>
-                                                      <th md-cell width="30%"> <b> <span translate>Name</span> </b></th>
-                                                      <th md-cell width="70%"> <b> <span translate>Contact</span> </b></th>
-                                                  </tr>
-                                                  <tr md-row ng-repeat="bc in processor.controllers">
-                                                      <td md-cell>{{ bc.label }}</td>
-                                                      <td md-cell>{{ bc.contact }}</td>
-                                                  </tr>
-                                              </tbody>
-                                          </table>
-                                      </md-table-container>
-                                  </td>
-                              </tr>
-                              <tr md-row ng-if="processor.idThirdCountry">
-                                  <td md-cell> <b> {{ 'Third country or international organisation Id' | translate }} </b> </td>
-                                  <td md-cell> {{ processor.idThirdCountry }} </td>
-                              </tr>
-                              <tr md-row ng-if="processor.dpoThirdCountry">
-                                  <td md-cell> <b> {{ 'Third country data protection officer' | translate }} </b> </td>
-                                  <td md-cell> {{ processor.dpoThirdCountry }} </td>
-                              </tr>
-                              <tr md-row ng-if="processor.secMeasures">
-                                  <td md-cell> <b> {{ "Technical and organisational security measures" | translate }} </b> </td>
-                                  <td md-cell> {{ processor.secMeasures }} </td>
-                              </tr>
+            <div>
+                <p class="md-title md-padding-left" translate>Description of processing activities</p>
+            </div>
+            <div>
+                <md-table-container flex>
+                    <table editable callback="onRecordTableEdited" class="md-html-table md-html-table-grey big-border-all" >
+                        <tbody edit-model="record">
+                            <tr>
+                                <td translate> <b> Name </b> </td>
+                                <td colspan="5" edit-readonly="isAnrReadOnly" edit-field="label" class="txtcenter"></td>
+                            </tr>
+                            <tr>
+                                <td translate> <b> Purpose(s) </b> </td>
+                                <td colspan="5" class="txtcenter">
+                                    <div layout="row" layout-align="start center">
+                                        <md-chips
+                                        md-on-remove="onRecordTableEdited(record)"  md-on-add="onRecordTableEdited(record)"
+                                        class="chips-horizontal" ng-model="record.purposes" md-require-match="true" flex>
+                                            <input type="text" style="width:100%">
+                                        </md-chips>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td translate style="width:1%; white-space:nowrap"> <b> Creation date </b> </td>
+                                <td class="txtcenter" style="width:1%; white-space:nowrap"> {{ record.createdAt.date.substring(0,10) }}</td>
+                                <td translate style="width:1%; white-space:nowrap"> <b> Update date </b> </td>
+                                <td class="txtcenter" style="width:1%; white-space:nowrap"> {{ record.updatedAt.date.substring(0,10) }}</td>
+                                <td translate style="width:1%; white-space:nowrap"> <b> Security measures </b> </td>
+                                <td edit-readonly="isAnrReadOnly" edit-field="secMeasures" class="txtcenter"></td>
                         </tbody>
                     </table>
                 </md-table-container>
-            </md-tab>
-        </md-tabs>
-      </md-tab>
+            </div>
+            <br/>
+            <div>
+                <p class="md-title md-padding-left" translate>Actors</p>
+            </div>
+            <div>
+                <md-table-container flex>
+                    <table md-table>
+                        <tbody md-body>
+                            <tr md-row>
+                                <th md-head translate> Actor </th>
+                                <th md-head translate> Name </th>
+                                <th md-head translate> Contact </th>
+                            </tr>
+                            <tr md-row>
+                                <td md-cell style="width:1%; white-space:nowrap" translate> <b> Processing activity controller </b> </td>
+                                <td md-cell>
+                                    <md-autocomplete
+                                        md-selected-item="selectedItemController"
+                                        md-search-text="record.controller.label"
+                                        md-items="item in queryRecordActorSearch(record.controller.label)"
+                                        md-item-text="item['label']"
+                                        md-min-length="0"
+                                        md-no-cache="true"
+                                        md-selected-item-change="actorItemSelected(record, selectedItemController, 'controller')"
+                                        md-search-text-change="actorSearchTextChanged()"
+                                        ng-blur="updateActorLabel(record, record.controller, 'controller')"
+                                        placeholder="{{ 'Processing activity controller' | translate }}"
+                                        ng-init="initController(record)">
+                                        <md-item-template>
+                                            <span md-highlight-text="record.controller.label" md-highlight-flags="^i">{{item['label']}}</span>
+                                        </md-item-template>
+                                    </md-autocomplete>
+                                </td>
+                                <td md-cell>
+                                    <div layout="row" layout-align="start center">
+                                        <md-chips class="chips-horizontal"
+                                            md-on-remove="onActorContactEdit(record.controller)"
+                                            md-on-add="onActorContactEdit(record.controller)"
+                                            ng-model="record.controller.contact" flex>
+                                            <input type="text" style="width:100%">
+                                        </md-chips>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr md-row>
+                                <td md-cell translate> <b> Data protection officer </b> </td>
+                                <td md-cell>
+                                    <md-autocomplete
+                                        md-selected-item="selectedItemDpo"
+                                        md-search-text="record.dpo.label"
+                                        md-items="item in queryRecordActorSearch(record.dpo.label)"
+                                        md-item-text="item['label']"
+                                        md-min-length="0"
+                                        md-no-cache="true"
+                                        md-selected-item-change="actorItemSelected(record, selectedItemDpo, 'dpo')"
+                                        md-search-text-change="actorSearchTextChanged()"
+                                        ng-blur="updateActorLabel(record, record.dpo, 'dpo')"
+                                        placeholder="{{ 'Data protection officer' | translate }}"
+                                        ng-init="initDpo(record)">
+                                        <md-item-template>
+                                            <span md-highlight-text="record.dpo.label" md-highlight-flags="^i">{{item['label']}}</span>
+                                        </md-item-template>
+                                    </md-autocomplete>
+                                </td>
+                                <td md-cell>
+                                    <div layout="row" layout-align="start center">
+                                        <md-chips class="chips-horizontal"
+                                            md-on-remove="onActorContactEdit(record.dpo)"
+                                            md-on-add="onActorContactEdit(record.dpo)"
+                                            ng-model="record.dpo.contact" flex>
+                                            <input type="text" style="width:100%">
+                                        </md-chips>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr md-row>
+                                <td md-cell translate> <b> Representative </b> </td>
+                                <td md-cell>
+                                    <md-autocomplete
+                                        md-selected-item="selectedItemRepresentative"
+                                        md-search-text="record.representative.label"
+                                        md-items="item in queryRecordActorSearch(record.representative.label)"
+                                        md-item-text="item['label']"
+                                        md-min-length="0"
+                                        md-no-cache="true"
+                                        md-selected-item-change="actorItemSelected(record, selectedItemRepresentative, 'representative')"
+                                        md-search-text-change="actorSearchTextChanged()"
+                                        ng-blur="updateActorLabel(record, record.representative, 'representative')"
+                                        placeholder="{{ 'Representative' | translate }}"
+                                        ng-init="initRepresentative(record)">
+                                        <md-item-template>
+                                            <span md-highlight-text="record.representative.label" md-highlight-flags="^i">{{item['label']}}</span>
+                                        </md-item-template>
+                                    </md-autocomplete>
+                                </td>
+                                <td md-cell>
+                                    <div layout="row" layout-align="start center">
+                                        <md-chips class="chips-horizontal"
+                                            md-on-remove="onActorContactEdit(record.representative)"
+                                            md-on-add="onActorContactEdit(record.representative)"
+                                            ng-model="record.representative.contact" flex>
+                                            <input type="text" style="width:100%">
+                                        </md-chips>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr md-row>
+                                <td md-cell translate> <b> Joint controllers </b> </td>
+                                <td md-cell>
+                                    <md-autocomplete ng-if="record.jointControllers.length > 0"
+                                        md-selected-item="selectedJointController"
+                                        md-search-text="record.jointContollers[0].label"
+                                        md-items="item in queryRecordActorSearch(record.jointContollers[0].label)"
+                                        md-item-text="item['label']"
+                                        md-min-length="0"
+                                        md-no-cache="true"
+                                        md-selected-item-change="jointControllerItemSelected(recordId, record.jointContollers[0].label, record.jointControllers, 0)"
+                                        md-search-text-change="actorSearchTextChanged()"
+                                        ng-blur="updateJointControllerLabel(record, record.jointContollers[0], 0)"
+                                        placeholder="{{ 'Joint controller' | translate }}">
+                                        <md-item-template>
+                                            <span md-highlight-text="record.jointContollers[0].label" md-highlight-flags="^i">{{item['label']}}</span>
+                                        </md-item-template>
+                                    </md-autocomplete>
+                                </td>
+                                <td md-cell>
+                                    <div layout="row" layout-align="start center">
+                                        <md-chips class="chips-horizontal"
+                                            md-on-remove="onActorContactEdit(record.jointController[0])"
+                                            md-on-add="onActorContactEdit(record.jointController[0])"
+                                            ng-model="record.jointController[0].contact" flex>
+                                            <input type="text" style="width:100%">
+                                        </md-chips>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr md-row ng-repeat="jc in record.jointControllers.slice(1)">
+                                <td md-cell translate> </td>
+                                <td md-cell>
+                                    <md-autocomplete
+                                        md-selected-item="selectedJointController"
+                                        md-search-text="searchTextJointController"
+                                        md-items="item in queryRecordActorSearch(jc.label)"
+                                        md-item-text="item['label']"
+                                        md-min-length="0"
+                                        md-no-cache="true"
+                                        md-selected-item-change="jointControllerItemSelected(recordId, selectedJointController, record,jointControllers, $index+1)"
+                                        md-search-text-change="actorSearchTextChanged()"
+                                        ng-blur="updateJointControllerLabel(record, jc, $index+1)"
+                                        placeholder="{{ 'Joint controller' | translate }}">
+                                        <md-item-template>
+                                            <span md-highlight-text="jc.label" md-highlight-flags="^i">{{item['label']}}</span>
+                                        </md-item-template>
+                                    </md-autocomplete>
+                                </td>
+                                <td md-cell>
+                                    <div layout="row" layout-align="start center">
+                                        <md-chips class="chips-horizontal"
+                                            md-on-remove="onActorContactEdit(record.jointController[$index+1])"
+                                            md-on-add="onActorContactEdit(record.jointController[$index+1])"
+                                            ng-model="record.jointController[$index+1].contact" flex>
+                                            <input type="text" style="width:100%">
+                                        </md-chips>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+            </div>
+            <div>
+                <p class="md-title md-padding-left" translate>Categories of personal data and data subjects</p>
+            </div>
+            <div>
+                <md-table-container flex>
+                    <table editable callback="onPersonalDataTableEdited" class="md-html-table md-html-table-grey big-border-all" >
+                        <tbody>
+                            <tr>
+                                <th translate> Data subjects </th>
+                                <th translate> Categories of personal data </th>
+                                <th translate> Description </th>
+                                <th translate> Duration of data retention </th>
+                            </tr>
+                            <tr ng-repeat="personalData in currentRecord.personalData" edit-localmodel="personalData">
+                                <td class="txtcenter"></td>
+                                <td class="txtcenter"></td>
+                                <td edit-readonly="isAnrReadOnly" edit-field="description" class="txtcenter"></td>
+                                <td class="txtcenter">
+                                    <input type="number" edit-readonly="isAnrReadOnly" edit-field="retentionPeriod">
+                                    <md-select edit-readonly="isAnrReadOnly" edit-field="retentionPeriodMode">
+                                        <md-option ng-value="0" translate>{{ day(s) }}</md-option>
+                                        <md-option ng-value="1" translate>{{ month(s) }}</md-option>
+                                        <md-option ng-value="2" translate>{{ year(s) }}</md-option>
+                                    </md-select>
+                                    <textarea edit-readonly="isAnrReadOnly" edit-field="retentionPeriodDescription"></textarea>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+            </div>
+            <div>
+                <p class="md-title md-padding-left" translate> Recipients/Transfers </p>
+            </div>
+            <div>
+                <md-subheader class="md-padding-left" translate> Recipients </p>
+            </div>
+            <div>
+                <md-table-container flex>
+                    <table editable callback="onRecipientTableEdited" class="md-html-table md-html-table-grey big-border-all" >
+                        <tbody>
+                            <tr>
+                                <th translate> Recipient </th>
+                                <th translate> Description </th>
+                            </tr>
+                            <tr ng-repeat="recipient in currentRecord.recipients" edit-localmodel="recipient">
+                                <td edit-readonly="isAnrReadOnly" edit-field="label" class="txtcenter"></td>
+                                <td edit-readonly="isAnrReadOnly" edit-field="description" class="txtcenter"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+            </div>
+            <div>
+                <md-subheader class="md-padding-left" translate> International transfers </p>
+            </div>
+            <div>
+                <md-table-container flex>
+                    <table editable callback="onTransferTableEdited" class="md-html-table md-html-table-grey big-border-all" >
+                        <tbody>
+                            <tr>
+                                <th translate> Organisation </th>
+                                <th translate> Description </th>
+                                <th translate> Country </th>
+                                <th translate> Documents </th>
+                            </tr>
+                            <tr ng-repeat="internationalTransfer in currentRecord.internationalTransfers" edit-localmodel="internationalTransfer">
+                                <td edit-readonly="isAnrReadOnly" edit-field="organisation" class="txtcenter"></td>
+                                <td edit-readonly="isAnrReadOnly" edit-field="description" class="txtcenter"></td>
+                                <td edit-readonly="isAnrReadOnly" edit-field="country" class="txtcenter"></td>
+                                <td edit-readonly="isAnrReadOnly" edit-field="country" class="txtcenter">
+                                    <div layout="row" layout-align="start center">
+                                        <md-chips class="chips-horizontal" edit-readonly="isAnrReadOnly" edit-field="documents" md-autocomplete-snap md-require-match="true" flex>
+                                            <input type="text" style="width:100%">
+                                        </md-chips>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </md-table-container>
+            </div>
+        </md-tab>
     </md-tabs>
 </div>

@@ -3,7 +3,7 @@
         .module('AnrModule')
         .controller('AnrRopaCtrl', [
             '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog',
-            '$state', 'DownloadService', '$http', '$stateParams', '$q', 'RecordService', 'TableHelperService',
+            'DownloadService', '$http', '$q', 'RecordService',
             AnrRopaCtrl
         ]);
 
@@ -11,32 +11,27 @@
     * ANR > RECORD OF PROCESSING ACTIVITIES
     */
     function AnrRopaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog,
-        $state, DownloadService, $http, $stateParams, $q, RecordService, TableHelperService) {
+        DownloadService, $http, $q, RecordService) {
         $scope.language = $scope.getAnrLanguage();
         $scope.recordTabSelected = 0;
         $scope.records = {
             'items' : [],
             'selected' : -1
         };
+
         $scope.createNewRecord = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'RecordService', 'ConfigService', 'record', 'anrId', CreateRecordDialogCtrl],
+                controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'RecordService', 'ConfigService', CreateRecordDialogCtrl],
                 templateUrl: 'views/anr/create.records.html',
                 targetEvent: ev,
-                preserveScope: true,
-                scope: $scope,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
-                locals: {
-                    'record' : null,
-                    'anrId': $scope.model.anr.id
-                }
             })
             .then(function (record) {
                 var cont = record.cont;
-                record.cont = undefined;
-                $scope.record = undefined;
                 RecordService.createRecord(record,
                     function (status) {
                         $scope.updateRecords();
@@ -46,13 +41,22 @@
                         if (cont) {
                             $scope.createNewRecord(ev);
                         }
-                    },
-
-                    function () {
-                        $scope.createNewRecord(ev, record);
                     }
                 );
             }).catch(angular.noop);
+        };
+
+        $scope.onRecordTableEdited = function (model, name) {
+            var promise = $q.defer();
+
+            // This record changed, update it
+            RecordService.updateRecord(model, function (data) {
+                promise.resolve(true);
+            }, function () {
+                promise.reject(false);
+            });
+
+            return promise.promise;
         };
 
         $scope.editRecord = function (ev, recordId) {
@@ -94,7 +98,7 @@
         $scope.deleteRecord = function (ev, item) {
             var confirm = $mdDialog.confirm()
                 .title(gettextCatalog.getString('Are you sure you want to delete record?',
-                    {label: item.label1}))
+                    {label: item.label}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
                 .theme('light')
@@ -172,8 +176,6 @@
         $scope.selectRecord = function(recordId, index = -1) {
             $scope.selectingRecord = true;
             RecordService.getRecord(recordId).then(function (data) {
-                data['erasure'] = (new Date(data['erasure']));
-                $scope.currentRecord = data;
                 $scope.records.selected = recordId;
                 if(index !== -1) {
                     $scope.recordTabSelected = index;
@@ -189,17 +191,149 @@
         $scope.updateRecords = function() {
             $scope.updatingRecords = true;
             RecordService.getRecords({order: 'created_at'}).then(function (data) {
-                for (var j = 0; j < data.records.length; ++j) {
-                    data['records'][j]['erasure'] = (new Date(data['records'][j]['erasure']));
-                }
                 $scope.records.items = data;
                 if ($scope.records.items.count>0 && $scope.records.selected === -1) {
                     $scope.selectRecord($scope.records.items.records[0].id, 0);
                 }
+                console.log($scope.records.items);
                 $scope.updatingRecords = false;
             });
         };
         $scope.updateRecords();
+
+        $scope.initController = function (record) {
+            $scope.selectedItemController = record["controller"];
+        }
+
+        $scope.initDpo = function (record) {
+            $scope.selectedItemDpo = record["dpo"];
+        }
+
+        $scope.initRepresentative = function (record) {
+            $scope.selectedItemRepresentative = record["representative"];
+        }
+
+        $scope.queryRecordActorSearch = function (query) {
+            var promise = $q.defer();
+            RecordService.getRecordActors({filter: query}).then(function (e) {
+                promise.resolve(e["record-actors"]);
+            });
+            return promise.promise;
+        };
+
+        $scope.actorItemSelected = function (record, selectedItem, field) {
+            if (selectedItem !== undefined && selectedItem !== null) {
+                var activeElement = document.activeElement;
+                if (activeElement) {
+                    activeElement.blur();
+                }
+                record[patchField] = selectedItem;
+            }
+            else {
+                if(record[field]["contact"]){
+                    return;
+                }
+                record[field] = {};
+            }
+            RecordService.updateRecord(record, function (data) {
+                toastr.success( gettextCatalog.getString('The record has been edited successfully.'),
+                                gettextCatalog.getString('Edition successful'));
+            });
+        };
+
+        $scope.updateActorLabel = function (record, actor, actorField) {
+            if((actor.id == undefined || actor.id == null)) {
+                if(actor.label) {
+                    RecordService.createRecordActor(actor,
+                        function (status) {
+                            actor["id"] = status.id;
+                            record[actorField] = actor;
+                            RecordService.updateRecord(record, function (data) {
+                                RecordService.getRecords({order: 'created_at'}).then(function (data) {
+                                    $scope.records.items = data;
+                                    $scope.selectRecord(record.id);
+                                });
+                                record[actorField].id = status.id;
+                                toastr.success( gettextCatalog.getString('The actor has been created successfully.'),
+                                                gettextCatalog.getString('Creation successful'));
+                            });
+                        }
+                    );
+                }
+            }
+            else {
+                RecordService.updateRecordActor(actor, function (data) {
+                    RecordService.getRecords({order: 'created_at'}).then(function (data) {
+                        console.log(data);
+                        $scope.records.items = data;
+                        $scope.selectRecord(record.id);
+                    });
+                    toastr.success( gettextCatalog.getString('The actor has been edited successfully.'),
+                                    gettextCatalog.getString('Edition successful'));
+                });
+            }
+        }
+
+        $scope.jointControllerItemSelected = function (recordId, selectedItem, jointControllers, index) {
+            if (selectedItem !== null) {
+                jointControllers[index] = selectedItem;
+                var ids = [];
+                for (var jc in jointControllers) {
+                    ids.push(jc.id);
+                }
+                RecordService.patchRecord(recordId, {"jointControllers": ids}, function (data) {
+                    promise.resolve(true);
+                }, function () {
+                    promise.reject(false);
+                });
+            }
+            else {
+                unset(jointControllers[index].id);
+            }
+        }
+
+        $scope.updateJointControllerLabel = function (record, actor, index) {
+            if(actor.id == null) {
+                RecordService.createRecordActor(actor,
+                    function (status) {
+                        record["jointControllers"][index]["id"] = status.id;
+                        RecordService.updateRecord(record, function (data) {
+                            toastr.success( gettextCatalog.getString('The actor has been created successfully.'),
+                                            gettextCatalog.getString('Creation successful'));
+                        });
+                    }
+                );
+            }
+            else {
+                RecordService.updateRecordActor(actor, function (data) {
+                    RecordService.getRecords({order: 'created_at'}).then(function (data) {
+                        $scope.records.items = data;
+                        $scope.selectRecord(record.id);
+                    });
+                    toastr.success( gettextCatalog.getString('The actor has been edited successfully.'),
+                                    gettextCatalog.getString('Edition successful'));
+                });
+            }
+        }
+
+
+        $scope.onActorContactEdit = function (actor) {
+            var promise = $q.defer();
+
+            // This record changed, update it
+            RecordService.updateRecordActor(actor, function (data) {
+                RecordService.getRecords({order: 'created_at'}).then(function (data) {
+                    $scope.records.items = data;
+                });
+                toastr.success( gettextCatalog.getString('The actor has been edited successfully.'),
+                                gettextCatalog.getString('Edition successful'))
+                promise.resolve(true);
+            }, function () {
+                promise.reject(false);
+            });
+            return promise.promise;
+        };
+
 
         $scope.jsonExport = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
@@ -222,6 +356,37 @@
                     method = $http.post;
                 }
                 method('api/'+cliAnr+'anr/' + $scope.model.anr.id + '/records/' + $scope.currentRecord.id + '/export', {id: $scope.currentRecord.id, password: exports.password}).then(function (data) {
+                    var contentD = data.headers('Content-Disposition'),
+                        contentT = data.headers('Content-Type');
+                    contentD = contentD.substring(0,contentD.length-1).split('filename="');
+                    contentD = contentD[contentD.length-1];
+                    DownloadService.downloadJSON(data.data, contentD);
+                    toastr.success(gettextCatalog.getString('The record has been exported successfully.'), gettextCatalog.getString('Export successful'));
+                })
+            }).catch(angular.noop);
+        }
+
+        $scope.jsonExportAll = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', ExportRecordDialogCtrl],
+                templateUrl: 'views/anr/export.record.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                }
+            }).then(function (exports) {
+                var cliAnr = '';
+                var method = $http.get;
+                if ($scope.OFFICE_MODE == 'FO') {
+                    cliAnr = 'client-';
+                    method = $http.post;
+                }
+                method('api/'+cliAnr+'anr/' + $scope.model.anr.id + '/records/export', {export:"All", password: exports.password}).then(function (data) {
                     var contentD = data.headers('Content-Disposition'),
                         contentT = data.headers('Content-Type');
                     contentD = contentD.substring(0,contentD.length-1).split('filename="');
@@ -328,240 +493,22 @@
         };
     }
 
-    function CreateRecordDialogCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $q, RecordService, ConfigService, record) {
+    function CreateRecordDialogCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $q, RecordService, ConfigService) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
-        $scope.joint={};
-        $scope.recipientCategorySearchText = '';
-        $scope.dataSubject = '';
-        $scope.toggleIcon = "add_to_photos";
-        $scope.addJointController = false;
-        var defaultLang = angular.copy($scope.language);
-        $scope.checkboxInternational = false;
-
-        if (record != undefined && record != null) {
-            $scope.controllerSearchText = record.controller.label;
-            $scope.record = record;
-            if(!Array.isArray($scope.record['jointControllers'])) {
-                $scope.record['jointControllers'] = [];
-            }
-            if(!Array.isArray($scope.record['recipients'])) {
-                $scope.record['recipients'] = [];
-            }
-            if(!Array.isArray($scope.record['processors'])) {
-                $scope.record['processors'] = [];
-            }
-            if(!Array.isArray($scope.record['dataSubjects'])) {
-                $scope.record['dataSubjects'] = [];
-            }
-            if($scope.record["idThirdCountry"]) {
-                $scope.checkboxInternational = true;
-            }
-        } else {
-            $scope.controllerSearchText = "";
-            $scope.processor = undefined;
-            $scope.record = {
-                label1: '',
-                label2: '',
-                label3: '',
-                label4: '',
-                controller: {},
-                recipients: [],
-                processors: [],
-                jointControllers: [],
-                dataSubjects: [],
-                representative: '',
-                dpo: '',
-                purposes: '',
-                description: '',
-                erasure: null,
-                secMeasures: '',
-                idThirdCountry: '',
-                dpoThirdCountry: '',
-            };
-        }
-        if($scope.processor) {
-            $scope.record.processors.push($scope.processor);
-            $scope.processor = undefined;
-        }
 
         $scope.cancel = function() {
-            if($scope.records.items.count > 0){
-                $scope.selectRecord($scope.records.items.records[$scope.recordTabSelected].id, $scope.recordTabSelected);
-            }
             $mdDialog.cancel();
         };
 
         $scope.create = function() {
-            for (var i = 1; i <=4; i++) {
-              if ($scope.record['label' + i] == '' && i != defaultLang) {
-                $scope.record['label' + i] = $scope.record['label' + defaultLang];
-              }
-            }
             $scope.record['cont'] = false;
             $mdDialog.hide($scope.record);
         };
 
         $scope.createAndContinue = function () {
-            for (var i = 1; i <=4; i++) {
-              if ($scope.record['label' + i] == '' && i != defaultLang) {
-                $scope.record['label' + i] = $scope.record['label' + defaultLang];
-              }
-            }
-            $scope.record.cont = true;
+            $scope.record['cont'] = true;
             $mdDialog.hide($scope.record);
-        };
-
-        $scope.controllerItemSelected = function () {
-            if ($scope.selectedController !== null)
-                $scope.record.controller = $scope.selectedController;
-            else {
-                $scope.record.controller = {};
-            }
-        };
-
-        $scope.controllerTextChanged = function () {
-            $scope.record.controller['label'] = $scope.controllerSearchText;
-        };
-
-        $scope.queryRecordControllerSearch = function (query) {
-            var promise = $q.defer();
-            RecordService.getRecordControllers({filter: query}).then(function (e) {
-                // Filter out values already selected
-                var filtered = [];
-                for (var j = 0; j < e['record-controllers'].length; ++j) {
-                    var found = false;
-
-                    for (var i = 0; i < $scope.record.jointControllers.length; ++i) {
-                        if ($scope.record.jointControllers[i].id == e['record-controllers'][j].id) {
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found) {
-                        filtered.push(e['record-controllers'][j]);
-                    }
-                }
-                promise.resolve(filtered);
-            }, function (e) {
-                promise.reject(e);
-            });
-            return promise.promise;
-        };
-
-        $scope.toggleJointController = function () {
-            if($scope.addJointController) {
-                $scope.joint={};
-                $scope.addJointController = false;
-                $scope.toggleIcon = "add_to_photos";
-            } else {
-                $scope.addJointController = true;
-                $scope.toggleIcon = "cancel";
-            }
-        };
-
-        $scope.addNewJointController = function () {
-            $scope.record.jointControllers.push({   'label' : $scope.joint.name,
-                                                    'contact' : $scope.joint.contact });
-            $scope.toggleJointController();
-        };
-
-        $scope.toggleCheckboxInternational = function () {
-            $scope.record.idThirdCountry = '';
-            $scope.record.dpoThirdCountry = '';
-        };
-
-        $scope.queryRecordRecipientCategorySearch = function (query) {
-            var promise = $q.defer();
-            RecordService.getRecordRecipientCategories({filter: query}).then(function (e) {
-                // Filter out values already selected
-                var filtered = [];
-                for (var j = 0; j < e['record-recipient-categories'].length; ++j) {
-                    var found = false;
-
-                    for (var i = 0; i < $scope.record.recipients.length; ++i) {
-                        if ($scope.record.recipients[i].id == e['record-recipient-categories'][j].id) {
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found) {
-                        filtered.push(e['record-recipient-categories'][j]);
-                    }
-                }
-                promise.resolve(filtered);
-            }, function (e) {
-                promise.reject(e);
-            });
-            return promise.promise;
-        };
-
-        $scope.createNewRecipientCategory = function (ev, recipientCategorySearchText) {
-            $scope.record.recipients.push({'label' : recipientCategorySearchText});
-            $scope.recipientCategorySearchText = "";
-        };
-
-        $scope.addDataSubject = function (ev, dataSubject) {
-            $scope.record.dataSubjects.push(dataSubject);
-            $scope.dataSubject = '';
-        };
-
-        $scope.queryRecordProcessorSearch = function (query) {
-            var promise = $q.defer();
-            RecordService.getRecordProcessors({filter: query}).then(function (e) {
-                // Filter out values already selected
-                var filtered = [];
-                for (var j = 0; j < e['record-processors'].length; ++j) {
-                    var found = false;
-
-                    for (var i = 0; i < $scope.record.processors.length; ++i) {
-                        if ($scope.record.processors[i].id == e['record-processors'][j].id) {
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found) {
-                        filtered.push(e['record-processors'][j]);
-                    }
-                }
-
-                promise.resolve(filtered);
-            }, function (e) {
-                promise.reject(e);
-            });
-            return promise.promise;
-        };
-        $scope.addNewProcessor = function (ev) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
-            $mdDialog.show({
-                controller: ['$scope', 'toastr', '$mdDialog', 'gettextCatalog', '$q', 'RecordService', 'ConfigService', 'processor', 'anrId', AddProcessorDialogCtrl],
-                templateUrl: 'views/anr/add.processor.html',
-                targetEvent: ev,
-                preserveScope: false,
-                scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: false,
-                fullscreen: useFullScreen,
-                locals: {
-                    'processor': null,
-                    'anrId': $scope.anrId
-                }
-            })
-            .then(function (processor) {
-                $scope.processor = processor;
-            })
-            .catch(angular.noop)
-            .finally( function () {
-                if(!$scope.record.id) {
-                    $scope.createNewRecord(ev, $scope.record);
-                }
-                else {
-                    $scope.editRecord(ev, $scope.record.id);
-                }
-            });
         };
 
         $scope.importRecord = function (ev) {
@@ -580,141 +527,5 @@
                 $scope.selectRecord(id, $scope.records.items.count);
             }).catch(angular.noop);
         };
-    }
-
-    function AddProcessorDialogCtrl($scope, toastr, $mdDialog, gettextCatalog, $q, RecordService, ConfigService, processor) {
-        $scope.languages = ConfigService.getLanguages();
-        $scope.language = $scope.getAnrLanguage();
-        $scope.behalf = {   name : '',
-                            contactDetail : ''};
-        var defaultLang = angular.copy($scope.language);
-        $scope.toggleIcon = "add_to_photos";
-        $scope.checkboxInternationalProcessor = false;
-
-        if (processor != undefined && processor != null) {
-            $scope.processor = processor;
-            if(!Array.isArray($scope.processor['controllers'])) {
-                $scope.processor['controllers'] = [];
-            }
-            if($scope.processor["idThirdCountry"]) {
-                $scope.checkboxInternationalProcessor = true;
-            }
-        }
-        else {
-            $scope.processor = {
-                label: '',
-                controllers: [],
-            };
-        }
-
-        $scope.cancel = function() {
-            $mdDialog.cancel();
-        };
-
-        $scope.addProcessor = function() {
-            $mdDialog.hide($scope.processor);
-        };
-        $scope.queryRecordControllerSearch = function (query) {
-            var promise = $q.defer();
-            RecordService.getRecordControllers({filter: query}).then(function (e) {
-                // Filter out values already selected
-                var filtered = [];
-                for (var j = 0; j < e['record-controllers'].length; ++j) {
-                    var found = false;
-
-                    for (var i = 0; i < $scope.processor.controllers.length; ++i) {
-                        if ($scope.processor.controllers[i].id == e['record-controllers'][j].id) {
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found) {
-                        filtered.push(e['record-controllers'][j]);
-                    }
-                }
-
-                promise.resolve(filtered);
-            }, function (e) {
-                promise.reject(e);
-            });
-            return promise.promise;
-        };
-        $scope.toggleBehalfController = function () {
-            if($scope.addBehalfController) {
-                $scope.behalf={};
-                $scope.addBehalfController = false;
-                $scope.toggleIcon = "add_to_photos";
-            } else {
-                $scope.addBehalfController = true;
-                $scope.toggleIcon = "cancel";
-            }
-        }
-        $scope.addNewBehalfController = function () {
-            $scope.processor.controllers.push({ 'label' : $scope.behalf.name,
-                                                'contact' : $scope.behalf.contact});
-            $scope.toggleBehalfController();
-        }
-        $scope.toggleCheckboxInternational = function () {
-            $scope.processor.idThirdCountry = '';
-            $scope.processor.dpoThirdCountry = '';
-        };
-    }
-
-    function ImportRecordDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload) {
-        $scope.file = [];
-        $scope.file_range = 0;
-		$scope.isImportingIn = false;
-        $scope.import = {
-            password: '',
-        };
-
-        $scope.uploadFile = function (file) {
-        	$scope.isImportingIn = true;
-            file.upload = Upload.upload({
-                url: 'api/client-anr/' + $scope.getUrlAnrId() + '/records/import',
-                data: {file: file, password: $scope.import.password}
-            });
-
-            file.upload.then(function (response) {
-                $scope.isImportingIn = false;
-                if (response.data.errors && response.data.errors.length > 0) {
-                    toastr.warning(gettextCatalog.getString("Some files could not be imported"));
-                } else {
-                    toastr.success(gettextCatalog.getString("The record has been imported successfully"));
-                    $mdDialog.hide(response.data.id[0]);
-                }
-            });
-        }
-
-        $scope.upgradeFileRange = function () {
-            $scope.file_range++;
-
-            for (var i = 0; i <= $scope.file_range; ++i) {
-                if ($scope.file[i] == undefined) {
-                    $scope.file[i] = {};
-                }
-            }
-        };
-
-        $scope.cancel = function () {
-            $mdDialog.cancel();
-        };
-    }
-
-    function ExportRecordDialogCtrl($scope, $mdDialog) {
-        $scope.exportData = {
-            simple_mode: true,
-            password: ''
-        };
-
-        $scope.cancel = function() {
-            $mdDialog.cancel();
-        };
-
-        $scope.export = function() {
-            $mdDialog.hide($scope.exportData);
-        };
-
     }
 })();

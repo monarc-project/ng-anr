@@ -25,8 +25,8 @@
                     isArray: false
                 }
             });
-            self.RecordControllerResource = $resource('api/' + anr + 'recordcontrollers/:RecordControllerId', {
-                RecordControllerId: '@id',
+            self.RecordActorResource = $resource('api/' + anr + 'recordactors/:RecordActorId', {
+                RecordActorId: '@id',
                 urlAnrId: $rootScope.getUrlAnrId()
             },
             {
@@ -55,8 +55,8 @@
                     isArray: false
                 }
             });
-            self.RecordRecipientCategoryResource = $resource('api/' + anr + 'recordrecipientcategories/:RecordRecipientCategoryId', {
-                RecordRecipientCategoryId: '@id',
+            self.RecordRecipientResource = $resource('api/' + anr + 'recordrecipientcategories/:RecordRecipientId', {
+                RecordRecipientId: '@id',
                 urlAnrId: $rootScope.getUrlAnrId()
             },
             {
@@ -97,9 +97,15 @@
             self.RecordResource.patch({RecordId: id}, params, success, error);
         }
 
-        //RecordController
-        var getRecordControllers = function (params) {
-            return self.RecordControllerResource.query(params).$promise;
+        //RecordActor
+        var getRecordActors = function (params) {
+            return self.RecordActorResource.query(params).$promise;
+        };
+        var createRecordActor = function (params, success, error) {
+            return new self.RecordActorResource(params).$save(success, error);
+        };
+        var updateRecordActor = function (params, success, error) {
+            self.RecordActorResource.update(params, success, error);
         };
 
         //RecordProcessor
@@ -115,9 +121,9 @@
             self.RecordProcessorResource.update(params, success, error);
         };
 
-        //RecordRecipientCategory
+        //RecordRecipient
         var getRecordRecipientCategories = function (params) {
-            return self.RecordRecipientCategoryResource.query(params).$promise;
+            return self.RecordRecipientResource.query(params).$promise;
         };
 
         return {
@@ -130,7 +136,9 @@
             updateRecord: updateRecord,
             patchRecord: patchRecord,
 
-            getRecordControllers: getRecordControllers,
+            getRecordActors: getRecordActors,
+            createRecordActor: createRecordActor,
+            updateRecordActor: updateRecordActor,
 
             getRecordProcessors: getRecordProcessors,
             getRecordProcessor: getRecordProcessor,
