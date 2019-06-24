@@ -2218,8 +2218,10 @@
 
         $scope.toggleRecommandationStatus = function (recommandation) {
             recommandation.anr = $scope.model.anr.id;
-            ClientRecommandationService.updateRecommandation(recommandation, {status: !recommandation.status}, function () {
-                recommandation.status = !recommandation.status;
+            recommandation.recommandationSet = recommandation.recommandationSet.uuid;
+            recommandation.status = !recommandation.status;
+            ClientRecommandationService.updateRecommandation(recommandation, function () {
+                $scope.updateRecommandations();
             });
         }
 
