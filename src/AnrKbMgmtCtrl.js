@@ -2218,7 +2218,7 @@
 
         $scope.toggleRecommandationStatus = function (recommandation) {
             recommandation.anr = $scope.model.anr.id;
-            ClientRecommandationService.updateRecommandation(recommandation.uuid, {status: !recommandation.status}, function () {
+            ClientRecommandationService.updateRecommandation(recommandation, {status: !recommandation.status}, function () {
                 recommandation.status = !recommandation.status;
             });
         }
