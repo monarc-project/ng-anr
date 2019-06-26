@@ -1255,3 +1255,9 @@ md-select-menu md-content
 .reco-autocomplete{
     width: 500px !important;
 }
+
+.retentionPeriodModeSelect{
+    padding-left: 6px;
+    width: 60%;
+    display: inline-block;
+}

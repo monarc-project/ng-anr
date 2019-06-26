@@ -1,6 +1,6 @@
 <div class="md-padding-left md-padding-right" layout="column" ng-controller="AnrRopaCtrl" ng-if="tabRopaDisplayed">
     <p class="md-title md-padding-left" translate>Records of processing activities</p>
-    <md-tabs md-dynamic-height="true" md-selected="recordTabSelected" ng-if="!(updatingRecords)" >
+    <md-tabs md-dynamic-height="true" md-selected="recordTabSelected" ng-if="!(updatingRecords)" style="padding-bottom: 100px;">
         <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-disabled="selectingRecord || updatingRecords" ng-click="createNewRecord($event)">
             <md-tooltip md-direction="left">
                 {{ 'Add a record' | translate }}
@@ -44,7 +44,7 @@
                         </md-menu-item>
                     </md-menu-content>
                 </md-menu>
-                <md-button class="md-icon-button md-warn" ng-if="!isAnrReadOnly && records.items.records.length > 0" ng-click="deleteRecord($event, currentRecord.id)">
+                <md-button class="md-icon-button md-warn" ng-if="!isAnrReadOnly && records.items.records.length > 0" ng-click="deleteRecord($event, record.id)">
                     <md-tooltip md-direction="left">
                         {{ 'Delete record' | translate }}
                     </md-tooltip>
@@ -56,11 +56,11 @@
             </div>
             <div>
                 <md-table-container flex>
-                    <table editable callback="onRecordTableEdited" class="md-html-table md-html-table-grey big-border-all" >
+                    <table editable callback="onRecordTableEdited" class="md-html-table md-html-table-grey big-border-all">
                         <tbody edit-model="record">
                             <tr>
                                 <td translate> <b> Name </b> </td>
-                                <td colspan="5" edit-readonly="isAnrReadOnly" edit-field="label" class="txtcenter"></td>
+                                <td colspan="5" edit-readonly="isAnrReadOnly" edit-field="label" edit-type="textarea"></td>
                             </tr>
                             <tr>
                                 <td translate> <b> Purpose(s) </b> </td>
@@ -80,7 +80,7 @@
                                 <td translate style="width:1%; white-space:nowrap"> <b> Update date </b> </td>
                                 <td class="txtcenter" style="width:1%; white-space:nowrap"> {{ record.updatedAt.date.substring(0,10) }}</td>
                                 <td translate style="width:1%; white-space:nowrap"> <b> Security measures </b> </td>
-                                <td edit-readonly="isAnrReadOnly" edit-field="secMeasures" class="txtcenter"></td>
+                                <td edit-readonly="isAnrReadOnly" edit-field="secMeasures" edit-type="textarea" edit-class="preserve-newlines"></td>
                         </tbody>
                     </table>
                 </md-table-container>
@@ -97,6 +97,7 @@
                                 <th md-head translate> Actor </th>
                                 <th md-head translate> Name </th>
                                 <th md-head translate> Contact </th>
+                                <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap"> </th>
                             </tr>
                             <tr md-row>
                                 <td md-cell style="width:1%; white-space:nowrap" translate> <b> Processing activity controller </b> </td>
@@ -109,24 +110,36 @@
                                         md-min-length="0"
                                         md-no-cache="true"
                                         md-selected-item-change="actorItemSelected(record, selectedItemController, 'controller')"
-                                        md-search-text-change="actorSearchTextChanged()"
                                         ng-blur="updateActorLabel(record, record.controller, 'controller')"
-                                        placeholder="{{ 'Processing activity controller' | translate }}"
-                                        ng-init="initController(record)">
+                                        placeholder="{{ 'Processing activity controller' | translate }}">
                                         <md-item-template>
                                             <span md-highlight-text="record.controller.label" md-highlight-flags="^i">{{item['label']}}</span>
                                         </md-item-template>
                                     </md-autocomplete>
                                 </td>
                                 <td md-cell>
-                                    <div layout="row" layout-align="start center">
+                                    <div layout="row" layout-align="start center" ng-if="record.controller.id">
                                         <md-chips class="chips-horizontal"
                                             md-on-remove="onActorContactEdit(record.controller)"
                                             md-on-add="onActorContactEdit(record.controller)"
                                             ng-model="record.controller.contact" flex>
-                                            <input type="text" style="width:100%">
+                                            <input type="text" ng-model="$parent.controllerContactText" style="width:100%">
                                         </md-chips>
+                                        <md-button class="md-icon-button md-primary" ng-disabled="!controllerContactText" ng-click="addNewContact(controllerContactText, record.controller)">
+                                            <md-tooltip md-direction="left">
+                                                {{ 'Add a new contact information' | translate }}
+                                            </md-tooltip>
+                                            <md-icon>add_to_photos</md-icon>
+                                        </md-button>
                                     </div>
+                                </td>
+                                <td md-cell class="txtcenter">
+                                    <md-button ng-if="!isAnrReadOnly && record.controller.id" class="md-icon-button md-warn"ng-click="detachActor(record, 'controller')">
+                                        <md-tooltip md-direction="left">
+                                            {{ 'Detach controller' | translate }}
+                                        </md-tooltip>
+                                        <md-icon>delete</md-icon>
+                                    </md-button>
                                 </td>
                             </tr>
                             <tr md-row>
@@ -140,24 +153,36 @@
                                         md-min-length="0"
                                         md-no-cache="true"
                                         md-selected-item-change="actorItemSelected(record, selectedItemDpo, 'dpo')"
-                                        md-search-text-change="actorSearchTextChanged()"
                                         ng-blur="updateActorLabel(record, record.dpo, 'dpo')"
-                                        placeholder="{{ 'Data protection officer' | translate }}"
-                                        ng-init="initDpo(record)">
+                                        placeholder="{{ 'Data protection officer' | translate }}">
                                         <md-item-template>
                                             <span md-highlight-text="record.dpo.label" md-highlight-flags="^i">{{item['label']}}</span>
                                         </md-item-template>
                                     </md-autocomplete>
                                 </td>
                                 <td md-cell>
-                                    <div layout="row" layout-align="start center">
+                                    <div layout="row" layout-align="start center" ng-if="record.dpo.id">
                                         <md-chips class="chips-horizontal"
                                             md-on-remove="onActorContactEdit(record.dpo)"
                                             md-on-add="onActorContactEdit(record.dpo)"
                                             ng-model="record.dpo.contact" flex>
-                                            <input type="text" style="width:100%">
+                                            <input type="text" ng-model="$parent.dpoContactText" style="width:100%">
                                         </md-chips>
+                                        <md-button class="md-icon-button md-primary" ng-disabled="!dpoContactText" ng-click="addNewContact(dpoContactText, record.dpo)">
+                                            <md-tooltip md-direction="left">
+                                                {{ 'Add a new contact information' | translate }}
+                                            </md-tooltip>
+                                            <md-icon>add_to_photos</md-icon>
+                                        </md-button>
                                     </div>
+                                </td>
+                                <td md-cell class="txtcenter">
+                                    <md-button ng-if="!isAnrReadOnly && record.dpo.id" class="md-icon-button md-warn"ng-click="detachActor(record, 'dpo')">
+                                        <md-tooltip md-direction="left">
+                                            {{ 'Detach data protection officer' | translate }}
+                                        </md-tooltip>
+                                        <md-icon>delete</md-icon>
+                                    </md-button>
                                 </td>
                             </tr>
                             <tr md-row>
@@ -171,54 +196,87 @@
                                         md-min-length="0"
                                         md-no-cache="true"
                                         md-selected-item-change="actorItemSelected(record, selectedItemRepresentative, 'representative')"
-                                        md-search-text-change="actorSearchTextChanged()"
                                         ng-blur="updateActorLabel(record, record.representative, 'representative')"
-                                        placeholder="{{ 'Representative' | translate }}"
-                                        ng-init="initRepresentative(record)">
+                                        placeholder="{{ 'Representative' | translate }}">
                                         <md-item-template>
                                             <span md-highlight-text="record.representative.label" md-highlight-flags="^i">{{item['label']}}</span>
                                         </md-item-template>
                                     </md-autocomplete>
                                 </td>
                                 <td md-cell>
-                                    <div layout="row" layout-align="start center">
+                                    <div layout="row" layout-align="start center" ng-if="record.representative.id">
                                         <md-chips class="chips-horizontal"
                                             md-on-remove="onActorContactEdit(record.representative)"
                                             md-on-add="onActorContactEdit(record.representative)"
                                             ng-model="record.representative.contact" flex>
-                                            <input type="text" style="width:100%">
+                                            <input type="text" ng-model="$parent.representativeContactText" style="width:100%">
                                         </md-chips>
+                                        <md-button class="md-icon-button md-primary" ng-disabled="!representativeContactText" ng-click="addNewContact(representativeContactText, record.representative)">
+                                            <md-tooltip md-direction="left">
+                                                {{ 'Add a new contact information' | translate }}
+                                            </md-tooltip>
+                                            <md-icon>add_to_photos</md-icon>
+                                        </md-button>
                                     </div>
+                                </td>
+                                <td md-cell class="txtcenter">
+                                    <md-button ng-if="!isAnrReadOnly && record.representative.id" class="md-icon-button md-warn"ng-click="detachActor(record, 'representative')">
+                                        <md-tooltip md-direction="left">
+                                            {{ 'Detach representative' | translate }}
+                                        </md-tooltip>
+                                        <md-icon>delete</md-icon>
+                                    </md-button>
                                 </td>
                             </tr>
                             <tr md-row>
-                                <td md-cell translate> <b> Joint controllers </b> </td>
+                                <td md-cell translate>
+                                    <span flex><b> Joint controllers </b> </span>
+                                    <md-button class="md-icon-button md-primary" ng-click="addJointControllers(record)">
+                                        <md-tooltip md-direction="left">
+                                            {{ 'Add a new joint controller' | translate }}
+                                        </md-tooltip>
+                                        <md-icon>add_to_photos</md-icon>
+                                    </md-button>
+                                </td>
                                 <td md-cell>
                                     <md-autocomplete ng-if="record.jointControllers.length > 0"
                                         md-selected-item="selectedJointController"
-                                        md-search-text="record.jointContollers[0].label"
-                                        md-items="item in queryRecordActorSearch(record.jointContollers[0].label)"
+                                        md-search-text="record.jointControllers[0].label"
+                                        md-items="item in queryRecordActorSearch(record.jointControllers[0].label)"
                                         md-item-text="item['label']"
                                         md-min-length="0"
                                         md-no-cache="true"
-                                        md-selected-item-change="jointControllerItemSelected(recordId, record.jointContollers[0].label, record.jointControllers, 0)"
-                                        md-search-text-change="actorSearchTextChanged()"
-                                        ng-blur="updateJointControllerLabel(record, record.jointContollers[0], 0)"
+                                        md-selected-item-change="actorItemSelected(record, selectedJointController, 'jointControllers', 0)"
+                                        ng-blur="updateActorLabel(record, record.jointControllers[0], 'jointControllers', 0)"
                                         placeholder="{{ 'Joint controller' | translate }}">
                                         <md-item-template>
-                                            <span md-highlight-text="record.jointContollers[0].label" md-highlight-flags="^i">{{item['label']}}</span>
+                                            <span md-highlight-text="record.jointCrontollers[0].label" md-highlight-flags="^i">{{item['label']}}</span>
                                         </md-item-template>
                                     </md-autocomplete>
                                 </td>
                                 <td md-cell>
-                                    <div layout="row" layout-align="start center">
+                                    <div layout="row" layout-align="start center" ng-if="record.jointControllers[0].id">
                                         <md-chips class="chips-horizontal"
-                                            md-on-remove="onActorContactEdit(record.jointController[0])"
-                                            md-on-add="onActorContactEdit(record.jointController[0])"
-                                            ng-model="record.jointController[0].contact" flex>
-                                            <input type="text" style="width:100%">
+                                            md-on-remove="onActorContactEdit(record.jointControllers[0])"
+                                            md-on-add="onActorContactEdit(record.jointControllers[0])"
+                                            ng-model="record.jointControllers[0].contact" flex>
+                                            <input type="text" ng-model="$parent.jcContactText" style="width:100%">
                                         </md-chips>
+                                        <md-button class="md-icon-button md-primary" ng-disabled="!jcContactText" ng-click="addNewContact(jcContactText, record.jointControllers[0])">
+                                            <md-tooltip md-direction="left">
+                                                {{ 'Add a new contact information' | translate }}
+                                            </md-tooltip>
+                                            <md-icon>add_to_photos</md-icon>
+                                        </md-button>
                                     </div>
+                                </td>
+                                <td md-cell class="txtcenter">
+                                    <md-button ng-if="!isAnrReadOnly && record.jointControllers[0].id" class="md-icon-button md-warn"ng-click="detachActor(record, 'jointControllers', 0)">
+                                        <md-tooltip md-direction="left">
+                                            {{ 'Detach joint controller' | translate }}
+                                        </md-tooltip>
+                                        <md-icon>delete</md-icon>
+                                    </md-button>
                                 </td>
                             </tr>
                             <tr md-row ng-repeat="jc in record.jointControllers.slice(1)">
@@ -226,14 +284,13 @@
                                 <td md-cell>
                                     <md-autocomplete
                                         md-selected-item="selectedJointController"
-                                        md-search-text="searchTextJointController"
+                                        md-search-text="record.jointControllers[$index + 1].label"
                                         md-items="item in queryRecordActorSearch(jc.label)"
                                         md-item-text="item['label']"
                                         md-min-length="0"
                                         md-no-cache="true"
-                                        md-selected-item-change="jointControllerItemSelected(recordId, selectedJointController, record,jointControllers, $index+1)"
-                                        md-search-text-change="actorSearchTextChanged()"
-                                        ng-blur="updateJointControllerLabel(record, jc, $index+1)"
+                                        md-selected-item-change="actorItemSelected(record, selectedJointController, 'jointControllers', $index + 1)"
+                                        ng-blur="updateActorLabel(record, jc, 'jointControllers', $index+1)"
                                         placeholder="{{ 'Joint controller' | translate }}">
                                         <md-item-template>
                                             <span md-highlight-text="jc.label" md-highlight-flags="^i">{{item['label']}}</span>
@@ -241,56 +298,176 @@
                                     </md-autocomplete>
                                 </td>
                                 <td md-cell>
-                                    <div layout="row" layout-align="start center">
+                                    <div layout="row" layout-align="start center" ng-if="record.jointControllers[$index+1].id">
                                         <md-chips class="chips-horizontal"
-                                            md-on-remove="onActorContactEdit(record.jointController[$index+1])"
-                                            md-on-add="onActorContactEdit(record.jointController[$index+1])"
-                                            ng-model="record.jointController[$index+1].contact" flex>
-                                            <input type="text" style="width:100%">
+                                            md-on-remove="onActorContactEdit(record.jointControllers[$index+1])"
+                                            md-on-add="onActorContactEdit(record.jointControllers[$index+1])"
+                                            ng-model="record.jointControllers[$index+1].contact" flex>
+                                            <input type="text" ng-model="$parent.jcContactText" style="width:100%">
                                         </md-chips>
+                                        <md-button class="md-icon-button md-primary" ng-disabled="!jcContactText" ng-click="addNewContact(jcContactText, record.jointControllers[$index+1])">
+                                            <md-tooltip md-direction="left">
+                                                {{ 'Add a new contact information' | translate }}
+                                            </md-tooltip>
+                                            <md-icon>add_to_photos</md-icon>
+                                        </md-button>
                                     </div>
+                                </td>
+                                <td md-cell class="txtcenter">
+                                    <md-button ng-if="!isAnrReadOnly && record.jointControllers[$index+1].id" class="md-icon-button md-warn"ng-click="detachActor(record, 'jointControllers', $index+1)">
+                                        <md-tooltip md-direction="left">
+                                            {{ 'Detach joint controller' | translate }}
+                                        </md-tooltip>
+                                        <md-icon>delete</md-icon>
+                                    </md-button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </md-table-container>
             </div>
+            <br/>
             <div>
-                <p class="md-title md-padding-left" translate>Categories of personal data and data subjects</p>
+                <span class="md-title md-padding-left" translate>Categories of personal data and data subjects</span>
+                <md-button class="md-icon-button md-primary" ng-click="addPersonalData(record)">
+                    <md-tooltip md-direction="left">
+                        {{ 'Add a new category of personal data and data subjects' | translate }}
+                    </md-tooltip>
+                    <md-icon>add_to_photos</md-icon>
+                </md-button>
             </div>
             <div>
                 <md-table-container flex>
                     <table editable callback="onPersonalDataTableEdited" class="md-html-table md-html-table-grey big-border-all" >
                         <tbody>
                             <tr>
-                                <th translate> Data subjects </th>
-                                <th translate> Categories of personal data </th>
+                                <th translate style="width:25%; white-space:nowrap"> Data subjects </th>
+                                <th translate style="width:25%; white-space:nowrap"> Categories of personal data </th>
                                 <th translate> Description </th>
                                 <th translate> Duration of data retention </th>
+                                <th translate> Description of retention period </th>
+                                <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap" ></th>
                             </tr>
-                            <tr ng-repeat="personalData in currentRecord.personalData" edit-localmodel="personalData">
-                                <td class="txtcenter"></td>
-                                <td class="txtcenter"></td>
-                                <td edit-readonly="isAnrReadOnly" edit-field="description" class="txtcenter"></td>
+                            <tr ng-repeat="personalData in record.personalData" edit-model="personalData">
+                                <td>
+                                    <md-chips class="chips-horizontal"
+                                        style="width:80%; display:inline-block"
+                                        md-on-remove="onPersonalDataEdit(record, personalData)"
+                                        md-on-add="onPersonalDataEdit(record, personalData)"
+                                        md-transform-chip="transformChip($chip)"
+                                        ng-model="personalData.dataSubjects"
+                                        md-autocomplete-snap flex>
+                                        <md-autocomplete md-selected-item="selectedDataSubject"
+                                                         md-search-text="$parent.dataSubjectSearchText"
+                                                         md-items="item in queryRecordDataSubjectSearch(dataSubjectSearchText)"
+                                                         md-item-text="item['label']"
+                                                         md-min-length="0"
+                                                         md-no-cache="true"
+                                                         placeholder="{{ 'Data subject' | translate }}"
+                                                         md-require-match="true">
+                                            <md-item-template>
+                                                <span md-highlight-text="dataSubjectSearchText" md-highlight-flags="^i">{{item['label']}}</span>
+                                            </md-item-template>
+                                        </md-autocomplete>
+
+                                        <md-chip-template>
+                                            <span>
+                                                <em>{{$chip['label']}}</em>
+                                            </span>
+                                        </md-chip-template>
+                                        <md-not-found>
+                                             {{ 'No data subject matching your search was found. Click on' | translate }}
+                                             <md-icon>add_to_photos</md-icon>
+                                             {{ 'to create it.' | translate }}
+                                         </md-not-found>
+                                    </md-chips>
+                                    <md-button class="md-icon-button md-primary" ng-disabled="!dataSubjectSearchText" ng-click="addNewDataSubject(record, dataSubjectSearchText, personalData, $index)">
+                                        <md-tooltip md-direction="left">
+                                            {{ 'Add a new data subject' | translate }}
+                                        </md-tooltip>
+                                        <md-icon>add_to_photos</md-icon>
+                                    </md-button>
+                                </td>
                                 <td class="txtcenter">
-                                    <input type="number" edit-readonly="isAnrReadOnly" edit-field="retentionPeriod">
-                                    <md-select edit-readonly="isAnrReadOnly" edit-field="retentionPeriodMode">
-                                        <md-option ng-value="0" translate>{{ day(s) }}</md-option>
-                                        <md-option ng-value="1" translate>{{ month(s) }}</md-option>
-                                        <md-option ng-value="2" translate>{{ year(s) }}</md-option>
-                                    </md-select>
-                                    <textarea edit-readonly="isAnrReadOnly" edit-field="retentionPeriodDescription"></textarea>
+                                    <md-chips class="chips-horizontal"
+                                        style="width:80%; display:inline-block"
+                                        md-on-remove="onPersonalDataEdit(record, personalData)"
+                                        md-on-add="onPersonalDataEdit(record, personalData)"
+                                        md-transform-chip="transformChip($chip)"
+                                        ng-model="personalData.dataCategories"
+                                        md-autocomplete-snap flex>
+                                        <md-autocomplete md-selected-item="selectedDataCategory"
+                                                         md-search-text="$parent.dataCategorySearchText"
+                                                         md-items="item in queryRecordDataCategorySearch(dataCategorySearchText)"
+                                                         md-item-text="item['label']"
+                                                         md-min-length="0"
+                                                         md-no-cache="true"
+                                                         placeholder="{{ 'Data category' | translate }}"
+                                                         md-require-match="true">
+                                            <md-item-template>
+                                                <span md-highlight-text="dataCategorySearchText" md-highlight-flags="^i">{{item['label']}}</span>
+                                            </md-item-template>
+                                        </md-autocomplete>
+
+                                        <md-chip-template>
+                                            <span>
+                                                <em>{{$chip['label']}}</em>
+                                            </span>
+                                        </md-chip-template>
+                                        <md-not-found>
+                                             {{ 'No data category matching your search was found. Click on' | translate }}
+                                             <md-icon>add_to_photos</md-icon>
+                                             {{ 'to create it.' | translate }}
+                                         </md-not-found>
+                                    </md-chips>
+                                    <md-button class="md-icon-button md-primary" ng-disabled="!dataCategorySearchText" ng-click="addNewDataCategory(record, dataCategorySearchText, personalData, $index)">
+                                        <md-tooltip md-direction="left">
+                                            {{ 'Add a new data category' | translate }}
+                                        </md-tooltip>
+                                        <md-icon>add_to_photos</md-icon>
+                                    </md-button>
+                                </td>
+                                <td edit-readonly="isAnrReadOnly || !personalData.id" edit-field="description" edit-type="textarea" ng-disabled="!personalData.id"></td>
+                                <td>
+                                    <span>
+                                        <input type="number" ng-model="personalData.retentionPeriod" min="0" style="width:20%" ng-change="onPersonalDataTableEdited(personalData)" ng-disabled="!personalData.id">
+                                    </span>
+                                    <span class="retentionPeriodModeSelect">
+                                        <md-select ng-model="personalData.retentionPeriodMode" placeholder="Retention period type" ng-change="onPersonalDataTableEdited(personalData)" ng-disabled="!personalData.id">
+                                            <md-option ng-value="0" translate> day(s)</md-option>
+                                            <md-option ng-value="1" translate> month(s) </md-option>
+                                            <md-option ng-value="2" translate> year(s) </md-option>
+                                        </md-select>
+                                    </span>
+                                </td>
+                                <td edit-readonly="isAnrReadOnly || !personalData.id" edit-field="retentionPeriodDescription" edit-type="textarea" ng-disabled="!personalData.id"></td>
+                                <td ng-if="!isAnrReadOnly">
+                                    <md-button class="md-icon-button md-warn"ng-click="deletePersonalData(record, $index)">
+                                        <md-tooltip md-direction="left">
+                                            {{ 'Delete personal data record' | translate }}
+                                        </md-tooltip>
+                                        <md-icon>delete</md-icon>
+                                    </md-button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </md-table-container>
             </div>
+            <br/>
             <div>
                 <p class="md-title md-padding-left" translate> Recipients/Transfers </p>
             </div>
             <div>
-                <md-subheader class="md-padding-left" translate> Recipients </p>
+                <md-subheader class="md-padding-left" translate>
+                    <span> Recipients </span>
+                    <md-button class="md-icon-button md-primary" ng-click="addRecipient(record)">
+                        <md-tooltip md-direction="left">
+                            {{ 'Add a new recipient of data' | translate }}
+                        </md-tooltip>
+                        <md-icon>add_to_photos</md-icon>
+                    </md-button>
+                </md-subheader>
             </div>
             <div>
                 <md-table-container flex>
@@ -299,17 +476,49 @@
                             <tr>
                                 <th translate> Recipient </th>
                                 <th translate> Description </th>
+                                <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap" ></th>
                             </tr>
-                            <tr ng-repeat="recipient in currentRecord.recipients" edit-localmodel="recipient">
-                                <td edit-readonly="isAnrReadOnly" edit-field="label" class="txtcenter"></td>
-                                <td edit-readonly="isAnrReadOnly" edit-field="description" class="txtcenter"></td>
+                            <tr ng-repeat="recipient in record.recipients" edit-model="recipient">
+                                <td>
+                                    <md-autocomplete
+                                        md-selected-item="selectedItemRecipient"
+                                        md-search-text="recipient.label"
+                                        md-items="item in queryRecordRecipientSearch(recipient.label, record)"
+                                        md-item-text="item['label']"
+                                        md-min-length="0"
+                                        md-no-cache="true"
+                                        md-selected-item-change="recipientItemSelected(record, selectedItemRecipient, $index)"
+                                        ng-blur="updateRecipientLabel(record, recipient, $index)"
+                                        placeholder="{{ 'Recipient of data' | translate }}">
+                                        <md-item-template>
+                                            <span md-highlight-text="recipient.label" md-highlight-flags="^i">{{item['label']}}</span>
+                                        </md-item-template>
+                                    </md-autocomplete>
+                                </td>
+                                <td edit-readonly="isAnrReadOnly || !recipient.id" edit-field="description" edit-type="textarea" ng-disabled="!recipient.id" class="txtcenter"></td>
+                                <td ng-if="!isAnrReadOnly">
+                                    <md-button class="md-icon-button md-warn"ng-click="deleteRecipient(record, $index)">
+                                        <md-tooltip md-direction="left">
+                                            {{ 'Delete recipient' | translate }}
+                                        </md-tooltip>
+                                        <md-icon>delete</md-icon>
+                                    </md-button>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
                 </md-table-container>
             </div>
             <div>
-                <md-subheader class="md-padding-left" translate> International transfers </p>
+                <md-subheader class="md-padding-left" translate>
+                <span> International transfers </span>
+                    <md-button class="md-icon-button md-primary" ng-click="addInternationalTransfer(record)">
+                        <md-tooltip md-direction="left">
+                            {{ 'Add a new record of data international transfer' | translate }}
+                        </md-tooltip>
+                        <md-icon>add_to_photos</md-icon>
+                    </md-button>
+                </md-subheader>
             </div>
             <div>
                 <md-table-container flex>
@@ -320,23 +529,350 @@
                                 <th translate> Description </th>
                                 <th translate> Country </th>
                                 <th translate> Documents </th>
+                                <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap"></th>
                             </tr>
-                            <tr ng-repeat="internationalTransfer in currentRecord.internationalTransfers" edit-localmodel="internationalTransfer">
-                                <td edit-readonly="isAnrReadOnly" edit-field="organisation" class="txtcenter"></td>
-                                <td edit-readonly="isAnrReadOnly" edit-field="description" class="txtcenter"></td>
-                                <td edit-readonly="isAnrReadOnly" edit-field="country" class="txtcenter"></td>
-                                <td edit-readonly="isAnrReadOnly" edit-field="country" class="txtcenter">
+                            <tr ng-repeat="internationalTransfer in record.internationalTransfers"  edit-model="internationalTransfer">
+                                <td edit-readonly="isAnrReadOnly" edit-field="organisation" edit-type="textarea" class="txtcenter"></td>
+                                <td edit-readonly="isAnrReadOnly" edit-field="description" edit-type="textarea" class="txtcenter"></td>
+                                <td edit-readonly="isAnrReadOnly" edit-field="country" edit-type="textarea" class="txtcenter"></td>
+                                <td>
                                     <div layout="row" layout-align="start center">
-                                        <md-chips class="chips-horizontal" edit-readonly="isAnrReadOnly" edit-field="documents" md-autocomplete-snap md-require-match="true" flex>
-                                            <input type="text" style="width:100%">
+                                        <md-chips   class="chips-horizontal" readonly="!internationalTransfer.id"
+                                                    ng-model="internationalTransfer.documents"
+                                                    md-on-remove="onTransferTableEdited(internationalTransfer)"
+                                                    md-on-add="onTransferTableEdited(internationalTransfer)" flex>
+                                            <input type="text" ng-model="$parent.documentText" style="width:100%" ng-disabled="!internationalTransfer.id">
                                         </md-chips>
+                                        <md-button class="md-icon-button md-primary" ng-disabled="!documentText" ng-click="addnewDocument(documentText, internationalTransfer)">
+                                            <md-tooltip md-direction="left">
+                                                {{ 'Add a new document' | translate }}
+                                            </md-tooltip>
+                                            <md-icon>add_to_photos</md-icon>
+                                        </md-button>
                                     </div>
+                                </td>
+                                <td ng-if="!isAnrReadOnly">
+                                    <md-button class="md-icon-button md-warn"ng-click="deleteInternationalTransfer(record, $index)">
+                                        <md-tooltip md-direction="left">
+                                            {{ 'Delete international transfer record' | translate }}
+                                        </md-tooltip>
+                                        <md-icon>delete</md-icon>
+                                    </md-button>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </md-table-container>
             </div>
+            <br/>
+            <div>
+                <p class="md-title md-padding-left" translate> Processors </p>
+            </div>
+            <md-tabs md-dynamic-height="true" md-selected="processorTabSelected" ng-if="record.processors.length > 0 || !isAnrReadOnly">
+                <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="createNewProcessor($event, record)">
+                    <md-tooltip md-direction="left">
+                        {{ 'Add a processor' | translate }}
+                    </md-tooltip>
+                    <md-icon class="md-icon-button md-primary">add_to_photos</md-icon>
+                </md-button>
+                <md-tab ng-repeat="processor in record.processors" label="{{processor.label}}"
+                        md-on-select="selectProcessor(processor.id)">
+                    <div layout="row" layout-align="end center" class="md-padding-double" style="height:40px">
+                        <md-button class="md-icon-button" ng-if="!isAnrReadOnly" ng-click="detachProcessor($event, record, $index)">
+                            <md-tooltip md-direction="left">
+                                {{ 'Detach processor' | translate }}
+                            </md-tooltip>
+                            <md-icon>content_cut</md-icon>
+                        </md-button>
+                    </div>
+                    <div>
+                        <md-table-container flex>
+                            <table editable callback="onProcessorTableEdited" class="md-html-table md-html-table-grey big-border-all">
+                                <tbody edit-model="processor">
+                                    <tr>
+                                        <td translate> <b> Name </b> </td>
+                                        <td edit-readonly="isAnrReadOnly" edit-field="label" edit-type="textarea"></td>
+                                    </tr>
+                                    <tr>
+                                        <td translate> <b> Activity(s) </b> </td>
+                                        <td class="txtcenter">
+                                            <div layout="row" layout-align="start center">
+                                                <md-chips
+                                                md-on-remove="onProcessorTableEdited(processor)"  md-on-add="onProcessorTableEdited(processor)"
+                                                class="chips-horizontal" ng-model="processor.activities" flex>
+                                                    <input type="text" style="width:100%">
+                                                </md-chips>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td translate style="width:1%; white-space:nowrap"> <b> Security measures </b> </td>
+                                        <td edit-readonly="isAnrReadOnly" edit-field="secMeasures" edit-type="textarea" edit-class="preserve-newlines"></td>
+                                </tbody>
+                            </table>
+                        </md-table-container>
+                    </div>
+                    <br/>
+                    <div>
+                        <md-subheader class="md-padding-left" translate>
+                            <span> Actors </span>
+                        </md-subheader>
+                    </div>
+                    <div>
+                        <md-table-container flex>
+                            <table md-table>
+                                <tbody md-body>
+                                    <tr md-row>
+                                        <th md-head translate> Actor </th>
+                                        <th md-head translate> Name </th>
+                                        <th md-head translate> Contact </th>
+                                        <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap"> </th>
+                                    </tr>
+                                    <tr md-row>
+                                        <td md-cell translate> <b> Representative </b> </td>
+                                        <td md-cell>
+                                            <md-autocomplete
+                                                md-selected-item="selectedItemRepresentativeProcessor"
+                                                md-search-text="processor.representative.label"
+                                                md-items="item in queryRecordActorSearch(processor.representative.label)"
+                                                md-item-text="item['label']"
+                                                md-min-length="0"
+                                                md-no-cache="true"
+                                                md-selected-item-change="processorActorItemSelected(processor, selectedItemRepresentativeProcessor, 'representative')"
+                                                ng-blur="processorUpdateActorLabel(processor, processor.representative, 'representative')"
+                                                placeholder="{{ 'Representative' | translate }}">
+                                                <md-item-template>
+                                                    <span md-highlight-text="processor.representative.label" md-highlight-flags="^i">{{item['label']}}</span>
+                                                </md-item-template>
+                                            </md-autocomplete>
+                                        </td>
+                                        <td md-cell>
+                                            <div layout="row" layout-align="start center" ng-if="processor.representative.id">
+                                                <md-chips class="chips-horizontal"
+                                                    md-on-remove="onActorContactEdit(processor.representative)"
+                                                    md-on-add="onActorContactEdit(processor.representative)"
+                                                    ng-model="processor.representative.contact" flex>
+                                                    <input type="text" ng-model="$parent.representativeContactText" style="width:100%">
+                                                </md-chips>
+                                                <md-button class="md-icon-button md-primary" ng-disabled="!representativeContactText" ng-click="addNewContact(representativeContactText, processor.representative)">
+                                                    <md-tooltip md-direction="left">
+                                                        {{ 'Add a new contact information' | translate }}
+                                                    </md-tooltip>
+                                                    <md-icon>add_to_photos</md-icon>
+                                                </md-button>
+                                            </div>
+                                        </td>
+                                        <td md-cell class="txtcenter">
+                                            <md-button ng-if="!isAnrReadOnly && processor.representative.id" class="md-icon-button md-warn"ng-click="processorDetachActor(processor, 'representative')">
+                                                <md-tooltip md-direction="left">
+                                                    {{ 'Detach representative' | translate }}
+                                                </md-tooltip>
+                                                <md-icon>delete</md-icon>
+                                            </md-button>
+                                        </td>
+                                    </tr>
+                                    <tr md-row>
+                                        <td md-cell translate> <b> Data protection officer </b> </td>
+                                        <td md-cell>
+                                            <md-autocomplete
+                                                md-selected-item="selectedItemDpoProcessor"
+                                                md-search-text="processor.dpo.label"
+                                                md-items="item in queryRecordActorSearch(processor.dpo.label)"
+                                                md-item-text="item['label']"
+                                                md-min-length="0"
+                                                md-no-cache="true"
+                                                md-selected-item-change="processorActorItemSelected(processor, selectedItemDpoProcessor, 'dpo')"
+                                                ng-blur="processorUpdateActorLabel(processor, processor.dpo, 'dpo')"
+                                                placeholder="{{ 'Data protection officer' | translate }}">
+                                                <md-item-template>
+                                                    <span md-highlight-text="processor.dpo.label" md-highlight-flags="^i">{{item['label']}}</span>
+                                                </md-item-template>
+                                            </md-autocomplete>
+                                        </td>
+                                        <td md-cell>
+                                            <div layout="row" layout-align="start center" ng-if="processor.dpo.id">
+                                                <md-chips class="chips-horizontal"
+                                                    md-on-remove="onActorContactEdit(processor.dpo)"
+                                                    md-on-add="onActorContactEdit(processor.dpo)"
+                                                    ng-model="processor.dpo.contact" flex>
+                                                    <input type="text" ng-model="$parent.dpoContactText" style="width:100%">
+                                                </md-chips>
+                                                <md-button class="md-icon-button md-primary" ng-disabled="!dpoContactText" ng-click="addNewContact(dpoContactText, processor.dpo)">
+                                                    <md-tooltip md-direction="left">
+                                                        {{ 'Add a new contact information' | translate }}
+                                                    </md-tooltip>
+                                                    <md-icon>add_to_photos</md-icon>
+                                                </md-button>
+                                            </div>
+                                        </td>
+                                        <td md-cell class="txtcenter">
+                                            <md-button ng-if="!isAnrReadOnly && processor.dpo.id" class="md-icon-button md-warn"ng-click="processorDetachActor(processor, 'dpo')">
+                                                <md-tooltip md-direction="left">
+                                                    {{ 'Detach data protection officer' | translate }}
+                                                </md-tooltip>
+                                                <md-icon>delete</md-icon>
+                                            </md-button>
+                                        </td>
+                                    </tr>
+
+                                    <tr md-row>
+                                        <td md-cell translate style="width:1%; white-space:nowrap">
+                                            <span flex><b> Cascaded processors </b> </span>
+                                            <md-button class="md-icon-button md-primary" ng-click="addCascadedProcessor(processor)">
+                                                <md-tooltip md-direction="left">
+                                                    {{ 'Add a new cascaded processor' | translate }}
+                                                </md-tooltip>
+                                                <md-icon>add_to_photos</md-icon>
+                                            </md-button>
+                                        </td>
+                                        <td md-cell>
+                                            <md-autocomplete ng-if="processor.cascadedProcessors.length > 0"
+                                                md-selected-item="selectedCascadedProcessor"
+                                                md-search-text="processor.cascadedProcessors[0].label"
+                                                md-items="item in queryRecordActorSearch(processor.cascadedProcessors[0].label)"
+                                                md-item-text="item['label']"
+                                                md-min-length="0"
+                                                md-no-cache="true"
+                                                md-selected-item-change="processorActorItemSelected(processor, selectedCascadedProcessor, 'cascadedProcessors', 0)"
+                                                ng-blur="processorUpdateActorLabel(processor, processor.cascadedProcessors[0], 'cascadedProcessors', 0)"
+                                                placeholder="{{ 'Cascaded processor' | translate }}">
+                                                <md-item-template>
+                                                    <span md-highlight-text="processor.cascadedProcessors[0].label" md-highlight-flags="^i">{{item['label']}}</span>
+                                                </md-item-template>
+                                            </md-autocomplete>
+                                        </td>
+                                        <td md-cell>
+                                            <div layout="row" layout-align="start center" ng-if="processor.cascadedProcessors[0].id">
+                                                <md-chips class="chips-horizontal"
+                                                    md-on-remove="onActorContactEdit(processor.cascadedProcessors[0])"
+                                                    md-on-add="onActorContactEdit(processor.cascadedProcessors[0])"
+                                                    ng-model="processor.cascadedProcessors[0].contact" flex>
+                                                    <input type="text" ng-model="$parent.cpContactText" style="width:100%">
+                                                </md-chips>
+                                                <md-button class="md-icon-button md-primary" ng-disabled="!cpContactText" ng-click="addNewContact(cpContactText, processor.cascadedProcessors[0])">
+                                                    <md-tooltip md-direction="left">
+                                                        {{ 'Add a new contact information' | translate }}
+                                                    </md-tooltip>
+                                                    <md-icon>add_to_photos</md-icon>
+                                                </md-button>
+                                            </div>
+                                        </td>
+                                        <td md-cell class="txtcenter">
+                                            <md-button ng-if="!isAnrReadOnly && processor.cascadedProcessors[0].id" class="md-icon-button md-warn"ng-click="processorDetachActor(processor, 'cascadedProcessors', 0)">
+                                                <md-tooltip md-direction="left">
+                                                    {{ 'Detach cascaded processor' | translate }}
+                                                </md-tooltip>
+                                                <md-icon>delete</md-icon>
+                                            </md-button>
+                                        </td>
+                                    </tr>
+                                    <tr md-row ng-repeat="cp in processor.cascadedProcessors.slice(1)">
+                                        <td md-cell translate> </td>
+                                        <td md-cell>
+                                            <md-autocomplete
+                                                md-selected-item="selectedCascadedProcessor"
+                                                md-search-text="processor.cascadedProcessors[$index + 1].label"
+                                                md-items="item in queryRecordActorSearch(cp.label)"
+                                                md-item-text="item['label']"
+                                                md-min-length="0"
+                                                md-no-cache="true"
+                                                md-selected-item-change="processorActorItemSelected(processor, selectedCascadedProcessor, 'cascadedProcessors', $index + 1)"
+                                                ng-blur="processorUpdateActorLabel(processor, cp, 'cascadedProcessors', $index+1)"
+                                                placeholder="{{ 'Cascaded processor' | translate }}">
+                                                <md-item-template>
+                                                    <span md-highlight-text="cp.label" md-highlight-flags="^i">{{item['label']}}</span>
+                                                </md-item-template>
+                                            </md-autocomplete>
+                                        </td>
+                                        <td md-cell>
+                                            <div layout="row" layout-align="start center" ng-if="processor.cascadedProcessors[$index+1].id">
+                                                <md-chips class="chips-horizontal"
+                                                    md-on-remove="onActorContactEdit(processor.cascadedProcessors[$index+1])"
+                                                    md-on-add="onActorContactEdit(processor.cascadedProcessors[$index+1])"
+                                                    ng-model="processor.cascadedProcessors[$index+1].contact" flex>
+                                                    <input type="text" ng-model="$parent.cpContactText" style="width:100%">
+                                                </md-chips>
+                                                <md-button class="md-icon-button md-primary" ng-disabled="!cpContactText" ng-click="addNewContact(cpContactText, processor.cascadedProcessors[$index+1])">
+                                                    <md-tooltip md-direction="left">
+                                                        {{ 'Add a new contact information' | translate }}
+                                                    </md-tooltip>
+                                                    <md-icon>add_to_photos</md-icon>
+                                                </md-button>
+                                            </div>
+                                        </td>
+                                        <td md-cell class="txtcenter">
+                                            <md-button ng-if="!isAnrReadOnly && processor.cascadedProcessors[$index+1].id" class="md-icon-button md-warn"ng-click="processorDetachActor(processor, 'cascadedProcessors', $index+1)">
+                                                <md-tooltip md-direction="left">
+                                                    {{ 'Detach cascaded processor' | translate }}
+                                                </md-tooltip>
+                                                <md-icon>delete</md-icon>
+                                            </md-button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </md-table-container>
+                    </div>
+                    <br/>
+                    <div>
+                        <md-subheader class="md-padding-left" layout="row" layout-align="space-between center" translate>
+                            <span> International transfers </span>
+                            <span layout-align="end center">
+                                <md-button class="md-icon-button md-primary" ng-click="processorAddInternationalTransfer(processor)">
+                                    <md-tooltip md-direction="left">
+                                        {{ 'Add a new record of data international transfer' | translate }}
+                                    </md-tooltip>
+                                    <md-icon>add_to_photos</md-icon>
+                                </md-button>
+                            </span>
+                        </md-subheader>
+                    </div>
+                    <div>
+                        <md-table-container flex>
+                            <table editable callback="onTransferTableEdited" class="md-html-table md-html-table-grey big-border-all" >
+                                <tbody>
+                                    <tr>
+                                        <th translate> Organisation </th>
+                                        <th translate> Description </th>
+                                        <th translate> Country </th>
+                                        <th translate> Documents </th>
+                                        <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap"></th>
+                                    </tr>
+                                    <tr ng-repeat="internationalTransfer in processor.internationalTransfers"  edit-model="internationalTransfer">
+                                        <td edit-readonly="isAnrReadOnly" edit-field="organisation" edit-type="textarea" class="txtcenter"></td>
+                                        <td edit-readonly="isAnrReadOnly" edit-field="description" edit-type="textarea" class="txtcenter"></td>
+                                        <td edit-readonly="isAnrReadOnly" edit-field="country" edit-type="textarea" class="txtcenter"></td>
+                                        <td>
+                                            <div layout="row" layout-align="start center">
+                                                <md-chips   class="chips-horizontal" readonly="!internationalTransfer.id"
+                                                            ng-model="internationalTransfer.documents"
+                                                            md-on-remove="onTransferTableEdited(internationalTransfer)"
+                                                            md-on-add="onTransferTableEdited(internationalTransfer)" flex>
+                                                    <input type="text" ng-model="$parent.documentText" style="width:100%" ng-disabled="!internationalTransfer.id">
+                                                </md-chips>
+                                                <md-button class="md-icon-button md-primary" ng-disabled="!documentText" ng-click="addnewDocument(documentText, internationalTransfer)">
+                                                    <md-tooltip md-direction="left">
+                                                        {{ 'Add a new document' | translate }}
+                                                    </md-tooltip>
+                                                    <md-icon>add_to_photos</md-icon>
+                                                </md-button>
+                                            </div>
+                                        </td>
+                                        <td ng-if="!isAnrReadOnly">
+                                            <md-button class="md-icon-button md-warn"ng-click="deleteInternationalTransfer(processor, $index)">
+                                                <md-tooltip md-direction="left">
+                                                    {{ 'Delete international transfer record' | translate }}
+                                                </md-tooltip>
+                                                <md-icon>delete</md-icon>
+                                            </md-button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </md-table-container>
+                    </div>
+                </md-tab>
+            </md-tabs>
         </md-tab>
     </md-tabs>
 </div>
