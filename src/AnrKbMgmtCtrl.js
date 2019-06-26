@@ -4318,7 +4318,7 @@
             },
             'description' : {
                 'field' : 'description',
-                'required' : false,
+                'required' : true,
                 'type' : 'text',
                 'example' : gettextCatalog.getString('Periodically review access permissions.')
             },
