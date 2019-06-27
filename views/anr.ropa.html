@@ -37,7 +37,7 @@
                           <md-button ng-click="openMethodDeliverable(step, $event)">.docx</md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button ng-click="jsonExport()">.json</md-button>
+                            <md-button ng-click="jsonExport($event, record)">.json</md-button>
                         </md-menu-item>
                         <md-menu-item>
                             <md-button ng-click="export()">.csv</md-button>
@@ -284,7 +284,7 @@
                                 <td md-cell>
                                     <md-autocomplete
                                         md-selected-item="selectedJointController"
-                                        md-search-text="record.jointControllers[$index + 1].label"
+                                        md-search-text="jc.label"
                                         md-items="item in queryRecordActorSearch(jc.label)"
                                         md-item-text="item['label']"
                                         md-min-length="0"
@@ -298,11 +298,11 @@
                                     </md-autocomplete>
                                 </td>
                                 <td md-cell>
-                                    <div layout="row" layout-align="start center" ng-if="record.jointControllers[$index+1].id">
+                                    <div layout="row" layout-align="start center" ng-if="jc.id">
                                         <md-chips class="chips-horizontal"
-                                            md-on-remove="onActorContactEdit(record.jointControllers[$index+1])"
-                                            md-on-add="onActorContactEdit(record.jointControllers[$index+1])"
-                                            ng-model="record.jointControllers[$index+1].contact" flex>
+                                            md-on-remove="onActorContactEdit(jc)"
+                                            md-on-add="onActorContactEdit(jc)"
+                                            ng-model="jc.contact" flex>
                                             <input type="text" ng-model="$parent.jcContactText" style="width:100%">
                                         </md-chips>
                                         <md-button class="md-icon-button md-primary" ng-disabled="!jcContactText" ng-click="addNewContact(jcContactText, record.jointControllers[$index+1])">
@@ -348,18 +348,18 @@
                                 <th translate> Description of retention period </th>
                                 <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap" ></th>
                             </tr>
-                            <tr ng-repeat="personalData in record.personalData" edit-model="personalData">
+                            <tr ng-repeat="personalData in record.personalData" edit-model="personalData" ng-if="!(updatingPersonalData)">
                                 <td>
                                     <md-chips class="chips-horizontal"
                                         style="width:80%; display:inline-block"
-                                        md-on-remove="onPersonalDataEdit(record, personalData)"
-                                        md-on-add="onPersonalDataEdit(record, personalData)"
+                                        md-on-remove="onPersonalDataEdit(record, personalData, $parent.$index)"
+                                        md-on-add="onPersonalDataEdit(record, personalData, $parent.$index)"
                                         md-transform-chip="transformChip($chip)"
                                         ng-model="personalData.dataSubjects"
                                         md-autocomplete-snap flex>
                                         <md-autocomplete md-selected-item="selectedDataSubject"
                                                          md-search-text="$parent.dataSubjectSearchText"
-                                                         md-items="item in queryRecordDataSubjectSearch(dataSubjectSearchText)"
+                                                         md-items="item in queryRecordDataSubjectSearch(dataSubjectSearchText, personalData)"
                                                          md-item-text="item['label']"
                                                          md-min-length="0"
                                                          md-no-cache="true"
@@ -391,14 +391,14 @@
                                 <td class="txtcenter">
                                     <md-chips class="chips-horizontal"
                                         style="width:80%; display:inline-block"
-                                        md-on-remove="onPersonalDataEdit(record, personalData)"
-                                        md-on-add="onPersonalDataEdit(record, personalData)"
+                                        md-on-remove="onPersonalDataEdit(record, personalData, $parent.$index)"
+                                        md-on-add="onPersonalDataEdit(record, personalData, $parent.$index)"
                                         md-transform-chip="transformChip($chip)"
                                         ng-model="personalData.dataCategories"
                                         md-autocomplete-snap flex>
                                         <md-autocomplete md-selected-item="selectedDataCategory"
                                                          md-search-text="$parent.dataCategorySearchText"
-                                                         md-items="item in queryRecordDataCategorySearch(dataCategorySearchText)"
+                                                         md-items="item in queryRecordDataCategorySearch(dataCategorySearchText, personalData)"
                                                          md-item-text="item['label']"
                                                          md-min-length="0"
                                                          md-no-cache="true"
@@ -528,7 +528,7 @@
                                 <th translate> Organisation </th>
                                 <th translate> Description </th>
                                 <th translate> Country </th>
-                                <th translate> Documents </th>
+                                <th translate style="width:40%; white-space:nowrap"> Documents </th>
                                 <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap"></th>
                             </tr>
                             <tr ng-repeat="internationalTransfer in record.internationalTransfers"  edit-model="internationalTransfer">
@@ -785,14 +785,14 @@
                                             </md-autocomplete>
                                         </td>
                                         <td md-cell>
-                                            <div layout="row" layout-align="start center" ng-if="processor.cascadedProcessors[$index+1].id">
+                                            <div layout="row" layout-align="start center" ng-if="processor.cascadedProcessors[($index) + 1].id">
                                                 <md-chips class="chips-horizontal"
-                                                    md-on-remove="onActorContactEdit(processor.cascadedProcessors[$index+1])"
-                                                    md-on-add="onActorContactEdit(processor.cascadedProcessors[$index+1])"
-                                                    ng-model="processor.cascadedProcessors[$index+1].contact" flex>
+                                                    md-on-remove="onActorContactEdit(processor.cascadedProcessors[($parent.$index) + 1])"
+                                                    md-on-add="onActorContactEdit(processor.cascadedProcessors[($parent.$index) + 1])"
+                                                    ng-model="processor.cascadedProcessors[($parent.$index) + 1].contact" flex>
                                                     <input type="text" ng-model="$parent.cpContactText" style="width:100%">
                                                 </md-chips>
-                                                <md-button class="md-icon-button md-primary" ng-disabled="!cpContactText" ng-click="addNewContact(cpContactText, processor.cascadedProcessors[$index+1])">
+                                                <md-button class="md-icon-button md-primary" ng-disabled="!cpContactText" ng-click="addNewContact(cpContactText, processor.cascadedProcessors[($index)+1])">
                                                     <md-tooltip md-direction="left">
                                                         {{ 'Add a new contact information' | translate }}
                                                     </md-tooltip>
@@ -801,7 +801,7 @@
                                             </div>
                                         </td>
                                         <td md-cell class="txtcenter">
-                                            <md-button ng-if="!isAnrReadOnly && processor.cascadedProcessors[$index+1].id" class="md-icon-button md-warn"ng-click="processorDetachActor(processor, 'cascadedProcessors', $index+1)">
+                                            <md-button ng-if="!isAnrReadOnly && processor.cascadedProcessors[($index) + 1].id" class="md-icon-button md-warn"ng-click="processorDetachActor(processor, 'cascadedProcessors', ($index) + 1)">
                                                 <md-tooltip md-direction="left">
                                                     {{ 'Detach cascaded processor' | translate }}
                                                 </md-tooltip>
@@ -859,7 +859,7 @@
                                             </div>
                                         </td>
                                         <td ng-if="!isAnrReadOnly">
-                                            <md-button class="md-icon-button md-warn"ng-click="deleteInternationalTransfer(processor, $index)">
+                                            <md-button class="md-icon-button md-warn"ng-click="processorDeleteInternationalTransfer(processor, $index)">
                                                 <md-tooltip md-direction="left">
                                                     {{ 'Delete international transfer record' | translate }}
                                                 </md-tooltip>

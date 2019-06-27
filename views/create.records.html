@@ -13,8 +13,8 @@
             <div class="md-dialog-content">
                 <md-card layout="row">
                     <span flex></span>
-                    <md-button class="md-primary" ng-click="importRecord($event)" ng-controller="AnrRopaCtrl">
-                        <md-icon>cloud_download</md-icon><span>&nbsp;{{ 'Import from MOSP' | translate }}</span>
+                    <md-button class="md-primary" ng-click="importRecord($event)">
+                        <md-icon>play_for_work</md-icon><span>&nbsp;{{ 'Import from file' | translate }}</span>
                     </md-button>
                     <span flex></span>
                 </md-card>
@@ -24,8 +24,8 @@
                 <md-input-container class="md-block" flex>
                     <label translate>Label</label>
                     <md-icon>label</md-icon>
-                    <input ng-model="record['label']" name="label" required>
-                    <div ng-messages="record.label.$error">
+                    <input ng-model="newRecord['label']" name="label" required>
+                    <div ng-messages="newRecord.label.$error">
                         <div ng-message="required">{{ 'The label may not be empty' | translate }}</div>
                     </div>
                 </md-input-container>

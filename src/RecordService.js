@@ -197,6 +197,9 @@
         var updateRecordRecipient = function (params, success, error) {
             self.RecordRecipientResource.update(params, success, error);
         };
+        var getRecordRecipient = function (id) {
+            return self.RecordRecipientResource.query({RecordRecipientId: id}).$promise;
+        };
 
         //RecordInternationalTransfer
         var createRecordInternationalTransfer = function (params, success, error) {
@@ -235,6 +238,7 @@
             getRecordRecipients: getRecordRecipients,
             createRecordRecipient: createRecordRecipient,
             updateRecordRecipient: updateRecordRecipient,
+            getRecordRecipient: getRecordRecipient,
 
             createRecordInternationalTransfer: createRecordInternationalTransfer,
             updateRecordInternationalTransfer: updateRecordInternationalTransfer
