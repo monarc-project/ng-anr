@@ -4090,7 +4090,7 @@
             $scope.allMeasures = data.measures;
           });break;
         case 'Recommendations':
-          var getService = ClientRecommandationService.getRecommandations({anr: recommandationSet.anr.id, recommandationSet: recommandationSet.uuid});
+          var getService = ClientRecommandationService.getRecommandations({anr: recommandationSet.anr.id});
           var items = 'recommandations'; break;
         default:
       }
