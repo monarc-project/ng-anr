@@ -716,13 +716,16 @@
         $scope.createNewProcessor = function (ev, record) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'RecordService', 'ConfigService', CreateProcessorDialogCtrl],
+                controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'RecordService', 'record', 'ConfigService', CreateProcessorDialogCtrl],
                 templateUrl: 'views/anr/create.processors.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
+                locals: {
+                    'record' : record,
+                }
             })
             .then(function (processor) {
                 var cont = processor.cont;
@@ -768,8 +771,7 @@
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
-                locals: {
-                }
+                locals: {}
             }).then(function (exports) {
                 var cliAnr = '';
                 var method = $http.get;
@@ -799,8 +801,7 @@
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
-                locals: {
-                }
+                locals: {}
             }).then(function (exports) {
                 var cliAnr = '';
                 var method = $http.get;
@@ -957,9 +958,10 @@
         };
     }
 
-    function CreateProcessorDialogCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $q, RecordService, ConfigService) {
+    function CreateProcessorDialogCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $q, RecordService, record, ConfigService) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
+        $scope.record = record;
 
         $scope.cancel = function() {
             $mdDialog.cancel();
@@ -976,7 +978,24 @@
         $scope.queryRecordProcessorSearch = function(query) {
             var promise = $q.defer();
             RecordService.getRecordProcessors({filter: query}).then(function (e) {
-                promise.resolve(e["record-processors"]);
+                // Filter out values already selected
+                var filtered = [];
+                for (var j = 0; j < e["record-processors"].length; ++j) {
+                    var found = false;
+
+                    for (var i = 0; i < $scope.record.processors.length; ++i) {
+                        if ($scope.record.processors[i].id == e["record-processors"][j].id) {
+                            found = true;
+                            break;
+                        }
+                    }
+
+                    if (!found) {
+                        filtered.push(e["record-processors"][j]);
+                    }
+                }
+
+                promise.resolve(filtered);
             });
             return promise.promise;
         }

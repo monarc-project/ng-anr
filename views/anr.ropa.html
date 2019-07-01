@@ -60,11 +60,11 @@
                     <table editable callback="onRecordTableEdited" class="md-html-table md-html-table-grey big-border-all">
                         <tbody edit-model="record">
                             <tr>
-                                <td translate> <b> Name </b> </td>
+                                <td> <b translate> Name </b> </td>
                                 <td colspan="5" edit-readonly="isAnrReadOnly" edit-field="label" edit-type="textarea"></td>
                             </tr>
                             <tr>
-                                <td translate> <b> Purpose(s) </b> </td>
+                                <td> <b translate> Purpose(s) </b> </td>
                                 <td colspan="5" class="txtcenter">
                                     <div layout="row" layout-align="start center">
                                         <md-chips
@@ -76,11 +76,11 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td translate style="width:1%; white-space:nowrap"> <b> Creation date </b> </td>
+                                <td style="width:1%; white-space:nowrap"> <b translate> Creation date </b> </td>
                                 <td class="txtcenter" style="width:1%; white-space:nowrap"> {{ record.createdAt.date.substring(0,10) }}</td>
-                                <td translate style="width:1%; white-space:nowrap"> <b> Update date </b> </td>
+                                <td style="width:1%; white-space:nowrap"> <b translate> Update date </b> </td>
                                 <td class="txtcenter" style="width:1%; white-space:nowrap"> {{ record.updatedAt.date.substring(0,10) }}</td>
-                                <td translate style="width:1%; white-space:nowrap"> <b> Security measures </b> </td>
+                                <td style="width:1%; white-space:nowrap"> <b translate> Security measures </b> </td>
                                 <td edit-readonly="isAnrReadOnly" edit-field="secMeasures" edit-type="textarea" edit-class="preserve-newlines"></td>
                         </tbody>
                     </table>
@@ -102,7 +102,7 @@
                                 <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap"> </th>
                             </tr>
                             <tr md-row>
-                                <td md-cell style="width:1%; white-space:nowrap" translate> <b> Processing activity controller </b> </td>
+                                <td md-cell style="width:1%; white-space:nowrap"> <b translate> Processing activity controller </b> </td>
                                 <td md-cell>
                                     <md-autocomplete
                                         md-selected-item="selectedItemController"
@@ -145,7 +145,7 @@
                                 </td>
                             </tr>
                             <tr md-row>
-                                <td md-cell translate> <b> Data protection officer </b> </td>
+                                <td md-cell> <b translate> Data protection officer </b> </td>
                                 <td md-cell>
                                     <md-autocomplete
                                         md-selected-item="selectedItemDpo"
@@ -188,7 +188,7 @@
                                 </td>
                             </tr>
                             <tr md-row>
-                                <td md-cell translate> <b> Representative </b> </td>
+                                <td md-cell> <b translate> Representative </b> </td>
                                 <td md-cell>
                                     <md-autocomplete
                                         md-selected-item="selectedItemRepresentative"
@@ -231,8 +231,8 @@
                                 </td>
                             </tr>
                             <tr md-row>
-                                <td md-cell translate>
-                                    <span flex><b> Joint controllers </b> </span>
+                                <td md-cell>
+                                    <span flex><b translate> Joint controllers </b> </span>
                                     <md-button class="md-icon-button md-primary" ng-click="addJointControllers(record)">
                                         <md-tooltip md-direction="left">
                                             {{ 'Add a new joint controller' | translate }}
@@ -282,7 +282,7 @@
                                 </td>
                             </tr>
                             <tr md-row ng-repeat="jc in record.jointControllers.slice(1)">
-                                <td md-cell translate> </td>
+                                <td md-cell> </td>
                                 <td md-cell>
                                     <md-autocomplete
                                         md-selected-item="selectedJointController"
@@ -465,8 +465,8 @@
                 <md-button class="md-icon-button" ng-click="uiState.hideRecipients = !uiState.hideRecipients"><md-icon>{{ uiState.hideRecipients ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
             <div ng-hide=uiState.hideRecipients>
-                <md-subheader class="md-padding-left" translate>
-                    <span> Recipients </span>
+                <md-subheader class="md-padding-left">
+                    <span translate> Recipients </span>
                     <md-button class="md-icon-button md-primary" ng-click="addRecipient(record)">
                         <md-tooltip md-direction="left">
                             {{ 'Add a new recipient of data' | translate }}
@@ -516,8 +516,8 @@
                 </md-table-container>
             </div>
             <div ng-hide=uiState.hideRecipients>
-                <md-subheader class="md-padding-left" translate>
-                <span> International transfers </span>
+                <md-subheader class="md-padding-left">
+                <span translate> International transfers </span>
                     <md-button class="md-icon-button md-primary" ng-click="addInternationalTransfer(record)">
                         <md-tooltip md-direction="left">
                             {{ 'Add a new record of data international transfer' | translate }}
@@ -598,11 +598,11 @@
                                 <table editable callback="onProcessorTableEdited" class="md-html-table md-html-table-grey big-border-all">
                                     <tbody edit-model="processor">
                                         <tr>
-                                            <td translate> <b> Name </b> </td>
+                                            <td> <b translate> Name </b> </td>
                                             <td edit-readonly="isAnrReadOnly" edit-field="label" edit-type="textarea"></td>
                                         </tr>
                                         <tr>
-                                            <td translate> <b> Activity(s) </b> </td>
+                                            <td> <b translate> Activity(s) </b> </td>
                                             <td class="txtcenter">
                                                 <div layout="row" layout-align="start center">
                                                     <md-chips
@@ -614,7 +614,7 @@
                                             </td>
                                         </tr>
                                         <tr>
-                                            <td translate style="width:1%; white-space:nowrap"> <b> Security measures </b> </td>
+                                            <td style="width:1%; white-space:nowrap"> <b translate> Security measures </b> </td>
                                             <td edit-readonly="isAnrReadOnly" edit-field="secMeasures" edit-type="textarea" edit-class="preserve-newlines"></td>
                                     </tbody>
                                 </table>
@@ -623,8 +623,8 @@
                         <br/>
 
                         <div layout="row" layout-align="space-between center">
-                            <md-subheader class="md-padding-left" translate>
-                                <span> Actors </span>
+                            <md-subheader class="md-padding-left">
+                                <span translate> Actors </span>
                             </md-subheader>
                             <md-button class="md-icon-button" ng-click="uiState.hideProcessorActors = !uiState.hideProcessorActors"><md-icon>{{ uiState.hideProcessorActors ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
                         </div>
@@ -639,7 +639,7 @@
                                             <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap"> </th>
                                         </tr>
                                         <tr md-row>
-                                            <td md-cell translate> <b> Representative </b> </td>
+                                            <td md-cell> <b translate> Representative </b> </td>
                                             <td md-cell>
                                                 <md-autocomplete
                                                     md-selected-item="selectedItemRepresentativeProcessor"
@@ -682,7 +682,7 @@
                                             </td>
                                         </tr>
                                         <tr md-row>
-                                            <td md-cell translate> <b> Data protection officer </b> </td>
+                                            <td md-cell> <b translate> Data protection officer </b> </td>
                                             <td md-cell>
                                                 <md-autocomplete
                                                     md-selected-item="selectedItemDpoProcessor"
@@ -726,8 +726,8 @@
                                         </tr>
 
                                         <tr md-row>
-                                            <td md-cell translate style="width:1%; white-space:nowrap">
-                                                <span flex><b> Cascaded processors </b> </span>
+                                            <td md-cell style="width:1%; white-space:nowrap">
+                                                <span flex><b translate> Cascaded processors </b> </span>
                                                 <md-button class="md-icon-button md-primary" ng-click="addCascadedProcessor(processor)">
                                                     <md-tooltip md-direction="left">
                                                         {{ 'Add a new cascaded processor' | translate }}
@@ -777,7 +777,7 @@
                                             </td>
                                         </tr>
                                         <tr md-row ng-repeat="cp in processor.cascadedProcessors.slice(1)">
-                                            <td md-cell translate> </td>
+                                            <td md-cell> </td>
                                             <td md-cell>
                                                 <md-autocomplete
                                                     md-selected-item="selectedCascadedProcessor"
@@ -825,8 +825,8 @@
                         </div>
                         <br/>
                         <div layout="row" layout-align="space-between center">
-                            <md-subheader class="md-padding-left" layout="row" layout-align="space-between center" translate>
-                                <span> International transfers </span>
+                            <md-subheader class="md-padding-left" layout="row" layout-align="space-between center">
+                                <span translate> International transfers </span>
                                 <span layout-align="end center">
                                     <md-button class="md-icon-button md-primary" ng-click="processorAddInternationalTransfer(processor)" ng-hide=uiState.hideProcessorTransfers>
                                         <md-tooltip md-direction="left">
