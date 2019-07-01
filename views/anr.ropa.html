@@ -439,9 +439,9 @@
                                     </span>
                                     <span class="retentionPeriodModeSelect">
                                         <md-select ng-model="personalData.retentionPeriodMode" placeholder="Retention period type" ng-change="onPersonalDataTableEdited(personalData)" ng-disabled="!personalData.id">
-                                            <md-option ng-value="0" translate> day(s)</md-option>
-                                            <md-option ng-value="1" translate> month(s) </md-option>
-                                            <md-option ng-value="2" translate> year(s) </md-option>
+                                            <md-option ng-value="0"> {{ 'day(s)' | translate }} </md-option>
+                                            <md-option ng-value="1"> {{ 'month(s)' | translate }} </md-option>
+                                            <md-option ng-value="2"> {{ 'year(s)' | translate }} </md-option>
                                         </md-select>
                                     </span>
                                 </td>
