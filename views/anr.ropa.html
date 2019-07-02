@@ -40,7 +40,7 @@
                             <md-button ng-click="jsonExport($event, record)">.json</md-button>
                         </md-menu-item>
                         <md-menu-item>
-                            <md-button ng-click="export()">.csv</md-button>
+                            <md-button ng-click="export($event, record)">.csv</md-button>
                         </md-menu-item>
                     </md-menu-content>
                 </md-menu>
@@ -70,8 +70,14 @@
                                         <md-chips
                                         md-on-remove="onRecordTableEdited(record)"  md-on-add="onRecordTableEdited(record)"
                                         class="chips-horizontal" ng-model="record.purposes" md-require-match="true" flex>
-                                            <input type="text" style="width:100%">
+                                            <input type="text" ng-model="$parent.purposesText" style="width:100%">
                                         </md-chips>
+                                        <md-button class="md-icon-button md-primary" ng-disabled="!purposesText" ng-click="addNewPurpose(purposesText, record)">
+                                            <md-tooltip md-direction="left">
+                                                {{ 'Add a new purpose' | translate }}
+                                            </md-tooltip>
+                                            <md-icon>add_to_photos</md-icon>
+                                        </md-button>
                                     </div>
                                 </td>
                             </tr>
@@ -608,8 +614,14 @@
                                                     <md-chips
                                                     md-on-remove="onProcessorTableEdited(processor)"  md-on-add="onProcessorTableEdited(processor)"
                                                     class="chips-horizontal" ng-model="processor.activities" flex>
-                                                        <input type="text" style="width:100%">
+                                                        <input type="text" ng-model="$parent.activitiesText" style="width:100%">
                                                     </md-chips>
+                                                    <md-button class="md-icon-button md-primary" ng-disabled="!activitiesText" ng-click="addNewActivity(activitiesText, processor)">
+                                                        <md-tooltip md-direction="left">
+                                                            {{ 'Add a new activity' | translate }}
+                                                        </md-tooltip>
+                                                        <md-icon>add_to_photos</md-icon>
+                                                    </md-button>
                                                 </div>
                                             </td>
                                         </tr>

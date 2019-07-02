@@ -250,6 +250,26 @@
             $scope.updatingRecords = false;
         });
 
+        $scope.addNewPurpose = function (purpose, record) {
+            for(var i = 0; i < record["purposes"].length; ++i) {
+                if (record["purposes"][i]== purpose){
+                    return;
+                }
+            }
+            record["purposes"].push(purpose);
+            $scope.onRecordTableEdited(record);
+        }
+
+        $scope.addNewActivity = function (activity, processor) {
+            for(var i = 0; i < processor["activities"].length; ++i) {
+                if (processor["activities"][i]== activity){
+                    return;
+                }
+            }
+            processor["activities"].push(activity);
+            $scope.onProcessorTableEdited(processor);
+        }
+
         $scope.queryRecordActorSearch = function (query) {
             var promise = $q.defer();
             RecordService.getRecordActors({filter: query}).then(function (e) {
@@ -820,86 +840,288 @@
             }).catch(angular.noop);
         }
 
-        $scope.export = function () {
+        $scope.export = function (ev, record) {
             finalArray=[];
             recLine = 0;
-            RecordService.getRecord($scope.records.selected).then(function (data) {
+            finalArray[recLine]= gettextCatalog.getString('Name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Purposes');
+            finalArray[recLine]+=','+gettextCatalog.getString('Creation date');
+            finalArray[recLine]+=','+gettextCatalog.getString('Last updated date');
+            finalArray[recLine]+=','+gettextCatalog.getString('Security measures');
+            finalArray[recLine]+=','+"\""+' '+"\"";
 
-                finalArray[recLine]= gettextCatalog.getString('Record label');
-                finalArray[recLine]+=','+"\""+$scope._langField(data,'label')+"\"";
-                recLine++;
-                finalArray[recLine]= gettextCatalog.getString('Controller name');
-                finalArray[recLine]+=','+"\""+data.controller.label+"\"";
-                recLine++;
-                finalArray[recLine]= gettextCatalog.getString('Controller contact');
-                finalArray[recLine]+=','+"\""+data.controller.contact+"\"";
-                recLine++;
-                finalArray[recLine]= gettextCatalog.getString("Controller\'s representative");
-                finalArray[recLine]+=','+"\""+data.representative+"\"";
-                recLine++;
-                finalArray[recLine]= gettextCatalog.getString('Data protection officer');
-                finalArray[recLine]+=','+"\""+data.dpo+"\"";
-                recLine++;
-                finalArray[recLine]= gettextCatalog.getString('Purposes of the processing');
-                finalArray[recLine]+=','+"\""+data.purposes+"\"";
-                recLine++;
-                finalArray[recLine]= gettextCatalog.getString('Description of the processing activity');
-                finalArray[recLine]+=','+"\""+data.description+"\"";
-                if(data.idThirdCountry!=null) {
-                    recLine++;
-                    finalArray[recLine]= gettextCatalog.getString('ID of third country or international organisation recipient');
-                    finalArray[recLine]+=','+"\""+data.idThirdCountry+"\"";
-                    recLine++;
-                    finalArray[recLine]= gettextCatalog.getString("Third country or international organisation\'s data protection officer");
-                    finalArray[recLine]+=','+"\""+data.dpoThirdCountry+"\"";
-                }
-                recLine++;
-                finalArray[recLine]= gettextCatalog.getString('Time limits for erasure');
-                finalArray[recLine]+=','+"\""+data.erasure.slice(0,10)+"\"";
-                recLine++;
-                finalArray[recLine]= gettextCatalog.getString('Technical and organisational security measures');
-                finalArray[recLine]+=','+"\""+data.secMeasures+"\"";
-                if(data["jointControllers"].length > 0) {
-                    recLine++;
-                    finalArray[recLine]="\""+' '+"\"";
-                    recLine++;
-                    finalArray[recLine]= gettextCatalog.getString('Joint controllers');
-                    finalArray[recLine]+=','+gettextCatalog.getString('Name');
-                    finalArray[recLine]+=','+gettextCatalog.getString('Contact');
-                    for(var j = 0; j < data["jointControllers"].length; ++j) {
-                        recLine++;
-                        finalArray[recLine]="\""+' '+"\"";
-                        finalArray[recLine]+=','+"\""+data["jointControllers"][j].label+"\"";
-                        finalArray[recLine]+=','+"\""+data["jointControllers"][j].contact+"\"";
+            finalArray[recLine]+=','+gettextCatalog.getString('Controller\'s name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Controller\'s contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data Protection Officer\'s name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data Protection Officer\'s contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Joint controllers\' name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Joint controllers\' contact');
+            finalArray[recLine]+=','+"\""+' '+"\"";
+
+            finalArray[recLine]+=','+gettextCatalog.getString('Data subjects');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data categories');
+            finalArray[recLine]+=','+gettextCatalog.getString('Description');
+            finalArray[recLine]+=','+gettextCatalog.getString('Retention period');
+            finalArray[recLine]+=','+gettextCatalog.getString('Retention period unit');
+            finalArray[recLine]+=','+gettextCatalog.getString('Retention period description');
+            finalArray[recLine]+=','+"\""+' '+"\"";
+
+            finalArray[recLine]+=','+gettextCatalog.getString('Data recipient');
+            finalArray[recLine]+=','+gettextCatalog.getString('Description');
+            finalArray[recLine]+=','+"\""+' '+"\"";
+
+            finalArray[recLine]+=','+gettextCatalog.getString('Organisation of international transfer');
+            finalArray[recLine]+=','+gettextCatalog.getString('Description');
+            finalArray[recLine]+=','+gettextCatalog.getString('Country');
+            finalArray[recLine]+=','+gettextCatalog.getString('Documents');
+            finalArray[recLine]+=','+"\""+' '+"\"";
+
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor\'s name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Activities');
+            finalArray[recLine]+=','+gettextCatalog.getString('Security measures');
+            finalArray[recLine]+=','+"\""+' '+"\"";
+
+            finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Cascaded processor\'s name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Cascaded processor\'s contact');
+            finalArray[recLine]+=','+"\""+' '+"\"";
+
+            finalArray[recLine]+=','+gettextCatalog.getString('Organisation of international transfer');
+            finalArray[recLine]+=','+gettextCatalog.getString('Description');
+            finalArray[recLine]+=','+gettextCatalog.getString('Country');
+            finalArray[recLine]+=','+gettextCatalog.getString('Documents');
+            RecordService.getRecord(record.id).then(function (data) {
+                console.log(data);
+                var nbJointControllerLine = Array.isArray(data.jointControllers)? data.jointControllers.length : 0;
+                var nbDataLine = Array.isArray(data.personalData)? data.personalData.length : 0;
+                var nbRecipientLine = Array.isArray(data.recipients)? data.recipients.length : 0;
+                var nbInternationalTransferLine = Array.isArray(data.internationalTransfers)? data.internationalTransfers.length : 0;
+                var nbProcessorLine = 0;
+                if (Array.isArray(data.processors)) {
+                    for(var i = 0; i < data.processors.length; ++i) {
+                        var currentProcessorLine = 1;
+                        if (Array.isArray(data.processors[i].cascadedProcessors)){
+                            currentProcessorLine = Math.max(data.processors[i].cascadedProcessors.length, currentProcessorLine);
+                        }
+                        if (Array.isArray(data.processors[i].internationalTransfers)){
+                            currentProcessorLine = Math.max(data.processors[i].internationalTransfers.length, currentProcessorLine);
+                        }
+                        nbProcessorLine += currentProcessorLine;
                     }
                 }
-                if(data["recipients"].length > 0) {
-                    recLine++;
-                    finalArray[recLine]="\""+' '+"\"";
-                    recLine++;
-                    finalArray[recLine]= gettextCatalog.getString('Recipient Categories');
-                    for(var j = 0; j < data["recipients"].length; ++j) {
-                        finalArray[recLine]+=','+"\""+data["recipients"][j].label+"\"";
-                        if(j != data["recipients"].length -1) {
-                            recLine++;
-                            finalArray[recLine]="\""+' '+"\"";
+                var nbLine = Math.max(nbJointControllerLine, nbDataLine, nbRecipientLine, nbInternationalTransferLine, nbProcessorLine, 1);
+                var currentProcessor = 0;
+                var currentProcessorRecLine = 0;
+                var currentProcessorMaxLine = 0;
+
+                recLine++;
+                while(recLine <= nbLine) {
+                    if(recLine === 1) {
+                        finalArray[recLine]="\""+data.label+"\"";
+                        finalArray[recLine]+=','+"\""+data.purposes.join()+"\"";
+                        finalArray[recLine]+=','+"\""+data.createdAt.date.substring(0,11)+"\"";
+                        if(data.updatedAt) {
+                            finalArray[recLine]+=','+"\""+data.updatedAt.date.substring(0,11)+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
+                        finalArray[recLine]+=','+"\""+data.secMeasures+"\"";
+                    }
+                    else {
+                        finalArray[recLine] ="\""+' '+"\""
+                                            +','+"\""+' '+"\""
+                                            +','+"\""+' '+"\""
+                                            +','+"\""+' '+"\""
+                                            +','+"\""+' '+"\"" ;
+                    }
+                    finalArray[recLine]+=','+"\""+' '+"\"";
+
+
+                    if(data.controller && recLine === 1) {
+                        finalArray[recLine] +=','+"\""+data.controller.label+"\"";
+                        finalArray[recLine] +=','+"\""+data.controller.contact.join()+"\"";
+                    }
+                    else {
+                        finalArray[recLine] +=','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\"";
+                    }
+                    if(data.representative && recLine === 1) {
+                        finalArray[recLine] +=','+"\""+data.representative.label+"\"";
+                        finalArray[recLine] +=','+"\""+data.representative.contact.join()+"\"";
+                    }
+                    else {
+                        finalArray[recLine] +=','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\"";
+                    }
+                    if(data.dpo && recLine === 1) {
+                        finalArray[recLine] +=','+"\""+data.dpo.label+"\"";
+                        finalArray[recLine] +=','+"\""+data.dpo.contact.join()+"\"";
+                    }
+                    else {
+                        finalArray[recLine] +=','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\"";
+                    }
+                    if(recLine <= nbJointControllerLine) {
+                        finalArray[recLine] +=','+"\""+data.jointControllers[recLine - 1].label+"\"";
+                        finalArray[recLine] +=','+"\""+data.jointControllers[recLine - 1].contact.join()+"\"";
+                    }
+                    else {
+                        finalArray[recLine] +=','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\"";
+                    }
+                    finalArray[recLine]+=','+"\""+' '+"\"";
+
+                    if(recLine <= nbDataLine) {
+                        var dataSubjectsString = '';
+                        if(Array.isArray(data.personalData[recLine - 1].dataSubjects)) {
+                            dataSubjectsString += data.personalData[recLine - 1].dataSubjects[0].label;
+                            for(var j = 1; j <data.personalData[recLine - 1].dataSubjects.length; ++j) {
+                                dataSubjectsString += ", " + data.personalData[recLine - 1].dataSubjects[j].label;
+                            }
+                        }
+                        var dataCategoriesString = '';
+                        if(Array.isArray(data.personalData[recLine - 1].dataCategories)) {
+                            dataCategoriesString += data.personalData[recLine - 1].dataCategories[0].label;
+                            for(var k = 1; k <data.personalData[recLine - 1].dataSubjects.length; ++k) {
+                                dataCategoriesString += ", " + data.personalData[recLine - 1].dataCategories[k].label;
+                            }
+                        }
+                        finalArray[recLine] +=','+"\""+dataSubjectsString+"\"";
+                        finalArray[recLine] +=','+"\""+dataCategoriesString+"\"";
+                        finalArray[recLine] +=','+"\""+data.personalData[recLine - 1].description+"\"";
+                        finalArray[recLine] +=','+"\""+data.personalData[recLine - 1].retentionPeriod+"\"";
+                        if(data.personalData[recLine - 1].retentionPeriodMode === 0) {
+                            finalArray[recLine] +=','+ gettextCatalog.getString('day(s)');
+                        } else if (data.personalData[recLine - 1].retentionPeriodMode === 1) {
+                            finalArray[recLine] +=','+ gettextCatalog.getString('month(s)');
+                        } else {
+                            finalArray[recLine] +=','+ gettextCatalog.getString('year(s)');
+                        }
+                        finalArray[recLine] +=','+"\""+data.personalData[recLine - 1].retentionPeriodDescription+"\"";
+                    }
+                    else {
+                        finalArray[recLine] +=','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\"";
+                    }
+                    finalArray[recLine]+=','+"\""+' '+"\"";
+
+                    if(recLine <= nbRecipientLine) {
+                        finalArray[recLine] +=','+"\""+data.recipients[recLine - 1].label+"\"";
+                        finalArray[recLine] +=','+"\""+data.recipients[recLine - 1].description+"\"";
+                    }
+                    else {
+                        finalArray[recLine] +=','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\"";
+                    }
+                    finalArray[recLine]+=','+"\""+' '+"\"";
+
+                    if(recLine <= nbInternationalTransferLine) {
+                        finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine - 1].organisation+"\"";
+                        finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine - 1].description+"\"";
+                        finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine - 1].country+"\"";
+                        finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine - 1].documents.join()+"\"";
+                    }
+                    else {
+                        finalArray[recLine] +=','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\"";
+                    }
+                    finalArray[recLine]+=','+"\""+' '+"\"";
+                    if(recLine <= nbProcessorLine) {
+                        if(currentProcessorRecLine === 0) {
+                            currentProcessorMaxLine = 1;
+                            if (Array.isArray(data.processors[currentProcessor].cascadedProcessors)){
+                                currentProcessorMaxLine = Math.max(data.processors[currentProcessor].cascadedProcessors.length, currentProcessorMaxLine);
+                            }
+                            if (Array.isArray(data.processors[currentProcessor].internationalTransfers)){
+                                currentProcessorMaxLine = Math.max(data.processors[currentProcessor].internationalTransfers.length, currentProcessorMaxLine);
+                            }
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].label+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].activities.join().description+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].secMeasures+"\"";
+                        }
+                        else {
+                            finalArray[recLine] +=','+"\""+' '+"\""
+                                                + ','+"\""+' '+"\""
+                                                + ','+"\""+' '+"\"";
+                        }
+                        finalArray[recLine]+=','+"\""+' '+"\"";
+
+                        if(data.processors[currentProcessor].representative && currentProcessorRecLine === 0) {
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].representative.label+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].representative.contact.join()+"\"";
+                        }
+                        else {
+                            finalArray[recLine] +=','+"\""+' '+"\""
+                                                + ','+"\""+' '+"\"";
+                        }
+                        if(data.processors[currentProcessor].dpo && currentProcessorRecLine === 0) {
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].dpo.label+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].dpo.contact.join()+"\"";
+                        }
+                        else {
+                            finalArray[recLine] +=','+"\""+' '+"\""
+                                                + ','+"\""+' '+"\"";
+                        }
+                        if(Array.isArray(data.processors[currentProcessor].cascadedProcessors) && currentProcessorRecLine < data.processors[currentProcessor].cascadedProcessors.length) {
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].cascadedProcessors[currentProcessorRecLine].label+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].cascadedProcessors[currentProcessorRecLine].contact.join()+"\"";
+                        }
+                        else {
+                            finalArray[recLine] +=','+"\""+' '+"\""
+                                                + ','+"\""+' '+"\"";
+                        }
+                        finalArray[recLine]+=','+"\""+' '+"\"";
+
+                        if(Array.isArray(data.processors[currentProcessor].internationalTransfers) && currentProcessorRecLine < data.processors[currentProcessor].internationalTransfers.length) {
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].internationalTransfers[currentProcessorRecLine].organisation+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].internationalTransfers[currentProcessorRecLine].description+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].internationalTransfers[currentProcessorRecLine].country+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].internationalTransfers[currentProcessorRecLine].documents.join()+"\"";
+                        }
+                        else {
+                            finalArray[recLine] +=','+"\""+' '+"\""
+                                                + ','+"\""+' '+"\""
+                                                + ','+"\""+' '+"\""
+                                                + ','+"\""+' '+"\"";
+                        }
+                        currentProcessorRecLine++;
+                        if(currentProcessorRecLine === currentProcessorMaxLine) {
+                            currentProcessor ++;
+                            currentProcessorRecLine = 0;
+                            currentProcessorMaxLine = 0;
                         }
                     }
-                }
-                if(data["processors"].length > 0) {
-                    recLine++;
-                    finalArray[recLine]="\""+' '+"\"";
-                    recLine++;
-                    finalArray[recLine]= gettextCatalog.getString('Data processors');
-                    finalArray[recLine]+=','+gettextCatalog.getString('Name');
-                    finalArray[recLine]+=','+gettextCatalog.getString('Contact');
-                    for(var j = 0; j < data["processors"].length; ++j) {
-                        recLine++;
-                        finalArray[recLine]="\""+' '+"\"";
-                        finalArray[recLine]+=','+"\""+data["processors"][j].label+"\"";
-                        finalArray[recLine]+=','+"\""+data["processors"][j].contact+"\"";
+                    else {
+                        finalArray[recLine] +=','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\"";
                     }
+                    recLine ++;
                 }
+
                 let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
                 for(var j = 0; j < finalArray.length; ++j) {
                     let row = finalArray[j].toString().replace(/\n|\r/g,' ') + "," + "\r\n";
