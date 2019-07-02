@@ -854,8 +854,8 @@
             finalArray[recLine]+=','+gettextCatalog.getString('Controller\'s contact');
             finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s name');
             finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s contact');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data Protection Officer\'s name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data Protection Officer\'s contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s contact');
             finalArray[recLine]+=','+gettextCatalog.getString('Joint controllers\' name');
             finalArray[recLine]+=','+gettextCatalog.getString('Joint controllers\' contact');
             finalArray[recLine]+=','+"\""+' '+"\"";
