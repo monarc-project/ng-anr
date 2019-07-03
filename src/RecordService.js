@@ -149,6 +149,9 @@
         var updateRecordActor = function (params, success, error) {
             self.RecordActorResource.update(params, success, error);
         };
+        var getRecordActor = function (id) {
+            return self.RecordActorResource.query({RecordActorId: id}).$promise;
+        };
 
         //RecordDataSubject
         var getRecordDataSubjects = function (params) {
@@ -221,6 +224,7 @@
             getRecordActors: getRecordActors,
             createRecordActor: createRecordActor,
             updateRecordActor: updateRecordActor,
+            getRecordActor: getRecordActor,
 
             getRecordDataSubjects: getRecordDataSubjects,
 
