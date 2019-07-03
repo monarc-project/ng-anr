@@ -63,6 +63,20 @@
             return promise.promise;
         };
 
+        $scope.onActorTableEdited = function (model, name) {
+            var promise = $q.defer();
+            // This record actor changed, update it
+            RecordService.updateRecordActor(model, function (data) {
+                toastr.success( gettextCatalog.getString('The actor has been edited successfully.'),
+                                gettextCatalog.getString('Edition successful'))
+                promise.resolve(true);
+            }, function () {
+                promise.reject(false);
+            });
+
+            return promise.promise;
+        };
+
         $scope.onPersonalDataTableEdited = function (model, name) {
             var promise = $q.defer();
 
@@ -250,16 +264,6 @@
             $scope.updatingRecords = false;
         });
 
-        $scope.addNewPurpose = function (purpose, record) {
-            for(var i = 0; i < record["purposes"].length; ++i) {
-                if (record["purposes"][i]== purpose){
-                    return;
-                }
-            }
-            record["purposes"].push(purpose);
-            $scope.onRecordTableEdited(record);
-        }
-
         $scope.addNewActivity = function (activity, processor) {
             for(var i = 0; i < processor["activities"].length; ++i) {
                 if (processor["activities"][i]== activity){
@@ -319,22 +323,27 @@
             }
             if((actor.id == undefined || actor.id == null)) {
                 if(actor.label) {
-                    RecordService.createRecordActor(actor,
-                        function (status) {
-                            actor["id"] = status.id;
-                            actor["contact"] = [];
+                    actor["contact"] = "";
+                    record[actorField] = actor;
+                    RecordService.createRecordActor(actor, function (status) {
+                        //RecordService.getRecordActor(status.id).then(function (data) {
                             if(actorField == "jointControllers") {
-                                record["jointControllers"][index] = actor;
+                                record["jointControllers"][index]["id"] = status.id;
+                                record["jointControllers"][index]["contact"] = "";
+                                record["jointControllers"][index]["label"] = actor.label;
                             } else {
-                                record[actorField] = actor;
+                                record[actorField]["id"] = status.id;
+                                record[actorField]["contact"] = "";
+                                record[actorField]["label"] = actor.label;
                             }
+                            console.log(record);
                             RecordService.updateRecord(record, function (data) {
                                 toastr.success( gettextCatalog.getString('The actor has been created successfully.'),
                                                 gettextCatalog.getString('Creation successful'));
                             });
-                        }
-                    );
-                }
+                        //});
+                    });
+                };
             }
             else {
                 if(!actor.label) {
@@ -357,31 +366,8 @@
         }
 
         $scope.addJointControllers = function (record) {
-            record["jointControllers"].push( { "label": "", "contact": [] } );
+            record["jointControllers"].push( { "label": "", "contact": "" } );
         }
-
-        $scope.addNewContact = function (contact, actor) {
-            for(var i = 0; i < actor["contact"].length; ++i) {
-                if (actor["contact"][i]== contact){
-                    return;
-                }
-            }
-            actor["contact"].push(contact);
-            $scope.onActorContactEdit(actor);
-        }
-
-        $scope.onActorContactEdit = function (actor) {
-            var promise = $q.defer();
-            // This record actor changed, update it-
-            RecordService.updateRecordActor(actor, function (data) {
-                toastr.success( gettextCatalog.getString('The actor has been edited successfully.'),
-                                gettextCatalog.getString('Edition successful'))
-                promise.resolve(true);
-            }, function () {
-                promise.reject(false);
-            });
-            return promise.promise;
-        };
 
         $scope.addPersonalData = function(record) {
             record["personalData"].push( { "dataSubjects": [], "dataCategories": [], "description": "", "retentionPeriod" : 0, "retentionPeriodMode" : 0, "retentionPeriodDescription" : "", "record" : record["id"]} );
@@ -440,7 +426,6 @@
         $scope.onPersonalDataEdit = function (record, personalData, index) {
             var promise = $q.defer();
             $scope.updatingPersonalData = true;
-            console.log(index);
             // This personal data changed, update it
             if((personalData.id == undefined || personalData.id == null)) {
                 RecordService.createRecordPersonalData(personalData, function (status) {
@@ -593,7 +578,7 @@
 
         $scope.addInternationalTransfer = function(record) {
             var promise = $q.defer();
-            var internationalTransfer = { "organisation" : "", "description": "", "country": "", "documents": [], "record": record["id"], "processor": null};
+            var internationalTransfer = { "organisation" : "", "description": "", "country": "", "documents": "", "record": record["id"], "processor": null};
             // Create a new international transfer record
             RecordService.createRecordInternationalTransfer(internationalTransfer, function (status) {
                 internationalTransfer["id"] = status.id;
@@ -658,9 +643,9 @@
             }
             if((actor.id == undefined || actor.id == null)) {
                 if(actor.label) {
-                    RecordService.createRecordActor(actor,
-                        function (status) {
-                            actor["id"] = status.id;
+                    RecordService.createRecordActor(actor, function (status) {
+                        RecordService.getRecordActor(status.id).then(function (data) {
+                            actor = data;
                             if(actorField == "cascadedProcessors") {
                                 processor["cascadedProcessors"][index] = actor;
                             } else {
@@ -670,8 +655,8 @@
                                 toastr.success( gettextCatalog.getString('The actor has been created successfully.'),
                                                 gettextCatalog.getString('Creation successful'));
                             });
-                        }
-                    );
+                        });
+                    });
                 }
             }
             else {
@@ -695,12 +680,12 @@
         }
 
         $scope.addCascadedProcessor = function (processor) {
-            processor["cascadedProcessors"].push( { "label": "", "contact": [] } );
+            processor["cascadedProcessors"].push( { "label": "", "contact": "" } );
         }
 
         $scope.processorAddInternationalTransfer = function(processor) {
             var promise = $q.defer();
-            var internationalTransfer = { "organisation" : "", "description": "", "country": "", "documents": [], "record": null, "processor": processor["id"]};
+            var internationalTransfer = { "organisation" : "", "description": "", "country": "", "documents": "", "record": null, "processor": processor["id"]};
             // Create a new international transfer record
             RecordService.createRecordInternationalTransfer(internationalTransfer, function (status) {
                 internationalTransfer["id"] = status.id;
@@ -713,16 +698,6 @@
             }, function () {
                 promise.reject(false);
             });
-        }
-
-        $scope.addnewDocument = function (doc, internationalTransfer) {
-            for(var i = 0; i < internationalTransfer["documents"].length; ++i) {
-                if (internationalTransfer["documents"][i] == doc){
-                    return;
-                }
-            }
-            internationalTransfer["documents"].push(doc);
-            $scope.onTransferTableEdited(internationalTransfer);
         }
 
         $scope.processorDeleteInternationalTransfer = function (processor, index) {
@@ -844,9 +819,9 @@
             finalArray=[];
             recLine = 0;
             finalArray[recLine]= gettextCatalog.getString('Name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Purposes');
             finalArray[recLine]+=','+gettextCatalog.getString('Creation date');
             finalArray[recLine]+=','+gettextCatalog.getString('Last updated date');
+            finalArray[recLine]+=','+gettextCatalog.getString('Purposes');
             finalArray[recLine]+=','+gettextCatalog.getString('Security measures');
             finalArray[recLine]+=','+"\""+' '+"\"";
 
@@ -896,7 +871,6 @@
             finalArray[recLine]+=','+gettextCatalog.getString('Country');
             finalArray[recLine]+=','+gettextCatalog.getString('Documents');
             RecordService.getRecord(record.id).then(function (data) {
-                console.log(data);
                 var nbJointControllerLine = Array.isArray(data.jointControllers)? data.jointControllers.length : 0;
                 var nbDataLine = Array.isArray(data.personalData)? data.personalData.length : 0;
                 var nbRecipientLine = Array.isArray(data.recipients)? data.recipients.length : 0;
@@ -923,13 +897,13 @@
                 while(recLine <= nbLine) {
                     if(recLine === 1) {
                         finalArray[recLine]="\""+data.label+"\"";
-                        finalArray[recLine]+=','+"\""+data.purposes.join()+"\"";
                         finalArray[recLine]+=','+"\""+data.createdAt.date.substring(0,11)+"\"";
                         if(data.updatedAt) {
                             finalArray[recLine]+=','+"\""+data.updatedAt.date.substring(0,11)+"\"";
                         } else {
                             finalArray[recLine]+=','+"\""+' '+"\"";
                         }
+                        finalArray[recLine]+=','+"\""+data.purposes+"\"";
                         finalArray[recLine]+=','+"\""+data.secMeasures+"\"";
                     }
                     else {
@@ -944,7 +918,7 @@
 
                     if(data.controller && recLine === 1) {
                         finalArray[recLine] +=','+"\""+data.controller.label+"\"";
-                        finalArray[recLine] +=','+"\""+data.controller.contact.join()+"\"";
+                        finalArray[recLine] +=','+"\""+data.controller.contact+"\"";
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
@@ -952,7 +926,7 @@
                     }
                     if(data.representative && recLine === 1) {
                         finalArray[recLine] +=','+"\""+data.representative.label+"\"";
-                        finalArray[recLine] +=','+"\""+data.representative.contact.join()+"\"";
+                        finalArray[recLine] +=','+"\""+data.representative.contact+"\"";
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
@@ -960,7 +934,7 @@
                     }
                     if(data.dpo && recLine === 1) {
                         finalArray[recLine] +=','+"\""+data.dpo.label+"\"";
-                        finalArray[recLine] +=','+"\""+data.dpo.contact.join()+"\"";
+                        finalArray[recLine] +=','+"\""+data.dpo.contact+"\"";
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
@@ -968,7 +942,7 @@
                     }
                     if(recLine <= nbJointControllerLine) {
                         finalArray[recLine] +=','+"\""+data.jointControllers[recLine - 1].label+"\"";
-                        finalArray[recLine] +=','+"\""+data.jointControllers[recLine - 1].contact.join()+"\"";
+                        finalArray[recLine] +=','+"\""+data.jointControllers[recLine - 1].contact+"\"";
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
@@ -1028,7 +1002,7 @@
                         finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine - 1].organisation+"\"";
                         finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine - 1].description+"\"";
                         finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine - 1].country+"\"";
-                        finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine - 1].documents.join()+"\"";
+                        finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine - 1].documents+"\"";
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
@@ -1059,7 +1033,7 @@
 
                         if(data.processors[currentProcessor].representative && currentProcessorRecLine === 0) {
                             finalArray[recLine] +=','+"\""+data.processors[currentProcessor].representative.label+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].representative.contact.join()+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].representative.contact+"\"";
                         }
                         else {
                             finalArray[recLine] +=','+"\""+' '+"\""
@@ -1067,7 +1041,7 @@
                         }
                         if(data.processors[currentProcessor].dpo && currentProcessorRecLine === 0) {
                             finalArray[recLine] +=','+"\""+data.processors[currentProcessor].dpo.label+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].dpo.contact.join()+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].dpo.contact+"\"";
                         }
                         else {
                             finalArray[recLine] +=','+"\""+' '+"\""
@@ -1075,7 +1049,7 @@
                         }
                         if(Array.isArray(data.processors[currentProcessor].cascadedProcessors) && currentProcessorRecLine < data.processors[currentProcessor].cascadedProcessors.length) {
                             finalArray[recLine] +=','+"\""+data.processors[currentProcessor].cascadedProcessors[currentProcessorRecLine].label+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].cascadedProcessors[currentProcessorRecLine].contact.join()+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].cascadedProcessors[currentProcessorRecLine].contact+"\"";
                         }
                         else {
                             finalArray[recLine] +=','+"\""+' '+"\""
@@ -1087,7 +1061,7 @@
                             finalArray[recLine] +=','+"\""+data.processors[currentProcessor].internationalTransfers[currentProcessorRecLine].organisation+"\"";
                             finalArray[recLine] +=','+"\""+data.processors[currentProcessor].internationalTransfers[currentProcessorRecLine].description+"\"";
                             finalArray[recLine] +=','+"\""+data.processors[currentProcessor].internationalTransfers[currentProcessorRecLine].country+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].internationalTransfers[currentProcessorRecLine].documents.join()+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].internationalTransfers[currentProcessorRecLine].documents +"\"";
                         }
                         else {
                             finalArray[recLine] +=','+"\""+' '+"\""
