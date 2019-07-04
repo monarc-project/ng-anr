@@ -19,7 +19,6 @@
             'items' : [],
             'selected' : -1
         };
-        $scope.currentRecord = {};
 
         $scope.createNewRecord = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
@@ -66,11 +65,12 @@
 
         $scope.onActorTableEdited = function (model, name) {
             var promise = $q.defer();
-            // This record changed, update it
-            RecordService.updateRecord(model, function (data) {
-                RecordService.getRecord($scope.currentRecord.id).then(function (data) {
-                    $scope.currentRecord = data;
-                    toastr.success( gettextCatalog.getString('The record has been edited successfully.'),
+            // This record actor changed, update it
+            RecordService.updateRecordActor(model, function (data) {
+                $scope.updatingRecords = true;
+                $scope.updateRecords().then( function() {
+                    $scope.updatingRecords = false;
+                    toastr.success( gettextCatalog.getString('The actor has been edited successfully.'),
                                     gettextCatalog.getString('Edition successful'))
                     promise.resolve(true);
                 });
@@ -97,7 +97,6 @@
 
         $scope.onRecipientTableEdited = function(model, name) {
             var promise = $q.defer();
-
             // This record recipient changed, update it
             RecordService.updateRecordRecipient(model, function (data) {
                 toastr.success( gettextCatalog.getString('The personal data has been edited successfully.'),
@@ -162,9 +161,9 @@
             }).catch(angular.noop);
         };
 
-        $scope.detachProcessor = function (ev, index) {
-            $scope.currentRecord['processors'].splice(index, 1);
-            RecordService.updateRecord($scope.currentRecord, function (data) {
+        $scope.detachProcessor = function (ev, record, index) {
+            record['processors'].splice(index, 1);
+            RecordService.updateRecord(record, function (data) {
                 toastr.success(gettextCatalog.getString('The processor has been detached successfully.'));
             });
         };
@@ -173,7 +172,6 @@
             $scope.selectingRecord = true;
             RecordService.getRecord(recordId).then(function (data) {
                 $scope.records.selected = recordId;
-                $scope.currentRecord = data;
                 if(index !== -1) {
                     $scope.recordTabSelected = index;
                 }
@@ -197,9 +195,6 @@
                     } else {
                         for(var j = 0; j < data.records[i]['personalData'].length; ++j) {
                             data.records[i]['personalData'][j]["record"] = data.records[i]["id"];
-                            if(!Array.isArray(data.records[i]['personalData'][j]['dataSubjects'])) {
-                                data.records[i]['personalData'][j]['dataSubjects'] = [];
-                            }
                             if(!Array.isArray(data.records[i]['personalData'][j]['dataCategories'])) {
                                 data.records[i]['personalData'][j]['dataCategories'] = [];
                             }
@@ -219,9 +214,6 @@
                         data.records[i]['processors'] = [];
                     } else {
                         for(var j = 0; j < data.records[i]['processors'].length; ++j) {
-                            if(!Array.isArray(data.records[i]['processors'][j]['activities'])) {
-                                data.records[i]['processors'][j]['activities'] = [];
-                            }
                             if(!Array.isArray(data.records[i]['processors'][j]['cascadedProcessors'])) {
                                 data.records[i]['processors'][j]['cascadedProcessors'] = [];
                             }
@@ -247,9 +239,6 @@
         $scope.getRecordProcessor = function (id) {
             var promise = $q.defer();
             RecordService.getRecordProcessor(id).then(function (data) {
-                if(!Array.isArray(data['activities'])) {
-                    data['activities'] = [];
-                }
                 if(!Array.isArray(data['cascadedProcessors'])) {
                     data['cascadedProcessors'] = [];
                 }
@@ -278,7 +267,7 @@
             return promise.promise;
         };
 
-        $scope.actorItemSelected = function (selectedItem, field, index) {
+        $scope.actorItemSelected = function (record, selectedItem, field, index) {
             if (selectedItem == undefined) {
                 selectedItem = null;
             }
@@ -288,72 +277,82 @@
             }
             if(field == "jointControllers") {
                 if (selectedItem == null) {
-                    $scope.currentRecord["jointControllers"].splice(index, 1);
+                    record["jointControllers"].splice(index, 1);
                 } else {
-                    $scope.currentRecord["jointControllers"][index] = selectedItem;
+                    record["jointControllers"][index] = selectedItem;
                 }
             } else {
-                $scope.currentRecord[field] = selectedItem;
+                record[field] = selectedItem;
             }
-            RecordService.updateRecord($scope.currentRecord, function (data) {
-                toastr.success( gettextCatalog.getString('The record has been edited successfully.'),
-                                gettextCatalog.getString('Edition successful'));
+            RecordService.updateRecord(record, function (data) {
+                $scope.updatingRecords = true;
+                $scope.updateRecords().then( function() {
+                    $scope.updatingRecords = false;
+                    toastr.success( gettextCatalog.getString('The record has been edited successfully.'),
+                                    gettextCatalog.getString('Edition successful'));
+                });
             });
         };
 
-        $scope.detachActor = function (field, index) {
+        $scope.detachActor = function (record, field, index) {
             if(field == "jointControllers") {
-                $scope.currentRecord["jointControllers"].splice(index, 1);
+                record["jointControllers"].splice(index, 1);
             } else {
-                $scope.currentRecord[field] = null;
+                record[field] = null;
             }
-            RecordService.updateRecord($scope.currentRecord, function (data) {
+            RecordService.updateRecord(record, function (data) {
                 toastr.success( gettextCatalog.getString('The actor has been detached successfully.'),
                                 gettextCatalog.getString('Edition successful'));
             });
         }
 
-        $scope.updateActorLabel = function (actor, actorField, index) {
+        $scope.updateActorLabel = function (record, recordIndex, actor, actorField, index) {
             if(actor == null) {
                 return;
             }
             if((actor.id == undefined || actor.id == null)) {
                 if(actor.label) {
-                    RecordService.createRecordActor(actor,
-                        function (status) {
-                            actor["id"] = status.id;
-                            actor["contact"] = [];
-                            if(actorField == "jointControllers") {
-                                $scope.currentRecord["jointControllers"][index] = actor;
-                            } else {
-                                $scope.currentRecord[actorField] = actor;
-                            }
-                            RecordService.updateRecord($scope.currentRecord, function (data) {
-                                RecordService.getRecord($scope.currentRecord.id).then(function (data) {
-                                    $scope.currentRecord = data;
-                                    toastr.success( gettextCatalog.getString('The actor has been created successfully.'),
-                                                    gettextCatalog.getString('Creation successful'));
-                                });
-                            });
+                    actor["contact"] = "";
+                    RecordService.createRecordActor(actor, function (status) {
+                        //RecordService.getRecordActor(status.id).then(function (data) {
+                        actor["id"] = status.id;
+                        if(actorField == "jointControllers") {
+                            record["jointControllers"][index] = actor;
+                        } else {
+                            record[actorField] = actor;
                         }
-                    );
-                }
+                        RecordService.updateRecord(record, function (data) {
+                            $scope.updatingRecords = true;
+                            $scope.updateRecords().then( function() {
+                                $scope.updatingRecords = false;
+                                toastr.success( gettextCatalog.getString('The actor has been created successfully.'),
+                                                gettextCatalog.getString('Creation successful'));
+                            });
+                        });
+                        //});
+                    });
+                };
             }
             else {
                 if(!actor.label) {
                     if(actorField == "jointControllers") {
-                        $scope.currentRecord["jointControllers"].splice(index, 1);
+                        record["jointControllers"].splice(index, 1);
                     } else {
-                        $scope.currentRecord[actorField] = null;
+                        record[actorField] = null;
                     }
-                    RecordService.updateRecord($scope.currentRecord, function (data) {
-                        toastr.success( gettextCatalog.getString('The actor has been detached successfully.'));
+                    RecordService.updateRecord(record, function (data) {
+                        $scope.updatingRecords = true;
+                        $scope.updateRecords().then( function() {
+                            $scope.updatingRecords = false;
+                            toastr.success( gettextCatalog.getString('The actor has been detached successfully.'));
+                        });
                     });
                 }
                 else {
                     RecordService.updateRecordActor(actor, function (data) {
-                        RecordService.getRecord($scope.currentRecord.id).then(function (data) {
-                            $scope.currentRecord = data;
+                        $scope.updatingRecords = true;
+                        $scope.updateRecords().then( function() {
+                            $scope.updatingRecords = false;
                             toastr.success( gettextCatalog.getString('The actor has been edited successfully.'),
                                             gettextCatalog.getString('Edition successful'));
                         });
@@ -362,38 +361,21 @@
             }
         }
 
-        $scope.addJointControllers = function () {
-            $scope.currentRecord["jointControllers"].push( { "label": "", "contact": [] } );
+        $scope.addJointControllers = function (record) {
+            record["jointControllers"].push( { "label": "", "contact": "" } );
         }
 
-        $scope.addPersonalData = function() {
-            $scope.currentRecord["personalData"].push( { "dataSubjects": [], "dataCategories": [], "description": "", "retentionPeriod" : 0, "retentionPeriodMode" : 0, "retentionPeriodDescription" : "", "record" : $scope.currentRecord["id"]} );
-        }
-
-        $scope.queryRecordDataSubjectSearch = function (query, personalData) {
-            var promise = $q.defer();
-            RecordService.getRecordDataSubjects({filter: query}).then(function (e) {
-                // Filter out values already selected
-                var filtered = [];
-                for (var j = 0; j < e["record-data-subjects"].length; ++j) {
-                    var found = false;
-
-                    for (var i = 0; i < personalData.dataSubjects.length; ++i) {
-                        if (personalData.dataSubjects[i].id == e["record-data-subjects"][j].id) {
-                            found = true;
-                            break;
-                        }
-                    }
-
-                    if (!found) {
-                        filtered.push(e["record-data-subjects"][j]);
-                    }
-                }
-
-                promise.resolve(filtered);
+        $scope.addPersonalData = function(record) {
+            personalData = { "dataSubject": "", "dataCategories": [], "description": "", "retentionPeriod" : 0, "retentionPeriodMode" : 0, "retentionPeriodDescription" : "", "record" : record["id"]};
+            RecordService.createRecordPersonalData(personalData, function (status) {
+                personalData["id"] = status.id;
+                record["personalData"].push(personalData);
+                RecordService.updateRecord(record, function (data) {
+                    toastr.success( gettextCatalog.getString('The personal data record has been created successfully.'),
+                                    gettextCatalog.getString('Creation successful'))
+                });
             });
-            return promise.promise;
-        };
+        }
 
         $scope.queryRecordDataCategorySearch = function (query, personalData) {
             var promise = $q.defer();
@@ -420,31 +402,18 @@
             return promise.promise;
         };
 
-        $scope.onPersonalDataEdit = function (personalData, index) {
+        $scope.onPersonalDataEdit = function (record, personalData, index) {
             var promise = $q.defer();
             $scope.updatingPersonalData = true;
             // This personal data changed, update it
-            if((personalData.id == undefined || personalData.id == null)) {
-                RecordService.createRecordPersonalData(personalData, function (status) {
-                    RecordService.getRecordPersonalData(status.id).then(function (data) {
-                        personalData = data;
-                        $scope.currentRecord["personalData"][index] = personalData;
-                        RecordService.updateRecord($scope.currentRecord, function (data) {
-                            $scope.updatingPersonalData = false;
-                            toastr.success( gettextCatalog.getString('The personal data has been created successfully.'),
-                                            gettextCatalog.getString('Creation successful'));
-                        });
-                    });
-                }, function () {
-                    promise.reject(false);
-                });
-                return promise.promise;
+            if(personalData.id == undefined || personalData.id == null) {
+                promise.reject(false);
             }
             else {
                 RecordService.updateRecordPersonalData(personalData, function () {
                     RecordService.getRecordPersonalData(personalData.id).then(function (data) {
                         personalData = data;
-                        $scope.currentRecord["personalData"][index] = personalData;
+                        record["personalData"][index] = personalData;
                         $scope.updatingPersonalData = false;
                         toastr.success( gettextCatalog.getString('The personal data has been edited successfully.'),
                                     gettextCatalog.getString('Edition successful'));
@@ -452,18 +421,13 @@
                 }, function () {
                     promise.reject(false);
                 });
-                return promise.promise;
             }
+            return promise.promise;
         };
 
-        $scope.addNewDataSubject = function (dataSubjectSearchText, personalData, index) {
-            personalData["dataSubjects"].push({"label" : dataSubjectSearchText});
-            $scope.onPersonalDataEdit(personalData, index);
-        }
-
-        $scope.addNewDataCategory = function (dataCategorySearchText, personalData, index) {
+        $scope.addNewDataCategory = function (record, dataCategorySearchText, personalData, index) {
             personalData["dataCategories"].push({"label" : dataCategorySearchText});
-            $scope.onPersonalDataEdit(personalData, index);
+            $scope.onPersonalDataEdit(record, personalData, index);
         }
 
         $scope.transformChip = function(chip) {
@@ -475,19 +439,19 @@
             };
         }
 
-        $scope.deletePersonalData = function(index) {
-            $scope.currentRecord["personalData"].splice(index, 1);
-            RecordService.updateRecord($scope.currentRecord, function (data) {
+        $scope.deletePersonalData = function(record, index) {
+            record["personalData"].splice(index, 1);
+            RecordService.updateRecord(record, function (data) {
                 toastr.success( gettextCatalog.getString('The personal data has been deleted successfully.'),
                                 gettextCatalog.getString('Deletion successful'));
             });
         }
 
-        $scope.addRecipient = function() {
-            $scope.currentRecord["recipients"].push( { "label" : "", "description": "" } );
+        $scope.addRecipient = function(record) {
+            record["recipients"].push({ "label" : "", "type": "0", "description": ""});
         }
 
-        $scope.queryRecordRecipientSearch = function (query) {
+        $scope.queryRecordRecipientSearch = function (record, query) {
             var promise = $q.defer();
             RecordService.getRecordRecipients({filter: query}).then(function (e) {
                 // Filter out values already selected
@@ -495,8 +459,8 @@
                 for (var j = 0; j < e["record-recipients"].length; ++j) {
                     var found = false;
 
-                    for (var i = 0; i < $scope.currentRecord.recipients.length; ++i) {
-                        if ($scope.currentRecord.recipients[i].id == e["record-recipients"][j].id) {
+                    for (var i = 0; i < record.recipients.length; ++i) {
+                        if (record.recipients[i].id == e["record-recipients"][j].id) {
                             found = true;
                             break;
                         }
@@ -512,7 +476,7 @@
             return promise.promise;
         };
 
-        $scope.recipientItemSelected = function (selectedItem, index) {
+        $scope.recipientItemSelected = function (record, selectedItem, index) {
             if (selectedItem == undefined) {
                 selectedItem = null;
             }
@@ -521,35 +485,36 @@
                 activeElement.blur();
             }
             if (selectedItem == null) {
-                $scope.currentRecord["recipients"].splice(index, 1);
+                record["recipients"].splice(index, 1);
             } else {
-                $scope.currentRecord["recipients"][index] = selectedItem;
+                record["recipients"][index] = selectedItem;
             }
-            RecordService.updateRecord($scope.currentRecord, function (data) {
+            RecordService.updateRecord(record, function (data) {
                 toastr.success( gettextCatalog.getString('The record has been edited successfully.'),
                                 gettextCatalog.getString('Edition successful'));
             });
         };
 
-        $scope.deleteRecipient = function (index) {
-            $scope.currentRecord["recipients"].splice(index, 1);
-            RecordService.updateRecord($scope.currentRecord, function (data) {
+        $scope.deleteRecipient = function (record, index) {
+            record["recipients"].splice(index, 1);
+            RecordService.updateRecord(record, function (data) {
                 toastr.success( gettextCatalog.getString('The recipient has been deleted successfully.'),
                                 gettextCatalog.getString('Deletion successful'));
             });
         }
 
-        $scope.updateRecipientLabel = function (recipient, index) {
+        $scope.updateRecipientLabel = function (record, recipient, index) {
             if(recipient == null) {
                 return;
             }
-            if((recipient.id == undefined || recipient.id == null)) {
+            if(recipient.id == undefined || recipient.id == null) {
                 if(recipient.label){
                     RecordService.createRecordRecipient(recipient, function (status) {
+                        console.log(status);
                         RecordService.getRecordRecipient(status.id).then(function (data) {
                             recipient = data;
-                            $scope.currentRecord["recipients"][index] = recipient;
-                            RecordService.updateRecord($scope.currentRecord, function (data) {
+                            record["recipients"][index] = recipient;
+                            RecordService.updateRecord(record, function (data) {
                                 toastr.success( gettextCatalog.getString('The recipient has been created successfully.'),
                                                 gettextCatalog.getString('Creation successful'));
                             });
@@ -559,8 +524,8 @@
             }
             else {
                 if(!recipient.label) {
-                    $scope.currentRecord["recipients"].splice(index, 1);
-                    RecordService.updateRecord($scope.currentRecord, function (data) {
+                    record["recipients"].splice(index, 1);
+                    RecordService.updateRecord(record, function (data) {
                         toastr.success( gettextCatalog.getString('The recipient has been deleted successfully.'));
                     });
                 }
@@ -573,14 +538,14 @@
             }
         }
 
-        $scope.addInternationalTransfer = function() {
+        $scope.addInternationalTransfer = function(record) {
             var promise = $q.defer();
-            var internationalTransfer = { "organisation" : "", "description": "", "country": "", "documents": "", "record": $scope.currentRecord["id"], "processor": null};
+            var internationalTransfer = { "organisation" : "", "description": "", "country": "", "documents": "", "record": record["id"], "processor": null};
             // Create a new international transfer record
             RecordService.createRecordInternationalTransfer(internationalTransfer, function (status) {
                 internationalTransfer["id"] = status.id;
-                $scope.currentRecord["internationalTransfers"].push( internationalTransfer);
-                RecordService.updateRecord($scope.currentRecord, function (data) {
+                record["internationalTransfers"].push( internationalTransfer);
+                RecordService.updateRecord(record, function (data) {
                     toastr.success( gettextCatalog.getString('The international transfer record has been created successfully.'),
                                     gettextCatalog.getString('Creation successful'))
                 });
@@ -590,9 +555,9 @@
             });
         }
 
-        $scope.deleteInternationalTransfer = function (index) {
-            $scope.currentRecord["internationalTransfers"].splice(index, 1);
-            RecordService.updateRecord($scope.currentRecord, function (data) {
+        $scope.deleteInternationalTransfer = function (record, index) {
+            record["internationalTransfers"].splice(index, 1);
+            RecordService.updateRecord(record, function (data) {
                 toastr.success( gettextCatalog.getString('The international transfer record has been deleted successfully.'),
                                 gettextCatalog.getString('Deletion successful'));
             });
@@ -640,20 +605,25 @@
             }
             if((actor.id == undefined || actor.id == null)) {
                 if(actor.label) {
-                    RecordService.createRecordActor(actor,
-                        function (status) {
-                            actor["id"] = status.id;
+                    actor["contact"] = "";
+                    RecordService.createRecordActor(actor, function (status) {
+                        RecordService.getRecordActor(status.id).then(function (data) {
+                            actor = data;
                             if(actorField == "cascadedProcessors") {
                                 processor["cascadedProcessors"][index] = actor;
                             } else {
                                 processor[actorField] = actor;
                             }
                             RecordService.updateRecordProcessor(processor, function (data) {
-                                toastr.success( gettextCatalog.getString('The actor has been created successfully.'),
-                                                gettextCatalog.getString('Creation successful'));
+                                $scope.updatingRecords = true;
+                                $scope.updateRecords().then( function() {
+                                    $scope.updatingRecords = false;
+                                    toastr.success( gettextCatalog.getString('The actor has been created successfully.'),
+                                                    gettextCatalog.getString('Creation successful'));
+                                });
                             });
-                        }
-                    );
+                        });
+                    });
                 }
             }
             else {
@@ -664,20 +634,28 @@
                         processor[actorField] = null;
                     }
                     RecordService.updateRecordProcessor(processor, function (data) {
-                        toastr.success( gettextCatalog.getString('The actor has been detached successfully.'));
+                        $scope.updatingRecords = true;
+                        $scope.updateRecords().then( function() {
+                            $scope.updatingRecords = false;
+                            toastr.success( gettextCatalog.getString('The actor has been detached successfully.'));
+                        });
                     });
                 }
                 else {
                     RecordService.updateRecordActor(actor, function (data) {
-                        toastr.success( gettextCatalog.getString('The actor has been edited successfully.'),
-                                        gettextCatalog.getString('Edition successful'));
+                        $scope.updatingRecords = true;
+                        $scope.updateRecords().then( function() {
+                            $scope.updatingRecords = false;
+                            toastr.success( gettextCatalog.getString('The actor has been edited successfully.'),
+                                            gettextCatalog.getString('Edition successful'));
+                        });
                     });
                 }
             }
         }
 
         $scope.addCascadedProcessor = function (processor) {
-            processor["cascadedProcessors"].push( { "label": "", "contact": [] } );
+            processor["cascadedProcessors"].push( { "label": "", "contact": "" } );
         }
 
         $scope.processorAddInternationalTransfer = function(processor) {
@@ -705,7 +683,7 @@
             });
         }
 
-        $scope.createNewProcessor = function (ev) {
+        $scope.createNewProcessor = function (ev, record) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'RecordService', 'record', 'ConfigService', CreateProcessorDialogCtrl],
@@ -716,7 +694,7 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                    'record' : $scope.currentRecord,
+                    'record' : record,
                 }
             })
             .then(function (processor) {
@@ -725,8 +703,8 @@
                     RecordService.createRecordProcessor(processor, function (status) {
                         $scope.getRecordProcessor(status.id).then(function (data) {
                             processor = data;
-                            $scope.currentRecord["processors"].push(processor);
-                            RecordService.updateRecord($scope.currentRecord, function (data) {
+                            record["processors"].push(processor);
+                            RecordService.updateRecord(record, function (data) {
                                 toastr.success(gettextCatalog.getString('The processor has been created successfully.',
                                       {processorLabel: $scope._langField(processor,'label')}), gettextCatalog.getString('Creation successful'));
                                 if (cont) {
@@ -738,8 +716,8 @@
                 }
                 else {
                     $scope.getRecordProcessor(processor.id).then(function (data) {
-                        $scope.currentRecord["processors"].push(data);
-                        RecordService.updateRecord($scope.currentRecord, function (data) {
+                        record["processors"].push(data);
+                        RecordService.updateRecord(record, function (data) {
                             toastr.success(gettextCatalog.getString('The processor has been added successfully.',
                                   {processorLabel: $scope._langField(processor,'label')}), gettextCatalog.getString('Creation successful'));
                             if (cont) {
@@ -752,7 +730,7 @@
             }).catch(angular.noop);
         };
 
-        $scope.jsonExport = function (ev) {
+        $scope.jsonExport = function (ev, record) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
@@ -771,7 +749,7 @@
                     cliAnr = 'client-';
                     method = $http.post;
                 }
-                method('api/'+cliAnr+'anr/' + $scope.model.anr.id + '/records/' + $scope.currentRecord.id + '/export', {id: $scope.currentRecord.id, password: exports.password}).then(function (data) {
+                method('api/'+cliAnr+'anr/' + $scope.model.anr.id + '/records/' + record.id + '/export', {id: record.id, password: exports.password}).then(function (data) {
                     var contentD = data.headers('Content-Disposition'),
                         contentT = data.headers('Content-Type');
                     contentD = contentD.substring(0,contentD.length-1).split('filename="');
@@ -812,13 +790,13 @@
             }).catch(angular.noop);
         }
 
-        $scope.export = function (ev) {
+        $scope.export = function (ev, record) {
             finalArray=[];
             recLine = 0;
             finalArray[recLine]= gettextCatalog.getString('Name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Purposes');
             finalArray[recLine]+=','+gettextCatalog.getString('Creation date');
             finalArray[recLine]+=','+gettextCatalog.getString('Last updated date');
+            finalArray[recLine]+=','+gettextCatalog.getString('Purposes');
             finalArray[recLine]+=','+gettextCatalog.getString('Security measures');
             finalArray[recLine]+=','+"\""+' '+"\"";
 
@@ -832,7 +810,7 @@
             finalArray[recLine]+=','+gettextCatalog.getString('Joint controllers\' contact');
             finalArray[recLine]+=','+"\""+' '+"\"";
 
-            finalArray[recLine]+=','+gettextCatalog.getString('Data subjects');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data subject');
             finalArray[recLine]+=','+gettextCatalog.getString('Data categories');
             finalArray[recLine]+=','+gettextCatalog.getString('Description');
             finalArray[recLine]+=','+gettextCatalog.getString('Retention period');
@@ -841,6 +819,7 @@
             finalArray[recLine]+=','+"\""+' '+"\"";
 
             finalArray[recLine]+=','+gettextCatalog.getString('Data recipient');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data recipient type');
             finalArray[recLine]+=','+gettextCatalog.getString('Description');
             finalArray[recLine]+=','+"\""+' '+"\"";
 
@@ -867,7 +846,7 @@
             finalArray[recLine]+=','+gettextCatalog.getString('Description');
             finalArray[recLine]+=','+gettextCatalog.getString('Country');
             finalArray[recLine]+=','+gettextCatalog.getString('Documents');
-            RecordService.getRecord($scope.currentRecord.id).then(function (data) {
+            RecordService.getRecord(record.id).then(function (data) {
                 var nbJointControllerLine = Array.isArray(data.jointControllers)? data.jointControllers.length : 0;
                 var nbDataLine = Array.isArray(data.personalData)? data.personalData.length : 0;
                 var nbRecipientLine = Array.isArray(data.recipients)? data.recipients.length : 0;
@@ -894,13 +873,13 @@
                 while(recLine <= nbLine) {
                     if(recLine === 1) {
                         finalArray[recLine]="\""+data.label+"\"";
-                        finalArray[recLine]+=','+"\""+data.purposes.join()+"\"";
                         finalArray[recLine]+=','+"\""+data.createdAt.date.substring(0,11)+"\"";
                         if(data.updatedAt) {
                             finalArray[recLine]+=','+"\""+data.updatedAt.date.substring(0,11)+"\"";
                         } else {
                             finalArray[recLine]+=','+"\""+' '+"\"";
                         }
+                        finalArray[recLine]+=','+"\""+data.purposes+"\"";
                         finalArray[recLine]+=','+"\""+data.secMeasures+"\"";
                     }
                     else {
@@ -915,7 +894,7 @@
 
                     if(data.controller && recLine === 1) {
                         finalArray[recLine] +=','+"\""+data.controller.label+"\"";
-                        finalArray[recLine] +=','+"\""+data.controller.contact.join()+"\"";
+                        finalArray[recLine] +=','+"\""+data.controller.contact+"\"";
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
@@ -923,7 +902,7 @@
                     }
                     if(data.representative && recLine === 1) {
                         finalArray[recLine] +=','+"\""+data.representative.label+"\"";
-                        finalArray[recLine] +=','+"\""+data.representative.contact.join()+"\"";
+                        finalArray[recLine] +=','+"\""+data.representative.contact+"\"";
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
@@ -931,7 +910,7 @@
                     }
                     if(data.dpo && recLine === 1) {
                         finalArray[recLine] +=','+"\""+data.dpo.label+"\"";
-                        finalArray[recLine] +=','+"\""+data.dpo.contact.join()+"\"";
+                        finalArray[recLine] +=','+"\""+data.dpo.contact+"\"";
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
@@ -939,7 +918,7 @@
                     }
                     if(recLine <= nbJointControllerLine) {
                         finalArray[recLine] +=','+"\""+data.jointControllers[recLine - 1].label+"\"";
-                        finalArray[recLine] +=','+"\""+data.jointControllers[recLine - 1].contact.join()+"\"";
+                        finalArray[recLine] +=','+"\""+data.jointControllers[recLine - 1].contact+"\"";
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
@@ -948,21 +927,14 @@
                     finalArray[recLine]+=','+"\""+' '+"\"";
 
                     if(recLine <= nbDataLine) {
-                        var dataSubjectsString = '';
-                        if(Array.isArray(data.personalData[recLine - 1].dataSubjects)) {
-                            dataSubjectsString += data.personalData[recLine - 1].dataSubjects[0].label;
-                            for(var j = 1; j <data.personalData[recLine - 1].dataSubjects.length; ++j) {
-                                dataSubjectsString += ", " + data.personalData[recLine - 1].dataSubjects[j].label;
-                            }
-                        }
                         var dataCategoriesString = '';
                         if(Array.isArray(data.personalData[recLine - 1].dataCategories)) {
                             dataCategoriesString += data.personalData[recLine - 1].dataCategories[0].label;
-                            for(var k = 1; k <data.personalData[recLine - 1].dataSubjects.length; ++k) {
+                            for(var k = 1; k <data.personalData[recLine - 1].dataCategories.length; ++k) {
                                 dataCategoriesString += ", " + data.personalData[recLine - 1].dataCategories[k].label;
                             }
                         }
-                        finalArray[recLine] +=','+"\""+dataSubjectsString+"\"";
+                        finalArray[recLine] +=','+"\""+data.personalData[recLine - 1].dataSubject+"\"";
                         finalArray[recLine] +=','+"\""+dataCategoriesString+"\"";
                         finalArray[recLine] +=','+"\""+data.personalData[recLine - 1].description+"\"";
                         finalArray[recLine] +=','+"\""+data.personalData[recLine - 1].retentionPeriod+"\"";
@@ -987,6 +959,11 @@
 
                     if(recLine <= nbRecipientLine) {
                         finalArray[recLine] +=','+"\""+data.recipients[recLine - 1].label+"\"";
+                        if(data.recipients[recLine - 1].type === 0) {
+                            finalArray[recLine] +=','+ gettextCatalog.getString('internal');
+                        } else {
+                            finalArray[recLine] +=','+ gettextCatalog.getString('external');
+                        }
                         finalArray[recLine] +=','+"\""+data.recipients[recLine - 1].description+"\"";
                     }
                     else {
@@ -1018,7 +995,7 @@
                                 currentProcessorMaxLine = Math.max(data.processors[currentProcessor].internationalTransfers.length, currentProcessorMaxLine);
                             }
                             finalArray[recLine] +=','+"\""+data.processors[currentProcessor].label+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].activities.join().description+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].activities+"\"";
                             finalArray[recLine] +=','+"\""+data.processors[currentProcessor].secMeasures+"\"";
                         }
                         else {
@@ -1030,7 +1007,7 @@
 
                         if(data.processors[currentProcessor].representative && currentProcessorRecLine === 0) {
                             finalArray[recLine] +=','+"\""+data.processors[currentProcessor].representative.label+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].representative.contact.join()+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].representative.contact+"\"";
                         }
                         else {
                             finalArray[recLine] +=','+"\""+' '+"\""
@@ -1038,7 +1015,7 @@
                         }
                         if(data.processors[currentProcessor].dpo && currentProcessorRecLine === 0) {
                             finalArray[recLine] +=','+"\""+data.processors[currentProcessor].dpo.label+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].dpo.contact.join()+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].dpo.contact+"\"";
                         }
                         else {
                             finalArray[recLine] +=','+"\""+' '+"\""
@@ -1046,7 +1023,7 @@
                         }
                         if(Array.isArray(data.processors[currentProcessor].cascadedProcessors) && currentProcessorRecLine < data.processors[currentProcessor].cascadedProcessors.length) {
                             finalArray[recLine] +=','+"\""+data.processors[currentProcessor].cascadedProcessors[currentProcessorRecLine].label+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].cascadedProcessors[currentProcessorRecLine].contact.join()+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].cascadedProcessors[currentProcessorRecLine].contact+"\"";
                         }
                         else {
                             finalArray[recLine] +=','+"\""+' '+"\""

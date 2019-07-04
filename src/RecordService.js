@@ -40,14 +40,6 @@
                     isArray: false
                 }
             });
-            self.RecordDataSubjectResource = $resource('api/' + anr + 'record-data-subjects', {
-                urlAnrId: $rootScope.getUrlAnrId()
-            },
-            {
-                'query': {
-                    isArray: false
-                }
-            });
             self.RecordDataCategoryResource = $resource('api/' + anr + 'record-data-categories', {
                 urlAnrId: $rootScope.getUrlAnrId()
             },
@@ -153,10 +145,6 @@
             return self.RecordActorResource.query({RecordActorId: id}).$promise;
         };
 
-        //RecordDataSubject
-        var getRecordDataSubjects = function (params) {
-            return self.RecordDataSubjectResource.query(params).$promise;
-        };
         //RecordDataCategory
         var getRecordDataCategories = function (params) {
             return self.RecordDataCategoryResource.query(params).$promise;
@@ -225,8 +213,6 @@
             createRecordActor: createRecordActor,
             updateRecordActor: updateRecordActor,
             getRecordActor: getRecordActor,
-
-            getRecordDataSubjects: getRecordDataSubjects,
 
             getRecordDataCategories: getRecordDataCategories,
 

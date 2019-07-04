@@ -1256,8 +1256,16 @@ md-select-menu md-content
     width: 500px !important;
 }
 
-.retentionPeriodModeSelect{
+.select-retention-period-mode{
     padding-left: 6px;
     width: 60%;
     display: inline-block;
+}
+
+.autocomplete-record-actor{
+    background: transparent !important;
+}
+
+.autocomplete-record-actor md-autocomplete-wrap{
+    box-shadow: none !important;
 }
