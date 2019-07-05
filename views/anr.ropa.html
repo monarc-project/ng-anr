@@ -204,7 +204,7 @@
                                         md-min-length="0"
                                         md-no-cache="true"
                                         md-selected-item-change="actorItemSelected(record, selectedJointController, 'jointControllers', 0)"
-                                        ng-blur="updateActorLabel(record, record.jointControllers[0], 'jointControllers', 0)">
+                                        ng-blur="updateActorLabel(record, recordIndex, record.jointControllers[0], 'jointControllers', 0)">
                                         <md-item-template>
                                             <span md-highlight-text="record.jointCrontollers[0].label" md-highlight-flags="^i">{{item['label']}}</span>
                                         </md-item-template>
