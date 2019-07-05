@@ -13,12 +13,13 @@
     function AnrRopaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog,
         DownloadService, $http, $q, RecordService) {
         $scope.language = $scope.getAnrLanguage();
-        $scope.recordTabSelected = 0;
         $scope.updatingPersonalData = false;
         $scope.records = {
             'items' : [],
-            'selected' : -1
+            'selected' : -1,
+            'recordTabSelected' : 0
         };
+        $scope.records.query = { 'filter' : "" };
 
         $scope.createNewRecord = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
@@ -39,6 +40,8 @@
                     $scope.updateRecords().then(function() {
                         $scope.updatingRecords = false;
                         $scope.selectRecord(status.id, $scope.records.items.count);
+                        toastr.success(gettextCatalog.getString('The record has been created successfully.',
+                              {recordLabel: $scope._langField(record,'label')}), gettextCatalog.getString('Creation successful'));
                         if (cont) {
                             $scope.createNewRecord(ev);
                         }
@@ -155,7 +158,7 @@
             RecordService.getRecord(recordId).then(function (data) {
                 $scope.records.selected = recordId;
                 if(index !== -1) {
-                    $scope.recordTabSelected = index;
+                    $scope.records.recordTabSelected = index;
                 }
                 $scope.step = { // Deliverable data
                   num:6,
@@ -166,8 +169,9 @@
         };
 
         $scope.updateRecords = function() {
+            var query = angular.copy($scope.records.query);
             var promise = $q.defer();
-            RecordService.getRecords({order: 'created_at'}).then(function (data) {
+            RecordService.getRecords({order: 'createdAt', filter: query.filter}).then(function (data) {
                 for(var i = 0; i < data.records.length; ++i) {
                     if(!Array.isArray(data.records[i]['jointControllers'])) {
                         data.records[i]['jointControllers'] = [{ "label": "", "contact": "" }];
@@ -204,6 +208,10 @@
             });
             return promise.promise;
         };
+
+        $scope.$watch('records.query.filter', function() {
+            $scope.updateRecords();
+        });
 
         $scope.getRecordProcessor = function (id) {
             var promise = $q.defer();

@@ -1256,6 +1256,15 @@ md-select-menu md-content
     width: 500px !important;
 }
 
+.record-tabs [role="tabpanel"] {
+    transition: none;
+}
+
+/* This will disable the `ink-bar` animation (border-bottom of selected tab) */
+.record-tabs md-ink-bar {
+  transition: none;
+}
+
 .select-retention-period-mode{
     padding-left: 6px;
     width: 60%;
