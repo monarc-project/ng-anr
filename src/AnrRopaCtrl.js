@@ -188,7 +188,7 @@
             RecordService.getRecords({order: 'created_at'}).then(function (data) {
                 for(var i = 0; i < data.records.length; ++i) {
                     if(!Array.isArray(data.records[i]['jointControllers'])) {
-                        data.records[i]['jointControllers'] = [];
+                        data.records[i]['jointControllers'] = [{ "label": "", "contact": "" }];
                     }
                     if(!Array.isArray(data.records[i]['personalData'])) {
                         data.records[i]['personalData'] = [];
@@ -215,7 +215,7 @@
                     } else {
                         for(var j = 0; j < data.records[i]['processors'].length; ++j) {
                             if(!Array.isArray(data.records[i]['processors'][j]['cascadedProcessors'])) {
-                                data.records[i]['processors'][j]['cascadedProcessors'] = [];
+                                data.records[i]['processors'][j]['cascadedProcessors'] = [{ "label": "", "contact": "" }];
                             }
                             if(!Array.isArray(data.records[i]['processors'][j]['internationalTransfers'])) {
                                 data.records[i]['processors'][j]['internationalTransfers'] = [];
