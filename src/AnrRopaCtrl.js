@@ -582,8 +582,12 @@
                 processor[field] = selectedItem;
             }
             RecordService.updateRecordProcessor(processor, function (data) {
-                toastr.success( gettextCatalog.getString('The processor has been edited successfully.'),
-                                gettextCatalog.getString('Edition successful'));
+                $scope.updatingRecords = true;
+                $scope.updateRecords().then( function() {
+                    $scope.updatingRecords = false;
+                    toastr.success( gettextCatalog.getString('The processor has been edited successfully.'),
+                                    gettextCatalog.getString('Edition successful'));
+                });
             });
         };
 
