@@ -39,8 +39,6 @@
                     $scope.updateRecords().then(function() {
                         $scope.updatingRecords = false;
                         $scope.selectRecord(status.id, $scope.records.items.count);
-                        toastr.success(gettextCatalog.getString('The record has been created successfully.',
-                              {recordLabel: $scope._langField(record,'label')}), gettextCatalog.getString('Creation successful'));
                         if (cont) {
                             $scope.createNewRecord(ev);
                         }
@@ -53,8 +51,6 @@
             var promise = $q.defer();
             // This record changed, update it
             RecordService.updateRecord(model, function (data) {
-                toastr.success( gettextCatalog.getString('The record has been edited successfully.'),
-                                gettextCatalog.getString('Edition successful'))
                 promise.resolve(true);
             }, function () {
                 promise.reject(false);
@@ -70,8 +66,6 @@
                 $scope.updatingRecords = true;
                 $scope.updateRecords().then( function() {
                     $scope.updatingRecords = false;
-                    toastr.success( gettextCatalog.getString('The actor has been edited successfully.'),
-                                    gettextCatalog.getString('Edition successful'))
                     promise.resolve(true);
                 });
             }, function () {
@@ -86,8 +80,6 @@
 
             // This record personal data changed, update it
             RecordService.updateRecordPersonalData(model, function (data) {
-                toastr.success( gettextCatalog.getString('The personal data has been edited successfully.'),
-                                gettextCatalog.getString('Edition successful'))
                 promise.resolve(true);
             }, function () {
                 promise.reject(false);
@@ -99,8 +91,6 @@
             var promise = $q.defer();
             // This record recipient changed, update it
             RecordService.updateRecordRecipient(model, function (data) {
-                toastr.success( gettextCatalog.getString('The personal data has been edited successfully.'),
-                                gettextCatalog.getString('Edition successful'))
                 promise.resolve(true);
             }, function () {
                 promise.reject(false);
@@ -113,8 +103,6 @@
             var promise = $q.defer();
             // This international transfer record changed, update it
             RecordService.updateRecordInternationalTransfer(model, function (data) {
-                toastr.success( gettextCatalog.getString('The international transfer record has been edited successfully.'),
-                                gettextCatalog.getString('Edition successful'))
                 promise.resolve(true);
             }, function () {
                 promise.reject(false);
@@ -127,8 +115,6 @@
             var promise = $q.defer();
             // This processor changed, update it
             RecordService.updateRecordProcessor(model, function (data) {
-                toastr.success( gettextCatalog.getString('The processor has been edited successfully.'),
-                                gettextCatalog.getString('Edition successful'))
                 promise.resolve(true);
             }, function () {
                 promise.reject(false);
@@ -153,8 +139,6 @@
                         $scope.updatingRecords = true;
                         $scope.updateRecords().then(function() {
                             $scope.updatingRecords = false;
-                            toastr.success( gettextCatalog.getString('The record has been deleted.',
-                                            {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                         });
                     }
                 );
@@ -163,9 +147,7 @@
 
         $scope.detachProcessor = function (ev, record, index) {
             record['processors'].splice(index, 1);
-            RecordService.updateRecord(record, function (data) {
-                toastr.success(gettextCatalog.getString('The processor has been detached successfully.'));
-            });
+            RecordService.updateRecord(record, function (data) {});
         };
 
         $scope.selectRecord = function(recordId, index = -1) {
@@ -212,19 +194,6 @@
                     }
                     if(!Array.isArray(data.records[i]['processors'])) {
                         data.records[i]['processors'] = [];
-                    } else {
-                        for(var j = 0; j < data.records[i]['processors'].length; ++j) {
-                            if(!Array.isArray(data.records[i]['processors'][j]['cascadedProcessors'])) {
-                                data.records[i]['processors'][j]['cascadedProcessors'] = [{ "label": "", "contact": "" }];
-                            }
-                            if(!Array.isArray(data.records[i]['processors'][j]['internationalTransfers'])) {
-                                data.records[i]['processors'][j]['internationalTransfers'] = [];
-                            } else {
-                                for(var k = 0; k < data.records[i]['processors'][j]['internationalTransfers'].length; ++k) {
-                                    data.records[i]['processors'][j]['internationalTransfers'][k]["processor"] = data.records[i]['processors'][j]['internationalTransfers'][k]["processor"]["id"];
-                                }
-                            }
-                        }
                     }
                 }
                 $scope.records.items = data;
@@ -239,16 +208,6 @@
         $scope.getRecordProcessor = function (id) {
             var promise = $q.defer();
             RecordService.getRecordProcessor(id).then(function (data) {
-                if(!Array.isArray(data['cascadedProcessors'])) {
-                    data['cascadedProcessors'] = [];
-                }
-                if(!Array.isArray(data['internationalTransfers'])) {
-                    data['internationalTransfers'] = [];
-                } else {
-                    for(var k = 0; k < data['internationalTransfers'].length; ++k) {
-                        data['internationalTransfers'][k]["processor"] = data['internationalTransfers'][k]["processor"]["id"];
-                    }
-                }
                 promise.resolve(data);
             });
             return promise.promise;
@@ -288,8 +247,6 @@
                 $scope.updatingRecords = true;
                 $scope.updateRecords().then( function() {
                     $scope.updatingRecords = false;
-                    toastr.success( gettextCatalog.getString('The record has been edited successfully.'),
-                                    gettextCatalog.getString('Edition successful'));
                 });
             });
         };
@@ -300,10 +257,7 @@
             } else {
                 record[field] = null;
             }
-            RecordService.updateRecord(record, function (data) {
-                toastr.success( gettextCatalog.getString('The actor has been detached successfully.'),
-                                gettextCatalog.getString('Edition successful'));
-            });
+            RecordService.updateRecord(record, function (data) {});
         }
 
         $scope.updateActorLabel = function (record, recordIndex, actor, actorField, index) {
@@ -325,8 +279,6 @@
                             $scope.updatingRecords = true;
                             $scope.updateRecords().then( function() {
                                 $scope.updatingRecords = false;
-                                toastr.success( gettextCatalog.getString('The actor has been created successfully.'),
-                                                gettextCatalog.getString('Creation successful'));
                             });
                         });
                         //});
@@ -344,7 +296,6 @@
                         $scope.updatingRecords = true;
                         $scope.updateRecords().then( function() {
                             $scope.updatingRecords = false;
-                            toastr.success( gettextCatalog.getString('The actor has been detached successfully.'));
                         });
                     });
                 }
@@ -353,8 +304,6 @@
                         $scope.updatingRecords = true;
                         $scope.updateRecords().then( function() {
                             $scope.updatingRecords = false;
-                            toastr.success( gettextCatalog.getString('The actor has been edited successfully.'),
-                                            gettextCatalog.getString('Edition successful'));
                         });
                     });
                 }
@@ -370,10 +319,7 @@
             RecordService.createRecordPersonalData(personalData, function (status) {
                 personalData["id"] = status.id;
                 record["personalData"].push(personalData);
-                RecordService.updateRecord(record, function (data) {
-                    toastr.success( gettextCatalog.getString('The personal data record has been created successfully.'),
-                                    gettextCatalog.getString('Creation successful'))
-                });
+                RecordService.updateRecord(record, function (data) {});
             });
         }
 
@@ -415,8 +361,6 @@
                         personalData = data;
                         record["personalData"][index] = personalData;
                         $scope.updatingPersonalData = false;
-                        toastr.success( gettextCatalog.getString('The personal data has been edited successfully.'),
-                                    gettextCatalog.getString('Edition successful'));
                     });
                 }, function () {
                     promise.reject(false);
@@ -441,10 +385,7 @@
 
         $scope.deletePersonalData = function(record, index) {
             record["personalData"].splice(index, 1);
-            RecordService.updateRecord(record, function (data) {
-                toastr.success( gettextCatalog.getString('The personal data has been deleted successfully.'),
-                                gettextCatalog.getString('Deletion successful'));
-            });
+            RecordService.updateRecord(record, function (data) {});
         }
 
         $scope.addRecipient = function(record) {
@@ -489,18 +430,12 @@
             } else {
                 record["recipients"][index] = selectedItem;
             }
-            RecordService.updateRecord(record, function (data) {
-                toastr.success( gettextCatalog.getString('The record has been edited successfully.'),
-                                gettextCatalog.getString('Edition successful'));
-            });
+            RecordService.updateRecord(record, function (data) {});
         };
 
         $scope.deleteRecipient = function (record, index) {
             record["recipients"].splice(index, 1);
-            RecordService.updateRecord(record, function (data) {
-                toastr.success( gettextCatalog.getString('The recipient has been deleted successfully.'),
-                                gettextCatalog.getString('Deletion successful'));
-            });
+            RecordService.updateRecord(record, function (data) {});
         }
 
         $scope.updateRecipientLabel = function (record, recipient, index) {
@@ -514,10 +449,7 @@
                         RecordService.getRecordRecipient(status.id).then(function (data) {
                             recipient = data;
                             record["recipients"][index] = recipient;
-                            RecordService.updateRecord(record, function (data) {
-                                toastr.success( gettextCatalog.getString('The recipient has been created successfully.'),
-                                                gettextCatalog.getString('Creation successful'));
-                            });
+                            RecordService.updateRecord(record, function (data) {});
                         });
                     });
                 }
@@ -525,30 +457,22 @@
             else {
                 if(!recipient.label) {
                     record["recipients"].splice(index, 1);
-                    RecordService.updateRecord(record, function (data) {
-                        toastr.success( gettextCatalog.getString('The recipient has been deleted successfully.'));
-                    });
+                    RecordService.updateRecord(record, function (data) {});
                 }
                 else {
-                    RecordService.updateRecordRecipient(recipient, function (data) {
-                        toastr.success( gettextCatalog.getString('The recipient has been edited successfully.'),
-                                        gettextCatalog.getString('Edition successful'));
-                    });
+                    RecordService.updateRecordRecipient(recipient, function (data) {});
                 }
             }
         }
 
         $scope.addInternationalTransfer = function(record) {
             var promise = $q.defer();
-            var internationalTransfer = { "organisation" : "", "description": "", "country": "", "documents": "", "record": record["id"], "processor": null};
+            var internationalTransfer = { "organisation" : "", "description": "", "country": "", "documents": "", "record": record["id"]};
             // Create a new international transfer record
             RecordService.createRecordInternationalTransfer(internationalTransfer, function (status) {
                 internationalTransfer["id"] = status.id;
-                record["internationalTransfers"].push( internationalTransfer);
-                RecordService.updateRecord(record, function (data) {
-                    toastr.success( gettextCatalog.getString('The international transfer record has been created successfully.'),
-                                    gettextCatalog.getString('Creation successful'))
-                });
+                record["internationalTransfers"].push(internationalTransfer);
+                RecordService.updateRecord(record, function (data) {});
                 promise.resolve(true);
             }, function () {
                 promise.reject(false);
@@ -557,14 +481,11 @@
 
         $scope.deleteInternationalTransfer = function (record, index) {
             record["internationalTransfers"].splice(index, 1);
-            RecordService.updateRecord(record, function (data) {
-                toastr.success( gettextCatalog.getString('The international transfer record has been deleted successfully.'),
-                                gettextCatalog.getString('Deletion successful'));
-            });
+            RecordService.updateRecord(record, function (data) {});
         }
 
 
-        $scope.processorActorItemSelected = function (processor, selectedItem, field, index) {
+        $scope.processorActorItemSelected = function (processor, selectedItem, field) {
             if (selectedItem == undefined) {
                 selectedItem = null;
             }
@@ -572,38 +493,21 @@
             if (activeElement) {
                 activeElement.blur();
             }
-            if(field == "cascadedProcessors") {
-                if (selectedItem == null) {
-                    processor["cascadedProcessors"].splice(index, 1);
-                } else {
-                    processor["cascadedProcessors"][index] = selectedItem;
-                }
-            } else {
-                processor[field] = selectedItem;
-            }
+            processor[field] = selectedItem;
             RecordService.updateRecordProcessor(processor, function (data) {
                 $scope.updatingRecords = true;
                 $scope.updateRecords().then( function() {
                     $scope.updatingRecords = false;
-                    toastr.success( gettextCatalog.getString('The processor has been edited successfully.'),
-                                    gettextCatalog.getString('Edition successful'));
                 });
             });
         };
 
-        $scope.processorDetachActor = function (processor, field, index) {
-            if(field == "cascadedProcessors") {
-                processor["cascadedProcessors"].splice(index, 1);
-            } else {
-                processor[field] = null;
-            }
-            RecordService.updateRecordProcessor(processor, function (data) {
-                toastr.success( gettextCatalog.getString('The actor has been detached successfully.'),
-                                gettextCatalog.getString('Edition successful'));
-            });
+        $scope.processorDetachActor = function (processor, field) {
+            processor[field] = null;
+            RecordService.updateRecordProcessor(processor, function (data) {});
         }
 
-        $scope.processorUpdateActorLabel = function (processor, actor, actorField, index) {
+        $scope.processorUpdateActorLabel = function (processor, actor, actorField) {
             if(actor == null) {
                 return;
             }
@@ -613,17 +517,11 @@
                     RecordService.createRecordActor(actor, function (status) {
                         RecordService.getRecordActor(status.id).then(function (data) {
                             actor = data;
-                            if(actorField == "cascadedProcessors") {
-                                processor["cascadedProcessors"][index] = actor;
-                            } else {
-                                processor[actorField] = actor;
-                            }
+                            processor[actorField] = actor;
                             RecordService.updateRecordProcessor(processor, function (data) {
                                 $scope.updatingRecords = true;
                                 $scope.updateRecords().then( function() {
                                     $scope.updatingRecords = false;
-                                    toastr.success( gettextCatalog.getString('The actor has been created successfully.'),
-                                                    gettextCatalog.getString('Creation successful'));
                                 });
                             });
                         });
@@ -632,16 +530,11 @@
             }
             else {
                 if(!actor.label) {
-                    if(actorField == "cascadedProcessors") {
-                        processor["cascadedProcessors"].splice(index, 1);
-                    } else {
-                        processor[actorField] = null;
-                    }
+                    processor[actorField] = null;
                     RecordService.updateRecordProcessor(processor, function (data) {
                         $scope.updatingRecords = true;
                         $scope.updateRecords().then( function() {
                             $scope.updatingRecords = false;
-                            toastr.success( gettextCatalog.getString('The actor has been detached successfully.'));
                         });
                     });
                 }
@@ -650,41 +543,10 @@
                         $scope.updatingRecords = true;
                         $scope.updateRecords().then( function() {
                             $scope.updatingRecords = false;
-                            toastr.success( gettextCatalog.getString('The actor has been edited successfully.'),
-                                            gettextCatalog.getString('Edition successful'));
                         });
                     });
                 }
             }
-        }
-
-        $scope.addCascadedProcessor = function (processor) {
-            processor["cascadedProcessors"].push( { "label": "", "contact": "" } );
-        }
-
-        $scope.processorAddInternationalTransfer = function(processor) {
-            var promise = $q.defer();
-            var internationalTransfer = { "organisation" : "", "description": "", "country": "", "documents": "", "record": null, "processor": processor["id"]};
-            // Create a new international transfer record
-            RecordService.createRecordInternationalTransfer(internationalTransfer, function (status) {
-                internationalTransfer["id"] = status.id;
-                processor["internationalTransfers"].push(internationalTransfer);
-                RecordService.updateRecordProcessor(processor, function (data) {
-                    toastr.success( gettextCatalog.getString('The international transfer record has been created successfully.'),
-                                    gettextCatalog.getString('Creation successful'))
-                });
-                promise.resolve(true);
-            }, function () {
-                promise.reject(false);
-            });
-        }
-
-        $scope.processorDeleteInternationalTransfer = function (processor, index) {
-            processor["internationalTransfers"].splice(index, 1);
-            RecordService.updateRecordProcessor(processor, function (data) {
-                toastr.success( gettextCatalog.getString('The international transfer record has been deleted successfully.'),
-                                gettextCatalog.getString('Deletion successful'));
-            });
         }
 
         $scope.createNewProcessor = function (ev, record) {
@@ -709,8 +571,6 @@
                             processor = data;
                             record["processors"].push(processor);
                             RecordService.updateRecord(record, function (data) {
-                                toastr.success(gettextCatalog.getString('The processor has been created successfully.',
-                                      {processorLabel: $scope._langField(processor,'label')}), gettextCatalog.getString('Creation successful'));
                                 if (cont) {
                                     $scope.createNewProcessor(ev);
                                 }
@@ -722,8 +582,6 @@
                     $scope.getRecordProcessor(processor.id).then(function (data) {
                         record["processors"].push(data);
                         RecordService.updateRecord(record, function (data) {
-                            toastr.success(gettextCatalog.getString('The processor has been added successfully.',
-                                  {processorLabel: $scope._langField(processor,'label')}), gettextCatalog.getString('Creation successful'));
                             if (cont) {
                                 $scope.createNewProcessor(ev);
                             }
@@ -836,42 +694,17 @@
             finalArray[recLine]+=','+gettextCatalog.getString('Data processor\'s name');
             finalArray[recLine]+=','+gettextCatalog.getString('Activities');
             finalArray[recLine]+=','+gettextCatalog.getString('Security measures');
-            finalArray[recLine]+=','+"\""+' '+"\"";
-
             finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s name');
             finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s contact');
             finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s name');
             finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s contact');
-            finalArray[recLine]+=','+gettextCatalog.getString('Cascaded processor\'s name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Cascaded processor\'s contact');
-            finalArray[recLine]+=','+"\""+' '+"\"";
-
-            finalArray[recLine]+=','+gettextCatalog.getString('Organisation of international transfer');
-            finalArray[recLine]+=','+gettextCatalog.getString('Description');
-            finalArray[recLine]+=','+gettextCatalog.getString('Country');
-            finalArray[recLine]+=','+gettextCatalog.getString('Documents');
             RecordService.getRecord(record.id).then(function (data) {
                 var nbJointControllerLine = Array.isArray(data.jointControllers)? data.jointControllers.length : 0;
                 var nbDataLine = Array.isArray(data.personalData)? data.personalData.length : 0;
                 var nbRecipientLine = Array.isArray(data.recipients)? data.recipients.length : 0;
                 var nbInternationalTransferLine = Array.isArray(data.internationalTransfers)? data.internationalTransfers.length : 0;
-                var nbProcessorLine = 0;
-                if (Array.isArray(data.processors)) {
-                    for(var i = 0; i < data.processors.length; ++i) {
-                        var currentProcessorLine = 1;
-                        if (Array.isArray(data.processors[i].cascadedProcessors)){
-                            currentProcessorLine = Math.max(data.processors[i].cascadedProcessors.length, currentProcessorLine);
-                        }
-                        if (Array.isArray(data.processors[i].internationalTransfers)){
-                            currentProcessorLine = Math.max(data.processors[i].internationalTransfers.length, currentProcessorLine);
-                        }
-                        nbProcessorLine += currentProcessorLine;
-                    }
-                }
+                var nbProcessorLine = Array.isArray(data.processors)? data.processors.length: 0;
                 var nbLine = Math.max(nbJointControllerLine, nbDataLine, nbRecipientLine, nbInternationalTransferLine, nbProcessorLine, 1);
-                var currentProcessor = 0;
-                var currentProcessorRecLine = 0;
-                var currentProcessorMaxLine = 0;
 
                 recLine++;
                 while(recLine <= nbLine) {
@@ -990,80 +823,29 @@
                     }
                     finalArray[recLine]+=','+"\""+' '+"\"";
                     if(recLine <= nbProcessorLine) {
-                        if(currentProcessorRecLine === 0) {
-                            currentProcessorMaxLine = 1;
-                            if (Array.isArray(data.processors[currentProcessor].cascadedProcessors)){
-                                currentProcessorMaxLine = Math.max(data.processors[currentProcessor].cascadedProcessors.length, currentProcessorMaxLine);
-                            }
-                            if (Array.isArray(data.processors[currentProcessor].internationalTransfers)){
-                                currentProcessorMaxLine = Math.max(data.processors[currentProcessor].internationalTransfers.length, currentProcessorMaxLine);
-                            }
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].label+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].activities+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].secMeasures+"\"";
-                        }
-                        else {
-                            finalArray[recLine] +=','+"\""+' '+"\""
-                                                + ','+"\""+' '+"\""
-                                                + ','+"\""+' '+"\"";
-                        }
-                        finalArray[recLine]+=','+"\""+' '+"\"";
+                        finalArray[recLine] +=','+"\""+data.processors[recLine].label+"\"";
+                        finalArray[recLine] +=','+"\""+data.processors[recLine].activities+"\"";
+                        finalArray[recLine] +=','+"\""+data.processors[recLine].secMeasures+"\"";
 
-                        if(data.processors[currentProcessor].representative && currentProcessorRecLine === 0) {
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].representative.label+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].representative.contact+"\"";
+                        if(data.processors[recLine].representative) {
+                            finalArray[recLine] +=','+"\""+data.processors[recLine].representative.label+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[recLine].representative.contact+"\"";
                         }
                         else {
                             finalArray[recLine] +=','+"\""+' '+"\""
                                                 + ','+"\""+' '+"\"";
                         }
-                        if(data.processors[currentProcessor].dpo && currentProcessorRecLine === 0) {
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].dpo.label+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].dpo.contact+"\"";
+                        if(data.processors[recLine].dpo) {
+                            finalArray[recLine] +=','+"\""+data.processors[recLine].dpo.label+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[recLine].dpo.contact+"\"";
                         }
                         else {
                             finalArray[recLine] +=','+"\""+' '+"\""
                                                 + ','+"\""+' '+"\"";
-                        }
-                        if(Array.isArray(data.processors[currentProcessor].cascadedProcessors) && currentProcessorRecLine < data.processors[currentProcessor].cascadedProcessors.length) {
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].cascadedProcessors[currentProcessorRecLine].label+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].cascadedProcessors[currentProcessorRecLine].contact+"\"";
-                        }
-                        else {
-                            finalArray[recLine] +=','+"\""+' '+"\""
-                                                + ','+"\""+' '+"\"";
-                        }
-                        finalArray[recLine]+=','+"\""+' '+"\"";
-
-                        if(Array.isArray(data.processors[currentProcessor].internationalTransfers) && currentProcessorRecLine < data.processors[currentProcessor].internationalTransfers.length) {
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].internationalTransfers[currentProcessorRecLine].organisation+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].internationalTransfers[currentProcessorRecLine].description+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].internationalTransfers[currentProcessorRecLine].country+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[currentProcessor].internationalTransfers[currentProcessorRecLine].documents+"\"";
-                        }
-                        else {
-                            finalArray[recLine] +=','+"\""+' '+"\""
-                                                + ','+"\""+' '+"\""
-                                                + ','+"\""+' '+"\""
-                                                + ','+"\""+' '+"\"";
-                        }
-                        currentProcessorRecLine++;
-                        if(currentProcessorRecLine === currentProcessorMaxLine) {
-                            currentProcessor ++;
-                            currentProcessorRecLine = 0;
-                            currentProcessorMaxLine = 0;
                         }
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
-                                            + ','+"\""+' '+"\""
-                                            + ','+"\""+' '+"\""
-                                            + ','+"\""+' '+"\""
-                                            + ','+"\""+' '+"\""
-                                            + ','+"\""+' '+"\""
-                                            + ','+"\""+' '+"\""
-                                            + ','+"\""+' '+"\""
-                                            + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\""
@@ -1125,8 +907,6 @@
                 $scope.updateRecords().then(function() {
                     $scope.updatingRecords = false;
                     $scope.selectRecord(id, $scope.records.items.count);
-                    toastr.success(gettextCatalog.getString('The record has been created successfully.',
-                                gettextCatalog.getString('Creation successful')));
                 });
             }).catch(angular.noop);
         };

@@ -93,7 +93,7 @@
                         <tbody edit-model="record">
                             <tr>
                                 <th translate> Actor </th>
-                                <th translate> Name </th>
+                                <th translate style="width:30%;"> Name </th>
                                 <th translate> Contact </th>
                                 <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap"> </th>
                             </tr>
@@ -367,7 +367,7 @@
                     <table editable callback="onRecipientTableEdited" class="md-html-table md-html-table-grey big-border-all" >
                         <tbody>
                             <tr>
-                                <th translate> Recipient </th>
+                                <th translate style="width:30%;"> Recipient </th>
                                 <th translate style="width:1%; white-space:nowrap"> Recipient type </th>
                                 <th translate> Description </th>
                                 <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap" ></th>
@@ -477,40 +477,19 @@
                                     <tbody edit-model="processor">
                                         <tr>
                                             <td> <b translate> Name </b> </td>
-                                            <td edit-readonly="isAnrReadOnly" edit-field="label" edit-type="textarea"></td>
+                                            <td colspan="3" edit-readonly="isAnrReadOnly" edit-field="label" edit-type="textarea"></td>
                                         </tr>
                                         <tr>
                                             <td> <b translate> Activity(s) </b> </td>
-                                            <td edit-readonly="isAnrReadOnly" edit-field="activities" edit-type="textarea" edit-class="preserve-newlines"></td>
+                                            <td colspan="3" edit-readonly="isAnrReadOnly" edit-field="activities" edit-type="textarea" edit-class="preserve-newlines"></td>
                                         </tr>
                                         <tr>
                                             <td style="width:1%; white-space:nowrap"> <b translate> Security measures </b> </td>
-                                            <td edit-readonly="isAnrReadOnly" edit-field="secMeasures" edit-type="textarea" edit-class="preserve-newlines"></td>
-                                    </tbody>
-                                </table>
-                            </md-table-container>
-                        </div>
-                        <br/>
-
-                        <div layout="row" layout-align="space-between center">
-                            <md-subheader class="md-padding-left">
-                                <span translate> Actors </span>
-                            </md-subheader>
-                            <md-button class="md-icon-button" ng-click="uiState.hideProcessorActors = !uiState.hideProcessorActors"><md-icon>{{ uiState.hideProcessorActors ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
-                        </div>
-                        <div ng-hide=uiState.hideProcessorActors>
-                            <md-table-container flex>
-                                <table editable callback="onActorTableEdited" class="md-html-table md-html-table-grey big-border-all">
-                                    <tbody>
-                                        <tr>
-                                            <th translate> Actor </th>
-                                            <th translate> Name </th>
-                                            <th translate> Contact </th>
-                                            <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap"> </th>
+                                            <td colspan="3" edit-readonly="isAnrReadOnly" edit-field="secMeasures" edit-type="textarea" edit-class="preserve-newlines"></td>
                                         </tr>
                                         <tr edit-model="processor.representative">
                                             <td> <b translate> Representative </b> </td>
-                                            <td>
+                                            <td style="width:30%;">
                                                 <md-autocomplete
                                                     class="autocomplete-record-actor"
                                                     md-selected-item="selectedItemRepresentativeProcessor"
@@ -528,7 +507,7 @@
                                             </td>
                                             <td edit-readonly="isAnrReadOnly" edit-field="contact" edit-type="textarea" edit-class="preserve-newlines" ng-if="processor.representative.id" edit-placeholder="{{ 'Address, mail, telephone, ...' | translate }}"></td>
                                             <td ng-if="!processor.representative.id"></td>
-                                            <td class="txtcenter">
+                                            <td class="txtcenter" style="width:1%; white-space:nowrap">
                                                 <md-button ng-if="!isAnrReadOnly && processor.representative.id" class="md-icon-button md-warn"ng-click="processorDetachActor(processor, 'representative')">
                                                     <md-tooltip md-direction="left">
                                                         {{ 'Detach representative' | translate }}
@@ -539,7 +518,7 @@
                                         </tr>
                                         <tr edit-model="processor.dpo">
                                             <td> <b translate> Data protection officer </b> </td>
-                                            <td>
+                                            <td style="width:30%;">
                                                 <md-autocomplete
                                                     class="autocomplete-record-actor"
                                                     md-selected-item="selectedItemDpoProcessor"
@@ -562,117 +541,6 @@
                                                 <md-button ng-if="!isAnrReadOnly && processor.dpo.id" class="md-icon-button md-warn"ng-click="processorDetachActor(processor, 'dpo')">
                                                     <md-tooltip md-direction="left">
                                                         {{ 'Detach data protection officer' | translate }}
-                                                    </md-tooltip>
-                                                    <md-icon>delete</md-icon>
-                                                </md-button>
-                                            </td>
-                                        </tr>
-
-                                        <tr edit-model="processor.cascadedProcessors[0]">
-                                            <td style="width:1%; white-space:nowrap">
-                                                <span flex><b translate> Cascaded processors </b> </span>
-                                                <md-button class="md-icon-button md-primary" ng-click="addCascadedProcessor(processor)">
-                                                    <md-tooltip md-direction="left">
-                                                        {{ 'Add a new cascaded processor' | translate }}
-                                                    </md-tooltip>
-                                                    <md-icon>add_to_photos</md-icon>
-                                                </md-button>
-                                            </td>
-                                            <td>
-                                                <md-autocomplete ng-if="processor.cascadedProcessors.length > 0"
-                                                    class="autocomplete-record-actor"
-                                                    md-selected-item="selectedCascadedProcessor"
-                                                    md-search-text="processor.cascadedProcessors[0].label"
-                                                    md-items="item in queryRecordActorSearch(processor.cascadedProcessors[0].label)"
-                                                    md-item-text="item['label']"
-                                                    md-min-length="0"
-                                                    md-no-cache="true"
-                                                    md-selected-item-change="processorActorItemSelected(processor, selectedCascadedProcessor, 'cascadedProcessors', 0)"
-                                                    ng-blur="processorUpdateActorLabel(processor, processor.cascadedProcessors[0], 'cascadedProcessors', 0)">
-                                                    <md-item-template>
-                                                        <span md-highlight-text="processor.cascadedProcessors[0].label" md-highlight-flags="^i">{{item['label']}}</span>
-                                                    </md-item-template>
-                                                </md-autocomplete>
-                                            </td>
-                                            <td edit-readonly="isAnrReadOnly" edit-field="contact" edit-type="textarea" edit-class="preserve-newlines" ng-if="processor.cascadedProcessors[0].id" edit-placeholder="{{ 'Address, mail, telephone, ...' | translate }}"></td>
-                                            <td ng-if="!processor.cascadedProcessors[0].id"></td>
-                                            <td class="txtcenter">
-                                                <md-button ng-if="!isAnrReadOnly && processor.cascadedProcessors[0].id" class="md-icon-button md-warn"ng-click="processorDetachActor(processor, 'cascadedProcessors', 0)">
-                                                    <md-tooltip md-direction="left">
-                                                        {{ 'Detach cascaded processor' | translate }}
-                                                    </md-tooltip>
-                                                    <md-icon>delete</md-icon>
-                                                </md-button>
-                                            </td>
-                                        </tr>
-                                        <tr ng-repeat="(cpIndex, cp) in processor.cascadedProcessors.slice(1)" edit-model="cp">
-                                            <td> </td>
-                                            <td>
-                                                <md-autocomplete
-                                                    class="autocomplete-record-actor"
-                                                    md-selected-item="selectedCascadedProcessor"
-                                                    md-search-text="processor.cascadedProcessors[cpIndex + 1].label"
-                                                    md-items="item in queryRecordActorSearch(cp.label)"
-                                                    md-item-text="item['label']"
-                                                    md-min-length="0"
-                                                    md-no-cache="true"
-                                                    md-selected-item-change="processorActorItemSelected(processor, selectedCascadedProcessor, 'cascadedProcessors', cpIndex + 1)"
-                                                    ng-blur="processorUpdateActorLabel(processor, cp, 'cascadedProcessors', cpIndex+1)">
-                                                    <md-item-template>
-                                                        <span md-highlight-text="cp.label" md-highlight-flags="^i">{{item['label']}}</span>
-                                                    </md-item-template>
-                                                </md-autocomplete>
-                                            </td>
-                                            <td edit-readonly="isAnrReadOnly" edit-field="contact" edit-type="textarea" edit-class="preserve-newlines" ng-if="cp.id" edit-placeholder="{{ 'Address, mail, telephone, ...' | translate }}"></td>
-                                            <td ng-if="!cp.id"></td>
-                                            <td class="txtcenter">
-                                                <md-button ng-if="!isAnrReadOnly && processor.cascadedProcessors[(cpIndex) + 1].id" class="md-icon-button md-warn"ng-click="processorDetachActor(processor, 'cascadedProcessors', (cpIndex) + 1)">
-                                                    <md-tooltip md-direction="left">
-                                                        {{ 'Detach cascaded processor' | translate }}
-                                                    </md-tooltip>
-                                                    <md-icon>delete</md-icon>
-                                                </md-button>
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </md-table-container>
-                        </div>
-                        <br/>
-                        <div layout="row" layout-align="space-between center">
-                            <md-subheader class="md-padding-left" layout="row" layout-align="space-between center">
-                                <span translate> International transfers </span>
-                                <span layout-align="end center">
-                                    <md-button class="md-icon-button md-primary" ng-click="processorAddInternationalTransfer(processor)" ng-hide=uiState.hideProcessorTransfers>
-                                        <md-tooltip md-direction="left">
-                                            {{ 'Add a new record of data international transfer' | translate }}
-                                        </md-tooltip>
-                                        <md-icon>add_to_photos</md-icon>
-                                    </md-button>
-                                </span>
-                            </md-subheader>
-                            <md-button class="md-icon-button" ng-click="uiState.hideProcessorTransfers = !uiState.hideProcessorTransfers"><md-icon>{{ uiState.hideProcessorTransfers ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
-                        </div>
-                        <div ng-hide=uiState.hideProcessorTransfers>
-                            <md-table-container flex>
-                                <table editable callback="onTransferTableEdited" class="md-html-table md-html-table-grey big-border-all" >
-                                    <tbody>
-                                        <tr>
-                                            <th translate> Organisation </th>
-                                            <th translate> Description </th>
-                                            <th translate> Country </th>
-                                            <th translate> Documents </th>
-                                            <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap"></th>
-                                        </tr>
-                                        <tr ng-repeat="internationalTransfer in processor.internationalTransfers"  edit-model="internationalTransfer">
-                                            <td edit-readonly="isAnrReadOnly" edit-field="organisation" edit-type="textarea" class="txtcenter"></td>
-                                            <td edit-readonly="isAnrReadOnly" edit-field="description" edit-type="textarea" class="txtcenter"></td>
-                                            <td edit-readonly="isAnrReadOnly" edit-field="country" edit-type="textarea" class="txtcenter"></td>
-                                            <td edit-readonly="isAnrReadOnly" edit-field="documents" edit-type="textarea" class="txtcenter"></td>
-                                            <td ng-if="!isAnrReadOnly">
-                                                <md-button class="md-icon-button md-warn"ng-click="processorDeleteInternationalTransfer(processor, $index)">
-                                                    <md-tooltip md-direction="left">
-                                                        {{ 'Delete international transfer record' | translate }}
                                                     </md-tooltip>
                                                     <md-icon>delete</md-icon>
                                                 </md-button>
