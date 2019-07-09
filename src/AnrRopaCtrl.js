@@ -255,9 +255,21 @@
             $scope.updatingRecords = false;
         });
 
-        $scope.$watch('records.query.filter', function() {
+        $scope.debounce = function(cb, interval) {
+            var timeout = null;
+            return function(data) {
+              if (timeout) {
+                clearTimeout(timeout);
+              }
+              timeout = setTimeout(function() {
+                cb(data);
+              }, interval);
+            };
+        };
+
+        $scope.$watch('records.query.filter', $scope.debounce(function() {
             $scope.updateRecords();
-        });
+        },500));
 
         $scope.getRecordProcessor = function (id) {
             var promise = $q.defer();
