@@ -1256,25 +1256,34 @@ md-select-menu md-content
     width: 500px !important;
 }
 
-.record-tabs [role="tabpanel"] {
-    transition: none;
+
+.record-tabs md-tabs-canvas{
+    margin-right: 210px;
 }
 
-/* This will disable the `ink-bar` animation (border-bottom of selected tab) */
-.record-tabs md-ink-bar {
-  transition: none;
+.record-tabs md-next-button{
+    right:190px;
 }
-
 .select-retention-period-mode{
     padding-left: 6px;
     width: 60%;
     display: inline-block;
 }
 
-.autocomplete-record-actor{
+.autocomplete-record-gdpr{
     background: transparent !important;
 }
 
-.autocomplete-record-actor md-autocomplete-wrap{
+.autocomplete-record-gdpr md-autocomplete-wrap{
     box-shadow: none !important;
+}
+
+.md-chips-table {
+    width:75%;
+    display:inline-block;
+    padding-left: 0;
+}
+
+.md-chips-table md-chips-wrap{
+    padding-left: 0;
 }

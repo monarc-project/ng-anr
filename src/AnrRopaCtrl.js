@@ -14,6 +14,7 @@
         DownloadService, $http, $q, RecordService) {
         $scope.language = $scope.getAnrLanguage();
         $scope.updatingPersonalData = false;
+        $scope.updatingActor = false;
         $scope.records = {
             'items' : [],
             'selected' : -1,
@@ -54,6 +55,9 @@
             var promise = $q.defer();
             // This record changed, update it
             RecordService.updateRecord(model, function (data) {
+                RecordService.getRecord(model.id).then(function (data) {
+                    model["updatedAt"] = data["updatedAt"];
+                });
                 promise.resolve(true);
             }, function () {
                 promise.reject(false);
@@ -66,9 +70,7 @@
             var promise = $q.defer();
             // This record actor changed, update it
             RecordService.updateRecordActor(model, function (data) {
-                $scope.updatingRecords = true;
-                $scope.updateRecords().then( function() {
-                    $scope.updatingRecords = false;
+                $scope.updateActor(model.id).then(function() {
                     promise.resolve(true);
                 });
             }, function () {
@@ -136,9 +138,7 @@
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-                RecordService.deleteRecord(item,
-                    function () {
-                        $scope.records.selected === -1;
+                RecordService.deleteRecord(item, function () {
                         $scope.updatingRecords = true;
                         $scope.updateRecords().then(function() {
                             $scope.updatingRecords = false;
@@ -150,23 +150,64 @@
 
         $scope.detachProcessor = function (ev, record, index) {
             record['processors'].splice(index, 1);
-            RecordService.updateRecord(record, function (data) {});
+            RecordService.updateRecord(record, function (data) {
+                RecordService.getRecord(record.id).then(function (data) {
+                    record["updatedAt"] = data["updatedAt"];
+                });
+            });
         };
 
         $scope.selectRecord = function(recordId, index = -1) {
-            $scope.selectingRecord = true;
-            RecordService.getRecord(recordId).then(function (data) {
-                $scope.records.selected = recordId;
-                if(index !== -1) {
-                    $scope.records.recordTabSelected = index;
-                }
-                $scope.step = { // Deliverable data
-                  num:6,
-                  record : recordId
-                };
-                $scope.selectingRecord = false;
-            });
+            var promise = $q.defer();
+            $scope.records.selected = recordId;
+            if(index !== -1) {
+                $scope.records.recordTabSelected = index;
+            }
+            $scope.step = { // Deliverable data
+              num:6,
+              record : recordId
+            };
+            promise.resolve(true);
+            return promise.promise;
         };
+
+        $scope.updateActor = function (actorId) {
+            var promise = $q.defer();
+            $scope.updatingActor = true;
+            RecordService.getRecordActor(actorId).then(function (data) {
+                for(var j = 0; j < $scope.records.items.records.length; ++j) {
+                    if($scope.records.items.records[j]['controller'] && $scope.records.items.records[j]['controller']['id'] == actorId) {
+                        $scope.records.items.records[j]['controller'] = data;
+                    }
+                    if($scope.records.items.records[j]['representative'] && $scope.records.items.records[j]['representative']['id'] == actorId) {
+                        $scope.records.items.records[j]['representative'] = data;
+                    }
+                    if($scope.records.items.records[j]['dpo'] && $scope.records.items.records[j]['dpo']['id'] == actorId) {
+                        $scope.records.items.records[j]['dpo'] = data;
+                    }
+                    if(Array.isArray($scope.records.items.records[j]['jointControllers'])) {
+                        for(var i = 0; i < $scope.records.items.records[j]['jointControllers'].length; ++i) {
+                            if($scope.records.items.records[j]['jointControllers'][i]['id'] == actorId) {
+                                $scope.records.items.records[j]['jointControllers'][i] = data;
+                            }
+                        }
+                    }
+                    if(Array.isArray($scope.records.items.records[j]['processors'])) {
+                        for(var i = 0; i < $scope.records.items.records[j]['processors'].length; ++i) {
+                            if($scope.records.items.records[j]['processors'][i]['representative'] && $scope.records.items.records[j]['processors'][i]['representative']['id'] == actorId) {
+                                $scope.records.items.records[j]['processors'][i]['representative'] = data;
+                            }
+                            if($scope.records.items.records[j]['processors'][i]['dpo'] && $scope.records.items.records[j]['processors'][i]['dpo']['id'] == actorId) {
+                                $scope.records.items.records[j]['processors'][i]['dpo'] = data;
+                            }
+                        }
+                    }
+                }
+                $scope.updatingActor = false;
+                promise.resolve(true);
+            });
+            return promise.promise;
+        }
 
         $scope.updateRecords = function() {
             var query = angular.copy($scope.records.query);
@@ -201,13 +242,18 @@
                     }
                 }
                 $scope.records.items = data;
-                if ($scope.records.items.count>0 && $scope.records.selected === -1) {
-                    $scope.selectRecord($scope.records.items.records[0].id, 0);
-                }
                 promise.resolve(true);
             });
             return promise.promise;
         };
+
+        $scope.updatingRecords = true;
+        $scope.updateRecords().then( function() {
+            if ($scope.records.items.count>0) {
+                $scope.selectRecord($scope.records.items.records[0].id, 0);
+            }
+            $scope.updatingRecords = false;
+        });
 
         $scope.$watch('records.query.filter', function() {
             $scope.updateRecords();
@@ -220,11 +266,6 @@
             });
             return promise.promise;
         }
-
-        $scope.updatingRecords = true;
-        $scope.updateRecords().then( function() {
-            $scope.updatingRecords = false;
-        });
 
         $scope.queryRecordActorSearch = function (query) {
             var promise = $q.defer();
@@ -251,11 +292,12 @@
             } else {
                 record[field] = selectedItem;
             }
+            $scope.updatingActor = true;
             RecordService.updateRecord(record, function (data) {
-                $scope.updatingRecords = true;
-                $scope.updateRecords().then( function() {
-                    $scope.updatingRecords = false;
+                RecordService.getRecord(record.id).then(function (data) {
+                    record["updatedAt"] = data["updatedAt"];
                 });
+                $scope.updatingActor = false;
             });
         };
 
@@ -265,7 +307,11 @@
             } else {
                 record[field] = null;
             }
-            RecordService.updateRecord(record, function (data) {});
+            RecordService.updateRecord(record, function (data) {
+                RecordService.getRecord(record.id).then(function (data) {
+                    record["updatedAt"] = data["updatedAt"];
+                });
+            });
         }
 
         $scope.updateActorLabel = function (record, recordIndex, actor, actorField, index) {
@@ -276,20 +322,19 @@
                 if(actor.label) {
                     actor["contact"] = "";
                     RecordService.createRecordActor(actor, function (status) {
-                        //RecordService.getRecordActor(status.id).then(function (data) {
                         actor["id"] = status.id;
                         if(actorField == "jointControllers") {
                             record["jointControllers"][index] = actor;
                         } else {
                             record[actorField] = actor;
                         }
+                        $scope.updatingActor = true;
                         RecordService.updateRecord(record, function (data) {
-                            $scope.updatingRecords = true;
-                            $scope.updateRecords().then( function() {
-                                $scope.updatingRecords = false;
+                            RecordService.getRecord(record.id).then(function (data) {
+                                record["updatedAt"] = data["updatedAt"];
                             });
+                            $scope.updatingActor = false;
                         });
-                        //});
                     });
                 };
             }
@@ -300,18 +345,19 @@
                     } else {
                         record[actorField] = null;
                     }
+                    $scope.updatingActor = true;
                     RecordService.updateRecord(record, function (data) {
-                        $scope.updatingRecords = true;
-                        $scope.updateRecords().then( function() {
-                            $scope.updatingRecords = false;
+                        RecordService.getRecord(record.id).then(function (data) {
+                            record["updatedAt"] = data["updatedAt"];
                         });
+                        $scope.updatingActor = false;
                     });
                 }
                 else {
+                    $scope.updatingActor = true;
                     RecordService.updateRecordActor(actor, function (data) {
-                        $scope.updatingRecords = true;
-                        $scope.updateRecords().then( function() {
-                            $scope.updatingRecords = false;
+                        $scope.updateActor(actor.id).then(function() {
+                            $scope.updatingActor = false;
                         });
                     });
                 }
@@ -319,7 +365,7 @@
         }
 
         $scope.addJointControllers = function (record) {
-            record["jointControllers"].push( { "label": "", "contact": "" } );
+            record["jointControllers"].push({ "label": "", "contact": "" } );
         }
 
         $scope.addPersonalData = function(record) {
@@ -327,7 +373,11 @@
             RecordService.createRecordPersonalData(personalData, function (status) {
                 personalData["id"] = status.id;
                 record["personalData"].push(personalData);
-                RecordService.updateRecord(record, function (data) {});
+                RecordService.updateRecord(record, function (status) {
+                    RecordService.getRecord(record.id).then(function (data) {
+                        record["updatedAt"] = data["updatedAt"];
+                    });
+                });
             });
         }
 
@@ -393,7 +443,11 @@
 
         $scope.deletePersonalData = function(record, index) {
             record["personalData"].splice(index, 1);
-            RecordService.updateRecord(record, function (data) {});
+            RecordService.updateRecord(record, function (data) {
+                RecordService.getRecord(record.id).then(function (data) {
+                    record["updatedAt"] = data["updatedAt"];
+                });
+            });
         }
 
         $scope.addRecipient = function(record) {
@@ -438,12 +492,20 @@
             } else {
                 record["recipients"][index] = selectedItem;
             }
-            RecordService.updateRecord(record, function (data) {});
+            RecordService.updateRecord(record, function (data) {
+                RecordService.getRecord(record.id).then(function (data) {
+                    record["updatedAt"] = data["updatedAt"];
+                });
+            });
         };
 
         $scope.deleteRecipient = function (record, index) {
             record["recipients"].splice(index, 1);
-            RecordService.updateRecord(record, function (data) {});
+            RecordService.updateRecord(record, function (data) {
+                RecordService.getRecord(record.id).then(function (data) {
+                    record["updatedAt"] = data["updatedAt"];
+                });
+            });
         }
 
         $scope.updateRecipientLabel = function (record, recipient, index) {
@@ -457,7 +519,11 @@
                         RecordService.getRecordRecipient(status.id).then(function (data) {
                             recipient = data;
                             record["recipients"][index] = recipient;
-                            RecordService.updateRecord(record, function (data) {});
+                            RecordService.updateRecord(record, function (data) {
+                                RecordService.getRecord(record.id).then(function (data) {
+                                    record["updatedAt"] = data["updatedAt"];
+                                });
+                            });
                         });
                     });
                 }
@@ -465,7 +531,11 @@
             else {
                 if(!recipient.label) {
                     record["recipients"].splice(index, 1);
-                    RecordService.updateRecord(record, function (data) {});
+                    RecordService.updateRecord(record, function (data) {
+                        RecordService.getRecord(record.id).then(function (data) {
+                            record["updatedAt"] = data["updatedAt"];
+                        });
+                    });
                 }
                 else {
                     RecordService.updateRecordRecipient(recipient, function (data) {});
@@ -480,7 +550,11 @@
             RecordService.createRecordInternationalTransfer(internationalTransfer, function (status) {
                 internationalTransfer["id"] = status.id;
                 record["internationalTransfers"].push(internationalTransfer);
-                RecordService.updateRecord(record, function (data) {});
+                RecordService.updateRecord(record, function (data) {
+                    RecordService.getRecord(record.id).then(function (data) {
+                        record["updatedAt"] = data["updatedAt"];
+                    });
+                });
                 promise.resolve(true);
             }, function () {
                 promise.reject(false);
@@ -489,7 +563,11 @@
 
         $scope.deleteInternationalTransfer = function (record, index) {
             record["internationalTransfers"].splice(index, 1);
-            RecordService.updateRecord(record, function (data) {});
+            RecordService.updateRecord(record, function (data) {
+                RecordService.getRecord(record.id).then(function (data) {
+                    record["updatedAt"] = data["updatedAt"];
+                });
+            });
         }
 
 
@@ -502,17 +580,30 @@
                 activeElement.blur();
             }
             processor[field] = selectedItem;
+            $scope.updatingActor = true;
             RecordService.updateRecordProcessor(processor, function (data) {
-                $scope.updatingRecords = true;
-                $scope.updateRecords().then( function() {
-                    $scope.updatingRecords = false;
-                });
+                for (var i = 0; i < $scope.records.items.records.length; ++i ) {
+                    for (var j = 0; j < $scope.records.items.records[i]["processors"].length; ++j ) {
+                        if ($scope.records.items.records[i]["processors"][j]['id'] == processor.id) {
+                            $scope.records.items.records[i]["processors"][j] = processor;
+                        }
+                    }
+                }
+                $scope.updatingActor = false;
             });
         };
 
         $scope.processorDetachActor = function (processor, field) {
             processor[field] = null;
-            RecordService.updateRecordProcessor(processor, function (data) {});
+            RecordService.updateRecordProcessor(processor, function (data) {
+                for (var i = 0; i < $scope.records.items.records.length; ++i ) {
+                    for (var j = 0; j < $scope.records.items.records[i]["processors"].length; ++j ) {
+                        if ($scope.records.items.records[i]["processors"][j]['id'] == processor.id) {
+                            $scope.records.items.records[i]["processors"][j] = processor;
+                        }
+                    }
+                }
+            });
         }
 
         $scope.processorUpdateActorLabel = function (processor, actor, actorField) {
@@ -526,11 +617,16 @@
                         RecordService.getRecordActor(status.id).then(function (data) {
                             actor = data;
                             processor[actorField] = actor;
+                            $scope.updatingActor = true;
                             RecordService.updateRecordProcessor(processor, function (data) {
-                                $scope.updatingRecords = true;
-                                $scope.updateRecords().then( function() {
-                                    $scope.updatingRecords = false;
-                                });
+                                for (var i = 0; i < $scope.records.items.records.length; ++i ) {
+                                    for (var j = 0; j < $scope.records.items.records[i]["processors"].length; ++j ) {
+                                        if ($scope.records.items.records[i]["processors"][j]['id'] == processor.id) {
+                                            $scope.records.items.records[i]["processors"][j] = processor;
+                                        }
+                                    }
+                                }
+                                $scope.updatingActor = false;
                             });
                         });
                     });
@@ -539,18 +635,23 @@
             else {
                 if(!actor.label) {
                     processor[actorField] = null;
+                    $scope.updatingActor = true;
                     RecordService.updateRecordProcessor(processor, function (data) {
-                        $scope.updatingRecords = true;
-                        $scope.updateRecords().then( function() {
-                            $scope.updatingRecords = false;
-                        });
+                        for (var i = 0; i < $scope.records.items.records.length; ++i ) {
+                            for (var j = 0; j < $scope.records.items.records[i]["processors"].length; ++j ) {
+                                if ($scope.records.items.records[i]["processors"][j]['id'] == processor.id) {
+                                    $scope.records.items.records[i]["processors"][j] = processor;
+                                }
+                            }
+                        }
+                        $scope.updatingActor = false;
                     });
                 }
                 else {
+                    $scope.updatingActor = true;
                     RecordService.updateRecordActor(actor, function (data) {
-                        $scope.updatingRecords = true;
-                        $scope.updateRecords().then( function() {
-                            $scope.updatingRecords = false;
+                        $scope.updateActor(actor.id).then(function() {
+                            $scope.updatingActor = false;
                         });
                     });
                 }
@@ -579,6 +680,9 @@
                             processor = data;
                             record["processors"].push(processor);
                             RecordService.updateRecord(record, function (data) {
+                                RecordService.getRecord(record.id).then(function (data) {
+                                    record["updatedAt"] = data["updatedAt"];
+                                });
                                 if (cont) {
                                     $scope.createNewProcessor(ev);
                                 }
@@ -590,6 +694,9 @@
                     $scope.getRecordProcessor(processor.id).then(function (data) {
                         record["processors"].push(data);
                         RecordService.updateRecord(record, function (data) {
+                            RecordService.getRecord(record.id).then(function (data) {
+                                record["updatedAt"] = data["updatedAt"];
+                            });
                             if (cont) {
                                 $scope.createNewProcessor(ev);
                             }
@@ -700,6 +807,7 @@
             finalArray[recLine]+=','+"\""+' '+"\"";
 
             finalArray[recLine]+=','+gettextCatalog.getString('Data processor\'s name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor\'s contact');
             finalArray[recLine]+=','+gettextCatalog.getString('Activities');
             finalArray[recLine]+=','+gettextCatalog.getString('Security measures');
             finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s name');
@@ -832,6 +940,7 @@
                     finalArray[recLine]+=','+"\""+' '+"\"";
                     if(recLine <= nbProcessorLine) {
                         finalArray[recLine] +=','+"\""+data.processors[recLine].label+"\"";
+                        finalArray[recLine] +=','+"\""+data.processors[recLine].contact+"\"";
                         finalArray[recLine] +=','+"\""+data.processors[recLine].activities+"\"";
                         finalArray[recLine] +=','+"\""+data.processors[recLine].secMeasures+"\"";
 

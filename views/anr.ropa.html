@@ -1,7 +1,7 @@
 <div class="md-padding-left md-padding-right" layout="column" ng-controller="AnrRopaCtrl" ng-if="tabRopaDisplayed">
-    <div layout="row" layout-align="space-between center" style="padding-top:50px; padding-bottom: 10px;">
+    <div layout="row" layout-align="space-between center" style="padding-top:10px; padding-bottom: 10px;">
         <span class="md-title md-padding-double" translate>Records of processing activities</span>
-        <span>
+        <span style="margin-right:38px">
             <md-menu>
                 <md-button class="md-icon-button" ng-click="$mdMenu.open()">
                     <md-tooltip md-direction="left">
@@ -18,7 +18,7 @@
                     </md-menu-item>
                 </md-menu-content>
             </md-menu>
-            <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-disabled="selectingRecord || updatingRecords" ng-click="createNewRecord($event)">
+            <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-disabled="updatingRecords" ng-click="createNewRecord($event)">
                 <md-tooltip md-direction="left">
                     {{ 'Add a record' | translate }}
                 </md-tooltip>
@@ -26,42 +26,44 @@
             </md-button>
         </span>
     </div>
-    <form flex name="records.filter.form">
-        <md-input-container class="md-block md-padding-left md-padding-right">
-            <label><md-icon>search</md-icon> {{ 'Search...' | translate }}</label>
-            <input ng-model="records.query.filter">
-        </md-input-container>
-    </form>
-    <md-tabs class="record-tabs" md-dynamic-height="true" md-selected="records.recordTabSelected" ng-if="!(updatingRecords)" style="padding-bottom: 100px;">
-        <md-tab ng-repeat="(recordIndex, record) in records.items.records" label="{{ record.label }}"
+    <md-tabs class="record-tabs" md-dynamic-height="true" md-selected="records.recordTabSelected" ng-if="!(updatingRecords) && records.items.count>0" style="padding-bottom: 100px;">
+        <div layout="row" layout-align="end center">
+            <form flex name="records.filter.form">
+                <md-input-container class="md-block md-padding-left md-padding-right">
+                    <label><md-icon>search</md-icon> {{ 'Search...' | translate }}</label>
+                    <input ng-model="records.query.filter">
+                </md-input-container>
+            </form>
+        </div>
+        <md-tab ng-repeat="(recordIndex,record) in records.items.records" label="{{ record.label }}"
             md-on-select="selectRecord(record.id)">
-            <div layout="row" layout-align="end center" class="md-padding-double" style="height:40px">
-                <md-menu>
-                    <md-button class="md-icon-button" ng-click="$mdMenu.open()">
-                        <md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }}</md-tooltip>
-                    </md-button>
-                    <md-menu-content>
-                        <md-menu-item>
-                          <md-button ng-click="openMethodDeliverable(step, $event)">.docx</md-button>
-                        </md-menu-item>
-                        <md-menu-item>
-                            <md-button ng-click="jsonExport($event, record)">.json</md-button>
-                        </md-menu-item>
-                        <md-menu-item>
-                            <md-button ng-click="export($event, record)">.csv</md-button>
-                        </md-menu-item>
-                    </md-menu-content>
-                </md-menu>
-                <md-button class="md-icon-button md-warn" ng-if="!isAnrReadOnly && records.items.records.length > 0" ng-click="deleteRecord($event, record.id)">
-                    <md-tooltip md-direction="left">
-                        {{ 'Delete record' | translate }}
-                    </md-tooltip>
-                    <md-icon>delete</md-icon>
-                </md-button>
-            </div>
             <div layout="row" layout-align="space-between center">
                 <p class="md-title md-padding-left" translate>Description of processing activities</p>
-                <md-button class="md-icon-button" ng-click="uiState.hideDescription = !uiState.hideDescription"><md-icon>{{ uiState.hideDescription ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
+                <div layout="row" layout-align="end center">
+                    <md-menu>
+                        <md-button class="md-icon-button" ng-click="$mdMenu.open()">
+                            <md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }}</md-tooltip>
+                        </md-button>
+                        <md-menu-content>
+                            <md-menu-item>
+                              <md-button ng-click="openMethodDeliverable(step, $event)">.docx</md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-click="jsonExport($event, record)">.json</md-button>
+                            </md-menu-item>
+                            <md-menu-item>
+                                <md-button ng-click="export($event, record)">.csv</md-button>
+                            </md-menu-item>
+                        </md-menu-content>
+                    </md-menu>
+                    <md-button class="md-icon-button md-warn" ng-if="!isAnrReadOnly && records.items.records.length > 0" ng-click="deleteRecord($event, record.id)">
+                        <md-tooltip md-direction="left">
+                            {{ 'Delete record' | translate }}
+                        </md-tooltip>
+                        <md-icon>delete</md-icon>
+                    </md-button>
+                    <md-button class="md-icon-button" ng-click="uiState.hideDescription = !uiState.hideDescription"><md-icon>{{ uiState.hideDescription ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
+                </div>
             </div>
             <div ng-hide=uiState.hideDescription>
                 <md-table-container flex>
@@ -73,11 +75,11 @@
                             </tr>
                             <tr>
                                 <td> <b translate> Creation date </b> </td>
-                                <td> {{ record.createdAt.date.substring(0,10) }}</td>
+                                <td> {{record.createdAt.date.substring(0,10)}} </td>
                             </tr>
                             <tr>
                                 <td> <b translate> Update date </b> </td>
-                                <td> {{ record.updatedAt.date.substring(0,10) }}</td>
+                                <td> {{record.updatedAt.date.substring(0,10)}} </td>
                             </tr>
                             <tr>
                                 <td> <b translate> Purpose(s) </b> </td>
@@ -97,8 +99,8 @@
             </div>
             <div ng-hide=uiState.hideActors>
                 <md-table-container flex>
-                    <table editable callback="onActorTableEdited" class="md-html-table md-html-table-grey big-border-all">
-                        <tbody edit-model="record">
+                    <table editable callback="onActorTableEdited" class="md-html-table md-html-table-grey big-border-all" ng-if="!updatingActor">
+                        <tbody>
                             <tr>
                                 <th translate> Actor </th>
                                 <th translate style="width:30%;"> Name </th>
@@ -109,7 +111,7 @@
                                 <td style="width:1%; white-space:nowrap"> <b translate> Processing activity controller </b> </td>
                                 <td>
                                     <md-autocomplete
-                                        class="autocomplete-record-actor"
+                                        class="autocomplete-record-gdpr"
                                         md-selected-item="selectedItemController"
                                         md-search-text="record.controller.label"
                                         md-items="item in queryRecordActorSearch(record.controller.label)"
@@ -123,8 +125,8 @@
                                         </md-item-template>
                                     </md-autocomplete>
                                 </td>
-                                <td edit-readonly="isAnrReadOnly" ng-model="record.controller.contact" edit-field="contact" edit-type="textarea" edit-class="preserve-newlines" ng-if="record.controller.id" edit-placeholder="{{ 'Address, mail, telephone, ...' | translate }}"></td>
-                                <td ng-if="!record.controller.id"></td>
+                                <td edit-readonly="isAnrReadOnly" edit-field="contact" edit-type="textarea" edit-class="preserve-newlines" ng-if="record.controller.id && !updatingActorContact" edit-placeholder="{{ 'Address, mail, telephone, ...' | translate }}"></td>
+                                <td ng-if="!record.controller.id || updatingActorContact"></td>
                                 <td class="txtcenter">
                                     <md-button ng-if="!isAnrReadOnly && record.controller.id" class="md-icon-button md-warn"ng-click="detachActor(record, 'controller')">
                                         <md-tooltip md-direction="left">
@@ -138,7 +140,7 @@
                                 <td> <b translate> Data protection officer </b> </td>
                                 <td>
                                     <md-autocomplete
-                                        class="autocomplete-record-actor"
+                                        class="autocomplete-record-gdpr"
                                         md-selected-item="selectedItemDpo"
                                         md-search-text="record.dpo.label"
                                         md-items="item in queryRecordActorSearch(record.dpo.label)"
@@ -152,8 +154,8 @@
                                         </md-item-template>
                                     </md-autocomplete>
                                 </td>
-                                <td edit-readonly="isAnrReadOnly" ng-model="record.dpo.contact" edit-field="contact" edit-type="textarea" edit-class="preserve-newlines" ng-if="record.dpo.id" edit-placeholder="{{ 'Address, mail, telephone, ...' | translate }}"></td>
-                                <td ng-if="!record.dpo.id"></td>
+                                <td edit-readonly="isAnrReadOnly" ng-model="record.dpo.contact" edit-field="contact" edit-type="textarea" edit-class="preserve-newlines" ng-if="record.dpo.id && !updatingActorContact" edit-placeholder="{{ 'Address, mail, telephone, ...' | translate }}"></td>
+                                <td ng-if="!record.dpo.id || updatingActorContact"></td>
                                 <td class="txtcenter">
                                     <md-button ng-if="!isAnrReadOnly && record.dpo.id" class="md-icon-button md-warn"ng-click="detachActor(record, 'dpo')">
                                         <md-tooltip md-direction="left">
@@ -167,7 +169,7 @@
                                 <td> <b translate> Representative </b> </td>
                                 <td>
                                     <md-autocomplete
-                                        class="autocomplete-record-actor"
+                                        class="autocomplete-record-gdpr"
                                         md-selected-item="selectedItemRepresentative"
                                         md-search-text="record.representative.label"
                                         md-items="item in queryRecordActorSearch(record.representative.label)"
@@ -204,7 +206,7 @@
                                 </td>
                                 <td>
                                     <md-autocomplete ng-if="record.jointControllers.length > 0"
-                                        class="autocomplete-record-actor"
+                                        class="autocomplete-record-gdpr"
                                         md-selected-item="selectedJointController"
                                         md-search-text="record.jointControllers[0].label"
                                         md-items="item in queryRecordActorSearch(record.jointControllers[0].label)"
@@ -233,7 +235,7 @@
                                 <td> </td>
                                 <td>
                                     <md-autocomplete
-                                        class="autocomplete-record-actor"
+                                        class="autocomplete-record-gdpr"
                                         md-selected-item="selectedJointController"
                                         md-search-text="jc.label"
                                         md-items="item in queryRecordActorSearch(jc.label)"
@@ -277,21 +279,20 @@
             </div>
             <div ng-hide=uiState.hidePersonalData>
                 <md-table-container flex>
-                    <table editable callback="onPersonalDataTableEdited" class="md-html-table md-html-table-grey big-border-all" >
+                    <table editable callback="onPersonalDataTableEdited" class="md-html-table md-html-table-grey big-border-all">
                         <tbody>
                             <tr>
-                                <th translate style="width:25%; white-space:nowrap"> Data subject </th>
-                                <th translate style="width:25%; white-space:nowrap"> Categories of personal data </th>
+                                <th translate style="width:20%"> Data subject </th>
+                                <th translate style="width:25%"> Categories of personal data </th>
                                 <th translate> Description </th>
-                                <th translate> Duration of data retention </th>
+                                <th translate style="width:15%"> Duration of data retention </th>
                                 <th translate> Description of retention period </th>
                                 <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap" ></th>
                             </tr>
                             <tr ng-repeat="(personalDataIndex, personalData) in record.personalData" edit-model="personalData" ng-if="!(updatingPersonalData)">
-                                <td edit-readonly="isAnrReadOnly" edit-field="dataSubject" edit-type="textarea"></td>
-                                <td class="txtcenter">
-                                    <md-chips class="chips-horizontal"
-                                        style="width:80%; display:inline-block"
+                                <td edit-readonly="isAnrReadOnly" edit-field="dataSubject" edit-type="textarea" edit-class="preserve-newlines" style="word-wrap:break-word;"></td>
+                                <td>
+                                    <md-chips class="chips-horizontal md-chips-table"
                                         md-on-remove="onPersonalDataEdit(record, personalData, personalDataIndex)"
                                         md-on-add="onPersonalDataEdit(record, personalData, personalDataIndex)"
                                         md-transform-chip="transformChip($chip)"
@@ -327,7 +328,7 @@
                                         <md-icon>add_to_photos</md-icon>
                                     </md-button>
                                 </td>
-                                <td edit-readonly="isAnrReadOnly || !personalData.id" edit-field="description" edit-type="textarea" ng-disabled="!personalData.id"></td>
+                                <td edit-readonly="isAnrReadOnly || !personalData.id" edit-field="description" edit-type="textarea" ng-disabled="!personalData.id" edit-class="preserve-newlines"  style="word-wrap:break-word;"></td>
                                 <td>
                                     <span>
                                         <input type="number" ng-model="personalData.retentionPeriod" min="0" style="width:20%" ng-change="onPersonalDataTableEdited(personalData)" ng-disabled="!personalData.id">
@@ -383,6 +384,7 @@
                             <tr ng-repeat="(recipientIndex, recipient) in record.recipients" edit-model="recipient">
                                 <td>
                                     <md-autocomplete
+                                        class="autocomplete-record-gdpr"
                                         md-selected-item="selectedItemRecipient"
                                         md-search-text="recipient.label"
                                         md-items="item in queryRecordRecipientSearch(record, recipient.label)"
@@ -402,7 +404,7 @@
                                         <md-option ng-value="1"> {{ 'External' | translate }} </md-option>
                                     </md-select>
                                 </td>
-                                <td edit-readonly="isAnrReadOnly || !recipient.id" edit-field="description" edit-type="textarea" ng-disabled="!recipient.id" class="txtcenter"></td>
+                                <td edit-readonly="isAnrReadOnly || !recipient.id" edit-field="description" edit-type="textarea" ng-disabled="!recipient.id"></td>
                                 <td ng-if="!isAnrReadOnly">
                                     <md-button class="md-icon-button md-warn"ng-click="deleteRecipient(record, recipientIndex)">
                                         <md-tooltip md-direction="left">
@@ -488,6 +490,10 @@
                                             <td edit-readonly="isAnrReadOnly" edit-field="label" edit-type="textarea"></td>
                                         </tr>
                                         <tr>
+                                            <td> <b translate> Contact </b> </td>
+                                            <td edit-readonly="isAnrReadOnly" edit-field="contact" edit-type="textarea" edit-class="preserve-newlines"></td>
+                                        </tr>
+                                        <tr>
                                             <td> <b translate> Activity(s) </b> </td>
                                             <td edit-readonly="isAnrReadOnly" edit-field="activities" edit-type="textarea" edit-class="preserve-newlines"></td>
                                         </tr>
@@ -508,7 +514,7 @@
                         </div>
                         <div ng-hide=uiState.hideProcessorActors>
                             <md-table-container flex>
-                                <table editable callback="onActorTableEdited" class="md-html-table md-html-table-grey big-border-all">
+                                <table editable callback="onActorTableEdited" class="md-html-table md-html-table-grey big-border-all" ng-if="!updatingActor">
                                     <tbody>
                                         <tr>
                                             <th translate> Actor </th>
@@ -519,7 +525,7 @@
                                             <td> <b translate> Representative </b> </td>
                                             <td style="width:30%;">
                                                 <md-autocomplete
-                                                    class="autocomplete-record-actor"
+                                                    class="autocomplete-record-gdpr"
                                                     md-selected-item="selectedItemRepresentativeProcessor"
                                                     md-search-text="processor.representative.label"
                                                     md-items="item in queryRecordActorSearch(processor.representative.label)"
@@ -548,7 +554,7 @@
                                             <td style="width:1%; white-space:nowrap"> <b translate> Data protection officer </b> </td>
                                             <td style="width:30%;">
                                                 <md-autocomplete
-                                                    class="autocomplete-record-actor"
+                                                    class="autocomplete-record-gdpr"
                                                     md-selected-item="selectedItemDpoProcessor"
                                                     md-search-text="processor.dpo.label"
                                                     md-items="item in queryRecordActorSearch(processor.dpo.label)"
