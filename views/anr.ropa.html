@@ -99,7 +99,7 @@
             </div>
             <div ng-hide=uiState.hideActors>
                 <md-table-container flex>
-                    <table editable callback="onActorTableEdited" class="md-html-table md-html-table-grey big-border-all" ng-if="!updatingActor">
+                    <table editable callback="onActorTableEdited" class="md-html-table md-html-table-grey big-border-all">
                         <tbody>
                             <tr>
                                 <th translate> Actor </th>
@@ -107,7 +107,7 @@
                                 <th translate> Contact </th>
                                 <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap"> </th>
                             </tr>
-                            <tr edit-model="records.items.records[recordIndex].controller">
+                            <tr edit-model="records.items.records[recordIndex].controller" ng-if="!updatingActor">
                                 <td style="width:1%; white-space:nowrap"> <b translate> Processing activity controller </b> </td>
                                 <td>
                                     <md-autocomplete
@@ -125,8 +125,8 @@
                                         </md-item-template>
                                     </md-autocomplete>
                                 </td>
-                                <td edit-readonly="isAnrReadOnly" edit-field="contact" edit-type="textarea" edit-class="preserve-newlines" ng-if="record.controller.id && !updatingActorContact" edit-placeholder="{{ 'Address, mail, telephone, ...' | translate }}"></td>
-                                <td ng-if="!record.controller.id || updatingActorContact"></td>
+                                <td edit-readonly="isAnrReadOnly" edit-field="contact" edit-type="textarea" edit-class="preserve-newlines" ng-if="record.controller.id" edit-placeholder="{{ 'Address, mail, telephone, ...' | translate }}"></td>
+                                <td ng-if="!record.controller.id"></td>
                                 <td class="txtcenter">
                                     <md-button ng-if="!isAnrReadOnly && record.controller.id" class="md-icon-button md-warn"ng-click="detachActor(record, 'controller')">
                                         <md-tooltip md-direction="left">
@@ -136,7 +136,9 @@
                                     </md-button>
                                 </td>
                             </tr>
-                            <tr edit-model="records.items.records[recordIndex].dpo">
+                            <tr ng-if="updatingActor">
+                            </tr>
+                            <tr edit-model="records.items.records[recordIndex].dpo" ng-if="!updatingActor">
                                 <td> <b translate> Data protection officer </b> </td>
                                 <td>
                                     <md-autocomplete
@@ -154,8 +156,8 @@
                                         </md-item-template>
                                     </md-autocomplete>
                                 </td>
-                                <td edit-readonly="isAnrReadOnly" ng-model="record.dpo.contact" edit-field="contact" edit-type="textarea" edit-class="preserve-newlines" ng-if="record.dpo.id && !updatingActorContact" edit-placeholder="{{ 'Address, mail, telephone, ...' | translate }}"></td>
-                                <td ng-if="!record.dpo.id || updatingActorContact"></td>
+                                <td edit-readonly="isAnrReadOnly" ng-model="record.dpo.contact" edit-field="contact" edit-type="textarea" edit-class="preserve-newlines" ng-if="record.dpo.id" edit-placeholder="{{ 'Address, mail, telephone, ...' | translate }}"></td>
+                                <td ng-if="!record.dpo.id"></td>
                                 <td class="txtcenter">
                                     <md-button ng-if="!isAnrReadOnly && record.dpo.id" class="md-icon-button md-warn"ng-click="detachActor(record, 'dpo')">
                                         <md-tooltip md-direction="left">
@@ -165,7 +167,9 @@
                                     </md-button>
                                 </td>
                             </tr>
-                            <tr edit-model="records.items.records[recordIndex].representative">
+                            <tr ng-if="updatingActor">
+                            </tr>
+                            <tr edit-model="records.items.records[recordIndex].representative" ng-if="!updatingActor">
                                 <td> <b translate> Representative </b> </td>
                                 <td>
                                     <md-autocomplete
@@ -193,6 +197,8 @@
                                         <md-icon>delete</md-icon>
                                     </md-button>
                                 </td>
+                            </tr>
+                            <tr ng-if="updatingActor">
                             </tr>
                             <tr edit-model="record.jointControllers[0]" >
                                 <td>
@@ -231,6 +237,8 @@
                                     </md-button>
                                 </td>
                             </tr>
+                            <tr ng-if="updatingActor">
+                            </tr>
                             <tr ng-repeat="jc in record.jointControllers.slice(1)" edit-model="jc">
                                 <td> </td>
                                 <td>
@@ -259,6 +267,8 @@
                                         <md-icon>delete</md-icon>
                                     </md-button>
                                 </td>
+                            </tr>
+                            <tr ng-if="updatingActor">
                             </tr>
                         </tbody>
                     </table>
@@ -514,14 +524,14 @@
                         </div>
                         <div ng-hide=uiState.hideProcessorActors>
                             <md-table-container flex>
-                                <table editable callback="onActorTableEdited" class="md-html-table md-html-table-grey big-border-all" ng-if="!updatingActor">
+                                <table editable callback="onActorTableEdited" class="md-html-table md-html-table-grey big-border-all">
                                     <tbody>
                                         <tr>
                                             <th translate> Actor </th>
                                             <th translate> Name </th>
                                             <th translate> Contact </th>
                                             <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap"> </th>
-                                        <tr edit-model="processor.representative">
+                                        <tr edit-model="processor.representative" ng-if="!updatingActor">
                                             <td> <b translate> Representative </b> </td>
                                             <td style="width:30%;">
                                                 <md-autocomplete
@@ -550,7 +560,9 @@
                                                 </md-button>
                                             </td>
                                         </tr>
-                                        <tr edit-model="processor.dpo">
+                                        <tr ng-if="updatingActor">
+                                        </tr>
+                                        <tr edit-model="processor.dpo" ng-if="!updatingActor">
                                             <td style="width:1%; white-space:nowrap"> <b translate> Data protection officer </b> </td>
                                             <td style="width:30%;">
                                                 <md-autocomplete
@@ -579,6 +591,8 @@
                                                     <md-icon>delete</md-icon>
                                                 </md-button>
                                             </td>
+                                        </tr>
+                                        <tr ng-if="updatingActor">
                                         </tr>
                                     </tbody>
                                 </table>

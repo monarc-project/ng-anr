@@ -177,28 +177,28 @@
             RecordService.getRecordActor(actorId).then(function (data) {
                 for(var j = 0; j < $scope.records.items.records.length; ++j) {
                     if($scope.records.items.records[j]['controller'] && $scope.records.items.records[j]['controller']['id'] == actorId) {
-                        $scope.records.items.records[j]['controller'] = data;
+                        $scope.records.items.records[j]['controller'] = angular.copy(data);;
                     }
                     if($scope.records.items.records[j]['representative'] && $scope.records.items.records[j]['representative']['id'] == actorId) {
-                        $scope.records.items.records[j]['representative'] = data;
+                        $scope.records.items.records[j]['representative'] = angular.copy(data);;
                     }
                     if($scope.records.items.records[j]['dpo'] && $scope.records.items.records[j]['dpo']['id'] == actorId) {
-                        $scope.records.items.records[j]['dpo'] = data;
+                        $scope.records.items.records[j]['dpo'] = angular.copy(data);;
                     }
                     if(Array.isArray($scope.records.items.records[j]['jointControllers'])) {
                         for(var i = 0; i < $scope.records.items.records[j]['jointControllers'].length; ++i) {
                             if($scope.records.items.records[j]['jointControllers'][i]['id'] == actorId) {
-                                $scope.records.items.records[j]['jointControllers'][i] = data;
+                                $scope.records.items.records[j]['jointControllers'][i] = angular.copy(data);;
                             }
                         }
                     }
                     if(Array.isArray($scope.records.items.records[j]['processors'])) {
                         for(var i = 0; i < $scope.records.items.records[j]['processors'].length; ++i) {
                             if($scope.records.items.records[j]['processors'][i]['representative'] && $scope.records.items.records[j]['processors'][i]['representative']['id'] == actorId) {
-                                $scope.records.items.records[j]['processors'][i]['representative'] = data;
+                                $scope.records.items.records[j]['processors'][i]['representative'] = angular.copy(data);;
                             }
                             if($scope.records.items.records[j]['processors'][i]['dpo'] && $scope.records.items.records[j]['processors'][i]['dpo']['id'] == actorId) {
-                                $scope.records.items.records[j]['processors'][i]['dpo'] = data;
+                                $scope.records.items.records[j]['processors'][i]['dpo'] = angular.copy(data);;
                             }
                         }
                     }
@@ -584,7 +584,7 @@
             RecordService.updateRecordProcessor(processor, function (data) {
                 for (var i = 0; i < $scope.records.items.records.length; ++i ) {
                     for (var j = 0; j < $scope.records.items.records[i]["processors"].length; ++j ) {
-                        if ($scope.records.items.records[i]["processors"][j]['id'] == processor.id) {
+                        if ($scope.records.items.records[i]["processors"][j]['id'] === processor.id) {
                             $scope.records.items.records[i]["processors"][j] = processor;
                         }
                     }
@@ -648,9 +648,9 @@
                     });
                 }
                 else {
-                    $scope.updatingActor = true;
                     RecordService.updateRecordActor(actor, function (data) {
                         $scope.updateActor(actor.id).then(function() {
+                            $scope.updatingActor = true;
                             $scope.updatingActor = false;
                         });
                     });
