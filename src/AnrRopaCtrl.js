@@ -96,6 +96,13 @@
             var promise = $q.defer();
             // This record recipient changed, update it
             RecordService.updateRecordRecipient(model, function (data) {
+                for (var i = 0; i < $scope.records.items.records.length; ++i ) {
+                    for (var j = 0; j < $scope.records.items.records[i]["recipients"].length; ++j ) {
+                        if ($scope.records.items.records[i]["recipients"][j]['id'] === model.id) {
+                            $scope.records.items.records[i]["recipients"][j] = model;
+                        }
+                    }
+                }
                 promise.resolve(true);
             }, function () {
                 promise.reject(false);
@@ -120,6 +127,13 @@
             var promise = $q.defer();
             // This processor changed, update it
             RecordService.updateRecordProcessor(model, function (data) {
+                for (var i = 0; i < $scope.records.items.records.length; ++i ) {
+                    for (var j = 0; j < $scope.records.items.records[i]["processors"].length; ++j ) {
+                        if ($scope.records.items.records[i]["processors"][j]['id'] === model.id) {
+                            $scope.records.items.records[i]["processors"][j] = model;
+                        }
+                    }
+                }
                 promise.resolve(true);
             }, function () {
                 promise.reject(false);
@@ -527,7 +541,6 @@
             if(recipient.id == undefined || recipient.id == null) {
                 if(recipient.label){
                     RecordService.createRecordRecipient(recipient, function (status) {
-                        console.log(status);
                         RecordService.getRecordRecipient(status.id).then(function (data) {
                             recipient = data;
                             record["recipients"][index] = recipient;
