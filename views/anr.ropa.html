@@ -433,12 +433,12 @@
             <div layout="row" layout-align="space-between center">
               <div layout="row" layout-align="start center">
                 <h3 translate> International transfers </h3>
-                    <md-button class="md-icon-button md-primary" ng-click="addInternationalTransfer(record)">
-                        <md-tooltip md-direction="left">
-                            {{ 'Add a new record of data international transfer' | translate }}
-                        </md-tooltip>
-                        <md-icon>add_to_photos</md-icon>
-                    </md-button>
+                <md-button class="md-icon-button md-primary" ng-click="addInternationalTransfer(record)">
+                    <md-tooltip md-direction="left">
+                        {{ 'Add a new record of data international transfer' | translate }}
+                    </md-tooltip>
+                    <md-icon>add_to_photos</md-icon>
+                </md-button>
               </div>
               <md-button class="md-icon-button" ng-click="uiState.hideTranfers = !uiState.hideTranfers"><md-icon>{{ uiState.hideTranfers ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
@@ -473,16 +473,18 @@
             </div>
             <br/>
             <div layout="row" layout-align="space-between center">
-                <div layout-align="start center">
-                    <span class="md-title md-padding-left" translate> Processors </span>
-                    <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="createNewProcessor($event, record)">
-                        <md-tooltip md-direction="left">
-                            {{ 'Add a processor' | translate }}
-                        </md-tooltip>
-                        <md-icon class="md-icon-button md-primary">add_to_photos</md-icon>
-                    </md-button>
+              <div layout-align="start center">
+                <div layout="row" layout-align="start center">
+                  <h3 class="md-padding-left" translate> Processors </h3>
+                  <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="createNewProcessor($event, record)">
+                      <md-tooltip md-direction="left">
+                          {{ 'Add a processor' | translate }}
+                      </md-tooltip>
+                      <md-icon class="md-icon-button md-primary">add_to_photos</md-icon>
+                  </md-button>
                 </div>
-                <md-button class="md-icon-button" ng-click="uiState.hideProcessors = !uiState.hideProcessors"><md-icon>{{ uiState.hideProcessors ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
+              </div>
+              <md-button class="md-icon-button" ng-click="uiState.hideProcessors = !uiState.hideProcessors"><md-icon>{{ uiState.hideProcessors ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
             <div ng-hide=uiState.hideProcessors>
                 <md-tabs md-dynamic-height="true" md-selected="processorTabSelected" ng-if="record.processors.length > 0 || !isAnrReadOnly">
@@ -522,9 +524,7 @@
                         </div>
                         <br/>
                         <div layout="row" layout-align="space-between center">
-                            <md-subheader class="md-padding-left">
-                                <span translate> Actors </span>
-                            </md-subheader>
+                            <h3 class="md-padding-left" translate> Actors </h3>
                             <md-button class="md-icon-button" ng-click="uiState.hideProcessorActors = !uiState.hideProcessorActors"><md-icon>{{ uiState.hideProcessorActors ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
                         </div>
                         <div ng-hide=uiState.hideProcessorActors>
