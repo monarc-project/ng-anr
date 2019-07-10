@@ -38,6 +38,7 @@
         <md-tab ng-repeat="(recordIndex,record) in records.items.records" label="{{ record.label }}" ng-if="records.items.count>0"
             md-on-select="selectRecord(record.id)">
             <div layout="row" layout-align="space-between center">
+<<<<<<< Updated upstream
                 <p class="md-title md-padding-left" translate>Description of processing activities</p>
                 <div layout="row" layout-align="end center">
                     <md-menu>
@@ -64,6 +65,10 @@
                     </md-button>
                     <md-button class="md-icon-button" ng-click="uiState.hideDescription = !uiState.hideDescription"><md-icon>{{ uiState.hideDescription ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
                 </div>
+=======
+                <h3 class="md-padding-left" translate>Description of processing activities</h3>
+                <md-button class="md-icon-button" ng-click="uiState.hideDescription = !uiState.hideDescription"><md-icon>{{ uiState.hideDescription ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
+>>>>>>> Stashed changes
             </div>
             <div ng-hide=uiState.hideDescription>
                 <md-table-container flex>
@@ -94,7 +99,7 @@
             </div>
             <br/>
             <div layout="row" layout-align="space-between center">
-                <p class="md-title md-padding-left" translate>Actors</p>
+                <h3 class="md-padding-left" translate>Actors</h3>
                 <md-button class="md-icon-button" ng-click="uiState.hideActors = !uiState.hideActors"><md-icon>{{ uiState.hideActors ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
             <div ng-hide=uiState.hideActors>
@@ -276,8 +281,8 @@
             </div>
             <br/>
             <div layout="row" layout-align="space-between center">
-                <div layout-align="start center">
-                    <span class="md-title md-padding-left" translate>Categories of personal data and data subjects</span>
+                <div layout="row" layout-align="start center">
+                    <h3 class="md-padding-left" translate>Categories of personal data and data subjects</h3>
                     <md-button class="md-icon-button md-primary" ng-click="addPersonalData(record)" ng-hide=uiState.hidePersonalData>
                         <md-tooltip md-direction="left">
                             {{ 'Add a new category of personal data and data subjects' | translate }}
@@ -367,19 +372,16 @@
             </div>
             <br/>
             <div layout="row" layout-align="space-between center">
-                <p class="md-title md-padding-left" translate> Recipients/Transfers </p>
+                <div layout="row" layout-align="start center">
+                  <h3 class="md-padding-left" translate> Recipients</h3>
+                  <md-button class="md-icon-button md-primary" ng-click="addRecipient(record)">
+                      <md-tooltip md-direction="left">
+                          {{ 'Add a new recipient of data' | translate }}
+                      </md-tooltip>
+                      <md-icon>add_to_photos</md-icon>
+                  </md-button>
+                </div>
                 <md-button class="md-icon-button" ng-click="uiState.hideRecipients = !uiState.hideRecipients"><md-icon>{{ uiState.hideRecipients ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
-            </div>
-            <div ng-hide=uiState.hideRecipients>
-                <md-subheader class="md-padding-left">
-                    <span translate> Recipients </span>
-                    <md-button class="md-icon-button md-primary" ng-click="addRecipient(record)">
-                        <md-tooltip md-direction="left">
-                            {{ 'Add a new recipient of data' | translate }}
-                        </md-tooltip>
-                        <md-icon>add_to_photos</md-icon>
-                    </md-button>
-                </md-subheader>
             </div>
             <div ng-hide=uiState.hideRecipients>
                 <md-table-container flex>
@@ -429,15 +431,15 @@
                 </md-table-container>
             </div>
             <div ng-hide=uiState.hideRecipients>
-                <md-subheader class="md-padding-left">
-                <span translate> International transfers </span>
+              <div layout="row" layout-align="start center">
+                <h3 translate> International transfers </h3>
                     <md-button class="md-icon-button md-primary" ng-click="addInternationalTransfer(record)">
                         <md-tooltip md-direction="left">
                             {{ 'Add a new record of data international transfer' | translate }}
                         </md-tooltip>
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
-                </md-subheader>
+              </div>
             </div>
             <div ng-hide=uiState.hideRecipients>
                 <md-table-container flex>
@@ -470,7 +472,7 @@
             </div>
             <br/>
             <div layout="row" layout-align="space-between center">
-                <p class="md-title md-padding-left" translate> Processors </p>
+                <h3 class="md-padding-left" translate> Processors </h3>
                 <md-button class="md-icon-button" ng-click="uiState.hideProcessors = !uiState.hideProcessors"><md-icon>{{ uiState.hideProcessors ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
             <div ng-hide=uiState.hideProcessors>
