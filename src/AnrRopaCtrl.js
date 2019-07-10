@@ -96,6 +96,13 @@
             var promise = $q.defer();
             // This record recipient changed, update it
             RecordService.updateRecordRecipient(model, function (data) {
+                for (var i = 0; i < $scope.records.items.records.length; ++i ) {
+                    for (var j = 0; j < $scope.records.items.records[i]["recipients"].length; ++j ) {
+                        if ($scope.records.items.records[i]["recipients"][j]['id'] === model.id) {
+                            $scope.records.items.records[i]["recipients"][j] = model;
+                        }
+                    }
+                }
                 promise.resolve(true);
             }, function () {
                 promise.reject(false);
@@ -120,6 +127,13 @@
             var promise = $q.defer();
             // This processor changed, update it
             RecordService.updateRecordProcessor(model, function (data) {
+                for (var i = 0; i < $scope.records.items.records.length; ++i ) {
+                    for (var j = 0; j < $scope.records.items.records[i]["processors"].length; ++j ) {
+                        if ($scope.records.items.records[i]["processors"][j]['id'] === model.id) {
+                            $scope.records.items.records[i]["processors"][j] = model;
+                        }
+                    }
+                }
                 promise.resolve(true);
             }, function () {
                 promise.reject(false);
@@ -527,7 +541,6 @@
             if(recipient.id == undefined || recipient.id == null) {
                 if(recipient.label){
                     RecordService.createRecordRecipient(recipient, function (status) {
-                        console.log(status);
                         RecordService.getRecordRecipient(status.id).then(function (data) {
                             recipient = data;
                             record["recipients"][index] = recipient;
@@ -933,6 +946,7 @@
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\"";
                     }
                     finalArray[recLine]+=','+"\""+' '+"\"";
@@ -951,22 +965,22 @@
                     }
                     finalArray[recLine]+=','+"\""+' '+"\"";
                     if(recLine <= nbProcessorLine) {
-                        finalArray[recLine] +=','+"\""+data.processors[recLine].label+"\"";
-                        finalArray[recLine] +=','+"\""+data.processors[recLine].contact+"\"";
-                        finalArray[recLine] +=','+"\""+data.processors[recLine].activities+"\"";
-                        finalArray[recLine] +=','+"\""+data.processors[recLine].secMeasures+"\"";
+                        finalArray[recLine] +=','+"\""+data.processors[recLine - 1].label+"\"";
+                        finalArray[recLine] +=','+"\""+data.processors[recLine - 1].contact+"\"";
+                        finalArray[recLine] +=','+"\""+data.processors[recLine - 1].activities+"\"";
+                        finalArray[recLine] +=','+"\""+data.processors[recLine - 1].secMeasures+"\"";
 
-                        if(data.processors[recLine].representative) {
-                            finalArray[recLine] +=','+"\""+data.processors[recLine].representative.label+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[recLine].representative.contact+"\"";
+                        if(data.processors[recLine - 1].representative) {
+                            finalArray[recLine] +=','+"\""+data.processors[recLine - 1].representative.label+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[recLine - 1].representative.contact+"\"";
                         }
                         else {
                             finalArray[recLine] +=','+"\""+' '+"\""
                                                 + ','+"\""+' '+"\"";
                         }
-                        if(data.processors[recLine].dpo) {
-                            finalArray[recLine] +=','+"\""+data.processors[recLine].dpo.label+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[recLine].dpo.contact+"\"";
+                        if(data.processors[recLine - 1].dpo) {
+                            finalArray[recLine] +=','+"\""+data.processors[recLine - 1].dpo.label+"\"";
+                            finalArray[recLine] +=','+"\""+data.processors[recLine - 1].dpo.contact+"\"";
                         }
                         else {
                             finalArray[recLine] +=','+"\""+' '+"\""
@@ -975,6 +989,7 @@
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\""
