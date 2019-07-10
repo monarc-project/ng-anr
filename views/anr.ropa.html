@@ -26,7 +26,7 @@
             </md-button>
         </span>
     </div>
-    <md-tabs class="record-tabs" md-dynamic-height="true" md-selected="records.recordTabSelected" ng-if="!(updatingRecords) && records.items.count>0" style="padding-bottom: 100px;">
+    <md-tabs class="record-tabs" md-dynamic-height="true" md-selected="records.recordTabSelected" ng-if="!(updatingRecords)" style="padding-bottom: 100px;">
         <div layout="row" layout-align="end center">
             <form flex name="records.filter.form">
                 <md-input-container class="md-block md-padding-left md-padding-right">
@@ -35,7 +35,7 @@
                 </md-input-container>
             </form>
         </div>
-        <md-tab ng-repeat="(recordIndex,record) in records.items.records" label="{{ record.label }}"
+        <md-tab ng-repeat="(recordIndex,record) in records.items.records" label="{{ record.label }}" ng-if="records.items.count>0"
             md-on-select="selectRecord(record.id)">
             <div layout="row" layout-align="space-between center">
                 <p class="md-title md-padding-left" translate>Description of processing activities</p>
