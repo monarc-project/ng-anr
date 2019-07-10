@@ -38,8 +38,7 @@
         <md-tab ng-repeat="(recordIndex,record) in records.items.records" label="{{ record.label }}" ng-if="records.items.count>0"
             md-on-select="selectRecord(record.id)">
             <div layout="row" layout-align="space-between center">
-<<<<<<< Updated upstream
-                <p class="md-title md-padding-left" translate>Description of processing activities</p>
+                <h3 class="md-padding-left" translate>Description of processing activities</h3>
                 <div layout="row" layout-align="end center">
                     <md-menu>
                         <md-button class="md-icon-button" ng-click="$mdMenu.open()">
@@ -65,10 +64,6 @@
                     </md-button>
                     <md-button class="md-icon-button" ng-click="uiState.hideDescription = !uiState.hideDescription"><md-icon>{{ uiState.hideDescription ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
                 </div>
-=======
-                <h3 class="md-padding-left" translate>Description of processing activities</h3>
-                <md-button class="md-icon-button" ng-click="uiState.hideDescription = !uiState.hideDescription"><md-icon>{{ uiState.hideDescription ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
->>>>>>> Stashed changes
             </div>
             <div ng-hide=uiState.hideDescription>
                 <md-table-container flex>
@@ -430,7 +425,7 @@
                     </table>
                 </md-table-container>
             </div>
-            <div ng-hide=uiState.hideRecipients>
+            <div layout="row" layout-align="space-between center">
               <div layout="row" layout-align="start center">
                 <h3 translate> International transfers </h3>
                     <md-button class="md-icon-button md-primary" ng-click="addInternationalTransfer(record)">
@@ -440,8 +435,9 @@
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
               </div>
+              <md-button class="md-icon-button" ng-click="uiState.hideTranfers = !uiState.hideTranfers"><md-icon>{{ uiState.hideTranfers ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
-            <div ng-hide=uiState.hideRecipients>
+            <div ng-hide=uiState.hideTranfers>
                 <md-table-container flex>
                     <table editable callback="onTransferTableEdited" class="md-html-table md-html-table-grey big-border-all" >
                         <tbody>
