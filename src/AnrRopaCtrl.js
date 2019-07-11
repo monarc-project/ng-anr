@@ -36,18 +36,36 @@
             .then(function (record) {
                 var cont = record.cont;
                 delete $scope.newRecord;
-                RecordService.createRecord(record, function (status) {
-                    $scope.updatingRecords = true;
-                    $scope.updateRecords().then(function() {
-                        $scope.updatingRecords = false;
-                        $scope.selectRecord(status.id, $scope.records.items.count);
-                        toastr.success(gettextCatalog.getString('The record has been created successfully.',
-                              {recordLabel: $scope._langField(record,'label')}), gettextCatalog.getString('Creation successful'));
-                        if (cont) {
-                            $scope.createNewRecord(ev);
-                        }
+                if(record.duplicateRecord) {
+                    record.recordToDuplicate['label'] = record['label'];
+                    RecordService.duplicateRecord(record.recordToDuplicate, function (data) {
+                        $scope.updatingRecords = true;
+                        $scope.updateRecords().then(function() {
+                            $scope.updatingRecords = false;
+                            $scope.selectRecord(status.id, $scope.records.items.count);
+                            toastr.success(gettextCatalog.getString('The record has been duplicated successfully.',
+                                  {recordLabel: record.label}), gettextCatalog.getString('Creation successful'));
+                            if (cont) {
+                                $scope.createNewRecord(ev);
+                            }
+                        });
                     });
-                });
+                }
+                else {
+
+                    RecordService.createRecord(record, function (status) {
+                        $scope.updatingRecords = true;
+                        $scope.updateRecords().then(function() {
+                            $scope.updatingRecords = false;
+                            $scope.selectRecord(status.id, $scope.records.items.count);
+                            toastr.success(gettextCatalog.getString('The record has been created successfully.',
+                                  {recordLabel: record.label}), gettextCatalog.getString('Creation successful'));
+                            if (cont) {
+                                $scope.createNewRecord(ev);
+                            }
+                        });
+                    });
+                }
             }).catch(angular.noop);
         };
 
@@ -1062,11 +1080,31 @@
     function CreateRecordDialogCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $q, RecordService, ConfigService) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
+        $scope.newRecord =  { 'duplicateRecord' : false,
+                              'recordToDuplicate' : {}
+                            }
 
         $scope.cancel = function() {
             delete $scope.newRecord;
             $mdDialog.cancel();
         };
+
+        $scope.queryRecordSearch = function(query) {
+            var promise = $q.defer();
+            RecordService.getRecords({filter: query}).then(function (e) {
+                promise.resolve(e["records"]);
+            });
+            return promise.promise;
+        }
+
+        $scope.recordItemSelected = function (selectedRecord) {
+            if(selectedRecord != null) {
+                $scope.newRecord.recordToDuplicate['record'] = selectedRecord.id;
+            }else {
+                $scope.newRecord.recordToDuplicate['record'] = null;
+            }
+            $scope.newRecord.duplicateRecord = true;
+        }
 
         $scope.create = function() {
             $scope.newRecord['cont'] = false;
