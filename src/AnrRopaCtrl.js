@@ -1236,10 +1236,7 @@
         $scope.import = {
             password: '',
         };
-        $scope.checkFile = function (file) {
-            console.log(file);
-        }
-
+        
         $scope.uploadFile = function (file) {
             $scope.isImportingIn = true;
             file.upload = Upload.upload({
