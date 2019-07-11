@@ -108,6 +108,17 @@
                     isArray: false
                 }
             });
+            self.RecordDuplicateResource = $resource('api/' + anr + 'records/duplicate', {
+                urlAnrId: $rootScope.getUrlAnrId()
+            },
+            {
+                'update': {
+                    method: 'PATCH'
+                },
+                'query': {
+                    isArray: false
+                }
+            });
         }
         makeResource();
 
@@ -200,6 +211,11 @@
             self.RecordInternationalTransferResource.update(params, success, error);
         };
 
+        //RecordDuplicate
+        var duplicateRecord = function (params, success, error) {
+            return new self.RecordDuplicateResource(params).$save(success, error);
+        };
+
         return {
             makeResource: makeResource,
 
@@ -231,7 +247,9 @@
             getRecordRecipient: getRecordRecipient,
 
             createRecordInternationalTransfer: createRecordInternationalTransfer,
-            updateRecordInternationalTransfer: updateRecordInternationalTransfer
+            updateRecordInternationalTransfer: updateRecordInternationalTransfer,
+
+            duplicateRecord: duplicateRecord
         };
     }
 
