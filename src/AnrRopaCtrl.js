@@ -346,16 +346,24 @@
         };
 
         $scope.detachActor = function (record, field, index) {
-            if(field == "jointControllers") {
-                record["jointControllers"].splice(index, 1);
-            } else {
-                record[field] = null;
-            }
-            RecordService.updateRecord(record, function (data) {
-                RecordService.getRecord(record.id).then(function (data) {
-                    record["updatedAt"] = data["updatedAt"];
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Are you sure you want to detach actor?'))
+                .textContent(gettextCatalog.getString('This actor will be deleted if it is not used anymore in the anr.'))
+                .theme('light')
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                if(field == "jointControllers") {
+                    record["jointControllers"].splice(index, 1);
+                } else {
+                    record[field] = null;
+                }
+                RecordService.updateRecord(record, function (data) {
+                    RecordService.getRecord(record.id).then(function (data) {
+                        record["updatedAt"] = data["updatedAt"];
+                    });
                 });
-            });
+            }).catch(angular.noop);
         }
 
         $scope.updateActorLabel = function (record, recordIndex, actor, actorField, index) {
@@ -451,24 +459,14 @@
         };
 
         $scope.onPersonalDataEdit = function (record, personalData, index) {
-            var promise = $q.defer();
             $scope.updatingPersonalData = true;
-            // This personal data changed, update it
-            if(personalData.id == undefined || personalData.id == null) {
-                promise.reject(false);
-            }
-            else {
-                RecordService.updateRecordPersonalData(personalData, function () {
-                    RecordService.getRecordPersonalData(personalData.id).then(function (data) {
-                        personalData = data;
-                        record["personalData"][index] = personalData;
-                        $scope.updatingPersonalData = false;
-                    });
-                }, function () {
-                    promise.reject(false);
+            RecordService.updateRecordPersonalData(personalData, function () {
+                RecordService.getRecordPersonalData(personalData.id).then(function (data) {
+                    personalData = data;
+                    record["personalData"][index] = personalData;
+                    $scope.updatingPersonalData = false;
                 });
-            }
-            return promise.promise;
+            });
         };
 
         $scope.addNewDataCategory = function (record, dataCategorySearchText, personalData, index) {
@@ -486,12 +484,20 @@
         }
 
         $scope.deletePersonalData = function(record, index) {
-            record["personalData"].splice(index, 1);
-            RecordService.updateRecord(record, function (data) {
-                RecordService.getRecord(record.id).then(function (data) {
-                    record["updatedAt"] = data["updatedAt"];
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Are you sure you want to delete personal data category?'))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .theme('light')
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                record["personalData"].splice(index, 1);
+                RecordService.updateRecord(record, function (data) {
+                    RecordService.getRecord(record.id).then(function (data) {
+                        record["updatedAt"] = data["updatedAt"];
+                    });
                 });
-            });
+            }).catch(angular.noop);
         }
 
         $scope.addRecipient = function(record) {
@@ -544,12 +550,20 @@
         };
 
         $scope.deleteRecipient = function (record, index) {
-            record["recipients"].splice(index, 1);
-            RecordService.updateRecord(record, function (data) {
-                RecordService.getRecord(record.id).then(function (data) {
-                    record["updatedAt"] = data["updatedAt"];
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Are you sure you want to delete recipient?'))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .theme('light')
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                record["recipients"].splice(index, 1);
+                RecordService.updateRecord(record, function (data) {
+                    RecordService.getRecord(record.id).then(function (data) {
+                        record["updatedAt"] = data["updatedAt"];
+                    });
                 });
-            });
+            }).catch(angular.noop);
         }
 
         $scope.updateRecipientLabel = function (record, recipient, index) {
@@ -605,12 +619,20 @@
         }
 
         $scope.deleteInternationalTransfer = function (record, index) {
-            record["internationalTransfers"].splice(index, 1);
-            RecordService.updateRecord(record, function (data) {
-                RecordService.getRecord(record.id).then(function (data) {
-                    record["updatedAt"] = data["updatedAt"];
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Are you sure you want to delete international transfer?'))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .theme('light')
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                record["internationalTransfers"].splice(index, 1);
+                RecordService.updateRecord(record, function (data) {
+                    RecordService.getRecord(record.id).then(function (data) {
+                        record["updatedAt"] = data["updatedAt"];
+                    });
                 });
-            });
+            }).catch(angular.noop);
         }
 
 
@@ -832,8 +854,16 @@
                         } else {
                             finalArray[recLine]+=','+"\""+' '+"\"";
                         }
-                        finalArray[recLine]+=','+"\""+data.purposes+"\"";
-                        finalArray[recLine]+=','+"\""+data.secMeasures+"\"";
+                        if(data.purposes) {
+                            finalArray[recLine]+=','+"\""+data.purposes+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
+                        if(data.secMeasures) {
+                            finalArray[recLine]+=','+"\""+data.secMeasures+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
                     }
                     else {
                         finalArray[recLine] ="\""+' '+"\""
@@ -1089,6 +1119,10 @@
             $mdDialog.cancel();
         };
 
+        $scope.createRecordModeChanged = function() {
+            $scope.newRecord.recordToDuplicate = {};
+        }
+
         $scope.queryRecordSearch = function(query) {
             var promise = $q.defer();
             RecordService.getRecords({filter: query}).then(function (e) {
@@ -1202,6 +1236,9 @@
         $scope.import = {
             password: '',
         };
+        $scope.checkFile = function (file) {
+            console.log(file);
+        }
 
         $scope.uploadFile = function (file) {
             $scope.isImportingIn = true;

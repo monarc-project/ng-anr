@@ -21,7 +21,7 @@
 
                 <md-subheader layout="row" layout-align="center"><strong>{{ 'Manual creation' | translate }}</strong></md-subheader><br/>
 
-                <md-switch ng-model="newRecord.duplicateRecord">{{ 'Duplicate an existing record' | translate }}</md-switch>
+                <md-switch ng-model="newRecord.duplicateRecord" ng-change="createRecordModeChanged()">{{ 'Duplicate an existing record' | translate }}</md-switch>
                 <md-input-container class="md-block" flex >
                     <md-autocomplete ng-if="newRecord.duplicateRecord"
                         md-selected-item="selectedRecord"
@@ -55,10 +55,10 @@
                 {{ 'Cancel' | translate }}
             </md-button>
             <md-button ng-click="create()" ng-disabled="(newRecord.duplicateRecord && !newRecord.recordToDuplicate.record) || recordForm.$error.required" type="submit" class="md-accent md-hue-3">
-                {{ (newRecord.duplicateRecord? 'Duplicate' : 'Create') | translate }}
+                {{ newRecord.duplicateRecord? 'Duplicate' : 'Create' | translate }}
             </md-button>
             <md-button ng-click="createAndContinue()" ng-disabled="(newRecord.duplicateRecord && !newRecord.recordToDuplicate.record) || recordForm.$error.required" class="md-accent md-hue-3">
-                {{ (newRecord.duplicateRecord? 'Duplicate and continue' : 'Create and continue' ) | translate }}
+                {{ newRecord.duplicateRecord? 'Duplicate and continue' : 'Create and continue' | translate }}
             </md-button>
         </md-dialog-actions>
     </form>

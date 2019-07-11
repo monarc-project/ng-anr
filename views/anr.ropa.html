@@ -296,7 +296,7 @@
                         <tbody>
                             <tr>
                                 <th translate style="width:20%"> Data subject </th>
-                                <th translate style="width:15%"> Categories of personal data </th>
+                                <th translate style="width:20%"> Categories of personal data </th>
                                 <th translate style="width:30%"> Description </th>
                                 <th translate style="width:15%"> Duration of data retention </th>
                                 <th translate style="width:20%"> Description of retention period </th>
@@ -357,9 +357,9 @@
                                 </td>
                                 <td edit-readonly="isAnrReadOnly || !personalData.id" edit-field="retentionPeriodDescription" edit-type="textarea" ng-disabled="!personalData.id"></td>
                                 <td ng-if="!isAnrReadOnly">
-                                    <md-button class="md-icon-button md-warn"ng-click="deletePersonalData(record, $personalDataIndex)">
+                                    <md-button class="md-icon-button md-warn"ng-click="deletePersonalData(record, personalDataIndex)">
                                         <md-tooltip md-direction="left">
-                                            {{ 'Delete personal data record' | translate }}
+                                            {{ 'Delete personal data' | translate }}
                                         </md-tooltip>
                                         <md-icon>delete</md-icon>
                                     </md-button>
