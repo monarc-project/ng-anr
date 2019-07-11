@@ -1277,6 +1277,10 @@ md-select-menu md-content
 .autocomplete-record-gdpr md-autocomplete-wrap{
     box-shadow: none !important;
 }
+.autocomplete-record-gdpr md-autocomplete-wrap input{
+    font-family: Helvetica, Sans-serif;
+    font-size: 12px
+}
 
 .md-chips-table {
     width:75%;
