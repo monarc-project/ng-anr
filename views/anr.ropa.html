@@ -2,7 +2,7 @@
     <div layout="row" layout-align="space-between center" style="padding-top:10px; padding-bottom: 10px;">
         <span class="md-title md-padding-double" translate>Records of processing activities</span>
         <span style="margin-right:38px">
-            <md-menu>
+            <md-menu ng-if="records.items.count>0">
                 <md-button class="md-icon-button" ng-click="$mdMenu.open()">
                     <md-tooltip md-direction="left">
                         {{ 'Export all the records in one file' | translate }}
