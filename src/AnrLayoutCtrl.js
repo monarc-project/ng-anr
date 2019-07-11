@@ -1160,11 +1160,11 @@
                 if (e.source.nodesScope.$treeScope.$id == e.dest.nodesScope.$treeScope.$id) {
                     var obj = e.source.nodeScope.$modelValue;
                     $scope.anr_instance_tree_is_patching = true;
-                    AnrService.moveInstance($scope.model.anr.id, obj.uuid, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
+                    AnrService.moveInstance($scope.model.anr.id, obj.id, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
                         $scope.updateInstances(function () {
                             $scope.anr_instance_tree_is_patching = false;
                         });
-                        $scope.$broadcast('instance-moved', obj.uuid);
+                        $scope.$broadcast('instance-moved', obj.id);
                     });
 
                     return true;
