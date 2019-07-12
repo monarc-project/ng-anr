@@ -52,7 +52,6 @@
                     });
                 }
                 else {
-
                     RecordService.createRecord(record, function (status) {
                         $scope.updatingRecords = true;
                         $scope.updateRecords().then(function() {
@@ -1236,7 +1235,7 @@
         $scope.import = {
             password: '',
         };
-        
+
         $scope.uploadFile = function (file) {
             $scope.isImportingIn = true;
             file.upload = Upload.upload({
