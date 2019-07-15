@@ -1,6 +1,32 @@
 (function () {
     angular
         .module('AnrModule')
+        .directive('onReadRecordFile', ['$mdDialog', 'gettextCatalog', function ($mdDialog, gettextCatalog) {
+            return {
+          		restrict: 'A',
+          		scope: false,
+          		link: function(scope, element, attrs) {
+          			element.on('change', function(onChangeEvent) {
+                        var fileTypes = ['json', 'csv', 'xlsx', 'xls']; // File types supported
+                        var extension = onChangeEvent.target.files[0].name.split('.').pop().toLowerCase(); //Extract extension of file
+                        var isSuccess = fileTypes.indexOf(extension) > -1; // Check file type
+                        var size = onChangeEvent.target.files[0].size < 1e6; // Check fize size being less 1M
+
+                        if (!(isSuccess && size)) {
+                            var alert = $mdDialog.alert()
+                                .multiple(true)
+                                .title(gettextCatalog.getString('File error'))
+                                .textContent(gettextCatalog.getString('File type not supported'))
+                                .theme('light')
+                                .ok(gettextCatalog.getString('Cancel'));
+                            $mdDialog.show(alert);
+
+                            onChangeEvent.target.value = null;
+                        }
+          			});
+          		}
+          	};
+          }])
         .controller('AnrRopaCtrl', [
             '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog',
             'DownloadService', '$http', '$q', 'RecordService',
@@ -847,9 +873,9 @@
                 while(recLine < nbLine) {
                     if(recLine === 0) {
                         finalArray[recLine]="\""+data.label+"\"";
-                        finalArray[recLine]+=','+"\""+data.createdAt.date.substring(0,11)+"\"";
+                        finalArray[recLine]+=','+"\""+data.createdAt.date.substring(0,10)+"\"";
                         if(data.updatedAt) {
-                            finalArray[recLine]+=','+"\""+data.updatedAt.date.substring(0,11)+"\"";
+                            finalArray[recLine]+=','+"\""+data.updatedAt.date.substring(0,10)+"\"";
                         } else {
                             finalArray[recLine]+=','+"\""+' '+"\"";
                         }
@@ -871,42 +897,64 @@
                                             +','+"\""+' '+"\""
                                             +','+"\""+' '+"\"" ;
                     }
-                    finalArray[recLine]+=','+"\""+' '+"\"";
 
 
                     if(data.controller && recLine === 0) {
+                        finalArray[recLine] +=','+"\""+data.controller.id+"\"";
                         finalArray[recLine] +=','+"\""+data.controller.label+"\"";
-                        finalArray[recLine] +=','+"\""+data.controller.contact+"\"";
+                        if(data.controller.contact) {
+                            finalArray[recLine]+=','+"\""+data.controller.contact+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\"";
                     }
                     if(data.representative && recLine === 0) {
+                        finalArray[recLine] +=','+"\""+data.representative.id+"\"";
                         finalArray[recLine] +=','+"\""+data.representative.label+"\"";
-                        finalArray[recLine] +=','+"\""+data.representative.contact+"\"";
+                        if(data.representative.contact) {
+                            finalArray[recLine]+=','+"\""+data.representative.contact+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\"";
                     }
                     if(data.dpo && recLine === 0) {
+                        finalArray[recLine] +=','+"\""+data.dpo.id+"\"";
                         finalArray[recLine] +=','+"\""+data.dpo.label+"\"";
-                        finalArray[recLine] +=','+"\""+data.dpo.contact+"\"";
+                        if(data.dpo.contact) {
+                            finalArray[recLine]+=','+"\""+data.dpo.contact+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\"";
                     }
                     if(recLine < nbJointControllerLine) {
+                        finalArray[recLine] +=','+"\""+data.jointControllers[recLine].id+"\"";
                         finalArray[recLine] +=','+"\""+data.jointControllers[recLine].label+"\"";
-                        finalArray[recLine] +=','+"\""+data.jointControllers[recLine].contact+"\"";
+                        if(data.jointControllers[recLine].contact) {
+                            finalArray[recLine]+=','+"\""+data.jointControllers[recLine].contact+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\"";
                     }
-                    finalArray[recLine] += ','+"\""+' '+"\"";
 
                     if(recLine < nbDataLine) {
                         var dataCategoriesString = '';
@@ -921,11 +969,11 @@
                         finalArray[recLine] +=','+"\""+data.personalData[recLine].description+"\"";
                         finalArray[recLine] +=','+"\""+data.personalData[recLine].retentionPeriod+"\"";
                         if(data.personalData[recLine].retentionPeriodMode === 0) {
-                            finalArray[recLine] +=','+ gettextCatalog.getString('day(s)');
+                            finalArray[recLine] +=','+"\""+ 'day(s)' +"\"";
                         } else if (data.personalData[recLine].retentionPeriodMode === 1) {
-                            finalArray[recLine] +=','+ gettextCatalog.getString('month(s)');
+                            finalArray[recLine] +=','+"\""+ 'month(s)'+"\"";
                         } else {
-                            finalArray[recLine] +=','+ gettextCatalog.getString('year(s)');
+                            finalArray[recLine] +=','+"\""+ 'year(s)' +"\"";
                         }
                         finalArray[recLine] +=','+"\""+data.personalData[recLine].retentionPeriodDescription+"\"";
                     }
@@ -937,23 +985,23 @@
                                             + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\"";
                     }
-                    finalArray[recLine]+=','+"\""+' '+"\"";
 
                     if(recLine < nbRecipientLine) {
+                        finalArray[recLine] +=','+"\""+data.recipients[recLine].id+"\"";
                         finalArray[recLine] +=','+"\""+data.recipients[recLine].label+"\"";
                         if(data.recipients[recLine].type === 0) {
-                            finalArray[recLine] +=','+ gettextCatalog.getString('internal');
+                            finalArray[recLine] +=','+"\""+ gettextCatalog.getString('internal')+"\"";
                         } else {
-                            finalArray[recLine] +=','+ gettextCatalog.getString('external');
+                            finalArray[recLine] +=','+"\""+ gettextCatalog.getString('external')+"\"";
                         }
                         finalArray[recLine] +=','+"\""+data.recipients[recLine].description+"\"";
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
                                             + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\"";
                     }
-                    finalArray[recLine]+=','+"\""+' '+"\"";
 
                     if(recLine < nbInternationalTransferLine) {
                         finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine].organisation+"\"";
@@ -967,32 +1015,48 @@
                                             + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\"";
                     }
-                    finalArray[recLine]+=','+"\""+' '+"\"";
+
                     if(recLine < nbProcessorLine) {
+                        finalArray[recLine] +=','+"\""+data.processors[recLine].id+"\"";
                         finalArray[recLine] +=','+"\""+data.processors[recLine].label+"\"";
                         finalArray[recLine] +=','+"\""+data.processors[recLine].contact+"\"";
                         finalArray[recLine] +=','+"\""+data.processors[recLine].activities+"\"";
                         finalArray[recLine] +=','+"\""+data.processors[recLine].secMeasures+"\"";
 
                         if(data.processors[recLine].representative) {
+                            finalArray[recLine] +=','+"\""+data.processors[recLine].representative.id+"\"";
                             finalArray[recLine] +=','+"\""+data.processors[recLine].representative.label+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[recLine].representative.contact+"\"";
+                            if(data.processors[recLine].representative.contact) {
+                                finalArray[recLine]+=','+"\""+data.processors[recLine].representative.contact+"\"";
+                            } else {
+                                finalArray[recLine]+=','+"\""+' '+"\"";
+                            }
                         }
                         else {
                             finalArray[recLine] +=','+"\""+' '+"\""
+                                                + ','+"\""+' '+"\""
                                                 + ','+"\""+' '+"\"";
                         }
                         if(data.processors[recLine].dpo) {
+                            finalArray[recLine] +=','+"\""+data.processors[recLine].dpo.id+"\"";
                             finalArray[recLine] +=','+"\""+data.processors[recLine].dpo.label+"\"";
-                            finalArray[recLine] +=','+"\""+data.processors[recLine].dpo.contact+"\"";
+                            if(data.processors[recLine].dpo.contact) {
+                                finalArray[recLine]+=','+"\""+data.processors[recLine].dpo.contact+"\"";
+                            } else {
+                                finalArray[recLine]+=','+"\""+' '+"\"";
+                            }
                         }
                         else {
                             finalArray[recLine] +=','+"\""+' '+"\""
+                                                + ','+"\""+' '+"\""
                                                 + ','+"\""+' '+"\"";
                         }
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
+                                            + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\""
                                             + ','+"\""+' '+"\""
@@ -1021,7 +1085,7 @@
             let promiseQueue = $scope.records.items.records.reduce(function(accumulatorPromise, nextRecord) {
                 return accumulatorPromise.then(function() {
                     return $scope.generateRecordContentCsv(nextRecord.id).then(function(data) {
-                        result += data + "," + "\r\n";
+                        result += data;
                     });
                 });
             }, Promise.resolve());
@@ -1041,17 +1105,19 @@
             finalArray[recLine]+=','+gettextCatalog.getString('Last updated date');
             finalArray[recLine]+=','+gettextCatalog.getString('Purposes');
             finalArray[recLine]+=','+gettextCatalog.getString('Security measures');
-            finalArray[recLine]+=','+"\""+' '+"\"";
 
+            finalArray[recLine]+=','+gettextCatalog.getString('Controller\'s id');
             finalArray[recLine]+=','+gettextCatalog.getString('Controller\'s name');
             finalArray[recLine]+=','+gettextCatalog.getString('Controller\'s contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s id');
             finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s name');
             finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s id');
             finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s name');
             finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Joint controllers\'s id');
             finalArray[recLine]+=','+gettextCatalog.getString('Joint controllers\' name');
             finalArray[recLine]+=','+gettextCatalog.getString('Joint controllers\' contact');
-            finalArray[recLine]+=','+"\""+' '+"\"";
 
             finalArray[recLine]+=','+gettextCatalog.getString('Data subject');
             finalArray[recLine]+=','+gettextCatalog.getString('Data categories');
@@ -1059,25 +1125,26 @@
             finalArray[recLine]+=','+gettextCatalog.getString('Retention period');
             finalArray[recLine]+=','+gettextCatalog.getString('Retention period unit');
             finalArray[recLine]+=','+gettextCatalog.getString('Retention period description');
-            finalArray[recLine]+=','+"\""+' '+"\"";
 
+            finalArray[recLine]+=','+gettextCatalog.getString('Data recipient\'s id');
             finalArray[recLine]+=','+gettextCatalog.getString('Data recipient');
             finalArray[recLine]+=','+gettextCatalog.getString('Data recipient type');
             finalArray[recLine]+=','+gettextCatalog.getString('Description');
-            finalArray[recLine]+=','+"\""+' '+"\"";
 
             finalArray[recLine]+=','+gettextCatalog.getString('Organisation of international transfer');
             finalArray[recLine]+=','+gettextCatalog.getString('Description');
             finalArray[recLine]+=','+gettextCatalog.getString('Country');
             finalArray[recLine]+=','+gettextCatalog.getString('Documents');
-            finalArray[recLine]+=','+"\""+' '+"\"";
 
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor\'s id');
             finalArray[recLine]+=','+gettextCatalog.getString('Data processor\'s name');
             finalArray[recLine]+=','+gettextCatalog.getString('Data processor\'s contact');
             finalArray[recLine]+=','+gettextCatalog.getString('Activities');
             finalArray[recLine]+=','+gettextCatalog.getString('Security measures');
+            finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s id');
             finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s name');
             finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data protection office\'s id');
             finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s name');
             finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s contact');
             let row = finalArray[0].toString().replace(/\n|\r/g,' ') + "," + "\r\n";
@@ -1229,18 +1296,18 @@
     }
 
     function ImportRecordDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload) {
-        $scope.file = [];
-        $scope.file_range = 0;
         $scope.isImportingIn = false;
+        $scope.file = {};
         $scope.import = {
             password: '',
         };
 
         $scope.uploadFile = function (file) {
             $scope.isImportingIn = true;
+            var extension = file.name.split('.').pop().toLowerCase(); //Extract extension of file
             file.upload = Upload.upload({
                 url: 'api/client-anr/' + $scope.getUrlAnrId() + '/records/import',
-                data: {file: file, password: $scope.import.password}
+                data: {file: file, fileType:extension, password: $scope.import.password}
             });
 
             file.upload.then(function (response) {
@@ -1253,16 +1320,6 @@
                 }
             });
         }
-
-        $scope.upgradeFileRange = function () {
-            $scope.file_range++;
-
-            for (var i = 0; i <= $scope.file_range; ++i) {
-                if ($scope.file[i] == undefined) {
-                    $scope.file[i] = {};
-                }
-            }
-        };
 
         $scope.cancel = function () {
             $mdDialog.cancel();

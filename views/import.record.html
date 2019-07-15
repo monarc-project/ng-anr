@@ -11,9 +11,12 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <input type="file" name="file" ngf-drop ngf-select ng-repeat="i in range(0, file_range)"
-                       ng-model="file[i]"
+                <input type="file"
+                       on-read-record-file
+                       accept=".csv, .xls, .xlsx, .ods, .json"
+                       title="File types supported: .csv, .xlsx, .ods, .json"
                        class="md-upload-dropbox md-padding md-whiteframe-3dp"
+                       ngf-drop ngf-select ng-model="file"
                        ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-allow-dir="false">
                 </input>
 
@@ -24,11 +27,11 @@
                 </md-input-container>
 
                 <div layout="row" layout-align="end center">
-                        <md-button ng-disabled="file.length < 1" ng-show="!isImportingIn" ng-click="uploadFile(file)">
+                    <md-button ng-disabled="!file" ng-show="!isImportingIn" ng-click="uploadFile(file)">
                         <md-icon>file_download</md-icon>
                         {{ 'Import file' | translate }}
-                        </md-button>
-						      <md-progress-circular ng-show="isImportingIn" md-mode="indeterminate" md-diameter="40"></md-progress-circular>&nbsp;
+                    </md-button>
+			        <md-progress-circular ng-show="isImportingIn" md-mode="indeterminate" md-diameter="40"></md-progress-circular>&nbsp;
                     <h3 ng-show="isImportingIn" >{{ 'Importing file...' | translate }}</h3>
                 </div>
             </div>
