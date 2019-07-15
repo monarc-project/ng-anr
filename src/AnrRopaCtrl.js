@@ -7,7 +7,7 @@
           		scope: false,
           		link: function(scope, element, attrs) {
           			element.on('change', function(onChangeEvent) {
-                        var fileTypes = ['json', 'csv', 'xlsx', 'xls']; // File types supported
+                        var fileTypes = ['json', 'csv', 'xlsx', 'xls', 'bin']; // File types supported
                         var extension = onChangeEvent.target.files[0].name.split('.').pop().toLowerCase(); //Extract extension of file
                         var isSuccess = fileTypes.indexOf(extension) > -1; // Check file type
                         var size = onChangeEvent.target.files[0].size < 1e6; // Check fize size being less 1M
@@ -24,7 +24,7 @@
                             onChangeEvent.target.value = null;
                         }
                         else{
-                            if(extension == "json") {
+                            if(extension == "bin") {
                                 scope.isJson = true;
                             } else {
                                 scope.import.password = '';
@@ -997,10 +997,10 @@
                     if(recLine < nbRecipientLine) {
                         finalArray[recLine] +=','+"\""+data.recipients[recLine].id+"\"";
                         finalArray[recLine] +=','+"\""+data.recipients[recLine].label+"\"";
-                        if(data.recipients[recLine].type === 0) {
-                            finalArray[recLine] +=','+"\""+ gettextCatalog.getString('internal')+"\"";
+                        if(data.recipients[recLine].type == 0) {
+                            finalArray[recLine] +=','+"\""+ 'internal' +"\"";
                         } else {
-                            finalArray[recLine] +=','+"\""+ gettextCatalog.getString('external')+"\"";
+                            finalArray[recLine] +=','+"\""+ 'external' +"\"";
                         }
                         finalArray[recLine] +=','+"\""+data.recipients[recLine].description+"\"";
                     }
