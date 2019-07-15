@@ -23,6 +23,14 @@
 
                             onChangeEvent.target.value = null;
                         }
+                        else{
+                            if(extension == "json") {
+                                scope.isJson = true;
+                            } else {
+                                scope.import.password = '';
+                                scope.isJson = false;
+                            }
+                        }
           			});
           		}
           	};
@@ -1297,6 +1305,7 @@
 
     function ImportRecordDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload) {
         $scope.isImportingIn = false;
+        $scope.isJson = false;
         $scope.file = {};
         $scope.import = {
             password: '',

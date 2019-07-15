@@ -23,11 +23,11 @@
                 <md-input-container class="md-block">
                     <md-icon>vpn_key</md-icon>
                     <label translate>Record password (if any)</label>
-                    <input ng-model="import.password" type="password">
+                    <input ng-model="import.password" type="password" ng-disabled="!isJson">
                 </md-input-container>
 
                 <div layout="row" layout-align="end center">
-                    <md-button ng-disabled="!file" ng-show="!isImportingIn" ng-click="uploadFile(file)">
+                    <md-button ng-disabled="!file.name" ng-show="!isImportingIn" ng-click="uploadFile(file)">
                         <md-icon>file_download</md-icon>
                         {{ 'Import file' | translate }}
                     </md-button>
