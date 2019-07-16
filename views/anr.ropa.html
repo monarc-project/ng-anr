@@ -68,7 +68,7 @@
                     <md-button class="md-icon-button" ng-click="uiState.hideDescription = !uiState.hideDescription"><md-icon>{{ uiState.hideDescription ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
                 </div>
             </div>
-            <div ng-hide=uiState.hideDescription>
+            <div ng-hide="uiState.hideDescription">
                 <md-table-container flex>
                     <table editable callback="onRecordTableEdited" class="md-html-table md-html-table-grey big-border-all">
                         <tbody edit-model="record">
@@ -100,7 +100,7 @@
                 <h3 class="md-padding-left" translate>Actors</h3>
                 <md-button class="md-icon-button" ng-click="uiState.hideActors = !uiState.hideActors"><md-icon>{{ uiState.hideActors ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
-            <div ng-hide=uiState.hideActors>
+            <div ng-hide="uiState.hideActors">
                 <md-table-container flex>
                     <table editable callback="onActorTableEdited" class="md-html-table md-html-table-grey big-border-all">
                         <tbody>
@@ -281,7 +281,7 @@
             <div layout="row" layout-align="space-between center">
                 <div layout="row" layout-align="start center">
                     <h3 class="md-padding-left" translate>Categories of personal data and data subjects</h3>
-                    <md-button class="md-icon-button md-primary" ng-click="addPersonalData(record)" ng-hide=uiState.hidePersonalData>
+                    <md-button class="md-icon-button md-primary" ng-click="addPersonalData(record)" ng-hide="uiState.hidePersonalData">
                         <md-tooltip md-direction="left">
                             {{ 'Add a new category of personal data and data subjects' | translate }}
                         </md-tooltip>
@@ -290,7 +290,7 @@
                 </div>
                 <md-button class="md-icon-button" ng-click="uiState.hidePersonalData = !uiState.hidePersonalData"><md-icon>{{ uiState.hidePersonalData ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
-            <div ng-hide=uiState.hidePersonalData>
+            <div ng-hide="uiState.hidePersonalData">
                 <md-table-container flex>
                     <table editable callback="onPersonalDataTableEdited" class="md-html-table md-html-table-grey big-border-all">
                         <tbody>
@@ -373,7 +373,7 @@
             <div layout="row" layout-align="space-between center">
                 <div layout="row" layout-align="start center">
                   <h3 class="md-padding-left" translate> Recipients</h3>
-                  <md-button class="md-icon-button md-primary" ng-click="addRecipient(record)">
+                  <md-button class="md-icon-button md-primary" ng-click="addRecipient(record)" ng-hide="uiState.hideRecipients">
                       <md-tooltip md-direction="left">
                           {{ 'Add a new recipient of data' | translate }}
                       </md-tooltip>
@@ -382,7 +382,7 @@
                 </div>
                 <md-button class="md-icon-button" ng-click="uiState.hideRecipients = !uiState.hideRecipients"><md-icon>{{ uiState.hideRecipients ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
-            <div ng-hide=uiState.hideRecipients>
+            <div ng-hide="uiState.hideRecipients">
                 <md-table-container flex>
                     <table editable callback="onRecipientTableEdited" class="md-html-table md-html-table-grey big-border-all" >
                         <tbody>
@@ -433,7 +433,7 @@
             <div layout="row" layout-align="space-between center">
               <div layout="row" layout-align="start center">
                 <h3  class="md-padding-left" translate> International transfers </h3>
-                <md-button class="md-icon-button md-primary" ng-click="addInternationalTransfer(record)">
+                <md-button class="md-icon-button md-primary" ng-click="addInternationalTransfer(record)" ng-hide="uiState.hideTranfers">
                     <md-tooltip md-direction="left">
                         {{ 'Add a new record of data international transfer' | translate }}
                     </md-tooltip>
@@ -442,7 +442,7 @@
               </div>
               <md-button class="md-icon-button" ng-click="uiState.hideTranfers = !uiState.hideTranfers"><md-icon>{{ uiState.hideTranfers ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
-            <div ng-hide=uiState.hideTranfers>
+            <div ng-hide="uiState.hideTranfers">
                 <md-table-container flex>
                     <table editable callback="onTransferTableEdited" class="md-html-table md-html-table-grey big-border-all" >
                         <tbody>
@@ -475,7 +475,7 @@
             <div layout="row" layout-align="space-between center">
                 <div layout="row" layout-align="start center">
                     <h3 class="md-padding-left" translate> Processors </h3>
-                    <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="createNewProcessor($event, record)">
+                    <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="createNewProcessor($event, record)" ng-hide="uiState.hideProcessors">
                         <md-tooltip md-direction="left">
                             {{ 'Add a processor' | translate }}
                         </md-tooltip>
@@ -484,7 +484,7 @@
                 </div>
                 <md-button class="md-icon-button" ng-click="uiState.hideProcessors = !uiState.hideProcessors"><md-icon>{{ uiState.hideProcessors ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
-            <div ng-hide=uiState.hideProcessors>
+            <div ng-hide="uiState.hideProcessors">
                 <md-tabs md-dynamic-height="true" md-selected="processorTabSelected" ng-if="record.processors.length > 0 || !isAnrReadOnly">
                     <md-tab ng-repeat="processor in record.processors" label="{{processor.label}}"
                             md-on-select="selectProcessor(processor.id)">
@@ -525,7 +525,7 @@
                             <h3 class="md-padding-left" translate> Actors </h3>
                             <md-button class="md-icon-button" ng-click="uiState.hideProcessorActors = !uiState.hideProcessorActors"><md-icon>{{ uiState.hideProcessorActors ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
                         </div>
-                        <div ng-hide=uiState.hideProcessorActors>
+                        <div ng-hide="uiState.hideProcessorActors">
                             <md-table-container flex>
                                 <table editable callback="onActorTableEdited" class="md-html-table md-html-table-grey big-border-all">
                                     <tbody>
