@@ -381,7 +381,7 @@
         $scope.detachActor = function (record, field, index) {
             var confirm = $mdDialog.confirm()
                 .title(gettextCatalog.getString('Are you sure you want to detach actor?'))
-                .textContent(gettextCatalog.getString('This actor will be deleted if it is not used anymore in the anr.'))
+                .textContent(gettextCatalog.getString('This actor will be deleted if it is not used anymore in the risk analysis.'))
                 .theme('light')
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
@@ -1152,7 +1152,7 @@
             finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s id');
             finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s name');
             finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s contact');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data protection office\'s id');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s id');
             finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s name');
             finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s contact');
             let row = finalArray[0].toString().replace(/\n|\r/g,' ') + "," + "\r\n";
