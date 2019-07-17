@@ -1,18 +1,50 @@
 (function () {
     angular
         .module('AnrModule')
-        .directive('onReadRecordFile', ['$mdDialog', 'gettextCatalog', function ($mdDialog, gettextCatalog) {
+        .directive('onReadRecordFile', ['$parse', '$mdDialog', 'gettextCatalog', function ($parse, $mdDialog, gettextCatalog) {
             return {
           		restrict: 'A',
           		scope: false,
           		link: function(scope, element, attrs) {
+                    var fn = $parse(attrs.onReadRecordFile);
+                    var reader = new FileReader();
+                    reader.onload = function(onLoadEvent) {
+                        scope.$apply(function() {
+                            var data = onLoadEvent.target.result;
+                            if (!scope.isJson) {
+                                var workbook = XLSX.read(data, {
+                                    type: 'binary'
+                                });
+                                var sheetName = workbook.SheetNames[0];
+                                if (workbook.Sheets[sheetName].hasOwnProperty('!ref')) {
+                                    var csv = XLSX.utils.sheet_to_csv(workbook.Sheets[sheetName]);
+                                    var chartset = jschardet.detect(csv);
+                                    if (chartset.encoding == 'UTF-8') {
+                                        fn(scope, {$fileContent:decodeURIComponent(escape(csv))});
+                                    }else {
+                                        fn(scope, {$fileContent:csv});
+                                    }
+                                }
+                            }
+                        });
+                    };
           			element.on('change', function(onChangeEvent) {
                         var fileTypes = ['json', 'csv', 'xlsx', 'xls', 'bin']; // File types supported
                         var extension = onChangeEvent.target.files[0].name.split('.').pop().toLowerCase(); //Extract extension of file
                         var isSuccess = fileTypes.indexOf(extension) > -1; // Check file type
                         var size = onChangeEvent.target.files[0].size < 1e6; // Check fize size being less 1M
 
-                        if (!(isSuccess && size)) {
+                        if (isSuccess && size) {
+                          if (extension == "json" || extension == "bin") {
+                              scope.isJson = true;
+                              scope.file = onChangeEvent.target.files[0];
+                          } else {
+                              scope.import.password = '';
+                              scope.isJson = false;
+                              reader.readAsBinaryString(onChangeEvent.target.files[0]);
+                          }
+                        }
+                        else {
                             var alert = $mdDialog.alert()
                                 .multiple(true)
                                 .title(gettextCatalog.getString('File error'))
@@ -22,14 +54,6 @@
                             $mdDialog.show(alert);
 
                             onChangeEvent.target.value = null;
-                        }
-                        else{
-                            if(extension == "bin") {
-                                scope.isJson = true;
-                            } else {
-                                scope.import.password = '';
-                                scope.isJson = false;
-                            }
                         }
           			});
           		}
@@ -972,9 +996,17 @@
                                 dataCategoriesString += ", " + data.personalData[recLine].dataCategories[k].label;
                             }
                         }
-                        finalArray[recLine] +=','+"\""+data.personalData[recLine].dataSubject+"\"";
+                        if(data.personalData[recLine].dataSubject) {
+                            finalArray[recLine] +=','+"\""+data.personalData[recLine].dataSubject+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
                         finalArray[recLine] +=','+"\""+dataCategoriesString+"\"";
-                        finalArray[recLine] +=','+"\""+data.personalData[recLine].description+"\"";
+                        if(data.personalData[recLine].description) {
+                            finalArray[recLine] +=','+"\""+data.personalData[recLine].description+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
                         finalArray[recLine] +=','+"\""+data.personalData[recLine].retentionPeriod+"\"";
                         if(data.personalData[recLine].retentionPeriodMode === 0) {
                             finalArray[recLine] +=','+"\""+ 'day(s)' +"\"";
@@ -983,7 +1015,11 @@
                         } else {
                             finalArray[recLine] +=','+"\""+ 'year(s)' +"\"";
                         }
-                        finalArray[recLine] +=','+"\""+data.personalData[recLine].retentionPeriodDescription+"\"";
+                        if(data.personalData[recLine].retentionPeriodDescription) {
+                            finalArray[recLine] +=','+"\""+data.personalData[recLine].retentionPeriodDescription+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
@@ -1002,7 +1038,11 @@
                         } else {
                             finalArray[recLine] +=','+"\""+ 'external' +"\"";
                         }
-                        finalArray[recLine] +=','+"\""+data.recipients[recLine].description+"\"";
+                        if(data.recipients[recLine].description) {
+                            finalArray[recLine] +=','+"\""+data.recipients[recLine].description+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
@@ -1012,10 +1052,26 @@
                     }
 
                     if(recLine < nbInternationalTransferLine) {
-                        finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine].organisation+"\"";
-                        finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine].description+"\"";
-                        finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine].country+"\"";
-                        finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine].documents+"\"";
+                        if(data.internationalTransfers[recLine].organisation) {
+                            finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine].organisation+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
+                        if(data.internationalTransfers[recLine].description) {
+                            finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine].description+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
+                        if(data.internationalTransfers[recLine].country) {
+                            finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine].country+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
+                        if(data.internationalTransfers[recLine].documents) {
+                            finalArray[recLine] +=','+"\""+data.internationalTransfers[recLine].documents+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
                     }
                     else {
                         finalArray[recLine] +=','+"\""+' '+"\""
@@ -1027,9 +1083,21 @@
                     if(recLine < nbProcessorLine) {
                         finalArray[recLine] +=','+"\""+data.processors[recLine].id+"\"";
                         finalArray[recLine] +=','+"\""+data.processors[recLine].label+"\"";
-                        finalArray[recLine] +=','+"\""+data.processors[recLine].contact+"\"";
-                        finalArray[recLine] +=','+"\""+data.processors[recLine].activities+"\"";
-                        finalArray[recLine] +=','+"\""+data.processors[recLine].secMeasures+"\"";
+                        if(data.processors[recLine].contact) {
+                            finalArray[recLine]+=','+"\""+data.processors[recLine].contact+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
+                        if(data.processors[recLine].activities) {
+                            finalArray[recLine]+=','+"\""+data.processors[recLine].activities+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
+                        if(data.processors[recLine].secMeasures) {
+                            finalArray[recLine]+=','+"\""+data.processors[recLine].secMeasures+"\"";
+                        } else {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }
 
                         if(data.processors[recLine].representative) {
                             finalArray[recLine] +=','+"\""+data.processors[recLine].representative.id+"\"";
@@ -1114,18 +1182,18 @@
             finalArray[recLine]+=','+gettextCatalog.getString('Purposes');
             finalArray[recLine]+=','+gettextCatalog.getString('Security measures');
 
-            finalArray[recLine]+=','+gettextCatalog.getString('Controller\'s id');
-            finalArray[recLine]+=','+gettextCatalog.getString('Controller\'s name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Controller\'s contact');
-            finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s id');
-            finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s contact');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s id');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s contact');
-            finalArray[recLine]+=','+gettextCatalog.getString('Joint controllers\'s id');
-            finalArray[recLine]+=','+gettextCatalog.getString('Joint controllers\' name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Joint controllers\' contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Controller id');
+            finalArray[recLine]+=','+gettextCatalog.getString('Controller name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Controller contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('representative id');
+            finalArray[recLine]+=','+gettextCatalog.getString('Representative name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Representative contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer id');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Joint controllers id');
+            finalArray[recLine]+=','+gettextCatalog.getString('Joint controllers name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Joint controllers contact');
 
             finalArray[recLine]+=','+gettextCatalog.getString('Data subject');
             finalArray[recLine]+=','+gettextCatalog.getString('Data categories');
@@ -1134,7 +1202,7 @@
             finalArray[recLine]+=','+gettextCatalog.getString('Retention period unit');
             finalArray[recLine]+=','+gettextCatalog.getString('Retention period description');
 
-            finalArray[recLine]+=','+gettextCatalog.getString('Data recipient\'s id');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data recipient id');
             finalArray[recLine]+=','+gettextCatalog.getString('Data recipient');
             finalArray[recLine]+=','+gettextCatalog.getString('Data recipient type');
             finalArray[recLine]+=','+gettextCatalog.getString('Description');
@@ -1144,17 +1212,17 @@
             finalArray[recLine]+=','+gettextCatalog.getString('Country');
             finalArray[recLine]+=','+gettextCatalog.getString('Documents');
 
-            finalArray[recLine]+=','+gettextCatalog.getString('Data processor\'s id');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data processor\'s name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data processor\'s contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor id');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor contact');
             finalArray[recLine]+=','+gettextCatalog.getString('Activities');
-            finalArray[recLine]+=','+gettextCatalog.getString('Security measures');
-            finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s id');
-            finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Representative\'s contact');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s id');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer\'s contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor security measures');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor representative\'s id');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor representative\'s name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor representative\'s contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor data protection officer\'s id');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor data protection officer\'s name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor data protection officer\'s contact');
             let row = finalArray[0].toString().replace(/\n|\r/g,' ') + "," + "\r\n";
             csvContent += row ;
             if(all == true) {
@@ -1306,20 +1374,361 @@
     function ImportRecordDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload) {
         $scope.isImportingIn = false;
         $scope.isJson = false;
-        $scope.file = {};
         $scope.import = {
             password: '',
         };
+        $scope.items = {
+            'type' : {
+                'jsonField' : 'type',
+                'required' : true,
+                'type' : 'text',
+                'value' : 'record'
+            },
+            'name' : {
+                'jsonField' : 'name',
+                'csvField' : 'Name',
+                'required' : true,
+                'type' : 'text',
+                'example' : gettextCatalog.getString('January payroll account, summer recruitment')
+            },
+            'purposes' : {
+                'jsonField' : 'purposes',
+                'csvField' : 'Purposes',
+                'required' : false,
+                'type' : 'text',
+                'example' : gettextCatalog.getString('Payroll, personnel file, recruitment')
+            },
+            'security measures' : {
+                'jsonField' : 'security_measures',
+                'csvField' : 'Security measures',
+                'required' : false,
+                'type' : 'text',
+                'example' : gettextCatalog.getString('Payroll, personnel file, recruitment')
+            },
+            'controller' : {
+                'jsonField' : 'controller',
+                'csvField' : 'Controller',
+                'required' : false,
+                'type' : 'object',
+                'subfield' : {
+                    'id' :  {
+                        'jsonField' : 'id',
+                        'csvField' : 'Controller id',
+                        'required' : false,
+                        'type' : 'id',
+                        'description' :  gettextCatalog.getString( 'Identifier assigned automatically to a new entry and' +
+                                                                   ' used to identify an existing entry')
+                    },
+                    'name' :  {
+                        'jsonField' : 'name',
+                        'csvField' : 'Controller name',
+                        'required' : true,
+                        'type' : 'text'
+                    },
+                    'contact' :  {
+                        'jsonField' : 'contact',
+                        'csvField' : 'Controller contact',
+                        'required' : false,
+                        'type' : 'text'
+                    },
+                }
+            },
+            'representative' : {
+                'jsonField' : 'representative',
+                'csvField' : 'Representative',
+                'required' : false,
+                'type' : 'object',
+                'subfield' : {
+                    'id' :  {
+                        'jsonField' : 'id',
+                        'csvField' : 'Representative id',
+                        'required' : false,
+                        'type' : 'id',
+                        'description' :  gettextCatalog.getString( 'Identifier assigned automatically to a new entry and' +
+                                                                   ' used to identify an existing entry')
+                    },
+                    'name' :  {
+                        'jsonField' : 'name',
+                        'csvField' : 'Representative name',
+                        'required' : true,
+                        'type' : 'text'
+                    },
+                    'contact' :  {
+                        'jsonField' : 'contact',
+                        'csvField' : 'Representative contact',
+                        'required' : false,
+                        'type' : 'text'
+                    },
+                }
+            },
+            'data protection officer' : {
+                'jsonField' : 'data_protection_officer',
+                'csvField' : 'Data protection officer',
+                'required' : false,
+                'type' : 'object',
+                'subfield' : {
+                    'id' :  {
+                        'jsonField' : 'id',
+                        'csvField' : 'Data protection officer id',
+                        'required' : false,
+                        'type' : 'id',
+                        'description' :  gettextCatalog.getString( 'Identifier assigned automatically to a new entry and' +
+                                                                   ' used to identify an existing entry')
+                    },
+                    'name' :  {
+                        'jsonField' : 'name',
+                        'csvField' : 'Data protection officer name',
+                        'required' : true,
+                        'type' : 'text'
+                    },
+                    'contact' :  {
+                        'jsonField' : 'contact',
+                        'csvField' : 'Data protection officer contact',
+                        'required' : false,
+                        'type' : 'text'
+                    },
+                }
+            },
+            'joint controllers' : {
+                'jsonField' : 'joint_controllers',
+                'csvField' : 'Joint controllers',
+                'required' : false,
+                'type' : 'array',
+                'subfield' : {
+                    'id' :  {
+                        'jsonField' : 'id',
+                        'csvField' : 'Joint controllers id',
+                        'required' : false,
+                        'type' : 'id',
+                        'description' :  gettextCatalog.getString( 'Identifier assigned automatically to a new entry and' +
+                                                                   ' used to identify an existing entry')
+                    },
+                    'name' :  {
+                        'jsonField' : 'name',
+                        'csvField' : 'Joint controllers name',
+                        'required' : true,
+                        'type' : 'text'
+                    },
+                    'contact' :  {
+                        'jsonField' : 'contact',
+                        'csvField' : 'Joint controllers contact',
+                        'required' : false,
+                        'type' : 'text'
+                    }
+                }
+            },
+            'personal data' : {
+                'jsonField' : 'personal_data',
+                'csvField' : 'Personal data',
+                'required' : false,
+                'type' : 'array',
+                'subfield' : {
+                    'data subject' :  {
+                        'jsonField' : 'data_subject',
+                        'csvField' : 'Data subject',
+                        'required' : false,
+                        'type' : 'text',
+                        'example' : gettextCatalog.getString( 'Employee, existing customers, recruitment candidates')
+                    },
+                    'data categories' :  {
+                        'jsonField' : 'data_categories',
+                        'csvField' : 'Data categories',
+                        'required' : false,
+                        'type' : 'array',
+                        'example' : gettextCatalog.getString( 'Contact details, bank details, qualifications')
+                    },
+                    'description' :  {
+                        'jsonField' : 'description',
+                        'csvField' : 'Description',
+                        'required' : false,
+                        'type' : 'text'
+                    },
+                    'retention period' :  {
+                        'jsonField' : 'retention_period',
+                        'csvField' : 'Retention period',
+                        'required' : false,
+                        'type' : 'integer'
+                    },
+                    'retention period mode' :  {
+                        'jsonField' : 'retention_period_mode',
+                        'csvField' : 'Retention period unit',
+                        'required' : false,
+                        'type' : 'text',
+                        'value' : 'day(s) / month(s) / year(s)'
+                    },
+                    'retention period description' :  {
+                        'jsonField' : 'retention_period_description',
+                        'csvField' : 'Retention period description',
+                        'required' : false,
+                        'type' : 'text',
+                        'example' : gettextCatalog.getString( 'Post-employment, end of customer relationship')
+                    },
+                }
+            },
+            'recipients' : {
+                'jsonField' : 'recipients',
+                'csvField' : 'Data recipients',
+                'required' : false,
+                'type' : 'array',
+                'subfield' : {
+                    'id' : {
+                        'jsonField' : 'id',
+                        'csvField' : 'Data recipient id',
+                        'required' : false,
+                        'type' : 'id',
+                        'description' :  gettextCatalog.getString( 'Identifier assigned automatically to a new entry and' +
+                                                                   ' used to identify an existing entry')
+                    },
+                    'name' : {
+                        'jsonField' : 'name',
+                        'csvField' : 'Data recipient',
+                        'required' : true,
+                        'type' : 'text',
+                        'example' : gettextCatalog.getString( 'Suppliers, credit reference agencies, government departments')
+                    },
+                    'type' : {
+                        'jsonField' : 'type',
+                        'csvField' : 'Data recipient type',
+                        'required' : false,
+                        'value' : 'internal / external'
+                    },
+                    'description' : {
+                        'jsonField' : 'description',
+                        'csvField' : 'Description',
+                        'required' : false,
+                        'type' : 'text'
+                    }
+                }
+            },
+            'international transfers' : {
+                'jsonField' : 'international_transfers',
+                'csvField' : 'International transfers',
+                'required' : false,
+                'type' : 'array',
+                'subfield' : {
+                    'organisation' : {
+                        'jsonField' : 'organisation',
+                        'csvField' : 'Organisation of international transfer',
+                        'required' : false,
+                        'type' : 'text'
+                    },
+                    'description' : {
+                        'jsonField' : 'description',
+                        'csvField' : 'Description',
+                        'required' : false,
+                        'type' : 'text'
+                    },
+                    'country' : {
+                        'jsonField' : 'country',
+                        'csvField' : 'Country',
+                        'required' : false,
+                        'type' : 'text',
+                        'example' : gettextCatalog.getString( 'Ireland, UK, Canada')
+                    },
+                    'documents' : {
+                        'jsonField' : 'documents',
+                        'csvField' : 'Documents',
+                        'required' : false,
+                        'type' : 'text'
+                    }
+                }
+            },
+            'processors' : {
+                'jsonField' : 'processors',
+                'csvField' : 'Processors',
+                'required' : false,
+                'type' : 'array',
+                'subfield' : {
+                    'id' :  {
+                        'jsonField' : 'id',
+                        'csvField' : 'Data processor id',
+                        'required' : false,
+                        'type' : 'id',
+                        'description' :  gettextCatalog.getString( 'Identifier assigned automatically to a new entry and' +
+                                                                   ' used to identify an existing entry')
+                    },
+                    'name' :  {
+                        'jsonField' : 'name',
+                        'csvField' : 'Data processor name',
+                        'required' : true,
+                        'type' : 'text'
+                    },
+                    'contact' :  {
+                        'jsonField' : 'contact',
+                        'csvField' : 'Data processor contact',
+                        'required' : false,
+                        'type' : 'text'
+                    },
+                    'activities' :  {
+                        'jsonField' : 'activities',
+                        'csvField' : 'Activities',
+                        'required' : false,
+                        'type' : 'text',
+                        'example' : gettextCatalog.getString( 'Payroll management, talent research')
+                    },
+                    'security measures' :  {
+                        'jsonField' : 'security_measures',
+                        'csvField' : 'Data processor security measures',
+                        'required' : false,
+                        'type' : 'text',
+                        'example' : gettextCatalog.getString('Encrypted storage, access controls')
+                    }
+                }
+            }
+        };
 
-        $scope.uploadFile = function (file) {
+        $scope.downloadExampleFile = function(){
+            var fields = [];
+            for(var index in $scope.items) {
+                if ($scope.items[index]['csvField']) {
+                    if ($scope.items[index]['subfield']) {
+                        for(var subfieldIndex in $scope.items[index]['subfield']) {
+                            fields.push($scope.items[index]['subfield'][subfieldIndex]['csvField']);
+                        }
+                    } else {
+                        fields.push($scope.items[index]['csvField']);
+                    }
+                }
+            }
+            data = encodeURI('data:text/csv;charset=UTF-8,\uFEFF' + fields.join());
+            link = document.createElement('a');
+            link.setAttribute('href', data);
+            link.setAttribute('download', 'ExampleFile.csv');
+            document.body.appendChild(link);
+            link.click();
+        }
+
+        $scope.toggleGuide = function () {
+            $scope.guideVisible = !$scope.guideVisible;
+        };
+
+        $scope.parseFile = function (fileContent) {
+            Papa.parse(fileContent, {
+                            header: true,
+                            skipEmptyLines: true,
+                            trimHeaders : true,
+                            beforeFirstChunk: function( chunk ) {
+                                var rows = chunk.split( /\r\n|\r|\n/ );
+                                rows[0] = rows[0].toLowerCase();
+                                return rows.join( '\n' );
+                            },
+                            complete: function(importData) {
+                                $scope.csvFile = importData.data;
+                            }
+                    });
+        };
+
+        $scope.uploadFile = function () {
             $scope.isImportingIn = true;
-            var extension = file.name.split('.').pop().toLowerCase(); //Extract extension of file
-            file.upload = Upload.upload({
+            if($scope.isJson) {
+                $scope.csvFile = [];
+            }
+            $scope.upload = Upload.upload({
                 url: 'api/client-anr/' + $scope.getUrlAnrId() + '/records/import',
-                data: {file: file, fileType:extension, password: $scope.import.password}
+                data: {file: $scope.file, isJson: $scope.isJson, csv: $scope.csvFile, password: $scope.import.password}
             });
 
-            file.upload.then(function (response) {
+            $scope.upload.then(function (response) {
                 $scope.isImportingIn = false;
                 if (response.data.errors && response.data.errors.length > 0) {
                     toastr.warning(gettextCatalog.getString("Some files could not be imported"));
