@@ -1584,12 +1584,13 @@
                         'csvField' : 'Data recipient',
                         'required' : true,
                         'type' : 'text',
-                        'example' : gettextCatalog.getString( 'Suppliers, credit reference agencies, government departments')
+                        'example' : gettextCatalog.getString( 'Suppliers, credit agencies, government departments')
                     },
                     'type' : {
                         'jsonField' : 'type',
                         'csvField' : 'Data recipient type',
                         'required' : false,
+                        'type' : 'text',
                         'value' : 'internal / external'
                     },
                     'description' : {
@@ -1664,7 +1665,7 @@
                         'csvField' : 'Activities',
                         'required' : false,
                         'type' : 'text',
-                        'example' : gettextCatalog.getString( 'Payroll management, talent research')
+                        'example' : gettextCatalog.getString( 'Financial management, talent research')
                     },
                     'security measures' :  {
                         'jsonField' : 'security_measures',
