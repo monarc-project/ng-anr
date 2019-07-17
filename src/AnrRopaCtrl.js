@@ -1217,12 +1217,12 @@
             finalArray[recLine]+=','+gettextCatalog.getString('Data processor contact');
             finalArray[recLine]+=','+gettextCatalog.getString('Activities');
             finalArray[recLine]+=','+gettextCatalog.getString('Data processor security measures');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data processor representative\'s id');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data processor representative\'s name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data processor representative\'s contact');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data processor data protection officer\'s id');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data processor data protection officer\'s name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data processor data protection officer\'s contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor representative id');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor representative name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor representative contact');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor data protection officer id');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor data protection officer name');
+            finalArray[recLine]+=','+gettextCatalog.getString('Data processor data protection officer contact');
             let row = finalArray[0].toString().replace(/\n|\r/g,' ') + "," + "\r\n";
             csvContent += row ;
             if(all == true) {
