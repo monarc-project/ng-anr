@@ -347,9 +347,9 @@
                 }
 
                 if ($scope.OFFICE_MODE == 'BO') {
-                    $state.transitionTo("main.kb_mgmt.models.details.object", {modelId: $scope.model.id, objectId: data.data.uuid});
+                    $state.transitionTo("main.kb_mgmt.models.details.object", {modelId: $scope.model.id, objectId: data.data.id});
                 } else {
-                    $state.transitionTo("main.project.anr.object", {modelId: $scope.model.anr.id, objectId: data.data.uuid});
+                    $state.transitionTo("main.project.anr.object", {modelId: $scope.model.anr.id, objectId: data.data.id});
                 }
             });
         };
