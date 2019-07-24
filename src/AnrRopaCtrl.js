@@ -199,13 +199,19 @@
         }
 
         $scope.onProcessorTableEdited = function (model, name) {
+            model['activities'][$scope.records.items.records[$scope.records.recordTabSelected]['id']] = model['recordActivities'];
+            model['secMeasures'][$scope.records.items.records[$scope.records.recordTabSelected]['id']] = model['recordSecMeasures'];
             var promise = $q.defer();
             // This processor changed, update it
             RecordService.updateRecordProcessor(model, function (data) {
                 for (var i = 0; i < $scope.records.items.records.length; ++i ) {
                     for (var j = 0; j < $scope.records.items.records[i]["processors"].length; ++j ) {
                         if ($scope.records.items.records[i]["processors"][j]['id'] === model.id) {
-                            $scope.records.items.records[i]["processors"][j] = model;
+                            for(key in $scope.records.items.records[i]["processors"][j]) {
+                                if(key != 'recordActivities' && key != 'recordSecMeasures') {
+                                    $scope.records.items.records[i]["processors"][j][key] = model[key];
+                                }
+                            }
                         }
                     }
                 }
@@ -328,6 +334,31 @@
                     }
                     if(!Array.isArray(data.records[i]['processors'])) {
                         data.records[i]['processors'] = [];
+                    } else {
+                        for(var j = 0; j < data.records[i]['processors'].length; ++j) {
+                            if(Array.isArray(data.records[i]['processors'][j]['activities'])) {
+                                var activitiesObject = {};
+                                for(key in data.records[i]['processors'][j]['activities']){
+                                    activitiesObject[key] = data.records[i]['processors'][j]['activities'][key];
+                                }
+                                data.records[i]['processors'][j]['activities'] = activitiesObject;
+                            }
+                            if(!data.records[i]['processors'][j]["activities"][data.records[i]['id']]) {
+                                data.records[i]['processors'][j]["activities"][data.records[i]['id']] = '';
+                            }
+                            data.records[i]['processors'][j]['recordActivities'] = data.records[i]['processors'][j]['activities'][data.records[i]['id']];
+                            if(Array.isArray(data.records[i]['processors'][j]['secMeasures'])) {
+                                var secMeasuresObject = {};
+                                for(key in data.records[i]['processors'][j]['secMeasures']){
+                                    secMeasuresObject[key] = data.records[i]['processors'][j]['secMeasures'][key];
+                                }
+                                data.records[i]['processors'][j]['secMeasures'] = secMeasuresObject;
+                            }
+                            if(!data.records[i]['processors'][j]["secMeasures"][data.records[i]['id']]) {
+                                data.records[i]['processors'][j]["secMeasures"][data.records[i]['id']] = '';
+                            }
+                            data.records[i]['processors'][j]['recordSecMeasures'] = data.records[i]['processors'][j]['secMeasures'][data.records[i]['id']];
+                        }
                     }
                 }
                 $scope.records.items = data;
@@ -360,9 +391,25 @@
             $scope.updateRecords();
         },500));
 
-        $scope.getRecordProcessor = function (id) {
+        $scope.getRecordProcessor = function (id, recordId) {
             var promise = $q.defer();
             RecordService.getRecordProcessor(id).then(function (data) {
+                if(Array.isArray(data['activities'])) {
+                    var activitiesObject = {};
+                    for(key in data['activities']){
+                        activitiesObject[key] = data['activities'][key];
+                    }
+                    data['activities'] = activitiesObject;
+                }
+                data['recordActivities'] = data['activities'][recordId];
+                if(Array.isArray(data['secMeasures'])) {
+                    var secMeasuresObject = {};
+                    for(key in data['secMeasures']){
+                        secMeasuresObject[key] = data['secMeasures'][key];
+                    }
+                    data['secMeasures'] = secMeasuresObject;
+                }
+                data['recordSecMeasures'] = data['secMeasures'][recordId];
                 promise.resolve(data);
             });
             return promise.promise;
@@ -797,8 +844,9 @@
             .then(function (processor) {
                 var cont = processor.cont;
                 if(processor.mode) {
+                    processor["contact"] = "";
                     RecordService.createRecordProcessor(processor, function (status) {
-                        $scope.getRecordProcessor(status.id).then(function (data) {
+                        $scope.getRecordProcessor(status.id, record.id).then(function (data) {
                             processor = data;
                             record["processors"].push(processor);
                             RecordService.updateRecord(record, function (data) {
@@ -813,7 +861,7 @@
                     });
                 }
                 else {
-                    $scope.getRecordProcessor(processor.id).then(function (data) {
+                    $scope.getRecordProcessor(processor.id, record.id).then(function (data) {
                         record["processors"].push(data);
                         RecordService.updateRecord(record, function (data) {
                             RecordService.getRecord(record.id).then(function (data) {
@@ -1078,12 +1126,12 @@
                             finalArray[recLine]+=','+"\""+' '+"\"";
                         }
                         if(data.processors[recLine].activities) {
-                            finalArray[recLine]+=','+"\""+data.processors[recLine].activities+"\"";
+                            finalArray[recLine]+=','+"\""+data.processors[recLine].activities[recordId]+"\"";
                         } else {
                             finalArray[recLine]+=','+"\""+' '+"\"";
                         }
                         if(data.processors[recLine].secMeasures) {
-                            finalArray[recLine]+=','+"\""+data.processors[recLine].secMeasures+"\"";
+                            finalArray[recLine]+=','+"\""+data.processors[recLine].secMeasures[recordId]+"\"";
                         } else {
                             finalArray[recLine]+=','+"\""+' '+"\"";
                         }
