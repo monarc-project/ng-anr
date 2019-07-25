@@ -50,7 +50,6 @@
                                         <span class="md-mandatory-field" ng-if="item.required">*</span>
                                         <p ng-if="item.value" translate>Value: <i class="preserve-newlines">{{item.value}}</i></p>
                                         <p ng-if="item.example" translate>Example: <i class="preserve-newlines">{{item.example}}</i></p>
-                                        <p ng-if="item.description" translate>Description: <i class="preserve-newlines">{{item.description}}</i></p>
                                         <md-list-item ng-repeat="subItem in item.subfield" ng-if="item.subfield">
                                             <div class="md-list-item-text">
                                                 <b class="preserve-newlines">{{subItem.csvField}}</b>
@@ -58,7 +57,6 @@
                                                 <span class="md-mandatory-field" ng-if="subItem.required">*</span>
                                                 <p ng-if="subItem.value" translate>Value: <i class="preserve-newlines">{{subItem.value}}</i></p>
                                                 <p ng-if="subItem.example" translate>Example: <i class="preserve-newlines">{{subItem.example}}</i></p>
-                                                <p ng-if="subItem.description" translate>Description: <i class="preserve-newlines">{{subItem.description}}</i></p>
                                             </div>
                                         </md-list-item>
                                     </div>
@@ -84,7 +82,6 @@
                                         <span class="md-mandatory-field" ng-if="item.required">*</span>
                                         <p ng-if="item.value" translate>Value: <i class="preserve-newlines">{{item.value}}</i></p>
                                         <p ng-if="item.example" translate>Example: <i class="preserve-newlines">{{item.example}}</i></p>
-                                        <p ng-if="item.description" translate>Description: <i class="preserve-newlines">{{item.description}}</i></p>
                                         <br ng-if="item.subfield"/>
                                         <md-list-item ng-repeat="subItem in item.subfield" ng-if="item.subfield" >
                                             <div class="md-list-item-text">
@@ -93,7 +90,6 @@
                                                 <span class="md-mandatory-field" ng-if="subItem.required">*</span>
                                                 <p ng-if="subItem.value" translate>Value: <i class="preserve-newlines">{{subItem.value}}</i></p>
                                                 <p ng-if="subItem.example" translate>Example: <i class="preserve-newlines">{{subItem.example}}</i></p>
-                                                <p ng-if="subItem.description" translate>Description: <i class="preserve-newlines">{{subItem.description}}</i></p>
                                             </div>
                                         </md-list-item>
                                     </div>
