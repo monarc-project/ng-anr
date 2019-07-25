@@ -142,7 +142,7 @@
               finalArray[recLine]+=','+gettextCatalog.getString('L (Inherent risk)');
               finalArray[recLine]+=','+gettextCatalog.getString('F (Inherent risk)');
               finalArray[recLine]+=','+gettextCatalog.getString('P (Inherent risk)');
-              finalArray[recLine]+=','+gettextCatalog.getString('Current risk (Inherent risk)');
+              finalArray[recLine]+=','+gettextCatalog.getString('Inherent risk');
             }
             finalArray[recLine]+=','+gettextCatalog.getString('Prob.(Net risk)');
             finalArray[recLine]+=','+gettextCatalog.getString('R (Net risk)');
