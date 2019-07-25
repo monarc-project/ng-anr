@@ -611,14 +611,14 @@
           let previousOpRisk = $scope.opRisks_instance[$scope.idxOpRisks - 1];
           $scope.opRisks_instance[$scope.idxOpRisks] = $scope.opsheet_risk;
           $scope.openOpRiskSheet(previousOpRisk, $scope.opRisks_instance);
-          $scope.saveOpRiskSheet($scope.opsheet_risk);
+          $scope.saveOpRiskSheet($scope.opRisks_instance[$scope.idxOpRisks]);
         };
 
         $scope.nextOpRisk = function(){
           let nextOpRisk = $scope.opRisks_instance[$scope.idxOpRisks + 1];
           $scope.opRisks_instance[$scope.idxOpRisks] = $scope.opsheet_risk;
           $scope.openOpRiskSheet(nextOpRisk, $scope.opRisks_instance);
-          $scope.saveOpRiskSheet($scope.opsheet_risk);
+          $scope.saveOpRiskSheet($scope.opRisks_instance[$scope.idxOpRisks]);
         };
 
         $scope.saveRiskSheet = function (sheet) {
