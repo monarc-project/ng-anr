@@ -1433,14 +1433,6 @@
                 'required' : false,
                 'type' : 'object',
                 'subfield' : {
-                    'id' :  {
-                        'jsonField' : 'id',
-                        'csvField' : 'Controller id',
-                        'required' : false,
-                        'type' : 'id',
-                        'description' :  gettextCatalog.getString( 'Identifier assigned automatically to a new entry and' +
-                                                                   ' used to identify an existing entry')
-                    },
                     'name' :  {
                         'jsonField' : 'name',
                         'csvField' : 'Controller name',
@@ -1461,14 +1453,6 @@
                 'required' : false,
                 'type' : 'object',
                 'subfield' : {
-                    'id' :  {
-                        'jsonField' : 'id',
-                        'csvField' : 'Representative id',
-                        'required' : false,
-                        'type' : 'id',
-                        'description' :  gettextCatalog.getString( 'Identifier assigned automatically to a new entry and' +
-                                                                   ' used to identify an existing entry')
-                    },
                     'name' :  {
                         'jsonField' : 'name',
                         'csvField' : 'Representative name',
@@ -1489,14 +1473,6 @@
                 'required' : false,
                 'type' : 'object',
                 'subfield' : {
-                    'id' :  {
-                        'jsonField' : 'id',
-                        'csvField' : 'Data protection officer id',
-                        'required' : false,
-                        'type' : 'id',
-                        'description' :  gettextCatalog.getString( 'Identifier assigned automatically to a new entry and' +
-                                                                   ' used to identify an existing entry')
-                    },
                     'name' :  {
                         'jsonField' : 'name',
                         'csvField' : 'Data protection officer name',
@@ -1517,14 +1493,6 @@
                 'required' : false,
                 'type' : 'array',
                 'subfield' : {
-                    'id' :  {
-                        'jsonField' : 'id',
-                        'csvField' : 'Joint controllers id',
-                        'required' : false,
-                        'type' : 'id',
-                        'description' :  gettextCatalog.getString( 'Identifier assigned automatically to a new entry and' +
-                                                                   ' used to identify an existing entry')
-                    },
                     'name' :  {
                         'jsonField' : 'name',
                         'csvField' : 'Joint controllers name',
@@ -1593,14 +1561,6 @@
                 'required' : false,
                 'type' : 'array',
                 'subfield' : {
-                    'id' : {
-                        'jsonField' : 'id',
-                        'csvField' : 'Data recipient id',
-                        'required' : false,
-                        'type' : 'id',
-                        'description' :  gettextCatalog.getString( 'Identifier assigned automatically to a new entry and' +
-                                                                   ' used to identify an existing entry')
-                    },
                     'name' : {
                         'jsonField' : 'name',
                         'csvField' : 'Data recipient',
@@ -1662,14 +1622,6 @@
                 'required' : false,
                 'type' : 'array',
                 'subfield' : {
-                    'id' :  {
-                        'jsonField' : 'id',
-                        'csvField' : 'Data processor id',
-                        'required' : false,
-                        'type' : 'id',
-                        'description' :  gettextCatalog.getString( 'Identifier assigned automatically to a new entry and' +
-                                                                   ' used to identify an existing entry')
-                    },
                     'name' :  {
                         'jsonField' : 'name',
                         'csvField' : 'Data processor name',
