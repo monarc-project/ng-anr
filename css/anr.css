@@ -1264,6 +1264,13 @@ md-select-menu md-content
 .record-tabs md-next-button{
     right:190px;
 }
+.processor-tabs md-tabs-canvas{
+    margin-right: 60px;
+}
+
+.processor-tabs md-next-button{
+    right:40px;
+}
 .select-retention-period-mode{
     padding-left: 6px;
     width: 60%;
@@ -1283,7 +1290,6 @@ md-select-menu md-content
 }
 
 .md-chips-table {
-    width:75%;
     display:inline-block;
     padding-left: 0;
 }

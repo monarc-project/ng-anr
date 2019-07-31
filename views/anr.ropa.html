@@ -312,13 +312,13 @@
                                         ng-model="personalData.dataCategories"
                                         md-autocomplete-snap flex>
                                         <md-autocomplete md-selected-item="selectedDataCategory"
-                                                         md-search-text="$parent.dataCategorySearchText"
+                                                         md-search-text="dataCategorySearchText"
                                                          md-items="item in queryRecordDataCategorySearch(dataCategorySearchText, personalData)"
                                                          md-item-text="item['label']"
                                                          md-min-length="0"
                                                          md-no-cache="true"
                                                          md-require-match="true"
-                                                         style="min-width:100px">
+                                                         ng-blur="addNewDataCategory(record, dataCategorySearchText, personalData, personalDataIndex)">
                                             <md-item-template>
                                                 <span md-highlight-text="dataCategorySearchText" md-highlight-flags="^i">{{item['label']}}</span>
                                             </md-item-template>
@@ -335,12 +335,6 @@
                                              {{ 'to create it.' | translate }}
                                          </md-not-found>
                                     </md-chips>
-                                    <md-button class="md-icon-button md-primary" ng-disabled="!dataCategorySearchText" ng-click="addNewDataCategory(record, dataCategorySearchText, personalData, personalDataIndex)">
-                                        <md-tooltip md-direction="left">
-                                            {{ 'Add a new data category' | translate }}
-                                        </md-tooltip>
-                                        <md-icon>add_to_photos</md-icon>
-                                    </md-button>
                                 </td>
                                 <td edit-readonly="isAnrReadOnly || !personalData.id" edit-field="description" edit-type="textarea" ng-disabled="!personalData.id" edit-class="preserve-newlines"  style="word-wrap:break-word;"></td>
                                 <td>
@@ -485,17 +479,17 @@
                 <md-button class="md-icon-button" ng-click="uiState.hideProcessors = !uiState.hideProcessors"><md-icon>{{ uiState.hideProcessors ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
             <div ng-hide="uiState.hideProcessors">
-                <md-tabs md-dynamic-height="true" md-selected="processorTabSelected" ng-if="record.processors.length > 0 || !isAnrReadOnly">
+                <md-tabs class="processor-tabs" md-dynamic-height="true" md-selected="processorTabSelected" ng-if="record.processors.length>0">
+                    <div layout="row" layout-align="end center" class="md-padding-double" style="height:40px" ng-if="!isAnrReadOnly">
+                        <md-button class="md-icon-button md-warn" ng-if="!isAnrReadOnly" ng-click="detachProcessor($event, record, processorTabSelected)">
+                            <md-tooltip md-direction="left">
+                                {{ 'Detach processor' | translate }}
+                            </md-tooltip>
+                            <md-icon>content_cut</md-icon>
+                        </md-button>
+                    </div>
                     <md-tab ng-repeat="processor in record.processors" label="{{processor.label}}"
                             md-on-select="selectProcessor(processor.id)">
-                        <div layout="row" layout-align="end center" class="md-padding-double" style="height:40px">
-                            <md-button class="md-icon-button" ng-if="!isAnrReadOnly" ng-click="detachProcessor($event, record, $index)">
-                                <md-tooltip md-direction="left">
-                                    {{ 'Detach processor' | translate }}
-                                </md-tooltip>
-                                <md-icon>content_cut</md-icon>
-                            </md-button>
-                        </div>
                         <div>
                             <md-table-container flex>
                                 <table editable callback="onProcessorTableEdited" class="md-html-table md-html-table-grey big-border-all">

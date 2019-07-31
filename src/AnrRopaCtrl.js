@@ -574,8 +574,10 @@
         };
 
         $scope.addNewDataCategory = function (record, dataCategorySearchText, personalData, index) {
-            personalData["dataCategories"].push({"label" : dataCategorySearchText});
-            $scope.onPersonalDataEdit(record, personalData, index);
+            if(dataCategorySearchText) {
+                personalData["dataCategories"].push({"label" : dataCategorySearchText});
+                $scope.onPersonalDataEdit(record, personalData, index);
+            }
         }
 
         $scope.transformChip = function(chip) {
@@ -1125,12 +1127,12 @@
                         } else {
                             finalArray[recLine]+=','+"\""+' '+"\"";
                         }
-                        if(data.processors[recLine].activities) {
+                        if(data.processors[recLine].activities && data.processors[recLine].activities[recordId]) {
                             finalArray[recLine]+=','+"\""+data.processors[recLine].activities[recordId]+"\"";
                         } else {
                             finalArray[recLine]+=','+"\""+' '+"\"";
                         }
-                        if(data.processors[recLine].secMeasures) {
+                        if(data.processors[recLine].secMeasures && data.processors[recLine].secMeasures[recordId]) {
                             finalArray[recLine]+=','+"\""+data.processors[recLine].secMeasures[recordId]+"\"";
                         } else {
                             finalArray[recLine]+=','+"\""+' '+"\"";
@@ -1206,45 +1208,45 @@
             finalArray=[];
             recLine = 0;
             let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
-            finalArray[recLine]= gettextCatalog.getString('Name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Creation date');
-            finalArray[recLine]+=','+gettextCatalog.getString('Last updated date');
-            finalArray[recLine]+=','+gettextCatalog.getString('Purposes');
-            finalArray[recLine]+=','+gettextCatalog.getString('Security measures');
+            finalArray[recLine]= 'Name';
+            finalArray[recLine]+=','+'Creation date';
+            finalArray[recLine]+=','+'Last updated date';
+            finalArray[recLine]+=','+'Purposes';
+            finalArray[recLine]+=','+'Security measures';
 
-            finalArray[recLine]+=','+gettextCatalog.getString('Controller name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Controller contact');
-            finalArray[recLine]+=','+gettextCatalog.getString('Representative name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Representative contact');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data protection officer contact');
-            finalArray[recLine]+=','+gettextCatalog.getString('Joint controllers name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Joint controllers contact');
+            finalArray[recLine]+=','+'Controller name';
+            finalArray[recLine]+=','+'Controller contact';
+            finalArray[recLine]+=','+'Representative name';
+            finalArray[recLine]+=','+'Representative contact';
+            finalArray[recLine]+=','+'Data protection officer name';
+            finalArray[recLine]+=','+'Data protection officer contact';
+            finalArray[recLine]+=','+'Joint controllers name';
+            finalArray[recLine]+=','+'Joint controllers contact';
 
-            finalArray[recLine]+=','+gettextCatalog.getString('Data subject');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data categories');
-            finalArray[recLine]+=','+gettextCatalog.getString('Description');
-            finalArray[recLine]+=','+gettextCatalog.getString('Retention period');
-            finalArray[recLine]+=','+gettextCatalog.getString('Retention period unit');
-            finalArray[recLine]+=','+gettextCatalog.getString('Retention period description');
+            finalArray[recLine]+=','+'Data subject';
+            finalArray[recLine]+=','+'Data categories';
+            finalArray[recLine]+=','+'Description';
+            finalArray[recLine]+=','+'Retention period';
+            finalArray[recLine]+=','+'Retention period unit';
+            finalArray[recLine]+=','+'Retention period description';
 
-            finalArray[recLine]+=','+gettextCatalog.getString('Data recipient');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data recipient type');
-            finalArray[recLine]+=','+gettextCatalog.getString('Description');
+            finalArray[recLine]+=','+'Data recipient';
+            finalArray[recLine]+=','+'Data recipient type';
+            finalArray[recLine]+=','+'Description';
 
-            finalArray[recLine]+=','+gettextCatalog.getString('Organisation of international transfer');
-            finalArray[recLine]+=','+gettextCatalog.getString('Description');
-            finalArray[recLine]+=','+gettextCatalog.getString('Country');
-            finalArray[recLine]+=','+gettextCatalog.getString('Documents');
+            finalArray[recLine]+=','+'Organisation of international transfer';
+            finalArray[recLine]+=','+'Description';
+            finalArray[recLine]+=','+'Country';
+            finalArray[recLine]+=','+'Documents';
 
-            finalArray[recLine]+=','+gettextCatalog.getString('Data processor name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data processor contact');
-            finalArray[recLine]+=','+gettextCatalog.getString('Activities');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data processor security measures');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data processor representative name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data processor representative contact');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data processor data protection officer name');
-            finalArray[recLine]+=','+gettextCatalog.getString('Data processor data protection officer contact');
+            finalArray[recLine]+=','+'Data processor name';
+            finalArray[recLine]+=','+'Data processor contact';
+            finalArray[recLine]+=','+'Activities';
+            finalArray[recLine]+=','+'Data processor security measures';
+            finalArray[recLine]+=','+'Data processor representative name';
+            finalArray[recLine]+=','+'Data processor representative contact';
+            finalArray[recLine]+=','+'Data processor data protection officer name';
+            finalArray[recLine]+=','+'Data processor data protection officer contact';
             let row = finalArray[0].toString().replace(/\n|\r/g,' ') + "," + "\r\n";
             csvContent += row ;
             if(all == true) {
@@ -1253,7 +1255,7 @@
                     var encodedUri = encodeURI(csvContent);
                     var link = document.createElement("a");
                     link.setAttribute("href", encodedUri);
-                    link.setAttribute("download", "recordOfProcessingActivities.csv");
+                    link.setAttribute("download", "records_list.csv");
                     document.body.appendChild(link);
                     link.click();  // This will download the data file named "record.csv".
                 });
@@ -1263,7 +1265,8 @@
                     var encodedUri = encodeURI(csvContent);
                     var link = document.createElement("a");
                     link.setAttribute("href", encodedUri);
-                    link.setAttribute("download", "recordOfProcessingActivities.csv");
+                    var fileName = record.label + ".csv";
+                    link.setAttribute("download", fileName);
                     document.body.appendChild(link);
                     link.click();  // This will download the data file named "record.csv".
                 });
@@ -1280,12 +1283,9 @@
 
         $scope.cancel = function() {
             delete $scope.newRecord;
+            $scope.recordSearchText = '';
             $mdDialog.cancel();
         };
-
-        $scope.createRecordModeChanged = function() {
-            $scope.newRecord.recordToDuplicate = {};
-        }
 
         $scope.queryRecordSearch = function(query) {
             var promise = $q.defer();
@@ -1298,26 +1298,29 @@
         $scope.recordItemSelected = function (selectedRecord) {
             if(selectedRecord != null) {
                 $scope.newRecord.recordToDuplicate['record'] = selectedRecord.id;
+                $scope.newRecord.duplicateRecord = true;
             }else {
                 $scope.newRecord.recordToDuplicate['record'] = null;
+                $scope.newRecord.duplicateRecord = false;
             }
-            $scope.newRecord.duplicateRecord = true;
         }
 
         $scope.create = function() {
             $scope.newRecord['cont'] = false;
+            $scope.recordSearchText = '';
             $mdDialog.hide($scope.newRecord);
         };
 
         $scope.createAndContinue = function () {
             $scope.newRecord['cont'] = true;
+            $scope.recordSearchText = '';
             $mdDialog.hide($scope.newRecord);
         };
 
         $scope.importRecord = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'AnrService', 'toastr', 'gettextCatalog', 'Upload', ImportRecordDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'AnrService', 'toastr', 'gettextCatalog', 'Upload', 'DownloadService', ImportRecordDialogCtrl],
                 templateUrl: 'views/anr/import.record.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -1339,18 +1342,11 @@
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
         $scope.record = record;
+        $scope.processor = {"mode" : true, "label" : ""};
 
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
-
-        $scope.addProcessorModeChange = function() {
-            if($scope.processor.mode) {
-                $scope.processor = {"mode" : true, "label" : ""};
-            } else {
-                $scope.processor = {"mode" : false };
-            }
-        }
 
         $scope.queryRecordProcessorSearch = function(query) {
             var promise = $q.defer();
@@ -1378,8 +1374,12 @@
         }
 
         $scope.processorItemSelected = function (selectedProcessor) {
-            $scope.processor = selectedProcessor;
-            $scope.processor["mode"] = false;
+            if(selectedProcessor) {
+                $scope.processor = selectedProcessor;
+                $scope.processor["mode"] = false;
+            } else {
+                $scope.processor = {"mode" : true, "label" : ""};
+            }
         }
 
         $scope.create = function() {
@@ -1393,7 +1393,7 @@
         };
     }
 
-    function ImportRecordDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload) {
+    function ImportRecordDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload, DownloadService) {
         $scope.isImportingIn = false;
         $scope.isJson = false;
         $scope.import = {
@@ -1671,6 +1671,37 @@
             link.setAttribute('download', 'ExampleFile.csv');
             document.body.appendChild(link);
             link.click();
+        }
+
+        $scope.downloadExampleJson = function() {
+            var data = {};
+            for(var index in $scope.items) {
+                if ($scope.items[index]['jsonField']) {
+                    if ($scope.items[index]['type'] == "array") {
+                        data[($scope.items[index]['jsonField'])] = [];
+                        if ($scope.items[index]['subfield']) {
+                            data[($scope.items[index]['jsonField'])][0] = {};
+                            for(var subfieldIndex in $scope.items[index]['subfield']) {
+                                data[($scope.items[index]['jsonField'])][0][($scope.items[index]['subfield'][subfieldIndex]['jsonField'])] = "";
+                            }
+                        } else {
+                            data[($scope.items[index]['jsonField'])][0] = "";
+                        }
+                    }
+                    else {
+                        if ($scope.items[index]['subfield']) {
+                            data[($scope.items[index]['jsonField'])] = {};
+                            for(var subfieldIndex in $scope.items[index]['subfield']) {
+                                data[($scope.items[index]['jsonField'])][($scope.items[index]['subfield'][subfieldIndex]['jsonField'])] = "";
+                            }
+                        } else {
+                            data[($scope.items[index]['jsonField'])] = "";
+                        }
+                    }
+                }
+            }
+            data["type"] = "record";
+            DownloadService.downloadJSON(data, "ExampleFile.json");
         }
 
         $scope.toggleGuide = function () {

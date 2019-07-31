@@ -23,10 +23,10 @@
                         </input>
                         <md-button class="ng-scope md-light-theme material-icons md-primary" ng-click="toggleGuide()"><md-icon>info</md-icon></md-button>
                     </div>
-                    <md-input-container class="md-block">
+                    <md-input-container class="md-block" ng-hide="!isJson">
                         <md-icon>vpn_key</md-icon>
                         <label translate>Record password (if any)</label>
-                        <input ng-model="import.password" type="password" ng-disabled="!isJson">
+                        <input ng-model="import.password" type="password">
                     </md-input-container>
 
                     <div layout="row" layout-align="end center">
@@ -98,6 +98,12 @@
                             <p class="md-mandatory-field txtright" translate>* Mandatory field</p>
                             <p class="md-mandatory-field txtright" ng-if="OFFICE_MODE == 'BO'" translate>1:FR,2:EN,3:DE,4:NL</p>
                         </md-card-content>
+                        <md-card-actions align="right">
+                            <md-button class="md-primary" ng-click="downloadExampleJson()">
+                            <md-icon>file_download</md-icon>
+                            {{ 'Example File' | translate }}
+                            </md-button>
+                        </md-card-actions>
                     </md-card>
                 </div>
             </div>

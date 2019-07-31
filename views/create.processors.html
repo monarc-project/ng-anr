@@ -11,43 +11,35 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-radio-group ng-model="processor.mode" ng-change="addProcessorModeChange()" ng-init="processor.mode = true">
-                    <md-radio-button ng-value="false">{{ 'Add an existing processor in anr' | translate }}</md-radio-button>
+                <div layout="row" layout-align="center center">
+                    <md-input-container class="md-block" flex>
+                        <md-autocomplete
+                            md-selected-item="selectedProcessor"
+                            md-search-text="processorSearchText"
+                            md-items="item in queryRecordProcessorSearch(processorSearchText)"
+                            md-item-text="item['label']"
+                            md-min-length="0"
+                            md-no-cache="true"
+                            md-selected-item-change="processorItemSelected(selectedProcessor)"
+                            md-require-match="true"
+                            placeholder="{{ 'Search a processor to add one from an existing' | translate }}">
+                            <md-item-template>
+                                <span md-highlight-text="processorSearchText" md-highlight-flags="^i">{{item['label']}}</span>
+                            </md-item-template>
+                        </md-autocomplete>
+                    </md-input-container>
+                </div>
 
-                    <div layout="row" layout-align="center center">
-                        <md-input-container class="md-block" flex>
-                            <md-autocomplete
-                                md-selected-item="selectedProcessor"
-                                md-search-text="processorSearchText"
-                                md-items="item in queryRecordProcessorSearch(processorSearchText)"
-                                md-item-text="item['label']"
-                                md-min-length="0"
-                                md-no-cache="true"
-                                md-selected-item-change="processorItemSelected(selectedProcessor)"
-                                md-require-match="true"
-                                placeholder="{{ 'Processor' | translate }}"
-                                ng-disabled="processor.mode">
-                                <md-item-template>
-                                    <span md-highlight-text="processorSearchText" md-highlight-flags="^i">{{item['label']}}</span>
-                                </md-item-template>
-                            </md-autocomplete>
-                        </md-input-container>
-                    </div>
-
-                    <md-radio-button ng-value="true">
-                        {{ 'Manual creation' | translate }}
-                    </md-radio-button>
-                    <div>
-                        <md-input-container class="md-block" flex>
-                            <label translate>Label</label>
-                            <md-icon>label</md-icon>
-                            <input ng-model="processor['label']" name="label" ng-disabled="!processor.mode" required>
-                            <div ng-messages="processor.label.$error">
-                                <div ng-message="required">{{ 'The label may not be empty' | translate }}</div>
-                            </div>
-                        </md-input-container>
-                    </div>
-                </md-radio-group>
+                <div>
+                    <md-input-container class="md-block" flex>
+                        <label translate>Label</label>
+                        <md-icon>label</md-icon>
+                        <input ng-model="processor['label']" name="label" ng-disabled="!processor.mode" required>
+                        <div ng-messages="processor.label.$error">
+                            <div ng-message="required">{{ 'The label may not be empty' | translate }}</div>
+                        </div>
+                    </md-input-container>
+                </div>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
@@ -56,10 +48,10 @@
                 {{ 'Cancel' | translate }}
             </md-button>
             <md-button ng-click="create()" ng-disabled="(processor.mode && processorForm.$error.required) || (!processor.mode && !processor.id)" type="submit" class="md-accent md-hue-3">
-                {{ (processor.mode ? 'Create' : 'Add') | translate }}
+                {{ 'Create' | translate }}
             </md-button>
             <md-button ng-click="createAndContinue()" ng-disabled="(processor.mode && processorForm.$error.required) || (!processor.mode && !processor.id)" class="md-accent md-hue-3">
-                {{ (processor.mode ? 'Create and continue' : 'Add and continue')  | translate }}
+                {{ 'Create and continue' | translate }}
             </md-button>
         </md-dialog-actions>
     </form>
