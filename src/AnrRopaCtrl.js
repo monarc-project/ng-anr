@@ -466,6 +466,9 @@
                     RecordService.getRecord(record.id).then(function (data) {
                         record["updatedAt"] = data["updatedAt"];
                     });
+                    if(field == "jointControllers" && record["jointControllers"].length == 0) {
+                        record["jointControllers"].push({ "label": "", "contact": "" } );
+                    }
                 });
             }).catch(angular.noop);
         }
@@ -507,6 +510,10 @@
                             record["updatedAt"] = data["updatedAt"];
                         });
                         $scope.updatingActor = false;
+                        console.log("qweqw");
+                        if(actorField == "jointControllers" && record["jointControllers"].length == 0) {
+                            record["jointControllers"].push({ "label": "", "contact": "" } );
+                        }
                     });
                 }
                 else {
