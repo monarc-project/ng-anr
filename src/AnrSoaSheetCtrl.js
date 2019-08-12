@@ -32,7 +32,7 @@
              getSoaRisks($state.current.data);
            }else {
              $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
-             $scope.display.anrSelectedTabIndex = 4;
+             $scope.display.anrSelectedTabIndex = 5;
              $scope.soaSheetfirstRefresh = false;
            }
          }
@@ -279,7 +279,7 @@
 
         $scope.backToList = function () {
           $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
-          $scope.display.anrSelectedTabIndex = 4;
+          $scope.display.anrSelectedTabIndex = 5;
           $scope.soaSheetfirstRefresh = false;
           $scope.$on('$destroy', soaSheetListener);
         };

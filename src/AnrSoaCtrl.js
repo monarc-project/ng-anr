@@ -128,7 +128,7 @@
             $state.get('main.project.anr.soa.sheet').data = measure;
             $rootScope.$broadcast('soaSheet', measure);
             $state.transitionTo('main.project.anr.soa.sheet', {modelId: $stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
-            $scope.display.anrSelectedTabIndex = 5;
+            $scope.display.anrSelectedTabIndex = 6;
         };
 
         $scope.import = function (ev,referential) {

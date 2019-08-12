@@ -125,7 +125,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'AnrService', 'instance', 'scales', 'scaleCommCache', CreateInstanceDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AnrService', 'instance', 'scales', 'scaleCommCache', CreateInstanceDialogCtrl],
                 templateUrl: 'views/anr/create.instance.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -153,6 +153,9 @@
                             toastr.success(gettextCatalog.getString("The asset has been edited"), gettextCatalog.getString("Edition successful"));
                         });
                     }
+                })
+                .catch(function () {
+                    $scope.updateInstance();
                 });
         };
 
@@ -397,7 +400,7 @@
 
     }
 
-    function CreateInstanceDialogCtrl($scope, $mdDialog, AnrService, instance, scales, scaleCommCache) {
+    function CreateInstanceDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, AnrService, instance, scales, scaleCommCache) {
         $scope.instance = instance;
         $scope.scales = scales;
         $scope.scaleCommCache = scaleCommCache;
@@ -429,6 +432,7 @@
                         $scope.instance.consequences[i]['d_risk'] = -1;//pour le recalcul
                         $scope.calculeImpact('d');
                         $scope.instance.consequences[i].isHidden = !visible;
+                        toastr.success(gettextCatalog.getString("The CID values have been successfully hidden, the impact has been re-evaluated"));
                         break;
                     }
                 }

@@ -1,0 +1,58 @@
+<md-dialog md-theme="light" class="dialog-width">
+    <form name="processorForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Add a processor</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <div layout="row" layout-align="center center">
+                    <md-input-container class="md-block" flex>
+                        <md-autocomplete
+                            md-selected-item="selectedProcessor"
+                            md-search-text="processorSearchText"
+                            md-items="item in queryRecordProcessorSearch(processorSearchText)"
+                            md-item-text="item['label']"
+                            md-min-length="0"
+                            md-no-cache="true"
+                            md-selected-item-change="processorItemSelected(selectedProcessor)"
+                            md-require-match="true"
+                            placeholder="{{ 'Search a processor to add one from an existing' | translate }}">
+                            <md-item-template>
+                                <span md-highlight-text="processorSearchText" md-highlight-flags="^i">{{item['label']}}</span>
+                            </md-item-template>
+                        </md-autocomplete>
+                    </md-input-container>
+                </div>
+
+                <div>
+                    <md-input-container class="md-block" flex>
+                        <label translate>Label</label>
+                        <md-icon>label</md-icon>
+                        <input ng-model="processor['label']" name="label" ng-disabled="!processor.mode" required>
+                        <div ng-messages="processor.label.$error">
+                            <div ng-message="required">{{ 'The label may not be empty' | translate }}</div>
+                        </div>
+                    </md-input-container>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="create()" ng-disabled="(processor.mode && processorForm.$error.required) || (!processor.mode && !processor.id)" type="submit" class="md-accent md-hue-3">
+                {{ 'Create' | translate }}
+            </md-button>
+            <md-button ng-click="createAndContinue()" ng-disabled="(processor.mode && processorForm.$error.required) || (!processor.mode && !processor.id)" class="md-accent md-hue-3">
+                {{ 'Create and continue' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

@@ -1,0 +1,118 @@
+<md-dialog md-theme="light" class="dialog-width">
+    <form name="importRecordForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Record import center</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column">
+                <div flex>
+                    <div layout="row" layout-align="space-between center">
+                        <input type="file"
+                               on-read-record-file="parseFile($fileContent)"
+                               accept=".csv, .xls, .xlsx, .ods, .json, .bin"
+                               title="File types supported: .csv, .xlsx, .ods, .json, .bin"
+                               class="md-upload-dropbox md-padding md-whiteframe-3dp"
+                               ngf-drop ngf-select ng-model="file"
+                               ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-allow-dir="false">
+                        </input>
+                        <md-button class="ng-scope md-light-theme material-icons md-primary" ng-click="toggleGuide()"><md-icon>info</md-icon></md-button>
+                    </div>
+                    <md-input-container class="md-block" ng-hide="!isJson">
+                        <md-icon>vpn_key</md-icon>
+                        <label translate>Record password (if any)</label>
+                        <input ng-model="import.password" type="password">
+                    </md-input-container>
+
+                    <div layout="row" layout-align="end center">
+                        <md-button ng-disabled="!file.name" ng-show="!isImportingIn" ng-click="uploadFile(file)">
+                            <md-icon>file_download</md-icon>
+                            {{ 'Import file' | translate }}
+                        </md-button>
+    			        <md-progress-circular ng-show="isImportingIn" md-mode="indeterminate" md-diameter="40"></md-progress-circular>&nbsp;
+                        <h3 ng-show="isImportingIn" >{{ 'Importing file...' | translate }}</h3>
+                    </div>
+                </div>
+                <div layout="row" ng-if="guideVisible">
+                    <md-card>
+                        <md-card-content >
+                            <p class="md-title" translate>File Schema (csv, xlsx, ods)</p>
+                            <md-list>
+                                <md-list-item ng-repeat="item in items" ng-if="item.csvField || item.subfield">
+                                    <div class="md-list-item-text" >
+                                        <b class="preserve-newlines">{{item.csvField}}</b>
+                                        <span>[<i>{{item.type}}</i>]</span>
+                                        <span class="md-mandatory-field" ng-if="item.required">*</span>
+                                        <p ng-if="item.value" translate>Value: <i class="preserve-newlines">{{item.value}}</i></p>
+                                        <p ng-if="item.example" translate>Example: <i class="preserve-newlines">{{item.example}}</i></p>
+                                        <md-list-item ng-repeat="subItem in item.subfield" ng-if="item.subfield">
+                                            <div class="md-list-item-text">
+                                                <b class="preserve-newlines">{{subItem.csvField}}</b>
+                                                <span>[<i>{{subItem.type}}</i>]</span>
+                                                <span class="md-mandatory-field" ng-if="subItem.required">*</span>
+                                                <p ng-if="subItem.value" translate>Value: <i class="preserve-newlines">{{subItem.value}}</i></p>
+                                                <p ng-if="subItem.example" translate>Example: <i class="preserve-newlines">{{subItem.example}}</i></p>
+                                            </div>
+                                        </md-list-item>
+                                    </div>
+                                </md-list-item>
+                            </md-list>
+                            <p class="md-mandatory-field txtright" translate>* Mandatory field</p>
+                        </md-card-content>
+                        <md-card-actions align="right">
+                            <md-button class="md-primary" ng-click="downloadExampleFile()">
+                            <md-icon>file_download</md-icon>
+                            {{ 'Example File' | translate }}
+                            </md-button>
+                        </md-card-actions>
+                    </md-card>
+                    <md-card>
+                        <md-card-content >
+                            <p class="md-title" translate>File Schema (json, bin)</p>
+                            <md-list>
+                                <md-list-item ng-repeat="item in items" >
+                                    <div class="md-list-item-text">
+                                        <b class="preserve-newlines">{{item.jsonField}}</b>
+                                        <span>[<i>{{item.type}}</i>]</span>
+                                        <span class="md-mandatory-field" ng-if="item.required">*</span>
+                                        <p ng-if="item.value" translate>Value: <i class="preserve-newlines">{{item.value}}</i></p>
+                                        <p ng-if="item.example" translate>Example: <i class="preserve-newlines">{{item.example}}</i></p>
+                                        <br ng-if="item.subfield"/>
+                                        <md-list-item ng-repeat="subItem in item.subfield" ng-if="item.subfield" >
+                                            <div class="md-list-item-text">
+                                                <b class="preserve-newlines">{{subItem.jsonField}}</b>
+                                                <span>[<i>{{subItem.type}}</i>]</span>
+                                                <span class="md-mandatory-field" ng-if="subItem.required">*</span>
+                                                <p ng-if="subItem.value" translate>Value: <i class="preserve-newlines">{{subItem.value}}</i></p>
+                                                <p ng-if="subItem.example" translate>Example: <i class="preserve-newlines">{{subItem.example}}</i></p>
+                                            </div>
+                                        </md-list-item>
+                                    </div>
+                                </md-list-item>
+                            </md-list>
+                            <p class="md-mandatory-field txtright" translate>* Mandatory field</p>
+                            <p class="md-mandatory-field txtright" ng-if="OFFICE_MODE == 'BO'" translate>1:FR,2:EN,3:DE,4:NL</p>
+                        </md-card-content>
+                        <md-card-actions align="right">
+                            <md-button class="md-primary" ng-click="downloadExampleJson()">
+                            <md-icon>file_download</md-icon>
+                            {{ 'Example File' | translate }}
+                            </md-button>
+                        </md-card-actions>
+                    </md-card>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

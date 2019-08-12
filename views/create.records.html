@@ -1,0 +1,63 @@
+<md-dialog md-theme="light" class="dialog-width">
+    <form name="recordForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Add a record</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-card layout="row">
+                    <span flex></span>
+                    <md-button class="md-primary" ng-click="importRecord($event)">
+                        <md-icon>play_for_work</md-icon><span>&nbsp;{{ 'Import from file' | translate }}</span>
+                    </md-button>
+                    <span flex></span>
+                </md-card>
+
+                <md-subheader layout="row" layout-align="center"><strong>{{ 'Manual creation' | translate }}</strong></md-subheader><br/>
+
+                <md-input-container class="md-block" flex >
+                    <md-autocomplete md-selected-item="selectedRecord"
+                        md-search-text="recordSearchText"
+                        md-items="item in queryRecordSearch(recordSearchText)"
+                        md-item-text="item['label']"
+                        md-min-length="0"
+                        md-no-cache="true"
+                        md-selected-item-change="recordItemSelected(selectedRecord)"
+                        md-require-match="true"
+                        placeholder="{{ 'Search a record to create one from an existing' | translate }}">
+                        <md-item-template>
+                            <span md-highlight-text="recordSearchText" md-highlight-flags="^i">{{item['label']}}</span>
+                        </md-item-template>
+                    </md-autocomplete>
+                </md-input-container>
+
+                <md-input-container class="md-block" flex>
+                    <label translate>Label</label>
+                    <md-icon>label</md-icon>
+                    <input ng-model="newRecord['label']" name="label" required>
+                    <div ng-messages="newRecord.label.$error">
+                        <div ng-message="required">{{ 'The label may not be empty' | translate }}</div>
+                    </div>
+                </md-input-container>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="create()" ng-disabled="recordForm.$error.required" type="submit" class="md-accent md-hue-3">
+                {{ 'Create' | translate }}
+            </md-button>
+            <md-button ng-click="createAndContinue()" ng-disabled="recordForm.$error.required" class="md-accent md-hue-3">
+                {{ 'Create and continue' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

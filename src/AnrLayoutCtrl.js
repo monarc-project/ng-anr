@@ -34,11 +34,14 @@
                     case 'main.project.anr.knowledge':
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 3};
                         break;
-                    case 'main.project.anr.soa':
+                    case 'main.project.anr.ropa':
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 4};
                         break;
-                    case 'main.project.anr.soa.sheet':
+                    case 'main.project.anr.soa':
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 5};
+                        break;
+                    case 'main.project.anr.soa.sheet':
+                        $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 6};
                         break;
                 }
             }
@@ -838,6 +841,9 @@
                         $state.transitionTo('main.project.anr.knowledge',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
                         break;
                     case 4:
+                        $state.transitionTo('main.project.anr.ropa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
+                        break;
+                    case 5:
                         $state.transitionTo('main.project.anr.soa',{modelId:$stateParams.modelId},{inherit:true,notify:true,reload:false,location:'replace'});
                         break;
                 }
@@ -1125,44 +1131,25 @@
         }
 
         $scope.visible = function (item) {
-            if ((item.type == 'lib' || item.type == 'libcat') && $scope.filter.library && $scope.filter.library.length > 0) {
+            var label = (item.type == 'lib' || item.type == 'inst')? $scope._langField(item,'name'):$scope._langField(item,'label');
+            var filterText = (item.type == 'lib' || item.type == 'libcat')? $scope.filter.library:$scope.filter.instance;
+            if (filterText && filterText.length > 0) {
                 if (item.__children__.length > 0) {
-                    var atLeastOneChildVisible = false;
-
                     for (var i = 0; i < item.__children__.length; ++i) {
                         if ($scope.visible(item.__children__[i])) {
-                            atLeastOneChildVisible = true;
+                            return true;
                             break;
                         }
                     }
-                    if(!atLeastOneChildVisible && $scope.removeAccents($scope._langField(item,'name')).indexOf($scope.removeAccents($scope.filter.library)) >= 0){
-                        atLeastOneChildVisible = true;
+                    if(!atLeastOneChildVisible && $scope.removeAccents(label).indexOf($scope.removeAccents(filterText)) >= 0){
+                        return true;
                     }
 
-                    return atLeastOneChildVisible;
+                    return false;
                 } else {
-                    return $scope.removeAccents($scope._langField(item,'name')).indexOf($scope.removeAccents($scope.filter.library)) >= 0;
-                }
-            } else if (item.type == 'inst' && $scope.filter.instance && $scope.filter.instance.length > 0) {
-                if (item.__children__.length > 0) {
-                    var atLeastOneChildVisible = false;
-
-                    for (var i = 0; i < item.__children__.length; ++i) {
-                        if ($scope.visible(item.__children__[i])) {
-                            atLeastOneChildVisible = true;
-                            break;
-                        }
-                    }
-                    if(!atLeastOneChildVisible && $scope.removeAccents($scope._langField(item,'name')).indexOf($scope.removeAccents($scope.filter.instance)) >= 0){
-                        atLeastOneChildVisible = true;
-                    }
-
-                    return atLeastOneChildVisible;
-                } else {
-                    return $scope.removeAccents($scope._langField(item,'name')).indexOf($scope.removeAccents($scope.filter.instance)) >= 0;
+                    return $scope.removeAccents(label).indexOf($scope.removeAccents(filterText)) >= 0;
                 }
             }
-
             return true;
         };
 
@@ -1947,7 +1934,7 @@
                         customUrl = 'api/client-anr/'+ $scope.model.anr.id +'/export';
                     }
 
-                    $http.post(customUrl, {id: $scope.model.anr.id, password: exports.password, assessments: exports.assessments, methodSteps: exports.methodSteps, interviews: exports.interviews, controls: exports.controls, recommendations: exports.recommendations, soas: exports.soas}).then(function (data) {
+                    $http.post(customUrl, {id: $scope.model.anr.id, password: exports.password, assessments: exports.assessments, methodSteps: exports.methodSteps, interviews: exports.interviews, controls: exports.controls, recommendations: exports.recommendations, soas: exports.soas, records: exports.records}).then(function (data) {
                         var contentD = data.headers('Content-Disposition'),
                             contentT = data.headers('Content-Type');
                         contentD = contentD.substring(0,contentD.length-1).split('filename="');
@@ -2122,9 +2109,9 @@
                 AnrService.addNewObjectToLibrary(anr.id, objlib, function (data) {
                     $parentScope.updateObjectsLibrary(false, function(){
                         if ($scope.OFFICE_MODE == 'FO') {
-                            $state.transitionTo('main.project.anr.object', {modelId: anr.id, objectId: data.uuid});
+                            $state.transitionTo('main.project.anr.object', {modelId: anr.id, objectId: data.id});
                         } else {
-                            $location.path('/backoffice/kb/models/'+$parentScope.model.id+'/object/'+data.uuid);
+                            $location.path('/backoffice/kb/models/'+$parentScope.model.id+'/object/'+data.id);
                         }
                         if(cont){
                             createAttachedObject($scope, $mdDialog, $state, $location, $parentScope, AnrService, ev);
@@ -2267,7 +2254,8 @@
             interviews: true,
             controls: true,
             recommendations: true,
-            soas: true
+            soas: true,
+            records: true
         };
 
         $scope.cancel = function() {
@@ -2850,6 +2838,9 @@
             if (step.referential) {
               $scope.deliverable.referential = step.referential;
               $scope.deliverable.risksByControl = false;
+            }
+            if (step.record) {
+              $scope.deliverable.record = step.record;
             }
         });
 
