@@ -5,7 +5,7 @@
             <md-menu ng-if="records.items.count>0">
                 <md-button class="md-icon-button" ng-click="$mdMenu.open()">
                     <md-tooltip md-direction="left">
-                        {{ 'Export all activities in one file' | translate }}
+                        {{ 'Export all processings in one file' | translate }}
                     </md-tooltip>
                     <md-icon class="md-warn">file_download</md-icon>
                 </md-button>
@@ -23,7 +23,7 @@
             </md-menu>
             <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-disabled="updatingRecords" ng-click="createNewRecord($event)">
                 <md-tooltip md-direction="left">
-                    {{ 'Add an activity' | translate }}
+                    {{ 'Add a processing' | translate }}
                 </md-tooltip>
                 <md-icon class="md-icon-button md-primary">add_to_photos</md-icon>
             </md-button>
@@ -61,7 +61,7 @@
                     </md-menu>
                     <md-button class="md-icon-button md-warn" ng-if="!isAnrReadOnly && records.items.records.length > 0" ng-click="deleteRecord($event, record.id)">
                         <md-tooltip md-direction="left">
-                            {{ 'Delete activity' | translate }}
+                            {{ 'Delete processing' | translate }}
                         </md-tooltip>
                         <md-icon>delete</md-icon>
                     </md-button>
