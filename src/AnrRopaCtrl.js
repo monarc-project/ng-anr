@@ -115,7 +115,7 @@
                         $scope.updateRecords().then(function() {
                             $scope.updatingRecords = false;
                             $scope.selectRecord(status.id, $scope.records.items.count);
-                            toastr.success(gettextCatalog.getString('The record has been created successfully.',
+                            toastr.success(gettextCatalog.getString('The activity has been created successfully.',
                                   {recordLabel: record.label}), gettextCatalog.getString('Creation successful'));
                             if (cont) {
                                 $scope.createNewRecord(ev);
