@@ -21,20 +21,11 @@
 
                 <md-subheader layout="row" layout-align="center"><strong>{{ 'Manual creation' | translate }}</strong></md-subheader><br/>
 
-                <md-input-container class="md-block" flex >
-                    <md-autocomplete md-selected-item="selectedRecord"
-                        md-search-text="recordSearchText"
-                        md-items="item in queryRecordSearch(recordSearchText)"
-                        md-item-text="item['label']"
-                        md-min-length="0"
-                        md-no-cache="true"
-                        md-selected-item-change="recordItemSelected(selectedRecord)"
-                        md-require-match="true"
-                        placeholder="{{ 'Search a record to create one from an existing' | translate }}">
-                        <md-item-template>
-                            <span md-highlight-text="recordSearchText" md-highlight-flags="^i">{{item['label']}}</span>
-                        </md-item-template>
-                    </md-autocomplete>
+                <md-input-container class="md-block" style="margin-right: 10px;" flex>
+                    <label translate>Search a record to create one from an existing</label>
+                    <md-select flex ng-model="selectedRecord" md-on-open="queryRecordSearch()" md-on-close="recordItemSelected(selectedRecord)">
+                        <md-option ng-repeat="item in options" ng-value="item">{{ item.label }}</md-option>
+                    </md-select>
                 </md-input-container>
 
                 <md-input-container class="md-block" flex>

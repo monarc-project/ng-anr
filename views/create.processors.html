@@ -12,24 +12,13 @@
         <md-dialog-content>
             <div class="md-dialog-content">
                 <div layout="row" layout-align="center center">
-                    <md-input-container class="md-block" flex>
-                        <md-autocomplete
-                            md-selected-item="selectedProcessor"
-                            md-search-text="processorSearchText"
-                            md-items="item in queryRecordProcessorSearch(processorSearchText)"
-                            md-item-text="item['label']"
-                            md-min-length="0"
-                            md-no-cache="true"
-                            md-selected-item-change="processorItemSelected(selectedProcessor)"
-                            md-require-match="true"
-                            placeholder="{{ 'Search a processor to add one from an existing' | translate }}">
-                            <md-item-template>
-                                <span md-highlight-text="processorSearchText" md-highlight-flags="^i">{{item['label']}}</span>
-                            </md-item-template>
-                        </md-autocomplete>
+                    <md-input-container class="md-block" style="margin-right: 10px;" flex>
+                        <label translate>Search a processor to add one from an existing</label>
+                        <md-select flex ng-model="selectedProcessor" md-on-open="queryRecordProcessorSearch()" md-on-close="processorItemSelected(selectedProcessor)">
+                            <md-option ng-repeat="item in options" ng-value="item">{{ item.label }}</md-option>
+                        </md-select>
                     </md-input-container>
                 </div>
-
                 <div>
                     <md-input-container class="md-block" flex>
                         <label translate>Label</label>

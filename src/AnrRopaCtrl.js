@@ -1297,6 +1297,7 @@
         $scope.queryRecordSearch = function(query) {
             var promise = $q.defer();
             RecordService.getRecords({filter: query}).then(function (e) {
+                $scope.options = e["records"];
                 promise.resolve(e["records"]);
             });
             return promise.promise;
@@ -1355,9 +1356,9 @@
             $mdDialog.cancel();
         };
 
-        $scope.queryRecordProcessorSearch = function(query) {
+        $scope.queryRecordProcessorSearch = function() {
             var promise = $q.defer();
-            RecordService.getRecordProcessors({filter: query}).then(function (e) {
+            RecordService.getRecordProcessors().then(function (e) {
                 // Filter out values already selected
                 var filtered = [];
                 for (var j = 0; j < e["record-processors"].length; ++j) {
@@ -1374,7 +1375,7 @@
                         filtered.push(e["record-processors"][j]);
                     }
                 }
-
+                $scope.options = filtered;
                 promise.resolve(filtered);
             });
             return promise.promise;
