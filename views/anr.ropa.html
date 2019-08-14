@@ -41,7 +41,7 @@
         <md-tab ng-repeat="(recordIndex,record) in records.items.records" label="{{ record.label }}"
             md-on-select="selectRecord(record.id)">
             <div layout="row" layout-align="space-between center">
-                <h3 class="md-padding-left" translate>Description of processing activities</h3>
+                <h3 class="md-padding-left" translate>Description</h3>
                 <div layout="row" layout-align="end center">
                     <md-menu>
                         <md-button class="md-icon-button" ng-click="$mdMenu.open()">
@@ -111,7 +111,7 @@
                                 <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap"> </th>
                             </tr>
                             <tr edit-model="records.items.records[recordIndex].controller" ng-if="!updatingActor">
-                                <td style="width:1%; white-space:nowrap"> <b translate> Processing activity controller </b> </td>
+                                <td style="width:1%; white-space:nowrap"> <b translate> Controller </b> </td>
                                 <td>
                                     <md-autocomplete
                                         class="autocomplete-record-gdpr"
@@ -208,7 +208,7 @@
                                     <span flex><b translate> Joint controllers </b> </span>
                                     <md-button class="md-icon-button md-primary" ng-click="addJointControllers(record)">
                                         <md-tooltip md-direction="left">
-                                            {{ 'Add a new joint controller' | translate }}
+                                            {{ 'Add a joint controller' | translate }}
                                         </md-tooltip>
                                         <md-icon>add_to_photos</md-icon>
                                     </md-button>
@@ -280,10 +280,10 @@
             <br/>
             <div layout="row" layout-align="space-between center">
                 <div layout="row" layout-align="start center">
-                    <h3 class="md-padding-left" translate>Categories of personal data and data subjects</h3>
+                    <h3 class="md-padding-left" translate>Categories of data subjects and personal data</h3>
                     <md-button class="md-icon-button md-primary" ng-click="addPersonalData(record)" ng-hide="uiState.hidePersonalData">
                         <md-tooltip md-direction="left">
-                            {{ 'Add a new category of personal data and data subjects' | translate }}
+                            {{ 'Add a category of data subjects and personal data' | translate }}
                         </md-tooltip>
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
@@ -295,7 +295,7 @@
                     <table editable callback="onPersonalDataTableEdited" class="md-html-table md-html-table-grey big-border-all">
                         <tbody>
                             <tr>
-                                <th translate style="width:20%"> Data subject </th>
+                                <th translate style="width:20%"> Categories of data subject </th>
                                 <th translate style="width:20%"> Categories of personal data </th>
                                 <th translate style="width:25%"> Description </th>
                                 <th translate style="width:15%"> Duration of data retention </th>
@@ -369,7 +369,7 @@
                   <h3 class="md-padding-left" translate> Recipients</h3>
                   <md-button class="md-icon-button md-primary" ng-click="addRecipient(record)" ng-hide="uiState.hideRecipients">
                       <md-tooltip md-direction="left">
-                          {{ 'Add a new recipient of data' | translate }}
+                          {{ 'Add a recipient' | translate }}
                       </md-tooltip>
                       <md-icon>add_to_photos</md-icon>
                   </md-button>
@@ -429,7 +429,7 @@
                 <h3  class="md-padding-left" translate> International transfers </h3>
                 <md-button class="md-icon-button md-primary" ng-click="addInternationalTransfer(record)" ng-hide="uiState.hideTranfers">
                     <md-tooltip md-direction="left">
-                        {{ 'Add a new record of data international transfer' | translate }}
+                        {{ 'Add an international transfer' | translate }}
                     </md-tooltip>
                     <md-icon>add_to_photos</md-icon>
                 </md-button>
