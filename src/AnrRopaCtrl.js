@@ -101,7 +101,7 @@
                         $scope.updateRecords().then(function() {
                             $scope.updatingRecords = false;
                             $scope.selectRecord(status.id, $scope.records.items.count);
-                            toastr.success(gettextCatalog.getString('The record has been duplicated successfully.',
+                            toastr.success(gettextCatalog.getString('The processing has been duplicated successfully.',
                                   {recordLabel: record.label}), gettextCatalog.getString('Creation successful'));
                             if (cont) {
                                 $scope.createNewRecord(ev);
@@ -115,7 +115,7 @@
                         $scope.updateRecords().then(function() {
                             $scope.updatingRecords = false;
                             $scope.selectRecord(status.id, $scope.records.items.count);
-                            toastr.success(gettextCatalog.getString('The activity has been created successfully.',
+                            toastr.success(gettextCatalog.getString('The processing has been created successfully.',
                                   {recordLabel: record.label}), gettextCatalog.getString('Creation successful'));
                             if (cont) {
                                 $scope.createNewRecord(ev);
@@ -225,7 +225,7 @@
 
         $scope.deleteRecord = function (ev, item) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete the activity?',
+                .title(gettextCatalog.getString('Are you sure you want to delete the processing?',
                     {label: item.label}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)

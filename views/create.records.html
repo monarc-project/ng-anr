@@ -2,7 +2,7 @@
     <form name="recordForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 translate>Add an activity</h2>
+                <h2 translate>Add a processing</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -22,7 +22,7 @@
                 <md-subheader layout="row" layout-align="center"><strong>{{ 'Manual creation' | translate }}</strong></md-subheader><br/>
 
                 <md-input-container class="md-block" style="margin-right: 10px;" flex>
-                    <label translate>Search a record to create one from an existing</label>
+                    <label translate>Search a processing to create one from an existing</label>
                     <md-select flex ng-model="selectedRecord" md-on-open="queryRecordSearch()" md-on-close="recordItemSelected(selectedRecord)">
                         <md-option ng-repeat="item in options" ng-value="item">{{ item.label }}</md-option>
                     </md-select>
