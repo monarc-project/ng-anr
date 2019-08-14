@@ -225,7 +225,7 @@
 
         $scope.deleteRecord = function (ev, item) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete record?',
+                .title(gettextCatalog.getString('Are you sure you want to delete the activity?',
                     {label: item.label}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
