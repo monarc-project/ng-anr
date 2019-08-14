@@ -2,7 +2,7 @@
     <form name="importRecordForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 translate>Record import center</h2>
+                <h2 translate>File import center</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -25,7 +25,7 @@
                     </div>
                     <md-input-container class="md-block" ng-hide="!isJson">
                         <md-icon>vpn_key</md-icon>
-                        <label translate>Record password (if any)</label>
+                        <label translate>File password (if any)</label>
                         <input ng-model="import.password" type="password">
                     </md-input-container>
 
