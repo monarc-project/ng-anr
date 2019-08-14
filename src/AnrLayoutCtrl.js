@@ -170,7 +170,7 @@
                         $scope.updateInstances();
                         $scope.updateObjectsLibrary();
                         $scope.updateScales();
-                        $scope.updateReferentials();
+                        $scope.updateReferentials();                        
 
                     }
 
@@ -207,8 +207,9 @@
                         $scope.updateObjectsLibrary();
                         $scope.updateScales();
                         $scope.updateReferentials();
+                        $scope.updateRecommandationsSets();
                         updateMethodProgress();
-
+                    
                     }
 
                     if ($rootScope.setAnrLanguage) {
@@ -232,6 +233,14 @@
             $scope.updatingReferentials = true;
           });
         };
+
+        $scope.updateRecommandationsSets = function () {
+            $scope.recommandationsSets = [];
+            ClientRecommandationService.getRecommandationsSets({anr: $scope.model.anr.id}).then(function (data) {
+              $scope.recommandationsSets = data['recommandations-sets'];
+              $scope.updatingRecommandationsSets = true;
+            });
+          };
 
         $scope.updateAnrRisksTable = function (cb) {
             $scope.anr_risks_table_loading = true;
@@ -267,6 +276,10 @@
                 $scope.anr_risks_table_loading = false;
             });
         };
+
+        $rootScope.$on('recommandationsSetsUpdated', function () {
+            $scope.updateRecommandationsSets();
+         });
 
         $rootScope.$on('referentialsUpdated', function () {
             $scope.updateReferentials();
@@ -481,6 +494,12 @@
         $scope.selectReferential = function (referentialId) {
             $scope.referential_uuid = referentialId;
         };
+
+        $scope.selectRecommandationSet = function (recommandationSetId) {
+            $scope.recommandation_set_uuid = recommandationSetId;
+        };
+
+
         $scope.updateSheetRiskTarget = function () {
           if ($scope.sheet_risk) {
             if(parseInt($scope.sheet_risk.threatRate) > -1 && parseInt($scope.sheet_risk.vulnerabilityRate) > -1){
@@ -2319,21 +2338,21 @@
                 if (evt.newIndex == 0) {
                     ClientRecommandationService.updateRecommandation({
                         anr: anr.id,
-                        id: evt.model.id,
+                        uuid: evt.model.uuid,
                         implicitPosition: 1
                     });
                 } else if (evt.newIndex == $scope.recommendations.length - 1) {
                     ClientRecommandationService.updateRecommandation({
                         anr: anr.id,
-                        id: evt.model.id,
+                        uuid: evt.model.uuid,
                         implicitPosition: 2
                     });
                 } else {
                     ClientRecommandationService.updateRecommandation({
                         anr: anr.id,
-                        id: evt.model.id,
+                        uuid: evt.model.uuid,
                         implicitPosition: 3,
-                        previous: $scope.recommendations[evt.newIndex - 1].id
+                        previous: $scope.recommendations[evt.newIndex - 1].uuid
                     });
                 }
 
@@ -2444,7 +2463,7 @@
         };
 
         $scope.openRecommendation = function (rec) {
-            $state.transitionTo('main.project.anr.risksplan.sheet', {modelId: anr.id, recId: rec.id});
+            $state.transitionTo('main.project.anr.risksplan.sheet', {modelId: anr.id, recId: rec.uuid});
         };
 
         $scope.cancel = function() {

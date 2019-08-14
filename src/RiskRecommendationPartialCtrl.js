@@ -87,7 +87,7 @@
         };
 
         $scope.attachRecommandation = function () {
-            ClientRecommandationService.attachToRisk($scope.model.anr.id, $scope.rec_edit.rec.id, riskId, isOpRiskMode,
+            ClientRecommandationService.attachToRisk($scope.model.anr.id, $scope.rec_edit.rec.uuid, riskId, isOpRiskMode,
                 function () {
                     toastr.success(gettextCatalog.getString("The recommandation has been attached to this risk."));
                     $scope.rec_edit.rec = null;
@@ -153,7 +153,7 @@
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-                ClientRecommandationService.deleteRecommandation({anr: $scope.model.anr.id, id: recommandation.recommandation.id},
+                ClientRecommandationService.deleteRecommandation({anr: $scope.model.anr.id, id: recommandation.recommandation.uuid},
                     function () {
                         updateRecommandations();
                         toastr.success(gettextCatalog.getString('The recommendation has been deleted successfully'),
@@ -162,45 +162,6 @@
                 );
             },function(){
                 $scope.editRecommandation(ev,recommandation);
-            });
-        }
-
-        $scope.attachMeasureToRecommandation = function (ev, recommandation) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
-            $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$q', 'MeasureService', MeasureRecommandationAttachDialog],
-                templateUrl: 'views/anr/create.recommandation-measure.html',
-                preserveScope: false,
-                targetEvent: ev,
-                scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: false,
-                fullscreen: useFullScreen,
-            }).then(function (measure_id) {
-                ClientRecommandationService.attachMeasureToRecommandation($scope.model.anr.id, recommandation.recommandation.id, measure_id, function () {
-                    toastr.success(gettextCatalog.getString("Control attached to recommendation"));
-                    updateRecommandations();
-                });
-            });
-        };
-
-        $scope.detachMeasureFromRecommandation = function (ev, recommandation, measure) {
-            var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to detach control of recommendation?',
-                    {measure: measure.code, code: recommandation.recommandation.code}))
-                .textContent(gettextCatalog.getString('This operation is irreversible.'))
-                .targetEvent(ev)
-                .theme('light')
-                .ok(gettextCatalog.getString('Detach'))
-                .cancel(gettextCatalog.getString('Cancel'));
-            $mdDialog.show(confirm).then(function() {
-                ClientRecommandationService.detachMeasureFromRecommandation($scope.model.anr.id, measure.id,
-                    function () {
-                        updateRecommandations();
-                        toastr.success(gettextCatalog.getString('The control has been detached.'),
-                            gettextCatalog.getString('Operation successful'));
-                    }
-                );
             });
         }
 
@@ -246,6 +207,13 @@
             return $scope.options;
         };
 
+        $scope.loadSetOptions = function(ev, anrID) {
+            ClientRecommandationService.getRecommandationsSets({anr: anrId}).then(function (data) {
+                $scope.setOptions = data['recommandations-sets'];
+            });
+            return $scope.setOptions;
+        };
+
         $scope.setSelectedRecommendation = function(ev, selectedRec) {
             if (selectedRec !== undefined) {
                 $scope.recommandation = selectedRec;
@@ -253,6 +221,12 @@
                 $scope.recommandation['recommandation']['code'] = selectedRec.code;
                 $scope.recommandation['recommandation']['importance'] = selectedRec.importance;
                 $scope.recommandation['recommandation']['description'] = selectedRec.description;
+            }
+        };
+
+        $scope.setSelectedRecommendationSet = function(ev, selectedRecSet) {
+            if (selectedRecSet !== undefined) {
+                $scope.recommandationSet = selectedRecSet['uuid'];
             }
         };
 
@@ -265,6 +239,7 @@
         };
 
         $scope.create = function () {
+            $scope.recommandation['recommandation']['recommandationSet'] = $scope.recommandationSet;
             $mdDialog.hide($scope.recommandation);
         };
 

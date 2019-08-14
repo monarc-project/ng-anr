@@ -28,7 +28,7 @@
 
             var params = {
                 anr: $scope.model.anr.id,
-                id: model.id,
+                uuid: model.uuid,
             };
 
             if (name == 'duedate') {

@@ -103,13 +103,15 @@
                         </md-button>
                     </div>
                 </td>
-                <td colspan="3" style="vertical-align:top;">
+                <td colspan="3">                    
                     <ul class="no-list-style no-padding no-margin">
-                        <li ng-repeat="recommandation in recommandations">
-                            <a class="md-primary" ui-sref="main.project.anr.risksplan.sheet({modelId: model.anr.id, recId: recommandation.recommandation.id})" ng-attr-title="{{ 'Implementation of the risk treatment plan' | translate }}" ><md-icon>open_in_new</md-icon></a>
-                            <a class="md-primary" href="#" ng-click="editRecommandation($event, recommandation)">{{ recommandation.recommandation.code }}</a> <span class="anr-importance" ng-repeat="i in range(1, recommandation.recommandation.importance)">&bull;</span> &gt; {{ recommandation.recommandation.description }}
+                        <li ng-repeat="recommandation in recommandations | orderBy : 'importance'">
+                            <p><a class="md-primary" ui-sref="main.project.anr.risksplan.sheet({modelId: model.anr.id, recId: recommandation.recommandation.uuid})" ng-attr-title="{{ 'Implementation of the risk treatment plan' | translate }}" ><md-icon>open_in_new</md-icon></a>
+                                <a class="md-primary" href="#" ng-click="editRecommandation($event, recommandation)">{{ recommandation.recommandation.code }}</a> <span class="anr-importance" ng-repeat="i in range(1, recommandation.recommandation.importance)">&bull;</span> &gt; {{ recommandation.recommandation.description }}
+                                <a ng-if="recommandation.recommandation.importance == 0" class="md-mandatory-field txtright" translate>Importance is required</a>
+                            </p>
                         </li>
-                    </ul>
+                    </ul>                    
                 </td>
             </tr>
             <tr>

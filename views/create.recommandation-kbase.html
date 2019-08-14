@@ -1,9 +1,9 @@
 <md-dialog md-theme="light" class="dialog-width">
-    <form name="riskForm">
+    <form name="recommandationForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 ng-if="!recommandation.recommandation.uuid" translate>Add a recommendation</h2>
-                <h2 ng-if="recommandation.recommandation.uuid" translate>Edit a recommendation</h2>
+                <h2 ng-if="!recommandation.uuid" translate>Add a recommendation</h2>
+                <h2 ng-if="recommandation.uuid" translate>Edit a recommendation</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -12,26 +12,32 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-input-container ng-if="!recommandation.recommandation.uuid" class="md-block" style="margin-right: 10px;">
+                <md-card ng-if="!recommandation.uuid">
+                    <md-button ng-if="OFFICE_MODE == 'FO'" class="md-primary" ng-click="importFile($event,'Recommendations')"  ng-controller="AnrKbMgmtCtrl">
+                        <md-icon>play_for_work</md-icon><span>{{ 'Import from file' | translate }}</span>
+                    </md-button>
+                </md-card>
+                
+                <md-input-container ng-if="!recommandation.uuid" class="md-block" style="margin-right: 10px;">
                     <label translate>Search a recommendation to create one from an existing</label>
-                    <md-select flex ng-model="recommandation.recommandation" md-on-open="loadOptions($event, recommandation.recommandation)" md-on-close="setSelectedRecommendation($event, recommandation.recommandation)">
+                    <md-select flex ng-model="recommandation" md-on-open="loadOptions($event, recommandation)" md-on-close="setSelectedRecommendation($event, recommandation)">
                         <md-option ng-repeat="item in options" ng-value="item">{{ item.code }} - {{ item.description }}</md-option>
                     </md-select>
                 </md-input-container>
 
-                <md-input-container ng-if="!recommandation.recommandation.uuid" class="md-block" style="margin-right: 10px;">
+                <md-input-container ng-if="recommandation.uuid" class="md-block" style="margin-right: 10px;">
                     <label translate>Select a recommendation set</label>
-                    <md-select flex ng-model="recommandation.recommandationSet" md-on-open="loadSetOptions($event, recommandation.recommandationSet)" md-on-close="setSelectedRecommendationSet($event, recommandation.recommandationSet)" ng-required="true">
+                    <md-select flex ng-model="recommandationSet" md-on-open="loadSetOptions($event, recommandationSet)" md-on-close="setSelectedRecommendationSet($event, recommandationSet)">
                         <md-option ng-repeat="item in setOptions" ng-value="item">{{ _langField(item,'label') }}</md-option>
                     </md-select>
                 </md-input-container>
 
                 <md-input-container class="md-block">
                     <md-icon>toc</md-icon>
-                    <input type="text" ng-model="recommandation.recommandation.code" ng-required="true">
+                    <input type="text" ng-model="recommandation.code" ng-required="true">
                 </md-input-container>
 
-                <md-radio-group ng-model="recommandation.recommandation.importance" ng-required="true">
+                <md-radio-group ng-model="recommandation.importance" ng-required="true">
                     <md-icon>star</md-icon>
                     <label translate>Importance</label>
                     <md-radio-button ng-value="1"><span class="anr-importance">&bull;</span> {{ 'Useful information for safety, advice' | translate }}</md-radio-button>
@@ -42,7 +48,7 @@
                 <md-input-container class="md-block">
                     <label translate>Description</label>
                     <md-icon>description</md-icon>
-                    <textarea rows="3" ng-model="recommandation.recommandation.description" ng-required="true"></textarea>
+                    <textarea rows="3" ng-model="recommandation.description" ng-required="true"></textarea>
                 </md-input-container>
             </div>
         </md-dialog-content>
@@ -50,13 +56,8 @@
             <md-button ng-click="cancel()">
                 {{ 'Cancel' | translate }}
             </md-button>
-            <md-button ng-click="deleteRecommandation($event, recommandation)" ng-if="recommandation.recommandation.uuid && !isRecoContext" type="submit" class="md-warn md-hue-3">
-                {{ 'Delete' | translate }}
-            </md-button>
-            <md-button ng-if="recommandation.recommandation.uuid && !isRecoContext" ng-click="detachRecommandation($event, recommandation)">{{ 'Detach' | translate }}</md-button>
-            <!-- <md-button ng-if="recommandation.recommandation.uuid" ng-click="copyRecommandation($event, recommandation)" >{{ 'Copy' | translate }}</md-button> -->
-            <md-button ng-click="create()" ng-disabled="riskForm.$invalid" type="submit" class="md-accent md-hue-3">
-                {{ (recommandation.recommandation.uuid ? 'Save' : 'Create') | translate }}
+            <md-button ng-click="create()" ng-disabled="recommandationForm.$invalid" type="submit" class="md-accent md-hue-3">
+                {{ (recommandation.uuid ? 'Save' : 'Create') | translate }}
             </md-button>
         </md-dialog-actions>
     </form>

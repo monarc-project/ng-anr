@@ -40,7 +40,7 @@
                         <md-button ng-click="openInterviewTools($event)">{{ 'Interviews table' | translate }}</md-button>
                     </md-menu-item>
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">
-                        <md-button ng-click="display.anrSelectedTabIndex = 4;">{{ 'Records of processing activities' | translate }}</md-button>
+                        <md-button ng-click="display.anrSelectedTabIndex = 4;">{{ 'Register of processing activities' | translate }}</md-button>
                     </md-menu-item>
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">
                         <md-button ng-click="display.anrSelectedTabIndex = 5;">{{ 'Statement of applicability' | translate }}</md-button>
@@ -66,7 +66,7 @@
                 <md-tab label="{{ 'Knowledge base' | translate }}" ng-if="OFFICE_MODE == 'FO'" md-on-select="::tabKBDisplayed = true">
                     <div ng-include="'views/anr/_anr.kbmgmt.html'"></div>
                 </md-tab>
-                <md-tab label="{{ 'Records of processing activities' | translate }}" md-on-select="::tabRopaDisplayed = true">
+                <md-tab label="{{ 'Register of processing activities' | translate }}" md-on-select="::tabRopaDisplayed = true">
                     <div ng-include="'views/anr/anr.ropa.html'"></div>
                 </md-tab>
                 <md-tab label="{{ 'Statement of applicability' | translate }}" md-on-select="::tabSoaDisplayed = true">

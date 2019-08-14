@@ -66,13 +66,14 @@
             '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
             'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'ClientSoaService',
             'TagService', 'RiskService','SOACategoryService', 'ReferentialService', 'MeasureMeasureService',
-             '$state', '$timeout', '$rootScope', AnrKbMgmtCtrl ])
+             'ClientRecommandationService', '$state', '$timeout', '$rootScope', AnrKbMgmtCtrl ])
     /**
      * ANR > KB
      */
     function AnrKbMgmtCtrl($scope, $stateParams, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService,
                                   AssetService, ThreatService, VulnService, AmvService, MeasureService, ClientSoaService, TagService,
-                                  RiskService,SOACategoryService, ReferentialService, MeasureMeasureService, $state, $timeout, $rootScope) {
+                                  RiskService,SOACategoryService, ReferentialService, MeasureMeasureService, ClientRecommandationService,
+                                  $state, $timeout, $rootScope) {
         $scope.gettext = gettextCatalog.getString;
         TableHelperService.resetBookmarks();
 
@@ -98,6 +99,7 @@
                 case 'measures': $scope.currentTabIndex = 3; break;
                 case 'amvs': $scope.currentTabIndex = 4; break;
                 case 'objlibs': $scope.currentTabIndex = 5; break;
+                case 'recommandations': $scope.currentTabIndex = 6; break;
             }
         }
 
@@ -2117,13 +2119,392 @@
             });
         };
 
+
+
+        /*
+         * RECOMMANDATIONS SETS TAB
+         */
+        $scope.recommandations = TableHelperService.build('code', 20, 1, '');
+        $scope.recommandations.activeFilter = 1;
+        $scope.recommandationsSets = [];
+
+        $scope.selectRecommandationsTab = function () {
+            $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'recommandations'});
+            $scope.updatingRecommandationsSets = false;
+            ClientRecommandationService.getRecommandationsSets({anr: $scope.model.anr.id, order: 'createdAt'}).then(function (data) {
+                $scope.recommandationsSets.items = data;
+                $rootScope.recommandations_sets_uuid = $scope.recommandationsSets.items['recommandations-sets'].map(function(recommandationSet){return recommandationSet.uuid});
+                $scope.updatingRecommandationsSets = true;
+            });
+        };
+
+        $scope.deselectRecommandationsTab = function () {
+            TableHelperService.unwatchSearch($scope.recommandations);
+            $scope.recommandations.selected = [];
+        };
+
+        $rootScope.$on('anrUpdated', function () {
+            if ($scope.currentTabIndex == 3) {
+                $scope.deselectRecommandationsTab();
+                $scope.selectRecommandationsTab();
+            }
+        });
+
+        $scope.selectRecommandationSet = function (RecommandationSetId,index) {
+            $scope.recSetTabSelected = index;
+            $scope.recommandation_set_uuid = RecommandationSetId;
+            ClientRecommandationService.getRecommandationSet($scope.model.anr.id, RecommandationSetId).then(function (data) {
+                $scope.recommandationSet = data;
+            });
+
+            var initRecommandationsFilter = true;
+            initRecommandationsFilter = $scope.$watch('recommandations.activeFilter', function() {
+                if (initRecommandationsFilter) {
+                    initRecommandationsFilter = false;
+                } else {
+                    $scope.updateRecommandations();
+                }
+            });
+            TableHelperService.watchSearch($scope, 'recommandations.query.filter', $scope.recommandations.query, $scope.updateRecommandations, $scope.recommandations);
+        };
+
+        $scope.deselectRecommandationsSetsTab = function () {
+            TableHelperService.removeFilter($scope.recommandations);
+            $scope.recommandations.selected = [];
+        };
+
+
+        $scope.removeRecommandationsFilter = function () {
+            TableHelperService.removeFilter($scope.recommandations);
+        };
+
+        $scope.toggleRecommandationStatus = function (recommandation) {
+            recommandation.anr = $scope.model.anr.id;
+            recommandation.recommandationSet = recommandation.recommandationSet.uuid;
+            recommandation.status = !recommandation.status;
+            ClientRecommandationService.updateRecommandation(recommandation, function () {
+                $scope.updateRecommandations();
+            });
+        }
+
+        $scope.updateRecommandationsSets = function () {
+            $scope.updatingRecommandationsSets = false;
+            $scope.recommandationsSets.promise = ClientRecommandationService.getRecommandationsSets({anr: $scope.model.anr.id, order: 'createdAt'});
+            $scope.recommandationsSets.promise.then(
+                function (data) {
+                    $scope.recommandationsSets.items = data;
+                    $rootScope.recommandations_sets_uuid = $scope.recommandationsSets.items['recommandations-sets'].map(function(recommandationSet){return recommandationSet.uuid});
+                    $scope.updatingRecommandationsSets = true;
+                }
+            )
+        };
+
+
+        $scope.importNewRecommandationSet = function (ev, recommandationSet) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ClientRecommandationService', 'ConfigService', 'recommandationSet', 'anrId', ImportRecommandationSetDialogCtrl],
+                templateUrl: 'views/anr/import.recommandationsSets.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                  'recommandationSet' : recommandationSet,
+                  'anrId': $scope.model.anr.id
+                }
+            })
+                .then(function (result) {
+                    var recommandationSet = result.recommandationSet;
+                    var recommandations = result.recommandations;
+
+                    ClientRecommandationService.createRecommandationSet(recommandationSet,
+                        function () {
+                            ClientRecommandationService.createRecommandationMass(recommandations, function (result){
+                                $scope.$parent.updateRecommandationsSets();
+                                toastr.success(gettextCatalog.getString('The recommendation set has been imported successfully.',
+                                    {recommandationSetLabel: $scope._langField(recommandationSet,'label')}), gettextCatalog.getString('Creation successful'));
+                                $rootScope.$broadcast('recommendationsSetsUpdated');
+                                $rootScope.$broadcast('recommendationsUpdated');
+                            });
+                        },
+                        function () {
+                            $scope.importNewRecommandationSet(ev, recommandationSet);
+                        }
+                    );
+                });
+        };
+
+
+        $scope.createNewRecommandationSet = function (ev, recommandationSet) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'ConfigService', 'recommandationSet', 'anrId', CreateRecommandationSetDialogCtrl],
+                templateUrl: 'views/anr/create.recommandationsSets.html',
+                targetEvent: ev,
+                preserveScope: true,
+                scope: $scope,
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                  'recommandationSet' : recommandationSet,
+                  'anrId': $scope.model.anr.id
+                }
+            })
+                .then(function (recommandationSet) {
+                    recommandationSet.anr = $scope.model.anr.id;
+                    var cont = recommandationSet.cont;
+                    recommandationSet.cont = undefined;
+
+                    if (cont) {
+                        $scope.createNewRecommandationSet(ev);
+                    }
+
+                    ClientRecommandationService.createRecommandationSet(recommandationSet,
+                        function () {
+                          $scope.recSetTabSelected = $scope.recommandationsSets.items.count + 1;
+                          $scope.updateRecommandationsSets();
+                          toastr.success(gettextCatalog.getString('The recommendation set has been created successfully.',
+                                  {recommandationSetLabel: $scope._langField(recommandationSet,'label')}), gettextCatalog.getString('Creation successful'));
+                          $rootScope.$broadcast('recommendationsSetsUpdated');
+                        },
+
+                        function () {
+                            $scope.createNewRecommandationSet(ev, recommandationSet);
+                        }
+                    );
+                });
+        };
+
+        $scope.editRecommandationSet = function (ev, recommandationSet) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            ClientRecommandationService.getRecommandationSet($scope.model.anr.id, recommandationSet).then(function (recommandationSetData) {
+                $mdDialog.show({
+                    controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'ConfigService', 'recommandationSet', 'anrId', CreateRecommandationSetDialogCtrl],
+                    templateUrl: 'views/anr/create.recommandationsSets.html',
+                    targetEvent: ev,
+                    preserveScope: false,
+                    scope: $scope.$dialogScope.$new(),
+                    clickOutsideToClose: false,
+                    fullscreen: useFullScreen,
+                    locals: {
+                        'recommandationSet': recommandationSetData,
+                        'anrId': $scope.model.anr.id
+                    }
+                })
+                    .then(function (recommandationSet) {
+                        recommandationSet.anr = $scope.model.anr.id;
+                        ClientRecommandationService.updateRecommandationSet(recommandationSet,
+                            function () {
+                                $scope.updateRecommandationsSets();
+                                toastr.success(gettextCatalog.getString('The recommendation set has been edited successfully.',
+                                    {recommandationSetLabel: $scope._langField(recommandationSet,'label')}), gettextCatalog.getString('Edition successful'));
+                                $rootScope.$broadcast('recommendationsSetsUpdated');
+                            },
+
+                            function () {
+                                $scope.editRecommandationSet(ev, recommandationSet);
+                            }
+                        );
+                    });
+            });
+        };
+
+        $scope.deleteRecommandationSet = function (ev, recommandationSet) {
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Are you sure you want to delete recommendation set?',
+                    {label: $scope._langField(recommandationSet,'label')}))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .targetEvent(ev)
+                .theme('light')
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                ClientRecommandationService.deleteRecommandationSet({anr: $scope.model.anr.id, id: recommandationSet},
+                    function () {
+                        $scope.updateRecommandationsSets();
+                        toastr.success(gettextCatalog.getString('The recommendation set has been deleted.',
+                                    {label: $scope._langField(recommandationSet,'label')}), gettextCatalog.getString('Deletion successful'));
+                        $rootScope.$broadcast('recommendationsSetsUpdated');
+                    }
+                );
+            });
+        };
+
+        $scope.updateRecommandations = function () {
+            var query = angular.copy($scope.recommandations.query);
+            query.status = $scope.recommandations.activeFilter;
+            if($scope.model !== undefined){
+                query.recommandationSet = $scope.recommandation_set_uuid;
+                query.anr = $scope.model.anr.id;
+            }
+            else if ($scope.RecSetSelected !== undefined){
+                query.anr = $scope.RecSetSelected.anr.id;
+                query.recommandationSet = $scope.RecSetSelected.uuid;
+            }
+
+            if ($scope.recommandations.previousQueryOrder != $scope.recommandations.query.order) {
+                $scope.recommandations.query.page = query.page = 1;
+                $scope.recommandations.previousQueryOrder = $scope.recommandations.query.order;
+            }
+
+            $scope.recommandations.promise = ClientRecommandationService.getRecommandations(query);
+            $scope.recommandations.promise.then(
+                function (data) {
+                  $scope.recommandations.items = data;
+                }
+            )
+
+        };
+
+
+        $scope.createNewRecommandation = function (ev, recommandation) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog',
+                            'ClientRecommandationService', 'ConfigService', 'recommandation', 'recommandationSet',
+                             'anrId', CreateRecommandationDialogCtrl],
+                templateUrl: 'views/anr/create.recommandation-kbase.html',
+                targetEvent: ev,
+                preserveScope: true,
+                scope: $scope,
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    'recommandation': recommandation,
+                    'recommandationSet' : $scope.recommandationSet,
+                    'anrId': $scope.model.anr.id
+                }
+            })
+                .then(function (recommandation) {
+                    var cont = recommandation.cont;
+                    recommandation.cont = undefined;
+                    recommandation.anr = $scope.model.anr.id;
+                    recommandation.recommandationSet = $scope.recommandationSet.uuid;
+                    if (cont) {
+                        $scope.createNewRecommandation(ev);
+                    }
+
+                    ClientRecommandationService.createRecommandation(recommandation,
+                        function () {
+                            $scope.recommandations.activeFilter = 1;
+                            $scope.updateRecommandations();
+                            toastr.success(gettextCatalog.getString('The recommendation has been created successfully.',
+                                {recommandationLabel: $scope._langField(recommandation,'label')}), gettextCatalog.getString('Creation successful'));
+                            $rootScope.$broadcast('recommandationsUpdated');
+                        },
+                        function (err) {
+                            $scope.createNewRecommandation(ev, recommandation);
+                        }
+                    );
+                });
+        };
+
+        $scope.editRecommandation = function (ev, recommandation) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            ClientRecommandationService.getRecommandation($scope.model.anr.id, recommandation.uuid).then(function (recommandationData) {
+                $mdDialog.show({
+                    controller: ['$scope', '$mdDialog',
+                                 'ClientRecommandationService', 'ConfigService', 'recommandation', 'recommandationSet',
+                                 'anrId', CreateRecommandationDialogCtrl],
+                    templateUrl: 'views/anr/create.recommandation-kbase.html',
+                    targetEvent: ev,
+                    preserveScope: false,
+                    scope: $scope.$dialogScope.$new(),
+                    clickOutsideToClose: false,
+                    fullscreen: useFullScreen,
+                    locals: {
+                        'recommandation': recommandationData,
+                        'recommandationSet' : $scope.recommandationSet,
+                        'anrId': $scope.model.anr.id
+                    }
+                })
+                    .then(function (recommandation) {
+                        recommandation.recommandationSet = recommandation.recommandationSet.uuid;
+                        recommandation.anr = $scope.model.anr.id;
+                        ClientRecommandationService.updateRecommandation(recommandation,
+                            function () {
+                                $scope.updateRecommandations();
+                                toastr.success(gettextCatalog.getString('The recommendation has been edited successfully.',
+                                    {recommandationLabel: $scope._langField(recommandation,'label')}), gettextCatalog.getString('Edition successful'));
+                                $rootScope.$broadcast('recommandationsUpdated');
+                            },
+
+                            function () {
+                                $scope.editRecommandation(ev, recommandation);
+                            }
+                        );
+                    });
+            });
+        };
+
+
+        $scope.deleteRecommandation = function (ev, item) {
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Are you sure you want to delete recommandation?',
+                    {label: $scope._langField(item,'label')}))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .targetEvent(ev)
+                .theme('light')
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                ClientRecommandationService.deleteRecommandation({anr : $scope.model.anr.id, id: item.uuid},
+                    function () {
+                        toastr.success(gettextCatalog.getString('The recommandation has been deleted.',
+                            {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
+                        $scope.updateRecommandations();
+                        $scope.recommandations.selected = $scope.recommandations.selected.filter(recSelected => recSelected.uuid != item.uuid);
+                        $rootScope.$broadcast('recommandationsUpdated');
+                    }
+                );
+            });
+        };
+
+        $scope.deleteMassRecommandation = function (ev, item) {
+            var outpromise = null;
+            var count = $scope.recommandations.selected.length;
+
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Are you sure you want to delete the {{count}} selected recommandations?',
+                    {count: count}))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .targetEvent(ev)
+                .theme('light')
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                var ids = [];
+                for (var i = 0; i < $scope.recommandations.selected.length; ++i) {
+                    ids.push($scope.recommandations.selected[i].uuid);
+                }
+                ClientRecommandationService.deleteMassRecommandation($scope.model.anr.id, ids, function () {
+                    toastr.success(gettextCatalog.getString('{{count}} recommendations have been deleted.',
+                        {count: count}), gettextCatalog.getString('Deletion successful'));
+                    $scope.updateRecommandations();
+                    $scope.recommandations.selected = [];
+                    $rootScope.$broadcast('recommandationsUpdated');
+                });
+            });
+        };
+
+
+
       //Import File Center
 
       $scope.importFile = function (ev,tab) {
         var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
         $mdDialog.show({
-            controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService',
-                        'SOACategoryService', 'TagService', 'RiskService', 'MeasureMeasureService', 'toastr', 'gettextCatalog', '$q', 'tab', 'themes', 'categories', 'referential' ,'tags',  ImportFileDialogCtrl],
+            controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService', 'ClientRecommandationService',
+                        'SOACategoryService', 'TagService', 'RiskService', 'MeasureMeasureService', 'toastr', 'gettextCatalog', '$q', 'tab', 'themes',
+                        'categories', 'referential' ,'recommandationSet','tags', ImportFileDialogCtrl],
             templateUrl: 'views/anr/import.file.html',
             targetEvent: ev,
             scope: $scope.$dialogScope.$new(),
@@ -2135,7 +2516,8 @@
                 'themes' : $scope.listThemes,
                 'categories' : $scope.listCategories,
                 'referential' : $scope.RefSelected,
-                'tags' : $scope.listTags
+                'recommandationSet': $scope.RecSetSelected,
+                'tags' : $scope.listTags,
             }
         })
          .then(function(importData){
@@ -2188,7 +2570,13 @@
                   successCreateObject(result)
                 });
                break;
-
+             case 'Recommendations':
+                importData.anr = $scope.RecSetSelected.anr.id;
+                ClientRecommandationService.createRecommandationMass(importData, function(result){
+                    $scope.$parent.updateRecommandations();
+                    successCreateObject(result);
+                });
+                break;
              default:
            }
 
@@ -2200,8 +2588,9 @@
            };
          })
       }
-
     }
+
+
 
 
     //////////////////////
@@ -2728,6 +3117,7 @@
             $mdDialog.hide($scope.referential);
         }
     }
+
     function MatchReferentialDialogCtrl($scope, $mdDialog, ReferentialService, MeasureService, ConfigService, MeasureMeasureService, $q, measures, referentials, referentialSelected) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = ConfigService.getDefaultLanguageIndex();
@@ -3038,7 +3428,6 @@
                 $scope.asset_amvs = data.amvs;
             });
         };
-
 
         if (amv != undefined && amv != null) {
             $scope.amv = amv;
@@ -3404,7 +3793,172 @@
         };
     }
 
-    function ImportAmvDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ConfigService, AssetService, ThreatService, VulnService) {
+    function ImportRecommandationSetDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ClientRecommandationService, ConfigService, recommandationSet, anrId) {
+        $scope.languages = ConfigService.getLanguages();
+        $scope.language = $scope.getAnrLanguage();
+
+        var mosp_query_organizations = 'organization';
+        $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
+        .then(function(json) {
+            $scope.organizations = json.data.data.objects;
+        });
+
+        $scope.selectOrganization = function() {
+            // Retrieve the recommendations sets from the selected organization
+            // from MOSP via its API
+            var mosp_query_recommandations_sets = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Recommendations"}},' +
+                    '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}';
+            $http.jsonp($rootScope.mospApiUrl + mosp_query_recommandations_sets)
+            .then(function(json) {
+                // filter from the results the recommendations sets already in the analysis
+                $scope.mosp_recommandations_sets = json.data.data.objects.filter(
+                    recommandationSet => !$scope.recommandations_sets_uuid.includes(recommandationSet.json_object.uuid)
+                )
+            });
+        }
+
+       /**
+        * Returns a filtered list of recommendations sets from MOSP with all the
+        * recommendations sets matching with 'searchText' as name.
+        *
+        * @param  searchText  the name of the recommendation set to search for
+        * @return             the list of available recommendations sets to import
+        */
+        $scope.getMatches = function(searchText) {
+            return $scope.mosp_recommandations_sets.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()));
+        };
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.import = function() {
+            var recSet_temp = $scope.mosp_recommandations_sets.find(r => r['id'] === $scope.recommandationSet.id);
+
+            $scope.recommandationSet['uuid'] = recSet_temp.json_object.uuid;
+            for (var i = 1; i <=4; i++) {
+                $scope.recommandationSet['label' + i] = recSet_temp['name'];
+            }
+            delete $scope.recommandationSet.id;
+            $scope.recommandationSet.anr = anrId;
+            var recommandations = recSet_temp.json_object.recommandations;
+            recommandations.anr = anrId;
+            recommandations.map(function(recommandation) {
+                recommandation['recommandationSet'] = recSet_temp.json_object.uuid;
+                recommandation['anr'] = anrId;
+            })
+            result = {
+                recommandationSet: $scope.recommandationSet,
+                recommandations: recommandations
+            }
+            $mdDialog.hide(result);
+        };
+    }
+
+    function CreateRecommandationSetDialogCtrl($scope, $mdDialog, ClientRecommandationService, ConfigService, recommandationSet, anrId) {
+        $scope.languages = ConfigService.getLanguages();
+        $scope.language = $scope.getAnrLanguage();
+        var defaultLang = angular.copy($scope.language);
+
+        if (recommandationSet != undefined && recommandationSet != null) {
+            $scope.recommandationSet = recommandationSet;
+            delete $scope.recommandationSet.recommandations;
+        } else {
+          $scope.recommandationSet = {
+              label1: '',
+              label2: '',
+              label3: '',
+              label4: '',
+          };
+        }
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.create = function() {
+            for (var i = 1; i <=4; i++) {
+              if ($scope.recommandationSet['label' + i] == '' && i != defaultLang) {
+                $scope.recommandationSet['label' + i] = $scope.recommandationSet['label' + defaultLang];
+              }
+            }
+            $mdDialog.hide($scope.recommandationSet);
+        };
+        $scope.createAndContinue = function () {
+            for (var i = 1; i <=4; i++) {
+              if ($scope.recommandationSet['label' + i] == '' && i != defaultLang) {
+                $scope.recommandationSet['label' + i] = $scope.recommandationSet['label' + defaultLang];
+              }
+            }
+            $scope.recommandationSet.cont = true;
+            $mdDialog.hide($scope.recommandationSet);
+        }
+    }
+
+
+    function CreateRecommandationDialogCtrl($scope, $mdDialog,ClientRecommandationService,
+                                ConfigService, recommandation, recommandationSet, anrId) {
+
+        $scope.languages = ConfigService.getLanguages();
+        $scope.language = $scope.getAnrLanguage();
+        $scope.categorySearchText = '';
+        $scope.RecSetSelected = recommandationSet;
+        if (recommandation != undefined && recommandation != null) {
+            $scope.recommandation = recommandation;
+        } else {
+            $scope.recommandation = {
+                recommandationSet: recommandationSet,
+                code: '',
+                description: '',
+                importance: '',
+            };
+        }
+
+        $scope.loadOptions = function(ev, anrID) {
+            ClientRecommandationService.getRecommandations({anr: anrId}).then(function (data) {
+                $scope.options = data.recommandations;
+            });
+            return $scope.options;
+        };
+
+        $scope.loadSetOptions = function(ev, anrID) {
+            ClientRecommandationService.getRecommandationsSets({anr: anrId}).then(function (data) {
+                $scope.setOptions = data['recommandations-sets'];
+            });
+            return $scope.setOptions;
+        };
+
+        $scope.setSelectedRecommendation = function(ev, selectedRec) {
+            if (selectedRec !== undefined) {
+                $scope.recommandation['code'] = selectedRec.code;
+                $scope.recommandation['importance'] = selectedRec.importance;
+                $scope.recommandation['description'] = selectedRec.description;
+            }
+        };
+
+        $scope.setSelectedRecommendationSet = function(ev, selectedRecSet) {
+            if (selectedRecSet !== undefined) {
+                $scope.recommandation['recommandationSet'] = selectedRecSet;
+                $scope.RecSetSelected = selectedRecSet;
+            }
+        };
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.create = function() {
+            $mdDialog.hide($scope.recommandation);
+        };
+        $scope.createAndContinue = function() {
+            $scope.recommandation.cont = true;
+            $mdDialog.hide($scope.recommandation);
+        };
+
+    }
+
+
+    function ImportAmvDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ConfigService, AssetService, ThreatService, VulnService, amv) {
             $scope.languages = ConfigService.getLanguages();
             $scope.language = $scope.getAnrLanguage();
 
@@ -3487,8 +4041,8 @@
             };
         }
 
-    function ImportFileDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService, MeasureService, SOACategoryService,
-                                  TagService, RiskService, MeasureMeasureService, toastr, gettextCatalog, $q, tab, themes, categories, referential, tags) {
+    function ImportFileDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService, MeasureService, ClientRecommandationService, SOACategoryService,
+                                  TagService, RiskService, MeasureMeasureService, toastr, gettextCatalog, $q, tab, themes, categories, referential, recommandationSet, tags) {
 
       $scope.tab = tab;
       $scope.guideVisible = false;
@@ -3534,8 +4088,10 @@
           var items = 'measuresmeasures';
           MeasureService.getMeasures().then(function (data) {
             $scope.allMeasures = data.measures;
-          });
-          break;
+          });break;
+        case 'Recommendations':
+          var getService = ClientRecommandationService.getRecommandations({anr: recommandationSet.anr.id});
+          var items = 'recommandations'; break;
         default:
       }
 
@@ -3710,6 +4266,26 @@
               'required' : true,
               'type' : 'uuid',
               'example' : ''
+            }
+        },
+        'Recommendations' : {
+            'code' : {
+                'field' : 'code',
+                'required' : true,
+                'type' : 'text',
+                'example' : 'C16, 123, CAZ, C-12'
+            },
+            'description' : {
+                'field' : 'description',
+                'required' : true,
+                'type' : 'text',
+                'example' : gettextCatalog.getString('Periodically review access permissions.')
+            },
+            'importance' : {
+                'field' : 'importance',
+                'required' : false,
+                'type' : 'integer',
+                'example' : gettextCatalog.getString('1, 2 or 3')
             }
         }
       };
@@ -3889,6 +4465,14 @@
                   }
                 }
 
+                if (requiredFields.includes('importance')) {
+                    file.data[i]['importance'] = Number(file.data[i]['importance']);
+                    if (file.data[i]['importance'] < 0 || file.data[i]['importance'] > 3) {
+                        file.data[i].error += gettextCatalog.getString('importance must be between 1 and 3') + "\n";
+                        $scope.check = true;
+                    }
+                }
+
                 if (requiredFields.includes('match') && file.data[i]['control'] && file.data[i]['match']) {
                   var matches = items.map(item => item.father.toLowerCase() + item.child.toLowerCase());
                   var uuids = $scope.allMeasures.map(item => item.uuid);
@@ -4006,7 +4590,7 @@
             postData['label' + $scope.language] = postData['label'];
             delete postData['label'];
           }
-          if (postData['description']) {
+          if (postData['description'] && tab !== 'Recommendations') {
             postData['description' + $scope.language] = postData['description'];
             delete postData['description'];
           }
@@ -4029,6 +4613,12 @@
           if (tab == 'Categories') {
             postData.referential = referential;
           }
+
+          if(tab == 'Recommendations'){
+              postData.recommandationSet = recommandationSet.uuid;
+              postData.anr = recommandationSet.anr.id;
+          }
+
           if (postData['category']) {
             postData.category = $scope.getCategories.find(c => c['label' + $scope.language].toLowerCase().trim() === postData.category.toLowerCase().trim()).id;
           }
