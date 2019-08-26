@@ -591,7 +591,7 @@
                         <span translate>Recommendations</span>
                         <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'Add a recommendation' | translate }}" ng-if="!isAnrReadOnly" ng-click="createNewRecommandation($event)">
                             <md-tooltip md-direction="left">
-                                {{ 'Add a recommandation' | translate }}
+                                {{ 'Add a recommendation' | translate }}
                             </md-tooltip>
                             <md-icon>add_to_photos</md-icon>
                         </md-button>
@@ -602,13 +602,13 @@
                             <input ng-model="recommandations.query.filter" ng-model-options="recommandations.filter.options">
                         </md-input-container>
                     </form>
-  
+
                     <md-select aria-label="filter" ng-model="recommandations.activeFilter">
                         <md-option value="all">{{ 'Show all' | translate }}</md-option>
                         <md-option value="0">{{ 'Show inactive only' | translate }}</md-option>
                         <md-option value="1">{{ 'Show active only' | translate }}</md-option>
                     </md-select>
-  
+
                     <md-button class="md-icon-button md-primary" ng-click="removeRecommandationsFilter()">
                         <md-icon>settings_backup_restore</md-icon>
                     </md-button>
@@ -621,7 +621,7 @@
                         </md-button>
                     </div>
                 </md-toolbar>
-  
+
                 <md-table-container flex>
                     <table md-table md-row-select="!isAnrReadOnly" multiple ng-model="recommandations.selected" md-progress="recommandations.promise">
                         <thead md-head md-order="recommandations.query.order" md-on-reorder="updateRecommandations">
@@ -633,7 +633,7 @@
                             <th md-column class="actions-column" ng-if="!isAnrReadOnly"><span translate>Actions</span></th>
                         </tr>
                         </thead>
-  
+
                         <tbody md-body>
                         <tr md-row md-select="recommandation" md-select-id="uuid" ng-repeat="recommandation in recommandations.items.recommandations">
                             <td md-cell><md-button class="md-icon-button md-primary" ng-click="!isAnrReadOnly && toggleRecommandationStatus(recommandation)"><md-icon>{{ recommandation.status ? 'done' : 'clear' }}</md-icon></md-button></td>
@@ -648,7 +648,7 @@
                         </tbody>
                     </table>
                 </md-table-container>
-  
+
                 <md-table-pagination md-limit="recommandations.query.limit" md-limit-options="[20, 30, 50, 100]" md-page="recommandations.query.page"
                                      md-total="{{recommandations.items.count}}" md-on-paginate="updateRecommandations" md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
               </md-tab>

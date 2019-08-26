@@ -2448,7 +2448,7 @@
 
         $scope.deleteRecommandation = function (ev, item) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete recommandation?',
+                .title(gettextCatalog.getString('Are you sure you want to delete recommendation?',
                     {label: $scope._langField(item,'label')}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
@@ -2458,7 +2458,7 @@
             $mdDialog.show(confirm).then(function() {
                 ClientRecommandationService.deleteRecommandation({anr : $scope.model.anr.id, id: item.uuid},
                     function () {
-                        toastr.success(gettextCatalog.getString('The recommandation has been deleted.',
+                        toastr.success(gettextCatalog.getString('The recommendation has been deleted.',
                             {label: $scope._langField(item,'label')}), gettextCatalog.getString('Deletion successful'));
                         $scope.updateRecommandations();
                         $scope.recommandations.selected = $scope.recommandations.selected.filter(recSelected => recSelected.uuid != item.uuid);
@@ -2473,7 +2473,7 @@
             var count = $scope.recommandations.selected.length;
 
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete the {{count}} selected recommandations?',
+                .title(gettextCatalog.getString('Are you sure you want to delete the {{count}} selected recommendations?',
                     {count: count}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
