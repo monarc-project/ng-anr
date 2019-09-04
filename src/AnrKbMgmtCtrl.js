@@ -3070,7 +3070,10 @@
 
             result = {
                 referential: $scope.referential,
-                categories: $scope.categories,
+                categories: Array.from(new Set($scope.categories.map(cat => cat.label1)))
+                                      .map(label => {
+                                        return $scope.categories.find(cat => cat.label1 === label) // Remove duplicates of categories
+                                      }),
                 measures: measures
             }
 
