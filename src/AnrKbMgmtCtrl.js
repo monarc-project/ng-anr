@@ -17,6 +17,8 @@
                           var data = onLoadEvent.target.result;
                           if (isJson) {
                             fn(scope, {$fileContent:JSON.parse(data)});
+                          }else if (isCsv) {
+                            fn(scope, {$fileContent:data});
                           }else{
                             var workbook = XLSX.read(data, {
                               type: 'binary'
@@ -44,6 +46,9 @@
                       if (extension == "json") {
                         reader.readAsText(onChangeEvent.target.files[0]);
                         isJson = true;
+                      }else if (extension == "csv") {
+                        reader.readAsText(onChangeEvent.target.files[0]);
+                        isCsv = true;
                       }else {
                         reader.readAsBinaryString(onChangeEvent.target.files[0]);
                       }
