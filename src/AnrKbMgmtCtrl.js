@@ -42,7 +42,7 @@
                     var size = onChangeEvent.target.files[0].size < 1e6; // Check fize size being less 1M
 
                     if (isSuccess && size) {
-                      var isJson = false;
+                      var isJson = isCsv = false;
                       if (extension == "json") {
                         reader.readAsText(onChangeEvent.target.files[0]);
                         isJson = true;
