@@ -28,7 +28,7 @@
                               <span title="{{scaleCommCache[3][calculeImpact('d')]}}"><b>{{ 'Availability' | translate }}</b></span>
                             </div>
                         </div>
-                        <div layout="row" style="border: 1px solid #DFDFDF; padding: 1em; text-align: center;" flex= "80">
+                        <div layout="row" style="border: 1px solid #DFDFDF; padding: 1em; text-align: center; white-space: nowrap" flex= "80">
                             <div layout="column" ng-repeat="(idx, col) in instance.consequences" ng-if="!col.isHidden || display.hidden" flex>
                                 <p title={{tooltipScale[col.scaleImpactType]}}>{{ _langField(col,'scaleImpactTypeDescription') }} <md-button class="md-icon-button" ng-click="setConsequenceVisibility(col.id, !!col.isHidden)"><md-icon>{{ col.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></p>
                                 <md-input-container style="margin: 8px 0">
