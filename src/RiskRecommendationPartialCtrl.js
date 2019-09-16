@@ -73,7 +73,8 @@
 
         $scope.queryRecSearch = function (query) {
             var q = $q.defer();
-            ClientRecommandationService.getRecommandations({anr: $scope.model.anr.id, filter: query}).then(function (data) {
+            ClientRecommandationService.getRecommandations({anr: $scope.model.anr.id, order: 'code', filter: query}).then(function (data) {
+                console.log(data.recommandations);
                 q.resolve(data.recommandations);
             }, function () {
                 q.reject();
