@@ -19,7 +19,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'anrId', CreateRecommandationDialog],
+                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'gettextCatalog', 'toastr', '$q','anrId', CreateRecommandationDialog],
                 templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -47,7 +47,7 @@
             ev.preventDefault();
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'anrId', 'rec' , 'detachRecommandation', 'copyRecommandation', 'deleteRecommandation', CreateRecommandationDialog],
+                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'gettextCatalog', 'toastr', '$q', 'anrId', 'rec' , 'detachRecommandation', 'copyRecommandation', 'deleteRecommandation', CreateRecommandationDialog],
                 templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -74,7 +74,6 @@
         $scope.queryRecSearch = function (query) {
             var q = $q.defer();
             ClientRecommandationService.getRecommandations({anr: $scope.model.anr.id, order: 'code', filter: query}).then(function (data) {
-                console.log(data.recommandations);
                 q.resolve(data.recommandations);
             }, function () {
                 q.reject();
@@ -194,7 +193,9 @@
 
     }
 
-    function CreateRecommandationDialog($scope, $mdDialog, ClientRecommandationService, anrId, rec, detachRecommandation, copyRecommandation, deleteRecommandation) {
+    function CreateRecommandationDialog($scope, $mdDialog, ClientRecommandationService, gettextCatalog, toastr, $q, anrId, rec, detachRecommandation, copyRecommandation, deleteRecommandation) {
+        $scope.language = $scope.getAnrLanguage();
+        $scope.recommendationSet = null;
         $scope.recommandation = rec;
         $scope.deleteConfirmation = false;
         $scope.detachRecommandation = detachRecommandation;
@@ -207,12 +208,34 @@
             });
             return $scope.options;
         };
-
-        $scope.loadSetOptions = function(ev, anrID) {
-            ClientRecommandationService.getRecommandationsSets({anr: anrId}).then(function (data) {
-                $scope.setOptions = data['recommandations-sets'];
+        $scope.queryRecommendationSetSearch = function (query) {
+            var promise = $q.defer();
+              ClientRecommandationService.getRecommandationsSets({filter: query, anr: anrId }).then(function (data) {
+                promise.resolve(data['recommandations-sets']);
+            }, function () {
+                promise.reject();
             });
-            return $scope.setOptions;
+            return promise.promise;
+        };
+
+        $scope.selectedRecommendationSetItemChange = function (item) {
+            $scope.recommendationSet = item;
+        }
+
+        $scope.createNewRecommendationSet = function (ev, recommendationSetlabel) {
+          var recommendationSet = {};
+          recommendationSet['anr'] = anrId;
+          for (var i = 1; i <=4; i++) {
+            recommendationSet['label' + i] =  recommendationSetlabel;
+          }
+
+          ClientRecommandationService.createRecommandationSet(recommendationSet,
+            function (status) {
+              recommendationSet.uuid = status.id;
+              $scope.selectedRecommendationSetItemChange(recommendationSet);
+              toastr.success(gettextCatalog.getString('The recommendation set has been created successfully.'), gettextCatalog.getString('Creation successful'));
+            }
+          );
         };
 
         $scope.setSelectedRecommendation = function(ev, selectedRec) {
@@ -225,12 +248,6 @@
             }
         };
 
-        $scope.setSelectedRecommendationSet = function(ev, selectedRecSet) {
-            if (selectedRecSet !== undefined) {
-                $scope.recommandationSet = selectedRecSet['uuid'];
-            }
-        };
-
         $scope.delete = function () {
             $scope.deleteConfirmation = true;
         };
@@ -240,7 +257,7 @@
         };
 
         $scope.create = function () {
-            $scope.recommandation['recommandation']['recommandationSet'] = $scope.recommandationSet;
+            $scope.recommandation['recommandation']['recommandationSet'] = $scope.recommendationSet.uuid;
             $mdDialog.hide($scope.recommandation);
         };
 

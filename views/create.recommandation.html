@@ -19,21 +19,52 @@
                     </md-select>
                 </md-input-container>
 
-                <md-input-container ng-if="!recommandation.recommandation.uuid" class="md-block" style="margin-right: 10px;">
-                    <label translate>Select a recommendation set</label>
-                    <md-select flex ng-model="recommandation.recommandationSet" md-on-open="loadSetOptions($event, recommandation.recommandationSet)" md-on-close="setSelectedRecommendationSet($event, recommandation.recommandationSet)" ng-required="true">
-                        <md-option ng-repeat="item in setOptions" ng-value="item">{{ _langField(item,'label') }}</md-option>
-                    </md-select>
-                </md-input-container>
+                <div class="md-block" layout="column"  ng-if="!recommandation.recommandation.uuid" flex>
+                    <div layout="row" layout-align="center center">
+                        <md-autocomplete
+                                flex
+                                required
+                                md-input-name="recommendation"
+                                md-no-cache="true"
+                                md-selected-item="recommendationSet"
+                                md-search-text="recommendationSetSearchText"
+                                md-items="item in queryRecommendationSetSearch(recommendationSetSearchText)"
+                                md-item-text="item['label' + language]"
+                                md-min-length="0"
+                                md-selected-item-change="selectedRecommendationSetItemChange(item)"
+                                md-floating-label="{{ 'Select a recommendation set' | translate }}">
+                            <md-item-template>
+                                <span md-highlight-text="recommendationSetSearchText" md-highlight-flags="^i">{{item['label' + language]}}</span>
+                            </md-item-template>
+                            <div ng-messages="recommendationSetForm.recommendationS.$error">
+                                <div ng-message="required">{{ 'The recommendation set may not be empty' | translate }}</div>
+                            </div>
+
+                            <md-not-found>
+                                {{ 'No recommendation set matching your search was found. Click on' | translate }}
+                                <md-icon>add_to_photos</md-icon>
+                                {{ 'to create it.' | translate }}
+                            </md-not-found>
+                        </md-autocomplete>
+
+                        <md-button class="md-icon-button md-primary" ng-click="createNewRecommendationSet($event,recommendationSetSearchText)" ng-show="!recommendationSet.uuid && recommendationSetSearchText">
+                          <md-tooltip md-direction="left">
+                              {{ 'Add a recommendation set' | translate }}
+                          </md-tooltip>
+                            <md-icon>add_to_photos</md-icon>
+                        </md-button>
+                    </div>
+                </div>
 
                 <md-input-container class="md-block">
+                  <label translate>Code</label>
                     <md-icon>toc</md-icon>
                     <input type="text" ng-model="recommandation.recommandation.code" ng-required="true">
                 </md-input-container>
 
+                <md-icon>star</md-icon>
+                <label translate>Importance</label>
                 <md-radio-group ng-model="recommandation.recommandation.importance" ng-required="true">
-                    <md-icon>star</md-icon>
-                    <label translate>Importance</label>
                     <md-radio-button ng-value="1"><span class="anr-importance">&bull;</span> {{ 'Useful information for safety, advice' | translate }}</md-radio-button>
                     <md-radio-button ng-value="2"><span class="anr-importance">&bull;&bull;</span> {{ 'Recommendation which requires a dedicated action to solve a vulnerability or a missing best practice' | translate }}</md-radio-button>
                     <md-radio-button ng-value="3"><span class="anr-importance">&bull;&bull;&bull;</span> {{ 'Priority recommendation' | translate }}</md-radio-button>
@@ -54,7 +85,6 @@
                 {{ 'Delete' | translate }}
             </md-button>
             <md-button ng-if="recommandation.recommandation.uuid && !isRecoContext" ng-click="detachRecommandation($event, recommandation)">{{ 'Detach' | translate }}</md-button>
-            <!-- <md-button ng-if="recommandation.recommandation.uuid" ng-click="copyRecommandation($event, recommandation)" >{{ 'Copy' | translate }}</md-button> -->
             <md-button ng-click="create()" ng-disabled="riskForm.$invalid" type="submit" class="md-accent md-hue-3">
                 {{ (recommandation.recommandation.uuid ? 'Save' : 'Create') | translate }}
             </md-button>
