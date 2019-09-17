@@ -62,9 +62,11 @@
                     <input type="text" ng-model="recommandation.recommandation.code" ng-required="true">
                 </md-input-container>
 
-                <md-icon>star</md-icon>
-                <label translate>Importance</label>
-                <md-radio-group ng-model="recommandation.recommandation.importance" ng-required="true">
+                <div style="margin-bottom:10px">
+                  <md-icon>star</md-icon>
+                  <label translate>Importance</label>
+                </div>
+                <md-radio-group class="importanceRec" ng-model="recommandation.recommandation.importance" ng-required="true">
                     <md-radio-button ng-value="1"><span class="anr-importance">&bull;</span> {{ 'Useful information for safety, advice' | translate }}</md-radio-button>
                     <md-radio-button ng-value="2"><span class="anr-importance">&bull;&bull;</span> {{ 'Recommendation which requires a dedicated action to solve a vulnerability or a missing best practice' | translate }}</md-radio-button>
                     <md-radio-button ng-value="3"><span class="anr-importance">&bull;&bull;&bull;</span> {{ 'Priority recommendation' | translate }}</md-radio-button>

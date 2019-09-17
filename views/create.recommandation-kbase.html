@@ -17,7 +17,7 @@
                         <md-icon>play_for_work</md-icon><span>{{ 'Import from file' | translate }}</span>
                     </md-button>
                 </md-card>
-                
+
                 <md-input-container ng-if="!recommandation.uuid" class="md-block" style="margin-right: 10px;">
                     <label translate>Search a recommendation to create one from an existing</label>
                     <md-select flex ng-model="recommandation" md-on-open="loadOptions($event, recommandation)" md-on-close="setSelectedRecommendation($event, recommandation)">
@@ -34,12 +34,15 @@
 
                 <md-input-container class="md-block">
                     <md-icon>toc</md-icon>
+                    <label translate>Code</label>
                     <input type="text" ng-model="recommandation.code" ng-required="true">
                 </md-input-container>
 
-                <md-radio-group ng-model="recommandation.importance" ng-required="true">
-                    <md-icon>star</md-icon>
-                    <label translate>Importance</label>
+                <div style="margin-bottom:10px">
+                  <md-icon>star</md-icon>
+                  <label translate>Importance</label>
+                </div>
+                <md-radio-group class="importanceRec" ng-model="recommandation.importance" ng-required="true">
                     <md-radio-button ng-value="1"><span class="anr-importance">&bull;</span> {{ 'Useful information for safety, advice' | translate }}</md-radio-button>
                     <md-radio-button ng-value="2"><span class="anr-importance">&bull;&bull;</span> {{ 'Recommendation which requires a dedicated action to solve a vulnerability or a missing best practice' | translate }}</md-radio-button>
                     <md-radio-button ng-value="3"><span class="anr-importance">&bull;&bull;&bull;</span> {{ 'Priority recommendation' | translate }}</md-radio-button>
