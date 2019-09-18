@@ -100,7 +100,7 @@ table.md-table tbody.md-body>tr.md-row:hover {
 }
 
 .importanceRec > *{
-  margin-left: 15px; 
+  margin-left: 15px;
 }
 
 .tooltip-object-header, .tooltip-object-header .md-content {
@@ -1260,6 +1260,21 @@ md-select-menu md-content
     width: 500px !important;
 }
 
+.kb-main-tabs md-tabs-canvas{
+    margin-right: 70px;
+}
+
+.kb-main-tabs md-next-button{
+    right:50px;
+}
+
+.kb-sub-tabs md-tabs-canvas{
+    margin-right: 190px;
+}
+
+.kb-sub-tabs md-next-button{
+    right:170px ;
+}
 
 .record-tabs md-tabs-canvas{
     margin-right: 210px;

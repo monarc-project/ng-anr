@@ -1,5 +1,5 @@
 <div flex ng-controller="AnrKbMgmtCtrl" class="anr-kb-mgmt" ng-if="tabKBDisplayed">
-    <md-tabs md-dynamic-height="true" md-border-bottom="true" md-selected="currentTabIndex">
+    <md-tabs class="kb-main-tabs" md-dynamic-height="true" md-border-bottom="true" md-selected="currentTabIndex">
 
         <md-tab label="{{ 'Asset types' | translate }}" md-on-select="selectAssetsTab()" md-on-deselect="deselectAssetsTab()">
             <div layout="row" layout-align="start center" class="md-padding" ng-if="!assets.selected.length">
@@ -214,7 +214,7 @@
         </md-tab>
 
         <md-tab label="{{ 'Referentials' | translate }}" md-on-select="selectMeasuresTab()" md-on-deselect="deselectMeasuresTab()">
-          <md-tabs md-dynamic-height="true" md-border-bottom="" ng-if="updatingReferentials" md-selected="refTabSelected">
+          <md-tabs class="kb-sub-tabs" md-dynamic-height="true" md-border-bottom="" ng-if="updatingReferentials" md-selected="refTabSelected">
             <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="createNewReferential($event)">
               <md-tooltip md-direction="left">
                   {{ 'Add a referential' | translate }}
@@ -566,7 +566,7 @@
         </md-tab>
 
         <md-tab label="{{ 'Recommendations Sets' | translate }}" md-on-select="selectRecommandationsTab()" md-on-deselect="deselectRecommandationsTab()">
-            <md-tabs md-dynamic-height="true" md-border-bottom="" ng-if="updatingRecommandationsSets" md-selected="recSetTabSelected">
+            <md-tabs class="kb-sub-tabs" md-dynamic-height="true" md-border-bottom="" ng-if="updatingRecommandationsSets" md-selected="recSetTabSelected">
               <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="createNewRecommandationSet($event)">
                 <md-tooltip md-direction="left">
                     {{ 'Add a recommendation set' | translate }}
