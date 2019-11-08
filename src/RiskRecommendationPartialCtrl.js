@@ -211,7 +211,6 @@
         $scope.queryRecommendationSetSearch = function (query) {
             var promise = $q.defer();
               ClientRecommandationService.getRecommandationsSets({filter: query, anr: anrId }).then(function (data) {
-                  console.log(data['recommandations-sets']);
                 promise.resolve(data['recommandations-sets']);
             }, function () {
                 promise.reject();
