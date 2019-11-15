@@ -2652,7 +2652,7 @@
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
 
-        var mosp_query_organizations = 'organization';
+        var mosp_query_organizations = 'organization?results_per_page=500';
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(org) {
             var mosp_query_all_assets = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Assets"}}]}&results_per_page=3000';
@@ -2839,7 +2839,7 @@
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
 
-        var mosp_query_organizations = 'organization';
+        var mosp_query_organizations = 'organization?results_per_page=500';
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(org) {
             var mosp_query_all_threats = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Threats"}}]}&results_per_page=3000';
@@ -2961,7 +2961,7 @@
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
 
-        var mosp_query_organizations = 'organization';
+        var mosp_query_organizations = 'organization?results_per_page=500';
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(org) {
             var mosp_query_all_vulns = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Vulnerabilities"}}]}&results_per_page=3000';
@@ -3017,7 +3017,7 @@
 
     function ImportReferentialDialogCtrl($rootScope, $scope, $http, $mdDialog) {
 
-        var mosp_query_organizations = 'organization';
+        var mosp_query_organizations = 'organization?results_per_page=500';
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(org) {
             var mosp_query_all_referentials = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Security referentials"}}]}';
@@ -3805,7 +3805,7 @@
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
 
-        var mosp_query_organizations = 'organization';
+        var mosp_query_organizations = 'organization?results_per_page=500';
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(json) {
             $scope.organizations = json.data.data.objects;
@@ -3970,7 +3970,7 @@
             $scope.languages = ConfigService.getLanguages();
             $scope.language = $scope.getAnrLanguage();
 
-            var mosp_query_organizations = 'organization';
+            var mosp_query_organizations = 'organization?results_per_page=500';
             $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
             .then(function(org) {
                 var mosp_query_all_amvs = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Risks"}}]}&results_per_page=3000';
