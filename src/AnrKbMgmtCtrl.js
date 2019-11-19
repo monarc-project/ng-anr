@@ -2223,7 +2223,7 @@
             })
                 .then(function (result) {
                     var recommandationSet = result.recommandationSet;
-                    var recommandations = result.recommandations;
+                    var recommandations = result.recommendations;
 
                     ClientRecommandationService.createRecommandationSet(recommandationSet,
                         function () {
@@ -3849,15 +3849,15 @@
             }
             delete $scope.recommandationSet.id;
             $scope.recommandationSet.anr = anrId;
-            var recommandations = recSet_temp.json_object.recommandations;
-            recommandations.anr = anrId;
-            recommandations.map(function(recommandation) {
+            var recommendations = recSet_temp.json_object.recommendations;
+            recommendations.anr = anrId;
+            recommendations.map(function(recommandation) {
                 recommandation['recommandationSet'] = recSet_temp.json_object.uuid;
                 recommandation['anr'] = anrId;
             })
             result = {
                 recommandationSet: $scope.recommandationSet,
-                recommandations: recommandations
+                recommendations: recommendations
             }
             $mdDialog.hide(result);
         };
