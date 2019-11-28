@@ -3059,7 +3059,7 @@
                 $scope.referential['label' + i] = ref_temp['name'];
             }
 
-            var measures = ref_temp.json_object.measures
+            var measures = ref_temp.json_object.values
 
             $scope.categories = [];
             measures.map(function(measure) {
@@ -3849,7 +3849,7 @@
             }
             delete $scope.recommandationSet.id;
             $scope.recommandationSet.anr = anrId;
-            var recommendations = recSet_temp.json_object.recommendations;
+            var recommendations = recSet_temp.json_object.values;
             recommendations.anr = anrId;
             recommendations.map(function(recommandation) {
                 recommandation['recommandationSet'] = recSet_temp.json_object.uuid;
