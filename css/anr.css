@@ -1032,11 +1032,12 @@ md-dialog.md-transition-in {
     transition: none;
     transition-duration: 0ms;
     transition-delay: 0ms;
-
 }
-.anr-menu {
 
+.anr-menu {
     min-height: 340px;
+    max-height: none;
+    overflow-y: hidden;
 }
 .md-button
 {
