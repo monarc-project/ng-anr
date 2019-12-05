@@ -111,9 +111,9 @@
                                 <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap"> </th>
                             </tr>
                             <tr edit-model="records.items.records[recordIndex].controller" ng-if="!updatingActor">
-                                <td style="width:1%; white-space:nowrap"> <b translate> Controller </b> </td>
-                                <td>
-                                    <md-autocomplete
+                                <td edit-readonly="isAnrReadOnly" style="width:1%; white-space:nowrap"> <b translate> Controller </b> </td>
+                                <td edit-readonly="isAnrReadOnly">
+                                    <md-autocomplete ng-if="!isAnrReadOnly"
                                         class="autocomplete-record-gdpr"
                                         md-selected-item="selectedItemController"
                                         md-search-text="record.controller.label"
@@ -127,11 +127,12 @@
                                             <span md-highlight-text="record.controller.label" md-highlight-flags="^i">{{item['label']}}</span>
                                         </md-item-template>
                                     </md-autocomplete>
+                                    <span ng-if="isAnrReadOnly" md-highlight-text="record.controller.label" md-highlight-flags="^i">{{record.controller.label}}</span>
                                 </td>
                                 <td edit-readonly="isAnrReadOnly" edit-field="contact" edit-type="textarea" edit-class="preserve-newlines" ng-if="record.controller.id" edit-placeholder="{{ 'Address, mail, telephone, ...' | translate }}"></td>
                                 <td ng-if="!record.controller.id"></td>
                                 <td class="txtcenter">
-                                    <md-button ng-if="!isAnrReadOnly && record.controller.id" class="md-icon-button md-warn"ng-click="detachActor(record, 'controller')">
+                                    <md-button ng-if="!isAnrReadOnly && record.controller.id" class="md-icon-button md-warn" ng-click="detachActor(record, 'controller')">
                                         <md-tooltip md-direction="left">
                                             {{ 'Detach controller' | translate }}
                                         </md-tooltip>
@@ -143,8 +144,8 @@
                             </tr>
                             <tr edit-model="records.items.records[recordIndex].dpo" ng-if="!updatingActor">
                                 <td> <b translate> Data protection officer </b> </td>
-                                <td>
-                                    <md-autocomplete
+                                <td edit-readonly="isAnrReadOnly">
+                                    <md-autocomplete ng-if="!isAnrReadOnly"
                                         class="autocomplete-record-gdpr"
                                         md-selected-item="selectedItemDpo"
                                         md-search-text="record.dpo.label"
@@ -175,7 +176,7 @@
                             <tr edit-model="records.items.records[recordIndex].representative" ng-if="!updatingActor">
                                 <td> <b translate> Representative </b> </td>
                                 <td>
-                                    <md-autocomplete
+                                    <md-autocomplete ng-if="!isAnrReadOnly"
                                         class="autocomplete-record-gdpr"
                                         md-selected-item="selectedItemRepresentative"
                                         md-search-text="record.representative.label"
@@ -206,7 +207,7 @@
                             <tr edit-model="record.jointControllers[0]" >
                                 <td>
                                     <span flex><b translate> Joint controllers </b> </span>
-                                    <md-button class="md-icon-button md-primary" ng-click="addJointControllers(record)">
+                                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-primary" ng-click="addJointControllers(record)">
                                         <md-tooltip md-direction="left">
                                             {{ 'Add a joint controller' | translate }}
                                         </md-tooltip>
@@ -214,7 +215,7 @@
                                     </md-button>
                                 </td>
                                 <td>
-                                    <md-autocomplete ng-if="record.jointControllers.length > 0"
+                                    <md-autocomplete ng-if="!isAnrReadOnly && record.jointControllers.length > 0"
                                         class="autocomplete-record-gdpr"
                                         md-selected-item="selectedJointController"
                                         md-search-text="record.jointControllers[0].label"
@@ -281,7 +282,7 @@
             <div layout="row" layout-align="space-between center">
                 <div layout="row" layout-align="start center">
                     <h3 class="md-padding-left" translate>Categories of data subjects and personal data</h3>
-                    <md-button class="md-icon-button md-primary" ng-click="addPersonalData(record)" ng-hide="uiState.hidePersonalData">
+                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-primary" ng-click="addPersonalData(record)" ng-hide="uiState.hidePersonalData">
                         <md-tooltip md-direction="left">
                             {{ 'Add a category of data subjects and personal data' | translate }}
                         </md-tooltip>
@@ -305,13 +306,13 @@
                             <tr ng-repeat="(personalDataIndex, personalData) in record.personalData" edit-model="personalData" ng-if="!(updatingPersonalData)">
                                 <td edit-readonly="isAnrReadOnly" edit-field="dataSubject" edit-type="textarea" edit-class="preserve-newlines" style="word-wrap:break-word;"></td>
                                 <td>
-                                    <md-chips class="chips-horizontal md-chips-table"
+                                    <md-chips readonly="isAnrReadOnly" class="chips-horizontal md-chips-table"
                                         md-on-remove="onPersonalDataEdit(record, personalData, personalDataIndex)"
                                         md-on-add="onPersonalDataEdit(record, personalData, personalDataIndex)"
                                         md-transform-chip="transformChip($chip)"
                                         ng-model="personalData.dataCategories"
                                         md-autocomplete-snap flex>
-                                        <md-autocomplete md-selected-item="selectedDataCategory"
+                                        <md-autocomplete ng-if="!isAnrReadOnly" md-selected-item="selectedDataCategory"
                                                          md-search-text="dataCategorySearchText"
                                                          md-items="item in queryRecordDataCategorySearch(dataCategorySearchText, personalData)"
                                                          md-item-text="item['label']"
@@ -338,16 +339,20 @@
                                 </td>
                                 <td edit-readonly="isAnrReadOnly || !personalData.id" edit-field="description" edit-type="textarea" ng-disabled="!personalData.id" edit-class="preserve-newlines"  style="word-wrap:break-word;"></td>
                                 <td>
-                                    <span>
+                                    <span ng-if="!isAnrReadOnly">
                                         <input type="number" ng-model="personalData.retentionPeriod" min="0" style="width:20%" ng-change="onPersonalDataTableEdited(personalData)" ng-disabled="!personalData.id">
                                     </span>
-                                    <span class="select-retention-period-mode">
+                                    <span ng-if="isAnrReadOnly">{{personalData.retentionPeriod}}</span>
+                                    <span ng-if="!isAnrReadOnly" class="select-retention-period-mode">
                                         <md-select ng-model="personalData.retentionPeriodMode" ng-change="onPersonalDataTableEdited(personalData)" ng-disabled="!personalData.id">
                                             <md-option ng-value="0"> {{ 'day(s)' | translate }} </md-option>
                                             <md-option ng-value="1"> {{ 'month(s)' | translate }} </md-option>
                                             <md-option ng-value="2"> {{ 'year(s)' | translate }} </md-option>
                                         </md-select>
                                     </span>
+                                    <span ng-if="isAnrReadOnly && personalData.retentionPeriodMode==0">{{ 'day(s)' | translate }}</span>
+                                    <span ng-if="isAnrReadOnly && personalData.retentionPeriodMode==1">{{ 'month(s)' | translate }}</span>
+                                    <span ng-if="isAnrReadOnly && personalData.retentionPeriodMode==2">{{ 'year(s)' | translate }}</span>
                                 </td>
                                 <td edit-readonly="isAnrReadOnly || !personalData.id" edit-field="retentionPeriodDescription" edit-type="textarea" ng-disabled="!personalData.id"></td>
                                 <td ng-if="!isAnrReadOnly">
@@ -367,7 +372,7 @@
             <div layout="row" layout-align="space-between center">
                 <div layout="row" layout-align="start center">
                   <h3 class="md-padding-left" translate> Recipients</h3>
-                  <md-button class="md-icon-button md-primary" ng-click="addRecipient(record)" ng-hide="uiState.hideRecipients">
+                  <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-primary" ng-click="addRecipient(record)" ng-hide="uiState.hideRecipients">
                       <md-tooltip md-direction="left">
                           {{ 'Add a recipient' | translate }}
                       </md-tooltip>
@@ -388,7 +393,7 @@
                             </tr>
                             <tr ng-repeat="(recipientIndex, recipient) in record.recipients" edit-model="recipient">
                                 <td>
-                                    <md-autocomplete
+                                    <md-autocomplete ng-if="!isAnrReadOnly"
                                         class="autocomplete-record-gdpr"
                                         md-selected-item="selectedItemRecipient"
                                         md-search-text="recipient.label"
@@ -402,12 +407,15 @@
                                             <span md-highlight-text="recipient.label" md-highlight-flags="^i">{{item['label']}}</span>
                                         </md-item-template>
                                     </md-autocomplete>
+                                    <span ng-if="isAnrReadOnly" md-highlight-text="recipient.label" md-highlight-flags="^i">{{recipient.label}}</span>
                                 </td>
                                 <td>
-                                    <md-select ng-model="recipient.type" ng-change="onRecipientTableEdited(recipient)" ng-if="recipient.id">
+                                    <md-select ng-if="!isAnrReadOnly" ng-model="recipient.type" ng-change="onRecipientTableEdited(recipient)" ng-if="recipient.id">
                                         <md-option ng-value="0"> {{ 'Internal' | translate }} </md-option>
                                         <md-option ng-value="1"> {{ 'External' | translate }} </md-option>
                                     </md-select>
+                                    <span ng-if="isAnrReadOnly && recipient.type==0" >{{ 'Internal' | translate }}</span>
+                                    <span ng-if="isAnrReadOnly && recipient.type==1" >{{ 'External' | translate }}</span>
                                 </td>
                                 <td edit-readonly="isAnrReadOnly || !recipient.id" edit-field="description" edit-type="textarea" ng-if="recipient.id"></td>
                                 <td ng-if="!recipient.id"></td>
@@ -427,7 +435,7 @@
             <div layout="row" layout-align="space-between center">
               <div layout="row" layout-align="start center">
                 <h3  class="md-padding-left" translate> International transfers </h3>
-                <md-button class="md-icon-button md-primary" ng-click="addInternationalTransfer(record)" ng-hide="uiState.hideTranfers">
+                <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-primary" ng-click="addInternationalTransfer(record)" ng-hide="uiState.hideTranfers">
                     <md-tooltip md-direction="left">
                         {{ 'Add an international transfer' | translate }}
                     </md-tooltip>
@@ -531,7 +539,7 @@
                                         <tr edit-model="processor.representative" ng-if="!updatingActor">
                                             <td> <b translate> Representative </b> </td>
                                             <td style="width:30%;">
-                                                <md-autocomplete
+                                                <md-autocomplete ng-if="!isAnrReadOnly"
                                                     class="autocomplete-record-gdpr"
                                                     md-selected-item="selectedItemRepresentativeProcessor"
                                                     md-search-text="processor.representative.label"
@@ -545,6 +553,7 @@
                                                         <span md-highlight-text="processor.representative.label" md-highlight-flags="^i">{{item['label']}}</span>
                                                     </md-item-template>
                                                 </md-autocomplete>
+                                                <span ng-if="isAnrReadOnly" md-highlight-text="processor.representative.label" md-highlight-flags="^i">{{processor.representative.label}}</span>
                                             </td>
                                             <td edit-readonly="isAnrReadOnly" edit-field="contact" edit-type="textarea" edit-class="preserve-newlines" ng-if="processor.representative.id" edit-placeholder="{{ 'Address, mail, telephone, ...' | translate }}"></td>
                                             <td ng-if="!processor.representative.id"></td>
@@ -562,7 +571,7 @@
                                         <tr edit-model="processor.dpo" ng-if="!updatingActor">
                                             <td style="width:1%; white-space:nowrap"> <b translate> Data protection officer </b> </td>
                                             <td style="width:30%;">
-                                                <md-autocomplete
+                                                <md-autocomplete ng-if="!isAnrReadOnly"
                                                     class="autocomplete-record-gdpr"
                                                     md-selected-item="selectedItemDpoProcessor"
                                                     md-search-text="processor.dpo.label"
