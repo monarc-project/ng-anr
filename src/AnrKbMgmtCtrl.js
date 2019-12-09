@@ -906,15 +906,18 @@
                     ReferentialService.createReferential(referential,
                         function () {
                                 SOACategoryService.createCategory(categories, function(){
-                                    measures.map(function(measure) {
-                                        measure.category = categories.find( c => c['label' + $scope.language].toLowerCase().trim() === measure.category.toLowerCase().trim() ).id;
-                                    })
-                                    MeasureService.createMeasure(measures, function (){
+                                    SOACategoryService.getCategories({order: $scope._langField('label'), referential: referential.uuid}).then(function (data) {
+                                        measures.map(function(measure) {
+                                            measure.category = data.categories.find( c => c['label' + $scope.language].toLowerCase().trim() === measure.category.toLowerCase().trim() ).id;
+                                        })
+                                        MeasureService.createMeasure(measures, function (){
                                             $scope.$parent.updateReferentials();
                                             toastr.success(gettextCatalog.getString('The referential has been imported successfully.'),
-                                                            gettextCatalog.getString('Creation successful'));
+                                                           gettextCatalog.getString('Creation successful'));
                                              $rootScope.$broadcast('referentialsUpdated');
                                              $rootScope.$broadcast('controlsUpdated');
+                                        });
+
                                     });
                                 });
                         }
