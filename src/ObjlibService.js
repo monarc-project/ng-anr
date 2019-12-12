@@ -24,7 +24,7 @@
                 });
 
 
-            self.ObjlibCatResource = $resource('api/' + anr + 'objects-categories/:objlibId', { objlibId: '@uuid', urlAnrId: $rootScope.getUrlAnrId() },
+            self.ObjlibCatResource = $resource('api/' + anr + 'objects-categories/:objlibId', { objlibId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
                 {
                     'update': {
                         method: 'PUT'
