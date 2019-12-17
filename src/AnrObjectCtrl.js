@@ -259,6 +259,11 @@
                             objlib.category = objlib.category.id;
                         }
 
+                        // We pass the property anr_id not to load and store the dependency for BO.
+                        if (!objlib.anr && $rootScope.anr_id) {
+                            objlib.anr_id = $rootScope.anr_id;
+                        }
+
                         if (isUpdate) {
                             ObjlibService.updateObjlib(objlib,
                                 function () {
