@@ -203,8 +203,6 @@
         }
 
         $scope.onProcessorTableEdited = function (model, name) {
-            model['activities'][$scope.records.items.records[$scope.records.recordTabSelected]['id']] = model['recordActivities'];
-            model['secMeasures'][$scope.records.items.records[$scope.records.recordTabSelected]['id']] = model['recordSecMeasures'];
             var promise = $q.defer();
             // This processor changed, update it
             RecordService.updateRecordProcessor(model, function (data) {
@@ -336,34 +334,6 @@
                             data.records[i]['internationalTransfers'][j]["record"] = data.records[i]["id"];
                         }
                     }
-                    if(!Array.isArray(data.records[i]['processors'])) {
-                        data.records[i]['processors'] = [];
-                    } else {
-                        for(var j = 0; j < data.records[i]['processors'].length; ++j) {
-                            if(Array.isArray(data.records[i]['processors'][j]['activities'])) {
-                                var activitiesObject = {};
-                                for(key in data.records[i]['processors'][j]['activities']){
-                                    activitiesObject[key] = data.records[i]['processors'][j]['activities'][key];
-                                }
-                                data.records[i]['processors'][j]['activities'] = activitiesObject;
-                            }
-                            if(!data.records[i]['processors'][j]["activities"][data.records[i]['id']]) {
-                                data.records[i]['processors'][j]["activities"][data.records[i]['id']] = '';
-                            }
-                            data.records[i]['processors'][j]['recordActivities'] = data.records[i]['processors'][j]['activities'][data.records[i]['id']];
-                            if(Array.isArray(data.records[i]['processors'][j]['secMeasures'])) {
-                                var secMeasuresObject = {};
-                                for(key in data.records[i]['processors'][j]['secMeasures']){
-                                    secMeasuresObject[key] = data.records[i]['processors'][j]['secMeasures'][key];
-                                }
-                                data.records[i]['processors'][j]['secMeasures'] = secMeasuresObject;
-                            }
-                            if(!data.records[i]['processors'][j]["secMeasures"][data.records[i]['id']]) {
-                                data.records[i]['processors'][j]["secMeasures"][data.records[i]['id']] = '';
-                            }
-                            data.records[i]['processors'][j]['recordSecMeasures'] = data.records[i]['processors'][j]['secMeasures'][data.records[i]['id']];
-                        }
-                    }
                 }
                 $scope.records.items = data;
                 promise.resolve(true);
@@ -398,22 +368,6 @@
         $scope.getRecordProcessor = function (id, recordId) {
             var promise = $q.defer();
             RecordService.getRecordProcessor(id).then(function (data) {
-                if(Array.isArray(data['activities'])) {
-                    var activitiesObject = {};
-                    for(key in data['activities']){
-                        activitiesObject[key] = data['activities'][key];
-                    }
-                    data['activities'] = activitiesObject;
-                }
-                data['recordActivities'] = data['activities'][recordId];
-                if(Array.isArray(data['secMeasures'])) {
-                    var secMeasuresObject = {};
-                    for(key in data['secMeasures']){
-                        secMeasuresObject[key] = data['secMeasures'][key];
-                    }
-                    data['secMeasures'] = secMeasuresObject;
-                }
-                data['recordSecMeasures'] = data['secMeasures'][recordId];
                 promise.resolve(data);
             });
             return promise.promise;
@@ -1135,16 +1089,6 @@
                         finalArray[recLine] +=','+"\""+data.processors[recLine].label+"\"";
                         if(data.processors[recLine].contact) {
                             finalArray[recLine]+=','+"\""+data.processors[recLine].contact+"\"";
-                        } else {
-                            finalArray[recLine]+=','+"\""+' '+"\"";
-                        }
-                        if(data.processors[recLine].activities && data.processors[recLine].activities[recordId]) {
-                            finalArray[recLine]+=','+"\""+data.processors[recLine].activities[recordId]+"\"";
-                        } else {
-                            finalArray[recLine]+=','+"\""+' '+"\"";
-                        }
-                        if(data.processors[recLine].secMeasures && data.processors[recLine].secMeasures[recordId]) {
-                            finalArray[recLine]+=','+"\""+data.processors[recLine].secMeasures[recordId]+"\"";
                         } else {
                             finalArray[recLine]+=','+"\""+' '+"\"";
                         }
