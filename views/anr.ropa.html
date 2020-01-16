@@ -206,7 +206,7 @@
                             </tr>
                             <tr edit-model="record.jointControllers[0]" >
                                 <td>
-                                    <span flex><b translate>Joint controllers </b> </span>
+                                    <span flex><b translate>Joint controllers</b></span>
                                     <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-primary" ng-click="addJointControllers(record)">
                                         <md-tooltip md-direction="left">
                                             {{ 'Add a joint controller' | translate }}
@@ -301,7 +301,7 @@
                                 <th translate style="width:25%">Description</th>
                                 <th translate style="width:15%">Duration of data retention</th>
                                 <th translate style="width:20%">Description of retention period</th>
-                                <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap" ></th>
+                                <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap"></th>
                             </tr>
                             <tr ng-repeat="(personalDataIndex, personalData) in record.personalData" edit-model="personalData" ng-if="!(updatingPersonalData)">
                                 <td edit-readonly="isAnrReadOnly" edit-field="dataSubject" edit-type="textarea" edit-class="preserve-newlines" style="word-wrap:break-word;"></td>
@@ -389,7 +389,7 @@
                                 <th translate style="width:30%;">Recipient</th>
                                 <th translate style="width:1%; white-space:nowrap">Recipient type</th>
                                 <th translate>Description</th>
-                                <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap" ></th>
+                                <th ng-if="!isAnrReadOnly" style="width:1%; white-space:nowrap"></th>
                             </tr>
                             <tr ng-repeat="(recipientIndex, recipient) in record.recipients" edit-model="recipient">
                                 <td>
