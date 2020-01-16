@@ -468,7 +468,6 @@
                             record["updatedAt"] = data["updatedAt"];
                         });
                         $scope.updatingActor = false;
-                        console.log("qweqw");
                         if(actorField == "jointControllers" && record["jointControllers"].length == 0) {
                             record["jointControllers"].push({ "label": "", "contact": "" } );
                         }
