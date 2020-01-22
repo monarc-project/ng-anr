@@ -310,11 +310,11 @@
             var query = angular.copy($scope.records.query);
             var promise = $q.defer();
             RecordService.getRecords({order: 'createdAt', filter: query.filter}).then(function (data) {
-                for(var i = 0; i < data.records.length; ++i) {
-                    if(!Array.isArray(data.records[i]['jointControllers'])) {
+                for (var i = 0; i < data.records.length; ++i) {
+                    if (!Array.isArray(data.records[i]['jointControllers'])) {
                         data.records[i]['jointControllers'] = [{ "label": "", "contact": "" }];
                     }
-                    if(!Array.isArray(data.records[i]['personalData'])) {
+                    if (!Array.isArray(data.records[i]['personalData'])) {
                         data.records[i]['personalData'] = [];
                     } else {
                         for(var j = 0; j < data.records[i]['personalData'].length; ++j) {
@@ -324,15 +324,18 @@
                             }
                         }
                     }
-                    if(!Array.isArray(data.records[i]['recipients'])) {
+                    if (!Array.isArray(data.records[i]['recipients'])) {
                         data.records[i]['recipients'] = [];
                     }
-                    if(!Array.isArray(data.records[i]['internationalTransfers'])) {
+                    if (!Array.isArray(data.records[i]['internationalTransfers'])) {
                         data.records[i]['internationalTransfers'] = [];
                     } else {
                         for(var j = 0; j < data.records[i]['internationalTransfers'].length; ++j) {
                             data.records[i]['internationalTransfers'][j]["record"] = data.records[i]["id"];
                         }
+                    }
+                    if (!Array.isArray(data.records[i]['processors'])) {
+                        data.records[i]['processors'] = [];
                     }
                 }
                 $scope.records.items = data;
