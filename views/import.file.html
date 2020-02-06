@@ -43,7 +43,25 @@
 
               <table class="md-html-table big-border-all">
                   <thead class="big-border-bottom">
+                    <tr ng-if="tab=='Information risks'">
+                      <th colspan="3" class="big-border-left"><p>asset</p></th>
+                      <th colspan="7" class="big-border-left"><p>threat</p></th>
+                      <th colspan="3" class="big-border-left"><p>vulnerability</p></th>
+                    </tr>
                     <tr >
+                      <th ng-if="items[tab].asset_code" colspan="1" class="big-border-left"><p>code</p></th>
+                      <th ng-if="items[tab].asset_label" colspan="1" class="big-border-left"><p>label</p></th>
+                      <th ng-if="items[tab].asset_description" colspan="1" class="big-border-left"><p>description</p></th>
+                      <th ng-if="items[tab].threat_code" colspan="1" class="big-border-left"><p>code</p></th>
+                      <th ng-if="items[tab].threat_label" colspan="1" class="big-border-left"><p>label</p></th>
+                      <th ng-if="items[tab].threat_description" colspan="1" class="big-border-left"><p>description</p></th>
+                      <th ng-if="items[tab].threat_c" colspan="1" class="big-border-left"><p>c</p></th>
+                      <th ng-if="items[tab].threat_i" colspan="1" class="big-border-left"><p>i</p></th>
+                      <th ng-if="items[tab].threat_a" colspan="1" class="big-border-left"><p>a</p></th>
+                      <th ng-if="items[tab].threat_theme" colspan="1" class="big-border-left"><p>theme</p></th>
+                      <th ng-if="items[tab].vulnerability_code" colspan="1" class="big-border-left"><p>code</p></th>
+                      <th ng-if="items[tab].vulnerability_label" colspan="1" class="big-border-left"><p>label</p></th>
+                      <th ng-if="items[tab].vulnerability_description" colspan="1" class="big-border-left"><p>description</p></th>
                       <th ng-if="items[tab].code" colspan="1" class="big-border-left"><p>code</p></th>
                       <th ng-if="items[tab].label && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'label' + language}}</p></th>
                       <th ng-if="items[tab].label && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>label</p></th>
@@ -67,6 +85,19 @@
 
                   <tbody>
                   <tr ng-repeat="input in importData">
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].asset_code">{{input['asset code']}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].asset_label">{{input['asset label']}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].asset_description">{{input['asset description']}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].threat_code">{{input['threat code']}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].threat_label">{{input['threat label']}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].threat_description">{{input['threat description']}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].threat_c">{{input['threat c']}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].threat_i">{{input['threat i']}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].threat_a">{{input['threat a']}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].threat_theme">{{input['threat theme']}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].vulnerability_code">{{input['vulnerability code']}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].vulnerability_label">{{input['vulnerability label']}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].vulnerability_description">{{input['vulnerability description']}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].code">{{input.code}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].label && OFFICE_MODE == 'BO'">{{input['label' + language]}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].label && OFFICE_MODE == 'FO'">{{input.label}}</td>
