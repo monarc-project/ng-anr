@@ -2507,7 +2507,7 @@
       $scope.importFile = function (ev,tab) {
         var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
         $mdDialog.show({
-            controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService', 'ClientRecommandationService',
+            controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService', 'AmvService', 'ClientRecommandationService',
                         'SOACategoryService', 'TagService', 'RiskService', 'MeasureMeasureService', 'toastr', 'gettextCatalog', '$q', 'tab', 'themes',
                         'categories', 'referential' ,'recommandationSet','tags', ImportFileDialogCtrl],
             templateUrl: 'views/anr/import.file.html',
@@ -4049,7 +4049,7 @@
             };
         }
 
-    function ImportFileDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService, MeasureService, ClientRecommandationService, SOACategoryService,
+    function ImportFileDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService, MeasureService, AmvService,ClientRecommandationService, SOACategoryService,
                                   TagService, RiskService, MeasureMeasureService, toastr, gettextCatalog, $q, tab, themes, categories, referential, recommandationSet, tags) {
 
       $scope.tab = tab;
@@ -4070,13 +4070,21 @@
         break;
         case 'Vulnerabilties':
           var getService = VulnService.getVulns();
-          var items = 'vulnerabilities'; break;
+          var items = 'vulnerabilities';
+          break;
         case 'Controls':
           var getService = MeasureService.getMeasures({referential: referential});
           var items = 'measures';
           var externalItem = 'category';
           $scope.actualExternalItems = categories;
           var extItemLabel = gettextCatalog.getString('categories');
+        break;
+        case 'Information risks':
+          var getService = AmvService.getAmvs();
+          var items = 'amvs';
+          // var externalItem = 'category';
+          // $scope.actualExternalItems = themes;
+          // var extItemLabel = gettextCatalog.getString('categories');
         break;
         case 'Categories':
           var getService = SOACategoryService.getCategories({referential: referential});
@@ -4212,6 +4220,92 @@
               'required' : true,
               'type' : 'text',
               'example' : $scope.actualExternalItems
+            }
+        },
+        'Information risks' :  {
+            'asset_code' : {
+              'field' : 'asset code',
+              'required' : true,
+              'type' : 'text',
+              'example' : 'C16, 123, CAZ, C-12'
+            },
+            'asset_label' : {
+              'field' : 'asset label',
+              'required' : true,
+              'type' : 'text',
+              'example' : gettextCatalog.getString('Network')
+            },
+            'asset_description' : {
+              'field' : 'asset description',
+              'required' : false,
+              'type' : 'text',
+              'example' : gettextCatalog.getString('Any network hardware (router, switch, firewall, etc.)')
+            },
+            'asset_type' : {
+              'field' : 'asset type',
+              'required' : true,
+              'type' : '1,2',
+              'example' : gettextCatalog.getString('\n1: primary asset\n2: secondary asset')
+            },
+            'threat_code' : {
+              'field' : 'threat code',
+              'required' : true,
+              'type' : 'text',
+              'example' : 'C16, 123, CAZ, C-12'
+            },
+            'threat_label' : {
+              'field' : 'threat label',
+              'required' : true,
+              'type' : 'text',
+              'example' : gettextCatalog.getString('Fire')
+            },
+            'threat_description' : {
+              'field' : 'threat description',
+              'required' : false,
+              'type' : 'text',
+              'example' : gettextCatalog.getString('Any situation that could facilitate the conflagration of premises or equipment.')
+            },
+            'threat_c' : {
+              'field' : 'threat c',
+              'required' : false,
+              'type' : 'Boolean',
+              'example' : '0,1,false,true'
+            },
+            'threat_i' : {
+              'field' : 'threat i',
+              'required' : false,
+              'type' : 'Boolean',
+              'example' : '0,1,false,true'
+            },
+            'threat_a' : {
+              'field' : 'threat a',
+              'required' : false,
+              'type' : 'Boolean',
+              'example' : '0,1,false,true'
+            },
+            'threat_theme' : {
+              'field' : 'threat theme',
+              'required' : true,
+              'type' : 'text',
+              'example' : $scope.actualExternalItems
+            },
+            'vulnerability_code' : {
+              'field' : 'vulnerability code',
+              'required' : true,
+              'type' : 'text',
+              'example' : 'C16, 123, CAZ, C-12'
+            },
+            'vulnerability_label' : {
+              'field' : 'vulnerability label',
+              'required' : true,
+              'type' : 'text',
+              'example' : gettextCatalog.getString('No IT charter specifying the rules of use')
+            },
+            'vulnerability_description' : {
+              'field' : 'vulnerability description',
+              'required' : false,
+              'type' : 'text',
+              'example' : gettextCatalog.getString('IT charter Conditions of use General terms and conditions')
             }
         },
         'Categories' :  {
