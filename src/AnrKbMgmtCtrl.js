@@ -2554,6 +2554,97 @@
                });
                break;
              case 'Information risks':
+               let assets = importData.map(amv => amv.asset)
+                            .filter(asset => asset.uuid === null);
+               let threats = importData.map(amv => amv.threat)
+                             .filter(threat => threat.uuid === null);
+               let vulnerabilities = importData.map(amv => amv.vulnerability)
+                                     .filter(vulnerability => vulnerability.uuid === null);
+
+               let assetsToCreate = Array.from(new Set(assets.map(asset => asset.code)))
+                                    .map(code => {
+                                      return assets.find(asset => asset.code === code)
+                                    });
+
+              // function createTheme(theme){
+              //   ThreatService.createTheme(theme, function(result){
+              //     return result.id;
+              //   });
+              // }
+
+               let threatsToCreate = Array.from(new Set(threats.map(threat => threat.code)))
+                                     .map(code => {
+                                       let tempThreat = threats.find(threat => threat.code === code);
+                                       let theme = $scope.listThemes.find(theme => theme['label' + $scope.language].toLowerCase().trim() === tempThreat.theme.toLowerCase().trim());
+                                       if (theme!== undefined) {
+                                         tempThreat.theme = theme.id;
+                                       }else{
+                                        tempThreat.theme = null;
+                                       }
+                                       return tempThreat
+                                     });
+
+               let vulnerabilitiesToCreate = Array.from(new Set(vulnerabilities.map(vulnerability => vulnerability.code)))
+                                             .map(code => {
+                                               return vulnerabilities.find(vulnerability => vulnerability.code === code)
+                                             });
+
+
+               let promises = [];
+               if (assetsToCreate.length > 0) {
+                 promises.push(
+                   AssetService.createAsset(assetsToCreate, function (assets){
+                     if(Array.isArray(assets.id)){
+                       assets.id.forEach(function(uuidAsset,a){
+                         assetsToCreate[a].uuid = uuidAsset;
+                       });
+                     }else{
+                       assetsToCreate[0].uuid = assets.id;
+                     }
+                   })
+                 )
+               }
+               if (threatsToCreate.length > 0) {
+                 promises.push(
+                   ThreatService.createThreat(threatsToCreate, function (threats){
+                     if(Array.isArray(threats.id)){
+                       threats.id.forEach(function(uuidThreat,t){
+                         threatsToCreate[t].uuid = uuidThreat;
+                       });
+                     }else{
+                       threatsToCreate[0].uuid = threats.id;
+                     }
+                   })
+                 )
+               }
+               if (vulnerabilitiesToCreate.length > 0) {
+                 promises.push(
+                   VulnService.createVuln(vulnerabilitiesToCreate, function (vulnerabilities){
+                     if(Array.isArray(vulnerabilities.id)){
+                       vulnerabilities.id.forEach(function(uuidVulnerability,v){
+                         vulnerabilitiesToCreate[v].uuid = uuidVulnerability;
+                       });
+                     }else{
+                       vulnerabilitiesToCreate[0].uuid = vulnerabilities.id;
+                     }
+                   })
+                 )
+               }
+
+               async function createAmvItems (){
+                 await Promise.all(promises);
+               }
+
+               createAmvItems().then(function(){
+
+                 importData.map(amv => {
+                   amv.asset
+                 })
+                 console.log(importData);
+               });
+
+
+
                break
              case 'Categories':
                SOACategoryService.createCategory(importData, function (result){
@@ -3438,6 +3529,10 @@
                 $scope.asset_amvs = data.amvs;
             });
         };
+
+        ThreatService.getThemes().then(function (data) {
+           $scope.listThemes = data['themes'];
+        });
 
         if (amv != undefined && amv != null) {
             $scope.amv = amv;
@@ -4777,25 +4872,25 @@
               asset:{
                 uuid:postData['asset uuid'],
                 code:postData['asset code'],
-                label:postData['asset label'],
+                ['label' + $scope.language]:postData['asset label'],
                 type:2,
-                description:postData['asset description']
+                ['description' + $scope.language]:postData['asset description']
               },
               threat:{
                 uuid:postData['threat uuid'],
                 code:postData['threat code'],
-                label:postData['threat label'],
-                description:postData['threat description'],
-                c:(!postData['threat c'] || postData['threat c'] == 0 || postData['threat c'].toLowerCase() == 'false' ? 'false' : 'true'),
-                i:(!postData['threat i'] || postData['threat i'] == 0 || postData['threat i'].toLowerCase() == 'false' ? 'false' : 'true'),
-                a:(!postData['threat a'] || postData['threat a'] == 0 || postData['threat a'].toLowerCase() == 'false' ? 'false' : 'true'),
-                theme:postData['threat theme']
+                ['label' + $scope.language]:postData['threat label'],
+                ['description' + $scope.language]:postData['threat description'],
+                c:(!postData['threat c'] || postData['threat c'] == 0 || postData['threat c'].toLowerCase() == 'false' ? false : true),
+                i:(!postData['threat i'] || postData['threat i'] == 0 || postData['threat i'].toLowerCase() == 'false' ? false : true),
+                a:(!postData['threat a'] || postData['threat a'] == 0 || postData['threat a'].toLowerCase() == 'false' ? false : true),
+                theme:postData['threat theme'],
               },
               vulnerability:{
                 uuid:postData['vulnerability uuid'],
                 code:postData['vulnerability code'],
-                label:postData['vulnerability label'],
-                description:postData['vulnerability description']
+                ['label' + $scope.language]:postData['vulnerability label'],
+                ['description' + $scope.language]:postData['vulnerability description']
               }
             }
           }
