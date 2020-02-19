@@ -4802,7 +4802,7 @@
                 theme: (themeFound !== undefined ?
                         themeFound.id :
                         {
-                          ['label' + $scope.language] : postData['threat theme']
+                          ['label' + $scope.language] : postData['threat theme'].trim()
                         }),
               },
               vulnerability:{
