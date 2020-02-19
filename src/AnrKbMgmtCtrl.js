@@ -2593,7 +2593,7 @@
 
            function successCreateObject(result){
 
-             toastr.success(gettextCatalog.getString((Array.isArray(result.id) ? result.id.length : 1) + ' ' + tab + ' ' + 'have been created successfully.'),
+             toastr.success((Array.isArray(result.id) ? result.id.length : 1) + ' ' + tab + ' ' + gettextCatalog.getString('have been created successfully.'),
                             gettextCatalog.getString('Creation successful'));
 
            };
