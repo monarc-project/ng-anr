@@ -169,11 +169,7 @@
 
         $scope.onRecipientTableEdited = function(model, name) {
             var promise = $q.defer();
-            if (!$scope.updatingRecords) {
-                promise.resolve(true);
-                return promise.promise;
-            }
-            // This record recipient changed, update it
+            // The record recipient changed, update it
             RecordService.updateRecordRecipient(model, function (data) {
                 for (var i = 0; i < $scope.records.items.records.length; ++i ) {
                     for (var j = 0; j < $scope.records.items.records[i]["recipients"].length; ++j ) {

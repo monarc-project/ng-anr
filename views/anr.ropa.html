@@ -354,7 +354,7 @@
                                     <span ng-if="isAnrReadOnly && personalData.retentionPeriodMode==1">{{ 'month(s)' | translate }}</span>
                                     <span ng-if="isAnrReadOnly && personalData.retentionPeriodMode==2">{{ 'year(s)' | translate }}</span>
                                 </td>
-                                <td edit-readonly="isAnrReadOnly || !personalData.id" edit-field="retentionPeriodDescription" edit-type="textarea" ng-disabled="!personalData.id"></td>
+                                <td edit-readonly="isAnrReadOnly || !personalData.id" edit-field="retentionPeriodDescription" edit-type="textarea" ng-disabled="!personalData.id" edit-class="preserve-newlines"  style="word-wrap:break-word;"></td>
                                 <td ng-if="!isAnrReadOnly">
                                     <md-button class="md-icon-button md-warn"ng-click="deletePersonalData(record, personalDataIndex)">
                                         <md-tooltip md-direction="left">
@@ -410,15 +410,14 @@
                                     <span ng-if="isAnrReadOnly" md-highlight-text="recipient.label" md-highlight-flags="^i">{{recipient.label}}</span>
                                 </td>
                                 <td>
-                                    <md-select ng-if="!isAnrReadOnly" ng-model="recipient.type" ng-change="onRecipientTableEdited(recipient)" ng-if="recipient.id">
+                                    <md-select ng-if="!isAnrReadOnly" ng-model="recipient.type" ng-change="onRecipientTableEdited(recipient)">
                                         <md-option ng-value="0">{{ 'Internal' | translate }}</md-option>
                                         <md-option ng-value="1">{{ 'External' | translate }}</md-option>
                                     </md-select>
                                     <span ng-if="isAnrReadOnly && recipient.type==0" >{{ 'Internal' | translate }}</span>
                                     <span ng-if="isAnrReadOnly && recipient.type==1" >{{ 'External' | translate }}</span>
                                 </td>
-                                <td edit-readonly="isAnrReadOnly || !recipient.id" edit-field="description" edit-type="textarea" ng-if="recipient.id"></td>
-                                <td ng-if="!recipient.id"></td>
+                                <td edit-readonly="isAnrReadOnly" edit-field="description" edit-type="textarea" ng-model="recipient.description"></td>
                                 <td ng-if="!isAnrReadOnly">
                                     <md-button class="md-icon-button md-warn"ng-click="deleteRecipient(record, recipientIndex)">
                                         <md-tooltip md-direction="left">
