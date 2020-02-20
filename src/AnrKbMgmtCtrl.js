@@ -3817,22 +3817,22 @@
 
         var mosp_query_organizations = 'organization?results_per_page=500';
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
-        .then(function(json) {
-            $scope.organizations = json.data.data.objects;
+        .then(function(org) {
+          var mosp_query_recommandations_sets = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Recommendations"}}]}&results_per_page=3000';
+          $http.jsonp($rootScope.mospApiUrl + mosp_query_recommandations_sets)
+          .then(function(recommandations) {
+              $scope.all_recommandations = recommandations.data.data.objects;
+              var org_ids = Array.from(new Set($scope.all_recommandations.map(recommandation => recommandation.org_id)));
+              $scope.organizations = org.data.data.objects.filter(org => org_ids.includes(org.id));
+          });
         });
 
         $scope.selectOrganization = function() {
-            // Retrieve the recommendations sets from the selected organization
-            // from MOSP via its API
-            var mosp_query_recommandations_sets = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Recommendations"}},' +
-                    '{"name":"organization","op":"has","val":{"name":"id","op":"eq","val": "' + $scope.organization.id + '"}}]}';
-            $http.jsonp($rootScope.mospApiUrl + mosp_query_recommandations_sets)
-            .then(function(json) {
-                // filter from the results the recommendations sets already in the analysis
-                $scope.mosp_recommandations_sets = json.data.data.objects.filter(
-                    recommandationSet => !$scope.recommandations_sets_uuid.includes(recommandationSet.json_object.uuid)
-                )
-            });
+            // Retrieve the assets from the selected organization
+            $scope.mosp_recommandations_sets = $scope.all_recommandations.filter(
+                recommandationSet => recommandationSet.org_id == $scope.organization.id &&
+                !$rootScope.recommandations_sets_uuid.includes(recommandationSet.json_object.uuid)
+            );
         }
 
        /**
