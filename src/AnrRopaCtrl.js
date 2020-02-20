@@ -570,7 +570,18 @@
         }
 
         $scope.addRecipient = function(record) {
-            record["recipients"].push({ "label" : "", "type": "0", "description": ""});
+            var recipient = { "label" : "", "type": "0", "description": ""};
+            RecordService.createRecordRecipient(recipient, function (status) {
+                RecordService.getRecordRecipient(status.id).then(function (data) {
+                    recipient = data;
+                    record["recipients"].push(recipient);
+                    RecordService.updateRecord(record, function (data) {
+                        RecordService.getRecord(record.id).then(function (data) {
+                            record["updatedAt"] = data["updatedAt"];
+                        });
+                    });
+                });
+            });
         }
 
         $scope.queryRecordRecipientSearch = function (record, query) {
