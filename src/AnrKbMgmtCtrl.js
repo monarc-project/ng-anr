@@ -4575,7 +4575,7 @@
                         return data.vulnerabilities.map(vulnerability => ({code: vulnerability.code, uuid: vulnerability.uuid}));
                     })
                   ]);
-                  
+
                   $scope.isProcessing = false;
                   return [assets,threats,vulnerabilities];
                 }
@@ -4601,14 +4601,6 @@
                           data[index][amvItem + ' uuid'] = itemFound.uuid;
                         }
                       });
-
-                      let amvFound = items.find(amv => amv.asset.uuid === data[index]['asset uuid'] &&
-                                                       amv.threat.uuid === data[index]['threat uuid'] &&
-                                                       amv.vulnerability.uuid === data[index]['vulnerability uuid']);
-                      if (amvFound !== undefined) {
-                        data[index].error = gettextCatalog.getString('This risk is already on the knowledge base');
-                      }
-
                       return acc.concat([current]);
                     } else {
                       data[index].error = gettextCatalog.getString('This risk is already on the import list');
