@@ -4555,7 +4555,7 @@
                     $scope.extItemToCreate.push(label.trim());
                   }
               }
-              if (tab=="Information risks" ) {
+              if (tab == "Information risks") {
 
                 const amvItems = ['asset', 'threat', 'vulnerability'];
 
@@ -4602,7 +4602,6 @@
                                                        amv.vulnerability.uuid === data[index]['vulnerability uuid']);
                       if (amvFound !== undefined) {
                         data[index].error = gettextCatalog.getString('This risk is already on the knowledge base');
-                        $scope.check = true;
                       }
 
                       return acc.concat([current]);
