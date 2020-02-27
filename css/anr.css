@@ -1256,6 +1256,9 @@ md-select-menu md-content
 
 .md-autocomplete-suggestions-container{
     width: 500px;
+    color: rgba(0,0,0,0.87);
+    font-size: 14px;
+    line-height: 48px;
 }
 .reco-autocomplete{
     width: 500px !important;
