@@ -34,7 +34,7 @@
               <div layout="row" layout-align="space-between center">
                 <span class="md-subhead md-padding-left">{{ importData ? importData.length : 0 }} {{ tab |translate }}</span>
                 <div>
-                      <md-button class="md-primary" ng-disabled="check || !importData" ng-click="uploadFile($event)">
+                      <md-button class="md-primary" ng-disabled="check || !importData || isProcessing" ng-click="uploadFile($event)">
                       <md-icon>file_download</md-icon>
                       {{ 'Import file' | translate }}
                       </md-button>

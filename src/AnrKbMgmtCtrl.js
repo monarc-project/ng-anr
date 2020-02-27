@@ -4396,6 +4396,7 @@
 
       $scope.parseFile = function (fileContent) {
         $scope.check = false;
+        $scope.isProcessing = true;
         if (typeof fileContent === 'object') {
           if (Array.isArray(fileContent)) {
             var fileContentJson = {data : fileContent };
@@ -4431,6 +4432,7 @@
       $scope.getItems = function (){
         var promise = $q.defer();
         getService.then(function (e) {
+            $scope.isProcessing = false;
             promise.resolve(e[items]);
         }, function (e) {
             promise.reject(e);
@@ -4557,6 +4559,8 @@
               }
               if (tab == "Information risks") {
 
+                $scope.isProcessing = true;
+
                 const amvItems = ['asset', 'threat', 'vulnerability'];
 
                 async function getAllAmvItems (){
@@ -4571,7 +4575,8 @@
                         return data.vulnerabilities.map(vulnerability => ({code: vulnerability.code, uuid: vulnerability.uuid}));
                     })
                   ]);
-
+                  
+                  $scope.isProcessing = false;
                   return [assets,threats,vulnerabilities];
                 }
 
