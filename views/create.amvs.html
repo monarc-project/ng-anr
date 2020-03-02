@@ -13,9 +13,20 @@
         <md-dialog-content>
             <div class="md-dialog-content" layout="column" >
                 <md-card ng-if="!referential.uuid && OFFICE_MODE == 'FO'" layout="row" layout-align="center center">
+                    <span flex></span>
+                    <md-button class="md-primary" ng-click="importFile($event,'Information risks')" ng-controller="AnrKbMgmtCtrl">
+                        <md-icon>cloud_download</md-icon><span>&nbsp;{{ 'Import from file' | translate }}</span>
+                    </md-button>
+                    <span flex></span>
                     <md-button class="md-primary" ng-click="importNewAmv($event)" ng-controller="AnrKbMgmtCtrl">
                         <md-icon>cloud_download</md-icon><span>&nbsp;{{ 'Import from MOSP' | translate }}</span>
                     </md-button>
+                    <span flex></span>
+                </md-card>
+                <md-card ng-if="!referential.uuid && OFFICE_MODE == 'BO'" layout="row" layout-align="center center">
+                  <md-button class="md-primary" ng-click="importFile($event,'Information risks')" ng-controller="BackofficeKbInfoCtrl">
+                      <md-icon>play_for_work</md-icon><span>{{ 'Import from file' | translate }}</span>
+                  </md-button>
                 </md-card>
 
                 <md-subheader ng-if="!amv.uuid && OFFICE_MODE == 'FO'" layout="row" layout-align="center"><strong>{{ 'Manual creation' | translate }}</strong></md-subheader><br />
