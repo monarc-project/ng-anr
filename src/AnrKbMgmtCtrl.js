@@ -39,7 +39,7 @@
                     var fileTypes = ['json', 'csv', 'xlsx', 'xls']; // File types supported
                     var extension = onChangeEvent.target.files[0].name.split('.').pop().toLowerCase(); //Extract extension of file
                     var isSuccess = fileTypes.indexOf(extension) > -1; // Check file type
-                    var size = onChangeEvent.target.files[0].size < 1e6; // Check fize size being less 1M
+                    var size = onChangeEvent.target.files[0].size < 2e6; // Check fize size being less 2M
 
                     if (isSuccess && size) {
                       var isJson = isCsv = false;
