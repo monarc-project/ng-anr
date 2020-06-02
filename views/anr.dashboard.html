@@ -1,5 +1,5 @@
 <div class="md-padding-left md-padding-right" ng-controller="ClientDashboardCtrl" md-theme="light" ng-if="tabDashboardDisplayed">
-    <md-tabs md-dynamic-height="true" md-border-bottom="true" md-selected="dashboard.currentTabIndex">
+    <md-tabs md-dynamic-height="true" md-border-bottom="true" md-selected="dashboard.currentTabIndex" ng-init="updateGraphs()">
         <nvd3 id="loadPptx" options="initOptionPptx" data="initDataPptx"  api="loadPptx" config="{refreshDataOnly: true}" ng-show="false"></nvd3>
         <div style="margin-right: 50px" ng-if="loadingPptx">
           <md-progress-circular md-indeterminate="true"></md-progress-circular>
@@ -152,7 +152,7 @@
 
               <md-input-container flex>
                   <label translate>Number of vulnerabilities to display</label>
-                  <md-select ng-model="dashboard.vulnerabilitiesDisplayed">
+                  <md-select ng-model="vulnerabilitiesDisplayed">
                       <md-option value="5" > 5 </md-option>
                       <md-option value="10" > 10 </md-option>
                       <md-option value="15" > 15 </md-option>
