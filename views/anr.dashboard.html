@@ -64,7 +64,6 @@
                     </div>
 
                     <d3 id="graphCurrentRisks"></d3>
-                    <nvd3 id="graphCurrentRisks" options="initOption" data="initData" api="graphCurrentRisks"></nvd3>
 
                 </div>
                 <div layout="column" flex="35">
@@ -109,9 +108,8 @@
                         <md-button class="added-button" ng-show="dashboard.targetRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackTargetRisksParentAsset(3)">
                             {{dashboard.targetRisksBreadcrumb[(dashboard.targetRisksBreadcrumb.length < 4) ? 3 : 3 + dashboard.targetRisksBreadcrumb.length - 4]}}</md-button>
                     </div>
-                    
+
                     <d3 id="graphTargetRisks"></d3>
-                    <nvd3 id="graphTargetRisks" options="initOptionBis" data="initDataBis" api="graphTargetRisks"></nvd3>
                 </div>
             </div>
         </md-tab>
