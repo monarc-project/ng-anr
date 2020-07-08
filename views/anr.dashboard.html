@@ -34,8 +34,8 @@
 
                         <md-input-container id="riskTab" ng-show ="displayCurrentRisksBy=='level'">
                             <label translate >Chart type</label>
-                            <md-select ng-model="currentRisksChartOptions" >
-                                <md-option value="optionsCartoRisk_discreteBarChart_current" selected>{{ 'Discrete Bar Chart' | translate }}</md-option>
+                            <md-select ng-model="currentRisksOptions" >
+                                <md-option value="vertical" selected>{{ 'Discrete Bar Chart' | translate }}</md-option>
                                 <md-option value="optionsCartoRisk_pieChart" >{{ 'Donut Chart' | translate }}</md-option>
                             </md-select >
                         </md-input-container>
@@ -81,7 +81,7 @@
                         <md-input-container id="riskTab" ng-show ="displayTargetRisksBy=='level'">
                             <label translate>Chart type</label>
                             <md-select ng-model="targetRisksChartOptions">
-                                <md-option value="optionsCartoRisk_discreteBarChart_target" selected>{{ 'Discrete Bar Chart' | translate }}</md-option>
+                                <md-option value="vertical" selected>{{ 'Discrete Bar Chart' | translate }}</md-option>
                                 <md-option value="optionsCartoRisk_pieChart" >{{ 'Donut Chart' | translate }}</md-option>
                             </md-select>
                         </md-input-container>
@@ -127,9 +127,9 @@
 
                 <md-input-container flex>
                     <label translate>Chart type</label>
-                    <md-select ng-model="threatsChartOption">
-                        <md-option value="optionsChartThreats_discreteBarChart">{{ 'Discrete Bar Chart' | translate }}</md-option>
-                        <md-option value="optionsChartThreats_multiBarHorizontalChart" selected>{{ 'Horizontal Bar Chart' | translate }}</md-option>
+                    <md-select ng-model="threatsOptions">
+                        <md-option value="vertical">{{ 'Discrete Bar Chart' | translate }}</md-option>
+                        <md-option value="horizontal" selected>{{ 'Horizontal Bar Chart' | translate }}</md-option>
                     </md-select>
                 </md-input-container>
 
@@ -166,9 +166,9 @@
 
                 <md-input-container flex>
                     <label translate>Chart type</label>
-                    <md-select ng-model="vulnerabilitiesChartOption">
-                        <md-option value="optionsChartVulnerabilities_discreteBarChart" selected> {{ 'Discrete Bar Chart' | translate }} </md-option>
-                        <md-option value="optionsChartVulnerabilities_horizontalBarChart" > {{ 'Horizontal Bar Chart' | translate }} </md-option>
+                    <md-select ng-model="vulnerabilitiesOptions">
+                        <md-option value="vertical" selected> {{ 'Discrete Bar Chart' | translate }} </md-option>
+                        <md-option value="horizontal" > {{ 'Horizontal Bar Chart' | translate }} </md-option>
                     </md-select>
                 </md-input-container>
 
