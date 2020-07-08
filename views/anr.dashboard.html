@@ -36,7 +36,7 @@
                             <label translate >Chart type</label>
                             <md-select ng-model="currentRisksOptions" >
                                 <md-option value="vertical" selected>{{ 'Discrete Bar Chart' | translate }}</md-option>
-                                <md-option value="optionsCartoRisk_pieChart" >{{ 'Donut Chart' | translate }}</md-option>
+                                <md-option value="donut" >{{ 'Donut Chart' | translate }}</md-option>
                             </md-select >
                         </md-input-container>
 
@@ -80,9 +80,9 @@
 
                         <md-input-container id="riskTab" ng-show ="displayTargetRisksBy=='level'">
                             <label translate>Chart type</label>
-                            <md-select ng-model="targetRisksChartOptions">
+                            <md-select ng-model="targetRisksOptions">
                                 <md-option value="vertical" selected>{{ 'Discrete Bar Chart' | translate }}</md-option>
-                                <md-option value="optionsCartoRisk_pieChart" >{{ 'Donut Chart' | translate }}</md-option>
+                                <md-option value="donut" >{{ 'Donut Chart' | translate }}</md-option>
                             </md-select>
                         </md-input-container>
 
