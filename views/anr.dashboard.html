@@ -1,6 +1,5 @@
 <div class="md-padding-left md-padding-right" ng-controller="ClientDashboardCtrl" md-theme="light" ng-if="tabDashboardDisplayed">
     <md-tabs md-dynamic-height="true" md-border-bottom="true" md-selected="dashboard.currentTabIndex" ng-init="updateGraphs()">
-        <d3 id="loadPptx" ng-show="false"></d3>
         <div style="margin-right: 50px" ng-if="loadingPptx">
             <md-progress-circular md-indeterminate="true"></md-progress-circular>
         </div>
@@ -17,6 +16,7 @@
                 </md-menu-item>
             </md-menu-content>
         </md-menu>
+        <d3 id="loadPptx" class="generateChartPptx"></d3>
         <md-tab label="{{ 'Risks' | translate }}" md-on-select="selectGraphRisks()">
             <div layout="row" layout-align="space-around">
                 <div layout="column" flex="35">

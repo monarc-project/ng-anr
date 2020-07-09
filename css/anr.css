@@ -1320,3 +1320,8 @@ md-select-menu md-content
 .md-chips-table md-chips-wrap{
     padding-left: 0;
 }
+
+.generateChartPptx{
+  position: absolute;
+  transform: translate(0, -1000px);
+}
