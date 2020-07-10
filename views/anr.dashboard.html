@@ -4,7 +4,7 @@
             <md-progress-circular md-indeterminate="true"></md-progress-circular>
         </div>
         <md-menu style="margin-right: 50px" ng-if="!loadingPptx">
-            <md-button class="md-icon-button" ng-click="$mdMenu.open()" ng-disabled="!dashboard.riskInfo || !loadCompliance" >
+            <md-button class="md-icon-button" ng-click="$mdMenu.open()" ng-disabled="!dashboard.export || !dashboardUpdated" >
                 <md-icon class="md-warn" >file_download</md-icon><md-tooltip>{{ 'Export' | translate }}</md-tooltip>
             </md-button>
             <md-menu-content>
@@ -17,7 +17,7 @@
             </md-menu-content>
         </md-menu>
         <d3 id="loadPptx" class="generateChartPptx"></d3>
-        <md-tab label="{{ 'Risks' | translate }}" md-on-select="selectGraphRisks()">
+        <md-tab label="{{ 'Risks' | translate }}">
             <div layout="row" layout-align="space-around">
                 <div layout="column" flex="35">
                     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -40,7 +40,7 @@
                             </md-select >
                         </md-input-container>
 
-                        <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphCurrentRisks', 'currentRisksChartBy' + displayCurrentRisksBy)">
+                        <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphCurrentRisks', 'currentRisksChartBy' + displayCurrentRisksBy)">
                             <md-icon class="md-warn">file_download</md-icon>
                         </md-button>
 
@@ -86,7 +86,7 @@
                             </md-select>
                         </md-input-container>
 
-                        <md-button class="md-icon-button" title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphTargetRisks', 'targetRisksChartBy' + displayTargetRisksBy)">
+                        <md-button class="md-icon-button" title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphTargetRisks', 'targetRisksChartBy' + displayTargetRisksBy)">
                             <md-icon class="md-warn">file_download</md-icon>
                         </md-button>
 
@@ -114,7 +114,7 @@
             </div>
         </md-tab>
 
-        <md-tab label="{{ 'Threats' | translate }}" md-on-select="selectGraphThreats()">
+        <md-tab label="{{ 'Threats' | translate }}">
             <div layout="row" layout-align="start center" flex="35" class="md-padding-left">
                 <md-input-container flex>
                     <label translate>Display threats by</label>
@@ -133,14 +133,14 @@
                     </md-select>
                 </md-input-container>
 
-                <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphThreats', 'threatsChartBy' + displayThreatsBy)">
+                <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphThreats', 'threatsChartBy' + displayThreatsBy)">
                     <md-icon class="md-warn">file_download</md-icon>
                 </md-button>
             </div>
             <d3 id="graphThreats" layout="row" layout-align="center center"></d3>
         </md-tab>
 
-        <md-tab label="{{ 'Vulnerabilities' | translate }}" md-on-select="selectGraphVulnerabilities()">
+        <md-tab label="{{ 'Vulnerabilities' | translate }}">
             <div layout="row" layout-align="start center" flex="50" class="md-padding-left">
                 <md-input-container flex>
                     <label translate>Display vulnerabilities by</label>
@@ -172,20 +172,20 @@
                     </md-select>
                 </md-input-container>
 
-                <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphVulnerabilities', 'vulnerabilitiesChartBy' + displayVulnerabilitiesBy)">
+                <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphVulnerabilities', 'vulnerabilitiesChartBy' + displayVulnerabilitiesBy)">
                     <md-icon class="md-warn">file_download</md-icon>
                 </md-button>
             </div>
             <d3 id="graphVulnerabilities" layout="row" layout-align="center center"></d3>
         </md-tab>
 
-        <md-tab label="{{ 'Cartography' | translate }}" md-on-select="selectGraphCartography()">
+        <md-tab label="{{ 'Cartography' | translate }}">
             <div layout="row" layout-align="start center" flex="25" class="md-padding-left">
                 <md-input-container flex>
                     <label translate>Type of risks</label>
                     <md-select ng-model="cartographyRisksType">
-                        <md-option value="info_risks" ng-disabled="!dashboard.riskInfo" selected>{{ 'Information risks' | translate }}</md-option>
-                        <md-option value="op_risks" ng-disabled="!dashboard.riskOp" >{{ 'Operational risks' | translate }}</md-option>
+                        <md-option value="info_risks" selected>{{ 'Information risks' | translate }}</md-option>
+                        <md-option value="op_risks">{{ 'Operational risks' | translate }}</md-option>
                     </md-select>
                 </md-input-container>
 
@@ -195,7 +195,7 @@
                 <div layout="column" layout-align="start center" flex>
                     <div layout="row" layout-align="start center">
                         <p class="md-title" translate>Current risks</p>
-                        <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphCartographyCurrent', 'cartographyChartCurrentBy' + cartographyRisksType)">
+                        <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphCartographyCurrent', 'cartographyChartCurrentBy' + cartographyRisksType)">
                             <md-icon class="md-warn">file_download</md-icon>
                         </md-button>
                     </div>
@@ -204,7 +204,7 @@
                 <div layout="column" layout-align="start center" flex>
                     <div layout="row" layout-align="start center">
                         <p class="md-title" translate>Residual risks</p>
-                        <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphCartographyTarget', 'cartographyChartTargetBy' + cartographyRisksType)">
+                        <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphCartographyTarget', 'cartographyChartTargetBy' + cartographyRisksType)">
                             <md-icon class="md-warn">file_download</md-icon>
                         </md-button>
                     </div>
@@ -213,25 +213,22 @@
             </div>
         </md-tab>
 
-        <md-tab label="{{ 'Compliance' | translate }}" md-on-select="selectGraphCompliance()">
+        <md-tab label="{{ 'Compliance' | translate }}">
             <div layout="row" layout-align="start center" flex="25" class="md-padding-left">
                 <md-input-container flex>
                     <label translate>Display compliance of</label>
-                    <md-select ng-model="dashboard.refSelected">
+                    <md-select ng-model="referentialSelected">
                         <md-option ng-repeat="ref in dashboard.referentials" ng-value="ref.uuid">
                             {{ _langField(ref,'label') }}
                         </md-option>
                     </md-select>
                 </md-input-container>
 
-                <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-click="exportAsPNG('graphCompliance', 'ComplianceChart')">
+                <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphCompliance', 'ComplianceChart')">
                     <md-icon class="md-warn">file_download</md-icon>
                 </md-button>
             </div>
             <d3 id="graphCompliance" layout="row" layout-align="center center"></d3>
         </md-tab>
-
-        <!--<md-tab label="{{ 'Perspective' | translate }}" md-on-select="selectGraphPerspective()">
-        </md-tab>-->
     </md-tabs>
 </div>
