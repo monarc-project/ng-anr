@@ -1,0 +1,150 @@
+<md-dialog md-theme="light" class="dialog-width">
+    <form name="evalContextForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Risks</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content class="md-padding">
+            <div>
+                <table class="md-html-table" ng-if="kindOfRisks == 'info_risks'">
+                   <thead class="big-border-bottom"  >
+                   <tr>
+                       <th rowspan="2" translate>Asset</th>
+                       <th colspan="3" translate>Impact</th>
+                       <th colspan="2" class="big-border-left" translate>Threat</th>
+                       <th colspan="3" class="big-border-left" translate>Vulnerability</th>
+                       <th colspan="3" class="big-border-left" style="min-width: 110px" translate>Current risk</th>
+                       <th rowspan="2" translate>Treatment</th>
+                       <th rowspan="2" translate>Residual risk</th>
+                   </tr>
+                   <tr>
+                       <th>C</th>
+                       <th>I</th>
+                       <th translate>A</th>
+                       <th class="big-border-left" translate>Label</th>
+                       <th title="{{scaleThreat}}">Prob.</th>
+                       <th class="big-border-left" translate>Label</th>
+                       <th translate style="min-width: 200px">Existing controls</th>
+                       <th title="{{scaleVul}}" translate>Qualif.</th>
+                       <th class="big-border-left">C</th>
+                       <th>I</th>
+                       <th translate>A</th>
+                   </tr>
+                   </thead>
+
+                   <tbody>
+                     <tr class="txtleft" ng-repeat="risk in risks">
+                       <td  class="txtleft">{{_langField(risk,'instanceName')}}</td>
+                       <td  class="txtcenter" title="{{ scaleCommCache[1][risk.c_impact] }}">{{risk.c_impact|dashnull}}</td>
+                       <td  class="txtcenter" title="{{ scaleCommCache[2][risk.i_impact] }}">{{risk.i_impact|dashnull}}</td>
+                       <td  class="txtcenter" title="{{ scaleCommCache[3][risk.d_impact] }}">{{risk.d_impact|dashnull}}</td>
+                       <td  class="preserve-newlines big-border-left txtleft" title="{{_langField(risk,'threatDescription')}}">{{_langField(risk,'threatLabel')}}</td>
+                       <td  class="txtcenter" title="{{threatCommCache[risk.threatRate]}}">{{risk.threatRate|dashnull}}</td>
+                       <td  class="txtleft" title="{{_langField(risk,'vulnDescription')}}">{{_langField(risk,'vulnLabel')}}</td>
+                       <td  class="txtleft" >{{risk.comment }}</td>
+                       <td  class="txtcenter" title="{{vulnsCommCache[risk.vulnerabilityRate]}}">{{risk.vulnerabilityRate | dashnull}}</td>
+                       <td  ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc big-border-left"
+                            ng-class="{'green': risk.c_risk >= 0 && risk.c_risk <= thresholds.thresholds.min,
+                                       'orange': risk.c_risk > thresholds.thresholds.min && risk.c_risk <=thresholds.thresholds.max,
+                                       'red': risk.c_risk > thresholds.thresholds.max}">{{ risk.c_risk_enabled ? (risk.c_risk | dashnull) : '' }}</td>
+                       <td  ng-disabled="!risk.i_risk_enabled" class="tbl-risk-calc"
+                            ng-class="{'green': risk.i_risk >= 0 && risk.i_risk <= thresholds.thresholds.min,
+                                       'orange': risk.i_risk > thresholds.thresholds.min && risk.i_risk <= thresholds.thresholds.max,
+                                       'red': risk.i_risk > thresholds.thresholds.max}">{{ risk.i_risk_enabled ? (risk.i_risk | dashnull) : '' }}</td>
+                       <td  ng-disabled="!risk.d_risk_enabled" class="tbl-risk-calc"
+                            ng-class="{'green': risk.d_risk >= 0 && risk.d_risk <= thresholds.thresholds.min,
+                                       'orange': risk.d_risk > thresholds.thresholds.min && risk.d_risk <= thresholds.thresholds.max,
+                                       'red': risk.d_risk > thresholds.thresholds.max}">{{ risk.d_risk_enabled ? (risk.d_risk | dashnull) : '' }}</td>
+                       <td>
+                           <div layout="row" layout-align="center center">
+                                   {{treatmentStr(risk.kindOfMeasure) | translate}}
+                           </div>
+                       </td>
+                       <td class="txtcenter tbl-risk-calc"
+                           ng-class="{'green': risk.target_risk >= 0 && risk.target_risk <= thresholds.thresholds.min,
+                                      'orange': risk.target_risk > thresholds.thresholds.min && risk.target_risk <= thresholds.thresholds.max,
+                                      'red': risk.target_risk > thresholds.thresholds.max}">{{risk.target_risk | dashnull}}</td>
+                   </tr>
+                   </tbody>
+              </table>
+
+              <table class="md-html-table" ng-if="kindOfRisks == 'op_risks'">
+                 <thead class="big-border-bottom">
+                 <tr>
+                     <th rowspan="3" translate>Asset</th>
+                     <th rowspan="3" translate>Risk description</th>
+                     <th ng-if="model.showRolfBrut" class="big-border-left" colspan="7" translate>Inherent risk</th>
+                     <th colspan="8" class="big-border-left" translate>Net risk</th>
+                     <th rowspan="3" class="big-border-left" translate>Treatment</th>
+                     <th rowspan="3" translate>Residual risk</th>
+                 </tr>
+
+                 <tr>
+                     <th title="{{scaleThreat}}" rowspan="2" translate ng-if="model.showRolfBrut">Prob.</th>
+                     <th colspan="5" translate ng-if="model.showRolfBrut">Impact</th>
+                     <th rowspan="2" translate ng-if="model.showRolfBrut">Inherent risk</th>
+
+                     <th title="{{scaleThreat}}" rowspan="2" class="big-border-left" translate>Prob.</th>
+                     <th colspan="5" translate>Impact</th>
+                     <th rowspan="2" translate>Current risk</th>
+                     <th style="min-width: 200px" rowspan="2" translate>Existing controls</th>
+                 </tr>
+
+                 <tr>
+                     <th title="{{scaleR}}" ng-if="model.showRolfBrut">R</th>
+                     <th title="{{scaleO}}" ng-if="model.showRolfBrut">O</th>
+                     <th title="{{scaleL}}" ng-if="model.showRolfBrut">L</th>
+                     <th title="{{scaleF}}" ng-if="model.showRolfBrut">F</th>
+                     <th title="{{scaleP}}" ng-if="model.showRolfBrut">P</th>
+
+                     <th title="{{scaleR}}">R</th>
+                     <th title="{{scaleO}}">O</th>
+                     <th title="{{scaleL}}">L</th>
+                     <th title="{{scaleF}}">F</th>
+                     <th title="{{scaleP}}">P</th>
+                 </tr>
+                 </thead>
+
+                 <tbody>
+                 <tr ng-repeat="risk in risks">
+                     <td title="{{instanceCache[risk.instanceInfos.id].completePath}}" class="preserve-newlines">{{ _langField(risk.instanceInfos,'name') }}</td>
+             	       <td class="preserve-newlines" title="{{ _langField(risk,'description') }}">{{ _langField(risk,'label') || _langField(risk,'label') }}</td>
+                     <td ng-if="model.showRolfBrut" class="big-border-left txtcenter" title="{{threatCommCache[risk.brutProb]}}">{{risk.brutProb | dashnull}}</td>
+                     <td ng-if="model.showRolfBrut">{{risk.brutR | dashnull}}</td>
+                     <td ng-if="model.showRolfBrut">{{risk.brutO | dashnull}}</td>
+                     <td ng-if="model.showRolfBrut">{{risk.brutL | dashnull}}</td>
+                     <td ng-if="model.showRolfBrut">{{risk.brutF | dashnull}}</td>
+                     <td ng-if="model.showRolfBrut">{{risk.brutP | dashnull}}</td>
+                     <td ng-if="model.showRolfBrut" class="tbl-risk-calc txtcenter"
+                         ng-class="{'green': risk.cacheBrutRisk >= 0 && risk.cacheBrutRisk <= thresholds.rolf_thresholds.min,
+                                    'orange': risk.cacheBrutRisk > thresholds.rolf_thresholds.min && risk.cacheBrutRisk <= thresholds.rolf_thresholds.max,
+                                    'red': risk.cacheBrutRisk > thresholds.rolf_thresholds.max}">{{risk.cacheBrutRisk|dashnull}}</td>
+                     <td class="small txtcenter big-border-left" title="{{threatCommCache[risk.netProb]}}">{{risk.netProb | dashnull}}</td>
+                     <td class="txtcenter">{{risk.netR | dashnull}}</td>
+                     <td class="txtcenter">{{risk.netO | dashnull}}</td>
+                     <td class="txtcenter">{{risk.netL | dashnull}}</td>
+                     <td class="txtcenter">{{risk.netF | dashnull}}</td>
+                     <td class="txtcenter">{{risk.netP | dashnull}}</td>
+                     <td class="tbl-risk-calc txtcenter"
+                         ng-class="{'green': risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min,
+                                    'orange': risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max,
+                                    'red': risk.cacheNetRisk > thresholds.rolf_thresholds.max}">{{ risk.cacheNetRisk|dashnull }}</td>
+                     <td class="preserve-newlines">{{risk.comment}}</td>
+                     <td class="small txtcenter" ng-if="instmode == 'obj'">-</td>
+                     <td class="txtcenter big-border-left"> {{treatmentStr(risk.kindOfMeasure)|translate}}</td>
+                     <td class="tbl-risk-calc txtcenter"
+                         ng-class="{'green': (risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min && risk.cacheTargetedRisk==-1) || risk.cacheTargetedRisk >= 0 && risk.cacheTargetedRisk <= thresholds.rolf_thresholds.min ,
+                                    'orange': (risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max && risk.cacheTargetedRisk==-1) || risk.cacheTargetedRisk > thresholds.rolf_thresholds.min && risk.cacheTargetedRisk <= thresholds.rolf_thresholds.max,
+                                    'red': (risk.cacheNetRisk > thresholds.rolf_thresholds.max && risk.cacheTargetedRisk==-1) || risk.cacheTargetedRisk > thresholds.rolf_thresholds.max}">{{ risk.cacheTargetedRisk==-1 ? risk.cacheNetRisk : risk.cacheTargetedRisk | dashnull }}</td>
+                 </tr>
+                 </tbody>
+             </table>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>
