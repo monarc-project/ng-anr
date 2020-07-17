@@ -44,23 +44,23 @@
                             <md-icon class="md-warn">file_download</md-icon>
                         </md-button>
 
-                        <md-button class="md-icon-button" title="{{ 'Go back' | translate }}" ng-show="dashboard.currentRisksParentAssetMemoryTab.length>1 && displayCurrentRisksBy=='parentAsset'" ng-click="goBackCurrentRisksParentAsset()">
+                        <md-button class="md-icon-button" title="{{ 'Go back' | translate }}" ng-show="currentRisksMemoryTab.length>1 && displayCurrentRisksBy=='parentAsset'" ng-click="goBackCurrentRisks()">
                             <md-icon class="md-primary">arrow_back</md-icon>
                         </md-button>
                     </div>
 
                     <div layout='row' ng-show="displayCurrentRisksBy=='parentAsset'">
-                        <md-button class="added-button" ng-click="breadcrumbGoBackCurrentRisksParentAsset(0)">
-                            {{dashboard.currentRisksBreadcrumb[(dashboard.currentRisksBreadcrumb.length < 4) ? 0 : dashboard.currentRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="dashboard.currentRisksBreadcrumb.length > 1" class="added-button">></p>
-                        <md-button class="added-button" ng-show="dashboard.currentRisksBreadcrumb.length > 1" ng-click="breadcrumbGoBackCurrentRisksParentAsset(1)">
-                            {{dashboard.currentRisksBreadcrumb[(dashboard.currentRisksBreadcrumb.length < 4) ? 1 : 1 + dashboard.currentRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="dashboard.currentRisksBreadcrumb.length > 2" class="added-button">></p>
-                        <md-button class="added-button" ng-show="dashboard.currentRisksBreadcrumb.length > 2" ng-click="breadcrumbGoBackCurrentRisksParentAsset(2)">
-                            {{dashboard.currentRisksBreadcrumb[(dashboard.currentRisksBreadcrumb.length < 4) ? 2 : 2 + dashboard.currentRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="dashboard.currentRisksBreadcrumb.length > 3" class="added-button">></p>
-                        <md-button  class="added-button" ng-show="dashboard.currentRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackCurrentRisksParentAsset(3)">
-                            {{dashboard.currentRisksBreadcrumb[(dashboard.currentRisksBreadcrumb.length < 4) ? 3 : 3 + dashboard.currentRisksBreadcrumb.length - 4]}}</md-button>
+                        <md-button class="added-button" ng-click="breadcrumbGoBackCurrentRisks(0)">
+                            {{currentRisksBreadcrumb[(currentRisksBreadcrumb.length < 4) ? 0 : currentRisksBreadcrumb.length - 4]}}</md-button>
+                        <p ng-show="currentRisksBreadcrumb.length > 1" class="added-button">></p>
+                        <md-button class="added-button" ng-show="currentRisksBreadcrumb.length > 1" ng-click="breadcrumbGoBackCurrentRisks(1)">
+                            {{currentRisksBreadcrumb[(currentRisksBreadcrumb.length < 4) ? 1 : 1 + currentRisksBreadcrumb.length - 4]}}</md-button>
+                        <p ng-show="currentRisksBreadcrumb.length > 2" class="added-button">></p>
+                        <md-button class="added-button" ng-show="currentRisksBreadcrumb.length > 2" ng-click="breadcrumbGoBackCurrentRisks(2)">
+                            {{currentRisksBreadcrumb[(currentRisksBreadcrumb.length < 4) ? 2 : 2 + currentRisksBreadcrumb.length - 4]}}</md-button>
+                        <p ng-show="currentRisksBreadcrumb.length > 3" class="added-button">></p>
+                        <md-button  class="added-button" ng-show="currentRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackCurrentRisks(3)">
+                            {{currentRisksBreadcrumb[(currentRisksBreadcrumb.length < 4) ? 3 : 3 + currentRisksBreadcrumb.length - 4]}}</md-button>
                     </div>
 
                     <d3 id="graphCurrentRisks"></d3>
@@ -90,23 +90,23 @@
                             <md-icon class="md-warn">file_download</md-icon>
                         </md-button>
 
-                        <md-button class="md-icon-button" title="{{ 'Go back' | translate }}" ng-show="dashboard.targetRisksParentAssetMemoryTab.length>1 && displayTargetRisksBy=='parentAsset'" ng-click="goBackTargetRisksParentAsset()">
+                        <md-button class="md-icon-button" title="{{ 'Go back' | translate }}" ng-show="targetRisksMemoryTab.length>1 && displayTargetRisksBy=='parentAsset'" ng-click="goBackTargetRisks()">
                             <md-icon class="md-primary">arrow_back</md-icon>
                         </md-button>
                     </div>
 
                     <div layout='row' ng-show="displayTargetRisksBy=='parentAsset'">
-                        <md-button class="added-button" ng-click="breadcrumbGoBackTargetRisksParentAsset(0)">
-                            {{dashboard.targetRisksBreadcrumb[(dashboard.targetRisksBreadcrumb.length < 4) ? 0 : dashboard.targetRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="dashboard.targetRisksBreadcrumb.length > 1" class="added-button">></p>
-                        <md-button class="added-button" ng-show="dashboard.targetRisksBreadcrumb.length > 1" ng-click="breadcrumbGoBackTargetRisksParentAsset(1)">
-                            {{dashboard.targetRisksBreadcrumb[(dashboard.targetRisksBreadcrumb.length < 4) ? 1 : 1 + dashboard.targetRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="dashboard.targetRisksBreadcrumb.length > 2" class="added-button">></p>
-                        <md-button class="added-button" ng-show="dashboard.targetRisksBreadcrumb.length > 2" ng-click="breadcrumbGoBackTargetRisksParentAsset(2)">
-                            {{dashboard.targetRisksBreadcrumb[(dashboard.targetRisksBreadcrumb.length < 4) ? 2 : 2 + dashboard.targetRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="dashboard.targetRisksBreadcrumb.length > 3" class="added-button">></p>
-                        <md-button class="added-button" ng-show="dashboard.targetRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackTargetRisksParentAsset(3)">
-                            {{dashboard.targetRisksBreadcrumb[(dashboard.targetRisksBreadcrumb.length < 4) ? 3 : 3 + dashboard.targetRisksBreadcrumb.length - 4]}}</md-button>
+                        <md-button class="added-button" ng-click="breadcrumbGoBackTargetRisks(0)">
+                            {{targetRisksBreadcrumb[(targetRisksBreadcrumb.length < 4) ? 0 : targetRisksBreadcrumb.length - 4]}}</md-button>
+                        <p ng-show="targetRisksBreadcrumb.length > 1" class="added-button">></p>
+                        <md-button class="added-button" ng-show="targetRisksBreadcrumb.length > 1" ng-click="breadcrumbGoBackTargetRisks(1)">
+                            {{targetRisksBreadcrumb[(targetRisksBreadcrumb.length < 4) ? 1 : 1 + targetRisksBreadcrumb.length - 4]}}</md-button>
+                        <p ng-show="targetRisksBreadcrumb.length > 2" class="added-button">></p>
+                        <md-button class="added-button" ng-show="targetRisksBreadcrumb.length > 2" ng-click="breadcrumbGoBackTargetRisks(2)">
+                            {{targetRisksBreadcrumb[(targetRisksBreadcrumb.length < 4) ? 2 : 2 + targetRisksBreadcrumb.length - 4]}}</md-button>
+                        <p ng-show="targetRisksBreadcrumb.length > 3" class="added-button">></p>
+                        <md-button class="added-button" ng-show="targetRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackTargetRisks(3)">
+                            {{targetRisksBreadcrumb[(targetRisksBreadcrumb.length < 4) ? 3 : 3 + targetRisksBreadcrumb.length - 4]}}</md-button>
                     </div>
 
                     <d3 id="graphTargetRisks"></d3>
@@ -141,23 +141,23 @@
                             <md-icon class="md-warn">file_download</md-icon>
                         </md-button>
 
-                        <md-button class="md-icon-button" title="{{ 'Go back' | translate }}" ng-show="dashboard.currentRisksParentAssetMemoryTab.length>1 && displayCurrentRisksBy=='parentAsset'" ng-click="goBackCurrentRisksParentAsset()">
+                        <md-button class="md-icon-button" title="{{ 'Go back' | translate }}" ng-show="currentOpRisksMemoryTab.length>1 && displayCurrentOpRisksBy=='parentAsset'" ng-click="goBackCurrentOpRisks()">
                             <md-icon class="md-primary">arrow_back</md-icon>
                         </md-button>
                     </div>
 
                     <div layout='row' ng-show="displayCurrentOpRisksBy=='parentAsset'">
-                        <md-button class="added-button" ng-click="breadcrumbGoBackCurrentRisksParentAsset(0)">
-                            {{dashboard.currentRisksBreadcrumb[(dashboard.currentRisksBreadcrumb.length < 4) ? 0 : dashboard.currentRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="dashboard.currentRisksBreadcrumb.length > 1" class="added-button">></p>
-                        <md-button class="added-button" ng-show="dashboard.currentRisksBreadcrumb.length > 1" ng-click="breadcrumbGoBackCurrentRisksParentAsset(1)">
-                            {{dashboard.currentRisksBreadcrumb[(dashboard.currentRisksBreadcrumb.length < 4) ? 1 : 1 + dashboard.currentRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="dashboard.currentRisksBreadcrumb.length > 2" class="added-button">></p>
-                        <md-button class="added-button" ng-show="dashboard.currentRisksBreadcrumb.length > 2" ng-click="breadcrumbGoBackCurrentRisksParentAsset(2)">
-                            {{dashboard.currentRisksBreadcrumb[(dashboard.currentRisksBreadcrumb.length < 4) ? 2 : 2 + dashboard.currentRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="dashboard.currentRisksBreadcrumb.length > 3" class="added-button">></p>
-                        <md-button  class="added-button" ng-show="dashboard.currentRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackCurrentRisksParentAsset(3)">
-                            {{dashboard.currentRisksBreadcrumb[(dashboard.currentRisksBreadcrumb.length < 4) ? 3 : 3 + dashboard.currentRisksBreadcrumb.length - 4]}}</md-button>
+                        <md-button class="added-button" ng-click="breadcrumbGoBackCurrentOpRisks(0)">
+                            {{currentOpRisksBreadcrumb[(currentOpRisksBreadcrumb.length < 4) ? 0 : currentOpRisksBreadcrumb.length - 4]}}</md-button>
+                        <p ng-show="currentOpRisksBreadcrumb.length > 1" class="added-button">></p>
+                        <md-button class="added-button" ng-show="currentOpRisksBreadcrumb.length > 1" ng-click="breadcrumbGoBackCurrentOpRisks(1)">
+                            {{currentOpRisksBreadcrumb[(currentOpRisksBreadcrumb.length < 4) ? 1 : 1 + currentOpRisksBreadcrumb.length - 4]}}</md-button>
+                        <p ng-show="currentOpRisksBreadcrumb.length > 2" class="added-button">></p>
+                        <md-button class="added-button" ng-show="currentOpRisksBreadcrumb.length > 2" ng-click="breadcrumbGoBackCurrentOpRisks(2)">
+                            {{currentOpRisksBreadcrumb[(currentOpRisksBreadcrumb.length < 4) ? 2 : 2 + currentOpRisksBreadcrumb.length - 4]}}</md-button>
+                        <p ng-show="currentOpRisksBreadcrumb.length > 3" class="added-button">></p>
+                        <md-button  class="added-button" ng-show="currentOpRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackCurrentOpRisks(3)">
+                            {{currentOpRisksBreadcrumb[(currentOpRisksBreadcrumb.length < 4) ? 3 : 3 + currentOpRisksBreadcrumb.length - 4]}}</md-button>
                     </div>
 
                     <d3 id="graphCurrentOpRisks"></d3>
@@ -187,23 +187,23 @@
                             <md-icon class="md-warn">file_download</md-icon>
                         </md-button>
 
-                        <md-button class="md-icon-button" title="{{ 'Go back' | translate }}" ng-show="dashboard.targetRisksParentAssetMemoryTab.length>1 && displayTargetRisksBy=='parentAsset'" ng-click="goBackTargetRisksParentAsset()">
+                        <md-button class="md-icon-button" title="{{ 'Go back' | translate }}" ng-show="targetOpRisksMemoryTab.length>1 && displayTargetOpRisksBy=='parentAsset'" ng-click="goBackTargetOpRisks()">
                             <md-icon class="md-primary">arrow_back</md-icon>
                         </md-button>
                     </div>
 
                     <div layout='row' ng-show="displayTargetOpRisksBy=='parentAsset'">
-                        <md-button class="added-button" ng-click="breadcrumbGoBackTargetRisksParentAsset(0)">
-                            {{dashboard.targetRisksBreadcrumb[(dashboard.targetRisksBreadcrumb.length < 4) ? 0 : dashboard.targetRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="dashboard.targetRisksBreadcrumb.length > 1" class="added-button">></p>
-                        <md-button class="added-button" ng-show="dashboard.targetRisksBreadcrumb.length > 1" ng-click="breadcrumbGoBackTargetRisksParentAsset(1)">
-                            {{dashboard.targetRisksBreadcrumb[(dashboard.targetRisksBreadcrumb.length < 4) ? 1 : 1 + dashboard.targetRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="dashboard.targetRisksBreadcrumb.length > 2" class="added-button">></p>
-                        <md-button class="added-button" ng-show="dashboard.targetRisksBreadcrumb.length > 2" ng-click="breadcrumbGoBackTargetRisksParentAsset(2)">
-                            {{dashboard.targetRisksBreadcrumb[(dashboard.targetRisksBreadcrumb.length < 4) ? 2 : 2 + dashboard.targetRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="dashboard.targetRisksBreadcrumb.length > 3" class="added-button">></p>
-                        <md-button class="added-button" ng-show="dashboard.targetRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackTargetRisksParentAsset(3)">
-                            {{dashboard.targetRisksBreadcrumb[(dashboard.targetRisksBreadcrumb.length < 4) ? 3 : 3 + dashboard.targetRisksBreadcrumb.length - 4]}}</md-button>
+                        <md-button class="added-button" ng-click="breadcrumbGoBackTargetOpRisks(0)">
+                            {{targetOpRisksBreadcrumb[(targetOpRisksBreadcrumb.length < 4) ? 0 : targetOpRisksBreadcrumb.length - 4]}}</md-button>
+                        <p ng-show="targetOpRisksBreadcrumb.length > 1" class="added-button">></p>
+                        <md-button class="added-button" ng-show="targetOpRisksBreadcrumb.length > 1" ng-click="breadcrumbGoBackTargetOpRisks(1)">
+                            {{targetOpRisksBreadcrumb[(targetOpRisksBreadcrumb.length < 4) ? 1 : 1 + targetOpRisksBreadcrumb.length - 4]}}</md-button>
+                        <p ng-show="targetOpRisksBreadcrumb.length > 2" class="added-button">></p>
+                        <md-button class="added-button" ng-show="targetOpRisksBreadcrumb.length > 2" ng-click="breadcrumbGoBackTargetOpRisks(2)">
+                            {{targetOpRisksBreadcrumb[(targetOpRisksBreadcrumb.length < 4) ? 2 : 2 + targetOpRisksBreadcrumb.length - 4]}}</md-button>
+                        <p ng-show="targetOpRisksBreadcrumb.length > 3" class="added-button">></p>
+                        <md-button class="added-button" ng-show="targetOpRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackTargetOpRisks(3)">
+                            {{targetOpRisksBreadcrumb[(targetOpRisksBreadcrumb.length < 4) ? 3 : 3 + targetOpRisksBreadcrumb.length - 4]}}</md-button>
                     </div>
 
                     <d3 id="graphTargetOpRisks"></d3>
