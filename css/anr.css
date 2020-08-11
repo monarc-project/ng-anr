@@ -71,6 +71,10 @@ a.blue {
 .no-margin {
     margin: 0;
 }
+
+.tight-margin {
+    margin: 4px;
+}
 .md-button.md-icon-button {
     margin: 0 0;
 }
