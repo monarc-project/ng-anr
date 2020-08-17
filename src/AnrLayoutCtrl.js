@@ -644,18 +644,22 @@
         };
 
         $scope.saveRiskSheet = function (sheet) {
+          if (!$scope.isAnrReadOnly) {
             AnrService.updateInstanceRisk($scope.model.anr.id, sheet.id, sheet, function () {
                 $scope.$broadcast('risks-table-edited');
                 $scope.updateAnrRisksTable();
                 $scope.updateSheetRiskTarget();
             })
+          }
         };
 
         $scope.saveOpRiskSheet = function (sheet) {
+          if (!$scope.isAnrReadOnly) {
             AnrService.updateInstanceOpRisk($scope.model.anr.id, sheet.id, sheet, function () {
                 $scope.$broadcast('risks-table-edited');
                 $scope.updateAnrRisksOpTable();
             })
+          }
         };
 
         $scope.$on('recommandations-loaded', function (ev, recs) {
