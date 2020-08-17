@@ -59,14 +59,14 @@
                 <md-input-container class="md-block">
                   <label translate>Code</label>
                     <md-icon>toc</md-icon>
-                    <input type="text" ng-model="recommandation.recommandation.code" ng-required="true">
+                    <input type="text" ng-model="recommandation.recommandation.code" ng-required="true" ng-disabled="isAnrReadOnly">
                 </md-input-container>
 
                 <div style="margin-bottom:10px">
                   <md-icon>star</md-icon>
                   <label translate>Importance</label>
                 </div>
-                <md-radio-group class="importanceRec" ng-model="recommandation.recommandation.importance" ng-required="true">
+                <md-radio-group class="importanceRec" ng-model="recommandation.recommandation.importance" ng-required="true" ng-disabled="isAnrReadOnly">
                     <md-radio-button ng-value="1"><span class="anr-importance">&bull;</span> {{ 'Useful information for safety, advice' | translate }}</md-radio-button>
                     <md-radio-button ng-value="2"><span class="anr-importance">&bull;&bull;</span> {{ 'Recommendation which requires a dedicated action to solve a vulnerability or a missing best practice' | translate }}</md-radio-button>
                     <md-radio-button ng-value="3"><span class="anr-importance">&bull;&bull;&bull;</span> {{ 'Priority recommendation' | translate }}</md-radio-button>
@@ -75,7 +75,7 @@
                 <md-input-container class="md-block">
                     <label translate>Description</label>
                     <md-icon>description</md-icon>
-                    <textarea rows="3" ng-model="recommandation.recommandation.description" ng-required="true"></textarea>
+                    <textarea rows="3" ng-model="recommandation.recommandation.description" ng-required="true" ng-disabled="isAnrReadOnly"></textarea>
                 </md-input-container>
             </div>
         </md-dialog-content>
@@ -83,11 +83,11 @@
             <md-button ng-click="cancel()">
                 {{ 'Cancel' | translate }}
             </md-button>
-            <md-button ng-click="deleteRecommandation($event, recommandation)" ng-if="recommandation.recommandation.uuid && !isRecoContext" type="submit" class="md-warn md-hue-3">
+            <md-button ng-click="deleteRecommandation($event, recommandation)" ng-if="recommandation.recommandation.uuid && !isRecoContext" ng-disabled="isAnrReadOnly" type="submit" class="md-warn md-hue-3">
                 {{ 'Delete' | translate }}
             </md-button>
-            <md-button ng-if="recommandation.recommandation.uuid && !isRecoContext" ng-click="detachRecommandation($event, recommandation)">{{ 'Detach' | translate }}</md-button>
-            <md-button ng-click="create()" ng-disabled="riskForm.$invalid" type="submit" class="md-accent md-hue-3">
+            <md-button ng-if="recommandation.recommandation.uuid && !isRecoContext" ng-disabled="isAnrReadOnly" ng-click="detachRecommandation($event, recommandation)">{{ 'Detach' | translate }}</md-button>
+            <md-button ng-click="create()" ng-disabled="riskForm.$invalid || isAnrReadOnly" type="submit" class="md-accent md-hue-3">
                 {{ (recommandation.recommandation.uuid ? 'Save' : 'Create') | translate }}
             </md-button>
         </md-dialog-actions>

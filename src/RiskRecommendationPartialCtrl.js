@@ -47,7 +47,8 @@
             ev.preventDefault();
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'gettextCatalog', 'toastr', '$q', 'anrId', 'rec' , 'detachRecommandation', 'copyRecommandation', 'deleteRecommandation', CreateRecommandationDialog],
+                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'gettextCatalog', 'toastr', '$q', 'anrId',
+                            'rec' , 'detachRecommandation', 'copyRecommandation', 'deleteRecommandation', 'rwd', CreateRecommandationDialog],
                 templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -60,7 +61,8 @@
                     anrId: $scope.model.anr.id,
                     detachRecommandation: $scope.detachRecommandation,
                     copyRecommandation: $scope.copyRecommandation,
-                    deleteRecommandation: $scope.deleteRecommandation
+                    deleteRecommandation: $scope.deleteRecommandation,
+                    rwd: $scope.model.anr.rwd
                 }
             }).then(function () {
                 rec.recommandation.anr = $scope.model.anr.id;
@@ -193,7 +195,8 @@
 
     }
 
-    function CreateRecommandationDialog($scope, $mdDialog, ClientRecommandationService, gettextCatalog, toastr, $q, anrId, rec, detachRecommandation, copyRecommandation, deleteRecommandation) {
+    function CreateRecommandationDialog($scope, $mdDialog, ClientRecommandationService, gettextCatalog, toastr, $q, anrId,
+                                        rec, detachRecommandation, copyRecommandation, deleteRecommandation, rwd) {
         $scope.language = $scope.getAnrLanguage();
         $scope.recommendationSet = null;
         $scope.recommandation = rec;
@@ -201,6 +204,7 @@
         $scope.detachRecommandation = detachRecommandation;
         $scope.copyRecommandation = copyRecommandation;
         $scope.deleteRecommandation = deleteRecommandation;
+        $scope.isAnrReadOnly = !rwd;
 
         $scope.loadOptions = function(ev, anrID) {
             ClientRecommandationService.getRecommandations({anr: anrId}).then(function (data) {
