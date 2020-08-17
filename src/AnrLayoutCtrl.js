@@ -726,7 +726,7 @@
             }
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'rec', 'ClientRecommandationService', CreateRecommandationDialogContext],
+                controller: ['$scope', '$mdDialog', 'rec', 'rwd', 'ClientRecommandationService', CreateRecommandationDialogContext],
                 templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -734,7 +734,8 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                    rec: rec
+                    rec: rec,
+                    rwd: $scope.model.anr.rwd
                 }
             }).then(function () {
                 rec.anr = $scope.model.anr.id;
@@ -747,10 +748,11 @@
             });
         }
 
-        function CreateRecommandationDialogContext($scope, $mdDialog, rec) {
+        function CreateRecommandationDialogContext($scope, $mdDialog, rec, rwd) {
             $scope.recommandation = {
                 recommandation: rec
             };
+            $scope.isAnrReadOnly = !rwd
             $scope.isRecoContext = true;
 
             $scope.delete = function () {
