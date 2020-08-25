@@ -19,7 +19,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'gettextCatalog', 'toastr', '$q','anrId', CreateRecommandationDialog],
+                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'gettextCatalog', 'toastr', '$q','anrId', 'rwd', CreateRecommandationDialog],
                 templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -27,7 +27,8 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                    anrId: $scope.model.anr.id
+                    anrId: $scope.model.anr.id,
+                    rwd: $scope.model.anr.rwd
                 }
             }).then(function (rec) {
                 rec.recommandation.anr = $scope.model.anr.id;
@@ -48,7 +49,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'gettextCatalog', 'toastr', '$q', 'anrId',
-                            'rec' , 'detachRecommandation', 'copyRecommandation', 'deleteRecommandation', 'rwd', CreateRecommandationDialog],
+                            'rwd', 'rec' , 'detachRecommandation', 'copyRecommandation', 'deleteRecommandation', CreateRecommandationDialog],
                 templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -196,7 +197,7 @@
     }
 
     function CreateRecommandationDialog($scope, $mdDialog, ClientRecommandationService, gettextCatalog, toastr, $q, anrId,
-                                        rec, detachRecommandation, copyRecommandation, deleteRecommandation, rwd) {
+                                        rwd, rec, detachRecommandation, copyRecommandation, deleteRecommandation) {
         $scope.language = $scope.getAnrLanguage();
         $scope.recommendationSet = null;
         $scope.recommandation = rec;
