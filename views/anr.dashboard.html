@@ -49,17 +49,17 @@
                     </div>
 
                     <div layout='row' ng-show="displayCurrentRisksBy=='parentAsset'" layout-wrap="">
-                        <md-button class="added-button" ng-click="breadcrumbGoBackCurrentRisks(0)"  flex="15">
-                            {{currentRisksBreadcrumb[(currentRisksBreadcrumb.length < 4) ? 0 : currentRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="currentRisksBreadcrumb.length > 1" class="added-button">></p>
-                        <md-button class="added-button" ng-show="currentRisksBreadcrumb.length > 1" ng-click="breadcrumbGoBackCurrentRisks(1)" flex="20">
-                            {{currentRisksBreadcrumb[(currentRisksBreadcrumb.length < 4) ? 1 : 1 + currentRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="currentRisksBreadcrumb.length > 2" class="added-button">></p>
-                        <md-button class="added-button" ng-show="currentRisksBreadcrumb.length > 2" ng-click="breadcrumbGoBackCurrentRisks(2)" flex="20">
-                            {{currentRisksBreadcrumb[(currentRisksBreadcrumb.length < 4) ? 2 : 2 + currentRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="currentRisksBreadcrumb.length > 3" class="added-button">></p>
-                        <md-button  class="added-button" ng-show="currentRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackCurrentRisks(3)" flex="20">
-                            {{currentRisksBreadcrumb[(currentRisksBreadcrumb.length < 4) ? 3 : 3 + currentRisksBreadcrumb.length - 4]}}</md-button>
+                        <h4 class="breadcrumb-link" ng-click="breadcrumbGoBackCurrentRisks(0)">
+                            {{currentRisksBreadcrumb[(currentRisksBreadcrumb.length < 4) ? 0 : currentRisksBreadcrumb.length - 4]}}</h4>
+                        <h4 class="breadcrumb-link" ng-show="currentRisksBreadcrumb.length > 1">></h4>
+                        <h4 class="breadcrumb-link" ng-show="currentRisksBreadcrumb.length > 1" ng-click="breadcrumbGoBackCurrentRisks(1)">
+                            {{currentRisksBreadcrumb[(currentRisksBreadcrumb.length < 4) ? 1 : 1 + currentRisksBreadcrumb.length - 4]}}</h4>
+                        <h4 class="breadcrumb-link" ng-show="currentRisksBreadcrumb.length > 2">></h4>
+                        <h4 class="breadcrumb-link" ng-show="currentRisksBreadcrumb.length > 2" ng-click="breadcrumbGoBackCurrentRisks(2)">
+                            {{currentRisksBreadcrumb[(currentRisksBreadcrumb.length < 4) ? 2 : 2 + currentRisksBreadcrumb.length - 4]}}</h4>
+                        <h4 class="breadcrumb-link" ng-show="currentRisksBreadcrumb.length > 3">></h4>
+                        <h4 class="breadcrumb-link" ng-show="currentRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackCurrentRisks(3)">
+                            {{currentRisksBreadcrumb[(currentRisksBreadcrumb.length < 4) ? 3 : 3 + currentRisksBreadcrumb.length - 4]}}</h4>
                     </div>
 
                     <d3 id="graphCurrentRisks"></d3>
@@ -95,17 +95,17 @@
                     </div>
 
                     <div layout='row' ng-show="displayTargetRisksBy=='parentAsset'" layout-wrap="">
-                        <md-button class="added-button" ng-click="breadcrumbGoBackTargetRisks(0)" flex="15">
-                            {{targetRisksBreadcrumb[(targetRisksBreadcrumb.length < 4) ? 0 : targetRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="targetRisksBreadcrumb.length > 1" class="added-button">></p>
-                        <md-button class="added-button" ng-show="targetRisksBreadcrumb.length > 1" ng-click="breadcrumbGoBackTargetRisks(1)" flex="20">
-                            {{targetRisksBreadcrumb[(targetRisksBreadcrumb.length < 4) ? 1 : 1 + targetRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="targetRisksBreadcrumb.length > 2" class="added-button">></p>
-                        <md-button class="added-button" ng-show="targetRisksBreadcrumb.length > 2" ng-click="breadcrumbGoBackTargetRisks(2)" flex="20">
-                            {{targetRisksBreadcrumb[(targetRisksBreadcrumb.length < 4) ? 2 : 2 + targetRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="targetRisksBreadcrumb.length > 3" class="added-button">></p>
-                        <md-button class="added-button" ng-show="targetRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackTargetRisks(3)" flex="20">
-                            {{targetRisksBreadcrumb[(targetRisksBreadcrumb.length < 4) ? 3 : 3 + targetRisksBreadcrumb.length - 4]}}</md-button>
+                        <h4 class="breadcrumb-link" ng-click="breadcrumbGoBackTargetRisks(0)">
+                            {{targetRisksBreadcrumb[(targetRisksBreadcrumb.length < 4) ? 0 : targetRisksBreadcrumb.length - 4]}}</h4>
+                        <h4 class="breadcrumb-link" ng-show="targetRisksBreadcrumb.length > 1">></h4>
+                        <h4 class="breadcrumb-link" ng-show="targetRisksBreadcrumb.length > 1" ng-click="breadcrumbGoBackTargetRisks(1)">
+                            {{targetRisksBreadcrumb[(targetRisksBreadcrumb.length < 4) ? 1 : 1 + targetRisksBreadcrumb.length - 4]}}</h4>
+                        <h4 class="breadcrumb-link" ng-show="targetRisksBreadcrumb.length > 2">></h4>
+                        <h4 class="breadcrumb-link" ng-show="targetRisksBreadcrumb.length > 2" ng-click="breadcrumbGoBackTargetRisks(2)">
+                            {{targetRisksBreadcrumb[(targetRisksBreadcrumb.length < 4) ? 2 : 2 + targetRisksBreadcrumb.length - 4]}}</h4>
+                        <h4 class="breadcrumb-link" ng-show="targetRisksBreadcrumb.length > 3">></h4>
+                        <h4 class="breadcrumb-link" ng-show="targetRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackTargetRisks(3)">
+                            {{targetRisksBreadcrumb[(targetRisksBreadcrumb.length < 4) ? 3 : 3 + targetRisksBreadcrumb.length - 4]}}</h4>
                     </div>
 
                     <d3 id="graphTargetRisks"></d3>
@@ -145,17 +145,17 @@
                     </div>
 
                     <div layout='row' ng-show="displayCurrentOpRisksBy=='parentAsset'" layout-wrap="">
-                        <md-button class="added-button" ng-click="breadcrumbGoBackCurrentOpRisks(0)" flex="15">
-                            {{currentOpRisksBreadcrumb[(currentOpRisksBreadcrumb.length < 4) ? 0 : currentOpRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="currentOpRisksBreadcrumb.length > 1" class="added-button">></p>
-                        <md-button class="added-button" ng-show="currentOpRisksBreadcrumb.length > 1" ng-click="breadcrumbGoBackCurrentOpRisks(1)" flex="20">
-                            {{currentOpRisksBreadcrumb[(currentOpRisksBreadcrumb.length < 4) ? 1 : 1 + currentOpRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="currentOpRisksBreadcrumb.length > 2" class="added-button">></p>
-                        <md-button class="added-button" ng-show="currentOpRisksBreadcrumb.length > 2" ng-click="breadcrumbGoBackCurrentOpRisks(2)" flex="20">
-                            {{currentOpRisksBreadcrumb[(currentOpRisksBreadcrumb.length < 4) ? 2 : 2 + currentOpRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="currentOpRisksBreadcrumb.length > 3" class="added-button">></p>
-                        <md-button  class="added-button" ng-show="currentOpRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackCurrentOpRisks(3)" flex="20">
-                            {{currentOpRisksBreadcrumb[(currentOpRisksBreadcrumb.length < 4) ? 3 : 3 + currentOpRisksBreadcrumb.length - 4]}}</md-button>
+                        <h4 class="breadcrumb-link" ng-click="breadcrumbGoBackCurrentOpRisks(0)">
+                            {{currentOpRisksBreadcrumb[(currentOpRisksBreadcrumb.length < 4) ? 0 : currentOpRisksBreadcrumb.length - 4]}}</h4>
+                        <h4 class="breadcrumb-link" ng-show="currentOpRisksBreadcrumb.length > 1">></h4>
+                        <h4 class="breadcrumb-link" ng-show="currentOpRisksBreadcrumb.length > 1" ng-click="breadcrumbGoBackCurrentOpRisks(1)">
+                            {{currentOpRisksBreadcrumb[(currentOpRisksBreadcrumb.length < 4) ? 1 : 1 + currentOpRisksBreadcrumb.length - 4]}}</h4>
+                        <h4 class="breadcrumb-link" ng-show="currentOpRisksBreadcrumb.length > 2">></h4>
+                        <h4 class="breadcrumb-link" ng-show="currentOpRisksBreadcrumb.length > 2" ng-click="breadcrumbGoBackCurrentOpRisks(2)">
+                            {{currentOpRisksBreadcrumb[(currentOpRisksBreadcrumb.length < 4) ? 2 : 2 + currentOpRisksBreadcrumb.length - 4]}}</h4>
+                        <h4 class="breadcrumb-link" ng-show="currentOpRisksBreadcrumb.length > 3">></h4>
+                        <h4 class="breadcrumb-link" ng-show="currentOpRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackCurrentOpRisks(3)">
+                            {{currentOpRisksBreadcrumb[(currentOpRisksBreadcrumb.length < 4) ? 3 : 3 + currentOpRisksBreadcrumb.length - 4]}}</h4>
                     </div>
 
                     <d3 id="graphCurrentOpRisks"></d3>
@@ -191,17 +191,17 @@
                     </div>
 
                     <div layout='row' ng-show="displayTargetOpRisksBy=='parentAsset'" layout-wrap="">
-                        <md-button class="added-button" ng-click="breadcrumbGoBackTargetOpRisks(0)"flex="15">
-                            {{targetOpRisksBreadcrumb[(targetOpRisksBreadcrumb.length < 4) ? 0 : targetOpRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="targetOpRisksBreadcrumb.length > 1" class="added-button">></p>
-                        <md-button class="added-button" ng-show="targetOpRisksBreadcrumb.length > 1" ng-click="breadcrumbGoBackTargetOpRisks(1)" flex="20">
-                            {{targetOpRisksBreadcrumb[(targetOpRisksBreadcrumb.length < 4) ? 1 : 1 + targetOpRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="targetOpRisksBreadcrumb.length > 2" class="added-button">></p>
-                        <md-button class="added-button" ng-show="targetOpRisksBreadcrumb.length > 2" ng-click="breadcrumbGoBackTargetOpRisks(2)" flex="20">
-                            {{targetOpRisksBreadcrumb[(targetOpRisksBreadcrumb.length < 4) ? 2 : 2 + targetOpRisksBreadcrumb.length - 4]}}</md-button>
-                        <p ng-show="targetOpRisksBreadcrumb.length > 3" class="added-button">></p>
-                        <md-button class="added-button" ng-show="targetOpRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackTargetOpRisks(3)" flex="20">
-                            {{targetOpRisksBreadcrumb[(targetOpRisksBreadcrumb.length < 4) ? 3 : 3 + targetOpRisksBreadcrumb.length - 4]}}</md-button>
+                        <h4 class="breadcrumb-link" ng-click="breadcrumbGoBackTargetOpRisks(0)">
+                            {{targetOpRisksBreadcrumb[(targetOpRisksBreadcrumb.length < 4) ? 0 : targetOpRisksBreadcrumb.length - 4]}}</h4>
+                        <h4 class="breadcrumb-link" ng-show="targetOpRisksBreadcrumb.length > 1">></h4>
+                        <h4 class="breadcrumb-link" ng-show="targetOpRisksBreadcrumb.length > 1" ng-click="breadcrumbGoBackTargetOpRisks(1)">
+                            {{targetOpRisksBreadcrumb[(targetOpRisksBreadcrumb.length < 4) ? 1 : 1 + targetOpRisksBreadcrumb.length - 4]}}</h4>
+                        <h4 class="breadcrumb-link" ng-show="targetOpRisksBreadcrumb.length > 2">></h4>
+                        <h4 class="breadcrumb-link" ng-show="targetOpRisksBreadcrumb.length > 2" ng-click="breadcrumbGoBackTargetOpRisks(2)">
+                            {{targetOpRisksBreadcrumb[(targetOpRisksBreadcrumb.length < 4) ? 2 : 2 + targetOpRisksBreadcrumb.length - 4]}}</h4>
+                        <h4 class="breadcrumb-link" ng-show="targetOpRisksBreadcrumb.length > 3">></h4>
+                        <h4 class="breadcrumb-link" ng-show="targetOpRisksBreadcrumb.length > 3" ng-click="breadcrumbGoBackTargetOpRisks(3)">
+                            {{targetOpRisksBreadcrumb[(targetOpRisksBreadcrumb.length < 4) ? 3 : 3 + targetOpRisksBreadcrumb.length - 4]}}</h4>
                     </div>
 
                     <d3 id="graphTargetOpRisks"></d3>

@@ -1326,3 +1326,11 @@ md-select-menu md-content
   position: absolute;
   transform: translate(0, -1000px);
 }
+
+.breadcrumb-link {
+    cursor: pointer;
+    color: #006FBA;
+    margin: 2px;
+    font-size: 12px;
+    outline: none;
+}
