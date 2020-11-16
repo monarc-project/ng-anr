@@ -1,6 +1,9 @@
 body{
     font-family: Helvetica, Sans-serif !important;
 }
+.main-card {
+  min-height: calc(100vh - 112px);
+}
 .preserve-newlines {
     white-space: pre-wrap
 }
