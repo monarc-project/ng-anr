@@ -2381,7 +2381,7 @@
                     }
 
                     if (rec.risksop) {
-                        rec.risksCount += rec.risksop.length;
+                        rec.risksCount += Object.keys(rec.risksop).length;
                     }
                 }
             });
