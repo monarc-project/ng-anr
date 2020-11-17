@@ -1,7 +1,7 @@
 (function () {
 
   angular
-    .module('ClientApp')
+    .module('AnrModule')
     .factory('MultiHorizontalBarChartService', ['gettextCatalog', function (gettextCatalog){
 
       /**

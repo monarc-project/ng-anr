@@ -1,7 +1,7 @@
 (function () {
 
   angular
-    .module('ClientApp')
+    .module('AnrModule')
     .factory('ChartService', ['MultiVerticalBarChartService', 'VerticalBarChartService', 'MultiHorizontalBarChartService', 'HorizontalBarChartService', 'LineChartService',
                               'MultiLineChartService','RadarChartService', 'HeatmapChartService', 'MultiHeatmapChartService', 'DonutChartService', ChartService]);
 

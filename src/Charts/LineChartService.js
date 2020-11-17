@@ -1,7 +1,7 @@
 (function () {
 
   angular
-    .module('ClientApp')
+    .module('AnrModule')
     .factory('LineChartService', ['gettextCatalog', function (gettextCatalog){
 
       /**
