@@ -4,6 +4,10 @@ body{
 .main-card {
   min-height: calc(100vh - 112px);
 }
+
+.home-card {
+  min-height: calc(100vh - 80px);
+}
 .preserve-newlines {
     white-space: pre-wrap
 }
