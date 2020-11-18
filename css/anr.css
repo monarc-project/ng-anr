@@ -42,6 +42,15 @@ body{
     white-space: pre-wrap
 }
 
+.md-tab {
+    min-width: unset;
+    padding: 12px 24px;
+}
+
+.md-tab.md-active {
+    color: #006FBA !important;
+}
+
 .md-tab, .md-button {
     text-transform: none;
 }
