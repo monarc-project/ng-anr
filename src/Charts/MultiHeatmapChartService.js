@@ -38,8 +38,11 @@
         var maxValue = d3.max(seriesMerged.map(d => d.value));
         var xTicks = [...new Set(seriesMerged.map(d => d.x))].sort((a,b) => a - b);
         var yTicks = [...new Set(seriesMerged.map(d => d.y))].sort((a,b) => a - b);
-        var gridSize = width / xTicks.length;
-        var height = gridSize * yTicks.length;
+        var height = width/2;
+        if (xTicks.length > 0) {
+          var gridSize = width / xTicks.length;
+          height = gridSize * yTicks.length;
+        }
         var cellCoords = [];
 
         yTicks.forEach(yCoord => {
