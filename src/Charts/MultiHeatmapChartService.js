@@ -125,7 +125,7 @@
             .attr("dy","-2em")
             .attr("font-size",10)
             .style("text-anchor", "middle")
-            .text(options.xLabel);
+            .text(gettextCatalog.getString(options.xLabel));
         }
 
         svg.append("g")
@@ -140,7 +140,7 @@
             .attr("dx","2em")
             .attr("font-size",10)
             .style("text-anchor", "middle")
-            .text(options.yLabel);
+            .text(gettextCatalog.getString(options.yLabel));
         }
 
         var cellsGroup = svg.append('g')

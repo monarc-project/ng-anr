@@ -84,7 +84,7 @@
         var Format = d3.format('.0%');
         var levels = options.levels;
         var nameSeries = data.map(cat => cat.series).shift();
-        var nameCategories = data.map(cat => cat.category);
+        var nameCategories = data.map(cat => gettextCatalog.getString(cat.category));
         var total = nameSeries.length;
         var sections = radians/total;
         var color = d3.scaleOrdinal(options.color);
