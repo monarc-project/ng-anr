@@ -104,11 +104,10 @@
 
 <script type="text/ng-template" id="monarc-method.tmpl.html">
     <div layout="column" class="md-padding-double md-monarc-method-box">
-        <h2>{{ ::step.label }}</h2>
-
+      <h2>{{ step.label | translate}}</h2>
         <div layout="row" ng-repeat="subStep in step.steps" layout-align="start center">
             <md-button class="md-icon-button" ng-click="setMethodStepStatus(subStep.progressField, subStep, subStep.done)"><md-icon>{{ subStep.done ? "check_box" : "check_box_outline_blank" }}</md-icon></md-button>
-            <div class="pointer" ng-click="subStep.action(subStep)">{{ ::subStep.label }}</div>
+            <div class="pointer" ng-click="subStep.action(subStep)">{{ subStep.label | translate }}</div>
         </div>
 
         <a href="#" class="bold" ng-click="openMethodDeliverable(step, $event)" ng-if="step.deliverable">{{ 'Deliverable:' | translate }} {{ ::step.deliverable }}</a>
