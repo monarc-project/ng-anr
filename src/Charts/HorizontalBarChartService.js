@@ -99,14 +99,17 @@
           })
         }
 
+        data.forEach(function(d){
+          if (d.translationLabelKey == undefined) {
+            d.translationLabelKey = d.category;
+          }
+          d.category = gettextCatalog.getString(d.translationLabelKey);
+        })
+
         var newCategories = [];
         var filtered = []; //to control legend selections
-        var categoriesNames = data.map((d) => {
-          return d.category;
-        });
-        var values = data.map((d) => {
-          return d.value;
-        });
+        var categoriesNames = data.map(d => d.category);
+        var values = data.map(d => d.value );
         var color = d3.scaleOrdinal()
           .range(options.color)
 
@@ -437,10 +440,10 @@
           var maxLines = Math.round(y.bandwidth()/11.5);
           text.each(function() {
             var text = d3.select(this),
-              maxLinesTextSplited = Math.ceil(text.node().getComputedTextLength()/(width - 20)),
+              maxLinesTextSplited = Math.ceil(text.node().getComputedTextLength()/(width - 50)),
               words = text.text().split(/\s+/).reverse(),
               word,
-              numberChar = Math.round((width - 10)/4),
+              numberChar = Math.round((width - 50)/4),
               line = [],
               lineNumber = 0,
               x = text.attr("x"),
@@ -464,7 +467,7 @@
                 tspan.text(line.join(" "));
               }
 
-              if (tspan.node().getComputedTextLength() > width - 10) {
+              if (tspan.node().getComputedTextLength() > width - 50) {
                 line.pop();
                 dy = -0.3 * Math.min(maxLinesTextSplited,maxLines)/2;
                 tspan.text(line.join(" "));

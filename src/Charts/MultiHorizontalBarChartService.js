@@ -2,7 +2,7 @@
 
   angular
     .module('AnrModule')
-    .factory('MultiHorizontalBarChartService', ['gettextCatalog', function (gettextCatalog){
+    .factory('MultiHorizontalBarChartService', ['gettextCatalog', '$timeout', function (gettextCatalog, $timeout){
 
       /**
       * Generate a grouped/stacked Horizontal Bar Chart
@@ -52,7 +52,8 @@
             .tickSize(-height)
             .tickSizeOuter(0);
 
-        var yAxis =  d3.axisLeft(y0);
+        var yAxis =  d3.axisLeft(y0)
+            .tickFormat((d,i) => { return categoriesNames[i]});
 
         var color = d3.scaleOrdinal()
             .range(options.color);
@@ -95,7 +96,7 @@
             if (d.translationLabelKey == undefined) {
               d.translationLabelKey = d.label;
             }
-            d.category = cat.category;
+            d.uuid = cat.uuid;
             d.label = gettextCatalog.getString(d.translationLabelKey);
           })
         });
@@ -106,21 +107,23 @@
         var filtered = []; //to control legend selections
         var chartMode = 'grouped'; //by default the mode is grouped
         sortData(data);
+        var categoriesUuids = data.map(function(d) { return d.uuid; });
         var categoriesNames = data.map(function(d) { return d.category; });
         var seriesNames = data[0].series.map(function(d) { return d.label; });
 
         if (options.externalFilter) {
-          var filterCategories = d3.selectAll(options.externalFilter).nodes();
-          filterCategories.forEach(function(cat){
-            if (cat.getAttribute('selected')) {
-              newCategories.push(cat.value);
-            }
-            cat.addEventListener('click', function(){updateCategories(this.value)});
-          });
-          updateCategories();
+          $timeout(function(){
+            var filterCategories = d3.selectAll(options.externalFilter);
+            filterCategories.on('click', function(){updateCategories(this.value)});
+            filterCategories.nodes().forEach(function(cat){
+              if (cat.getAttribute('selected') && newCategories.indexOf(cat.value) == -1) {
+                newCategories.push(cat.value);
+              }
+            });
+            updateCategories();
+          },1500,false)
         }
-
-        y0.domain(categoriesNames);
+        y0.domain(categoriesUuids);
         y1.domain(seriesNames).range([0, y0.bandwidth()]);
         x.domain([0, d3.max(data, function(category) { return d3.max(category.series.map(function(d){return d[options.nameValue];}))})]).nice();
 
@@ -141,8 +144,8 @@
         var category = svg.selectAll(".category")
             .data(data)
           .enter().append("g")
-            .attr("class", function(d) { return "category " + d.category.replace(/\s/g, '')})
-            .attr("transform",function(d) { return `translate(1,${y0(d.category)})`; })
+            .attr("class", function(d) { return "category " + d.uuid})
+            .attr("transform",function(d) { return `translate(1,${y0(d.uuid)})`; })
             .on("mouseover", function() { mouseover() })
             .on("mousemove", function(d) { mousemove(d,this) })
             .on("mouseleave", function() { mouseleave() });
@@ -231,7 +234,7 @@
           }).reduce((a, b) => a + b, 0);
 
           data.sort((a,b) => sum(a.series) - sum(b.series));
-          categoriesOrdered = data.map(d => d.category);
+          categoriesOrdered = data.map(d => d.uuid);
           return categoriesOrdered;
         };
 
@@ -304,16 +307,16 @@
             var categories = svg.selectAll(".category");
 
             categories.filter(function(d) {
-                    return newCategories.indexOf(d.category) == -1;
+                    return newCategories.indexOf(d.uuid) == -1;
                  })
                  .style("visibility","hidden");
 
             categories.filter(function(d) {
-                    return newCategories.indexOf(d.category) > -1;
+                    return newCategories.indexOf(d.uuid) > -1;
                  })
                  .transition()
                  .style("visibility","visible")
-                 .attr("transform",function(d) { return `translate(1,${y0(d.category)})`; })
+                 .attr("transform",function(d) { return `translate(1,${y0(d.uuid)})`; })
                  .duration(500);
 
             var categoriesBars = categories.selectAll("rect");
@@ -389,12 +392,12 @@
           var categories = svg.selectAll(".category");
 
           categories.filter(function(d) {
-                  return newCategories.indexOf(d.category) == -1;
+                  return newCategories.indexOf(d.uuid) == -1;
                })
                .style("visibility","hidden");
 
           categories.filter(function(d) {
-                  return newCategories.indexOf(d.category) > -1;
+                  return newCategories.indexOf(d.uuid) > -1;
                })
                .style("visibility","visible")
                .attr("transform","translate(1,0)")
@@ -416,7 +419,7 @@
                })
                .transition()
                .style("opacity",0)
-               .attr("transform", d => { return `translate(${x(d.x1)},${y0(d.category)})`; })
+               .attr("transform", d => { return `translate(${x(d.x1)},${y0(d.uuid)})`; })
                .attr("y", y0.bandwidth()/2)
                .duration(500);
 
@@ -430,7 +433,7 @@
               d.x1 = x0 += +d[options.nameValue];
             d3.select(this)
               .transition()
-              .attr("y",function(d) { return y0(d.category); })
+              .attr("y",function(d) { return y0(d.uuid); })
               .attr("height", y0.bandwidth())
               .attr("x", function(d) { return x(d.x0); })
               .attr("width", function(d) { return  x(d.x1) - x(d.x0); })
@@ -445,7 +448,7 @@
                 if (i == seriesNames.length - filtered.length - 1) {
                   d3.select(this)
                   .transition()
-                  .attr("transform", d => { return `translate(${x(d.x1)},${y0(d.category)})`; })
+                  .attr("transform", d => { return `translate(${x(d.x1)},${y0(d.uuid)})`; })
                   .attr("y", y0.bandwidth()/2)
                   .style("opacity",1)
                   .text(function(d) {return d.x1; })
@@ -454,7 +457,7 @@
                   d3.select(this)
                   .transition()
                   .style("opacity",0)
-                  .attr("transform", d => { return `translate(${x(d.x1)},${y0(d.category)})`; })
+                  .attr("transform", d => { return `translate(${x(d.x1)},${y0(d.uuid)})`; })
                   .attr("y", y0.bandwidth()/2)
                   .duration(500);
                 }
@@ -497,10 +500,14 @@
             let index = newCategories.indexOf(cat);
             newCategories.splice(index,1);
           }else if (cat) {
-            newCategories.push(cat);
+            let index = categoriesUuids.indexOf(cat);
+            newCategories.splice(index,0,cat);
           }
 
-          newData = data.filter(function(d){return newCategories.includes(d.category);});
+          newData = data.filter(function(d){return newCategories.includes(d.uuid);});
+          if (newData.length > 0) {
+            categoriesNames = newData.map(function(d) { return d.category; });
+          }
 
           updateChart();
 
@@ -508,7 +515,7 @@
 
         function updateChart() {
           if (newData.length == 0) newData = data
-          if (newCategories.length == 0) newCategories = categoriesNames
+          if (newCategories.length == 0) newCategories = angular.copy(categoriesUuids)
           if (chartMode == 'grouped') {
             if (newSeries.length == 0) newSeries = seriesNames
             updateGroupedChart(newSeries,newCategories,newData);

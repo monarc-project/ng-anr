@@ -2,7 +2,7 @@
 
   angular
     .module('AnrModule')
-    .factory('MultiVerticalBarChartService', ['gettextCatalog', function (gettextCatalog){
+    .factory('MultiVerticalBarChartService', ['gettextCatalog', '$timeout', function (gettextCatalog, $timeout){
 
       /**
       * Generate a grouped/stacked Multi Vertical Bar Chart
@@ -52,7 +52,8 @@
         var y = d3.scaleLinear()
             .range([height, 0]);
 
-        var xAxis = d3.axisBottom(x0);
+        var xAxis = d3.axisBottom(x0)
+            .tickFormat((d,i) => { return categoriesNames[i]});
 
         var yAxis = d3.axisLeft(y)
             .tickSize(-width)
@@ -99,7 +100,7 @@
             if (d.translationLabelKey == undefined) {
               d.translationLabelKey = d.label;
             }
-            d.category = cat.category;
+            d.uuid = cat.uuid;
             d.label = gettextCatalog.getString(d.translationLabelKey);
           })
         });
@@ -109,22 +110,24 @@
         var newData = [];
         var filtered = []; //to control legend selections
         var chartMode = 'grouped'; //by default the mode is grouped
+        var categoriesUuids = data.map(function(d) { return d.uuid; });
         var categoriesNames = data.map(function(d) { return d.category; });
         var seriesNames = [...new Set(data.flatMap(x => x.series.flatMap(x=>x.label)))];
 
         if (options.externalFilter) {
-          var filterCategories = d3.selectAll(options.externalFilter).nodes();
-          filterCategories.forEach(function(cat){
-            if (cat.getAttribute('selected')) {
-              newCategories.push(cat.value);
-            }
-            cat.addEventListener('click', function(){updateCategories(this.value)});
-          });
-          updateCategories();
+          $timeout(function(){
+            var filterCategories = d3.selectAll(options.externalFilter);
+            filterCategories.on('click', function(){updateCategories(this.value)});
+            filterCategories.nodes().forEach(function(cat){
+              if (cat.getAttribute('selected') && newCategories.indexOf(cat.value) == -1) {
+                newCategories.push(cat.value);
+              }
+            });
+            updateCategories();
+          },1500,false)
         }
 
-
-        x0.domain(categoriesNames);
+        x0.domain(categoriesUuids);
         x1.domain(seriesNames).range([0, x0.bandwidth()]);
         y.domain([0, d3.max(data, function(category) { return d3.max(category.series.map(function(d){return d[options.nameValue];}))})]).nice();
 
@@ -160,8 +163,8 @@
         var category = svg.selectAll(".category")
             .data(data)
           .enter().append("g")
-            .attr("class", function(d) { return "category " + d.category.replace(/\s/g, '')})
-            .attr("transform",function(d) { return `translate(${x0(d.category)},0)`; })
+            .attr("class", function(d) { return "category " + d.uuid})
+            .attr("transform",function(d) { return `translate(${x0(d.uuid)},0)`; })
             .on("mouseover", function() { mouseover() })
             .on("mousemove", function(d) { mousemove(d,this) })
             .on("mouseleave", function() { mouseleave() })
@@ -327,16 +330,16 @@
             var categories = svg.selectAll(".category");
 
             categories.filter(function(d) {
-                    return newCategories.indexOf(d.category) == -1;
+                    return newCategories.indexOf(d.uuid) == -1;
                  })
                  .style("visibility","hidden");
 
             categories.filter(function(d) {
-                    return newCategories.indexOf(d.category) > -1;
+                    return newCategories.indexOf(d.uuid) > -1;
                  })
                  .transition()
                  .style("visibility","visible")
-                 .attr("transform",function(d) { return `translate(${x0(d.category)},0)`; })
+                 .attr("transform",function(d) { return `translate(${x0(d.uuid)},0)`; })
                  .duration(500);
 
             var categoriesBars = categories.selectAll("rect");
@@ -419,12 +422,12 @@
           var categories = svg.selectAll(".category");
 
           categories.filter(function(d) {
-                  return newCategories.indexOf(d.category) == -1;
+                  return newCategories.indexOf(d.uuid) == -1;
                })
                .style("visibility","hidden");
 
           categories.filter(function(d) {
-                  return newCategories.indexOf(d.category) > -1;
+                  return newCategories.indexOf(d.uuid) > -1;
                })
                .style("visibility","visible")
                .attr("transform","translate(0,0)")
@@ -446,7 +449,7 @@
                })
                .transition()
                .style("opacity",0)
-               .attr("transform", d => { return `translate(${x0(d.category)},${y(d.y1)})`; })
+               .attr("transform", d => {return `translate(${x0(d.uuid)},${y(d.y1)})`; })
                .attr("x", x0.bandwidth()/2)
                .duration(500);
 
@@ -460,7 +463,7 @@
               d.y1 = y0 += +d[options.nameValue];
             d3.select(this)
               .transition()
-              .attr("x",function(d) { return x0(d.category); })
+              .attr("x",function(d) { return x0(d.uuid); })
               .attr("width", x0.bandwidth())
               .attr("y", function(d) { return y(d.y1); })
               .attr("height", function(d) { return y(d.y0) - y(d.y1); })
@@ -476,7 +479,7 @@
                 if (i == seriesNames.length - filtered.length - 1) {
                   d3.select(this)
                   .transition()
-                  .attr("transform", d => { return `translate(${x0(d.category)},${y(d.y1)})`; })
+                  .attr("transform", d => { return `translate(${x0(d.uuid)},${y(d.y1)})`; })
                   .attr("x", x0.bandwidth()/2)
                   .style("opacity",1)
                   .text(function(d) {return d.y1; })
@@ -485,7 +488,7 @@
                   d3.select(this)
                   .transition()
                   .style("opacity",0)
-                  .attr("transform", d => { return `translate(${x0(d.category)},${y(d.y1)})`; })
+                  .attr("transform", d => { return `translate(${x0(d.uuid)},${y(d.y1)})`; })
                   .attr("x", x0.bandwidth()/2)
                   .duration(500);
                 }
@@ -528,17 +531,14 @@
             let index = newCategories.indexOf(cat);
             newCategories.splice(index,1);
           }else if (cat) {
-            newCategories.push(cat);
+            let index = categoriesUuids.indexOf(cat);
+            newCategories.splice(index,0,cat);
           }
 
-          newCategories.sort(
-            function(a, b) {
-              return a.localeCompare(b)
-            }
-          );
-
-          newData = data.filter(function(d){return newCategories.includes(d.category);});
-
+          newData = data.filter(function(d){return newCategories.includes(d.uuid);});
+          if (newData.length > 0) {
+            categoriesNames = newData.map(function(d) { return d.category; });
+          }
 
           updateChart();
 
@@ -546,7 +546,7 @@
 
         function updateChart() {
           if (newData.length == 0) newData = data
-          if (newCategories.length == 0) newCategories = categoriesNames
+          if (newCategories.length == 0) newCategories = angular.copy(categoriesUuids)
           if (chartMode == 'grouped') {
             if (newSeries.length == 0) newSeries = seriesNames
             updateGroupedChart(newSeries,newCategories,newData);

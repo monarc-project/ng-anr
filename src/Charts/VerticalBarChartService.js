@@ -103,14 +103,17 @@
           })
         }
 
+        data.forEach(function(d){
+          if (d.translationLabelKey == undefined) {
+            d.translationLabelKey = d.category;
+          }
+          d.category = gettextCatalog.getString(d.translationLabelKey);
+        })
+
         var newCategories = [];
         var filtered = []; //to control legend selections
-        var categoriesNames = data.map((d) => {
-          return d.category;
-        });
-        var values = data.map((d) => {
-          return d.value;
-        });
+        var categoriesNames = data.map(d => d.category);
+        var values = data.map(d => d.value);
         var color = d3.scaleOrdinal()
           .range(options.color)
 

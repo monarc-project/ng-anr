@@ -26,8 +26,8 @@
                 });
                 if (!$scope.referential_uuid && $scope.referentials.items.referentials.length > 0) {
                   $scope.referential_uuid = $scope.referentials.items.referentials[0].uuid;
-                  $scope.selectReferential($scope.referential_uuid);
                 }
+                $scope.selectReferential($scope.referential_uuid);
                 $scope.updatingReferentials = true;
                 if (document.querySelector('#tabRef')) {
                   document.querySelector('#tabRef').click(); //Force ng-click over first referential

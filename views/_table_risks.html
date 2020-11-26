@@ -29,8 +29,7 @@
                     &nbsp;
 
                     <md-input-container style="margin: 0 0; min-width: 120px;">
-                        <label translate>Kind of treatment</label>
-                        <md-select ng-model="risks_filters.kindOfMeasure">
+                        <md-select ng-model="risks_filters.kindOfMeasure" placeholder="{{ 'Kind of treatment' | translate }}">
                             <md-option ng-value="null">{{ 'All (unfiltered)' | translate }}</md-option>
                             <md-option ng-value="5">{{ 'Not treated' | translate }}</md-option>
                             <md-option ng-value="1">{{ 'Reduction' | translate }}</md-option>
