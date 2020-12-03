@@ -2,9 +2,9 @@
     <md-input-container ng-if="OFFICE_MODE == 'BO'">
         <md-icon>language</md-icon>
         <md-select ng-model="scales.language" ng-change="switchLanguage()">
-          <md-option ng-repeat="(lang_idx, lang) in languages" value="{{ lang_idx }}" ng-controller="BackofficeAccountCtrl">
-            <countryflag country="{{ countriesCode[lang_idx] }}"></countryflag>
-            {{ languagesNames[lang_idx] }}
+          <md-option ng-repeat="(index, lang) in languages" value="{{ index }}">
+            <countryflag country="{{ languages[index].flag }}"></countryflag>
+            {{ languages[index].name | translate }}
           </md-option>
         </md-select>
     </md-input-container>
