@@ -2710,7 +2710,7 @@
 
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
-        themeSearchText = null;
+        $scope.themeSearchText = null;
 
         if (threat != undefined && threat != null) {
             $scope.threat = threat;
