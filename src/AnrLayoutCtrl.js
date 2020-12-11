@@ -2040,6 +2040,22 @@
             });
         };
 
+        $scope.importObject = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ConfigService', ImportObjectMospDialogCtrl],
+                templateUrl: 'views/anr/import.object.mosp.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen
+            })
+                .then(function () {
+                });
+        };
+
         $scope.importInstance = function (ev, parentId) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
@@ -2947,6 +2963,45 @@
         $scope.cancel = function () {
             $mdDialog.cancel();
         };
+    }
+
+    function ImportObjectMospDialogCtrl($rootScope, $scope, $http, $mdDialog, ConfigService) {
+      $scope.languages = ConfigService.getLanguages();
+      $scope.language = $scope.getAnrLanguage();
+
+      var mosp_query_organizations = 'organization?results_per_page=500';
+      $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
+      .then(function(org) {
+          var mosp_query_all_objects = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Objects"}}]}&results_per_page=3000';
+          $http.jsonp($rootScope.mospApiUrl + mosp_query_all_objects)
+          .then(function(objects) {
+              $scope.all_objects = objects.data.data.objects;
+              var org_ids = Array.from(new Set($scope.all_objects.map(object => object.org_id)));
+              $scope.organizations = org.data.data.objects.filter(org => org_ids.includes(org.id));
+          });
+      });
+
+      $scope.selectOrganization = function() {
+          // Retrieve the assets from the selected organization
+          $scope.mosp_objects = $scope.all_objects.filter(
+              object => object.org_id == $scope.organization.id //&&
+              // !$rootScope.assets_uuid.includes(asset.json_object.uuid) &&
+              // asset.json_object.language == $scope.languages[$scope.language].toUpperCase()
+          );
+      }
+
+      $scope.getMatches = function(searchText) {
+          // filter on the name and and the theme
+          return $scope.mosp_objects.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()));
+      };
+
+      $scope.cancel = function() {
+          $mdDialog.cancel();
+      };
+
+      $scope.import = function() {
+          $mdDialog.hide();
+      };
     }
 
     function ImportInstanceDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload, instanceId, parentId, hookUpdateObjlib) {
