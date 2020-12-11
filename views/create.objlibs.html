@@ -12,10 +12,16 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-card ng-if="!objlib.uuid && OFFICE_MODE == 'FO'">
+                <md-card ng-if="!objlib.uuid && OFFICE_MODE == 'FO'" layout="row">
+                    <span flex></span>
                     <md-button class="md-primary" ng-click="importObject($event)">
                         <md-icon>play_for_work</md-icon><span>{{ 'Import an asset' | translate }}</span>
                     </md-button>
+                    <span flex></span>
+                    <md-button class="md-primary" ng-click="importObject($event)">
+                        <md-icon>cloud_download</md-icon><span>&nbsp;{{ 'Import from MOSP' | translate }}</span>
+                    </md-button>
+                    <span flex></span>
                 </md-card>
                 <md-subheader>{{ 'Labels and descriptions' | translate }}</md-subheader>
 
