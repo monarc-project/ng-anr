@@ -37,9 +37,9 @@
                     <label translate>Language</label>
                     <md-icon>language</md-icon>
                     <md-select ng-model="language" ng-change="switchLanguage()">
-                      <md-option ng-repeat="(lang_idx, lang) in languages" value="{{ lang_idx }}" ng-controller="BackofficeAccountCtrl">
-                        <countryflag country="{{ countriesCode[lang_idx] }}"></countryflag>
-                        {{ languagesNames[lang_idx] }}
+                      <md-option ng-repeat="(index, lang) in $root.languages" value="{{ index }}">
+                        <countryflag country="{{ $root.languages[index].flag }}"></countryflag>
+                        {{ $root.languages[index].name | translate }}
                       </md-option>
                     </md-select>
                 </md-input-container>
@@ -69,7 +69,7 @@
                                 required
                                 md-input-name="theme"
                                 md-no-cache="true"
-                                md-selected-item="threat.theme"
+                                md-selected-item="selectedThemeItem"
                                 md-search-text="themeSearchText"
                                 md-items="item in queryThemeSearch(themeSearchText)"
                                 md-item-text="item['label' + language]"

@@ -11,17 +11,6 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-input-container class="md-block" ng-hide="OFFICE_MODE == 'FO'" flex>
-                    <label translate>Language</label>
-                    <md-icon>language</md-icon>
-                    <md-select ng-model="language" ng-change="switchLanguage()">
-                      <md-option ng-repeat="(lang_idx, lang) in languages" value="{{ lang_idx }}" ng-controller="BackofficeAccountCtrl">
-                        <countryflag country="{{ countriesCode[lang_idx] }}"></countryflag>
-                        {{ languagesNames[lang_idx] }}
-                      </md-option>
-                    </md-select>
-                </md-input-container>
-
                 <md-input-container class="md-block" flex>
                     <md-icon style="color: rgba(0,0,0,0.54)">account_balance</md-icon>
                     <label translate>Organization</label>
