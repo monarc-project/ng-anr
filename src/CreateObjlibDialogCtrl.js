@@ -7,6 +7,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
     var $parentScope = objLibDialog;
 
     $scope.importObject = objLibDialog.importObject;
+    $scope.importMospObject = objLibDialog.importMospObject;
 
     if (objLibDialog.__objlibDialog_ParentScope && objLibDialog.__objlibDialog_ParentScope.model) {
         $scope.model = objLibDialog.__objlibDialog_ParentScope.model;

@@ -2040,11 +2040,10 @@
             });
         };
 
-        $scope.importObject = function (ev) {
+        $scope.importMospObject = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
             $mdDialog.show({
-                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ConfigService', ImportObjectMospDialogCtrl],
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ObjlibService', ImportObjectMospDialogCtrl],
                 templateUrl: 'views/anr/import.object.mosp.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -2052,7 +2051,91 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen
             })
-                .then(function () {
+                .then(function (object) {
+                  var language = $scope.getAnrLanguage();
+
+                  formatRecursive(object);
+
+                  function formatRecursive(object){
+                    object.mosp = true;
+                    object.type = 'object';
+                    object.monarc_version = $rootScope.appVersion;
+                    object.asset.type = "asset";
+                    object.categories = [{["label" + language] : "Imported from MOSP", parent: null}];
+                    object.object.category = 0;
+                    object.object.scope = 2;
+                    object.object.mode = 0;
+                    object.object["label" + language] = object.object.label;
+                    object.object["name" + language] = object.object.name;
+                    delete object.object.label;
+                    delete object.object.name;
+                    object.asset.asset.type = object.asset.asset.type == 'Primary' ? 1 : 2;
+                    object.asset.asset.label4 = null;
+                    object.asset.asset["label" + language] = object.asset.asset.label;
+                    object.asset.asset["description" + language] = object.asset.asset.description;
+                    delete object.asset.asset.label;
+                    delete object.asset.asset.description;
+
+                    let objAmvs = {};
+                    object.asset.amvs.forEach(amv => {
+                      let uuid = amv.uuid;
+                      objAmvs[uuid] = amv;
+                    })
+                    object.asset.amvs = objAmvs;
+
+                    let themes = [];
+                    let themeIndex = null;
+                    let objThreats = {};
+                    object.asset.threats.forEach(threat => {
+                      let uuid = threat.uuid;
+                      let themeFound = themes.filter(function(theme,index) {
+                        themeIndex = index;
+                        return theme["label" + language] == threat.theme
+                      })[0];
+
+                      if (themeFound == undefined) {
+                        themes.push({["label" + language]:threat.theme});
+                        threat.theme = themes.length - 1;
+                      }else {
+                        threat.theme = themeIndex;
+                      }
+
+                      threat["label" + language] = threat.label;
+                      threat["description" + language] = threat.description;
+                      delete threat.label;
+                      delete threat.description;
+                      objThreats[uuid] = threat;
+                    })
+                    object.asset.themes = themes;
+                    object.asset.threats = objThreats;
+
+                    let objVulns = {};
+                    object.asset.vuls.forEach(vul => {
+                      let uuid = vul.uuid;
+                      vul["label" + language] = vul.label;
+                      vul["description" + language] = vul.description;
+                      delete vul.label;
+                      delete vul.description;
+                      objVulns[uuid] = vul;
+                    })
+                    object.asset.vuls = objVulns;
+
+                    if (object.children.length > 0) {
+                      object.children.forEach(obj => {
+                        formatRecursive(obj);
+                      })
+                    }
+                  }
+
+                  ObjlibService.createObjlib(object,
+                    function(){
+                      toastr.success(gettextCatalog.getString("The asset has been imported successfully"));
+		                  $scope.hookUpdateObjlib();
+                    },
+                    function(){
+                      toastr.warning(gettextCatalog.getString("Some files could not be imported"));
+                    }
+                  );
                 });
         };
 
@@ -2195,8 +2278,6 @@
         $scope.changeCateg = function(){
             $scope.objlib.category = {id: $scope.selected_categ.id};
         };
-
-
 
         $scope.queryCategorySearch = function (query) {
             var q = $q.defer();
@@ -2965,8 +3046,7 @@
         };
     }
 
-    function ImportObjectMospDialogCtrl($rootScope, $scope, $http, $mdDialog, ConfigService) {
-      $scope.languages = ConfigService.getLanguages();
+    function ImportObjectMospDialogCtrl($rootScope, $scope, $http, $mdDialog, ObjlibService) {
       $scope.language = $scope.getAnrLanguage();
 
       var mosp_query_organizations = 'organization?results_per_page=500';
@@ -2983,15 +3063,17 @@
 
       $scope.selectOrganization = function() {
           // Retrieve the assets from the selected organization
-          $scope.mosp_objects = $scope.all_objects.filter(
-              object => object.org_id == $scope.organization.id //&&
-              // !$rootScope.assets_uuid.includes(asset.json_object.uuid) &&
-              // asset.json_object.language == $scope.languages[$scope.language].toUpperCase()
-          );
+          ObjlibService.getObjectsOfAnr($rootScope.anr_id ,{},function(data){
+            $scope.mosp_objects = $scope.all_objects.filter(
+                object => object.org_id == $scope.organization.id &&
+                !data.objects.map(object => object.uuid).includes(object.json_object.object.object.uuid) &&
+                object.json_object.object.object.language == $rootScope.languages[$scope.language].code.toUpperCase()
+            );
+          })
       }
 
       $scope.getMatches = function(searchText) {
-          // filter on the name and and the theme
+          // filter on the name and the theme
           return $scope.mosp_objects.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()));
       };
 
@@ -3000,7 +3082,8 @@
       };
 
       $scope.import = function() {
-          $mdDialog.hide();
+          var object = $scope.object.json_object.object;
+          $mdDialog.hide(object);
       };
     }
 
