@@ -2061,16 +2061,18 @@
                     object.type = 'object';
                     object.monarc_version = $rootScope.appVersion;
                     object.asset.type = "asset";
-                    object.categories = [{["label" + language] : "Imported from MOSP", parent: null}];
+                    object.categories = [{
+                      ["label" + language] : gettextCatalog.getString("Imported from MOSP"),
+                      parent: null
+                    }];
                     object.object.category = 0;
-                    object.object.scope = 2;
+                    object.object.scope = object.object.scope == 'local' ? 1 : 2;;
                     object.object.mode = 0;
                     object.object["label" + language] = object.object.label;
                     object.object["name" + language] = object.object.name;
                     delete object.object.label;
                     delete object.object.name;
                     object.asset.asset.type = object.asset.asset.type == 'Primary' ? 1 : 2;
-                    object.asset.asset.label4 = null;
                     object.asset.asset["label" + language] = object.asset.asset.label;
                     object.asset.asset["description" + language] = object.asset.asset.description;
                     delete object.asset.asset.label;
