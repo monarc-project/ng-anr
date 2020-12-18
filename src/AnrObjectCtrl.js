@@ -319,7 +319,7 @@
                     if ($scope.OFFICE_MODE == 'FO') {
                         url = 'api/client-anr/' + $scope.model.anr.id + '/objects/' + $scope.object.uuid + '/export';
                     }
-                    $http.post(url, {id: $scope.object.uuid, password: exports.password}).then(function (data) {
+                    $http.post(url, {id: $scope.object.uuid, password: exports.password, mosp: exports.mosp}).then(function (data) {
                         var contentD = data.headers('Content-Disposition'),
                             contentT = data.headers('Content-Type');
                         contentD = contentD.substring(0,contentD.length-1).split('filename="');
@@ -554,6 +554,7 @@
         $scope.mode = mode;
         $scope.exportData = {
             password: '',
+            mosp: false,
             simple_mode: true,
         };
 
