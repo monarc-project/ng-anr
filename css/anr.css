@@ -152,6 +152,11 @@ table.md-table tbody.md-body>tr.md-row:hover {
     text-align: center
 }
 
+.icon-center {
+    text-align: center;
+    display: block;
+}
+
 .green-dot {
     width: 8px;
     height: 8px;
@@ -325,6 +330,16 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 
 .md-errors-spacer {
     min-height: 0 !important;
+}
+
+.subheader-deliveries-admin {
+  background-color: #333333 !important;
+  color: white !important;
+  z-index: 8;
+}
+
+.icon-white {
+  color: white !important;
 }
 
 /** TREE VIEW **/

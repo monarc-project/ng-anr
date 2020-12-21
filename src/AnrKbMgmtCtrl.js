@@ -2675,7 +2675,7 @@
             $scope.mosp_assets = $scope.all_assets.filter(
                 asset => asset.org_id == $scope.organization.id &&
                 !$rootScope.assets_uuid.includes(asset.json_object.uuid) &&
-                asset.json_object.language == $scope.languages[$scope.language].toUpperCase()
+                asset.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
             );
         }
 
@@ -2710,7 +2710,7 @@
 
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
-        $scope.themeSearchText = '';
+        $scope.themeSearchText = null;
 
         if (threat != undefined && threat != null) {
             $scope.threat = threat;
@@ -2862,7 +2862,7 @@
             $scope.mosp_threats = $scope.all_threats.filter(
                 threat => threat.org_id == $scope.organization.id &&
                 !$rootScope.threats_uuid.includes(threat.json_object.uuid) &&
-                threat.json_object.language == $scope.languages[$scope.language].toUpperCase()
+                threat.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
             );
         }
 
@@ -2981,11 +2981,11 @@
 
         $scope.selectOrganization = function() {
             // Retrieve the vulnerabilities from the selected organization
-            if ($scope.languages[$scope.language].toUpperCase() != 'EN') {
+            if ($scope.languages[$scope.language].code.toUpperCase() != 'EN') {
                 $scope.mosp_vulnerabilities = $scope.all_vulns.filter(
                     vulnerability => vulnerability.org_id == $scope.organization.id &&
                     !$rootScope.vulnerabilities_uuid.includes(vulnerability.json_object.uuid) &&
-                    vulnerability.json_object.language == $scope.languages[$scope.language].toUpperCase()
+                    vulnerability.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
                 );
             } else {
                 $scope.mosp_vulnerabilities = $scope.all_vulns.filter(
