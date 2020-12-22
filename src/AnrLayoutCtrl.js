@@ -2066,7 +2066,8 @@
                       parent: null
                     }];
                     object.object.category = 0;
-                    object.object.scope = object.object.scope == 'local' ? 1 : 2;;
+                    object.object.rolfTag = object.rolfTags.length > 0 ? 1 : null;
+                    object.object.scope = object.object.scope == 'local' ? 1 : 2;
                     object.object.mode = 0;
                     object.object["label" + language] = object.object.label;
                     object.object["name" + language] = object.object.name;
@@ -2121,6 +2122,22 @@
                       objVulns[uuid] = vul;
                     })
                     object.asset.vuls = objVulns;
+
+                    object.rolfTags.forEach(tag => {
+                      tag["label" + language] = tag.label;
+                      tag.risks = [...Array(object.rolfRisks.length).keys()];
+                      delete tag.label;
+                    })
+                    object.rolfTags.unshift({});
+
+                    object.rolfRisks.forEach((opRisk,index) => {
+                      opRisk['id'] = index;
+                      opRisk['measures'] = [];
+                      opRisk["label" + language] = opRisk.label;
+                      opRisk["description" + language] = opRisk.description;
+                      delete opRisk.label;
+                      delete opRisk.description;
+                    })
 
                     if (object.children.length > 0) {
                       object.children.forEach(obj => {
