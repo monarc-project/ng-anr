@@ -2040,19 +2040,23 @@
             });
         };
 
-        $scope.importMospObject = function (ev) {
+        $scope.importMospObject = function (ev,categories) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ObjlibService', ImportObjectMospDialogCtrl],
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ObjlibService', 'categories', ImportObjectMospDialogCtrl],
                 templateUrl: 'views/anr/import.object.mosp.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
-                fullscreen: useFullScreen
+                fullscreen: useFullScreen,
+                locals: {
+                  categories : categories,
+                }
             })
                 .then(function (object) {
                   var language = $scope.getAnrLanguage();
+                  var category = object.categories;
 
                   formatRecursive(object);
 
@@ -2061,10 +2065,7 @@
                     object.type = 'object';
                     object.monarc_version = $rootScope.appVersion;
                     object.asset.type = "asset";
-                    object.categories = [{
-                      ["label" + language] : gettextCatalog.getString("Imported from MOSP"),
-                      parent: null
-                    }];
+                    object.categories = category;
                     object.object.category = 0;
                     object.object.rolfTag = object.rolfTags.length > 0 ? 1 : null;
                     object.object.scope = object.object.scope == 'local' ? 1 : 2;
@@ -3065,8 +3066,13 @@
         };
     }
 
-    function ImportObjectMospDialogCtrl($rootScope, $scope, $http, $mdDialog, ObjlibService) {
+    function ImportObjectMospDialogCtrl($rootScope, $scope, $http, $mdDialog, ObjlibService,categories) {
+
       $scope.language = $scope.getAnrLanguage();
+      $scope.categories = categories;
+      $scope.libraryCategory = {
+        parent: null
+      };
 
       var mosp_query_organizations = 'organization?results_per_page=500';
       $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
@@ -3096,12 +3102,36 @@
           return $scope.mosp_objects.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()));
       };
 
+      $scope.createCategory = function (ev) {
+          $mdDialog.show({
+              controller: ['$scope', '$mdDialog', '$q', 'toastr', 'gettextCatalog', 'ConfigService', 'ObjlibService', 'categories', CreateObjlibCategoryDialogCtrl],
+              templateUrl: 'views/anr/create.objlibs.categories.html',
+              clickOutsideToClose: false,
+              preserveScope: true,
+              multiple:true,
+              scope: $scope,
+              locals: {
+                  'categories': $scope.categories
+              }
+          })
+              .then(function (category) {
+                  ObjlibService.createObjlibCat(category,
+                      function (cat) {
+                          let label = cat.categ['label' + $scope.language];
+                          $scope.libraryCategory['label' + $scope.language] = label;
+                          $scope.categories.push($scope.libraryCategory)
+                      }
+                  );
+              });
+      };
+
       $scope.cancel = function() {
           $mdDialog.cancel();
       };
 
       $scope.import = function() {
-          var object = $scope.object.json_object.object;
+          let object = $scope.object.json_object.object;
+          object['categories'] = [$scope.libraryCategory];
           $mdDialog.hide(object);
       };
     }
