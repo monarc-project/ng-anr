@@ -66,8 +66,6 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
         };
 
         $scope.categories = buildItemRecurse(x.categories, "", null);
-        console.log($scope.categories);
-
     });
 
 
