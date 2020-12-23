@@ -3119,7 +3119,7 @@
                       function (cat) {
                           let label = cat.categ['label' + $scope.language];
                           $scope.libraryCategory['label' + $scope.language] = label;
-                          $scope.categories.push($scope.libraryCategory)
+                          $scope.categories.push($scope.libraryCategory);
                       }
                   );
               });

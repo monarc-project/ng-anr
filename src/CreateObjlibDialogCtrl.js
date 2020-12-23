@@ -42,20 +42,22 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
 
     ObjlibService.getObjlibsCats().then(function (x) {
         // Recursively build items
-        var buildItemRecurse = function (children, parentPath) {
+        var buildItemRecurse = function (children, parentPath, parentId) {
             var output = [];
 
             for (var i = 0; i < children.length; ++i) {
                 var child = children[i];
 
                 if (parentPath != "") {
+                    child.originLabel = $scope._langField(child,'label');
                     child[$scope._langField('label')] = parentPath + " >> " + $scope._langField(child,'label');
+                    child.parent = parentId;
                 }
 
                 output.push(child);
 
                 if (child.child && child.child.length > 0) {
-                    var child_output = buildItemRecurse(child.child, $scope._langField(child,'label'));
+                    var child_output = buildItemRecurse(child.child, $scope._langField(child,'label'), child.id);
                     output = output.concat(child_output);
                 }
             }
@@ -63,8 +65,11 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
             return output;
         };
 
-        $scope.categories = buildItemRecurse(x.categories, "");
+        $scope.categories = buildItemRecurse(x.categories, "", null);
+        console.log($scope.categories);
+
     });
+
 
     $scope.specificityStr = function (type) {
         switch (type) {
