@@ -19,37 +19,40 @@
                     </md-select>
                 </md-input-container>
 
-                <md-input-container class="md-block" flex>
-                    <div layout="row" layout-align="center center">
-                      <div class="md-padding-right">
-                        <md-icon class="black">push_pin</md-icon>
-                      </div>
-                      <md-autocomplete
-                          ng-disabled="!organization['id']"
-                          flex
-                          md-no-cache="true"
-                          md-selected-item="object"
-                          md-search-text="searchText"
-                          md-items="item in getMatches(searchText)"
-                          md-item-text="item.name"
-                          md-min-length="0"
-                          md-floating-label="{{ 'Asset' | translate }}"
-                          required
-                          <md-item-template>
-                              <span md-highlight-text="searchText" md-highlight-flags="i">{{ item.name }}</span>
-                          </md-item-template>
-                          <md-not-found>
-                               {{ 'No asset matching your search was found' | translate }}
-                          </md-not-found>
-                      </md-autocomplete>
+                <div layout="row" layout-align="center center" flex>
+                    <div class="md-padding-right">
+                      <md-icon class="black">push_pin</md-icon>
                     </div>
-                </md-input-container>
+                    <md-autocomplete
+                        ng-disabled="!organization['id']"
+                        flex
+                        md-no-cache="true"
+                        md-selected-item="object"
+                        md-search-text="searchText"
+                        md-items="item in getMatches(searchText)"
+                        md-delay="300"
+                        md-item-text="item.name"
+                        md-min-length="0"
+                        md-input-name="object"
+                        md-floating-label="{{ 'Asset' | translate }}"
+                        required
+                        <md-item-template>
+                            <span md-highlight-text="searchText" md-highlight-flags="i">{{ item.name }}</span>
+                        </md-item-template>
+                        <md-not-found>
+                             {{ 'No asset matching your search was found' | translate }}
+                        </md-not-found>
+                        <div ng-messages="objectForm.object.$error">
+                            <div ng-message="required">{{ 'You must select an asset' | translate }}</div>
+                        </div>
+                    </md-autocomplete>
+                </div>
                 <div layout="row" layout-align="center center">
                     <md-input-container class="md-block" flex>
                         <md-icon>class</md-icon>
                         <label translate>Category</label>
-                        <md-select required ng-model="libraryCategory['label' + language]">
-                            <md-option ng-repeat="cat in categories" ng-value="cat['label' + language]">{{ _langField(cat,'label') }}</md-option>
+                        <md-select required ng-model="categorySelected">
+                            <md-option ng-repeat="cat in categories" ng-value="cat">{{ _langField(cat,'label') }}</md-option>
                         </md-select>
                     </md-input-container>
                     <md-button class="md-icon-button md-primary" ng-click="createCategory($event)"><md-icon>add</md-icon></md-button>

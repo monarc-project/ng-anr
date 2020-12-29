@@ -3070,9 +3070,6 @@
 
       $scope.language = $scope.getAnrLanguage();
       $scope.categories = categories;
-      $scope.libraryCategory = {
-        parent: null
-      };
 
       var mosp_query_organizations = 'organization?results_per_page=500';
       $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
@@ -3098,7 +3095,6 @@
       }
 
       $scope.getMatches = function(searchText) {
-          // filter on the name and the theme
           return $scope.mosp_objects.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()));
       };
 
@@ -3115,12 +3111,13 @@
               }
           })
               .then(function (category) {
+                  let path = category.path;
                   ObjlibService.createObjlibCat(category,
-                      function (cat) {
-                          let label = cat.categ['label' + $scope.language];
-                          $scope.libraryCategory['label' + $scope.language] = label;
-                          $scope.categories.push($scope.libraryCategory);
-                      }
+                    function (cat) {
+                        cat.categ['label' + $scope.language] = (path ? path + ' >> ' + cat.categ['label' + $scope.language] : cat.categ['label' + $scope.language]);
+                        $scope.categorySelected = cat.categ
+                        $scope.categories.push(cat.categ);
+                    }
                   );
               });
       };
@@ -3130,9 +3127,24 @@
       };
 
       $scope.import = function() {
-          let object = $scope.object.json_object.object;
-          object['categories'] = [$scope.libraryCategory];
-          $mdDialog.hide(object);
+        let libraryCategory = [];
+        let categories = $scope.categorySelected['label' + $scope.language].split(' >> ');
+        let object = $scope.object.json_object.object;
+
+        categories
+          .reverse()
+          .forEach((category,index) => {
+            libraryCategory.push(
+              {
+                ['label' + $scope.language]:category,
+                parent: (index == categories.length - 1 ? null : index + 1)
+              }
+            )
+          })
+
+        object['categories'] = libraryCategory;
+
+        $mdDialog.hide(object);
       };
     }
 
