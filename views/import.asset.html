@@ -2,7 +2,7 @@
     <form name="assetForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 translate>Import an asset from MOSP</h2>
+                <h2 translate>Import an asset type from MOSP</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -12,17 +12,17 @@
         <md-dialog-content>
             <div class="md-dialog-content">
                 <md-input-container class="md-block" flex>
-                    <md-icon style="color: rgba(0,0,0,0.54)">account_balance</md-icon>
+                    <md-icon>account_balance</md-icon>
                     <label translate>Organization</label>
                     <md-select ng-model="organization['id']" required ng-change="selectOrganization()">
                         <md-option ng-repeat="org in organizations" ng-value="org.id">{{ org.name }}</md-option>
                     </md-select>
                 </md-input-container>
 
-                <md-input-container class="md-block" md-no-float flex>
-                    <md-icon style="color: rgba(0,0,0,0.54)">class</md-icon>
-                    <label translate>Asset</label>
-
+                <div layout="row" layout-align="center center" flex>
+                    <div class="md-padding-right">
+                      <md-icon class="black">push_pin</md-icon>
+                    </div>
                     <md-autocomplete
                         ng-disabled="!organization['id']"
                         flex
@@ -31,7 +31,9 @@
                         md-search-text="searchText"
                         md-items="item in getMatches(searchText)"
                         md-item-text="item.name"
+                        md-delay="300"
                         md-min-length="0"
+                        md-floating-label="{{ 'Asset type' | translate }}"
                         required
                         <md-item-template>
                             <span md-highlight-text="searchText" md-highlight-flags="i">{{ item.name }}</span>
@@ -40,7 +42,7 @@
                              {{ 'No asset matching your search was found' | translate }}
                         </md-not-found>
                     </md-autocomplete>
-                </md-input-container>
+                </div>
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">
