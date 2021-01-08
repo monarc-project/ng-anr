@@ -3074,7 +3074,7 @@
       var mosp_query_organizations = 'organization?results_per_page=500';
       $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
       .then(function(org) {
-          var mosp_query_all_objects = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Objects"}}]}&results_per_page=3000';
+          var mosp_query_all_objects = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Library objects"}}]}&results_per_page=3000';
           $http.jsonp($rootScope.mospApiUrl + mosp_query_all_objects)
           .then(function(objects) {
               $scope.all_objects = objects.data.data.objects;
