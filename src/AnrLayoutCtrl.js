@@ -170,7 +170,7 @@
                         $scope.updateInstances();
                         $scope.updateObjectsLibrary();
                         $scope.updateScales();
-                        $scope.updateReferentials();                        
+                        $scope.updateReferentials();
 
                     }
 
@@ -209,7 +209,7 @@
                         $scope.updateReferentials();
                         $scope.updateRecommandationsSets();
                         updateMethodProgress();
-                    
+
                     }
 
                     if ($rootScope.setAnrLanguage) {
@@ -2060,12 +2060,15 @@
 
                   formatRecursive(object);
 
-                  function formatRecursive(object){
+                  function formatRecursive(object,index){
                     object.mosp = true;
                     object.type = 'object';
                     object.monarc_version = $rootScope.appVersion;
                     object.asset.type = "asset";
                     object.categories = category;
+                    if (index) {
+                      object.object.position = index;
+                    };
                     object.object.category = 0;
                     object.object.rolfTag = object.rolfTags.length > 0 ? 1 : null;
                     object.object.scope = object.object.scope == 'local' ? 1 : 2;
@@ -2141,8 +2144,8 @@
                     })
 
                     if (object.children.length > 0) {
-                      object.children.forEach(obj => {
-                        formatRecursive(obj);
+                      object.children.forEach((obj,index) => {
+                        formatRecursive(obj,index + 1);
                       })
                     }
                   }
