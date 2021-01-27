@@ -2061,6 +2061,13 @@
                   formatRecursive(object);
 
                   function formatRecursive(object,index){
+                    if (object.rolfTags === undefined) {
+                      object.rolfTags = [];
+                    }
+                    if (object.rolfRisks === undefined) {
+                      object.rolfRisks = [];
+                    }
+
                     object.mosp = true;
                     object.type = 'object';
                     object.monarc_version = $rootScope.appVersion;
@@ -2143,7 +2150,7 @@
 
                     if (object.children.length > 0) {
                       object.children.forEach((obj,index) => {
-                        formatRecursive(obj,index + 1);
+                        formatRecursive(obj, index + 1);
                       })
                     }
                   }
