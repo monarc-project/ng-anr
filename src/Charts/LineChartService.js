@@ -233,7 +233,7 @@
                tooltip
                 .html('Date : ' + new Date(d.date).toDateString() +
                       "<br/>"   +
-                      'Value : '+ d[options.nameValue])
+                      'Value : '+ d3.format(".2f")(d[options.nameValue]))
                 .style("left", (startX) + "px")
                 .style("top", (startY) + "px");
             })
