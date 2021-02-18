@@ -4143,7 +4143,7 @@
               'field' : 'type',
               'required' : true,
               'type' : '1,2',
-              'example' : gettextCatalog.getString('\n1: primary asset\n2: secondary asset')
+              'example' : '\n1: ' + gettextCatalog.getString('primary asset') + '\n2: ' + gettextCatalog.getString('secondary asset')
             }
         },
         'Threats' : {
@@ -4389,7 +4389,7 @@
                 'field' : 'importance',
                 'required' : false,
                 'type' : 'integer',
-                'example' : gettextCatalog.getString('1, 2 or 3')
+                'example' : '1, 2 ' + gettextCatalog.getString('or') + ' 3'
             }
         }
       };

@@ -143,18 +143,22 @@
                                                            OFFICE_MODE == 'FO' ? item.field : item.fieldBis}}</b>
                             <span>[<i>{{item.type}}</i>]</span>
                             <span class="md-mandatory-field" ng-if="item.required">*</span>
-                            <p ng-if="!item.field.includes('theme') && item.field != 'category' && item.field != 'tags'" translate>Example: <i class="preserve-newlines">{{item.example}}</i></p>
+                            <p ng-if="!item.field.includes('theme') && item.field != 'category' && item.field != 'tags'"><span translate>Example:</span><i class="preserve-newlines">{{item.example}}</i></p>
                             <div ng-if="item.field.includes('theme') || item.field == 'category' || item.field == 'tags'">
-                              <p class="preserve-newlines" translate>{{item.field.includes('theme') ? 'List of themes:'
-                                          : item.field == 'category' ? 'List of categories:'
-                                          :'Multiple tags must be separated by a slash (/) \n\r\ Ex: Tag1/Tag2/Tag3  \n\r\n\r List of tags: '}}</p>
+                              <p ng-if="item.field.includes('theme')" translate>List of themes:</p>
+                              <p ng-if="item.field == 'category'" translate>List of categories:</p>
+                              <p ng-if="item.field == 'tags'">
+                                <span translate>Multiple tags must be separated by a slash</span> (/)<br>
+                                <span translate>Ex: Tag1/Tag2/Tag3</span><br><br>
+                                <span translate>List of tags:</span>
+                              </p>
                               <p class="md-theme-list" ng-repeat="externalItem in actualExternalItems">{{externalItem['label' + language]}}</p>
                             </div>
                           </div>
                         </md-list-item>
                     </md-list>
-                    <p class="md-mandatory-field txtright" translate>* Mandatory field</p>
-                    <p class="md-mandatory-field txtright" ng-if="OFFICE_MODE == 'BO'" translate>1:FR,2:EN,3:DE,4:NL</p>
+                    <p class="md-mandatory-field txtright">* <span translate>Mandatory field</span></p>
+                    <p class="md-mandatory-field txtright" ng-if="OFFICE_MODE == 'BO'">1:FR,2:EN,3:DE,4:NL</p>
                 </md-card-content>
                 <md-card-actions align="right">
                     <md-button class="md-primary" ng-click="downloadExempleFile()">

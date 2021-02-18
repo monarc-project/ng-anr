@@ -48,26 +48,38 @@
 
             <div flex="grow" layout="row" layout-align="end top" class="hpad-10 bigger">
                 <div flex="33">
-                    <span class="bold" ng-class="{'txtright': $mdMedia('gt-md')}" translate>Confidentiality:&nbsp;</span>
+                    <span class="bold" ng-class="{'txtright': $mdMedia('gt-md')}"><span translate>Confidentiality</span> :</span>
                     <span>
-                        <md-tooltip class="tooltip-object-header" ng-if="instance.c >= 0"><span ng-if="instance.asset.type == 1" ng-bind-html="getEveryScaleComm(instance, 'c')"></span><span ng-if="instance.asset.type != 1">{{scaleCommCache[1][instance.c]}}</span></md-tooltip>
-                        {{ instance.c < 0 ? ('Inherited' | translate) : instance.c }} <span ng-if="instance.ch == 1 && instance.c >= 0" translate>(inherited)</span>
+                        <md-tooltip class="tooltip-object-header" ng-if="instance.c >= 0">
+                          <span ng-if="instance.asset.type == 1" ng-bind-html="getEveryScaleComm(instance, 'c')"></span>
+                          <span ng-if="instance.asset.type != 1">{{scaleCommCache[1][instance.c]}}</span>
+                        </md-tooltip>
+                        {{ instance.c < 0 ? ('Inherited' | translate) : instance.c }}
+                        <span ng-if="instance.ch == 1 && instance.c >= 0">(<span translate>inherited</span>)</span>
                     </span>
                 </div>
 
                 <div flex="33">
-                    <span class="bold" ng-class="{'txtright': $mdMedia('gt-md')}" translate>Integrity:&nbsp;</span>
+                    <span class="bold" ng-class="{'txtright': $mdMedia('gt-md')}"><span translate>Integrity</span> :</span>
                     <span>
-                        <md-tooltip class="tooltip-object-header" ng-if="instance.i >= 0"><span ng-if="instance.asset.type == 1" ng-bind-html="getEveryScaleComm(instance, 'i')"></span><span ng-if="instance.asset.type != 1">{{scaleCommCache[2][instance.i]}}</span></md-tooltip>
-                        {{ instance.i < 0 ? ('Inherited' | translate) : instance.i }} <span ng-if="instance.ih == 1 && instance.i >= 0" translate>(inherited)</span>
+                        <md-tooltip class="tooltip-object-header" ng-if="instance.i >= 0">
+                          <span ng-if="instance.asset.type == 1" ng-bind-html="getEveryScaleComm(instance, 'i')"></span>
+                          <span ng-if="instance.asset.type != 1">{{scaleCommCache[2][instance.i]}}</span>
+                        </md-tooltip>
+                        {{ instance.i < 0 ? ('Inherited' | translate) : instance.i }}
+                        <span ng-if="instance.ih == 1 && instance.i >= 0">(<span translate>inherited</span>)</span>
                     </span>
                 </div>
 
                 <div flex="33">
-                    <span class="bold" ng-class="{'txtright': $mdMedia('gt-md')}" translate>Availability:&nbsp;</span>
+                    <span class="bold" ng-class="{'txtright': $mdMedia('gt-md')}"><span translate>Availability</span> :</span>
                     <span>
-                        <md-tooltip class="tooltip-object-header" ng-if="instance.d >= 0"><span ng-if="instance.asset.type == 1" ng-bind-html="getEveryScaleComm(instance, 'd')"></span><span ng-if="instance.asset.type != 1">{{scaleCommCache[3][instance.d]}}</span></md-tooltip>
-                        {{ instance.d < 0 ? ('Inherited' | translate) : instance.d }} <span ng-if="instance.dh == 1 && instance.d >= 0" translate>(inherited)</span>
+                        <md-tooltip class="tooltip-object-header" ng-if="instance.d >= 0">
+                          <span ng-if="instance.asset.type == 1" ng-bind-html="getEveryScaleComm(instance, 'd')"></span>
+                          <span ng-if="instance.asset.type != 1">{{scaleCommCache[3][instance.d]}}</span>
+                        </md-tooltip>
+                        {{ instance.d < 0 ? ('Inherited' | translate) : instance.d }}
+                        <span ng-if="instance.dh == 1 && instance.d >= 0">(<span translate>inherited</span>)</span>
                     </span>
                 </div>
             </div>
