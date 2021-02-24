@@ -71,14 +71,14 @@
             '$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
             'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'ClientSoaService',
             'TagService', 'RiskService','SOACategoryService', 'ReferentialService', 'MeasureMeasureService',
-             'ClientRecommandationService', '$state', '$timeout', '$rootScope', AnrKbMgmtCtrl ])
+             'ClientRecommandationService', 'DownloadService', '$state', '$timeout', '$rootScope', AnrKbMgmtCtrl ])
     /**
      * ANR > KB
      */
     function AnrKbMgmtCtrl($scope, $stateParams, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService,
                                   AssetService, ThreatService, VulnService, AmvService, MeasureService, ClientSoaService, TagService,
                                   RiskService,SOACategoryService, ReferentialService, MeasureMeasureService, ClientRecommandationService,
-                                  $state, $timeout, $rootScope) {
+                                  DownloadService, $state, $timeout, $rootScope) {
         $scope.gettext = gettextCatalog.getString;
         TableHelperService.resetBookmarks();
 
@@ -170,6 +170,25 @@
 
         $scope.removeAssetsFilter = function () {
             TableHelperService.removeFilter($scope.assets);
+        };
+
+        $scope.exportAllAssets = function() {
+          $scope.assets.promise
+            .then(data => {
+              let allAssets = data.assets
+                .map(asset =>
+                  ({
+                    uuid: asset.uuid,
+                    code: asset.code,
+                    label: asset['label' + $scope.language],
+                    description: asset['description' + $scope.language],
+                    type: asset.type
+                  })
+                );
+              let csv = Papa.unparse(allAssets,{quotes: true});
+              let contentT = 'text/csv; charset=utf-8';
+              DownloadService.downloadCSV(csv, 'allAssets.csv',contentT);
+            });
         };
 
         $scope.toggleAssetStatus = function (asset) {
@@ -402,6 +421,27 @@
             TableHelperService.removeFilter($scope.threats);
         };
 
+        $scope.exportAllThreats = function() {
+          $scope.threats.promise
+            .then(data => {
+              let allThreats = data.threats
+                .map(threat =>
+                  ({
+                    uuid: threat.uuid,
+                    code: threat.code,
+                    label: threat['label' + $scope.language],
+                    description: threat['description' + $scope.language],
+                    c: threat.c,
+                    i: threat.i,
+                    a: threat.a,
+                    theme: threat.theme['label' + $scope.language]
+                  })
+                );
+              let csv = Papa.unparse(allThreats,{quotes: true});
+              let contentT = 'text/csv; charset=utf-8';
+              DownloadService.downloadCSV(csv, 'allThreats.csv',contentT);
+            });
+        };
 
         $scope.toggleThreatStatus = function (threat) {
             ThreatService.patchThreat(threat.uuid, {status: !threat.status}, function () {
@@ -643,6 +683,24 @@
             TableHelperService.removeFilter($scope.vulns);
         };
 
+        $scope.exportAllVulnerabilities = function() {
+          $scope.vulns.promise
+            .then(data => {
+              let allVulnerabilities = data.vulnerabilities
+                .map(vulnerability =>
+                  ({
+                    uuid: vulnerability.uuid,
+                    code: vulnerability.code,
+                    label: vulnerability['label' + $scope.language],
+                    description: vulnerability['description' + $scope.language],
+                  })
+                );
+              let csv = Papa.unparse(allVulnerabilities,{quotes: true});
+              let contentT = 'text/csv; charset=utf-8';
+              DownloadService.downloadCSV(csv, 'allVulnerabilities.csv',contentT);
+            });
+        };
+
         $scope.toggleVulnStatus = function (vuln) {
             VulnService.patchVuln(vuln.uuid, {status: !vuln.status}, function () {
                 vuln.status = !vuln.status;
@@ -864,6 +922,30 @@
 
         $scope.removeMeasuresFilter = function () {
             TableHelperService.removeFilter($scope.measures);
+        };
+
+        $scope.exportAllMeasures = function() {
+          let query = {
+            limit: -1,
+            referential : $scope.referential_uuid
+          }
+          MeasureService.getMeasures(query)
+            .then(data => {
+              let allMeasures = data.measures
+                .map(measure =>
+                  ({
+                    uuid: measure.uuid,
+                    code: measure.code,
+                    label: measure['label' + $scope.language],
+                    category: measure.category['label' + $scope.language],
+                    referential: measure.referential['label' + $scope.language]
+                  })
+                );
+              let csv = Papa.unparse(allMeasures,{quotes: true});
+              let filename = 'allControls_' + $scope.referential['label' + $scope.language] +'.csv';
+              let contentT = 'text/csv; charset=utf-8';
+              DownloadService.downloadCSV(csv,filename,contentT);
+            });
         };
 
         $scope.toggleMeasureStatus = function (measure) {
@@ -1259,6 +1341,33 @@
             TableHelperService.removeFilter($scope.amvs);
         };
 
+        $scope.exportAllAmvs = function() {
+          $scope.amvs.promise
+            .then(data => {
+              let allAmvs = data.amvs
+                .map(amv =>
+                  ({
+                    uuid: amv.uuid,
+                    'asset code': amv.asset.code,
+                    'asset label': amv.asset['label' + $scope.language],
+                    'asset description': amv.asset['description' + $scope.language],
+                    'threat code': amv.threat.code,
+                    'threat label': amv.threat['label' + $scope.language],
+                    'threat description': amv.threat['description' + $scope.language],
+                    'threat c': amv.threat.c,
+                    'threat i': amv.threat.i,
+                    'threat a': amv.threat.a,
+                    'threat theme': amv.threat.theme['label' + $scope.language],
+                    'vulnerability code': amv.vulnerability.code,
+                    'vulnerability label': amv.vulnerability['label' + $scope.language],
+                    'vulnerability description': amv.vulnerability['description' + $scope.language],
+                  })
+                );
+              let csv = Papa.unparse(allAmvs,{quotes: true});
+              let contentT = 'text/csv; charset=utf-8';
+              DownloadService.downloadCSV(csv,'allInfoRisk.csv',contentT);
+            });
+        };
 
         $scope.toggleAmvStatus = function (amv) {
             AmvService.patchAmv(amv.uuid, {status: !amv.status}, function () {
@@ -1497,7 +1606,6 @@
         }
 
         $scope.resetObjlibsFilters = function () {
-
             $scope.objlib_asset_filter = 0;
             $scope.objlib_lockswitch = false;
         };
@@ -1733,6 +1841,25 @@
             TableHelperService.removeFilter($scope.tags);
         };
 
+        $scope.exportAllTags = function() {
+          let query = {
+            limit: -1
+          }
+          TagService.getTags(query)
+            .then(data => {
+              let allTags = data.tags
+                .map(tag =>
+                  ({
+                    code: tag.code,
+                    label: tag['label' + $scope.language],
+                  })
+                );
+              let csv = Papa.unparse(allTags,{quotes: true});
+              let contentT = 'text/csv; charset=utf-8';
+              DownloadService.downloadCSV(csv,'allTags.csv',contentT);
+            });
+        };
+
         $scope.selectTagsTab = function () {
             $state.transitionTo('main.kb_mgmt.op_risk', {'tab': 'tags'});
             TableHelperService.watchSearch($scope, 'tags.query.filter', $scope.tags.query, $scope.updateTags, $scope.tags);
@@ -1898,6 +2025,27 @@
 
         $scope.removeRisksFilter = function () {
             TableHelperService.removeFilter($scope.risks);
+        };
+
+        $scope.exportAllRisksOp = function() {
+          let query = {
+            limit: -1
+          }
+          RiskService.getRisks(query)
+            .then(data => {
+              let allOpRisks = data.risks
+                .map(opRisk =>
+                  ({
+                    code: opRisk.code,
+                    label: opRisk['label' + $scope.language],
+                    description: opRisk['description' + $scope.language],
+                    tags: opRisk.tags.map(tag => tag['label' + $scope.language]).join("/")
+                  })
+                );
+              let csv = Papa.unparse(allOpRisks,{quotes: true});
+              let contentT = 'text/csv; charset=utf-8';
+              DownloadService.downloadCSV(csv,'allOpRisks.csv',contentT);
+            });
         };
 
         $scope.resetRisksFilters = function () {
@@ -2181,6 +2329,31 @@
 
         $scope.removeRecommandationsFilter = function () {
             TableHelperService.removeFilter($scope.recommandations);
+        };
+
+        $scope.exportAllRecommendations = function() {
+          let query = {
+            limit: -1,
+            recommandationSet : $scope.recommandation_set_uuid,
+            anr : $scope.model.anr.id
+          }
+          ClientRecommandationService.getRecommandations(query)
+            .then(data => {
+              let allRecommendations = data.recommandations
+                .map(recommendation =>
+                  ({
+                    uuid: recommendation.uuid,
+                    code: recommendation.code,
+                    description: recommendation.description,
+                    importance: recommendation.importance,
+                    set: recommendation.recommandationSet['label' + $scope.language]
+                  })
+                );
+              let csv = Papa.unparse(allRecommendations,{quotes: true});
+              let filename = 'allRecommendations_' + $scope.recommandationSet['label' + $scope.language] +  '.csv';
+              let contentT = 'text/csv; charset=utf-8';
+              DownloadService.downloadCSV(csv,filename,contentT);
+            });
         };
 
         $scope.toggleRecommandationStatus = function (recommandation) {
