@@ -1455,7 +1455,6 @@
             $scope.editAmv(null,$stateParams.showid);
         }
 
-
         $scope.deleteAmv = function (ev, item) {
             var confirm = $mdDialog.confirm()
                 .title(gettextCatalog.getString('Are you sure you want to delete this risk?'))
@@ -1553,8 +1552,6 @@
             $scope.objlib_asset_filter = 0;
             $scope.objlib_lockswitch = false;
         };
-
-
 
         $scope.selectObjlibsTab = function () {
             $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'objlibs'});
@@ -1747,7 +1744,6 @@
             });
         };
 
-
         /// ROLF
         /*
          * Global helpers
@@ -1759,14 +1755,8 @@
                 case 'risks': $scope.currentTabIndex = 2; break;
             }
         }
+
         $scope.selectTagsTab($scope.tab);
-
-        /*$scope.$on('$locationChangeSuccess', function (event, newUrl) {
-            var tabName = newUrl.substring(newUrl.lastIndexOf('/') + 1);
-            $scope.tab = tabName;
-            $scope.selectTab(tabName);
-        });*/
-
 
         /**
          * TAGS
@@ -1988,7 +1978,6 @@
         };
 
         $scope.resetRisksFilters = function () {
-
             $scope.risk_tag_filter = null;
         }
 
@@ -2211,8 +2200,6 @@
             });
         };
 
-
-
         /*
          * RECOMMANDATIONS SETS TAB
          */
@@ -2260,14 +2247,12 @@
             $scope.recommandations.selected = [];
         };
 
-
         $scope.removeRecommandationsFilter = function () {
             TableHelperService.removeFilter($scope.recommandations);
         };
 
         $scope.exportAllRecommendations = function() {
           let query = {
-            limit: -1,
             recommandationSet : $scope.recommandation_set_uuid,
             anr : $scope.model.anr.id
           }
@@ -2346,7 +2331,6 @@
                     );
                 });
         };
-
 
         $scope.createNewRecommandationSet = function (ev, recommandationSet) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
@@ -2471,7 +2455,6 @@
 
         };
 
-
         $scope.createNewRecommandation = function (ev, recommandation) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
@@ -2555,7 +2538,6 @@
             });
         };
 
-
         $scope.deleteRecommandation = function (ev, item) {
             var confirm = $mdDialog.confirm()
                 .title(gettextCatalog.getString('Are you sure you want to delete recommendation?',
@@ -2605,11 +2587,9 @@
             });
         };
 
+        //Import File Center
 
-
-      //Import File Center
-
-      $scope.importFile = function (ev,tab) {
+        $scope.importFile = function (ev,tab) {
         var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
         $mdDialog.show({
             controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService', 'AmvService', 'ClientRecommandationService',
@@ -2697,17 +2677,12 @@
            }
 
            function successCreateObject(result){
-
              toastr.success((Array.isArray(result.id) ? result.id.length : 1) + ' ' + tab + ' ' + gettextCatalog.getString('have been created successfully.'),
                             gettextCatalog.getString('Creation successful'));
-
            };
          })
       }
     }
-
-
-
 
     //////////////////////
     // DIALOGS
@@ -3524,7 +3499,6 @@
 
     }
 
-
     function updateMeasuresAMVDialogCtrl($scope, $mdDialog, referentials) {
 
         $scope.referentials = referentials;
@@ -3731,24 +3705,6 @@
             $mdDialog.hide($scope.amv);
         };
     }
-
-    function ExportAssetDialog($scope, $mdDialog, mode) {
-        $scope.mode = mode;
-        $scope.exportData = {
-            password: '',
-            simple_mode: true,
-        };
-
-        $scope.cancel = function() {
-            $mdDialog.cancel();
-        };
-
-        $scope.export = function() {
-            $mdDialog.hide($scope.exportData);
-        };
-    }
-
-
 
     function CreateTagDialogCtrl($scope, $mdDialog, ConfigService, tag) {
         $scope.languages = ConfigService.getLanguages();
@@ -4032,7 +3988,6 @@
         }
     }
 
-
     function CreateRecommandationDialogCtrl($scope, $mdDialog,ClientRecommandationService,
                                 ConfigService, recommandation, recommandationSet, anrId) {
 
@@ -4093,7 +4048,6 @@
         };
 
     }
-
 
     function ImportAmvDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ConfigService, AssetService, ThreatService, VulnService, amv) {
             $scope.languages = ConfigService.getLanguages();
