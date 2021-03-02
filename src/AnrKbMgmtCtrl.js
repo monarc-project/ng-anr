@@ -161,8 +161,7 @@
         };
 
         $scope.exportAllAssets = function() {
-          $scope.assets.promise
-            .then(data => {
+            AssetService.getAssets().then(data => {
               let allAssets = data.assets
                 .map(asset =>
                   ({
@@ -398,8 +397,7 @@
         };
 
         $scope.exportAllThreats = function() {
-          $scope.threats.promise
-            .then(data => {
+            ThreatService.getThreats().then(data => {
               let allThreats = data.threats
                 .map(threat =>
                   ({
@@ -649,8 +647,7 @@
         };
 
         $scope.exportAllVulnerabilities = function() {
-          $scope.vulns.promise
-            .then(data => {
+          VulnService.getVulns().then(data => {
               let allVulnerabilities = data.vulnerabilities
                 .map(vulnerability =>
                   ({
@@ -886,7 +883,6 @@
 
         $scope.exportAllMeasures = function() {
           let query = {
-            limit: -1,
             referential : $scope.referential_uuid
           }
           MeasureService.getMeasures(query)
@@ -1287,10 +1283,8 @@
         };
 
         $scope.exportAllAmvs = function() {
-          $scope.amvs.promise
-            .then(data => {
-              let allAmvs = data.amvs
-                .map(amv =>
+          AmvService.getAmvs().then(data => {
+              let allAmvs = data.amvs.map(amv =>
                   ({
                     uuid: amv.uuid,
                     'asset code': amv.asset.code,
@@ -1306,12 +1300,17 @@
                     'vulnerability code': amv.vulnerability.code,
                     'vulnerability label': amv.vulnerability['label' + $scope.language],
                     'vulnerability description': amv.vulnerability['description' + $scope.language],
+                    controls: (amv.measures instanceof Array ? amv.measures.map(measure =>
+                      measure.referential['label' + $scope.language] +
+                      " ["+ measure.code +"] " +
+                      measure['label' + $scope.language]).join("\n") : ""
+                    )
                   })
                 );
               let csv = Papa.unparse(allAmvs,{quotes: true});
               let contentT = 'text/csv; charset=utf-8';
               DownloadService.downloadCSV(csv,'allInfoRisk.csv',contentT);
-            });
+          });
         };
 
         $scope.toggleAmvStatus = function (amv) {
@@ -1787,13 +1786,8 @@
         };
 
         $scope.exportAllTags = function() {
-          let query = {
-            limit: -1
-          }
-          TagService.getTags(query)
-            .then(data => {
-              let allTags = data.tags
-                .map(tag =>
+          TagService.getTags().then(data => {
+              let allTags = data.tags.map(tag =>
                   ({
                     code: tag.code,
                     label: tag['label' + $scope.language],
@@ -1973,18 +1967,18 @@
         };
 
         $scope.exportAllRisksOp = function() {
-          let query = {
-            limit: -1
-          }
-          RiskService.getRisks(query)
-            .then(data => {
-              let allOpRisks = data.risks
-                .map(opRisk =>
+          RiskService.getRisks().then(data => {
+              let allOpRisks = data.risks.map(opRisk =>
                   ({
                     code: opRisk.code,
                     label: opRisk['label' + $scope.language],
                     description: opRisk['description' + $scope.language],
-                    tags: opRisk.tags.map(tag => tag['label' + $scope.language]).join("/")
+                    tags: opRisk.tags.map(tag => tag['label' + $scope.language]).join("/"),
+                    controls: (opRisk.measures instanceof Array ? opRisk.measures.map(measure =>
+                      measure.referential['label' + $scope.language] +
+                      " ["+ measure.code +"] " +
+                      measure['label' + $scope.language]).join("\n") : ""
+                    )
                   })
                 );
               let csv = Papa.unparse(allOpRisks,{quotes: true});
