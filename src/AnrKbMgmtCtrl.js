@@ -154,18 +154,6 @@
                     $scope.assets.items = data;
                 }
             )
-
-            // we want to know the UUIDs of all the assets already
-            // imported in the analysis
-            query.limit = -1;
-            query.filter = "";
-            query.status = "all";
-            $scope.assets.promise = AssetService.getAssets(query);
-            $scope.assets.promise.then(
-                function (data) {
-                    $rootScope.assets_uuid = data.assets.map(function(asset){return asset.uuid});
-                }
-            )
         };
 
         $scope.removeAssetsFilter = function () {
@@ -245,7 +233,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ConfigService', ImportAssetDialogCtrl],
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'AssetService', 'ConfigService', ImportAssetDialogCtrl],
                 templateUrl: 'views/anr/import.asset.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -401,18 +389,6 @@
             $scope.threats.promise.then(
                 function (data) {
                     $scope.threats.items = data;
-                }
-            )
-
-            // we want to know the UUIDs of all the threats already
-            // imported in the analysis
-            query.limit = -1;
-            query.filter = "";
-            query.status = "all";
-            $scope.threats.promise = ThreatService.getThreats(query);
-            $scope.threats.promise.then(
-                function (data) {
-                    $rootScope.threats_uuid = data.threats.map(function(threat){return threat.uuid});
                 }
             )
         };
@@ -662,23 +638,12 @@
             $scope.vulns.promise.then(
                 function (data) {
                     $scope.vulns.items = data;
-
-                    // we want to know the UUIDs of all the vulnerabilites already
-                    // imported in the analysis
-                    query.limit = -1;
-                    query.filter = "";
-                    query.status = "all";
-                    $scope.vulns.promise = VulnService.getVulns(query);
-                    $scope.vulns.promise.then(
-                        function (data) {
-                            $rootScope.vulnerabilities_uuid = data.vulnerabilities.map(function(vulnerability){return vulnerability.uuid});
-                        }
-                    )
                 }
             )
 
 
         };
+
         $scope.removeVulnsFilter = function () {
             TableHelperService.removeFilter($scope.vulns);
         };
@@ -711,7 +676,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ConfigService', ImportVulnerabilityDialogCtrl],
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ConfigService', 'VulnService', ImportVulnerabilityDialogCtrl],
                 templateUrl: 'views/anr/import.vulnerability.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -877,12 +842,7 @@
 
         $scope.selectMeasuresTab = function () {
           $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'measures'});
-          $scope.updatingReferentials = false;
-          ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
-              $scope.referentials.items = data;
-              $rootScope.referentials_uuid = $scope.referentials.items.referentials.map(function(referential){return referential.uuid});
-              $scope.updatingReferentials = true;
-          });
+          $scope.updateReferentials();
         };
 
         $scope.deselectMeasuresTab = function () {
@@ -960,9 +920,6 @@
             $scope.referentials.promise.then(
                 function (data) {
                     $scope.referentials.items = data;
-                    // we want to know the UUIDs of all the referentials already
-                    // imported in the analysis
-                    $rootScope.referentials_uuid = $scope.referentials.items.referentials.map(function(referential){return referential.uuid});
                     $scope.updatingReferentials = true;
                 }
             )
@@ -972,7 +929,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$rootScope', '$scope', '$http', '$mdDialog', ImportReferentialDialogCtrl],
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ReferentialService', ImportReferentialDialogCtrl],
                 templateUrl: 'views/anr/import.referentials.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -1321,18 +1278,6 @@
             $scope.amvs.promise.then(
                 function (data) {
                     $scope.amvs.items = data;
-                }
-            )
-
-            // we want to know the UUIDs of all the amvs already
-            // imported in the analysis
-            query.limit = -1;
-            query.filter = "";
-            query.status = "all";
-            $scope.amvs.promise = AmvService.getAmvs(query);
-            $scope.amvs.promise.then(
-                function (data) {
-                    $rootScope.amvs_uuid = data.amvs.map(function(amv){return amv.uuid});
                 }
             )
         };
@@ -2283,12 +2228,7 @@
 
         $scope.selectRecommandationsTab = function () {
             $state.transitionTo('main.kb_mgmt.info_risk', {'tab': 'recommandations'});
-            $scope.updatingRecommandationsSets = false;
-            ClientRecommandationService.getRecommandationsSets({anr: $scope.model.anr.id, order: 'createdAt'}).then(function (data) {
-                $scope.recommandationsSets.items = data;
-                $rootScope.recommandations_sets_uuid = $scope.recommandationsSets.items['recommandations-sets'].map(function(recommandationSet){return recommandationSet.uuid});
-                $scope.updatingRecommandationsSets = true;
-            });
+            $scope.updateRecommandationsSets();
         };
 
         $scope.deselectRecommandationsTab = function () {
@@ -2371,12 +2311,10 @@
             $scope.recommandationsSets.promise.then(
                 function (data) {
                     $scope.recommandationsSets.items = data;
-                    $rootScope.recommandations_sets_uuid = $scope.recommandationsSets.items['recommandations-sets'].map(function(recommandationSet){return recommandationSet.uuid});
                     $scope.updatingRecommandationsSets = true;
                 }
             )
         };
-
 
         $scope.importNewRecommandationSet = function (ev, recommandationSet) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
@@ -2827,7 +2765,7 @@
         };
     }
 
-    function ImportAssetDialogCtrl($rootScope, $scope, $http, $mdDialog, ConfigService) {
+    function ImportAssetDialogCtrl($rootScope, $scope, $http, $mdDialog, AssetService, ConfigService) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
 
@@ -2845,11 +2783,14 @@
 
         $scope.selectOrganization = function() {
             // Retrieve the assets from the selected organization
-            $scope.mosp_assets = $scope.all_assets.filter(
-                asset => asset.org_id == $scope.organization.id &&
-                !$rootScope.assets_uuid.includes(asset.json_object.uuid) &&
-                asset.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
-            );
+            AssetService.getAssets().then(data => {
+              let assets_uuid = data.assets.map(asset => asset.uuid);
+              $scope.mosp_assets = $scope.all_assets.filter(
+                  asset => asset.org_id == $scope.organization.id &&
+                  !assets_uuid.includes(asset.json_object.uuid) &&
+                  asset.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
+              );
+            })
         }
 
         $scope.getMatches = function(searchText) {
@@ -3032,11 +2973,15 @@
 
         $scope.selectOrganization = function() {
             // Retrieve the threats from the selected organization
-            $scope.mosp_threats = $scope.all_threats.filter(
-                threat => threat.org_id == $scope.organization.id &&
-                !$rootScope.threats_uuid.includes(threat.json_object.uuid) &&
-                threat.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
-            );
+            ThreatService.getThreats().then(data => {
+              let threats_uuid = data.threats.map(threat => threat.uuid);
+              $scope.mosp_threats = $scope.all_threats.filter(
+                  threat => threat.org_id == $scope.organization.id &&
+                  !threats_uuid.includes(threat.json_object.uuid) &&
+                  threat.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
+              );
+            })
+
         }
 
         ThreatService.getThemes().then(function (data) {
@@ -3135,8 +3080,7 @@
         };
     }
 
-
-    function ImportVulnerabilityDialogCtrl($rootScope, $scope, $http, $mdDialog, ConfigService) {
+    function ImportVulnerabilityDialogCtrl($rootScope, $scope, $http, $mdDialog, ConfigService, VulnService) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
 
@@ -3154,19 +3098,22 @@
 
         $scope.selectOrganization = function() {
             // Retrieve the vulnerabilities from the selected organization
-            if ($scope.languages[$scope.language].code.toUpperCase() != 'EN') {
-                $scope.mosp_vulnerabilities = $scope.all_vulns.filter(
-                    vulnerability => vulnerability.org_id == $scope.organization.id &&
-                    !$rootScope.vulnerabilities_uuid.includes(vulnerability.json_object.uuid) &&
-                    vulnerability.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
-                );
-            } else {
-                $scope.mosp_vulnerabilities = $scope.all_vulns.filter(
-                    vulnerability => vulnerability.org_id == $scope.organization.id &&
-                    !$rootScope.vulnerabilities_uuid.includes(vulnerability.json_object.uuid)
-                );
-            }
-        }
+            VulnService.getVulns().then(data => {
+              let vulnerabilities_uuid = data.vulnerabilities.map(vulnerability => vulnerability.uuid);
+              if ($scope.languages[$scope.language].code.toUpperCase() != 'EN') {
+                  $scope.mosp_vulnerabilities = $scope.all_vulns.filter(
+                      vulnerability => vulnerability.org_id == $scope.organization.id &&
+                      !vulnerabilities_uuid.includes(vulnerability.json_object.uuid) &&
+                      vulnerability.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
+                  );
+              } else {
+                  $scope.mosp_vulnerabilities = $scope.all_vulns.filter(
+                      vulnerability => vulnerability.org_id == $scope.organization.id &&
+                      !vulnerabilities_uuid.includes(vulnerability.json_object.uuid)
+                  );
+              }
+            });
+        };
 
         /**
          * Returns a filtered list of referentials from MOSP with all the
@@ -3193,8 +3140,7 @@
          };
     }
 
-
-    function ImportReferentialDialogCtrl($rootScope, $scope, $http, $mdDialog) {
+    function ImportReferentialDialogCtrl($rootScope, $scope, $http, $mdDialog, ReferentialService) {
 
         var mosp_query_organizations = 'organization?results_per_page=500';
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
@@ -3210,9 +3156,12 @@
 
         $scope.selectOrganization = function() {
             // Retrieve the security referentials from the selected organization
-            $scope.mosp_referentials = $scope.all_referentials.filter(
-                ref => ref.org_id == $scope.organization.id &&
-                !$scope.referentials_uuid.includes(ref.json_object.uuid));
+            ReferentialService.getReferentials().then(data => {
+              let referentials_uuid = data.referentials.map(refetential => refetential.uuid);
+              $scope.mosp_referentials = $scope.all_referentials.filter(
+                  ref => ref.org_id == $scope.organization.id &&
+                  !referentials_uuid.includes(ref.json_object.uuid));
+            })
         }
 
        /**
@@ -4002,10 +3951,13 @@
 
         $scope.selectOrganization = function() {
             // Retrieve the assets from the selected organization
-            $scope.mosp_recommandations_sets = $scope.all_recommandations.filter(
-                recommandationSet => recommandationSet.org_id == $scope.organization.id &&
-                !$rootScope.recommandations_sets_uuid.includes(recommandationSet.json_object.uuid)
-            );
+            ClientRecommandationService.getRecommandationsSets({anr: anrId}).then(data => {
+              let recommandations_sets_uuid = data['recommandations-sets'].map(recommandationSet => recommandationSet.uuid);
+              $scope.mosp_recommandations_sets = $scope.all_recommandations.filter(
+                  recommandationSet => recommandationSet.org_id == $scope.organization.id &&
+                  !recommandations_sets_uuid.includes(recommandationSet.json_object.uuid)
+              );
+            })
         }
 
        /**
@@ -4167,10 +4119,13 @@
 
             $scope.selectOrganization = function() {
                 // Retrieve the amvs from the selected organization
-                $scope.mosp_amvs = $scope.all_amvs.filter(
-                    amv => amv.org_id == $scope.organization.id &&
-                    !$rootScope.amvs_uuid.includes(amv.json_object.uuid)
-                );
+                AmvService.getAmvs().then(data => {
+                  let amvs_uuid = data.amvs.map(amv => amv.uuid);
+                  $scope.mosp_amvs = $scope.all_amvs.filter(
+                      amv => amv.org_id == $scope.organization.id &&
+                      !amvs_uuid.includes(amv.json_object.uuid)
+                  );
+                })
             }
 
             $scope.getMatches = function(searchText) {
