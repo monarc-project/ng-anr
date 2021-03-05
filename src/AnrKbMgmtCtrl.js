@@ -110,6 +110,10 @@
 
         $scope.language = $scope.getAnrLanguage();
 
+        function handleRejectionDialog(reject) {
+          if(reject !== undefined) throw reject;
+        }
+
         /*
          * ASSETS TAB
          */
@@ -225,12 +229,15 @@
                             $scope.createNewAsset(ev, asset);
                         }
                     );
+                }, function (reject) {
+                  handleRejectionDialog(reject);
                 });
         };
 
         $scope.importNewAsset = function (ev) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.cancel();
 
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'AssetService', 'ConfigService', ImportAssetDialogCtrl],
                 templateUrl: 'views/anr/import.asset.html',
@@ -254,6 +261,8 @@
                             }
                         }
                     );
+                }, function (reject) {
+                  handleRejectionDialog(reject);
                 });
         };
 
@@ -291,6 +300,8 @@
                                 $scope.editAsset(ev, asset);
                             }
                         );
+                    }, function (reject) {
+                      handleRejectionDialog(reject);
                     });
             });
         };
@@ -470,10 +481,14 @@
                             $scope.createNewThreat(ev, threat);
                         }
                     );
+                }, function (reject) {
+                  handleRejectionDialog(reject);
                 });
         };
 
         $scope.importNewThreat = function (ev) {
+            $mdDialog.cancel();
+
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
@@ -499,6 +514,8 @@
                             }
                         }
                     );
+                }, function (reject) {
+                  handleRejectionDialog(reject);
                 });
         };
 
@@ -545,6 +562,8 @@
                                 $scope.editThreat(ev, threat);
                             }
                         );
+                    }, function (reject) {
+                      handleRejectionDialog(reject);
                     });
             });
         };
@@ -670,6 +689,8 @@
         }
 
         $scope.importNewVulnerability = function (ev) {
+            $mdDialog.cancel();
+
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
@@ -695,6 +716,8 @@
                             }
                         }
                     );
+                }, function (reject) {
+                  handleRejectionDialog(reject);
                 });
         };
 
@@ -738,6 +761,8 @@
                             $scope.createNewVuln(ev, vuln);
                         }
                     );
+                }, function (reject) {
+                  handleRejectionDialog(reject);
                 });
         };
 
@@ -777,6 +802,8 @@
                                 $scope.editVuln(ev, vuln);
                             }
                         );
+                    }, function (reject) {
+                      handleRejectionDialog(reject);
                     });
             });
         };
@@ -922,6 +949,8 @@
         };
 
         $scope.importNewReferential = function (ev) {
+            $mdDialog.cancel();
+
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
@@ -957,6 +986,8 @@
                                 });
                         }
                     );
+                }, function (reject) {
+                  handleRejectionDialog(reject);
                 });
         };
 
@@ -997,6 +1028,8 @@
                             $scope.createNewReferential(ev, referential);
                         }
                     );
+                }, function (reject) {
+                  handleRejectionDialog(reject);
                 });
         };
 
@@ -1030,6 +1063,8 @@
                                 $scope.editReferential(ev, referential);
                             }
                         );
+                    }, function (reject) {
+                      handleRejectionDialog(reject);
                     });
             });
         };
@@ -1100,7 +1135,6 @@
         $scope.createNewMeasure = function (ev, measure) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-
             $mdDialog.show({
                 controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'SOACategoryService',
                              'MeasureService', 'ReferentialService', 'ConfigService', '$q', 'measure', 'referential',
@@ -1137,6 +1171,8 @@
                             $scope.createNewMeasure(ev, measure);
                         }
                     );
+                }, function (reject) {
+                  handleRejectionDialog(reject);
                 });
         };
 
@@ -1174,10 +1210,11 @@
                                 $scope.editMeasure(ev, measure);
                             }
                         );
+                    }, function (reject) {
+                      handleRejectionDialog(reject);
                     });
             });
         };
-
 
         $scope.deleteMeasure = function (ev, item) {
             var confirm = $mdDialog.confirm()
@@ -1233,8 +1270,11 @@
           * AMVS TAB
           */
         $scope.amvs = TableHelperService.build('status', 20, 1, '');
+
         $scope.amvs.activeFilter = 1;
+
         var amvsFilterWatch;
+
         $scope.referentials_filter = [];
 
         $scope.selectAmvsTab = function () {
@@ -1346,6 +1386,42 @@
               });
         }
 
+        $scope.importNewAmv = function (ev) {
+            $mdDialog.cancel();
+
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ConfigService', 'AssetService', 'ThreatService', 'VulnService', 'AmvService', ImportAmvDialogCtrl],
+                templateUrl: 'views/anr/import.amv.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen
+            })
+            .then(function (amv) {
+                var new_amv = {
+                    uuid: amv.amv.uuid,
+                    asset: amv.amv.asset,
+                    threat: amv.amv.threat,
+                    vulnerability: amv.amv.vulnerability,
+                    status: 1,
+                    implicitPosition: 1
+                };
+                AmvService.createAmv(new_amv,
+                    function () {
+                        $scope.updateAmvs();
+                        toastr.success(gettextCatalog.getString('The risk has been created successfully.'),
+                          gettextCatalog.getString('Creation successful'));
+                    }
+                );
+
+            }, function (reject) {
+              handleRejectionDialog(reject);
+            });
+        };
+
         $scope.createNewAmv = function (ev, amv) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
@@ -1394,6 +1470,8 @@
                             $scope.createNewAmv(ev, amvBackup);
                         }
                     );
+                }, function (reject) {
+                  handleRejectionDialog(reject);
                 });
         };
 
@@ -1434,7 +1512,6 @@
                             amv.vulnerability = amv.vulnerability.uuid;
                         }
 
-
                         AmvService.updateAmv(amv,
                             function () {
                                 $scope.updateAmvs();
@@ -1447,6 +1524,8 @@
                                 $scope.editAmv(ev, amvBackup);
                             }
                         );
+                    }, function (reject) {
+                      handleRejectionDialog(reject);
                     });
             });
         };
@@ -1507,6 +1586,7 @@
          * ASSETS LIBRARY TAB
          */
         var objLibTabSelected = false;
+
         $scope.objlibs = TableHelperService.build('name' + $scope.language, 20, 1, '');
 
         if ($rootScope.objlibs_query) {
@@ -1514,9 +1594,10 @@
             $scope.objlibs.previousQueryOrder = $scope.objlibs.query.order;
         }
 
-
         $scope.objlib_asset_filter = 0;
+
         $scope.objlib_lockswitch = false;
+
         $scope.objlib_assets = [];
 
         $scope.$watchGroup(['objlib_category_filter', 'objlib_asset_filter', 'objlib_lockswitch'], function (newValue, oldValue) {
@@ -1671,7 +1752,6 @@
                     }
                 }, function () {
                     $scope.updateObjlibs();
-
                 });
         };
 
@@ -1771,6 +1851,7 @@
                 }
             )
         };
+
         $scope.removeTagsFilter = function () {
             TableHelperService.removeFilter($scope.tags);
         };
@@ -1826,6 +1907,8 @@
                             $scope.createNewTag(ev, tag);
                         }
                     );
+                }, function (reject) {
+                  handleRejectionDialog(reject);
                 });
         };
 
@@ -1857,6 +1940,8 @@
                                 $scope.createNewTag(ev, tag);
                             }
                         );
+                    }, function (reject) {
+                      handleRejectionDialog(reject);
                     });
             });
         };
@@ -1914,7 +1999,9 @@
          * RISKS
          */
         $scope.risks = TableHelperService.build('label' + $scope.language, 20, 1, '');
+
         $scope.risk_tag_filter = null;
+
         $scope.opRisksRef_filter = [];
 
         var risksTabSelected = false;
@@ -2076,39 +2163,9 @@
                               $scope.createNewRisk(ev, riskBackup);
                           }
                       );
+                  }, function (reject) {
+                    handleRejectionDialog(reject);
                   });
-        };
-
-        $scope.importNewAmv = function (ev) {
-            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-
-            $mdDialog.show({
-                controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ConfigService', 'AssetService', 'ThreatService', 'VulnService', 'AmvService', ImportAmvDialogCtrl],
-                templateUrl: 'views/anr/import.amv.html',
-                targetEvent: ev,
-                preserveScope: false,
-                scope: $scope.$dialogScope.$new(),
-                clickOutsideToClose: false,
-                fullscreen: useFullScreen
-            })
-            .then(function (amv) {
-                var new_amv = {
-                    uuid: amv.amv.uuid,
-                    asset: amv.amv.asset,
-                    threat: amv.amv.threat,
-                    vulnerability: amv.amv.vulnerability,
-                    status: 1,
-                    implicitPosition: 1
-                };
-                AmvService.createAmv(new_amv,
-                    function () {
-                        $scope.updateAmvs();
-                        toastr.success(gettextCatalog.getString('The risk has been created successfully.'),
-                          gettextCatalog.getString('Creation successful'));
-                    }
-                );
-
-            })
         };
 
         $scope.editRisk = function (ev, risk) {
@@ -2150,6 +2207,8 @@
                                   $scope.editRisk(ev, riskBackup);
                               }
                           );
+                      }, function (reject) {
+                        handleRejectionDialog(reject);
                       });
               });
         };
@@ -2204,7 +2263,9 @@
          * RECOMMANDATIONS SETS TAB
          */
         $scope.recommandations = TableHelperService.build('code', 20, 1, '');
+
         $scope.recommandations.activeFilter = 1;
+
         $scope.recommandationsSets = [];
 
         $scope.selectRecommandationsTab = function () {
@@ -2296,6 +2357,8 @@
         };
 
         $scope.importNewRecommandationSet = function (ev, recommandationSet) {
+            $mdDialog.cancel();
+
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
@@ -2329,6 +2392,8 @@
                             $scope.importNewRecommandationSet(ev, recommandationSet);
                         }
                     );
+                }, function (reject) {
+                  handleRejectionDialog(reject);
                 });
         };
 
@@ -2370,6 +2435,8 @@
                             $scope.createNewRecommandationSet(ev, recommandationSet);
                         }
                     );
+                }, function (reject) {
+                  handleRejectionDialog(reject);
                 });
         };
 
@@ -2404,6 +2471,8 @@
                                 $scope.editRecommandationSet(ev, recommandationSet);
                             }
                         );
+                    }, function (reject) {
+                      handleRejectionDialog(reject);
                     });
             });
         };
@@ -2496,6 +2565,8 @@
                             $scope.createNewRecommandation(ev, recommandation);
                         }
                     );
+                }, function (reject) {
+                  handleRejectionDialog(reject);
                 });
         };
 
@@ -2534,6 +2605,8 @@
                                 $scope.editRecommandation(ev, recommandation);
                             }
                         );
+                    }, function (reject) {
+                      handleRejectionDialog(reject);
                     });
             });
         };
@@ -2590,95 +2663,99 @@
         //Import File Center
 
         $scope.importFile = function (ev,tab) {
-        var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
-        $mdDialog.show({
-            controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService', 'AmvService', 'ClientRecommandationService',
-                        'SOACategoryService', 'TagService', 'RiskService', 'MeasureMeasureService', 'gettextCatalog', '$q', 'tab', 'referential' ,'recommandationSet',
-                        ImportFileDialogCtrl],
-            templateUrl: 'views/anr/import.file.html',
-            targetEvent: ev,
-            scope: $scope.$dialogScope.$new(),
-            preserveScope: false,
-            clickOutsideToClose: false,
-            fullscreen: useFullScreen,
-            locals: {
-                'tab': tab,
-                'referential' : $scope.RefSelected,
-                'recommandationSet': $scope.RecSetSelected,
-            }
-        })
-         .then(function(importData){
-           switch (tab) {
+            $mdDialog.cancel();
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-             case 'Asset types':
-               AssetService.createAsset(importData, function (result){
-                 $scope.$parent.updateAssets();
-                 successCreateObject(result)
-               });
-               break;
-             case 'Threats':
-               ThreatService.createThreat(importData, function (result){
-                 $scope.$parent.updateThreats();
-                 successCreateObject(result)
-               });
-               break;
-             case 'Vulnerabilties':
-               VulnService.createVuln(importData, function (result){
-                 $scope.$parent.updateVulns();
-                 successCreateObject(result)
-               });
-               break;
-             case 'Controls':
-               MeasureService.createMeasure(importData, function (result){
-                 $scope.$parent.updateMeasures();
-                 successCreateObject(result)
-                 $rootScope.$broadcast('controlsUpdated');
-               });
-               break;
-             case 'Information risks':
-              AmvService.createAmv(importData,function(result){
-                $scope.updateAmvs();
-                successCreateObject(result)
-              });
-               break
-             case 'Categories':
-               SOACategoryService.createCategory(importData, function (result){
-                 successCreateObject(result)
-               });
-               break;
-             case 'Tags':
-               TagService.createTag(importData, function (result){
-                 $scope.$parent.updateTags();
-                 successCreateObject(result)
-               });
-               break;
-             case 'Operational risks':
-               RiskService.createRisk(importData, function (result){
-                 $scope.$parent.updateRisks();
-                 successCreateObject(result)
-               });
-               break;
-             case 'Matches':
-                MeasureMeasureService.createMeasureMeasure(importData, function (result){
-                  successCreateObject(result)
-                });
-               break;
-             case 'Recommendations':
-                importData.anr = $scope.RecSetSelected.anr.id;
-                ClientRecommandationService.createRecommandationMass(importData, function(result){
-                    $scope.$parent.updateRecommandations();
-                    successCreateObject(result);
-                });
-                break;
-             default:
-           }
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService', 'AmvService', 'ClientRecommandationService',
+                            'SOACategoryService', 'TagService', 'RiskService', 'MeasureMeasureService', 'gettextCatalog', '$q', 'tab', 'referential' ,'recommandationSet',
+                            ImportFileDialogCtrl],
+                templateUrl: 'views/anr/import.file.html',
+                targetEvent: ev,
+                scope: $scope.$dialogScope.$new(),
+                preserveScope: false,
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    'tab': tab,
+                    'referential' : $scope.RefSelected,
+                    'recommandationSet': $scope.RecSetSelected,
+                }
+            })
+             .then(function(importData){
+               switch (tab) {
 
-           function successCreateObject(result){
-             toastr.success((Array.isArray(result.id) ? result.id.length : 1) + ' ' + tab + ' ' + gettextCatalog.getString('have been created successfully.'),
-                            gettextCatalog.getString('Creation successful'));
-           };
-         })
-      }
+                 case 'Asset types':
+                   AssetService.createAsset(importData, function (result){
+                     $scope.$parent.updateAssets();
+                     successCreateObject(result)
+                   });
+                   break;
+                 case 'Threats':
+                   ThreatService.createThreat(importData, function (result){
+                     $scope.$parent.updateThreats();
+                     successCreateObject(result)
+                   });
+                   break;
+                 case 'Vulnerabilties':
+                   VulnService.createVuln(importData, function (result){
+                     $scope.$parent.updateVulns();
+                     successCreateObject(result)
+                   });
+                   break;
+                 case 'Controls':
+                   MeasureService.createMeasure(importData, function (result){
+                     $scope.$parent.updateMeasures();
+                     successCreateObject(result)
+                     $rootScope.$broadcast('controlsUpdated');
+                   });
+                   break;
+                 case 'Information risks':
+                  AmvService.createAmv(importData,function(result){
+                    $scope.updateAmvs();
+                    successCreateObject(result)
+                  });
+                   break
+                 case 'Categories':
+                   SOACategoryService.createCategory(importData, function (result){
+                     successCreateObject(result)
+                   });
+                   break;
+                 case 'Tags':
+                   TagService.createTag(importData, function (result){
+                     $scope.$parent.updateTags();
+                     successCreateObject(result)
+                   });
+                   break;
+                 case 'Operational risks':
+                   RiskService.createRisk(importData, function (result){
+                     $scope.$parent.updateRisks();
+                     successCreateObject(result)
+                   });
+                   break;
+                 case 'Matches':
+                    MeasureMeasureService.createMeasureMeasure(importData, function (result){
+                      successCreateObject(result)
+                    });
+                   break;
+                 case 'Recommendations':
+                    importData.anr = $scope.RecSetSelected.anr.id;
+                    ClientRecommandationService.createRecommandationMass(importData, function(result){
+                        $scope.$parent.updateRecommandations();
+                        successCreateObject(result);
+                    });
+                    break;
+                 default:
+               }
+
+               function successCreateObject(result){
+                 toastr.success((Array.isArray(result.id) ? result.id.length : 1) + ' ' + tab + ' ' + gettextCatalog.getString('have been created successfully.'),
+                                gettextCatalog.getString('Creation successful'));
+               };
+             }, function (reject) {
+               handleRejectionDialog(reject);
+             });
+        }
     }
 
     //////////////////////
