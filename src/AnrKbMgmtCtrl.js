@@ -2002,18 +2002,14 @@
          */
         $scope.risks = TableHelperService.build('label' + $scope.language, 20, 1, '');
 
-        $scope.risk_tag_filter = null;
+        $scope.risk_tag_filter = 0;
 
         $scope.opRisksRef_filter = [];
 
-        var risksTabSelected = false;
-
         $scope.$watchGroup(['risk_tag_filter'], function (newValue, oldValue) {
-            if (risksTabSelected) {
-                // Refresh contents
+            if (newValue !== oldValue) {
                 $scope.updateRisks();
             }
-            $scope.updateRisks();
         });
 
         $scope.updateTagsRisks = function(value) {
@@ -2026,7 +2022,6 @@
             if ($scope.risk_tag_filter > 0) {
                 query.tag = $scope.risk_tag_filter;
             }
-            $scope.risks.query.tag = $scope.risk_tag_filter;
 
             if ($scope.risks.previousQueryOrder != $scope.risks.query.order) {
                 $scope.risks.query.page = query.page = 1;
@@ -2079,8 +2074,6 @@
                 $scope.opRisksRef_filter.items = data;
                 if (data['referentials'][0]) {
                   $scope.opRisksRef_filter.selected = data['referentials'][0].uuid;
-                }else {
-                  $scope.updateRisks();
                 }
             });
 
