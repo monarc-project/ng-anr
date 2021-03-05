@@ -1383,6 +1383,8 @@
                       gettextCatalog.getString('Edition successful'));
                     $rootScope.$broadcast('amvUpdated');
                 });
+              }, function (reject) {
+                handleRejectionDialog(reject);
               });
         }
 
@@ -2117,6 +2119,8 @@
                       gettextCatalog.getString('Edition successful'));
                     $rootScope.$broadcast('opRiskUpdated');
                 });
+              }, function (reject) {
+                handleRejectionDialog(reject);
               });
         }
 
