@@ -110,10 +110,6 @@
 
         $scope.language = $scope.getAnrLanguage();
 
-        function handleRejectionDialog(reject) {
-          if(reject !== undefined) throw reject;
-        }
-
         /*
          * ASSETS TAB
          */
@@ -230,7 +226,7 @@
                         }
                     );
                 }, function (reject) {
-                  handleRejectionDialog(reject);
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -262,7 +258,7 @@
                         }
                     );
                 }, function (reject) {
-                  handleRejectionDialog(reject);
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -301,7 +297,7 @@
                             }
                         );
                     }, function (reject) {
-                      handleRejectionDialog(reject);
+                      $scope.handleRejectionDialog(reject);
                     });
             });
         };
@@ -482,7 +478,7 @@
                         }
                     );
                 }, function (reject) {
-                  handleRejectionDialog(reject);
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -515,7 +511,7 @@
                         }
                     );
                 }, function (reject) {
-                  handleRejectionDialog(reject);
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -563,7 +559,7 @@
                             }
                         );
                     }, function (reject) {
-                      handleRejectionDialog(reject);
+                      $scope.handleRejectionDialog(reject);
                     });
             });
         };
@@ -717,7 +713,7 @@
                         }
                     );
                 }, function (reject) {
-                  handleRejectionDialog(reject);
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -762,7 +758,7 @@
                         }
                     );
                 }, function (reject) {
-                  handleRejectionDialog(reject);
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -803,7 +799,7 @@
                             }
                         );
                     }, function (reject) {
-                      handleRejectionDialog(reject);
+                      $scope.handleRejectionDialog(reject);
                     });
             });
         };
@@ -987,7 +983,7 @@
                         }
                     );
                 }, function (reject) {
-                  handleRejectionDialog(reject);
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -1029,7 +1025,7 @@
                         }
                     );
                 }, function (reject) {
-                  handleRejectionDialog(reject);
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -1064,7 +1060,7 @@
                             }
                         );
                     }, function (reject) {
-                      handleRejectionDialog(reject);
+                      $scope.handleRejectionDialog(reject);
                     });
             });
         };
@@ -1172,7 +1168,7 @@
                         }
                     );
                 }, function (reject) {
-                  handleRejectionDialog(reject);
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -1211,7 +1207,7 @@
                             }
                         );
                     }, function (reject) {
-                      handleRejectionDialog(reject);
+                      $scope.handleRejectionDialog(reject);
                     });
             });
         };
@@ -1384,7 +1380,7 @@
                     $rootScope.$broadcast('amvUpdated');
                 });
               }, function (reject) {
-                handleRejectionDialog(reject);
+                $scope.handleRejectionDialog(reject);
               });
         }
 
@@ -1420,7 +1416,7 @@
                 );
 
             }, function (reject) {
-              handleRejectionDialog(reject);
+              $scope.handleRejectionDialog(reject);
             });
         };
 
@@ -1473,7 +1469,7 @@
                         }
                     );
                 }, function (reject) {
-                  handleRejectionDialog(reject);
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -1527,7 +1523,7 @@
                             }
                         );
                     }, function (reject) {
-                      handleRejectionDialog(reject);
+                      $scope.handleRejectionDialog(reject);
                     });
             });
         };
@@ -1910,7 +1906,7 @@
                         }
                     );
                 }, function (reject) {
-                  handleRejectionDialog(reject);
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -1943,7 +1939,7 @@
                             }
                         );
                     }, function (reject) {
-                      handleRejectionDialog(reject);
+                      $scope.handleRejectionDialog(reject);
                     });
             });
         };
@@ -2113,7 +2109,7 @@
                     $rootScope.$broadcast('opRiskUpdated');
                 });
               }, function (reject) {
-                handleRejectionDialog(reject);
+                $scope.handleRejectionDialog(reject);
               });
         }
 
@@ -2161,7 +2157,7 @@
                           }
                       );
                   }, function (reject) {
-                    handleRejectionDialog(reject);
+                    $scope.handleRejectionDialog(reject);
                   });
         };
 
@@ -2205,7 +2201,7 @@
                               }
                           );
                       }, function (reject) {
-                        handleRejectionDialog(reject);
+                        $scope.handleRejectionDialog(reject);
                       });
               });
         };
@@ -2390,7 +2386,7 @@
                         }
                     );
                 }, function (reject) {
-                  handleRejectionDialog(reject);
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -2433,7 +2429,7 @@
                         }
                     );
                 }, function (reject) {
-                  handleRejectionDialog(reject);
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -2469,7 +2465,7 @@
                             }
                         );
                     }, function (reject) {
-                      handleRejectionDialog(reject);
+                      $scope.handleRejectionDialog(reject);
                     });
             });
         };
@@ -2563,7 +2559,7 @@
                         }
                     );
                 }, function (reject) {
-                  handleRejectionDialog(reject);
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -2603,7 +2599,7 @@
                             }
                         );
                     }, function (reject) {
-                      handleRejectionDialog(reject);
+                      $scope.handleRejectionDialog(reject);
                     });
             });
         };
@@ -2750,7 +2746,7 @@
                                 gettextCatalog.getString('Creation successful'));
                };
              }, function (reject) {
-               handleRejectionDialog(reject);
+               $scope.handleRejectionDialog(reject);
              });
         }
     }

@@ -153,9 +153,8 @@
                             toastr.success(gettextCatalog.getString("The asset has been edited"), gettextCatalog.getString("Edition successful"));
                         });
                     }
-                })
-                .catch(function () {
-                    $scope.updateInstance();
+                }, function () {
+                  $scope.updateInstance();
                 });
         };
 
@@ -193,6 +192,8 @@
                         }
                         toastr.success(gettextCatalog.getString('The asset has been exported successfully.'), gettextCatalog.getString('Export successful'));
                     })
+                }, function (reject) {
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -252,6 +253,8 @@
                         $scope.updateAnrRisksOpTable();
                     }
                 });
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
             });
         }
 
@@ -277,6 +280,8 @@
                         $scope.updateAnrRisksTable();
                     }
                 });
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
             });
         }
 
