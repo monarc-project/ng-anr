@@ -88,10 +88,10 @@
                     </md-select>
                 </md-input-container>
 
-                <div ng-if="OFFICE_MODE == 'BO'">
+                <div ng-if="OFFICE_MODE == 'BO' && models && models.length > 0">
                     <md-subheader>{{ 'Specific models links' | translate }}</md-subheader>
 
-                    <md-input-container class="md-block" layout="row" ng-if="models && models.length > 0" flex>
+                    <md-input-container class="md-block" layout="row" flex>
                         <label translate>Models</label>
                         <md-icon>class</md-icon>
                         <md-select ng-disabled="asset.mode != 1" multiple ng-model="asset.models">
