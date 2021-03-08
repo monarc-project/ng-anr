@@ -2760,9 +2760,12 @@
     //////////////////////
 
     function CreateAssetDialogCtrl($scope, $mdDialog, ModelService, ConfigService, asset) {
-        ModelService.getModels({isGeneric:0}).then(function (data) {
-            $scope.models = data.models;
-        });
+        if ($scope.OFFICE_MODE == 'BO') {
+          ModelService.getModels({isGeneric:0}).then(function (data) {
+              $scope.models = data.models;
+          })
+        };
+
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
 
@@ -2854,9 +2857,11 @@
     }
 
     function CreateThreatDialogCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $q, ModelService, ThreatService, ConfigService, threat) {
-        ModelService.getModels({isGeneric:0}).then(function (data) {
-            $scope.models = data.models;
-        });
+        if ($scope.OFFICE_MODE == 'BO') {
+          ModelService.getModels({isGeneric:0}).then(function (data) {
+              $scope.models = data.models;
+          });
+        };
 
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
@@ -3077,9 +3082,12 @@
     }
 
     function CreateVulnDialogCtrl($scope, $mdDialog, ModelService, ConfigService, vuln) {
-        ModelService.getModels({isGeneric:0}).then(function (data) {
-            $scope.models = data.models;
-        });
+        if ($scope.OFFICE_MODE == 'BO') {
+          ModelService.getModels({isGeneric:0}).then(function (data) {
+              $scope.models = data.models;
+          });
+        };
+
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
 
