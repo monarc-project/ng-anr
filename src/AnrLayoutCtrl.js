@@ -787,6 +787,8 @@
                 }
             }).then(function (data) {
 
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
             });
         };
 
@@ -972,6 +974,8 @@
                     DownloadService.downloadBlob(data.data, docname + '.docx');
                     toastr.success(gettextCatalog.getString('The deliverable has been generated successfully.'), gettextCatalog.getString('Generation successful'));
                 })
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
             });
         };
 
@@ -1624,6 +1628,8 @@
                         $scope.updatingANR = false;
                     });
                   $scope.model.anr = anr;
+                }, function (reject) {
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -1654,6 +1660,8 @@
                                 toastr.success(gettextCatalog.getString("The asset has been added to the library."), gettextCatalog.getString("Asset added successfully"));
                             });
                         }
+                    }, function (reject) {
+                      $scope.handleRejectionDialog(reject);
                     });
             } else {
                 $scope.createAttachedObject = createAttachedObject;
@@ -1952,6 +1960,8 @@
                         }
                         toastr.success(gettextCatalog.getString('The risk analysis has been exported successfully.'), gettextCatalog.getString('Export successful'));
                     })
+                }, function (reject) {
+                  $scope.handleRejectionDialog(reject);
                 });
         };
         $scope.showMethodBox = function (stepNum, step, ev) {
@@ -2021,6 +2031,7 @@
 
 
         $scope.importObject = function (ev) {
+            $mdDialog.cancel();
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'ObjlibService', 'toastr', 'gettextCatalog', 'Upload', 'hookUpdateObjlib', ImportObjectDialogCtrl],
@@ -2035,8 +2046,8 @@
                 }
             }).then(function () {
                 $scope.updateObjectsLibrary();
-            }, function () {
-                $scope.updateObjectsLibrary();
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
             });
         };
 
@@ -2184,6 +2195,8 @@
                 fullscreen: useFullScreen,
             }).then(function (object) {
 
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
             });
         };
 
@@ -2255,10 +2268,8 @@
                     createAttachedObject($scope, $mdDialog, $state, $location, $parentScope, AnrService, ev, copy);
                 });
             }
-        }, function () {
-            if ($scope.hookUpdateObjlib) {
-                $scope.hookUpdateObjlib();
-            }
+        }, function (reject) {
+          $scope.handleRejectionDialog(reject);
         });
     };
 
@@ -2988,7 +2999,7 @@
         $scope.dialog_mode = null;
         $scope.file = [];
         $scope.file_range = 0;
- 		  $scope.isImportingIn = false;
+ 		     $scope.isImportingIn = false;
         $scope.import = {
             mode: 'merge',
             password: '',
@@ -3002,7 +3013,7 @@
             });
 
             file.upload.then(function (response) {
-				$scope.isImportingIn = false;
+				        $scope.isImportingIn = false;
                 if (response.data.errors && response.data.errors.length > 0) {
                     toastr.warning(gettextCatalog.getString("Some files could not be imported"));
                 } else {

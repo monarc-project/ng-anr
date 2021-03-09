@@ -28,6 +28,11 @@
 
                 <md-button class="md-icon-button md-primary" ng-click="removeAssetsFilter()">
                     <md-icon>settings_backup_restore</md-icon>
+                    <md-tooltip translate>Reset filter</md-tooltip>
+                </md-button>
+                <md-button class="md-icon-button md-warn" ng-click="exportAllAssets()">
+                    <md-icon>file_download</md-icon>
+                    <md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip>
                 </md-button>
             </div>
 
@@ -98,6 +103,11 @@
                 </md-select>
                 <md-button class="md-icon-button md-primary" ng-click="removeThreatsFilter()">
                     <md-icon>settings_backup_restore</md-icon>
+                    <md-tooltip translate>Reset filter</md-tooltip>
+                </md-button>
+                <md-button class="md-icon-button md-warn" ng-click="exportAllThreats()">
+                    <md-icon>file_download</md-icon>
+                    <md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip>
                 </md-button>
             </div>
 
@@ -170,6 +180,11 @@
 
                 <md-button class="md-icon-button md-primary" ng-click="removeVulnsFilter()">
                     <md-icon>settings_backup_restore</md-icon>
+                    <md-tooltip translate>Reset filter</md-tooltip>
+                </md-button>
+                <md-button class="md-icon-button md-warn" ng-click="exportAllVulnerabilities()">
+                    <md-icon>file_download</md-icon>
+                    <md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip>
                 </md-button>
             </div>
 
@@ -265,6 +280,11 @@
 
                   <md-button class="md-icon-button md-primary" ng-click="removeMeasuresFilter()">
                       <md-icon>settings_backup_restore</md-icon>
+                      <md-tooltip translate>Reset filter</md-tooltip>
+                  </md-button>
+                  <md-button class="md-icon-button md-warn" ng-click="exportAllMeasures()">
+                      <md-icon>file_download</md-icon>
+                      <md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip>
                   </md-button>
               </div>
               <md-toolbar class="md-table-toolbar alternate" ng-if="measures.selected.length">
@@ -341,6 +361,7 @@
 
                 <md-button class="md-icon-button md-primary" ng-click="removeAmvsFilter()">
                     <md-icon>settings_backup_restore</md-icon>
+                    <md-tooltip translate>Reset filter</md-tooltip>
                 </md-button>
 
                 <md-button ng-if="!isAnrReadOnly && referentials_filter.items.referentials.length > 1"
@@ -349,6 +370,11 @@
                         {{ 'Update controls' | translate }}
                     </md-tooltip>
                     <md-icon>update</md-icon>
+                </md-button>
+
+                <md-button class="md-icon-button md-warn" ng-click="exportAllAmvs()">
+                    <md-icon>file_download</md-icon>
+                    <md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip>
                 </md-button>
             </div>
 
@@ -418,9 +444,13 @@
                     </md-input-container>
                 </form>
                 <md-button class="md-icon-button md-primary" ng-click="removeTagsFilter()">
-                    <md-icon>settings_backup_restore</md-icon>
+                  <md-icon>settings_backup_restore</md-icon>
+                  <md-tooltip translate>Reset filter</md-tooltip>
                 </md-button>
-
+                <md-button class="md-icon-button md-warn" ng-click="exportAllTags()">
+                    <md-icon>file_download</md-icon>
+                    <md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip>
+                </md-button>
             </div>
 
             <md-toolbar class="md-table-toolbar alternate" ng-show="tags.selected.length">
@@ -499,16 +529,21 @@
 
                 <md-button class="md-icon-button md-primary" ng-click="removeRisksFilter()">
                     <md-icon>settings_backup_restore</md-icon>
-                </md-button>
+                    <md-tooltip translate>Reset filter</md-tooltip>
+                  </md-button>
 
-                <md-button ng-if="!isAnrReadOnly && opRisksRef_filter.items.referentials.length > 1"
+                  <md-button ng-if="!isAnrReadOnly && opRisksRef_filter.items.referentials.length > 1"
                           class="md-icon-button md-primary" ng-click="updateMeasuresOpRisks($event)">
                     <md-tooltip md-direction="left">
                         {{ 'Update controls' | translate }}
                     </md-tooltip>
                     <md-icon>update</md-icon>
-                </md-button>
+                  </md-button>
 
+                  <md-button class="md-icon-button md-warn" ng-click="exportAllRisksOp()">
+                      <md-icon>file_download</md-icon>
+                      <md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip>
+                  </md-button>
             </div>
 
             <md-toolbar class="md-table-toolbar alternate" ng-show="risks.selected.length">
@@ -611,8 +646,15 @@
 
                     <md-button class="md-icon-button md-primary" ng-click="removeRecommandationsFilter()">
                         <md-icon>settings_backup_restore</md-icon>
+                        <md-tooltip translate>Reset filter</md-tooltip>
+                    </md-button>
+
+                    <md-button class="md-icon-button md-warn" ng-click="exportAllRecommendations()">
+                      <md-icon>file_download</md-icon>
+                      <md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip>
                     </md-button>
                 </div>
+
                 <md-toolbar class="md-table-toolbar alternate" ng-if="recommandations.selected.length">
                     <div class="md-toolbar-tools md-toolbar-pad" layout-align="space-between center">
                         <div>{{recommandations.selected.length}} {{recommandations.selected.length > 1 ? 'items' : 'item'}} selected</div>

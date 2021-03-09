@@ -69,6 +69,8 @@
                     toastr.success(gettextCatalog.getString("The recommendation has been successfully validated."));
                     updateRecs();
                 })
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
             });
         };
 

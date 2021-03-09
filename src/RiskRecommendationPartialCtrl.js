@@ -41,6 +41,8 @@
                             updateRecommandations();
                         });
                 })
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
             });
         }
 
@@ -71,6 +73,8 @@
                     toastr.success(gettextCatalog.getString("The recommendation has been edited successfully"));
                     updateRecommandations();
                 });
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
             });
         }
 

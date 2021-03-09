@@ -145,6 +145,8 @@
                         }
                     });
                 }
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
             });
         };
 
@@ -331,6 +333,8 @@
                         }
                         toastr.success(gettextCatalog.getString('The asset has been exported successfully.'), gettextCatalog.getString('Export successful'));
                     })
+                }, function (reject) {
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
@@ -384,6 +388,8 @@
                             }
                         );
                     }
+                }, function (reject) {
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 

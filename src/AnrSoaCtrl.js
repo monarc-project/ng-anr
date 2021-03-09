@@ -219,6 +219,8 @@
                     })
                   });
                 });
+              }, function (reject) {
+                $scope.handleRejectionDialog(reject);
               });
         }
 
