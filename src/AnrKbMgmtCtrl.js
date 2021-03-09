@@ -415,7 +415,7 @@
                     c: threat.c,
                     i: threat.i,
                     a: threat.a,
-                    theme: threat.theme['label' + $scope.language]
+                    theme: threat.theme ? threat.theme['label' + $scope.language] : null
                   })
                 );
               let csv = Papa.unparse(allThreats,{quotes: true});
@@ -916,7 +916,7 @@
                     uuid: measure.uuid,
                     code: measure.code,
                     label: measure['label' + $scope.language],
-                    category: measure.category['label' + $scope.language],
+                    category: measure.category ? measure.category['label' + $scope.language] : null,
                     referential: measure.referential['label' + $scope.language]
                   })
                 );
@@ -1332,7 +1332,7 @@
                     'threat c': amv.threat.c,
                     'threat i': amv.threat.i,
                     'threat a': amv.threat.a,
-                    'threat theme': amv.threat.theme['label' + $scope.language],
+                    'threat theme': amv.threat.theme ? amv.threat.theme['label' + $scope.language] : null,
                     'vulnerability code': amv.vulnerability.code,
                     'vulnerability label': amv.vulnerability['label' + $scope.language],
                     'vulnerability description': amv.vulnerability['description' + $scope.language],
