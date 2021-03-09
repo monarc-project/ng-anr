@@ -31,7 +31,7 @@
                 <md-datepicker ng-disabled="isAnrReadOnly" md-hide-icons="calendar" ng-model="rec.duedate" date-set="rec.duedate" md-placeholder="{{rec.duedate}}" ng-change="onTableEdited(rec, 'duedate')"></md-datepicker><md-button class="md-icon-button" ng-click="clearDate(rec.duedate)" ng-if="!isAnrReadOnly"><md-icon>clear</md-icon></md-button>
             </td>
             <td ng-if="rec.counterTreated == 0" translate>Coming</td>
-            <td ng-if="rec.counterTreated > 0" translate>In progress ({{rec.counterTreated}})</td>
+            <td ng-if="rec.counterTreated > 0"><span translate>In progress</span> ({{rec.counterTreated}})</td>
             <td>
                 <div layout="row" layout-align="center center">
                     <md-button class="md-icon-button md-primary" ui-sref="main.project.anr.risksplan.sheet({modelId: model.anr.id, recId: rec.uuid})"><md-icon>open_in_new</md-icon></md-button>
