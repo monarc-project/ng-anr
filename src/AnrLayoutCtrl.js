@@ -2143,6 +2143,15 @@
                     })
                     object.asset.vuls = objVulns;
 
+                    let objMesures = {};
+                    object.asset.measures.forEach(measure => {
+                      let uuid = measures.uuid;
+                      measure["label" + language] = measure.label;
+                      delete measure.label;
+                      objMesures[uuid] = measure;
+                    })
+                    object.asset.measures = objMesures;
+
                     object.rolfTags.forEach(tag => {
                       tag["label" + language] = tag.label;
                       tag.risks = [...Array(object.rolfRisks.length).keys()];
