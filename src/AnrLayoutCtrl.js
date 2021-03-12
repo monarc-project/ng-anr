@@ -2145,8 +2145,15 @@
 
                     let objMesures = {};
                     object.asset.measures.forEach(measure => {
-                      let uuid = measures.uuid;
+                      let uuid = measure.uuid;
                       measure["label" + language] = measure.label;
+                      measure.category = {
+                        ["label" + language]: measure.category
+                      };
+                      measure.referential = {
+                        uuid: measure.referential,
+                        ["label" + language]: measure.referential_label
+                      };
                       delete measure.label;
                       objMesures[uuid] = measure;
                     })
