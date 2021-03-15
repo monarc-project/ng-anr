@@ -2052,6 +2052,7 @@
         };
 
         $scope.importMospObject = function (ev,categories) {
+            $mdDialog.cancel();
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ObjlibService', 'categories', ImportObjectMospDialogCtrl],
@@ -2191,6 +2192,8 @@
                       toastr.warning(gettextCatalog.getString("Some files could not be imported"));
                     }
                   );
+                }, function (reject) {
+                  $scope.handleRejectionDialog(reject);
                 });
         };
 
