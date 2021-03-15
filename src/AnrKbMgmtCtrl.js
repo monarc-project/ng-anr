@@ -2807,8 +2807,9 @@
     function ImportAssetDialogCtrl($rootScope, $scope, $http, $mdDialog, AssetService, ConfigService) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
-
+        var assets_uuid = [];
         var mosp_query_organizations = 'organization?results_per_page=500';
+
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(org) {
             var mosp_query_all_assets = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Assets"}}]}&results_per_page=3000';
@@ -2825,18 +2826,26 @@
             // Retrieve the assets from the selected organization
             $scope.searchText = '';
             $scope.mosp_assets = [];
-            $scope.hideSpinLoader = false;
-            $scope.dataLoaded = false;
-            AssetService.getAssets().then(data => {
-              let assets_uuid = data.assets.map(asset => asset.uuid);
+            if (assets_uuid.length == 0) {
+              $scope.hideSpinLoader = false;
+              $scope.dataLoaded = false;
+              AssetService.getAssets().then(data => {
+                assets_uuid = data.assets.map(asset => asset.uuid);
+                $scope.mosp_assets = $scope.all_assets.filter(
+                    asset => asset.org_id == $scope.organization.id &&
+                    !assets_uuid.includes(asset.json_object.uuid) &&
+                    asset.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
+                );
+                $scope.hideSpinLoader = true;
+                $scope.dataLoaded = true;
+              });
+            } else{
               $scope.mosp_assets = $scope.all_assets.filter(
                   asset => asset.org_id == $scope.organization.id &&
                   !assets_uuid.includes(asset.json_object.uuid) &&
                   asset.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
               );
-              $scope.hideSpinLoader = true;
-              $scope.dataLoaded = true;
-            });
+            }
         }
 
         $scope.getMatches = function(searchText) {
@@ -3002,8 +3011,9 @@
     function ImportThreatDialogCtrl($rootScope, $scope, $http, $mdDialog, ConfigService, ThreatService) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
-
+        var threats_uuid = [];
         var mosp_query_organizations = 'organization?results_per_page=500';
+
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(org) {
             var mosp_query_all_threats = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Threats"}}]}&results_per_page=3000';
@@ -3020,18 +3030,26 @@
             // Retrieve the threats from the selected organization
             $scope.searchText = '';
             $scope.mosp_threats = [];
-            $scope.hideSpinLoader = false;
-            $scope.dataLoaded = false;
-            ThreatService.getThreats().then(data => {
-              let threats_uuid = data.threats.map(threat => threat.uuid);
+            if (threats_uuid.length == 0) {
+              $scope.hideSpinLoader = false;
+              $scope.dataLoaded = false;
+              ThreatService.getThreats().then(data => {
+                threats_uuid = data.threats.map(threat => threat.uuid);
+                $scope.mosp_threats = $scope.all_threats.filter(
+                    threat => threat.org_id == $scope.organization.id &&
+                    !threats_uuid.includes(threat.json_object.uuid) &&
+                    threat.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
+                );
+                $scope.hideSpinLoader = true;
+                $scope.dataLoaded = true;
+              });
+            } else{
               $scope.mosp_threats = $scope.all_threats.filter(
                   threat => threat.org_id == $scope.organization.id &&
                   !threats_uuid.includes(threat.json_object.uuid) &&
                   threat.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
               );
-              $scope.hideSpinLoader = true;
-              $scope.dataLoaded = true;
-            });
+            }
         }
 
         ThreatService.getThemes().then(function (data) {
@@ -3136,8 +3154,9 @@
     function ImportVulnerabilityDialogCtrl($rootScope, $scope, $http, $mdDialog, ConfigService, VulnService) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
-
+        var vulnerabilities_uuid = [];
         var mosp_query_organizations = 'organization?results_per_page=500';
+
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(org) {
             var mosp_query_all_vulns = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Vulnerabilities"}}]}&results_per_page=3000';
@@ -3154,25 +3173,26 @@
             // Retrieve the vulnerabilities from the selected organization
             $scope.searchText = '';
             $scope.mosp_vulnerabilities = [];
-            $scope.hideSpinLoader = false;
-            $scope.dataLoaded = false;
-            VulnService.getVulns().then(data => {
-              let vulnerabilities_uuid = data.vulnerabilities.map(vulnerability => vulnerability.uuid);
-              if ($scope.languages[$scope.language].code.toUpperCase() != 'EN') {
-                  $scope.mosp_vulnerabilities = $scope.all_vulns.filter(
-                      vulnerability => vulnerability.org_id == $scope.organization.id &&
-                      !vulnerabilities_uuid.includes(vulnerability.json_object.uuid) &&
-                      vulnerability.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
-                  );
-              } else {
-                  $scope.mosp_vulnerabilities = $scope.all_vulns.filter(
-                      vulnerability => vulnerability.org_id == $scope.organization.id &&
-                      !vulnerabilities_uuid.includes(vulnerability.json_object.uuid)
-                  );
-              }
-              $scope.hideSpinLoader = true;
-              $scope.dataLoaded = true;
-            });
+            if (vulnerabilities_uuid.length == 0) {
+              $scope.hideSpinLoader = false;
+              $scope.dataLoaded = false;
+              VulnService.getVulns().then(data => {
+                vulnerabilities_uuid = data.vulnerabilities.map(vulnerability => vulnerability.uuid);
+                $scope.mosp_vulnerabilities = $scope.all_vulns.filter(
+                    vulnerability => vulnerability.org_id == $scope.organization.id &&
+                    !vulnerabilities_uuid.includes(vulnerability.json_object.uuid) &&
+                    vulnerability.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
+                );
+                $scope.hideSpinLoader = true;
+                $scope.dataLoaded = true;
+              });
+            } else{
+              $scope.mosp_vulnerabilities = $scope.all_vulns.filter(
+                  vulnerability => vulnerability.org_id == $scope.organization.id &&
+                  !vulnerabilities_uuid.includes(vulnerability.json_object.uuid) &&
+                  vulnerability.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
+              );
+            }
         };
 
         /**
@@ -3201,6 +3221,7 @@
     }
 
     function ImportReferentialDialogCtrl($rootScope, $scope, $http, $mdDialog, ReferentialService) {
+        var referentials_uuid = [];
         var mosp_query_organizations = 'organization?results_per_page=500';
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(org) {
@@ -3218,17 +3239,24 @@
             // Retrieve the security referentials from the selected organization
             $scope.searchText = '';
             $scope.mosp_referentials = [];
-            $scope.hideSpinLoader = false;
-            $scope.dataLoaded = false;
-            ReferentialService.getReferentials().then(data => {
-              let referentials_uuid = data.referentials.map(refetential => refetential.uuid);
+            if (referentials_uuid.length == 0) {
+              $scope.hideSpinLoader = false;
+              $scope.dataLoaded = false;
+              ReferentialService.getReferentials().then(data => {
+                referentials_uuid = data.referentials.map(refetential => refetential.uuid);
+                $scope.mosp_referentials = $scope.all_referentials.filter(
+                    ref => ref.org_id == $scope.organization.id &&
+                    !referentials_uuid.includes(ref.json_object.uuid)
+                );
+                $scope.dataLoaded = true;
+                $scope.hideSpinLoader = true;
+              });
+            } else {
               $scope.mosp_referentials = $scope.all_referentials.filter(
                   ref => ref.org_id == $scope.organization.id &&
                   !referentials_uuid.includes(ref.json_object.uuid)
               );
-              $scope.dataLoaded = true;
-              $scope.hideSpinLoader = true;
-            });
+            }
         }
 
        /**
@@ -3981,8 +4009,9 @@
     function ImportRecommandationSetDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ClientRecommandationService, ConfigService, recommandationSet, anrId) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = $scope.getAnrLanguage();
-
+        var recommandations_sets_uuid = [];
         var mosp_query_organizations = 'organization?results_per_page=500';
+
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(org) {
           var mosp_query_recommandations_sets = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Recommendations"}}]}&results_per_page=3000';
@@ -3999,17 +4028,24 @@
             // Retrieve the assets from the selected organization
             $scope.searchText = '';
             $scope.mosp_recommandations_sets = [];
-            $scope.hideSpinLoader = false;
-            $scope.dataLoaded = false;
-            ClientRecommandationService.getRecommandationsSets({anr: anrId}).then(data => {
-              let recommandations_sets_uuid = data['recommandations-sets'].map(recommandationSet => recommandationSet.uuid);
+            if (recommandations_sets_uuid.length == 0) {
+              $scope.hideSpinLoader = false;
+              $scope.dataLoaded = false;
+              ClientRecommandationService.getRecommandationsSets({anr: anrId}).then(data => {
+                recommandations_sets_uuid = data['recommandations-sets'].map(recommandationSet => recommandationSet.uuid);
+                $scope.mosp_recommandations_sets = $scope.all_recommandations.filter(
+                    recommandationSet => recommandationSet.org_id == $scope.organization.id &&
+                    !recommandations_sets_uuid.includes(recommandationSet.json_object.uuid)
+                );
+                $scope.hideSpinLoader = true;
+                $scope.dataLoaded = true;
+              });
+            } else{
               $scope.mosp_recommandations_sets = $scope.all_recommandations.filter(
                   recommandationSet => recommandationSet.org_id == $scope.organization.id &&
                   !recommandations_sets_uuid.includes(recommandationSet.json_object.uuid)
               );
-              $scope.hideSpinLoader = true;
-              $scope.dataLoaded = true;
-            });
+            }
         }
 
        /**
@@ -4154,8 +4190,9 @@
     function ImportAmvDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ConfigService, AssetService, ThreatService, VulnService, AmvService, amv) {
             $scope.languages = ConfigService.getLanguages();
             $scope.language = $scope.getAnrLanguage();
-
+            var amvs_uuid = [];
             var mosp_query_organizations = 'organization?results_per_page=500';
+
             $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
             .then(function(org) {
                 var mosp_query_all_amvs = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Risks"}}]}&results_per_page=3000';
@@ -4172,17 +4209,24 @@
                 // Retrieve the amvs from the selected organization
                 $scope.searchText = '';
                 $scope.mosp_amvs = [];
-                $scope.hideSpinLoader = false;
-                $scope.dataLoaded = false;
-                AmvService.getAmvs().then(data => {
-                  let amvs_uuid = data.amvs.map(amv => amv.uuid);
+                if (amvs_uuid.length == 0) {
+                  $scope.hideSpinLoader = false;
+                  $scope.dataLoaded = false;
+                  AmvService.getAmvs().then(data => {
+                    let amvs_uuid = data.amvs.map(amv => amv.uuid);
+                    $scope.mosp_amvs = $scope.all_amvs.filter(
+                        amv => amv.org_id == $scope.organization.id &&
+                        !amvs_uuid.includes(amv.json_object.uuid)
+                    );
+                    $scope.dataLoaded = true;
+                    $scope.hideSpinLoader = true;
+                  });
+                } else{
                   $scope.mosp_amvs = $scope.all_amvs.filter(
                       amv => amv.org_id == $scope.organization.id &&
                       !amvs_uuid.includes(amv.json_object.uuid)
                   );
-                  $scope.dataLoaded = true;
-                  $scope.hideSpinLoader = true;
-                });
+                }
             }
 
             $scope.getMatches = function(searchText) {
