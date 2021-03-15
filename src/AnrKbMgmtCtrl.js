@@ -2815,7 +2815,7 @@
             var mosp_query_all_assets = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Assets"}}]}&results_per_page=3000';
             $http.jsonp($rootScope.mospApiUrl + mosp_query_all_assets)
             .then(function(assets) {
-                $scope.all_assets = assets.data.data.objects;
+                $scope.all_assets = assets.data.data.objects.filter(object => !angular.equals({}, object.json_object));
                 var org_ids = Array.from(new Set($scope.all_assets.map(asset => asset.org_id)));
                 $scope.organizations = org.data.data.objects.filter(org => org_ids.includes(org.id));
                 $scope.loadingMOSPData = true;
@@ -3007,7 +3007,7 @@
             var mosp_query_all_threats = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Threats"}}]}&results_per_page=3000';
             $http.jsonp($rootScope.mospApiUrl + mosp_query_all_threats)
             .then(function(threats) {
-                $scope.all_threats = threats.data.data.objects;
+                $scope.all_threats = threats.data.data.objects.filter(object => !angular.equals({}, object.json_object));
                 var org_ids = Array.from(new Set($scope.all_threats.map(threat => threat.org_id)));
                 $scope.organizations = org.data.data.objects.filter(org => org_ids.includes(org.id));
                 $scope.loadingMOSPData = true;
@@ -3139,7 +3139,7 @@
             var mosp_query_all_vulns = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Vulnerabilities"}}]}&results_per_page=3000';
             $http.jsonp($rootScope.mospApiUrl + mosp_query_all_vulns)
             .then(function(vulns) {
-                $scope.all_vulns = vulns.data.data.objects;
+                $scope.all_vulns = vulns.data.data.objects.filter(object => !angular.equals({}, object.json_object));
                 var org_ids = Array.from(new Set($scope.all_vulns.map(vuln => vuln.org_id)));
                 $scope.organizations = org.data.data.objects.filter(org => org_ids.includes(org.id));
                 $scope.loadingMOSPData = true;
@@ -3201,7 +3201,7 @@
             var mosp_query_all_referentials = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Security referentials"}}]}';
             $http.jsonp($rootScope.mospApiUrl + mosp_query_all_referentials)
             .then(function(ref) {
-                $scope.all_referentials = ref.data.data.objects;
+                $scope.all_referentials = ref.data.data.objects.filter(object => !angular.equals({}, object.json_object));
                 var org_ids = Array.from(new Set($scope.all_referentials.map(ref => ref.org_id)));
                 $scope.organizations = org.data.data.objects.filter(org => org_ids.includes(org.id));
                 $scope.loadingMOSPData = true;
@@ -3978,7 +3978,7 @@
           var mosp_query_recommandations_sets = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Recommendations"}}]}&results_per_page=3000';
           $http.jsonp($rootScope.mospApiUrl + mosp_query_recommandations_sets)
           .then(function(recommandations) {
-              $scope.all_recommandations = recommandations.data.data.objects;
+              $scope.all_recommandations = recommandations.data.data.objects.filter(object => !angular.equals({}, object.json_object));
               var org_ids = Array.from(new Set($scope.all_recommandations.map(recommandation => recommandation.org_id)));
               $scope.organizations = org.data.data.objects.filter(org => org_ids.includes(org.id));
               $scope.loadingMOSPData = true;
@@ -4148,7 +4148,7 @@
                 var mosp_query_all_amvs = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Risks"}}]}&results_per_page=3000';
                 $http.jsonp($rootScope.mospApiUrl + mosp_query_all_amvs)
                 .then(function(amvs) {
-                    $scope.all_amvs = amvs.data.data.objects;
+                    $scope.all_amvs = amvs.data.data.objects.filter(object => !angular.equals({}, object.json_object));
                     var org_ids = Array.from(new Set($scope.all_amvs.map(amv => amv.org_id)));
                     $scope.organizations = org.data.data.objects.filter(org => org_ids.includes(org.id));
                     $scope.loadingMOSPData = true;

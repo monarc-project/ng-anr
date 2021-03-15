@@ -3116,7 +3116,7 @@
           var mosp_query_all_objects = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Library objects"}}]}&results_per_page=3000';
           $http.jsonp($rootScope.mospApiUrl + mosp_query_all_objects)
           .then(function(objects) {
-              $scope.all_objects = objects.data.data.objects;
+              $scope.all_objects = objects.data.data.objects.filter(object => !angular.equals({}, object.json_object));
               var org_ids = Array.from(new Set($scope.all_objects.map(object => object.org_id)));
               $scope.organizations = org.data.data.objects.filter(org => org_ids.includes(org.id));
               $scope.loadingMOSPData = true;
