@@ -10,12 +10,12 @@
             </div>
         </md-toolbar>
         <md-dialog-content>
-            <md-progress-circular class="spinloader" ng-disabled="loadingMOSPData" md-diameter="60"></md-progress-circular>
+            <md-progress-circular class="spinloader" ng-disabled="hideSpinLoader" md-diameter="60"></md-progress-circular>
             <div class="md-dialog-content">
                 <md-input-container class="md-block" flex>
                     <md-icon>account_balance</md-icon>
                     <label translate>Organization</label>
-                    <md-select ng-model="organization['id']" ng-disabled="!loadingMOSPData" ng-change="selectOrganization()" required>
+                    <md-select ng-model="organization['id']" ng-disabled="!hideSpinLoader" ng-change="selectOrganization()" required>
                         <md-option ng-repeat="org in organizations" ng-value="org.id">{{ org.name }}</md-option>
                     </md-select>
                 </md-input-container>
@@ -25,7 +25,7 @@
                       <md-icon class="black">push_pin</md-icon>
                     </div>
                     <md-autocomplete
-                        ng-disabled="!organization['id']"
+                        ng-disabled="!dataLoaded"
                         flex
                         md-no-cache="true"
                         md-selected-item="threat"
