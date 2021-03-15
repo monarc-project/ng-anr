@@ -10,11 +10,12 @@
             </div>
         </md-toolbar>
         <md-dialog-content>
+            <md-progress-circular class="spinloader" ng-disabled="loadingMOSPData" md-diameter="60"></md-progress-circular>
             <div class="md-dialog-content">
                 <md-input-container class="md-block" flex>
                     <md-icon>account_balance</md-icon>
                     <label translate>Organization</label>
-                    <md-select ng-model="organization['id']" required ng-change="selectOrganization()">
+                    <md-select ng-model="organization['id']" ng-disabled="!loadingMOSPData" ng-change="selectOrganization()" required>
                         <md-option ng-repeat="org in organizations" ng-value="org.id">{{ org.name }}</md-option>
                     </md-select>
                 </md-input-container>

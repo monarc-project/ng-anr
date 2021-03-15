@@ -3108,6 +3108,7 @@
 
       $scope.language = $scope.getAnrLanguage();
       $scope.categories = categories;
+      $scope.loadingMOSPData = false;
 
       var mosp_query_organizations = 'organization?results_per_page=500';
       $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
@@ -3118,11 +3119,14 @@
               $scope.all_objects = objects.data.data.objects;
               var org_ids = Array.from(new Set($scope.all_objects.map(object => object.org_id)));
               $scope.organizations = org.data.data.objects.filter(org => org_ids.includes(org.id));
+              $scope.loadingMOSPData = true;
           });
       });
 
       $scope.selectOrganization = function() {
           // Retrieve the assets from the selected organization
+          $scope.searchText = '';
+          $scope.mosp_objects = [];
           ObjlibService.getObjectsOfAnr($rootScope.anr_id ,{},function(data){
             $scope.mosp_objects = $scope.all_objects.filter(
                 object => object.org_id == $scope.organization.id &&

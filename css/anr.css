@@ -38,6 +38,12 @@ body{
     to {left: 100%;}
 }
 
+.spinloader {
+  position:absolute;
+  bottom:45%;
+  left: 45%;
+}
+
 .md-dialog-content-body {
     white-space: pre-wrap
 }
