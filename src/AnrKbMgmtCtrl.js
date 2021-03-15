@@ -3223,6 +3223,7 @@
     function ImportReferentialDialogCtrl($rootScope, $scope, $http, $mdDialog, ReferentialService) {
         var referentials_uuid = [];
         var mosp_query_organizations = 'organization?results_per_page=500';
+
         $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(org) {
             var mosp_query_all_referentials = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Security referentials"}}]}';
