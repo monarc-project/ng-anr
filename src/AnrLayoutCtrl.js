@@ -2156,6 +2156,7 @@
                         ["label" + language]: measure.referential_label
                       };
                       delete measure.label;
+                      delete measure.referential_label;
                       objMesures[uuid] = measure;
                     })
                     object.asset.measures = objMesures;
@@ -2169,11 +2170,22 @@
 
                     object.rolfRisks.forEach((opRisk,index) => {
                       opRisk['id'] = index;
-                      opRisk['measures'] = [];
                       opRisk["label" + language] = opRisk.label;
                       opRisk["description" + language] = opRisk.description;
                       delete opRisk.label;
                       delete opRisk.description;
+                      opRisk.measures.forEach(measure => {
+                        measure["label" + language] = measure.label;
+                        measure.category = {
+                          ["label" + language]: measure.category
+                        };
+                        measure.referential = {
+                          uuid: measure.referential,
+                          ["label" + language]: measure.referential_label
+                        };
+                        delete measure.label;
+                        delete measure.referential_label;
+                      })
                     })
 
                     if (object.children.length > 0) {
