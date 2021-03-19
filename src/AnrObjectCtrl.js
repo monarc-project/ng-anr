@@ -650,7 +650,8 @@
                       Accept : 'application/json'
                     }
                 };
-                $http.get('https://objects.monarc.lu/api/v2/user/me',params).then(function (data){
+
+                $http.get($rootScope.mospApiUrl + 'user/me', params).then(function (data){
                   $scope.mospAccount = {
                     // organization : 'MONARC',
                     organization_id : 4,
