@@ -667,8 +667,8 @@
                     name : mospObject.object.object.name,
                     description : mospObject.object.object.label,
                     org_id :  null,
-                    schema_id : 21,
-                    licenses : [{license_id : 'CC0-1.0'}],
+                    schema_id : 21, // library object schema
+                    licenses : [{license_id : 'CC0-1.0'}], // Creative Commons Zero v1.0 Universal
                     json_object : mospObject,
                     mospApiKey : mospApiKey
                   }
