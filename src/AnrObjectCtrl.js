@@ -371,7 +371,7 @@
                   .then(function(){
                     toastr.success(gettextCatalog.getString('The asset has been imported to MOSP successfully.'), gettextCatalog.getString('Export successful'));
                   }, function(error){
-                    toastr.error(error, gettextCatalog.getString('Error'));
+                    toastr.error(error.data.message, gettextCatalog.getString('Error'));
                   });
 
 
