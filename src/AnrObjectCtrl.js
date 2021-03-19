@@ -614,7 +614,6 @@
 
             UserProfileService.getProfile().then(function (data) {
 
-              let mospUrl = 'https://objects.monarc.lu/api/v1/json_object';
               if (data.mospApiKey) {
                 getMOSPData(data.mospApiKey);
               } else{
@@ -663,12 +662,6 @@
                     validateMospPApiKey();
                   });
                 });
-
-                // $http.post(mospUrl,mospObject,params)
-                //   .then(function(){
-                //     toastr.success(gettextCatalog.getString('The asset has been imported to MOSP successfully.'), gettextCatalog.getString('Export successful'));
-                //   }, function(){
-                //   });
               }
             });
 
