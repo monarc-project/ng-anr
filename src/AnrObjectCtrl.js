@@ -668,6 +668,7 @@
                     description : mospObject.object.object.label,
                     org_id :  null,
                     schema_id : 21,
+                    licenses : [{license_id : 'CC0-1.0'}],
                     json_object : mospObject,
                     mospApiKey : mospApiKey
                   }
