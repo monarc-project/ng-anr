@@ -39,6 +39,11 @@
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
+                            <md-button class="md-primary" ng-click="publishObject($event)">
+                                <md-icon class="md-light-theme material-icons">publish</md-icon><span class="black">{{ 'Publish asset in MOSP' | translate }}</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
                             <md-button class="md-primary md-warn" ng-click="deleteObject($event)" ng-disabled="isAnrReadOnly">
                                 <md-icon class="ng-scope md-light-theme material-icons">{{ (mode == 'bdc' || OFFICE_MODE == 'FO') ? 'delete' : 'content_cut' }}</md-icon><span class="black">{{ (mode == 'bdc' || OFFICE_MODE == 'FO') ? ('Delete asset' | translate) : ('Detach asset' | translate) }}</span>
                             </md-button>
