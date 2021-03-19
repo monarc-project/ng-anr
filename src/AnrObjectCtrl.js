@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrObjectCtrl', [
             '$scope', '$rootScope', '$timeout', '$state', 'toastr', '$mdMedia', '$mdDialog', '$stateParams', '$http', 'gettextCatalog',
-            'ObjlibService', 'DownloadService', 'AnrService', 'InstanceService', '$location', 'AnrObject',
+            'ObjlibService', 'DownloadService', 'AnrService', 'InstanceService', 'UserProfileService', '$location', 'AnrObject',
             AnrObjectCtrl
         ]);
 
@@ -12,7 +12,8 @@
      * BO > KB > INFO > Objects Library > Object details
      */
     function AnrObjectCtrl($scope, $rootScope, $timeout, $state, toastr, $mdMedia, $mdDialog, $stateParams, $http,
-                                        gettextCatalog, ObjlibService, DownloadService, AnrService, InstanceService, $location, AnrObject) {
+                                        gettextCatalog, ObjlibService, DownloadService, AnrService, InstanceService,
+                                        UserProfileService, $location, AnrObject) {
 
         if ($state.current.name == 'main.kb_mgmt.models.details.object' || $state.current.name == 'main.project.anr.object') {
             $scope.mode = 'anr';
@@ -321,7 +322,7 @@
                     if ($scope.OFFICE_MODE == 'FO') {
                         url = 'api/client-anr/' + $scope.model.anr.id + '/objects/' + $scope.object.uuid + '/export';
                     }
-                    $http.post(url, {id: $scope.object.uuid, password: exports.password, mosp: exports.mosp}).then(function (data) {
+                    $http.post(url, {id: $scope.object.uuid, password: exports.password}).then(function (data) {
                         var contentD = data.headers('Content-Disposition'),
                             contentT = data.headers('Content-Type');
                         contentD = contentD.substring(0,contentD.length-1).split('filename="');
@@ -333,6 +334,31 @@
                         }
                         toastr.success(gettextCatalog.getString('The asset has been exported successfully.'), gettextCatalog.getString('Export successful'));
                     })
+                }, function (reject) {
+                  $scope.handleRejectionDialog(reject);
+                });
+        };
+
+        $scope.publishObject = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'UserProfileService', 'toastr', 'gettextCatalog', '$http', 'objectUuid', 'anrId', PublishObjectDialog],
+                templateUrl: 'views/anr/publish.object.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                  objectUuid : $scope.object.uuid,
+                  anrId : $scope.model.anr.id
+                }
+
+            })
+                .then(function (exports) {
+
+
                 }, function (reject) {
                   $scope.handleRejectionDialog(reject);
                 });
@@ -569,6 +595,90 @@
         };
 
         $scope.export = function() {
+            $mdDialog.hide($scope.exportData);
+        };
+    }
+
+    function PublishObjectDialog($scope, $mdDialog, UserProfileService, toastr, gettextCatalog, $http, objectUuid, anrId) {
+
+        let exportUrl = 'api/client-anr/' + anrId + '/objects/' + objectUuid + '/export';
+        $http.post(exportUrl, {id: objectUuid, mosp: true}).then(function (data) {
+
+            $scope.mospObject = {
+              name : data.data.object.object.name,
+              description : data.data.object.object.label,
+              org_id :  4,
+              schema_id : 21,
+              json_object : data.data
+            }
+
+            UserProfileService.getProfile().then(function (data) {
+
+              let mospUrl = 'https://objects.monarc.lu/api/v1/json_object';
+              if (data.mospApiKey) {
+                getMOSPData(data.mospApiKey);
+              } else{
+                  var setMospApiKey = $mdDialog.prompt()
+                    .theme('light')
+                    .title('What is your MOSP API Key?')
+                    .textContent('Please register your API Key associated with your MOSP account or request one by emailing info@cases.lu.')
+                    .placeholder('MOSP API Key')
+                    .multiple(true)
+                    .required(true)
+                    .ok('Save')
+                    .cancel('Cancel');
+
+                  validateMospPApiKey();
+              }
+
+              function validateMospPApiKey() {
+                $mdDialog.show(setMospApiKey).then(function (mospApiKey) {
+                  UserProfileService.updateProfile({mospApiKey: mospApiKey}, function () {
+                    getMOSPData(mospApiKey);
+                  });
+                }, function () {
+                  $mdDialog.cancel();
+                });
+              };
+
+              function getMOSPData(mospApiKey){
+                let params = {
+                    headers : {
+                      // Authorization : 'Token ' + data.mospApiKey,
+                      'X-API-KEY' : mospApiKey,
+                      // 'Content-Type' : 'application/json',
+                      Accept : 'application/json'
+                    }
+                };
+                $http.get('https://objects.monarc.lu/api/v2/user/me',params).then(function (data){
+                  $scope.mospAccount = {
+                    // organization : 'MONARC',
+                    organization_id : 4,
+                    mospApiKey: mospApiKey,
+                  }
+                }, function () {
+                  UserProfileService.updateProfile({mospApiKey: ''}, function () {
+                    toastr.error(gettextCatalog.getString('Wrong MOSP API Key. Try again.'), gettextCatalog.getString('Error'));
+                    validateMospPApiKey();
+                  });
+                });
+
+                // $http.post(mospUrl,mospObject,params)
+                //   .then(function(){
+                //     toastr.success(gettextCatalog.getString('The asset has been imported to MOSP successfully.'), gettextCatalog.getString('Export successful'));
+                //   }, function(){
+                //   });
+              }
+            });
+
+        })
+
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.publish = function() {
             $mdDialog.hide($scope.exportData);
         };
     }
