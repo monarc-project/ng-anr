@@ -2813,7 +2813,7 @@
         $http.get($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(org) {
             //console.log(org.data.data);
-            var mosp_query_all_assets = 'object/?schema=Assets&per_page=3000'  ;//'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Assets"}}]}&results_per_page=3000';
+            var mosp_query_all_assets = 'object/?schema=Assets&per_page=3000';
             $http.get($rootScope.mospApiUrl + mosp_query_all_assets)
             .then(function(assets) {
                 $scope.all_assets = assets.data.data.filter(object => !angular.equals({}, object.json_object));                
