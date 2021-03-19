@@ -361,13 +361,13 @@
                     headers : {
                       'X-API-KEY' : mospObject.mospApiKey,
                       'Content-Type' : 'application/json',
-                      Accept : 'application/json'
+                      'Accept' : 'application/json'
                     }
                   };
 
                   delete mospObject.mospApiKey;
 
-                  $http.post($rootScope.mospApiUrl + 'object',mospObject,params)
+                  $http.post($rootScope.mospApiUrl + 'object/', mospObject, params)
                   .then(function(){
                     toastr.success(gettextCatalog.getString('The asset has been imported to MOSP successfully.'), gettextCatalog.getString('Export successful'));
                   }, function(error){
