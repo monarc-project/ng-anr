@@ -652,8 +652,8 @@
                 };
                 $http.get('https://objects.monarc.lu/api/v2/user/me',params).then(function (data){
                   $scope.mospAccount = {
-                    // organization : 'MONARC',
-                    organization_id : 4,
+                    organizations : data.data.organizations,
+                    organization : data.data.organizations[0],
                     mospApiKey: mospApiKey,
                   }
                 }, function () {
@@ -679,7 +679,7 @@
         };
 
         $scope.publish = function() {
-            $mdDialog.hide($scope.exportData);
+            $mdDialog.hide($scope.mospAccount);
         };
     }
 })();

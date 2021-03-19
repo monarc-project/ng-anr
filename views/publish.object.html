@@ -29,21 +29,16 @@
             </md-input-container>
 
             <md-input-container class="md-block" flex>
-                <label translate>Organization</label>
-                <md-icon>label</md-icon>
-                <input ng-model="mospAccount.organization" name="organization" required>
-                <div ng-messages="publishObjectForm.organization.$error">
-                    <div ng-message="required">{{ 'The organization may not be empty' | translate }}</div>
-                </div>
-            </md-input-container>
-
-            <md-input-container class="md-block" flex>
-                <label translate>MOSP API Key</label>
-                <md-icon>label</md-icon>
-                <input ng-model="mospAccount.mospApiKey" name="mospApiKey" required>
-                <div ng-messages="publishObjectForm.mospApiKey.$error">
-                    <div ng-message="required">{{ 'The MOSP API Key may not be empty' | translate }}</div>
-                </div>
+              <label translate>Organization</label>
+              <md-icon>label</md-icon>
+              <md-select ng-model="mospAccount.organization" name="organization">
+                <md-option ng-repeat="organization in mospAccount.organizations" ng-value="organization">
+                 {{ organization.name }}
+                </md-option>
+              </md-select>
+              <div ng-messages="publishObjectForm.organization.$error">
+                  <div ng-message="required">{{ 'The organization may not be empty' | translate }}</div>
+              </div>
             </md-input-container>
         </md-dialog-content>
 
