@@ -357,6 +357,22 @@
 
             })
                 .then(function (mospObject) {
+                  let params = {
+                    headers : {
+                      'X-API-KEY' : mospObject.mospApiKey,
+                      'Content-Type' : 'application/json',
+                      Accept : 'application/json'
+                    }
+                  };
+
+                  delete mospObject.mospApiKey;
+
+                  $http.post($rootScope.mospApiUrl + 'object',mospObject,params)
+                  .then(function(){
+                    toastr.success(gettextCatalog.getString('The asset has been imported to MOSP successfully.'), gettextCatalog.getString('Export successful'));
+                  }, function(error){
+                    toastr.error(error, gettextCatalog.getString('Error'));
+                  });
 
 
                 }, function (reject) {
@@ -606,7 +622,6 @@
             var mospObject = data.data;
 
             UserProfileService.getProfile().then(function (data) {
-
               if (data.mospApiKey) {
                 getMOSPData(data.mospApiKey);
               } else{
@@ -653,7 +668,8 @@
                     description : mospObject.object.object.label,
                     org_id :  null,
                     schema_id : 21,
-                    json_object : mospObject
+                    json_object : mospObject,
+                    mospApiKey : mospApiKey
                   }
                 }, function () {
                   UserProfileService.updateProfile({mospApiKey: ''}, function () {
