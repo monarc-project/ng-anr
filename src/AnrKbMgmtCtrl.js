@@ -4193,16 +4193,16 @@
             $scope.languages = ConfigService.getLanguages();
             $scope.language = $scope.getAnrLanguage();
             var amvs_uuid = [];
-            var mosp_query_organizations = 'organization?results_per_page=500';
+            var mosp_query_organizations = 'organization/?per_page=500';
 
-            $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
+            $http.get($rootScope.mospApiUrl + mosp_query_organizations)
             .then(function(org) {
-                var mosp_query_all_amvs = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Risks"}}]}&results_per_page=3000';
-                $http.jsonp($rootScope.mospApiUrl + mosp_query_all_amvs)
+                var mosp_query_all_amvs = 'object/?schema=Risks&per_page=500'
+                $http.get($rootScope.mospApiUrl + mosp_query_all_amvs)
                 .then(function(amvs) {
-                    $scope.all_amvs = amvs.data.data.objects.filter(object => !angular.equals({}, object.json_object));
-                    var org_ids = Array.from(new Set($scope.all_amvs.map(amv => amv.org_id)));
-                    $scope.organizations = org.data.data.objects.filter(org => org_ids.includes(org.id));
+                    $scope.all_amvs = amvs.data.data.filter(object => !angular.equals({}, object.json_object));
+                    var org_ids = Array.from(new Set($scope.all_amvs.map(amv => amv.organization.id)));
+                    $scope.organizations = org.data.data.filter(org => org_ids.includes(org.id));
                     $scope.hideSpinLoader = true;
                 });
             });
@@ -4217,7 +4217,7 @@
                   AmvService.getAmvs().then(data => {
                     let amvs_uuid = data.amvs.map(amv => amv.uuid);
                     $scope.mosp_amvs = $scope.all_amvs.filter(
-                        amv => amv.org_id == $scope.organization.id &&
+                        amv => amv.organization.id == $scope.organization.id &&
                         !amvs_uuid.includes(amv.json_object.uuid)
                     );
                     $scope.dataLoaded = true;
@@ -4225,7 +4225,7 @@
                   });
                 } else{
                   $scope.mosp_amvs = $scope.all_amvs.filter(
-                      amv => amv.org_id == $scope.organization.id &&
+                      amv => amv.organization.id == $scope.organization.id &&
                       !amvs_uuid.includes(amv.json_object.uuid)
                   );
                 }
