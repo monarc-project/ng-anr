@@ -3121,15 +3121,15 @@
       $scope.language = $scope.getAnrLanguage();
       $scope.categories = categories;
 
-      var mosp_query_organizations = 'organization?results_per_page=500';
-      $http.jsonp($rootScope.mospApiUrl + mosp_query_organizations)
+      var mosp_query_organizations = 'organization/?per_page=500';
+      $http.get($rootScope.mospApiUrl + mosp_query_organizations)
       .then(function(org) {
-          var mosp_query_all_objects = 'json_object?q={"filters":[{"name":"schema","op":"has","val":{"name":"name","op":"eq","val": "Library objects"}}]}&results_per_page=3000';
-          $http.jsonp($rootScope.mospApiUrl + mosp_query_all_objects)
+          var mosp_query_all_objects = 'object/?schema=Library objects&per_page=3000';
+          $http.get($rootScope.mospApiUrl + mosp_query_all_objects)
           .then(function(objects) {
-              $scope.all_objects = objects.data.data.objects.filter(object => !angular.equals({}, object.json_object));
-              var org_ids = Array.from(new Set($scope.all_objects.map(object => object.org_id)));
-              $scope.organizations = org.data.data.objects.filter(org => org_ids.includes(org.id));
+              $scope.all_objects = objects.data.data.filter(object => !angular.equals({}, object.json_object));
+              var org_ids = Array.from(new Set($scope.all_objects.map(object => object.organization.id)));
+              $scope.organizations = org.data.data.filter(org => org_ids.includes(org.id));
               $scope.hideSpinLoader = true;
           });
       });
@@ -3142,7 +3142,7 @@
           $scope.dataLoaded = false;
           ObjlibService.getObjectsOfAnr($rootScope.anr_id ,{},function(data){
             $scope.mosp_objects = $scope.all_objects.filter(
-                object => object.org_id == $scope.organization.id &&
+                object => object.organization.id == $scope.organization.id &&
                 !data.objects.map(object => object.uuid).includes(object.json_object.object.object.uuid) &&
                 object.json_object.object.object.language == $rootScope.languages[$scope.language].code.toUpperCase()
             );
