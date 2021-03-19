@@ -343,7 +343,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'UserProfileService', 'toastr', 'gettextCatalog', '$http', 'objectUuid', 'anrId', PublishObjectDialog],
+                controller: ['$scope', '$mdDialog', 'UserProfileService', 'toastr', 'gettextCatalog', '$rootScope', '$http', 'objectUuid', 'anrId', PublishObjectDialog],
                 templateUrl: 'views/anr/publish.object.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -356,7 +356,7 @@
                 }
 
             })
-                .then(function (exports) {
+                .then(function (mospObject) {
 
 
                 }, function (reject) {
@@ -599,18 +599,11 @@
         };
     }
 
-    function PublishObjectDialog($scope, $mdDialog, UserProfileService, toastr, gettextCatalog, $http, objectUuid, anrId) {
+    function PublishObjectDialog($scope, $mdDialog, UserProfileService, toastr, gettextCatalog, $rootScope, $http, objectUuid, anrId) {
 
         let exportUrl = 'api/client-anr/' + anrId + '/objects/' + objectUuid + '/export';
         $http.post(exportUrl, {id: objectUuid, mosp: true}).then(function (data) {
-
-            $scope.mospObject = {
-              name : data.data.object.object.name,
-              description : data.data.object.object.label,
-              org_id :  4,
-              schema_id : 21,
-              json_object : data.data
-            }
+            var mospObject = data.data;
 
             UserProfileService.getProfile().then(function (data) {
 
@@ -643,9 +636,7 @@
               function getMOSPData(mospApiKey){
                 let params = {
                     headers : {
-                      // Authorization : 'Token ' + data.mospApiKey,
                       'X-API-KEY' : mospApiKey,
-                      // 'Content-Type' : 'application/json',
                       Accept : 'application/json'
                     }
                 };
@@ -655,6 +646,14 @@
                     organizations : data.data.organizations,
                     organization : data.data.organizations[0],
                     mospApiKey: mospApiKey,
+                  };
+
+                  $scope.mospObject = {
+                    name : mospObject.object.object.name,
+                    description : mospObject.object.object.label,
+                    org_id :  null,
+                    schema_id : 21,
+                    json_object : mospObject
                   }
                 }, function () {
                   UserProfileService.updateProfile({mospApiKey: ''}, function () {
@@ -673,7 +672,8 @@
         };
 
         $scope.publish = function() {
-            $mdDialog.hide($scope.mospAccount);
+            $scope.mospObject.org_id = $scope.mospAccount.organization.id;
+            $mdDialog.hide($scope.mospObject);
         };
     }
 })();
