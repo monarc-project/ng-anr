@@ -627,13 +627,13 @@
               } else{
                   var setMospApiKey = $mdDialog.prompt()
                     .theme('light')
-                    .title('What is your MOSP API Key?')
-                    .textContent('Please register your API Key associated with your MOSP account or request one by emailing info@cases.lu.')
-                    .placeholder('MOSP API Key')
+                    .title(gettextCatalog.getString('What is your MOSP API Key?'))
+                    .textContent(gettextCatalog.getString('Register your API Key associated with your MOSP account or request one by emailing to info@cases.lu'))
+                    .placeholder(gettextCatalog.getString('MOSP API Key'))
                     .multiple(true)
                     .required(true)
-                    .ok('Save')
-                    .cancel('Cancel');
+                    .ok(gettextCatalog.getString('Save'))
+                    .cancel(gettextCatalog.getString('Cancel'));
 
                   validateMospPApiKey();
               }
