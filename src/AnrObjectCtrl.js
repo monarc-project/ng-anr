@@ -369,7 +369,7 @@
 
                   $http.post($rootScope.mospApiUrl + 'object/', [mospObject], params)
                   .then(function(){
-                    toastr.success(gettextCatalog.getString('The asset has been imported to MOSP successfully.'), gettextCatalog.getString('Export successful'));
+                    toastr.success(gettextCatalog.getString('The asset has been published in MOSP successfully.'), gettextCatalog.getString('Successful publishing'));
                   }, function(error){
                     toastr.error(error.data.message, gettextCatalog.getString('Error'));
                   });
