@@ -672,9 +672,9 @@
                     json_object : mospObject,
                     mospApiKey : mospApiKey
                   }
-                }, function () {
+                }, function (data) {
                   UserProfileService.updateProfile({mospApiKey: ''}, function () {
-                    toastr.error(gettextCatalog.getString('Wrong MOSP API Key. Try again.'), gettextCatalog.getString('Error'));
+                    toastr.error(gettextCatalog.getString('Wrong MOSP API Key. Try again.'), data.data.Error + ' ' + gettextCatalog.getString('Error'));
                     validateMospPApiKey();
                   });
                 });
