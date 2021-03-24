@@ -367,7 +367,7 @@
 
                   delete mospObject.mospApiKey;
 
-                  $http.post($rootScope.mospApiUrl + 'object/', [mospObject], params)
+                  $http.post($rootScope.mospApiUrl + 'v2/object/', [mospObject], params)
                   .then(function(){
                     toastr.success(gettextCatalog.getString('The asset has been published in MOSP successfully.'), gettextCatalog.getString('Successful publishing'));
                   }, function(error){
@@ -656,7 +656,7 @@
                     }
                 };
 
-                $http.get($rootScope.mospApiUrl + 'user/me', params).then(function (data){
+                $http.get($rootScope.mospApiUrl + 'v2/user/me', params).then(function (data){
                   $scope.mospAccount = {
                     organizations : data.data.organizations,
                     organization : data.data.organizations[0],

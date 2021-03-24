@@ -3121,10 +3121,10 @@
       $scope.language = $scope.getAnrLanguage();
       $scope.categories = categories;
 
-      var mosp_query_organizations = 'organization/?per_page=500';
+      var mosp_query_organizations = 'v2/organization/?per_page=500';
       $http.get($rootScope.mospApiUrl + mosp_query_organizations)
       .then(function(org) {
-          var mosp_query_all_objects = 'object/?schema=Library objects&per_page=3000';
+          var mosp_query_all_objects = 'v2/object/?schema=Library objects&per_page=3000';
           $http.get($rootScope.mospApiUrl + mosp_query_all_objects)
           .then(function(objects) {
               $scope.all_objects = objects.data.data.filter(object => !angular.equals({}, object.json_object));
