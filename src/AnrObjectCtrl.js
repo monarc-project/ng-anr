@@ -617,83 +617,81 @@
 
     function PublishObjectDialog($scope, $mdDialog, UserProfileService, toastr, gettextCatalog, $rootScope, $http, objectUuid, anrId) {
 
-        let exportUrl = 'api/client-anr/' + anrId + '/objects/' + objectUuid + '/export';
-        $http.post(exportUrl, {id: objectUuid, mosp: true}).then(function (data) {
-            var mospObject = data.data;
+        var setMospApiKey = $mdDialog.prompt()
+          .theme('light')
+          .title(gettextCatalog.getString('What is your MOSP API Key?'))
+          .textContent(gettextCatalog.getString('Register your API Key associated with your MOSP account or create one by MONARC user account'))
+          .placeholder(gettextCatalog.getString('MOSP API Key'))
+          .multiple(true)
+          .required(true)
+          .ok(gettextCatalog.getString('Save'))
+          .cancel(gettextCatalog.getString('Cancel'));
 
-            UserProfileService.getProfile().then(function (data) {
-              if (data.mospApiKey) {
-                getMOSPData(data.mospApiKey);
-              } else{
-                  var setMospApiKey = $mdDialog.prompt()
-                    .theme('light')
-                    .title(gettextCatalog.getString('What is your MOSP API Key?'))
-                    .textContent(gettextCatalog.getString('Register your API Key associated with your MOSP account or create one by MONARC user account'))
-                    .placeholder(gettextCatalog.getString('MOSP API Key'))
-                    .multiple(true)
-                    .required(true)
-                    .ok(gettextCatalog.getString('Save'))
-                    .cancel(gettextCatalog.getString('Cancel'));
+        UserProfileService.getProfile().then(function (data) {
+          if (data.mospApiKey) {
+            getMOSPData(data.mospApiKey);
+          } else{
+            validateMospApiKey();
+          }
+        });
 
-                  validateMospApiKey();
-              }
-
-              function validateMospApiKey() {
-                $mdDialog.show(setMospApiKey).then(function (mospApiKey) {
-                  UserProfileService.updateProfile({mospApiKey: mospApiKey}, function () {
-                    getMOSPData(mospApiKey);
-                  });
-                }, function () {
-                  $mdDialog.cancel();
-                });
-              };
-
-              function getMOSPData(mospApiKey){
-                let params = {
-                    headers : {
-                      'X-API-KEY' : mospApiKey,
-                      Accept : 'application/json'
-                    }
-                };
-
-                $http.get($rootScope.mospApiUrl + 'v2/user/me', params).then(function (data){
-                  $scope.mospAccount = {
-                    organizations : data.data.organizations,
-                    organization : data.data.organizations[0],
-                    mospApiKey: mospApiKey,
-                  };
-
-                  $scope.mospObject = {
-                    name : mospObject.object.object.name,
-                    description : mospObject.object.object.label,
-                    org_id :  null,
-                    schema_id : 21, // library object schema
-                    licenses : [{license_id : 'CC0-1.0'}], // Creative Commons Zero v1.0 Universal
-                    json_object : mospObject,
-                    mospApiKey : mospApiKey
-                  }
-                }, function (data) {
-                  if (data.data.Error == "Account deactivated.") {
-                    var activationMospAccountAlert = $mdDialog.alert()
-                        .title(gettextCatalog.getString('Activation MOSP account'))
-                        .textContent(gettextCatalog.getString('A verification email has been sent to you. Open this email and click the link to activate your account, then copy and paste the MOSP API Key here'))
-                        .theme('light')
-                        .multiple(true)
-                        .ok(gettextCatalog.getString('Close'))
-                    $mdDialog.show(activationMospAccountAlert).then( function(){
-                      $mdDialog.cancel();
-                    });
-                  } else {
-                    UserProfileService.updateProfile({mospApiKey: ''}, function () {
-                      toastr.error(gettextCatalog.getString('Wrong MOSP API Key. Try again.'), data.data.Error + ' ' + gettextCatalog.getString('Error'));
-                      validateMospApiKey();
-                    });
-                  }
-                });
-              }
+        function validateMospApiKey() {
+          $mdDialog.show(setMospApiKey).then(function (mospApiKey) {
+            UserProfileService.updateProfile({mospApiKey: mospApiKey}, function () {
+              getMOSPData(mospApiKey);
             });
-        })
+          }, function () {
+            $mdDialog.cancel();
+          });
+        };
 
+        function getMOSPData(mospApiKey){
+          let params = {
+              headers : {
+                'X-API-KEY' : mospApiKey,
+                Accept : 'application/json'
+              }
+          };
+
+          $http.get($rootScope.mospApiUrl + 'v2/user/me', params).then(function (data){
+            let exportUrl = 'api/client-anr/' + anrId + '/objects/' + objectUuid + '/export';
+            $scope.mospAccount = {
+              organizations : data.data.organizations,
+              organization : data.data.organizations[0],
+              mospApiKey: mospApiKey,
+            };
+
+            $http.post(exportUrl, {id: objectUuid, mosp: true}).then(function (data) {
+                var mospObject = data.data;
+                $scope.mospObject = {
+                  name : mospObject.object.object.name,
+                  description : mospObject.object.object.label,
+                  org_id :  null,
+                  schema_id : 21, // library object schema
+                  licenses : [{license_id : 'CC0-1.0'}], // Creative Commons Zero v1.0 Universal
+                  json_object : mospObject,
+                  mospApiKey : mospApiKey
+                }
+              });
+          }, function (data) {
+            if (data.data.Error == "Account deactivated.") {
+              var activationMospAccountAlert = $mdDialog.alert()
+                  .title(gettextCatalog.getString('Activation MOSP account'))
+                  .textContent(gettextCatalog.getString('A verification email has been sent to you. Open this email and click the link to activate your account, then copy and paste the MOSP API Key here'))
+                  .theme('light')
+                  .multiple(true)
+                  .ok(gettextCatalog.getString('Close'))
+              $mdDialog.show(activationMospAccountAlert).then( function(){
+                $mdDialog.cancel();
+              });
+            } else {
+              UserProfileService.updateProfile({mospApiKey: ''}, function () {
+                validateMospApiKey();
+                toastr.error(gettextCatalog.getString('Wrong MOSP API Key. Try again.'), data.data.Error + ' ' + gettextCatalog.getString('Error'));
+              });
+            }
+          });
+        }
 
         $scope.cancel = function() {
             $mdDialog.cancel();
