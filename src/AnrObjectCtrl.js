@@ -673,23 +673,25 @@
                     mospApiKey : mospApiKey
                   }
                 }, function (data) {
-                  UserProfileService.updateProfile({mospApiKey: ''}, function () {
-                    if (data.data.Error == "Account deactivated.") {
-                      var activationMospAccountAlert = $mdDialog.alert()
-                          .title(gettextCatalog.getString('Activation MOSP account'))
-                          .textContent(gettextCatalog.getString('A verification email has been sent to you. Open this email and click the link to activate your account, then copy and paste the MOSP API Key here'))
-                          .theme('light')
-                          .ok(gettextCatalog.getString('Close'))
-                      $mdDialog.show(activationMospAccountAlert);
-                    } else {
+                  if (data.data.Error == "Account deactivated.") {
+                    var activationMospAccountAlert = $mdDialog.alert()
+                        .title(gettextCatalog.getString('Activation MOSP account'))
+                        .textContent(gettextCatalog.getString('A verification email has been sent to you. Open this email and click the link to activate your account, then copy and paste the MOSP API Key here'))
+                        .theme('light')
+                        .multiple(true)
+                        .ok(gettextCatalog.getString('Close'))
+                    $mdDialog.show(activationMospAccountAlert).then( function(){
+                      $mdDialog.cancel();
+                    });
+                  } else {
+                    UserProfileService.updateProfile({mospApiKey: ''}, function () {
                       toastr.error(gettextCatalog.getString('Wrong MOSP API Key. Try again.'), data.data.Error + ' ' + gettextCatalog.getString('Error'));
-                    }
-                    validateMospApiKey();
-                  });
+                      validateMospApiKey();
+                    });
+                  }
                 });
               }
             });
-
         })
 
 
