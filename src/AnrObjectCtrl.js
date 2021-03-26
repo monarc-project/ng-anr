@@ -655,14 +655,17 @@
 
           $http.get($rootScope.mospApiUrl + 'v2/user/me', params).then(function (data){
             let exportUrl = 'api/client-anr/' + anrId + '/objects/' + objectUuid + '/export';
-            $scope.mospAccount = {
-              organizations : data.data.organizations,
-              organization : data.data.organizations[0],
-              mospApiKey: mospApiKey,
-            };
+            let mospAccountData = data.data;
 
             $http.post(exportUrl, {id: objectUuid, mosp: true}).then(function (data) {
                 var mospObject = data.data;
+
+                $scope.mospAccount = {
+                  organizations : mospAccountData.organizations,
+                  organization : mospAccountData.organizations[0],
+                  mospApiKey: mospApiKey,
+                };
+
                 $scope.mospObject = {
                   name : mospObject.object.object.name,
                   description : mospObject.object.object.label,
