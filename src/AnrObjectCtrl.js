@@ -628,17 +628,17 @@
                   var setMospApiKey = $mdDialog.prompt()
                     .theme('light')
                     .title(gettextCatalog.getString('What is your MOSP API Key?'))
-                    .textContent(gettextCatalog.getString('Register your API Key associated with your MOSP account or request one by emailing to info@cases.lu'))
+                    .textContent(gettextCatalog.getString('Register your API Key associated with your MOSP account or create one by MONARC user account'))
                     .placeholder(gettextCatalog.getString('MOSP API Key'))
                     .multiple(true)
                     .required(true)
                     .ok(gettextCatalog.getString('Save'))
                     .cancel(gettextCatalog.getString('Cancel'));
 
-                  validateMospPApiKey();
+                  validateMospApiKey();
               }
 
-              function validateMospPApiKey() {
+              function validateMospApiKey() {
                 $mdDialog.show(setMospApiKey).then(function (mospApiKey) {
                   UserProfileService.updateProfile({mospApiKey: mospApiKey}, function () {
                     getMOSPData(mospApiKey);
@@ -674,8 +674,17 @@
                   }
                 }, function (data) {
                   UserProfileService.updateProfile({mospApiKey: ''}, function () {
-                    toastr.error(gettextCatalog.getString('Wrong MOSP API Key. Try again.'), data.data.Error + ' ' + gettextCatalog.getString('Error'));
-                    validateMospPApiKey();
+                    if (data.data.Error == "Account deactivated.") {
+                      var activationMospAccountAlert = $mdDialog.alert()
+                          .title(gettextCatalog.getString('Activation MOSP account'))
+                          .textContent(gettextCatalog.getString('A verification email has been sent to you. Open this email and click the link to activate your account, then copy and paste the MOSP API Key here'))
+                          .theme('light')
+                          .ok(gettextCatalog.getString('Close'))
+                      $mdDialog.show(activationMospAccountAlert);
+                    } else {
+                      toastr.error(gettextCatalog.getString('Wrong MOSP API Key. Try again.'), data.data.Error + ' ' + gettextCatalog.getString('Error'));
+                    }
+                    validateMospApiKey();
                   });
                 });
               }
