@@ -2813,7 +2813,7 @@
         $http.get($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(org) {
             //console.log(org.data.data);
-            var mosp_query_all_assets = 'v2/object/?schema=Assets&per_page=3000';
+            var mosp_query_all_assets = 'v2/object/?schema_uuid=76315a94-50a4-4358-a844-f5eae7e7e141&per_page=3000';
             $http.get($rootScope.mospApiUrl + mosp_query_all_assets)
             .then(function(assets) {
                 $scope.all_assets = assets.data.data.filter(object => !angular.equals({}, object.json_object));
@@ -3017,7 +3017,7 @@
 
         $http.get($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(org) {
-            var mosp_query_all_threats = 'v2/object/?schema=Threats&per_page=500';
+            var mosp_query_all_threats = 'v2/object/?schema_uuid=9b9e44b1-a943-4f95-b0c3-df1015063a10&per_page=500';
             $http.get($rootScope.mospApiUrl + mosp_query_all_threats)
             .then(function(threats) {
                 $scope.all_threats = threats.data.data.filter(object => !angular.equals({}, object.json_object));
@@ -3160,7 +3160,7 @@
 
         $http.get($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(org) {
-            var mosp_query_all_vulns = 'v2/object/?schema=Vulnerabilities&per_page=3000';
+            var mosp_query_all_vulns = 'v2/object/?schema_uuid=023efe2b-5f7f-43c0-b858-97877b5a1f75&per_page=3000';
             $http.get($rootScope.mospApiUrl + mosp_query_all_vulns)
             .then(function(vulns) {
                 $scope.all_vulns = vulns.data.data.filter(object => !angular.equals({}, object.json_object));
@@ -3227,7 +3227,7 @@
 
         $http.get($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(org) {
-            var mosp_query_all_referentials = 'v2/object/?schema=Security referentials&per_page=500';
+            var mosp_query_all_referentials = 'v2/object/?schema_uuid=308deb4c-0249-43ed-9f6f-f5c60b630d8f&per_page=500';
             $http.get($rootScope.mospApiUrl + mosp_query_all_referentials)
             .then(function(ref) {
                 $scope.all_referentials = ref.data.data.filter(object => !angular.equals({}, object.json_object));
@@ -4016,7 +4016,7 @@
 
         $http.get($rootScope.mospApiUrl + mosp_query_organizations)
         .then(function(org) {
-          var mosp_query_recommandations_sets = 'v2/object/?schema=Recommendations&per_page=500'
+          var mosp_query_recommandations_sets = 'v2/object/?schema_uuid=ac048422-2bd2-40c0-8447-41a607639f3a&per_page=500'
           $http.get($rootScope.mospApiUrl + mosp_query_recommandations_sets)
           .then(function(recommandations) {
               $scope.all_recommandations = recommandations.data.data.filter(object => !angular.equals({}, object.json_object));
@@ -4197,7 +4197,7 @@
 
             $http.get($rootScope.mospApiUrl + mosp_query_organizations)
             .then(function(org) {
-                var mosp_query_all_amvs = 'v2/object/?schema=Risks&per_page=500'
+                var mosp_query_all_amvs = 'v2/object/?schema_uuid=46a32545-94c5-4bcc-88bf-e65973556f7e&per_page=500'
                 $http.get($rootScope.mospApiUrl + mosp_query_all_amvs)
                 .then(function(amvs) {
                     $scope.all_amvs = amvs.data.data.filter(object => !angular.equals({}, object.json_object));
