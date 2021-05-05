@@ -123,7 +123,9 @@
                         });
                     });
                 }
-            }).catch(angular.noop);
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
+            });
         };
 
         $scope.onRecordTableEdited = function (model, name) {
@@ -850,7 +852,9 @@
                     });
                 }
 
-            }).catch(angular.noop);
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
+            });
         };
 
         $scope.jsonExport = function (ev, record) {
@@ -880,7 +884,9 @@
                     DownloadService.downloadJSON(data.data, contentD);
                     toastr.success(gettextCatalog.getString('The record has been exported successfully.'), gettextCatalog.getString('Export successful'));
                 })
-            }).catch(angular.noop);
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
+            });
         }
 
         $scope.jsonExportAll = function (ev) {
@@ -910,7 +916,9 @@
                     DownloadService.downloadJSON(data.data, contentD);
                     toastr.success(gettextCatalog.getString('The record has been exported successfully.'), gettextCatalog.getString('Export successful'));
                 })
-            }).catch(angular.noop);
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
+            });
         }
 
         $scope.generateRecordContentCsv = function(recordId) {
@@ -1283,6 +1291,7 @@
         };
 
         $scope.importRecord = function (ev) {
+            $mdDialog.cancel();
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'AnrService', 'toastr', 'gettextCatalog', 'Upload', 'DownloadService', ImportRecordDialogCtrl],
@@ -1299,7 +1308,9 @@
                     $scope.updatingRecords = false;
                     $scope.selectRecord(id, $scope.records.items.count);
                 });
-            }).catch(angular.noop);
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
+            });
         };
     }
 
