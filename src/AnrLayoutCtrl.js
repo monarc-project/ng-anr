@@ -170,7 +170,7 @@
                         $scope.updateInstances();
                         $scope.updateObjectsLibrary();
                         $scope.updateScales();
-                        $scope.updateReferentials();                        
+                        $scope.updateReferentials();
 
                     }
 
@@ -209,7 +209,7 @@
                         $scope.updateReferentials();
                         $scope.updateRecommandationsSets();
                         updateMethodProgress();
-                    
+
                     }
 
                     if ($rootScope.setAnrLanguage) {
@@ -2051,6 +2051,164 @@
             });
         };
 
+        $scope.importMospObject = function (ev,categories) {
+            $mdDialog.cancel();
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ObjlibService', 'categories', ImportObjectMospDialogCtrl],
+                templateUrl: 'views/anr/import.object.mosp.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                  categories : categories,
+                }
+            })
+                .then(function (object) {
+                  var language = $scope.getAnrLanguage();
+                  var category = object.categories;
+
+                  formatRecursive(object);
+
+                  function formatRecursive(object,index){
+                    if (object.rolfTags === undefined) {
+                      object.rolfTags = [];
+                    }
+                    if (object.rolfRisks === undefined) {
+                      object.rolfRisks = [];
+                    }
+
+                    object.mosp = true;
+                    object.type = 'object';
+                    object.monarc_version = $rootScope.appVersion;
+                    object.asset.type = "asset";
+                    object.categories = category;
+                    object.object.position = index ? index  : null;
+                    object.object.category = 0;
+                    object.object.rolfTag = object.rolfTags.length > 0 ? 1 : null;
+                    object.object.scope = object.object.scope == 'local' ? 1 : 2;
+                    object.object.mode = 0;
+                    object.object["label" + language] = object.object.label;
+                    object.object["name" + language] = object.object.name;
+                    delete object.object.label;
+                    delete object.object.name;
+                    object.asset.asset.type = object.asset.asset.type == 'Primary' ? 1 : 2;
+                    object.asset.asset["label" + language] = object.asset.asset.label;
+                    object.asset.asset["description" + language] = object.asset.asset.description;
+                    delete object.asset.asset.label;
+                    delete object.asset.asset.description;
+
+                    let objAmvs = {};
+                    object.asset.amvs.forEach(amv => {
+                      let uuid = amv.uuid;
+                      objAmvs[uuid] = amv;
+                    })
+                    object.asset.amvs = objAmvs;
+
+                    let themes = [];
+                    let themeIndex = null;
+                    let objThreats = {};
+                    object.asset.threats.forEach(threat => {
+                      let uuid = threat.uuid;
+                      let themeFound = themes.filter(function(theme,index) {
+                        themeIndex = index;
+                        return theme["label" + language] == threat.theme
+                      })[0];
+
+                      if (themeFound == undefined) {
+                        themes.push({["label" + language]:threat.theme});
+                        threat.theme = themes.length - 1;
+                      }else {
+                        threat.theme = themeIndex;
+                      }
+
+                      threat["label" + language] = threat.label;
+                      threat["description" + language] = threat.description;
+                      delete threat.label;
+                      delete threat.description;
+                      objThreats[uuid] = threat;
+                    })
+                    object.asset.themes = themes;
+                    object.asset.threats = objThreats;
+
+                    let objVulns = {};
+                    object.asset.vuls.forEach(vul => {
+                      let uuid = vul.uuid;
+                      vul["label" + language] = vul.label;
+                      vul["description" + language] = vul.description;
+                      delete vul.label;
+                      delete vul.description;
+                      objVulns[uuid] = vul;
+                    })
+                    object.asset.vuls = objVulns;
+
+                    let objMesures = {};
+                    object.asset.measures.forEach(measure => {
+                      let uuid = measure.uuid;
+                      measure["label" + language] = measure.label;
+                      measure.category = {
+                        ["label" + language]: measure.category
+                      };
+                      measure.referential = {
+                        uuid: measure.referential,
+                        ["label" + language]: measure.referential_label
+                      };
+                      delete measure.label;
+                      delete measure.referential_label;
+                      objMesures[uuid] = measure;
+                    })
+                    object.asset.measures = objMesures;
+
+                    object.rolfTags.forEach(tag => {
+                      tag["label" + language] = tag.label;
+                      tag.risks = [...Array(object.rolfRisks.length).keys()];
+                      delete tag.label;
+                    })
+                    object.rolfTags.unshift({});
+
+                    object.rolfRisks.forEach((opRisk,index) => {
+                      opRisk['id'] = index;
+                      opRisk["label" + language] = opRisk.label;
+                      opRisk["description" + language] = opRisk.description;
+                      delete opRisk.label;
+                      delete opRisk.description;
+                      opRisk.measures.forEach(measure => {
+                        measure["label" + language] = measure.label;
+                        measure.category = {
+                          ["label" + language]: measure.category
+                        };
+                        measure.referential = {
+                          uuid: measure.referential,
+                          ["label" + language]: measure.referential_label
+                        };
+                        delete measure.label;
+                        delete measure.referential_label;
+                      })
+                    })
+
+                    if (object.children.length > 0) {
+                      object.children.forEach((obj,index) => {
+                        formatRecursive(obj, index + 1);
+                      })
+                    }
+                  }
+
+                  ObjlibService.createObjlib(object,
+                    function(){
+                      toastr.success(gettextCatalog.getString("The asset has been imported successfully"));
+		                  $scope.hookUpdateObjlib();
+                    },
+                    function(){
+                      toastr.warning(gettextCatalog.getString("Some files could not be imported"));
+                    }
+                  );
+                }, function (reject) {
+                  $scope.handleRejectionDialog(reject);
+                });
+        };
+
         $scope.importInstance = function (ev, parentId) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
@@ -2190,8 +2348,6 @@
         $scope.changeCateg = function(){
             $scope.objlib.category = {id: $scope.selected_categ.id};
         };
-
-
 
         $scope.queryCategorySearch = function (query) {
             var q = $q.defer();
@@ -2958,6 +3114,95 @@
         $scope.cancel = function () {
             $mdDialog.cancel();
         };
+    }
+
+    function ImportObjectMospDialogCtrl($rootScope, $scope, $http, $mdDialog, ObjlibService,categories) {
+
+      $scope.language = $scope.getAnrLanguage();
+      $scope.categories = categories;
+
+      var mosp_query_organizations = 'v2/organization/?per_page=500';
+      $http.get($rootScope.mospApiUrl + mosp_query_organizations)
+      .then(function(org) {
+          var mosp_query_all_objects = 'v2/object/?schema=Library objects&per_page=3000';
+          $http.get($rootScope.mospApiUrl + mosp_query_all_objects)
+          .then(function(objects) {
+              $scope.all_objects = objects.data.data.filter(object => !angular.equals({}, object.json_object));
+              var org_ids = Array.from(new Set($scope.all_objects.map(object => object.organization.id)));
+              $scope.organizations = org.data.data.filter(org => org_ids.includes(org.id));
+              $scope.hideSpinLoader = true;
+          });
+      });
+
+      $scope.selectOrganization = function() {
+          // Retrieve the assets from the selected organization
+          $scope.searchText = '';
+          $scope.mosp_objects = [];
+          $scope.hideSpinLoader = false;
+          $scope.dataLoaded = false;
+          ObjlibService.getObjectsOfAnr($rootScope.anr_id ,{},function(data){
+            $scope.mosp_objects = $scope.all_objects.filter(
+                object => object.organization.id == $scope.organization.id &&
+                !data.objects.map(object => object.uuid).includes(object.json_object.object.object.uuid) &&
+                object.json_object.object.object.language == $rootScope.languages[$scope.language].code.toUpperCase()
+            );
+            $scope.hideSpinLoader = true;
+            $scope.dataLoaded = true;
+          });
+      }
+
+      $scope.getMatches = function(searchText) {
+          return $scope.mosp_objects.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()));
+      };
+
+      $scope.createCategory = function (ev) {
+          $mdDialog.show({
+              controller: ['$scope', '$mdDialog', '$q', 'toastr', 'gettextCatalog', 'ConfigService', 'ObjlibService', 'categories', CreateObjlibCategoryDialogCtrl],
+              templateUrl: 'views/anr/create.objlibs.categories.html',
+              clickOutsideToClose: false,
+              preserveScope: true,
+              multiple:true,
+              scope: $scope,
+              locals: {
+                  'categories': $scope.categories
+              }
+          })
+              .then(function (category) {
+                  let path = category.path;
+                  ObjlibService.createObjlibCat(category,
+                    function (cat) {
+                        cat.categ['label' + $scope.language] = (path ? path + ' >> ' + cat.categ['label' + $scope.language] : cat.categ['label' + $scope.language]);
+                        $scope.categorySelected = cat.categ
+                        $scope.categories.push(cat.categ);
+                    }
+                  );
+              });
+      };
+
+      $scope.cancel = function() {
+          $mdDialog.cancel();
+      };
+
+      $scope.import = function() {
+        let libraryCategory = [];
+        let categories = $scope.categorySelected['label' + $scope.language].split(' >> ');
+        let object = $scope.object.json_object.object;
+
+        categories
+          .reverse()
+          .forEach((category,index) => {
+            libraryCategory.push(
+              {
+                ['label' + $scope.language]:category,
+                parent: (index == categories.length - 1 ? null : index + 1)
+              }
+            )
+          })
+
+        object['categories'] = libraryCategory;
+
+        $mdDialog.hide(object);
+      };
     }
 
     function ImportInstanceDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload, instanceId, parentId, hookUpdateObjlib) {

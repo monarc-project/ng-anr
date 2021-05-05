@@ -1,8 +1,8 @@
 <md-dialog md-theme="light" class="dialog-width">
-    <form name="threatForm">
+    <form name="objectForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 translate>Import a threat from MOSP</h2>
+                <h2 translate>Import an asset from MOSP</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -28,21 +28,35 @@
                         ng-disabled="!dataLoaded"
                         flex
                         md-no-cache="true"
-                        md-selected-item="threat"
+                        md-selected-item="object"
                         md-search-text="searchText"
                         md-items="item in getMatches(searchText)"
                         md-delay="300"
                         md-item-text="item.name"
                         md-min-length="0"
-                        md-floating-label="{{ 'Threat' | translate }}"
+                        md-input-name="object"
+                        md-floating-label="{{ 'Asset' | translate }}"
                         required
                         <md-item-template>
-                            <span md-highlight-text="searchText" md-highlight-flags="i">{{ item.name }} - in theme {{ item.json_object.theme }}</span>
+                            <span md-highlight-text="searchText" md-highlight-flags="i">{{ item.name }}</span>
                         </md-item-template>
                         <md-not-found>
-                             {{ 'No threat matching your search was found' | translate }}
+                             {{ 'No asset matching your search was found' | translate }}
                         </md-not-found>
+                        <div ng-messages="objectForm.object.$error">
+                            <div ng-message="required">{{ 'You must select an asset' | translate }}</div>
+                        </div>
                     </md-autocomplete>
+                </div>
+                <div layout="row" layout-align="center center">
+                    <md-input-container class="md-block" flex>
+                        <md-icon>class</md-icon>
+                        <label translate>Category</label>
+                        <md-select required ng-model="categorySelected">
+                            <md-option ng-repeat="cat in categories" ng-value="cat">{{ _langField(cat,'label') }}</md-option>
+                        </md-select>
+                    </md-input-container>
+                    <md-button class="md-icon-button md-primary" ng-click="createCategory($event)"><md-icon>add</md-icon></md-button>
                 </div>
             </div>
         </md-dialog-content>
@@ -51,7 +65,7 @@
             <md-button ng-click="cancel()">
                 {{ 'Cancel' | translate }}
             </md-button>
-            <md-button ng-click="import()" ng-disabled="threatForm.$error.required" type="submit" class="md-accent md-hue-3">
+            <md-button ng-click="import()" ng-disabled="objectForm.$error.required" type="submit" class="md-accent md-hue-3">
                 {{ 'Import' | translate }}
             </md-button>
         </md-dialog-actions>

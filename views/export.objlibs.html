@@ -47,7 +47,7 @@
                         <md-option ng-value="0">{{ 'No' | translate }}</md-option>
                     </md-select>
                 </md-input-container>
-                <div ng-if="exportData.assessments" == 1 layout="column" class="md-block" flex>
+                <div ng-if="exportData.assessments">
                   <label translate>Options</label>
                   <div layout="row">
                       <div>
@@ -66,8 +66,6 @@
                       </div>
                   </div>
                 </div>
-
-
             </div>
         </md-dialog-content>
         <md-dialog-actions layout="row">

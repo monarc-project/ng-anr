@@ -7,6 +7,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
     var $parentScope = objLibDialog;
 
     $scope.importObject = objLibDialog.importObject;
+    $scope.importMospObject = objLibDialog.importMospObject;
 
     if (objLibDialog.__objlibDialog_ParentScope && objLibDialog.__objlibDialog_ParentScope.model) {
         $scope.model = objLibDialog.__objlibDialog_ParentScope.model;
@@ -64,6 +65,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
 
         $scope.categories = buildItemRecurse(x.categories, "");
     });
+
 
     $scope.specificityStr = function (type) {
         switch (type) {
@@ -328,11 +330,16 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
             $scope.category.position = -$scope.implicitPosition;
         }
 
+        if ($scope.parentCategory) {
+          $scope.category.path = $scope.parentCategory[$scope._langField('label')];
+          $scope.category.parent = $scope.parentCategory.id;
+        }
+
         $mdDialog.hide($scope.category);
     };
 
     $scope.updateCategoryChildren = function () {
-        ObjlibService.getObjlibsCats({lock: true, parentId: $scope.category.parent ? $scope.category.parent : 0, catid: $scope.category.id}).then(function (x) {
+        ObjlibService.getObjlibsCats({lock: true, parentId: $scope.parentCategory ? $scope.parentCategory.id : 0, catid: $scope.category.id}).then(function (x) {
             $scope.childrenCategories = x.categories;
         });
     };
@@ -341,13 +348,14 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
         $scope.category = category;
 
         if ($scope.category.parent) {
-            $scope.category.parent = $scope.category.parent.id;
+            $scope.parentCategory = $scope.category.parent;
         }
         if (category.previous) {
             $scope.updateCategoryChildren();
         }
     } else {
         $scope.category = {
+            path: null,
             parent: null,
             implicitPosition: 2,
             position: null,
@@ -357,6 +365,7 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
             label4: '',
         };
 
+        $scope.parentCategory = null;
         $scope.category[$scope._langField('label')] = catName;
 
     }

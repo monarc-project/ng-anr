@@ -12,10 +12,16 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
-                <md-card ng-if="!objlib.uuid && OFFICE_MODE == 'FO'">
+                <md-card ng-if="!objlib.uuid && OFFICE_MODE == 'FO'" layout="row">
+                    <span flex></span>
                     <md-button class="md-primary" ng-click="importObject($event)">
                         <md-icon>play_for_work</md-icon><span>{{ 'Import an asset' | translate }}</span>
                     </md-button>
+                    <span flex></span>
+                    <md-button class="md-primary" ng-click="importMospObject($event,categories)">
+                        <md-icon>cloud_download</md-icon><span>&nbsp;{{ 'Import from MOSP' | translate }}</span>
+                    </md-button>
+                    <span flex></span>
                 </md-card>
                 <md-subheader>{{ 'Labels and descriptions' | translate }}</md-subheader>
 
@@ -171,7 +177,7 @@
                                 md-item-text="_langField(item,'label')"
                                 md-min-length="0"
                                 md-input-name="tag"
-				md-clear-button="true"
+				                        md-clear-button="true"
                                 md-floating-label="{{ 'Operational risk Tag' | translate }}">
                             <md-item-template>
                                 <span md-highlight-text="tagSearchText" md-highlight-flags="^i">{{ _langField(item,'label') }}</span>

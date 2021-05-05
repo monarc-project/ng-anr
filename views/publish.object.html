@@ -1,0 +1,55 @@
+<md-dialog md-theme="light" class="dialog-width">
+    <form name="publishObjectForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Publish asset in MOSP</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content class="md-dialog-content">
+            <md-input-container class="md-block" flex>
+                <label translate>Name</label>
+                <md-icon>label</md-icon>
+                <input ng-model="mospObject.name" name="name" required>
+                <div ng-messages="publishObjectForm.name.$error">
+                    <div ng-message="required">{{ 'The name may not be empty' | translate }}</div>
+                </div>
+            </md-input-container>
+
+            <md-input-container class="md-block" flex>
+                <label translate>Description</label>
+                <md-icon>label</md-icon>
+                <input ng-model="mospObject.description" name="description" required>
+                <div ng-messages="publishObjectForm.description.$error">
+                    <div ng-message="required">{{ 'The description may not be empty' | translate }}</div>
+                </div>
+            </md-input-container>
+
+            <md-input-container class="md-block" flex>
+              <label translate>Organization</label>
+              <md-icon>label</md-icon>
+              <md-select ng-model="mospAccount.organization" name="organization" required>
+                <md-option ng-repeat="organization in mospAccount.organizations" ng-value="organization">
+                 {{ organization.name }}
+                </md-option>
+              </md-select>
+              <div ng-messages="publishObjectForm.organization.$error">
+                  <div ng-message="required">{{ 'The organization may not be empty' | translate }}</div>
+              </div>
+            </md-input-container>
+        </md-dialog-content>
+
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="publish()" class="md-accent md-hue-3" ng-disabled="publishObjectForm.$error.required">
+                {{ 'Publish' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

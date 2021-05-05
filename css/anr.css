@@ -38,6 +38,12 @@ body{
     to {left: 100%;}
 }
 
+.spinloader {
+  position:absolute;
+  bottom:45%;
+  left: 45%;
+}
+
 .md-dialog-content-body {
     white-space: pre-wrap
 }
@@ -1158,7 +1164,7 @@ md-select-menu md-content
 .hpad-10{ padding: 0 10px; }
 .bigger{ font-size: 1.3em; }
 .mw250p {min-width: 250px;}
-.black {color: rgba(0,0,0,0.87);}
+.black {color: rgba(0,0,0,0.87) !important;}
 
 #anrMainTab > md-tabs-wrapper{
     display: none;
