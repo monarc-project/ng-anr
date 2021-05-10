@@ -110,6 +110,6 @@
             <div class="pointer" ng-click="subStep.action(subStep)">{{ subStep.label | translate }}</div>
         </div>
 
-        <a href="#" class="bold" ng-click="openMethodDeliverable(step, $event)" ng-if="step.deliverable">{{ 'Deliverable:' | translate }} {{ ::step.deliverable }}</a>
+        <a href="#" class="bold" ng-click="openMethodDeliverable(step, $event)" ng-if="step.deliverable">{{ 'Deliverable:' | translate }} {{ step.deliverable | translate }}</a>
     </div>
 </script>
