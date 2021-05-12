@@ -96,6 +96,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
     };
 
     $scope.createCategory = function (ev, catName) {
+        $mdDialog.cancel();
         $mdDialog.show({
             controller: ['$scope', '$mdDialog', '$q', 'toastr', 'gettextCatalog', 'ConfigService', 'ObjlibService', 'categories', 'catName', CreateObjlibCategoryDialogCtrl],
             templateUrl: 'views/anr/create.objlibs.categories.html',
@@ -300,6 +301,7 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
     $scope.languages = ConfigService.getLanguages();
     $scope.language = ConfigService.getDefaultLanguageIndex();
     $scope.implicitPosition = null;
+    $scope.parentCategory = null;
     $scope.showConfirmDeletion = false;
     $scope.categories = categories;
 
@@ -365,7 +367,6 @@ function CreateObjlibCategoryDialogCtrl($scope, $mdDialog, $q, toastr, gettextCa
             label4: '',
         };
 
-        $scope.parentCategory = null;
         $scope.category[$scope._langField('label')] = catName;
 
     }

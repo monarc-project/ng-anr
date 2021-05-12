@@ -3176,6 +3176,8 @@
                         $scope.categories.push(cat.categ);
                     }
                   );
+              }, function (reject) {
+                $scope.handleRejectionDialog(reject);
               });
       };
 
