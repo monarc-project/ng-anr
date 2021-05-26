@@ -66,6 +66,14 @@
                     <div ng-if="sheet_risk.vulnerabilityRate > -1"><strong>{{ sheet_risk.vulnerabilityRate }}</strong> - {{ _langField(comms.vuln[sheet_risk.vulnerabilityRate],'comment') }}</div>
                 </td>
             </tr>
+            <tr >
+                <td class="bold" translate>Risk owner</td>
+                <td  colspan="3" edit-readonly="isAnrReadOnly" edit-filter="dashnull">{{ sheet_risk.owner }}</td>
+            </tr>
+            <tr >
+                <td class="bold" translate>Risk context</td>
+                <td  colspan="3" edit-readonly="isAnrReadOnly" edit-filter="dashnull">{{ sheet_risk.context }}</td>
+            </tr>
             <tr>
                 <td class="bold" translate>Existing controls</td>
                 <td colspan="3">{{ sheet_risk.comment }}</td>
@@ -103,7 +111,7 @@
                         </md-button>
                     </div>
                 </td>
-                <td colspan="3">                    
+                <td colspan="3">
                     <ul class="no-list-style no-padding no-margin">
                         <li ng-repeat="recommandation in recommandations | orderBy : 'importance'">
                             <p><a class="md-primary" ui-sref="main.project.anr.risksplan.sheet({modelId: model.anr.id, recId: recommandation.recommandation.uuid})" ng-attr-title="{{ 'Implementation of the risk treatment plan' | translate }}" ><md-icon>open_in_new</md-icon></a>
@@ -111,7 +119,7 @@
                                 <a ng-if="recommandation.recommandation.importance == 0" class="md-mandatory-field txtright" translate>Importance is required</a>
                             </p>
                         </li>
-                    </ul>                    
+                    </ul>
                 </td>
             </tr>
             <tr>
