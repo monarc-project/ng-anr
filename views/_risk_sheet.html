@@ -66,13 +66,13 @@
                     <div ng-if="sheet_risk.vulnerabilityRate > -1"><strong>{{ sheet_risk.vulnerabilityRate }}</strong> - {{ _langField(comms.vuln[sheet_risk.vulnerabilityRate],'comment') }}</div>
                 </td>
             </tr>
-            <tr >
+            <tr edit-model="sheet_risk">
                 <td class="bold" translate>Risk owner</td>
-                <td  colspan="3" edit-readonly="isAnrReadOnly" edit-filter="dashnull">{{ sheet_risk.owner }}</td>
+                <td  colspan="3" edit-readonly="isAnrReadOnly" ><input ng-model="sheet_risk.owner" ng-change="nameChanged()"></td>
             </tr>
             <tr >
                 <td class="bold" translate>Risk context</td>
-                <td  colspan="3" edit-readonly="isAnrReadOnly" edit-filter="dashnull">{{ sheet_risk.context }}</td>
+                <td  colspan="3" edit-readonly="isAnrReadOnly" ><input ng-model="sheet_risk.context" ng-change="nameChanged()"></td>
             </tr>
             <tr>
                 <td class="bold" translate>Existing controls</td>
