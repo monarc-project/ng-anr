@@ -42,6 +42,14 @@
                     <td class="bold" translate>Risk description</td>
                     <td colspan="7">{{ _langField(opsheet_risk,"label") }}</td>
                 </tr>
+                <tr edit-model="opsheet_risk">
+                    <td class="bold" translate>Risk owner</td>
+                    <td  colspan="7" edit-readonly="isAnrReadOnly" edit-field="owner" edit-filter="dashnull"></td>
+                </tr>
+                <tr edit-model="opsheet_risk">
+                    <td class="bold" translate>Risk context</td>
+                    <td  colspan="7" edit-readonly="isAnrReadOnly" edit-field="context" edit-filter="dashnull"></td>
+                </tr>
                 <tr>
                     <td class="bold" translate>Risk probability</td>
                     <td colspan="7">
