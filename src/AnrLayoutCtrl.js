@@ -1534,6 +1534,9 @@
             }
         };
 
+        $scope.onEditImpactValue = function(newValue) {
+        }
+
         $scope.onThreatCommChanged = function (model, value) {
             if (!model.id) {
                 return createComm($scope.scales.threats.id, model.val, model[value]);
@@ -1773,8 +1776,8 @@
                     cb();
                 }
             });
-        };
 
+        };
         $scope.checkCommentVisibility = function(comment){
             return comment && ! $scope.scales_types_by_id[comment.scaleImpactType].isHidden || $scope.display.show_hidden_impacts ;
         }
@@ -1818,7 +1821,7 @@
         $scope.scaleThreat = '';
         $scope.scaleVul = '';
         $scope.scaleR = '';
-		$scope.scaleO = '';
+		    $scope.scaleO = '';
         $scope.scaleF = '';
         $scope.scaleL = '';
         $scope.scaleP = '';
@@ -1831,9 +1834,6 @@
 
                 if (scale_id === $scope.scales.threats.id) {
                     obj = $scope.comms.threat;
-
-
-
                 } else if (scale_id === $scope.scales.vulns.id) {
                     obj = $scope.comms.vuln;
                 } else if (scale_id === $scope.scales.impacts.id) {
@@ -1861,6 +1861,7 @@
                         obj[comm.val][comm.scaleImpactType.id].comment2 = comm.comment2;
                         obj[comm.val][comm.scaleImpactType.id].comment3 = comm.comment3;
                         obj[comm.val][comm.scaleImpactType.id].comment4 = comm.comment4;
+                        obj[comm.val].val = comm.val;
 
                         if (!$scope.scaleCommCache[comm.scaleImpactType.type]) {
                             $scope.scaleCommCache[comm.scaleImpactType.type] = {};
