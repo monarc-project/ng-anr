@@ -150,6 +150,19 @@
                 }
             });
 
+        self.OperationalRiskScalesResource = $resource('api/' + anr + '/:anrId/operational-scales/:scaleId', { anrId: '@anrId', scaleId: '@scaleId' },
+            {
+                'update': {
+                    method: 'PUT'
+                },
+                'patch': {
+                    method: 'PATCH'
+                },
+                'query': {
+                    isArray: false
+                }
+            });
+
         self.InstancesConsequencesResource = $resource('api/' + anr + '/:anrId/instances-consequences/:consId', { anrId: '@anrId', consId: '@consId' },
             {
                 'update': {
@@ -303,6 +316,12 @@
             return self.ScalesCommentResource.update({anrId: anr_id, scaleId: scale_id, commentId: comment_id}, params, success, error);
         };
 
+        // operational scales
+        var getOperationalRiskScales = function (anr_id) {
+            return self.OperationalRiskScalesResource.query({anrId: anr_id}).$promise;
+        };
+
+
         // Instances (unforeseen) consequences
         var getInstancesConsequences = function (anr_id) {
             return self.InstancesConsequencesResource.query({anrId: anr_id}).$promise;
@@ -375,6 +394,8 @@
             createScaleType: createScaleType,
             patchScaleType: patchScaleType,
             deleteScaleType: deleteScaleType,
+
+            getOperationalRiskScales: getOperationalRiskScales,
 
             getScaleComments: getScaleComments,
             createScaleComment: createScaleComment,

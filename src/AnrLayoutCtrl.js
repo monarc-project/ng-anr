@@ -1694,6 +1694,11 @@
         }
 
         $scope.updateScales = function () {
+          AnrService.getOperationalRiskScales($scope.model.anr.id).then(function (data) {
+            console.log(data);
+          });
+
+
             AnrService.getScales($scope.model.anr.id).then(function (data) {
                 $scope.scalesCanChange = data.canChange && $scope.model.anr.cacheModelIsScalesUpdatable;
                 $scope.scaleThreat = ''; // Reset tooltip Prob. on table risks
