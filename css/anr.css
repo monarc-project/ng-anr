@@ -702,6 +702,10 @@ span textarea {
     text-align: center;
 }
 
+.vertical-text {
+    transform: rotate(-90deg);
+}
+
 .anr-formula-container {
     padding: 5px;
     margin-left: 16px;

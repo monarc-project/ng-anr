@@ -315,6 +315,20 @@
 
         $scope.updateAnrRisksOpTable = function (cb) {
             $scope.anr_risks_op_table_loading = true;
+            $scope.operationalRiskScales = [
+              {label:'Reputation'},
+              {label:'Operational'},
+              {label:'Legal'},
+              {label:'Finacial'},
+              {label:'Personal'},
+              {label:'Quality'},
+              {label:'Environnement'},
+              {label:'Time'},
+              {label:'Sustainability'},
+              {label:'Health'},
+              {label:'Safety'},
+            ];
+
             AnrService.getAnrRisksOp($scope.model.anr.id, $scope.risks_op_filters).then(function (data) {
                 if (!$scope.oprisks || $scope.oprisks.length != data.oprisks.length) {
                     $scope.oprisks_total = data.count;
