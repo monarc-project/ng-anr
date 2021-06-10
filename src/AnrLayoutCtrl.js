@@ -1694,7 +1694,7 @@
                 comment2: null,
                 comment3: null,
                 comment4: null,
-                val: j
+                scaleValue: j
             };
 
             $scope.comms.vuln[j] = {
@@ -1703,16 +1703,17 @@
                 comment2: null,
                 comment3: null,
                 comment4: null,
-                val: j
+                scaleValue: j
             };
         }
 
+        $scope.updateOperationalRiskScales = function () {
+            AnrService.getOperationalRiskScales($scope.model.anr.id).then(function (data) {
+            });
+        }
+
         $scope.updateScales = function () {
-          AnrService.getOperationalRiskScales($scope.model.anr.id).then(function (data) {
-            console.log(data);
-          });
-
-
+            $scope.updateOperationalRiskScales();
             AnrService.getScales($scope.model.anr.id).then(function (data) {
                 $scope.scalesCanChange = data.canChange && $scope.model.anr.cacheModelIsScalesUpdatable;
                 $scope.scaleThreat = ''; // Reset tooltip Prob. on table risks
@@ -1780,7 +1781,8 @@
                                 comment3: null,
                                 comment4: null,
                                 scaleImpactType: $scope.scales_types[j].id,
-                                val: i
+                                scaleValue:null,
+                                scaleIndex: null,
                             };
                         }
                     }
@@ -1874,35 +1876,39 @@
                 for (var i = 0; i < data.comments.length; ++i) {
                     var comm = data.comments[i];
 
-                    if (isImpact && obj[comm.val]) {
-                        obj[comm.val][comm.scaleImpactType.id].id = comm.id;
-                        obj[comm.val][comm.scaleImpactType.id].comment1 = comm.comment1;
-                        obj[comm.val][comm.scaleImpactType.id].comment2 = comm.comment2;
-                        obj[comm.val][comm.scaleImpactType.id].comment3 = comm.comment3;
-                        obj[comm.val][comm.scaleImpactType.id].comment4 = comm.comment4;
-                        obj[comm.val].val = comm.val;
+                    if (isImpact && obj[comm.scaleValue]) {
+                        obj[comm.scaleValue][comm.scaleImpactType.id].id = comm.id;
+                        obj[comm.scaleValue][comm.scaleImpactType.id].comment1 = comm.comment1;
+                        obj[comm.scaleValue][comm.scaleImpactType.id].comment2 = comm.comment2;
+                        obj[comm.scaleValue][comm.scaleImpactType.id].comment3 = comm.comment3;
+                        obj[comm.scaleValue][comm.scaleImpactType.id].comment4 = comm.comment4;
+                        obj[comm.scaleValue][comm.scaleImpactType.id].scaleValue = comm.scaleValue;
+                        obj[comm.scaleValue][comm.scaleImpactType.id].scaleIndex = comm.scaleIndex;
+
 
                         if (!$scope.scaleCommCache[comm.scaleImpactType.type]) {
                             $scope.scaleCommCache[comm.scaleImpactType.type] = {};
                         }
 
-                        $scope.scaleCommCache[comm.scaleImpactType.type][comm.val] = $scope._langField(comm,'comment');
+                        $scope.scaleCommCache[comm.scaleImpactType.type][comm.scaleValue] = $scope._langField(comm,'comment');
                     } else if (!isImpact) {
-                        if (!obj[comm.val]) {
-                            obj[comm.val] = comm;
+                        if (!obj[comm.scaleValue]) {
+                            obj[comm.scaleValue] = comm;
                         } else {
-                            obj[comm.val].id = comm.id;
-                            obj[comm.val].comment1 = comm.comment1;
-                            obj[comm.val].comment2 = comm.comment2;
-                            obj[comm.val].comment3 = comm.comment3;
-                            obj[comm.val].comment4 = comm.comment4;
+                            obj[comm.scaleValue].id = comm.id;
+                            obj[comm.scaleValue].comment1 = comm.comment1;
+                            obj[comm.scaleValue].comment2 = comm.comment2;
+                            obj[comm.scaleValue].comment3 = comm.comment3;
+                            obj[comm.scaleValue].comment4 = comm.comment4;
+                            obj[comm.scaleValue].scaleValue = comm.scaleValue;
+                            obj[comm.scaleValue].scaleIndex = comm.scaleIndex;
                         }
 
                         if (scale_id == $scope.scales.threats.id) {
-                            $scope.threatCommCache[comm.val] = $scope._langField(comm,'comment');
+                            $scope.threatCommCache[comm.scaleValue] = $scope._langField(comm,'comment');
 
                         } else if (scale_id == $scope.scales.vulns.id) {
-                            $scope.vulnsCommCache[comm.val] = $scope._langField(comm,'comment');
+                            $scope.vulnsCommCache[comm.scaleValue] = $scope._langField(comm,'comment');
                         }
                     }
                 }
