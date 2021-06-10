@@ -1694,7 +1694,7 @@
                 comment2: null,
                 comment3: null,
                 comment4: null,
-                val: j
+                scaleValue: j
             };
 
             $scope.comms.vuln[j] = {
@@ -1703,7 +1703,7 @@
                 comment2: null,
                 comment3: null,
                 comment4: null,
-                val: j
+                scaleValue: j
             };
         }
 
@@ -1781,7 +1781,8 @@
                                 comment3: null,
                                 comment4: null,
                                 scaleImpactType: $scope.scales_types[j].id,
-                                val: i
+                                scaleValue:null,
+                                scaleIndex: null,
                             };
                         }
                     }
@@ -1881,6 +1882,9 @@
                         obj[comm.scaleValue][comm.scaleImpactType.id].comment2 = comm.comment2;
                         obj[comm.scaleValue][comm.scaleImpactType.id].comment3 = comm.comment3;
                         obj[comm.scaleValue][comm.scaleImpactType.id].comment4 = comm.comment4;
+                        obj[comm.scaleValue][comm.scaleImpactType.id].scaleValue = comm.scaleValue;
+                        obj[comm.scaleValue][comm.scaleImpactType.id].scaleIndex = comm.scaleIndex;
+
 
                         if (!$scope.scaleCommCache[comm.scaleImpactType.type]) {
                             $scope.scaleCommCache[comm.scaleImpactType.type] = {};
@@ -1896,6 +1900,8 @@
                             obj[comm.scaleValue].comment2 = comm.comment2;
                             obj[comm.scaleValue].comment3 = comm.comment3;
                             obj[comm.scaleValue].comment4 = comm.comment4;
+                            obj[comm.scaleValue].scaleValue = comm.scaleValue;
+                            obj[comm.scaleValue].scaleIndex = comm.scaleIndex;
                         }
 
                         if (scale_id == $scope.scales.threats.id) {
