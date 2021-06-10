@@ -55,7 +55,15 @@
                   <tbody ng-if="scales.impacts.min != scales.impacts.max && scales.impacts.max > 0">
                       <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)" edit-model="comms.impact[i]">
                           <th>{{ i }}</th>
-                          <td class="preserve-newlines" ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types" edit-readonly="isAnrReadOnly" edit-field edit-ng-field="'comment' + scales.language" edit-localmodel="comms.impact[i][type.id]" edit-type="textarea"></td>
+                          <td
+                              class="preserve-newlines"
+                              ng-show="!type.isHidden || display.show_hidden_impacts"
+                              ng-repeat="type in scales_types"
+                              edit-readonly="isAnrReadOnly"
+                              edit-field edit-ng-field="'comment' + scales.language"
+                              edit-localmodel="comms.impact[i][type.id]"
+                              edit-type="textarea">
+                          </td>
                       </tr>
                   </tbody>
               </table>
@@ -168,26 +176,34 @@
           </md-card>
 
           <div editable callback="onImpactScaleChanged" layout="row">
-              <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="scales.impacts"><span translate>Impacts scale:</span> [
+              <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="opRiskImpactScale"><span translate>Impacts scale:</span> [
                   <span class="text-blue" edit-field="min"></span> -
                   <span class="text-blue" edit-field="max"></span> ]
               </h4>
               <h4 ng-if="(OFFICE_MODE == 'FO' && !scalesCanChange ) || isAnrReadOnly"><span translate>Impacts scale:</span> [
-                  <span class="text-blue">{{ scales.impacts.min }}</span> -
-                  <span class="text-blue">{{ scales.impacts.max }}</span> ]
+                  <span class="text-blue">{{ opRiskImpactScale.min}}</span> -
+                  <span class="text-blue">{{ opRiskImpactScale.max }}</span> ]
               </h4>
           </div>
 
           <md-switch ng-model="display.show_hidden_impacts">{{ 'Show hidden impacts' | translate }}</md-switch>
 
           <div class="horz-expanding-table" id="horiz-scrollable">
-              <table editable callback="onImpactCommChanged" visible="checkCommentVisibility" class="md-html-table">
+              <table editable callback="onImpactCommChanged" class="md-html-table">
                   <thead>
                       <tr>
                           <th></th>
-                          <th ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">
-                            <span class="text-blue" ng-if="type.type == 'CUS' && !isAnrReadOnly" inline-edit="column.name" inline-edit-callback="onEditCustomColumn(type.id, newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ type['label' + scales.language]? type['label' + scales.language] : '...' }}"></span>
-                            <span class="text-blue" ng-if="type.type != 'CUS'">{{ type['label' + scales.language] }}</span>
+                          <th ng-repeat="scale in opRiskImpactScale">
+                            <span
+                                class="text-blue"
+                                inline-edit="scale.labels"
+                                inline-edit-callback="onEditCustomColumn(type.id, newValue)"
+                                inline-edit-btn-edit=""
+                                inline-edit-on-blur="save"
+                                inline-edit-on-click>
+                            </span>
+                            <span class="text-blue">
+                            </span>
                             <md-button class="md-icon-button md-warn" ng-if="type.type == 'CUS' && !isAnrReadOnly" ng-click="deleteCustomScaleType(type.id)">
                               <md-icon>delete</md-icon>
                             </md-button>
@@ -201,29 +217,44 @@
                       </tr>
                   </thead>
 
-                  <tbody ng-if="scales.impacts.min != scales.impacts.max && scales.impacts.max > 0">
-                    <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)" edit-model="comms.impact[i]">
-                        <th>{{ i }}</th>
-                        <td class="preserve-newlines" ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types" edit-readonly="isAnrReadOnly" edit-field edit-ng-field="'comment' + scales.language" edit-localmodel="comms.impact[i][type.id]" edit-type="textarea"></td>
+                  <tbody ng-if="opRiskImpactScale.min != opRiskImpactScale.max && opRiskImpactScale.max > 0">
+                    <tr ng-repeat="i in range(opRiskImpactScale.min,opRiskImpactScale.max)" edit-model="opRiskImpactScale">
+                        <th>{{ opRiskImpactScale[0].comments[i].scaleValue}}</th>
+                        <td
+                            class="preserve-newlines"
+                            edit-readonly="isAnrReadOnly"
+                            edit-field="comments"
+                            ng-repeat="scale in opRiskImpactScale"
+                            edit-localmodel="scale.comments[i]"
+                            edit-type="textarea">
+                          </td>
                     </tr>
                   </tbody>
               </table>
           </div>
 
           <div editable callback="onThreatScaleChanged" layout="row">
-              <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="scales.threats"><span translate>Likelihood scale:</span> [
+              <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="opRiskLikelihoodScale"><span translate>Likelihood scale:</span> [
                   <span class="text-blue" edit-field="min"></span> -
                   <span class="text-blue" edit-field="max"></span> ]
               </h4>
               <h4 ng-if="(OFFICE_MODE == 'FO' && !scalesCanChange ) || isAnrReadOnly"><span translate>Likelihood scale:</span> [
-                  <span class="text-blue">{{ scales.threats.min }}</span> -
-                  <span class="text-blue">{{ scales.threats.max }}</span> ]
+                  <span class="text-blue">{{ opRiskLikelihoodScale.min }}</span> -
+                  <span class="text-blue">{{ opRiskLikelihoodScale.max }}</span> ]
               </h4>
           </div>
 
-          <div ng-if="scales.threats.min != scales.threats.max && scales.threats.max > 0" editable callback="onThreatCommChanged">
-              <ul class="no-list-style" edit-model="comms">
-                  <li ng-repeat="i in range(scales.threats.min, scales.threats.max)">{{i}}. <span edit-field edit-ng-field="'comment' + scales.language" edit-readonly="isAnrReadOnly" edit-type="textarea" edit-class="preserve-newlines" edit-localmodel="comms.threat[i]" edit-placeholder="{{ 'Click here to type...' | translate }}"></span></li>
+          <div ng-if="opRiskLikelihoodScale.min != opRiskLikelihoodScale.max && opRiskLikelihoodScale.max > 0" editable callback="onThreatCommChanged">
+              <ul class="no-list-style">
+                  <li ng-repeat="comment in opRiskLikelihoodScale.comments" edit-model="comment">{{comment.scaleValue}}.
+                    <span
+                        edit-field="comments"
+                        edit-readonly="isAnrReadOnly"
+                        edit-type="textarea"
+                        edit-class="preserve-newlines"
+                        edit-placeholder="{{ 'Click here to type...' | translate }}">
+                      </span>
+                    </li>
               </ul>
           </div>
 
