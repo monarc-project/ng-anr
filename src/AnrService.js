@@ -321,9 +321,9 @@
             return self.OperationalRiskScalesResource.query({anrId: anr_id}).$promise;
         };
 
-        var createOperationalRiskScale = function (anr_id, label1, min, max, success, error) {
+        var createOperationalRiskScale = function (anr_id, label1, min, max, comments, success, error) {
              if ($rootScope.OFFICE_MODE == "FO") {
-                new self.OperationalRiskScalesResource({anrId: anr_id, anr: anr_id, Label: label1, min: min, max: max, type: 1}).$save(success, error);
+                new self.OperationalRiskScalesResource({anrId: anr_id, anr: anr_id, Label: label1, min: min, max: max,comments : comments, type: 1}).$save(success, error);
              } else {
         	      new self.OperationalRiskScalesResource({anrId: anr_id, anr: anr_id, Label: label1, min: min, max: max, type: 1, langue: langue}).$save(success, error);
              }
