@@ -316,19 +316,6 @@
 
         $scope.updateAnrRisksOpTable = function (cb) {
             $scope.anr_risks_op_table_loading = true;
-            $scope.operationalRiskScales = [
-              {label:'Reputation'},
-              {label:'Operational'},
-              {label:'Legal'},
-              {label:'Finacial'},
-              {label:'Personal'},
-              {label:'Quality'},
-              {label:'Environnement'},
-              {label:'Time'},
-              {label:'Sustainability'},
-              {label:'Health'},
-              {label:'Safety'},
-            ];
 
             AnrService.getAnrRisksOp($scope.model.anr.id, $scope.risks_op_filters).then(function (data) {
                 if (!$scope.oprisks || $scope.oprisks.length != data.oprisks.length) {
@@ -1707,12 +1694,18 @@
         $scope.updateOperationalRiskScales = function () {
             AnrService.getOperationalRiskScales($scope.model.anr.id).then(function (data) {
               let allScales = data.data;
+
               $scope.opRiskLikelihoodScale = allScales.filter(scale => scale.type == 2)[0];
               $scope.opRiskLikelihoodScale.comments.sort((a,b) => a.scaleIndex - b.scaleIndex);
+
               $scope.opRiskImpactScale = allScales.filter(scale => scale.type == 1);
               $scope.opRiskImpactScale.forEach(scale => scale.comments.sort((a,b) => a.scaleIndex - b.scaleIndex));
               $scope.opRiskImpactScale.min = $scope.opRiskImpactScale[0].min;
               $scope.opRiskImpactScale.max = $scope.opRiskImpactScale[0].max;
+
+              $scope.opRiskImpactScaleLabels = $scope.opRiskImpactScale.map(function(scale){
+                  return { label : scale.labels};
+              });
             });
         }
 
