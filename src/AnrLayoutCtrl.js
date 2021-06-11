@@ -48,6 +48,7 @@
         }else{
             $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
         }
+
         $scope.scalesCanChange = false;
         $scope.isAnrReadOnly = true;
 
@@ -227,11 +228,11 @@
         };
 
         $scope.updateReferentials = function () {
-          $scope.referentials = [];
-          ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
-            $scope.referentials.items = data;
-            $scope.updatingReferentials = true;
-          });
+            $scope.referentials = [];
+            ReferentialService.getReferentials({order: 'createdAt'}).then(function (data) {
+              $scope.referentials.items = data;
+              $scope.updatingReferentials = true;
+            });
         };
 
         $scope.updateRecommandationsSets = function () {
@@ -315,19 +316,6 @@
 
         $scope.updateAnrRisksOpTable = function (cb) {
             $scope.anr_risks_op_table_loading = true;
-            $scope.operationalRiskScales = [
-              {label:'Reputation'},
-              {label:'Operational'},
-              {label:'Legal'},
-              {label:'Finacial'},
-              {label:'Personal'},
-              {label:'Quality'},
-              {label:'Environnement'},
-              {label:'Time'},
-              {label:'Sustainability'},
-              {label:'Health'},
-              {label:'Safety'},
-            ];
 
             AnrService.getAnrRisksOp($scope.model.anr.id, $scope.risks_op_filters).then(function (data) {
                 if (!$scope.oprisks || $scope.oprisks.length != data.oprisks.length) {
@@ -462,7 +450,6 @@
             }
         });
 
-
         $scope.clearSelectedInstAndObj = function () {
             $rootScope.anr_selected_instance_id = null;
             $rootScope.anr_selected_object_id = null;
@@ -515,15 +502,15 @@
 
 
         $scope.updateSheetRiskTarget = function () {
-          if ($scope.sheet_risk) {
-            if(parseInt($scope.sheet_risk.threatRate) > -1 && parseInt($scope.sheet_risk.vulnerabilityRate) > -1){
-                $scope.sheet_risk.target_c = $scope.sheet_risk.c_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
-                $scope.sheet_risk.target_i = $scope.sheet_risk.i_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
-                $scope.sheet_risk.target_d = $scope.sheet_risk.d_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
-            }else{
-                $scope.sheet_risk.target_c = $scope.sheet_risk.target_i = $scope.sheet_risk.target_d = "-";
+            if ($scope.sheet_risk) {
+              if(parseInt($scope.sheet_risk.threatRate) > -1 && parseInt($scope.sheet_risk.vulnerabilityRate) > -1){
+                  $scope.sheet_risk.target_c = $scope.sheet_risk.c_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
+                  $scope.sheet_risk.target_i = $scope.sheet_risk.i_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
+                  $scope.sheet_risk.target_d = $scope.sheet_risk.d_impact * $scope.sheet_risk.threatRate * ($scope.sheet_risk.vulnerabilityRate - $scope.sheet_risk.reductionAmount);
+              }else{
+                  $scope.sheet_risk.target_c = $scope.sheet_risk.target_i = $scope.sheet_risk.target_d = "-";
+              }
             }
-          }
         };
 
         $scope.resetSheet = function (redir) {
@@ -601,20 +588,20 @@
         };
 
         $scope.$watch('sheet_risk.reductionAmount', function () {
-          if ($state.$current.name == 'main.project.anr.instance.risk' || $state.$current.name == 'main.project.anr.risk') {
-            $scope.updateSheetRiskTarget();
-          }
+            if ($state.$current.name == 'main.project.anr.instance.risk' || $state.$current.name == 'main.project.anr.risk') {
+              $scope.updateSheetRiskTarget();
+            }
         });
 
         $scope.$watch('sheet_risk.kindOfMeasure', function (newValue) {
-          if ($state.$current.name == 'main.project.anr.instance.risk' || $state.$current.name == 'main.project.anr.risk') {
-            if (newValue == 5 || newValue == 3) {
-              $scope.sheet_risk.reductionAmount = 0;
-              $scope.reductionVuln = false;
-            }else {
-              $scope.reductionVuln = true;
+            if ($state.$current.name == 'main.project.anr.instance.risk' || $state.$current.name == 'main.project.anr.risk') {
+              if (newValue == 5 || newValue == 3) {
+                $scope.sheet_risk.reductionAmount = 0;
+                $scope.reductionVuln = false;
+              }else {
+                $scope.reductionVuln = true;
+              }
             }
-          }
         });
 
         $scope.treatmentStr = function (treatment) {
@@ -628,43 +615,43 @@
         };
 
         $scope.previousRisk = function(){
-          $scope.reducAmount = [];
-          let previousRisk = $scope.risks_instance[$scope.idxRisks - 1];
-          $scope.risks_instance[$scope.idxRisks] = $scope.sheet_risk;
-          $scope.openRiskSheet(previousRisk, $scope.risks_instance);
-          $scope.saveRiskSheet($scope.sheet_risk);
+            $scope.reducAmount = [];
+            let previousRisk = $scope.risks_instance[$scope.idxRisks - 1];
+            $scope.risks_instance[$scope.idxRisks] = $scope.sheet_risk;
+            $scope.openRiskSheet(previousRisk, $scope.risks_instance);
+            $scope.saveRiskSheet($scope.sheet_risk);
         };
 
         $scope.nextRisk = function(){
-          $scope.reducAmount = [];
-          let nextRisk = $scope.risks_instance[$scope.idxRisks + 1];
-          $scope.risks_instance[$scope.idxRisks] = $scope.sheet_risk;
-          $scope.openRiskSheet(nextRisk, $scope.risks_instance);
-          $scope.saveRiskSheet($scope.sheet_risk);
+            $scope.reducAmount = [];
+            let nextRisk = $scope.risks_instance[$scope.idxRisks + 1];
+            $scope.risks_instance[$scope.idxRisks] = $scope.sheet_risk;
+            $scope.openRiskSheet(nextRisk, $scope.risks_instance);
+            $scope.saveRiskSheet($scope.sheet_risk);
         };
 
         $scope.previousOpRisk = function(){
-          let previousOpRisk = $scope.opRisks_instance[$scope.idxOpRisks - 1];
-          $scope.opRisks_instance[$scope.idxOpRisks] = $scope.opsheet_risk;
-          $scope.openOpRiskSheet(previousOpRisk, $scope.opRisks_instance);
-          $scope.saveOpRiskSheet($scope.opRisks_instance[$scope.idxOpRisks]);
+            let previousOpRisk = $scope.opRisks_instance[$scope.idxOpRisks - 1];
+            $scope.opRisks_instance[$scope.idxOpRisks] = $scope.opsheet_risk;
+            $scope.openOpRiskSheet(previousOpRisk, $scope.opRisks_instance);
+            $scope.saveOpRiskSheet($scope.opRisks_instance[$scope.idxOpRisks]);
         };
 
         $scope.nextOpRisk = function(){
-          let nextOpRisk = $scope.opRisks_instance[$scope.idxOpRisks + 1];
-          $scope.opRisks_instance[$scope.idxOpRisks] = $scope.opsheet_risk;
-          $scope.openOpRiskSheet(nextOpRisk, $scope.opRisks_instance);
-          $scope.saveOpRiskSheet($scope.opRisks_instance[$scope.idxOpRisks]);
+            let nextOpRisk = $scope.opRisks_instance[$scope.idxOpRisks + 1];
+            $scope.opRisks_instance[$scope.idxOpRisks] = $scope.opsheet_risk;
+            $scope.openOpRiskSheet(nextOpRisk, $scope.opRisks_instance);
+            $scope.saveOpRiskSheet($scope.opRisks_instance[$scope.idxOpRisks]);
         };
 
         $scope.saveRiskSheet = function (sheet) {
-          if (!$scope.isAnrReadOnly) {
-            AnrService.updateInstanceRisk($scope.model.anr.id, sheet.id, sheet, function () {
-                $scope.$broadcast('risks-table-edited');
-                $scope.updateAnrRisksTable();
-                $scope.updateSheetRiskTarget();
-            })
-          }
+            if (!$scope.isAnrReadOnly) {
+                AnrService.updateInstanceRisk($scope.model.anr.id, sheet.id, sheet, function () {
+                    $scope.$broadcast('risks-table-edited');
+                    $scope.updateAnrRisksTable();
+                    $scope.updateSheetRiskTarget();
+                })
+            }
         };
 
         $scope.saveOpRiskSheet = function (sheet) {
@@ -782,7 +769,6 @@
             };
         }
 
-
         var editRisksContext = function (step) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
@@ -891,20 +877,19 @@
             $scope.display.anrSelectedTabIndex = 0;
             ToolsAnrService.currentTab = 0;
         };
+
         var showAnrRisks = function () {
             $state.transitionTo('main.project.anr', {modelId: $scope.model.anr.id});
             $scope.clearSelectedInstAndObj();
             $scope.display.anrSelectedTabIndex = 0;
             ToolsAnrService.currentTab = 1;
         };
+
         var editRiskTreatPlan = function () {
             $state.transitionTo('main.project.anr.risksplan', {modelId: $scope.model.anr.id});
             $scope.clearSelectedInstAndObj();
             $scope.display.anrSelectedTabIndex = 0;
         }
-
-
-
 
         // Progress
         var updateMethodProgress = function () {
@@ -1261,7 +1246,6 @@
             }
         };
 
-
         $scope.updateObjectsLibrary = function (gotofirst, callback) {
             AnrService.getObjectsLibrary($scope.model.anr.id).then(function (data) {
                 if (!$scope.collapseCache) {
@@ -1568,6 +1552,7 @@
         };
 
         $scope.newColumn = { name: null };
+
         $scope.onCreateNewColumn = function (newValue) {
             AnrService.createScaleType($scope.model.anr.id, $scope.scales.impacts.id, newValue, $scope.scales.language, function () {
                 $scope.updateScaleTypes(function () {
@@ -1614,7 +1599,6 @@
                 $state.transitionTo('main.project');
             });
         };
-
 
         $scope.editAnrInfo = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
@@ -1710,12 +1694,18 @@
         $scope.updateOperationalRiskScales = function () {
             AnrService.getOperationalRiskScales($scope.model.anr.id).then(function (data) {
               let allScales = data.data;
+
               $scope.opRiskLikelihoodScale = allScales.filter(scale => scale.type == 2)[0];
               $scope.opRiskLikelihoodScale.comments.sort((a,b) => a.scaleIndex - b.scaleIndex);
+
               $scope.opRiskImpactScale = allScales.filter(scale => scale.type == 1);
               $scope.opRiskImpactScale.forEach(scale => scale.comments.sort((a,b) => a.scaleIndex - b.scaleIndex));
               $scope.opRiskImpactScale.min = $scope.opRiskImpactScale[0].min;
               $scope.opRiskImpactScale.max = $scope.opRiskImpactScale[0].max;
+
+              $scope.opRiskImpactScaleLabels = $scope.opRiskImpactScale.map(function(scale){
+                  return { label : scale.labels};
+              });
             });
         }
 
@@ -1725,11 +1715,6 @@
                 $scope.scalesCanChange = data.canChange && $scope.model.anr.cacheModelIsScalesUpdatable;
                 $scope.scaleThreat = ''; // Reset tooltip Prob. on table risks
                 $scope.scaleVul = ''; // Reset tooltip Qualif. on table risks
-                $scope.scaleR = ''; // Reset tooltip (R)Reputation on table risks
-                $scope.scaleO = ''; // Reset tooltip (O)Operation on table risks
-                $scope.scaleF = ''; // Reset tooltip (F)Finance on table risks
-                $scope.scaleL = ''; // Reset tooltip (L)Legal on table risks
-                $scope.scaleP = ''; // Reset tooltip (P)Person on table risks
                 for (var i = 0; i < data.scales.length; ++i) {
                     var scale = data.scales[i];
 
@@ -1804,8 +1789,8 @@
                     cb();
                 }
             });
-
         };
+
         $scope.checkCommentVisibility = function(comment){
             return comment && ! $scope.scales_types_by_id[comment.scaleImpactType].isHidden || $scope.display.show_hidden_impacts ;
         }
@@ -1842,17 +1827,11 @@
             return result.promise;
         };
 
-
         $scope.scaleCommCache = {}; // C/I/D, type
         $scope.threatCommCache = {};
         $scope.vulnsCommCache = {};
         $scope.scaleThreat = '';
         $scope.scaleVul = '';
-        $scope.scaleR = '';
-		    $scope.scaleO = '';
-        $scope.scaleF = '';
-        $scope.scaleL = '';
-        $scope.scaleP = '';
 
         $scope.updateScaleComments = function (scale_id) {
             commsWatchSetup = false;
@@ -1921,45 +1900,19 @@
                 }
 
                 if (scale_id == $scope.scales.threats.id) {
-
-							for (var i = $scope.scales.threats.min; i <= $scope.scales.threats.max; i++) {
-               		$scope.scaleThreat += i + ' :  ' + $scope.threatCommCache[i] + "\n";
-               		}
-				    }
-					 if (scale_id == $scope.scales.vulns.id) {
-              			for (var i = $scope.scales.vulns.min; i <= $scope.scales.vulns.max; i++) {
-               		$scope.scaleVul += i + ' :  ' + $scope.vulnsCommCache[i] + "\n";
-               	   }
-					 }
-					 if (scale_id == $scope.scales.impacts.id) {
-              			for (var i = $scope.scales.impacts.min; i <= $scope.scales.impacts.max; i++) {
-               		$scope.scaleR += i + ' :  ' + $scope.scaleCommCache[4][i] + "\n";
-               	   }
-					 }
-					 if (scale_id == $scope.scales.impacts.id) {
-              			for (var i = $scope.scales.impacts.min; i <= $scope.scales.impacts.max; i++) {
-               		$scope.scaleO += i + ' :  ' + $scope.scaleCommCache[5][i] + "\n";
-               	   }
-					 }
-					 if (scale_id == $scope.scales.impacts.id) {
-              			for (var i = $scope.scales.impacts.min; i <= $scope.scales.impacts.max; i++) {
-               		$scope.scaleL += i + ' :  ' + $scope.scaleCommCache[6][i] + "\n";
-               	   }
-					 }
-					 if (scale_id == $scope.scales.impacts.id) {
-              			for (var i = $scope.scales.impacts.min; i <= $scope.scales.impacts.max; i++) {
-               		$scope.scaleF += i + ' :  ' + $scope.scaleCommCache[7][i] + "\n";
-               	   }
-					 }
- 					 if (scale_id == $scope.scales.impacts.id) {
-              			for (var i = $scope.scales.impacts.min; i <= $scope.scales.impacts.max; i++) {
-               		$scope.scaleP += i + ' :  ' + $scope.scaleCommCache[8][i] + "\n";
-               	   }
-					 }
+			               for (var i = $scope.scales.threats.min; i <= $scope.scales.threats.max; i++) {
+                 		    $scope.scaleThreat += i + ' :  ' + $scope.threatCommCache[i] + "\n";
+             		     }
+			          }
+      					if (scale_id == $scope.scales.vulns.id) {
+            			   for (var i = $scope.scales.vulns.min; i <= $scope.scales.vulns.max; i++) {
+                     		$scope.scaleVul += i + ' :  ' + $scope.vulnsCommCache[i] + "\n";
+                 	   }
+      					}
             });
         };
 
-		      $scope.exportAnr = function (ev) {
+	      $scope.exportAnr = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
@@ -1997,6 +1950,7 @@
                   $scope.handleRejectionDialog(reject);
                 });
         };
+
         $scope.showMethodBox = function (stepNum, step, ev) {
             ev.preventDefault()
             var position = $mdPanel.newPanelPosition()
@@ -2061,7 +2015,6 @@
                 fullscreen: useFullScreen
             });
         }
-
 
         $scope.importObject = function (ev) {
             $mdDialog.cancel();
