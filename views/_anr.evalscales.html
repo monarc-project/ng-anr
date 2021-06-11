@@ -185,8 +185,12 @@
                   <span class="text-blue">{{ opRiskImpactScale.max }}</span> ]
               </h4>
           </div>
-
-          <md-switch ng-model="display.show_hidden_impacts">{{ 'Show hidden impacts' | translate }}</md-switch>
+          <div layout="row" layout-align="space-between center">
+              <md-switch ng-model="display.show_hidden_impacts">{{ 'Show hidden impacts' | translate }}</md-switch>
+              <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-warn" ng-click="deleteOpRiskScale()">
+                  <md-icon>delete</md-icon>
+              </md-button>
+          </div>
 
           <div class="horz-expanding-table" id="horiz-scrollable">
               <table editable callback="onImpactCommChanged" class="md-html-table">
