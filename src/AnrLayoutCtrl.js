@@ -1747,6 +1747,7 @@
                           gettextCatalog.getString('The operational risk impact scale has been created successfully.'),
                           gettextCatalog.getString('Creation successful')
                       );
+                      $scope.updateOperationalRiskScales();
                   },
                   function () {
                       $scope.addOperationalRiskScales(ev);
