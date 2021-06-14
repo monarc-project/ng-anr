@@ -187,9 +187,20 @@
           </div>
           <div layout="row" layout-align="space-between center">
               <md-switch ng-model="display.show_hidden_impacts">{{ 'Show hidden impacts' | translate }}</md-switch>
-              <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-warn" ng-click="deleteOpRiskScale()">
-                  <md-icon>delete</md-icon>
-              </md-button>
+              <div>
+                <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="addOperationalRiskScales()">
+                    <md-tooltip md-direction="left">
+                        {{ 'Add scales' | translate }}
+                    </md-tooltip>
+                    <md-icon>add_to_photos</md-icon>
+                </md-button>
+                <md-button ng-if="!isAnrReadOnly || opRiskImpactScale.length == 1" class="md-icon-button md-warn" ng-click="deleteOperationalRiskScales()">
+                  <md-tooltip md-direction="left">
+                      {{ 'Delete scales' | translate }}
+                  </md-tooltip>
+                    <md-icon>delete</md-icon>
+                </md-button>
+              </div>
           </div>
 
           <div class="horz-expanding-table" id="horiz-scrollable">
@@ -208,16 +219,13 @@
                             </span>
                             <span class="text-blue">
                             </span>
-                            <md-button class="md-icon-button md-warn" ng-if="type.type == 'CUS' && !isAnrReadOnly" ng-click="deleteCustomScaleType(type.id)">
-                              <md-icon>delete</md-icon>
-                            </md-button>
                             <md-button class="md-icon-button md-primary" ng-if="type.type != 'CUS' && !isAnrReadOnly" ng-click="setImpactVisibility(type.id, !!type.isHidden)">
                               <md-icon>{{ type.isHidden ? 'visibility' : 'visibility_off' }}</md-icon>
                             </md-button>
                           </th>
-                          <th ng-if="!isAnrReadOnly">
+                          <!-- <th ng-if="!isAnrReadOnly">
                               <span class="text-blue" inline-edit="newColumn.name" inline-edit-callback="onCreateNewColumn(newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ 'New column name' | translate }}"></span>
-                          </th>
+                          </th> -->
                       </tr>
                   </thead>
 
