@@ -1702,6 +1702,9 @@
               $scope.opRiskImpactScale.forEach(scale => scale.comments.sort((a,b) => a.scaleIndex - b.scaleIndex));
               $scope.opRiskImpactScale.min = $scope.opRiskImpactScale[0].min;
               $scope.opRiskImpactScale.max = $scope.opRiskImpactScale[0].max;
+              $scope.defaultCommentsData = $scope.opRiskImpactScale[0].comments.map(
+                  scale => ({scaleIndex: scale.scaleIndex, scaleValue: scale.scaleValue})
+              );
 
               $scope.opRiskImpactScaleLabels = $scope.opRiskImpactScale.map(function(scale){
                   return {
@@ -1733,7 +1736,12 @@
                     $scope.addOperationalRiskScales(ev);
                 }
 
-                AnrService.createOperationalRiskScales(scale,
+                AnrService.createOperationalRiskScale(
+                    $scope.model.anr.id,
+                    scale['label' + $scope.model.anr.language],
+                    $scope.opRiskImpactScale.min,
+                    $scope.opRiskImpactScale.max,
+                    $scope.defaultCommentsData,
                   function () {
                       toastr.success(
                           gettextCatalog.getString('The operational risk impact scale has been created successfully.'),
