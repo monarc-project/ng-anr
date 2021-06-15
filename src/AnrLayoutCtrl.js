@@ -1694,6 +1694,7 @@
         $scope.updateOperationalRiskScales = function () {
             AnrService.getOperationalRiskScales($scope.model.anr.id).then(function (data) {
                 let allScales = data.data;
+                $scope.opRiskImpactScaleValues = [];
 
                 $scope.opRiskLikelihoodScale = allScales.filter(scale => scale.type == 2)[0];
                 $scope.opRiskLikelihoodScale.comments.sort((a,b) => a.scaleIndex - b.scaleIndex);
@@ -1702,9 +1703,10 @@
                 $scope.opRiskImpactScales.forEach(scale => scale.comments.sort((a,b) => a.scaleIndex - b.scaleIndex));
                 $scope.opRiskImpactScales.min = $scope.opRiskImpactScales[0].min;
                 $scope.opRiskImpactScales.max = $scope.opRiskImpactScales[0].max;
-                $scope.defaultCommentsData = $scope.opRiskImpactScales[0].comments.map(
-                    scale => ({scaleIndex: scale.scaleIndex, scaleValue: scale.scaleValue})
-                );
+                $scope.defaultCommentsData = $scope.opRiskImpactScales[0].comments.map(function(scale) {
+                    $scope.opRiskImpactScaleValues.push(scale.scaleValue);
+                    return {scaleIndex: scale.scaleIndex, scaleValue: scale.scaleValue}
+                });
             });
         };
 

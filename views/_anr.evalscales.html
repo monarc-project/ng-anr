@@ -301,16 +301,21 @@
                           <tbody>
                               <tr>
                                   <td></td>
-                                  <td colspan="{{opRiskImpactScales.max - opRiskImpactScales.min + 1 }}" class="anr-table-toptitle" translate>Probability</td>
+                                  <td colspan="{{opRiskLikelihoodScale.max - opRiskLikelihoodScale.min + 1 }}" class="anr-table-toptitle" translate>Probability</td>
                               </tr>
                               <tr>
                                   <th></th>
-                                  <th ng-repeat="p in range(scales.threats.min, scales.threats.max)">{{p}}</th>
+                                  <th ng-repeat="p in range(opRiskLikelihoodScale.min, opRiskLikelihoodScale.max)">{{p}}</th>
                               </tr>
-                              <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)">
+                              <tr ng-repeat="i in opRiskImpactScaleValues">
                                   <th>{{i}}</th>
-                                  <td ng-repeat="p in range(scales.threats.min, scales.threats.max)"
-                                      ng-class="{'green': p*i <= thresholds.rolf_thresholds.min, 'orange': p*i <= thresholds.rolf_thresholds.max && p*i > thresholds.rolf_thresholds.min, 'red': p*i > thresholds.rolf_thresholds.max}">{{i*p}}</td>
+                                  <td ng-repeat="p in range(opRiskLikelihoodScale.min, opRiskLikelihoodScale.max)"
+                                      ng-class="{'
+                                        green': p*i <= thresholds.rolf_thresholds.min,
+                                        'orange': p*i <= thresholds.rolf_thresholds.max && p*i > thresholds.rolf_thresholds.min,
+                                        'red': p*i > thresholds.rolf_thresholds.max}">
+                                        {{i*p}}
+                                  </td>
                               </tr>
                           </tbody>
                       </table>
