@@ -228,7 +228,13 @@
 
                   <tbody ng-if="opRiskImpactScales.min != opRiskImpactScales.max && opRiskImpactScales.max > 0">
                     <tr ng-repeat="i in range(opRiskImpactScales.min,opRiskImpactScales.max)" edit-model="opRiskImpactScales">
-                        <th>{{ opRiskImpactScales[0].comments[i].scaleValue}}</th>
+                        <th
+                            class="preserve-newlines"
+                            edit-readonly="isAnrReadOnly"
+                            edit-field="scaleValue"
+                            edit-localmodel="opRiskImpactScales[0].comments[i]"
+                            edit-type="textarea">
+                        </th>
                         <td
                             class="preserve-newlines"
                             edit-readonly="isAnrReadOnly"
@@ -236,7 +242,7 @@
                             ng-repeat="scale in opRiskImpactScales"
                             edit-localmodel="scale.comments[i]"
                             edit-type="textarea">
-                          </td>
+                        </td>
                     </tr>
                   </tbody>
               </table>
