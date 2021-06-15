@@ -1697,19 +1697,42 @@
 
         $scope.onOpRiskImpactCommChanged = function (model, value) {
             let promise = $q.defer();
-            AnrService.updateOperationalRiskScaleComment(
-                $scope.model.anr.id,
-                model.scaleId,
-                model.id,
-                {[value] : model[value]},
-                function() {
-                  promise.resolve();
-                },
-                function(){
-                  promise.reject();
-                }
-              )
-              return promise;
+            if (value == 'scaleValue') {
+              $scope.opRiskImpactScales.forEach(function(scale){
+                scale.comments.forEach(function(comment){
+                  if (model.scaleIndex == comment.scaleIndex) {
+                    AnrService.updateOperationalRiskScaleComment(
+                        $scope.model.anr.id,
+                        comment.scaleId,
+                        comment.id,
+                        {[value] : model[value]},
+                        function() {
+                          promise.resolve();
+                        },
+                        function(){
+                          promise.reject();
+                        }
+                      );
+                  }
+                })
+              })
+
+            } else {
+              AnrService.updateOperationalRiskScaleComment(
+                  $scope.model.anr.id,
+                  model.scaleId,
+                  model.id,
+                  {[value] : model[value]},
+                  function() {
+                    promise.resolve();
+                  },
+                  function(){
+                    promise.reject();
+                  }
+                );
+            }
+
+            return promise;
           };
 
 
