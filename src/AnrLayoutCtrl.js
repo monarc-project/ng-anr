@@ -3109,7 +3109,6 @@
                       .filter(scale => scale.selected == true)
                       .map(scale => scale.id);
 
-
             if ($scope.idsScalesSelected.length !== 0 && $scope.idsScalesSelected.length !== $scope.scales.length) {
                 $scope.validator = false;
             }
