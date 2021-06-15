@@ -256,11 +256,11 @@
               </h4>
           </div>
 
-          <div ng-if="opRiskImpactScales.min != opRiskImpactScales.max && opRiskImpactScales.max > 0" editable callback="onThreatCommChanged">
+          <div ng-if="opRiskLikelihoodScale.min != opRiskLikelihoodScale.max && opRiskLikelihoodScale.max > 0" editable callback="onThreatCommChanged">
               <ul class="no-list-style">
-                  <li ng-repeat="comment in opRiskImpactScales.comments" edit-model="comment">{{comment.scaleValue}}.
+                  <li ng-repeat="comment in opRiskLikelihoodScale.comments" edit-model="comment">{{comment.scaleValue}}.
                     <span
-                        edit-field="comments"
+                        edit-field="comment"
                         edit-readonly="isAnrReadOnly"
                         edit-type="textarea"
                         edit-class="preserve-newlines"
