@@ -1695,7 +1695,7 @@
           console.log(model, value);
         }
 
-        $scope.onOpRiskImpactCommChanged = function (model, value) {
+        $scope.onOpRiskScaleCommChanged = function (model, value) {
             let promise = $q.defer();
             if (value == 'scaleValue') {
               $scope.opRiskImpactScales.forEach(function(scale){
@@ -1741,10 +1741,6 @@
         }
 
         $scope.onOpRiskLikelihoodScaleChanged = function (model, value) {
-          console.log(model, value);
-        }
-
-        $scope.onpRiskLikelihoodCommChanged = function (model, value) {
           console.log(model, value);
         }
 

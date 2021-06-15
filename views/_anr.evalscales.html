@@ -204,7 +204,7 @@
           </div>
 
           <div class="horz-expanding-table" id="horiz-scrollable">
-              <table editable callback="onOpRiskImpactCommChanged" class="md-html-table">
+              <table editable callback="onOpRiskScaleCommChanged" class="md-html-table">
                   <thead>
                       <tr>
                           <th></th>
@@ -259,7 +259,7 @@
               </h4>
           </div>
 
-          <div ng-if="opRiskLikelihoodScale.min != opRiskLikelihoodScale.max && opRiskLikelihoodScale.max > 0" editable callback="onpRiskLikelihoodCommChanged">
+          <div ng-if="opRiskLikelihoodScale.min != opRiskLikelihoodScale.max && opRiskLikelihoodScale.max > 0" editable callback="onOpRiskScaleCommChanged">
               <ul class="no-list-style">
                   <li ng-repeat="comment in opRiskLikelihoodScale.comments" edit-model="comment">{{comment.scaleValue}}.
                     <span
