@@ -176,13 +176,13 @@
           </md-card>
 
           <div editable callback="onImpactScaleChanged" layout="row">
-              <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="opRiskImpactScale"><span translate>Impacts scale:</span> [
+              <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="opRiskImpactScales"><span translate>Impacts scale:</span> [
                   <span class="text-blue" edit-field="min"></span> -
                   <span class="text-blue" edit-field="max"></span> ]
               </h4>
               <h4 ng-if="(OFFICE_MODE == 'FO' && !scalesCanChange ) || isAnrReadOnly"><span translate>Impacts scale:</span> [
-                  <span class="text-blue">{{ opRiskImpactScale.min}}</span> -
-                  <span class="text-blue">{{ opRiskImpactScale.max }}</span> ]
+                  <span class="text-blue">{{ opRiskImpactScales.min}}</span> -
+                  <span class="text-blue">{{ opRiskImpactScales.max }}</span> ]
               </h4>
           </div>
           <div layout="row" layout-align="space-between center">
@@ -194,7 +194,7 @@
                     </md-tooltip>
                     <md-icon>add_to_photos</md-icon>
                 </md-button>
-                <md-button ng-if="!isAnrReadOnly || opRiskImpactScale.length == 1" class="md-icon-button md-warn" ng-click="deleteOperationalRiskScales()">
+                <md-button ng-if="!isAnrReadOnly || opRiskImpactScales.length == 1" class="md-icon-button md-warn" ng-click="deleteOperationalRiskScales()">
                   <md-tooltip md-direction="left">
                       {{ 'Delete scales' | translate }}
                   </md-tooltip>
@@ -208,10 +208,10 @@
                   <thead>
                       <tr>
                           <th></th>
-                          <th ng-repeat="scale in opRiskImpactScale">
+                          <th ng-repeat="scale in opRiskImpactScales">
                             <span
                                 class="text-blue"
-                                inline-edit="scale.labels"
+                                inline-edit="scale.label"
                                 inline-edit-callback="onEditCustomColumn(type.id, newValue)"
                                 inline-edit-btn-edit=""
                                 inline-edit-on-blur="save"
@@ -229,14 +229,14 @@
                       </tr>
                   </thead>
 
-                  <tbody ng-if="opRiskImpactScale.min != opRiskImpactScale.max && opRiskImpactScale.max > 0">
-                    <tr ng-repeat="i in range(opRiskImpactScale.min,opRiskImpactScale.max)" edit-model="opRiskImpactScale">
-                        <th>{{ opRiskImpactScale[0].comments[i].scaleValue}}</th>
+                  <tbody ng-if="opRiskImpactScales.min != opRiskImpactScales.max && opRiskImpactScales.max > 0">
+                    <tr ng-repeat="i in range(opRiskImpactScales.min,opRiskImpactScales.max)" edit-model="opRiskImpactScales">
+                        <th>{{ opRiskImpactScales[0].comments[i].scaleValue}}</th>
                         <td
                             class="preserve-newlines"
                             edit-readonly="isAnrReadOnly"
-                            edit-field="comments"
-                            ng-repeat="scale in opRiskImpactScale"
+                            edit-field="comment"
+                            ng-repeat="scale in opRiskImpactScales"
                             edit-localmodel="scale.comments[i]"
                             edit-type="textarea">
                           </td>
@@ -256,9 +256,9 @@
               </h4>
           </div>
 
-          <div ng-if="opRiskLikelihoodScale.min != opRiskLikelihoodScale.max && opRiskLikelihoodScale.max > 0" editable callback="onThreatCommChanged">
+          <div ng-if="opRiskImpactScales.min != opRiskImpactScales.max && opRiskImpactScales.max > 0" editable callback="onThreatCommChanged">
               <ul class="no-list-style">
-                  <li ng-repeat="comment in opRiskLikelihoodScale.comments" edit-model="comment">{{comment.scaleValue}}.
+                  <li ng-repeat="comment in opRiskImpactScales.comments" edit-model="comment">{{comment.scaleValue}}.
                     <span
                         edit-field="comments"
                         edit-readonly="isAnrReadOnly"
@@ -301,7 +301,7 @@
                           <tbody>
                               <tr>
                                   <td></td>
-                                  <td colspan="{{scales.threats.max - scales.threats.min + 1 }}" class="anr-table-toptitle" translate>Probability</td>
+                                  <td colspan="{{opRiskImpactScales.max - opRiskImpactScales.min + 1 }}" class="anr-table-toptitle" translate>Probability</td>
                               </tr>
                               <tr>
                                   <th></th>
