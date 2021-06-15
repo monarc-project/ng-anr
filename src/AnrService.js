@@ -2,10 +2,10 @@
 
     angular
         .module('AnrModule')
-        .factory('AnrService', [ '$resource', '$rootScope', 'ObjlibService', AnrService ])
+        .factory('AnrService', [ '$resource', '$rootScope', 'MassDeleteService','ObjlibService', AnrService ])
         .controller('AnrService', ['$scope', 'ConfigService']);
 
-    function AnrService($resource, $rootScope, ObjlibService) {
+    function AnrService($resource, $rootScope, MassDeleteService, ObjlibService) {
         var self = this;
 
         self.AnrResource = $resource('api/anr/:anrId', { anrId: '@anrId' },
@@ -329,6 +329,10 @@
              }
         };
 
+        var deleteOperationalRiskScales = function (ids, success, error) {
+            MassDeleteService.deleteMass('api/client-anr/' + $rootScope.getUrlAnrId() + '/operational-scales', ids, success, error);
+        };
+
 
         // Instances (unforeseen) consequences
         var getInstancesConsequences = function (anr_id) {
@@ -405,6 +409,7 @@
 
             getOperationalRiskScales: getOperationalRiskScales,
             createOperationalRiskScale: createOperationalRiskScale,
+            deleteOperationalRiskScales: deleteOperationalRiskScales,
 
             getScaleComments: getScaleComments,
             createScaleComment: createScaleComment,

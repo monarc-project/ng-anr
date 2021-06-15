@@ -1783,6 +1783,10 @@
         }
 
         $scope.updateScales = function () {
+          var ids = [1,2,3,4]
+          AnrService.deleteOperationalRiskScales(ids, function () {
+
+          });
             $scope.updateOperationalRiskScales();
             AnrService.getScales($scope.model.anr.id).then(function (data) {
                 $scope.scalesCanChange = data.canChange && $scope.model.anr.cacheModelIsScalesUpdatable;
