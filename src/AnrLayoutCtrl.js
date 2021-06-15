@@ -1696,8 +1696,22 @@
         }
 
         $scope.onOpRiskImpactCommChanged = function (model, value) {
-          console.log(model, value);
-        }
+            let promise = $q.defer();
+            AnrService.updateOperationalRiskScaleComment(
+                $scope.model.anr.id,
+                model.scaleId,
+                model.id,
+                {[value] : model[value]},
+                function() {
+                  promise.resolve();
+                },
+                function(){
+                  promise.reject();
+                }
+              )
+              return promise;
+          };
+
 
         $scope.onEditOpRiskLabelScale = function (id, value) {
           console.log(id, value);
