@@ -1793,6 +1793,7 @@
                   AnrService.deleteOperationalRiskScales(ids, function () {
                       toastr.success(gettextCatalog.getString('{{count}} scales have been deleted.',
                           {count: ids.length}), gettextCatalog.getString('Deletion successful'));
+                      $scope.updateOperationalRiskScales();
                   });
 
             }, function (reject) {
