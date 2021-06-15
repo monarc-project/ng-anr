@@ -1716,8 +1716,6 @@
                 let allScales = data.data;
                 $scope.opRiskImpactScaleValues = [];
 
-                allScales.forEach(scale => scale.comments.forEach(comment => comment.scaleId = scale.id));
-
                 $scope.opRiskLikelihoodScale = allScales.filter(scale => scale.type == 2)[0];
                 $scope.opRiskLikelihoodScale.comments.sort((a,b) => a.scaleIndex - b.scaleIndex);
 
