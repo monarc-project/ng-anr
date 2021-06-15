@@ -3098,7 +3098,7 @@
     }
 
     function DeleteOperationalRiskScalesDialogCtrl($scope, $mdDialog, gettextCatalog, scales) {
-        $scope.scales = scales;
+        $scope.scales = angular.copy(scales);
         $scope.validator = true;
 
         $scope.scaleSelected = function () {
