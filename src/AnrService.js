@@ -163,6 +163,16 @@
                 }
             });
 
+        self.OperationalRiskScalesCommentResource = $resource('api/' + anr + '/:anrId/operational-scales/:operationalRiskScaleId/comments/:operationalRiskScaleCommentId', { anrId: '@anrId', operationalRiskScaleId: '@operationalRiskScaleId', operationalRiskScaleCommentId: "@operationalRiskScaleCommentId" },
+            {
+                'update': {
+                    method: 'PUT'
+                },
+                'query': {
+                    isArray: false
+                }
+            });
+
         self.InstancesConsequencesResource = $resource('api/' + anr + '/:anrId/instances-consequences/:consId', { anrId: '@anrId', consId: '@consId' },
             {
                 'update': {
@@ -333,6 +343,11 @@
             MassDeleteService.deleteMass('api/client-anr/' + $rootScope.getUrlAnrId() + '/operational-scales', ids, success, error);
         };
 
+        //operational risk scale comment
+        var updateOperationalRiskScaleComment = function (anr_id, scale_id, comment_id, params, success, error) {
+            return self.OperationalRiskScalesCommentResource.update({anrId: anr_id, operationalRiskScaleId: scale_id, operationalRiskScaleCommentId: comment_id}, params, success, error);
+        };
+
 
         // Instances (unforeseen) consequences
         var getInstancesConsequences = function (anr_id) {
@@ -414,6 +429,8 @@
             getScaleComments: getScaleComments,
             createScaleComment: createScaleComment,
             updateScaleComment: updateScaleComment,
+
+            updateOperationalRiskScaleComment: updateOperationalRiskScaleComment,
 
             getInstances: getInstances,
             getInstance: getInstance,
