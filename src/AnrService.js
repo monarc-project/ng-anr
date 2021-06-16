@@ -168,6 +168,9 @@
                 'update': {
                     method: 'PUT'
                 },
+                'patch': {
+                    method: 'PATCH'
+                },
                 'query': {
                     isArray: false
                 }
@@ -347,6 +350,10 @@
             return self.OperationalRiskScalesResource.update({anrId: anr_id, operationalRiskScaleId: scale_id}, params, success, error);
         };
 
+        var updateValueForAllOperationalRiskScale = function(anr_id, params, success,error){
+            return self.OperationalRiskScalesResource.patch({anrId: anr_id}, params, success, error);
+        };
+
         //operational risk scale comment
         var updateOperationalRiskScaleComment = function (anr_id, scale_id, comment_id, params, success, error) {
             return self.OperationalRiskScalesCommentResource.update({anrId: anr_id, operationalRiskScaleId: scale_id, operationalRiskScaleCommentId: comment_id}, params, success, error);
@@ -430,6 +437,7 @@
             createOperationalRiskScale: createOperationalRiskScale,
             deleteOperationalRiskScales: deleteOperationalRiskScales,
             updateOperationalRiskScale: updateOperationalRiskScale,
+            updateValueForAllOperationalRiskScale: updateValueForAllOperationalRiskScale,
 
             getScaleComments: getScaleComments,
             createScaleComment: createScaleComment,
