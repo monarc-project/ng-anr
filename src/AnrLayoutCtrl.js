@@ -1726,7 +1726,20 @@
 
 
         $scope.onEditOpRiskLabelScale = function (id, value) {
-          console.log(id, value);
+            let promise = $q.defer();
+            AnrService.updateOperationalRiskScale(
+                $scope.model.anr.id,
+                id,
+                {label : value},
+                function() {
+                  promise.resolve();
+                },
+                function(){
+                  promise.reject();
+                }
+            )
+
+            return promise;
         }
 
         $scope.onOpRiskLikelihoodScaleChanged = function (model, value) {
