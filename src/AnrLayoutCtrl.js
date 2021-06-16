@@ -1719,8 +1719,6 @@
                       }
                   })
               })
-
-
             } else {
               AnrService.updateOperationalRiskScaleComment(
                   $scope.model.anr.id,
