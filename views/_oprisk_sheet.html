@@ -3,10 +3,13 @@
         <table class="md-html-table" editable callback="changeRiskOp">
             <thead>
                 <tr>
-                    <th class="column-scales-table no-border"></th>
-                    <th class="column-scales-table" translate>Prob.</th>
-                    <th class="column-scales-table" ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}">{{scale.label}}</th>
-                    <th class="column-scales-table" translate>MAX risk</th>
+                    <th class="column-scales-table no-border" rowspan="2"></th>
+                    <th class="column-scales-table" translate rowspan="2">Prob.</th>
+                    <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}" translate>Impact</th>
+                    <th class="column-scales-table" translate rowspan="2">MAX risk</th>
+                </tr>
+                <tr>
+                    <th class="column-scales-table" ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}">{{scale.label}}</th> -->
                 </tr>
             </thead>
             <tbody>
