@@ -232,8 +232,10 @@
                             class="preserve-newlines"
                             edit-readonly="isAnrReadOnly"
                             edit-field="scaleValue"
+                            edit-min="{{opRiskImpactScales[0].comments[i - 1] ? opRiskImpactScales[0].comments[i - 1].scaleValue + 1 : 0}}"
+                            edit-max="{{opRiskImpactScales[0].comments[i + 1] ? opRiskImpactScales[0].comments[i + 1].scaleValue - 1 : null}}"
                             edit-localmodel="opRiskImpactScales[0].comments[i]"
-                            edit-type="textarea">
+                            edit-type="number">
                         </th>
                         <td
                             class="preserve-newlines"

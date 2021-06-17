@@ -119,7 +119,7 @@ angular.module('AnrModule').directive('editable', function(){
 			}
 
 			if (attrs.editType == 'number') {
-				tmpl += '<input class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'number\'" type="number" ng-model="field.editedValue" placeholder="{{placeholder}}" escape="cancelEdition()" action="saveEdition" autofocus/>';
+				tmpl += '<input class="edit-field" min={{min}} max={{max}} ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'number\'" type="number" ng-model="field.editedValue" placeholder="{{placeholder}}" escape="cancelEdition()" action="saveEdition" autofocus/>';
 			} else if (attrs.editType == 'textarea') {
 				tmpl += '<textarea class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'textarea\'" ng-model="field.editedValue" placeholder="{{placeholder}}" escape="cancelEdition()" action="saveEdition" autofocus></textarea>';
 			} else {
@@ -134,6 +134,8 @@ angular.module('AnrModule').directive('editable', function(){
 			localmodel: '=editLocalmodel',
 			placeholder: '@editPlaceholder',
 			class: '@editClass',
+			min: '@editMin',
+			max: '@editMax',
 			show: "=ngShow",
 			filter: '@editFilter',
 			readOnly: '=editReadonly',
