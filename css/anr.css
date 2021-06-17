@@ -734,6 +734,9 @@ span textarea {
     min-width: 200px;
 }
 
+.column-scales-table {
+    width: 10%
+}
 
 /*.angular-ui-tree-nodes .angular-ui-tree-nodes {
     padding-left: 6px;
