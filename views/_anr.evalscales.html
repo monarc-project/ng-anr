@@ -219,7 +219,7 @@
                             </span>
                             <span class="text-blue">
                             </span>
-                            <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="onEditOpRiskScale(scale.id, 'isHidden', !scale.isHidden)">
+                            <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly && ((opRiskImpactScales | filter:{isHidden:false}).length > 1 || display.show_hidden_opRisks_impacts)" ng-click="onEditOpRiskScale(scale.id, 'isHidden', !scale.isHidden)">
                               <md-icon>{{ scale.isHidden ? 'visibility' : 'visibility_off' }}</md-icon>
                             </md-button>
                           </th>
