@@ -23,7 +23,7 @@
                 switch($state.current.name){
                     default:
                     case 'main.project.anr':
-                        $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
+                        $scope.display = {show_hidden_impacts: false, show_hidden_opRisks_impacts:false, anrSelectedTabIndex: 0};
                         break;
                     case 'main.project.anr.dashboard':
                         $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 1};
@@ -1532,9 +1532,6 @@
             }
         };
 
-        $scope.onEditImpactValue = function(newValue) {
-        }
-
         $scope.onThreatCommChanged = function (model, value) {
             if (!model.id) {
                 return createComm($scope.scales.threats.id, model.val, model[value]);
@@ -1724,15 +1721,15 @@
             return promise;
           };
 
-
-        $scope.onEditOpRiskLabelScale = function (id, value) {
+        $scope.onEditOpRiskScale = function (id, field, value) {
             let promise = $q.defer();
             AnrService.updateOperationalRiskScale(
                 $scope.model.anr.id,
                 id,
-                {label : value},
+                {[field] : value},
                 function() {
                   promise.resolve();
+                  $scope.updateOperationalRiskScales();
                 },
                 function(){
                   promise.reject();
