@@ -1753,7 +1753,24 @@
         }
 
         $scope.onOpRiskLikelihoodScaleChanged = function (model, value) {
-          console.log(model, value);
+            let promise = $q.defer();
+            let params = {probabilityMin : model[value] , probabilityMax : model.max};
+            if (value == 'max') {
+                params = {probabilityMin : model.min, probabilityMax : model[value]};
+            }
+            AnrService.updateValueForAllOperationalRiskScale(
+                $scope.model.anr.id,
+                params,
+                function() {
+                  promise.resolve();
+                  $scope.updateOperationalRiskScales();
+                },
+                function(){
+                  promise.reject();
+                }
+              );
+
+            return promise;
         }
 
         $scope.updateOperationalRiskScales = function () {
