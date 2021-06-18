@@ -1689,7 +1689,20 @@
         }
 
         $scope.onOpRiskImpactScaleChanged = function (model, value) {
-          console.log(model, value);
+            let promise = $q.defer();
+            AnrService.updateValueForAllOperationalRiskScale(
+                $scope.model.anr.id,
+                {numberOfLevelForOperationalImpact : model[value]},
+                function() {
+                  promise.resolve();
+                  $scope.updateOperationalRiskScales();
+                },
+                function(){
+                  promise.reject();
+                }
+              );
+
+            return promise;
         }
 
         $scope.onOpRiskScaleCommChanged = function (model, value) {
@@ -1749,12 +1762,10 @@
                 $scope.opRiskImpactScaleValues = [];
 
                 $scope.opRiskLikelihoodScale = allScales.filter(scale => scale.type == 2)[0];
-                $scope.opRiskLikelihoodScale.comments.sort((a,b) => a.scaleIndex - b.scaleIndex);
 
                 $scope.opRiskImpactScales = allScales.filter(scale => scale.type == 1);
-                $scope.opRiskImpactScales.forEach(scale => scale.comments.sort((a,b) => a.scaleIndex - b.scaleIndex));
                 $scope.opRiskImpactScales.min = $scope.opRiskImpactScales[0].min;
-                $scope.opRiskImpactScales.max = $scope.opRiskImpactScales[0].max;
+                $scope.opRiskImpactScales.max = $scope.opRiskImpactScales[0].max + 1;
 
                 $scope.defaultCommentsData = $scope.opRiskImpactScales[0].comments.map(function(scale) {
                     $scope.opRiskImpactScaleValues.push(scale.scaleValue);

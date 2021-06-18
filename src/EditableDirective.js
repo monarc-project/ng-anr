@@ -5,7 +5,7 @@ angular.module('AnrModule').directive('editable', function(){
 			callback: '=',
 			visibleCallback: '=visible'
 		},
-		controller: ['$scope', '$attrs', function($scope, $attrs){
+		controller: ['$scope', '$attrs', 'toastr', 'gettextCatalog', function($scope, $attrs, toastr, gettextCatalog){
 			this.fields = [];
 			this.addField = function(field){
 				this.fields.push(field);
@@ -21,11 +21,14 @@ angular.module('AnrModule').directive('editable', function(){
 			this.saveChange = function(field, direction){
 				field.error = false;
 
-				if( $attrs.forceCallback == undefined && field.initialValue == field.editedValue){
+				if( $attrs.forceCallback == undefined && (field.initialValue == field.editedValue || field.editedValue == null) ){
 					// value didn't change, don't call callback
 					field.cancel();
 					if(direction != undefined){
 						this.moveEdition(field, direction);
+					}
+					if (field.editedValue == null) {
+						toastr.warning(gettextCatalog.getString("Wrong value"));
 					}
 					return true;
 				}
@@ -139,13 +142,13 @@ angular.module('AnrModule').directive('editable', function(){
 			show: "=ngShow",
 			filter: '@editFilter',
 			readOnly: '=editReadonly',
+			canChange: '=editCanchange',
 		},
 		link: function(scope, element, attrs, ctrls){
 			scope.editableCtrl = ctrls[0];
 			scope.modelCtrl = ctrls[1];
 
 			var model = scope.localmodel !== undefined ? scope.localmodel : scope.modelCtrl.model;
-
 			scope.field = {
 				edited: false,
 				model: model,
@@ -154,6 +157,7 @@ angular.module('AnrModule').directive('editable', function(){
 				type: attrs.editType && attrs.editType != "" ? attrs.editType : 'text',
 				editedValue: null,
 				readOnly: scope.readOnly !== undefined ? scope.readOnly : false,
+				canChange: scope.canChange !== undefined ? scope.canChange : true,
 				edit: function(){
 					this.edited = true;
 					this.initialValue = this.model[this.name];
@@ -198,7 +202,7 @@ angular.module('AnrModule').directive('editable', function(){
 			});
 
 			element.on('click', function(){
-				if( ! scope.field.edited && !scope.field.readOnly ){
+				if( !scope.field.edited && !scope.field.readOnly && scope.field.canChange){
 					scope.$apply(function(){
 						scope.startEdition();
 					});

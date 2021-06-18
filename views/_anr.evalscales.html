@@ -176,13 +176,18 @@
           </md-card>
 
           <div editable callback="onOpRiskImpactScaleChanged" layout="row">
-              <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="opRiskImpactScales"><span translate>Impacts scale:</span> [
-                  <span class="text-blue" edit-field="min"></span> -
-                  <span class="text-blue" edit-field="max"></span> ]
-              </h4>
-              <h4 ng-if="(OFFICE_MODE == 'FO' && !scalesCanChange ) || isAnrReadOnly"><span translate>Impacts scale:</span> [
-                  <span class="text-blue">{{ opRiskImpactScales.min}}</span> -
-                  <span class="text-blue">{{ opRiskImpactScales.max }}</span> ]
+              <h4 edit-model="opRiskImpactScales">
+                  <span translate>Impacts scale:</span>&nbsp;
+                  <span
+                      class="text-blue"
+                      edit-readonly="isAnrReadOnly"
+                      edit-canchange="scalesCanChange"
+                      edit-min="1"
+                      edit-max="20"
+                      edit-field="max"
+                      edit-type="number">
+                  </span>&nbsp;
+                  <span translate>Levels</span>
               </h4>
           </div>
           <div layout="row" layout-align="space-between center">
@@ -227,10 +232,10 @@
                   </thead>
 
                   <tbody ng-if="opRiskImpactScales.min != opRiskImpactScales.max && opRiskImpactScales.max > 0">
-                    <tr ng-repeat="i in range(opRiskImpactScales.min,opRiskImpactScales.max)" edit-model="opRiskImpactScales">
+                    <tr ng-repeat="i in range(opRiskImpactScales.min,opRiskImpactScales.max - 1)" edit-model="opRiskImpactScales">
                         <th
-                            class="preserve-newlines"
                             edit-readonly="isAnrReadOnly"
+                            edit-canchange="scalesCanChange"
                             edit-field="scaleValue"
                             edit-min="{{opRiskImpactScales[0].comments[i - 1] ? opRiskImpactScales[0].comments[i - 1].scaleValue + 1 : 0}}"
                             edit-max="{{opRiskImpactScales[0].comments[i + 1] ? opRiskImpactScales[0].comments[i + 1].scaleValue - 1 : null}}"
@@ -252,13 +257,19 @@
           </div>
 
           <div editable callback="onOpRiskLikelihoodScaleChanged" layout="row">
-              <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="opRiskLikelihoodScale"><span translate>Likelihood scale:</span> [
-                  <span class="text-blue" edit-field="min"></span> -
-                  <span class="text-blue" edit-field="max"></span> ]
-              </h4>
-              <h4 ng-if="(OFFICE_MODE == 'FO' && !scalesCanChange ) || isAnrReadOnly"><span translate>Likelihood scale:</span> [
-                  <span class="text-blue">{{ opRiskLikelihoodScale.min }}</span> -
-                  <span class="text-blue">{{ opRiskLikelihoodScale.max }}</span> ]
+              <h4 edit-model="opRiskLikelihoodScale"><span translate>Likelihood scale:</span> [
+                  <span
+                      class="text-blue"
+                      edit-readonly="isAnrReadOnly"
+                      edit-canchange="scalesCanChange"
+                      edit-field="min">
+                  </span> -
+                  <span
+                      class="text-blue"
+                      edit-readonly="isAnrReadOnly"
+                      edit-canchange="scalesCanChange"
+                      edit-field="max">
+                  </span> ]
               </h4>
           </div>
 
