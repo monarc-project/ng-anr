@@ -262,13 +262,19 @@
                       class="text-blue"
                       edit-readonly="isAnrReadOnly"
                       edit-canchange="scalesCanChange"
-                      edit-field="min">
+                      edit-min="0"
+                      edit-max="{{opRiskLikelihoodScale.max - 1}}"
+                      edit-field="min"
+                      edit-type="number">
                   </span> -
                   <span
                       class="text-blue"
                       edit-readonly="isAnrReadOnly"
                       edit-canchange="scalesCanChange"
-                      edit-field="max">
+                      edit-min="{{opRiskLikelihoodScale.min + 1}}"
+                      edit-max="20"
+                      edit-field="max"
+                      edit-type="number">
                   </span> ]
               </h4>
           </div>
