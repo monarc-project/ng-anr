@@ -5,7 +5,7 @@ angular.module('AnrModule').directive('editable', function(){
 			callback: '=',
 			visibleCallback: '=visible'
 		},
-		controller: ['$scope', '$attrs', 'toastr', 'gettextCatalog', function($scope, $attrs, toastr, gettextCatalog){
+		controller: ['$scope', '$attrs', function($scope, $attrs){
 			this.fields = [];
 			this.addField = function(field){
 				this.fields.push(field);
@@ -27,9 +27,7 @@ angular.module('AnrModule').directive('editable', function(){
 					if(direction != undefined){
 						this.moveEdition(field, direction);
 					}
-					if (field.editedValue == null) {
-						toastr.warning(gettextCatalog.getString("Wrong value"));
-					}
+
 					return true;
 				}
 
