@@ -310,7 +310,7 @@
                       <div layout="row" layout-align="start center">
                           <div class="anr-scales-demo-block orange"></div>
                           <md-input-container>
-                              <input ng-disabled="isAnrReadOnly" type="number" name="rolf_thresholds_max" min="{{ thresholds.rolf_thresholds.min }}" max="{{ scales.impacts.max*scales.threats.max*scales.vulns.max }}" ng-model="thresholds.rolf_thresholds.max" aria-label="max"></input>
+                              <input ng-disabled="isAnrReadOnly" type="number" name="rolf_thresholds_max" min="{{ thresholds.rolf_thresholds.min }}" max="{{ opRiskImpactScaleValues[opRiskImpactScales.max - 1]*opRiskLikelihoodScale.max}}" ng-model="thresholds.rolf_thresholds.max" aria-label="max"></input>
                               <div ng-messages="thresholdsForm.rolf_thresholds_max.$error">
                                   <div ng-message="min">{{ 'This cannot be lower than the green threshold' | translate }}</div>
                                   <div ng-message="max">{{ 'This cannot be higher than' | translate }} {{ scales.impacts.max*scales.threats.max*scales.vulns.max }}</div>
