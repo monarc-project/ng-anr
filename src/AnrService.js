@@ -338,7 +338,7 @@
              if ($rootScope.OFFICE_MODE == "FO") {
                 new self.OperationalRiskScalesResource({anrId: anr_id, Label: label, min: min, max: max,comments : comments, type: 1}).$save(success, error);
              } else {
-        	      new self.OperationalRiskScalesResource({anrId: anr_id, Label: label, min: min, max: max, type: 1, langue: langue}).$save(success, error);
+        	      new self.OperationalRiskScalesResource({anrId: anr_id, Label: label, min: min, max: max,comments : comments, type: 1,}).$save(success, error);
              }
         };
 
