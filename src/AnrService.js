@@ -343,7 +343,11 @@
         };
 
         var deleteOperationalRiskScales = function (ids, success, error) {
-            MassDeleteService.deleteMass('api/client-anr/' + $rootScope.getUrlAnrId() + '/operational-scales', ids, success, error);
+            if ($rootScope.OFFICE_MODE == 'FO') {
+                MassDeleteService.deleteMass('api/client-anr/' + $rootScope.getUrlAnrId() + '/operational-scales', ids, success, error);
+            } else {
+                MassDeleteService.deleteMass('api/delete-operational-scales', ids, success, error);
+            }
         };
 
         var updateOperationalRiskScale = function (anr_id, scale_id, params, success, error) {
