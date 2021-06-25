@@ -160,7 +160,7 @@
       <md-tab label="{{ 'Operational risks' | translate }}">
           <md-input-container ng-if="OFFICE_MODE == 'BO'">
               <md-icon>language</md-icon>
-              <md-select ng-model="scales.language" ng-change="switchLanguage()">
+              <md-select ng-model="opRisksScales.language" ng-change="switchOpRisksLanguage()">
                 <md-option ng-repeat="(index, lang) in languages" value="{{ index }}">
                   <countryflag country="{{ languages[index].flag }}"></countryflag>
                   {{ languages[index].name | translate }}

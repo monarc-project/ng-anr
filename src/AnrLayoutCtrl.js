@@ -155,10 +155,11 @@
                     $scope.model = data;
                     $rootScope.anr_id = data.anr.id;
                     $scope.isAnrReadOnly = false;
-
                     $scope.languages = ConfigService.getLanguages();
+                    $scope.opRisksScales = {
+                      language : ConfigService.getDefaultLanguageIndex()
+                    };
                     $scope.scales.language = ConfigService.getDefaultLanguageIndex();
-
                     thresholdsWatchSetup = false;
                     $scope.thresholds = {
                         thresholds: {min: $scope.model.anr.seuil1, max: $scope.model.anr.seuil2},
@@ -193,6 +194,9 @@
                     $scope.isAnrReadOnly = (data.rwd == 0);
                     $scope.languages = ConfigService.getLanguages();
                     $scope.scales.language = data.language;
+                    $scope.opRisksScales = {
+                      language : data.language
+                    };
                     $scope.$parent.$parent.clientCurrentAnr = data;
 
                     thresholdsWatchSetup = false;
@@ -1688,6 +1692,10 @@
             };
         }
 
+        $scope.switchOpRisksLanguage = function(){
+          $scope.updateOperationalRiskScales();
+        };
+
         $scope.onOpRiskImpactScaleChanged = function (model, value) {
             let promise = $q.defer();
             AnrService.updateValueForAllOperationalRiskScale(
@@ -1774,7 +1782,8 @@
         }
 
         $scope.updateOperationalRiskScales = function () {
-            AnrService.getOperationalRiskScales($scope.model.anr.id).then(function (data) {
+            let languageSelected = $scope.languages[$scope.opRisksScales.language].code
+            AnrService.getOperationalRiskScales($scope.model.anr.id, languageSelected).then(function (data) {
                 let allScales = data.data;
                 $scope.opRiskImpactScaleValues = [];
 

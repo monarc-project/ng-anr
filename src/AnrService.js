@@ -330,8 +330,8 @@
         };
 
         // operational scales
-        var getOperationalRiskScales = function (anr_id) {
-            return self.OperationalRiskScalesResource.query({anrId: anr_id}).$promise;
+        var getOperationalRiskScales = function (anr_id, language) {
+            return self.OperationalRiskScalesResource.query({anrId: anr_id, language: language}).$promise;
         };
 
         var createOperationalRiskScale = function (anr_id, label, min, max, comments, success, error) {
