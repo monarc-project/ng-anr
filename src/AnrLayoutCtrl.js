@@ -159,6 +159,7 @@
                     $scope.opRisksScales = {
                       language : ConfigService.getDefaultLanguageIndex()
                     };
+                    $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
                     $scope.scales.language = ConfigService.getDefaultLanguageIndex();
                     thresholdsWatchSetup = false;
                     $scope.thresholds = {
@@ -197,6 +198,7 @@
                     $scope.opRisksScales = {
                       language : data.language
                     };
+                    $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
                     $scope.$parent.$parent.clientCurrentAnr = data;
 
                     thresholdsWatchSetup = false;
@@ -1693,6 +1695,7 @@
         }
 
         $scope.switchOpRisksLanguage = function(){
+          $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
           $scope.updateOperationalRiskScales();
         };
 
@@ -1729,7 +1732,10 @@
                   $scope.model.anr.id,
                   model.scaleId,
                   model.id,
-                  {[value] : model[value]},
+                  {
+                    language: $scope.opRisksLanguageSelected,
+                    [value] : model[value]
+                  },
                   function() {
                     promise.resolve();
                   },
@@ -1747,7 +1753,10 @@
             AnrService.updateOperationalRiskScale(
                 $scope.model.anr.id,
                 id,
-                {[field] : value},
+                {
+                  language: $scope.opRisksLanguageSelected,
+                  [field] : value
+                },
                 function() {
                   promise.resolve();
                   $scope.updateOperationalRiskScales();
@@ -1782,8 +1791,7 @@
         }
 
         $scope.updateOperationalRiskScales = function () {
-            let languageSelected = $scope.languages[$scope.opRisksScales.language].code
-            AnrService.getOperationalRiskScales($scope.model.anr.id, languageSelected).then(function (data) {
+            AnrService.getOperationalRiskScales($scope.model.anr.id, $scope.opRisksLanguageSelected).then(function (data) {
                 let allScales = data.data;
                 $scope.opRiskImpactScaleValues = [];
 

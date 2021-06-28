@@ -351,6 +351,7 @@
         };
 
         var updateOperationalRiskScale = function (anr_id, scale_id, params, success, error) {
+            console.log(params);
             return self.OperationalRiskScalesResource.update({anrId: anr_id, operationalRiskScaleId: scale_id}, params, success, error);
         };
 
