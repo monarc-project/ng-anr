@@ -1832,7 +1832,7 @@
 
                 AnrService.createOperationalRiskScale(
                     $scope.model.anr.id,
-                    [scale.label],
+                    scale.label,
                     $scope.opRiskImpactScales.min,
                     $scope.opRiskImpactScales.max,
                     $scope.defaultCommentsData,
