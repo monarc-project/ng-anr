@@ -3184,12 +3184,13 @@
         $scope.languages = ConfigService.getLanguages();
         $scope.language = language;
         let labels = {};
+        labels[$scope.languages[$scope.language].code] = null;
 
-        for (language in $scope.languages) {
-            if ($scope.OFFICE_MODE == 'BO' || $scope.languages[language].inDB) {
-              labels[$scope.languages[language].code] = null;
-            }
-        };
+        if ($scope.OFFICE_MODE == 'BO') {
+            for (language in $scope.languages) {
+                  labels[$scope.languages[language].code] = null;
+            };
+        }
         $scope.opRiskImpactScale = {label:labels} ;
 
         $scope.create = function () {
