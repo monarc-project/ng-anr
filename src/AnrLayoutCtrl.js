@@ -1831,7 +1831,7 @@
 
                 AnrService.createOperationalRiskScale(
                     $scope.model.anr.id,
-                    scale['label' + $scope.model.anr.language],
+                    scale.label,
                     $scope.opRiskImpactScales.min,
                     $scope.opRiskImpactScales.max,
                     $scope.defaultCommentsData,
@@ -3181,8 +3181,7 @@
 
     function AddOperationalRiskScalesDialogCtrl($scope, $mdDialog, ConfigService) {
         $scope.languages = ConfigService.getLanguages();
-        $scope.language = $scope.getAnrLanguage();
-        $scope.opRiskImpactScale = { ['label' + $scope.language] : null };
+        $scope.opRiskImpactScale = { label : null };
 
         $scope.create = function () {
           $mdDialog.hide($scope.opRiskImpactScale);
