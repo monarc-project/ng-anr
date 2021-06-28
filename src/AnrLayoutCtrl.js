@@ -3186,10 +3186,11 @@
         let labels = {};
 
         for (language in $scope.languages) {
-            labels[$scope.languages[language].code] = null;
+            if ($scope.OFFICE_MODE == 'BO' || $scope.languages[language].inDB) {
+              labels[$scope.languages[language].code] = null;
+            }
         };
         $scope.opRiskImpactScale = {label:labels} ;
-
 
         $scope.create = function () {
           $mdDialog.hide($scope.opRiskImpactScale);
