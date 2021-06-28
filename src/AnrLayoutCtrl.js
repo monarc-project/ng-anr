@@ -1812,7 +1812,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ConfigService', 'languageSelected', AddOperationalRiskScalesDialogCtrl],
+                controller: ['$scope', '$mdDialog', 'ConfigService', 'language', AddOperationalRiskScalesDialogCtrl],
                 templateUrl: 'views/anr/create.operationalRiskScale.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -1820,7 +1820,7 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                  languageSelected: $scope.opRisksLanguageSelected
+                  language: $scope.opRisksScales.language
                 }
             }).then(function (scale) {
                 let cont = scale.cont;
@@ -3180,9 +3180,9 @@
         };
     }
 
-    function AddOperationalRiskScalesDialogCtrl($scope, $mdDialog, ConfigService, languageSelected) {
+    function AddOperationalRiskScalesDialogCtrl($scope, $mdDialog, ConfigService, language) {
         $scope.languages = ConfigService.getLanguages();
-        $scope.language = languageSelected;
+        $scope.language = language;
         let labels = {};
 
         for (language in $scope.languages) {
