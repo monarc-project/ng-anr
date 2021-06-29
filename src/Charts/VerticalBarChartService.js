@@ -43,7 +43,7 @@
           offsetXAxisLabel: 0,
         } //default options for the graph
 
-        options = $.extend(options, parameters); //merge the parameters to the default options
+        options = angular.extend(options, parameters); //merge the parameters to the default options
 
         var margin = options.margin,
           width = options.width - margin.left - margin.right,
