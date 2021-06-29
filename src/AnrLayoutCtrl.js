@@ -1834,7 +1834,7 @@
                     $scope.model.anr.id,
                     scale.label,
                     $scope.opRiskImpactScales.min,
-                    $scope.opRiskImpactScales.max,
+                    $scope.opRiskImpactScales.max - 1,
                     $scope.defaultCommentsData,
                   function () {
                       toastr.success(
