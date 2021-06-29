@@ -81,16 +81,16 @@
     <em ng-if="instmode == 'obj' ">{{ 'There are no operational risks for this asset.' | translate }}</em>
 </div>
 
-<div style="overflow-x: scroll;">
+<div class="op-riks-table">
   <table class="md-html-table inputs-as-number big-border-all" ng-if="!opsheet_risk && oprisks.length > 0" editable callback="changeRiskOp">
       <thead class="big-border-bottom">
       <tr>
-          <th ng-if="instmode != 'obj'" rowspan="3" translate>Asset</th>
+          <th rowspan="3" translate>Asset</th>
           <th rowspan="3" translate>Risk description</th>
-          <th colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" ng-if="model.showRolfBrut" class="big-border-left"  translate>Inherent risk</th>
-          <th colspan="{{3 + (opRiskImpactScales | filter:{isHidden:false}).length}}" class="big-border-left" translate>Net risk</th>
-          <th rowspan="3" class="big-border-left" translate>Treatment</th>
-          <th rowspan="3" translate>Residual risk</th>
+          <th colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" ng-if="model.showRolfBrut && instmode != 'obj'" class="big-border-left"  translate>Inherent risk</th>
+          <th colspan="{{3 + (opRiskImpactScales | filter:{isHidden:false}).length}}" ng-if="instmode != 'obj'" class="big-border-left" translate>Net risk</th>
+          <th rowspan="3" class="big-border-left" ng-if="instmode != 'obj'" translate>Treatment</th>
+          <th rowspan="3" ng-if="instmode != 'obj'" translate>Residual risk</th>
       </tr>
 
       <tr>
@@ -98,42 +98,41 @@
           <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}" translate ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">Impact</th>
           <th rowspan="2" translate ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">Inherent risk</th>
 
-          <th title="{{scaleThreat}}" rowspan="2" class="big-border-left" translate>Prob.</th>
-          <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}" translate>Impact</th>
-          <th rowspan="2" translate>Current risk</th>
-          <th rowspan="2" translate>Existing controls</th>
+          <th rowspan="2" ng-if="instmode != 'obj'" class="big-border-left" title="{{scaleThreat}}" translate>Prob.</th>
+          <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}" ng-if="instmode != 'obj'" translate>Impact</th>
+          <th rowspan="2" ng-if="instmode != 'obj'" translate>Current risk</th>
+          <th rowspan="2" ng-if="instmode != 'obj'" translate>Existing controls</th>
       </tr>
 
       <tr>
           <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" class="vertical-text" title="{{scale.label}}" ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr')">{{scale.label.substring(0,3)}}.</th>
-          <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" class="vertical-text" title="{{scale.label}}">{{scale.label.substring(0,3)}}.</th>
+          <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" class="vertical-text" title="{{scale.label}}" ng-if="instmode != 'obj'">{{scale.label.substring(0,3)}}.</th>
       </tr>
       </thead>
 
       <tbody>
       <tr ng-repeat="risk in oprisks" edit-model="risk" ng-class="{'specific-blue': risk.specific == 1}">
-          <td ng-if="instmode != 'obj'" title="{{instanceCache[risk.instanceInfos.id].completePath}}" class="preserve-newlines">{{ _langField(risk.instanceInfos,'name') }}</td>
+          <td class="preserve-newlines" ng-if="instmode == 'obj'">{{ _langField(object,'name') }}</td>
+          <td class="preserve-newlines" ng-if="instmode != 'obj'" title="{{instanceCache[risk.instanceInfos.id].completePath}}">{{ _langField(risk.instanceInfos,'name') }}</td>
   	      <td class="preserve-newlines" title="{{ _langField(risk,'description') }}">{{ _langField(risk,'label') || _langField(risk,'label') }}</td>
-          <td class="big-border-left txtcenter" ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr' || instmode == 'inst')" edit-readonly="isAnrReadOnly || instmode == 'obj'" edit-filter="dashnull" edit-field="brutProb" title="{{threatCommCache[risk.brutProb]}}"></td>
-          <td ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}"  ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr' || instmode == 'inst')" edit-readonly="isAnrReadOnly || instmode == 'obj'" edit-filter="dashnull" edit-field="brutR" class="txtcenter" title="{{scaleCommCache[4][risk.brutR]}}"></td>
+          <td class="big-border-left txtcenter" ng-if="model.showRolfBrut && (instmode == 'anr' || instmode == 'inst')" edit-readonly="isAnrReadOnly" edit-filter="dashnull" edit-field="brutProb" title="{{threatCommCache[risk.brutProb]}}"></td>
+          <td ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}"  ng-if="model.showRolfBrut && (instmode == 'anr' || instmode == 'inst')" edit-readonly="isAnrReadOnly" edit-filter="dashnull" edit-field="brutR" class="txtcenter" title="{{scaleCommCache[4][risk.brutR]}}"></td>
 
-          <td ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr' || instmode == 'inst')" class="tbl-risk-calc txtcenter"
+          <td ng-if="model.showRolfBrut && (instmode == 'anr' || instmode == 'inst')" class="tbl-risk-calc txtcenter"
               ng-class="{'green': risk.cacheBrutRisk >= 0 && risk.cacheBrutRisk <= thresholds.rolf_thresholds.min, 'orange': risk.cacheBrutRisk > thresholds.rolf_thresholds.min && risk.cacheBrutRisk <= thresholds.rolf_thresholds.max, 'red': risk.cacheBrutRisk > thresholds.rolf_thresholds.max}">{{risk.cacheBrutRisk|dashnull}}</td>
           <td class="small txtcenter big-border-left" ng-if="instmode == 'anr' || instmode == 'inst'" edit-readonly="isAnrReadOnly" edit-field="netProb" edit-filter="dashnull" title="{{threatCommCache[risk.netProb]}}"></td>
 
-          <td ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" class="small txtcenter" ng-if="instmode == 'obj'">-</td>
           <td ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" class="small txtcenter" ng-if="instmode == 'anr' || instmode == 'inst'" edit-readonly="isAnrReadOnly" edit-field="netR" edit-filter="dashnull" title="{{scaleCommCache[4][risk.netR]}}"></td>
 
-          <td class="tbl-risk-calc txtcenter" ng-class="{'green': risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min, 'orange': risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max, 'red': risk.cacheNetRisk > thresholds.rolf_thresholds.max}">{{ risk.cacheNetRisk|dashnull }}</td>
+          <td class="tbl-risk-calc txtcenter" ng-if="instmode != 'obj'" ng-class="{'green': risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min, 'orange': risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max, 'red': risk.cacheNetRisk > thresholds.rolf_thresholds.max}">{{ risk.cacheNetRisk|dashnull }}</td>
           <td class="preserve-newlines" ng-if="instmode == 'anr' || instmode == 'inst'" edit-readonly="isAnrReadOnly" edit-field="comment" edit-type="textarea"></td>
-          <td class="small txtcenter" ng-if="instmode == 'obj'">-</td>
-          <td class="txtcenter big-border-left">
+          <td class="txtcenter big-border-left" ng-if="instmode != 'obj'">
               <a ng-if="risk.specific == 1 && deleteSpecOpRisk" class="pointer" ng-click="deleteSpecOpRisk($event, risk)"><md-icon class="md-warn">delete</md-icon></a>
-              <a class="pointer blue" title="{{ ('Open risk sheet' | translate) }}" ng-click="openOpRiskSheet(risk, oprisks)" ng-if="instmode != 'obj'">
+              <a class="pointer blue" title="{{ ('Open risk sheet' | translate) }}" ng-click="openOpRiskSheet(risk, oprisks)">
                   {{treatmentStr(risk.kindOfMeasure)|translate}}
               </a>
           </td>
-          <td class="tbl-risk-calc txtcenter" ng-class="{'green': (risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min && risk.cacheTargetedRisk==-1) || risk.cacheTargetedRisk >= 0 && risk.cacheTargetedRisk <= thresholds.rolf_thresholds.min ,
+          <td class="tbl-risk-calc txtcenter" ng-if="instmode != 'obj'" ng-class="{'green': (risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min && risk.cacheTargetedRisk==-1) || risk.cacheTargetedRisk >= 0 && risk.cacheTargetedRisk <= thresholds.rolf_thresholds.min ,
              'orange': (risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max && risk.cacheTargetedRisk==-1) || risk.cacheTargetedRisk > thresholds.rolf_thresholds.min && risk.cacheTargetedRisk <= thresholds.rolf_thresholds.max,
              'red': (risk.cacheNetRisk > thresholds.rolf_thresholds.max && risk.cacheTargetedRisk==-1) || risk.cacheTargetedRisk > thresholds.rolf_thresholds.max}">{{ risk.cacheTargetedRisk==-1 ? risk.cacheNetRisk : risk.cacheTargetedRisk | dashnull }}</td>
       </tr>

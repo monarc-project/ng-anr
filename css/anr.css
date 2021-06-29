@@ -726,8 +726,13 @@ span textarea {
     font-weight: bold;
 }
 
+
+.op-riks-table {
+    overflow-x: auto;
+}
+
 .horz-expanding-table {
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 .horz-expanding-table .md-html-table td, .horz-expanding-table .md-html-table td span span {
