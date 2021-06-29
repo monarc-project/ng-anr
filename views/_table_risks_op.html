@@ -94,9 +94,9 @@
       </tr>
 
       <tr>
-          <th title="{{scaleThreat}}" rowspan="2" translate ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">Prob.</th>
-          <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}" translate ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">Impact</th>
-          <th rowspan="2" translate ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr') ">Inherent risk</th>
+          <th rowspan="2" ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr')" class="big-border-left" title="{{scaleThreat}}" translate>Prob.</th>
+          <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}"  ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr')" translate>Impact</th>
+          <th rowspan="2"  ng-if="model.showRolfBrut && (instmode != 'obj' || mode == 'anr')" translate>Inherent risk</th>
 
           <th rowspan="2" ng-if="instmode != 'obj'" class="big-border-left" title="{{scaleThreat}}" translate>Prob.</th>
           <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}" ng-if="instmode != 'obj'" translate>Impact</th>
