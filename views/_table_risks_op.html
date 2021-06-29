@@ -93,7 +93,7 @@
           <th rowspan="3" ng-if="instmode != 'obj'" translate>Residual risk</th>
       </tr>
 
-      <tr ng-if="OFFICE_MODE == 'FO' && instmode != 'obj'">
+      <tr ng-if="instmode != 'obj'">
           <th rowspan="2" ng-if="model.showRolfBrut" class="big-border-left" title="{{scaleThreat}}" translate>Prob.</th>
           <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}"  ng-if="model.showRolfBrut" translate>Impact</th>
           <th rowspan="2"  ng-if="model.showRolfBrut" translate>Inherent risk</th>
@@ -104,7 +104,7 @@
           <th rowspan="2" translate>Existing controls</th>
       </tr>
 
-      <tr ng-if="OFFICE_MODE == 'FO' && instmode != 'obj'">
+      <tr ng-if="instmode != 'obj'">
           <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" class="vertical-text" title="{{scale.label}}" ng-if="model.showRolfBrut">{{scale.label.substring(0,3)}}.</th>
           <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" class="vertical-text" title="{{scale.label}}">{{scale.label.substring(0,3)}}.</th>
       </tr>
