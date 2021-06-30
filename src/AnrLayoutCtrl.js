@@ -1580,17 +1580,31 @@
                 AnrService.createScaleType(
                     $scope.model.anr.id,
                     $scope.scales.impacts.id,
-                    label, $scope.scales.language,
-                    function () {
-                    $scope.updateScaleTypes(function () {
-                        $timeout(
-                            function () {
-                              var scroller = document.getElementById('horiz-scrollable');
-                              scroller.scrollLeft = scroller.scrollWidth;
-                            }, 0, false);
+                    label,
+                    $scope.scales.language,
+                    function (data) {
+                        let index = 0;
+                        for(label in scale.label) {
+                          if (scale.label[label]) {
+                            let language = Object.values($scope.languages).filter(language => language.code == label)[0].index;
+                            AnrService.patchScaleType($scope.model.anr.id, data.id, {label: scale.label[label]}, language, function () {
+                                if (index == Object.entries(scale.label).length - 1) {
+                                  $scope.updateScaleTypes(function () {
+                                      $timeout(
+                                          function () {
+                                            var scroller = document.getElementById('horiz-scrollable');
+                                            scroller.scrollLeft = scroller.scrollWidth;
+                                          }, 0, false);
+                                      }
+                                  );
+                                  $scope.$broadcast('scales-impacts-type-changed');
+                                }
+                                ++index;
+                            });
+                          }else {
+                           ++index;
+                          }
                         }
-                    );
-                    $scope.$broadcast('scales-impacts-type-changed');
                   },
                   function () {
                       $scope.addInformationRiskScales(ev);
