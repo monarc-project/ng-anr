@@ -1554,31 +1554,54 @@
             }
         };
 
-        $scope.newColumn = { name: null };
+        $scope.addInformationRiskScales = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-        $scope.onCreateNewColumn = function (newValue) {
-            AnrService.createScaleType($scope.model.anr.id, $scope.scales.impacts.id, newValue, $scope.scales.language, function () {
-                $scope.updateScaleTypes(function () {
-                    $timeout(function () {
-                        var scroller = document.getElementById('horiz-scrollable');
-                        scroller.scrollLeft = scroller.scrollWidth;
-                    }, 0, false);
-                });
-                $scope.newColumn.name = null;
-                $scope.$broadcast('scales-impacts-type-changed');
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'language', AddScaleDialogCtrl],
+                templateUrl: 'views/anr/create.scale.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                  language: $scope.scales.language
+                }
+            }).then(function (scale) {
+                let cont = scale.cont;
+                scale.cont = undefined;
+                let label = scale.label[$scope.languages[$scope.scales.language].code];
+
+                if (cont) {
+                    $scope.addInformationRiskScales(ev);
+                }
+
+                AnrService.createScaleType(
+                    $scope.model.anr.id,
+                    $scope.scales.impacts.id,
+                    label, $scope.scales.language,
+                    function () {
+                    $scope.updateScaleTypes(function () {
+                        $timeout(
+                            function () {
+                              var scroller = document.getElementById('horiz-scrollable');
+                              scroller.scrollLeft = scroller.scrollWidth;
+                            }, 0, false);
+                        }
+                    );
+                    $scope.$broadcast('scales-impacts-type-changed');
+                  },
+                  function () {
+                      $scope.addInformationRiskScales(ev);
+                  });
+            }, function (reject) {
+                $scope.handleRejectionDialog(reject);
             });
         };
 
         $scope.onEditCustomColumn = function (id, newValue) {
             AnrService.patchScaleType($scope.model.anr.id, id, {label: newValue}, $scope.scales.language, function () {
-                $scope.updateScaleTypes(function () {
-                    $timeout(function () {
-                        var scroller = document.getElementById('horiz-scrollable');
-                        scroller.scrollLeft = scroller.scrollWidth;
-                    }, 0, false);
-                });
-                // $scope.column.name = newValue;
-                $scope.$broadcast('scales-impacts-type-changed');
             });
         };
 
@@ -1589,11 +1612,36 @@
             });
         };
 
-        $scope.deleteCustomScaleType = function (id) {
-            AnrService.deleteScaleType($scope.model.anr.id, id, function () {
-                toastr.success(gettextCatalog.getString("The impact scale type has been deleted successfully."), gettextCatalog.getString("Scale type deleted"));
-                $scope.updateScaleTypes();
-                $scope.$broadcast('scales-impacts-type-changed');
+        $scope.deleteInformationRiskScales = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'gettextCatalog', 'scales', 'forceValidator', 'language', DeleteScaleDialogCtrl],
+                templateUrl: 'views/anr/delete.scale.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    scales: $scope.scales_types.filter(scale => scale.type == 'CUS'),
+                    forceValidator : true,
+                    language: $scope.scales.language,
+                }
+            }).then(function (ids) {
+
+              ids.forEach((id,index) => {
+                  AnrService.deleteScaleType($scope.model.anr.id, id, function () {
+                    if (index == ids.length - 1) {
+                        toastr.success(gettextCatalog.getString('{{count}} scales have been deleted.',
+                            {count: ids.length}), gettextCatalog.getString('Deletion successful'));
+                        $scope.updateScaleTypes();
+                        $scope.$broadcast('scales-impacts-type-changed');
+                    }
+                  });
+              });
+            }, function (reject) {
+                $scope.handleRejectionDialog(reject);
             });
         };
 
@@ -1714,7 +1762,7 @@
               );
 
             return promise;
-        }
+        };
 
         $scope.onOpRiskScaleCommChanged = function (model, value) {
             let promise = $q.defer();
@@ -1767,7 +1815,7 @@
             )
 
             return promise;
-        }
+        };
 
         $scope.onOpRiskLikelihoodScaleChanged = function (model, value) {
             let promise = $q.defer();
@@ -1788,9 +1836,9 @@
               );
 
             return promise;
-        }
+        };
 
-        $scope.updateOperationalRiskScales = function () {
+        $scope.updateOperationalRiskScales = function (cb) {
             AnrService.getOperationalRiskScales($scope.model.anr.id, $scope.opRisksLanguageSelected).then(function (data) {
                 let allScales = data.data;
                 $scope.opRiskImpactScaleValues = [];
@@ -1805,6 +1853,10 @@
                     $scope.opRiskImpactScaleValues.push(scale.scaleValue);
                     return {scaleIndex: scale.scaleIndex, scaleValue: scale.scaleValue}
                 });
+
+                if (cb) {
+                    cb();
+                }
             });
         };
 
@@ -1812,8 +1864,8 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ConfigService', 'language', AddOperationalRiskScalesDialogCtrl],
-                templateUrl: 'views/anr/create.operationalRiskScale.html',
+                controller: ['$scope', '$mdDialog', 'language', AddScaleDialogCtrl],
+                templateUrl: 'views/anr/create.scale.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -1841,7 +1893,16 @@
                           gettextCatalog.getString('The operational risk impact scale has been created successfully.'),
                           gettextCatalog.getString('Creation successful')
                       );
-                      $scope.updateOperationalRiskScales();
+                      $scope.updateOperationalRiskScales(
+                        function () {
+                          $timeout(
+                              function () {
+                                var scroller = document.getElementById('op-risks-horiz-scrollable');
+                                scroller.scrollLeft = scroller.scrollWidth;
+                              }, 0, false
+                          );
+                        }
+                      );
                   },
                   function () {
                       $scope.addOperationalRiskScales(ev);
@@ -1849,14 +1910,14 @@
             }, function (reject) {
                 $scope.handleRejectionDialog(reject);
             });
-        }
+        };
 
         $scope.deleteOperationalRiskScales = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'gettextCatalog', 'scales', DeleteOperationalRiskScalesDialogCtrl],
-                templateUrl: 'views/anr/deleteOperationalRiskScales.html',
+                controller: ['$scope', '$mdDialog', 'gettextCatalog', 'scales', DeleteScaleDialogCtrl],
+                templateUrl: 'views/anr/delete.scale.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -1875,7 +1936,7 @@
             }, function (reject) {
                 $scope.handleRejectionDialog(reject);
             });
-        }
+        };
 
         $scope.updateScales = function () {
             $scope.updateOperationalRiskScales();
@@ -1961,7 +2022,7 @@
 
         $scope.checkCommentVisibility = function(comment){
             return comment && ! $scope.scales_types_by_id[comment.scaleImpactType].isHidden || $scope.display.show_hidden_impacts ;
-        }
+        };
 
         $scope.onRisksTableEdited = function (model, name) {
             var promise = $q.defer();
@@ -3180,8 +3241,7 @@
         };
     }
 
-    function AddOperationalRiskScalesDialogCtrl($scope, $mdDialog, ConfigService, language) {
-        $scope.languages = ConfigService.getLanguages();
+    function AddScaleDialogCtrl($scope, $mdDialog, language) {
         $scope.language = language;
         let labels = {};
         labels[$scope.languages[$scope.language].code] = null;
@@ -3191,15 +3251,15 @@
                   labels[$scope.languages[language].code] = null;
             };
         }
-        $scope.opRiskImpactScale = {label:labels} ;
+        $scope.scale = {label:labels} ;
 
         $scope.create = function () {
-          $mdDialog.hide($scope.opRiskImpactScale);
+          $mdDialog.hide($scope.scale);
         }
 
         $scope.createAndContinue = function () {
-            $scope.opRiskImpactScale.cont = true;
-            $mdDialog.hide($scope.opRiskImpactScale);
+            $scope.scale.cont = true;
+            $mdDialog.hide($scope.scale);
         }
 
         $scope.cancel = function () {
@@ -3207,8 +3267,9 @@
         };
     }
 
-    function DeleteOperationalRiskScalesDialogCtrl($scope, $mdDialog, gettextCatalog, scales) {
+    function DeleteScaleDialogCtrl($scope, $mdDialog, gettextCatalog, scales, forceValidator, language) {
         $scope.scales = angular.copy(scales);
+        $scope.language = language;
         $scope.validator = true;
 
         $scope.scaleSelected = function () {
@@ -3219,6 +3280,9 @@
 
             if ($scope.idsScalesSelected.length !== 0 && $scope.idsScalesSelected.length !== $scope.scales.length) {
                 $scope.validator = false;
+            }
+            if (forceValidator) {
+              $scope.validator = false;
             }
         }
 

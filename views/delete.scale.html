@@ -19,7 +19,7 @@
             </thead>
             <tbody md-body>
             <tr class="md-row" ng-repeat="scale in scales">
-              <td class="md-cell">{{scale.label}}</td>
+              <td class="md-cell">{{scale.label ? scale.label : scale['label' + language]}}</td>
               <td class="md-cell">
                 <md-checkbox ng-model="scale.selected" ng-change='scaleSelected()'>
                 </md-checkbox>

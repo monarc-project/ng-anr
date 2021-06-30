@@ -1061,6 +1061,11 @@ trix-toolbar button.link, trix-toolbar button.strike, trix-toolbar button.code {
     border-left-style: solid !important;
     border-color: #DDDDDD;
 }
+.big-border-right {
+    border-right-width: 2px !important;
+    border-right-style: solid !important;
+    border-color: #DDDDDD;
+}
 
 .md-ripple-container, .md-ripple-placed {
     transition: none;

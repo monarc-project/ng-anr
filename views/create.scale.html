@@ -1,8 +1,8 @@
 <md-dialog md-theme="light" class="dialog-width">
-    <form name="addRiskOpScaleForm">
+    <form name="addRiScaleForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
-                <h2 ranslate>Add an operational risk impact scale</h2>
+                <h2 translate>Add a scale</h2>
                 <span flex></span>
                 <md-button class="md-icon-button" ng-click="cancel()">
                     <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
@@ -25,8 +25,8 @@
                 <md-input-container class="md-block" flex>
                     <label translate>Label</label>
                     <md-icon>label</md-icon>
-                    <input ng-model="opRiskImpactScale.label[languages[language].code]" name="label" required>
-                    <div ng-messages="opRiskImpactScale.label.$error">
+                    <input ng-model="scale.label[languages[language].code]" name="label" required>
+                    <div ng-messages="scale.label.$error">
                         <div ng-message="required">{{ 'The label may not be empty' | translate }}</div>
                     </div>
                 </md-input-container>
@@ -37,10 +37,10 @@
             <md-button ng-click="cancel()">
                 {{ 'Cancel' | translate }}
             </md-button>
-            <md-button ng-click="create()" ng-disabled="addRiskOpScaleForm.$error.required" type="submit" class="md-accent md-hue-3">
+            <md-button ng-click="create()" ng-disabled="addRiScaleForm.$error.required" type="submit" class="md-accent md-hue-3">
                 {{ 'Create' | translate }}
             </md-button>
-            <md-button ng-click="createAndContinue()" ng-disabled="addRiskOpScaleForm.$error.required" class="md-accent md-hue-3">
+            <md-button ng-click="createAndContinue()" ng-disabled="addRiScaleForm.$error.required" class="md-accent md-hue-3">
                 {{ 'Create and continue' | translate }}
             </md-button>
         </md-dialog-actions>

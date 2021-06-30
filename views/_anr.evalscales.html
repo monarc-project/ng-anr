@@ -19,35 +19,68 @@
           </md-card>
 
           <div editable callback="onImpactScaleChanged" layout="row">
-              <h4 ng-if="(OFFICE_MODE == 'BO' || scalesCanChange) && !isAnrReadOnly" edit-model="scales.impacts"><span translate>Impacts scale:</span> [
-                  <span class="text-blue" edit-field="min"></span> -
-                  <span class="text-blue" edit-field="max"></span> ]
-              </h4>
-              <h4 ng-if="(OFFICE_MODE == 'FO' && !scalesCanChange ) || isAnrReadOnly"><span translate>Impacts scale:</span> [
-                  <span class="text-blue">{{ scales.impacts.min }}</span> -
-                  <span class="text-blue">{{ scales.impacts.max }}</span> ]
+              <h4 edit-model="scales.impacts">
+                  <span translate>Impacts and consequences scale: </span> [
+                      <span
+                        class="text-blue"
+                        edit-readonly="isAnrReadOnly"
+                        edit-canchange="scalesCanChange"
+                        edit-min="0"
+                        edit-max="{{scales.impacts.max - 1}}"
+                        edit-field="min"
+                        edit-type="number">
+                      </span> -
+                      <span
+                      class="text-blue"
+                      edit-readonly="isAnrReadOnly"
+                      edit-canchange="scalesCanChange"
+                      edit-min="{{scales.impacts.min + 1}}"
+                      edit-max="20"
+                      edit-field="max"
+                      edit-type="number">
+                      </span> ]
               </h4>
           </div>
 
-          <md-switch ng-model="display.show_hidden_impacts">{{ 'Show hidden impacts' | translate }}</md-switch>
+          <div layout="row" layout-align="space-between center">
+              <md-switch ng-model="display.show_hidden_impacts">{{ 'Show hidden impacts' | translate }}</md-switch>
+              <div>
+                <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="addInformationRiskScales()">
+                    <md-tooltip md-direction="left">
+                        {{ 'Add scales' | translate }}
+                    </md-tooltip>
+                    <md-icon>add_to_photos</md-icon>
+                </md-button>
+                <md-button ng-if="!isAnrReadOnly && (scales_types | filter:{type:'CUS'}).length >= 1" class="md-icon-button md-warn" ng-click="deleteInformationRiskScales()">
+                  <md-tooltip md-direction="left">
+                      {{ 'Delete scales' | translate }}
+                  </md-tooltip>
+                    <md-icon>delete</md-icon>
+                </md-button>
+              </div>
+          </div>
 
           <div class="horz-expanding-table" id="horiz-scrollable">
-              <table editable callback="onImpactCommChanged" visible="checkCommentVisibility" class="md-html-table">
-                  <thead>
+              <table editable callback="onImpactCommChanged" visible="checkCommentVisibility" class="md-html-table big-border-all">
+                  <thead class="big-border-bottom">
                       <tr>
-                          <th></th>
-                          <th ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types">
-                            <span class="text-blue" ng-if="type.type == 'CUS' && !isAnrReadOnly" inline-edit="column.name" inline-edit-callback="onEditCustomColumn(type.id, newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ type['label' + scales.language]? type['label' + scales.language] : '...' }}"></span>
+                        <th rowspan="2"></th>
+                        <th colspan="3" class="text-blue" translate>Impacts</th>
+                        <th colspan="{{display.show_hidden_impacts ? scales_types.length - 3 : (scales_types | filter:{isHidden:0}).length - 3 }}" class="text-blue big-border-left" translate>Consequences</th>
+                      </tr>
+                      <tr>
+                          <th ng-show="!type.isHidden || display.show_hidden_impacts" ng-repeat="type in scales_types" ng-class="{'big-border-right': type.type_id == 3}">
+                            <span class="text-blue" ng-if="type.type == 'CUS' && !isAnrReadOnly" inline-edit="type['label' + + scales.language]" inline-edit-callback="onEditCustomColumn(type.id, newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ type['label' + scales.language]? type['label' + scales.language] : '...' }}"></span>
                             <span class="text-blue" ng-if="type.type != 'CUS'">{{ type['label' + scales.language] }}</span>
-                            <md-button class="md-icon-button md-warn" ng-if="type.type == 'CUS' && !isAnrReadOnly" ng-click="deleteCustomScaleType(type.id)">
-                              <md-icon>delete</md-icon>
-                            </md-button>
-                            <md-button class="md-icon-button md-primary" ng-if="type.type != 'CUS' && !isAnrReadOnly" ng-click="setImpactVisibility(type.id, !!type.isHidden)">
+                            <md-button class="md-icon-button md-primary"
+                              ng-if="
+                                type.type_id != 1 &&
+                                type.type_id != 2 &&
+                                type.type_id != 3 &&
+                                !isAnrReadOnly"
+                              ng-click="setImpactVisibility(type.id, !!type.isHidden)">
                               <md-icon>{{ type.isHidden ? 'visibility' : 'visibility_off' }}</md-icon>
                             </md-button>
-                          </th>
-                          <th ng-if="!isAnrReadOnly">
-                              <span class="text-blue" inline-edit="newColumn.name" inline-edit-callback="onCreateNewColumn(newValue)" inline-edit-btn-edit="" inline-edit-on-blur="save" inline-edit-on-click inline-edit-placeholder="{{ 'New column name' | translate }}"></span>
                           </th>
                       </tr>
                   </thead>
@@ -57,6 +90,7 @@
                           <th>{{ i }}</th>
                           <td
                               class="preserve-newlines"
+                              ng-class="{'big-border-right': type.type_id == 3}"
                               ng-show="!type.isHidden || display.show_hidden_impacts"
                               ng-repeat="type in scales_types"
                               edit-readonly="isAnrReadOnly"
@@ -208,7 +242,7 @@
               </div>
           </div>
 
-          <div class="horz-expanding-table" id="horiz-scrollable">
+          <div class="horz-expanding-table" id="op-risks-horiz-scrollable">
               <table editable callback="onOpRiskScaleCommChanged" class="md-html-table">
                   <thead>
                       <tr>
