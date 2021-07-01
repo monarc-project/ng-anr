@@ -285,22 +285,11 @@
             return self.ScalesTypesResource.query({anrId: anr_id, order:'position'}).$promise;
         };
 
-        var createScaleType = function (anr_id, scale_id, label1, langue = null, success, error) {
-             if ($rootScope.OFFICE_MODE == "FO") {
-                new self.ScalesTypesResource({anrId: anr_id, anr: anr_id, scale: scale_id, Label: label1, isHidden: false, isSys: false, implicitPosition: 2, langue: $rootScope.getAnrLanguage().toString()}).$save(success, error);
-             } else {
-        	      new self.ScalesTypesResource({anrId: anr_id, anr: anr_id, scale: scale_id, Label: label1, isHidden: false, isSys: false, implicitPosition: 2, langue: langue}).$save(success, error);
-             }
+        var createScaleType = function (anr_id, scale_id, labels, success, error) {
+            new self.ScalesTypesResource({anrId: anr_id, scale: scale_id, labels: labels, implicitPosition: 2}).$save(success, error);
         };
 
-        var patchScaleType = function (anr_id, scale_type_id, data, langue = null, success, error) {
-            if (data.hasOwnProperty("label")) {
-                if ($rootScope.OFFICE_MODE == "FO") {
-                    langue = $rootScope.getAnrLanguage().toString();
-                }
-                data['label' + langue] = data['label'];
-                delete data['label'];
-            }
+        var patchScaleType = function (anr_id, scale_type_id, data, success, error) {
             self.ScalesTypesResource.patch({anrId: anr_id, scaleTypeId: scale_type_id}, data, success, error);
         };
 
@@ -313,12 +302,17 @@
             return self.ScalesCommentResource.query({anrId: anr_id, scaleId: type}).$promise;
         };
 
-        var createScaleComment = function ( anr_id, scale_id, row, comment, type_impact_id, langue = null, success, error) {
-             if ($rootScope.OFFICE_MODE == "FO") {
-                new self.ScalesCommentResource({anrId: anr_id, scaleId: scale_id, val: row, scaleImpactType: type_impact_id, comment: comment, langue: $rootScope.getAnrLanguage().toString()}).$save(success, error);
-             } else {
-        	      new self.ScalesCommentResource({anrId: anr_id, scaleId: scale_id, val: row, scaleImpactType: type_impact_id, comment: comment, langue: langue }).$save(success, error);
-             }
+        var createScaleComment = function ( anr_id, scale_id, row, comments, type_impact_id, success, error) {
+            let params = {
+              anrId: anr_id,
+              scaleId: scale_id,
+              scaleIndex: row,
+              scaleValue: row,
+              scaleImpactType: type_impact_id,
+              [Object.keys(comments)]: Object.values(comments)[0]
+            };
+
+            new self.ScalesCommentResource(params).$save(success, error);
         };
 
         var updateScaleComment = function (anr_id, scale_id, comment_id, params, success, error) {
@@ -335,11 +329,7 @@
         };
 
         var createOperationalRiskScale = function (anr_id, label, min, max, comments, success, error) {
-             if ($rootScope.OFFICE_MODE == "FO") {
-                new self.OperationalRiskScalesResource({anrId: anr_id, Label: label, min: min, max: max,comments : comments, type: 1}).$save(success, error);
-             } else {
-        	      new self.OperationalRiskScalesResource({anrId: anr_id, Label: label, min: min, max: max,comments : comments, type: 1,}).$save(success, error);
-             }
+            new self.OperationalRiskScalesResource({anrId: anr_id, label: label, min: min, max: max, comments : comments, type: 1}).$save(success, error);
         };
 
         var deleteOperationalRiskScales = function (ids, success, error) {

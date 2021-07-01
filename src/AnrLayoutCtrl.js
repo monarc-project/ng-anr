@@ -1519,8 +1519,9 @@
 
         var createComm = function (model_id, row_id, comment, impactType) {
             var promise = $q.defer();
+            let comm= {['comment' + $scope.scales.language] : comment};
 
-            AnrService.createScaleComment($scope.model.anr.id, model_id, row_id, comment, impactType, $scope.scales.language, function () {
+            AnrService.createScaleComment($scope.model.anr.id, model_id, row_id, comm, impactType, function () {
                 $scope.updateScaleComments(model_id);
                 promise.resolve();
             }, function () {
@@ -1532,7 +1533,7 @@
 
         $scope.onImpactCommChanged = function (model, value) {
             if (!model.id) {
-                return createComm($scope.scales.impacts.id, model.val, model[value], model.scaleImpactType);
+                return createComm($scope.scales.impacts.id, model.scaleValue, model[value], model.scaleImpactType);
             } else {
                 return updateComm($scope.scales.impacts.id, model.id, model);
             }
@@ -1540,7 +1541,7 @@
 
         $scope.onThreatCommChanged = function (model, value) {
             if (!model.id) {
-                return createComm($scope.scales.threats.id, model.val, model[value]);
+                return createComm($scope.scales.threats.id, model.scaleValue, model[value]);
             } else {
                 return updateComm($scope.scales.threats.id, model.id, model);
             }
@@ -1548,7 +1549,7 @@
 
         $scope.onVulnCommChanged = function (model, value) {
             if (!model.id) {
-                return createComm($scope.scales.vulns.id, model.val, model[value]);
+                return createComm($scope.scales.vulns.id, model.scaleValue, model[value]);
             } else {
                 return updateComm($scope.scales.vulns.id, model.id, model);
             }
@@ -1571,7 +1572,12 @@
             }).then(function (scale) {
                 let cont = scale.cont;
                 scale.cont = undefined;
-                let label = scale.label[$scope.languages[$scope.scales.language].code];
+                let labels = {};
+
+                for(label in scale.label) {
+                  let language = Object.values($scope.languages).filter(language => language.code == label)[0].index;
+                  labels['label' + language] = scale.label[label];
+                }
 
                 if (cont) {
                     $scope.addInformationRiskScales(ev);
@@ -1580,31 +1586,17 @@
                 AnrService.createScaleType(
                     $scope.model.anr.id,
                     $scope.scales.impacts.id,
-                    label,
-                    $scope.scales.language,
-                    function (data) {
-                        let index = 0;
-                        for(label in scale.label) {
-                          if (scale.label[label]) {
-                            let language = Object.values($scope.languages).filter(language => language.code == label)[0].index;
-                            AnrService.patchScaleType($scope.model.anr.id, data.id, {label: scale.label[label]}, language, function () {
-                                if (index == Object.entries(scale.label).length - 1) {
-                                  $scope.updateScaleTypes(function () {
-                                      $timeout(
-                                          function () {
-                                            var scroller = document.getElementById('horiz-scrollable');
-                                            scroller.scrollLeft = scroller.scrollWidth;
-                                          }, 0, false);
-                                      }
-                                  );
-                                  $scope.$broadcast('scales-impacts-type-changed');
-                                }
-                                ++index;
-                            });
-                          }else {
-                           ++index;
-                          }
-                        }
+                    labels,
+                    function () {
+                        $scope.updateScaleTypes(function () {
+                            $timeout(
+                                function () {
+                                  var scroller = document.getElementById('horiz-scrollable');
+                                  scroller.scrollLeft = scroller.scrollWidth;
+                                }, 0, false);
+                            }
+                        );
+                        $scope.$broadcast('scales-impacts-type-changed');
                   },
                   function () {
                       $scope.addInformationRiskScales(ev);
@@ -1615,12 +1607,12 @@
         };
 
         $scope.onEditCustomColumn = function (id, newValue) {
-            AnrService.patchScaleType($scope.model.anr.id, id, {label: newValue}, $scope.scales.language, function () {
+            AnrService.patchScaleType($scope.model.anr.id, id, {['label' + $scope.scales.language]: newValue}, function () {
             });
         };
 
         $scope.setImpactVisibility = function (id, visible) {
-            AnrService.patchScaleType($scope.model.anr.id, id, {isHidden: visible ? 0 : 1}, $scope.scales.language, function () {
+            AnrService.patchScaleType($scope.model.anr.id, id, {isHidden: visible ? 0 : 1}, function () {
                 $scope.updateScaleTypes();
                 $scope.$broadcast('scales-impacts-type-changed');
             });
@@ -2016,8 +2008,8 @@
                                 comment3: null,
                                 comment4: null,
                                 scaleImpactType: $scope.scales_types[j].id,
-                                scaleValue:null,
-                                scaleIndex: null,
+                                scaleValue: i,
+                                scaleIndex: i,
                             };
                         }
                     }
