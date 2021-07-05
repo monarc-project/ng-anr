@@ -346,6 +346,8 @@
                             $scope.oprisks[i][j] = data.oprisks[i][j];
                         }
                     }
+
+                    $scope.opRiskImpactScales = angular.copy($scope.opRiskImpactScales); // force binding operational scales $scope
                 }
 
                 if (cb) {
