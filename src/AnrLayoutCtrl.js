@@ -553,16 +553,9 @@
                 $scope.opsheet_risk = angular.copy(risk);
             }
             $timeout(function() {
-                let fieldsOpRisk = ['R','O','L','F','P','Prob'];
                 $scope.ToolsAnrService.currentTab = 1;
                 $scope.sheet_risk = undefined;
-                fieldsOpRisk.forEach(function(field){
-                  if ($scope.opsheet_risk['targeted'+field] == -1 && $scope.opsheet_risk['net'+field] !== -1) {
-                    $scope.opsheet_risk['targeted'+field] = $scope.opsheet_risk['net'+field];
-                    $scope.changeRiskOp($scope.opsheet_risk,'targeted'+field);
-                  }
-                });
-                RiskService.getRisk($scope.opsheet_risk.rolfRiskId).then(function (data) {
+                RiskService.getRisk($scope.opsheet_risk.rolfRisk).then(function (data) {
                   if (!angular.equals(data['measures'], {})) {
                     $scope.opsheet_risk.measures = data['measures'];
                   }else {
