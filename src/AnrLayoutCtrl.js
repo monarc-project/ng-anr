@@ -2044,16 +2044,33 @@
             return promise.promise;
         };
 
-        $scope.changeRiskOp = function(riskOp, attr){
+        $scope.changeRiskOp = function(model, value){
             var result = $q.defer();
-            AnrService.updateInstanceOpRisk($scope.model.anr.id, riskOp.id, riskOp, function(risk){
-                riskOp.cacheBrutRisk = risk.cacheBrutRisk;
-                riskOp.cacheNetRisk = risk.cacheNetRisk;
-                riskOp.cacheTargetedRisk = risk.cacheTargetedRisk;
-                result.resolve(true);
-            }, function(error){
-                result.reject(false);
-            });
+            if (value !== 'comment') {
+                AnrService.patchInstanceOpRisk(
+                    $scope.model.anr.id,
+                    model.operationalInstanceRiskId,
+                    {
+                        instanceRiskScaleId: model.instanceRiskScaleId,
+                        [value] : model[value]
+                    },
+                    function(){
+                        result.resolve(true);
+                    },
+                    function(){
+                        result.reject(false);
+                    }
+                );
+            }else {
+                AnrService.updateInstanceOpRisk($scope.model.anr.id, model.id, model, function(risk){
+                    model.cacheBrutRisk = risk.cacheBrutRisk;
+                    model.cacheNetRisk = risk.cacheNetRisk;
+                    model.cacheTargetRisk = risk.cacheTargetedRisk;
+                    result.resolve(true);
+                }, function(error){
+                    result.reject(false);
+                });
+            }
             return result.promise;
         };
 
