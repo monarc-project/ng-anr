@@ -2046,7 +2046,7 @@
 
         $scope.changeRiskOp = function(model, value){
             var result = $q.defer();
-            if (value !== 'comment') {
+            if (model.operationalInstanceRiskId && model.instanceRiskScaleId) {
                 AnrService.patchInstanceOpRisk(
                     $scope.model.anr.id,
                     model.operationalInstanceRiskId,
@@ -2067,7 +2067,7 @@
                     model.cacheNetRisk = risk.cacheNetRisk;
                     model.cacheTargetRisk = risk.cacheTargetedRisk;
                     result.resolve(true);
-                }, function(error){
+                }, function(){
                     result.reject(false);
                 });
             }
