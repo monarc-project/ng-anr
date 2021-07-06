@@ -113,45 +113,84 @@
       <tbody>
       <tr ng-repeat="risk in oprisks" edit-model="risk" ng-class="{'specific-blue': risk.specific == 1}">
           <td class="preserve-newlines" title="{{instanceCache[risk.instanceInfos.id].completePath}}">{{ instmode == 'obj' ? _langField(object,'name') : _langField(risk.instanceInfos,'name') }}</td>
-  	      <td class="preserve-newlines" title="{{ _langField(risk,'description') }}">{{ _langField(risk,'label') || _langField(risk,'label') }}</td>
-          <td class="big-border-left txtcenter" ng-if="model.showRolfBrut && instmode != 'obj'" edit-readonly="isAnrReadOnly" edit-filter="dashnull" edit-field="brutProb" title="{{threatCommCache[risk.brutProb]}}"></td>
+  	      <td class="preserve-newlines" title="{{ _langField(risk,'description') }}">{{ _langField(risk,'label') }}</td>
+          <td
+            class="big-border-left txtcenter"
+            ng-if="model.showRolfBrut && instmode != 'obj'"
+            edit-readonly="isAnrReadOnly"
+            edit-field="brutProb"
+            edit-filter="dashnull"
+            title="{{}}">
+          </td>
           <td
             ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}"
             class="small txtcenter"
             ng-if="model.showRolfBrut && instmode != 'obj'"
             edit-readonly="isAnrReadOnly"
-            edit-localmodel="risk.scales[scale.id].values"
-            edit-field="brut"
+            edit-localmodel="risk.scales[scale.id]"
+            edit-field="brutValue"
             edit-filter="dashnull"
             title="{{}}">
            </td>
-
-          <td ng-if="model.showRolfBrut && instmode != 'obj'" class="tbl-risk-calc txtcenter"
-              ng-class="{'green': risk.cacheBrutRisk >= 0 && risk.cacheBrutRisk <= thresholds.rolf_thresholds.min, 'orange': risk.cacheBrutRisk > thresholds.rolf_thresholds.min && risk.cacheBrutRisk <= thresholds.rolf_thresholds.max, 'red': risk.cacheBrutRisk > thresholds.rolf_thresholds.max}">{{risk.cacheBrutRisk|dashnull}}</td>
-          <td class="small txtcenter big-border-left" ng-if="instmode != 'obj'" edit-readonly="isAnrReadOnly" edit-field="netProb" edit-filter="dashnull" title="{{threatCommCache[risk.netProb]}}"></td>
-
+          <td
+            class="tbl-risk-calc txtcenter"
+            ng-if="model.showRolfBrut && instmode != 'obj'"
+            ng-class="{
+                'green': risk.cacheBrutRisk >= 0 && risk.cacheBrutRisk <= thresholds.rolf_thresholds.min,
+                'orange': risk.cacheBrutRisk > thresholds.rolf_thresholds.min && risk.cacheBrutRisk <= thresholds.rolf_thresholds.max,
+                'red': risk.cacheBrutRisk > thresholds.rolf_thresholds.max}">
+                {{ risk.cacheBrutRisk | dashnull }}
+          </td>
+          <td
+            class="small txtcenter big-border-left"
+            ng-if="instmode != 'obj'"
+            edit-readonly="isAnrReadOnly"
+            edit-field="netProb"
+            edit-filter="dashnull"
+            title="{{}}">
+          </td>
           <td
             ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}"
             class="small txtcenter"
             ng-if="instmode != 'obj'"
             edit-readonly="isAnrReadOnly"
-            edit-localmodel="risk.scales[scale.id].values"
-            edit-field="net"
+            edit-localmodel="risk.scales[scale.id]"
+            edit-field="netValue"
             edit-filter="dashnull"
             title="{{}}">
           </td>
 
-          <td class="tbl-risk-calc txtcenter" ng-if="instmode != 'obj'" ng-class="{'green': risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min, 'orange': risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max, 'red': risk.cacheNetRisk > thresholds.rolf_thresholds.max}">{{ risk.cacheNetRisk|dashnull }}</td>
-          <td class="preserve-newlines" ng-if="instmode != 'obj'" edit-readonly="isAnrReadOnly" edit-field="comment" edit-type="textarea"></td>
+          <td
+            class="tbl-risk-calc txtcenter"
+            ng-if="instmode != 'obj'"
+            ng-class="{
+                'green': risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min,
+                'orange': risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max,
+                'red': risk.cacheNetRisk > thresholds.rolf_thresholds.max}">
+                {{ risk.cacheNetRisk | dashnull }}
+          </td>
+          <td
+            class="preserve-newlines"
+            ng-if="instmode != 'obj'"
+            edit-readonly="isAnrReadOnly"
+            edit-field="comment"
+            edit-type="textarea">
+          </td>
           <td class="txtcenter big-border-left" ng-if="instmode != 'obj'">
               <a ng-if="risk.specific == 1 && deleteSpecOpRisk" class="pointer" ng-click="deleteSpecOpRisk($event, risk)"><md-icon class="md-warn">delete</md-icon></a>
               <a class="pointer blue" title="{{ ('Open risk sheet' | translate) }}" ng-click="openOpRiskSheet(risk, oprisks)">
-                  {{treatmentStr(risk.kindOfMeasure)|translate}}
+                  {{ treatmentStr(risk.kindOfMeasure) | translate }}
               </a>
           </td>
-          <td class="tbl-risk-calc txtcenter" ng-if="instmode != 'obj'" ng-class="{'green': (risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min && risk.cacheTargetRisk==-1) || risk.cacheTargetRisk >= 0 && risk.cacheTargetRisk <= thresholds.rolf_thresholds.min ,
-             'orange': (risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max && risk.cacheTargetRisk==-1) || risk.cacheTargetRisk > thresholds.rolf_thresholds.min && risk.cacheTargetRisk <= thresholds.rolf_thresholds.max,
-             'red': (risk.cacheNetRisk > thresholds.rolf_thresholds.max && risk.cacheTargetRisk==-1) || risk.cacheTargetRisk > thresholds.rolf_thresholds.max}">{{ risk.cacheTargetRisk == '-1' ? risk.cacheNetRisk : risk.cacheTargetRisk | dashnull }}</td>
+          <td
+            class="tbl-risk-calc txtcenter"
+            ng-if="instmode != 'obj'"
+            ng-class="{
+                'green': (risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min && risk.cacheTargetRisk==-1) || risk.cacheTargetRisk >= 0 && risk.cacheTargetRisk <= thresholds.rolf_thresholds.min ,
+                'orange': (risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max && risk.cacheTargetRisk==-1) || risk.cacheTargetRisk > thresholds.rolf_thresholds.min && risk.cacheTargetRisk <= thresholds.rolf_thresholds.max,
+                'red': (risk.cacheNetRisk > thresholds.rolf_thresholds.max && risk.cacheTargetRisk==-1) || risk.cacheTargetRisk > thresholds.rolf_thresholds.max}">
+                {{ risk.cacheTargetRisk == '-1' ? risk.cacheNetRisk : risk.cacheTargetRisk | dashnull }}
+          </td>
       </tr>
       </tbody>
   </table>
