@@ -33,7 +33,7 @@ angular.module('AnrModule').directive('editable', function(){
 
 
 				field.model[field.name] = field.editedValue;
-				var result = this.callback.call(null, field.model, field.name);
+				var result = this.callback.call(null, field.model, field.name, field.rootModel);
 
 				if(result.then == undefined){
 					this.handleCallbackReturn(result, field, direction);
@@ -146,10 +146,12 @@ angular.module('AnrModule').directive('editable', function(){
 			scope.editableCtrl = ctrls[0];
 			scope.modelCtrl = ctrls[1];
 
+			var rootModel = scope.modelCtrl.model;
 			var model = scope.localmodel !== undefined ? scope.localmodel : scope.modelCtrl.model;
 			scope.field = {
 				edited: false,
 				model: model,
+				rootModel: rootModel,
 				name: scope.name ? scope.name : angular.copy(scope.ngName),
 				shown: true,
 				type: attrs.editType && attrs.editType != "" ? attrs.editType : 'text',

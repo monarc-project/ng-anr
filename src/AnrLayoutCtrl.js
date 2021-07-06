@@ -2044,17 +2044,20 @@
             return promise.promise;
         };
 
-        $scope.changeRiskOp = function(model, value){
+        $scope.changeRiskOp = function(model, value, rootModel){
             var result = $q.defer();
-            if (model.operationalInstanceRiskId && model.instanceRiskScaleId) {
+            if (model.instanceRiskScaleId) {
                 AnrService.patchInstanceOpRisk(
                     $scope.model.anr.id,
-                    model.operationalInstanceRiskId,
+                    rootModel.id,
                     {
                         instanceRiskScaleId: model.instanceRiskScaleId,
                         [value] : model[value]
                     },
-                    function(){
+                    function(risk){
+                        rootModel.cacheBrutRisk = risk.cacheBrutRisk;
+                        rootModel.cacheNetRisk = risk.cacheNetRisk;
+                        rootModel.cacheTargetRisk = risk.cacheTargetedRisk;
                         result.resolve(true);
                     },
                     function(){
