@@ -126,7 +126,9 @@
             edit-readonly="isAnrReadOnly"
             edit-field="brutProb"
             edit-filter="dashnull"
-            title="{{}}">
+            title="{{(opRiskLikelihoodScale.comments | filter:{scaleValue:risk.brutProb}).length > 0 ?
+                (opRiskLikelihoodScale.comments | filter:{scaleValue:risk.brutProb})[0].comment :
+                null}}">
           </td>
           <td
             ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}"
@@ -136,7 +138,9 @@
             edit-localmodel="risk.scales[scale.id]"
             edit-field="brutValue"
             edit-filter="dashnull"
-            title="{{}}">
+            title="{{(scale.comments | filter:{scaleValue:risk.scales[scale.id].brutValue}).length > 0 ?
+                (scale.comments | filter:{scaleValue:risk.scales[scale.id].brutValue})[0].comment :
+                null}}">
            </td>
           <td
             class="tbl-risk-calc txtcenter"
@@ -153,7 +157,9 @@
             edit-readonly="isAnrReadOnly"
             edit-field="netProb"
             edit-filter="dashnull"
-            title="{{}}">
+            title="{{(opRiskLikelihoodScale.comments | filter:{scaleValue:risk.netProb}).length > 0 ?
+                (opRiskLikelihoodScale.comments | filter:{scaleValue:risk.netProb})[0].comment :
+                null}}">
           </td>
           <td
             ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}"
@@ -163,7 +169,9 @@
             edit-localmodel="risk.scales[scale.id]"
             edit-field="netValue"
             edit-filter="dashnull"
-            title="{{}}">
+            title="{{(scale.comments | filter:{scaleValue:risk.scales[scale.id].netValue}).length > 0 ?
+                (scale.comments | filter:{scaleValue:risk.scales[scale.id].netValue})[0].comment :
+                null}}">
           </td>
 
           <td
