@@ -1847,6 +1847,7 @@
                 $scope.opRiskLikelihoodScale = allScales.filter(scale => scale.type == 2)[0];
 
                 $scope.opRiskImpactScales = allScales.filter(scale => scale.type == 1);
+                $scope.opRiskScalesAreHidden = allScales.filter(scale => scale.isHidden == true).length > 0 ? true : false;
                 $scope.opRiskImpactScales.min = $scope.opRiskImpactScales[0].min;
                 $scope.opRiskImpactScales.max = $scope.opRiskImpactScales[0].max + 1;
 
