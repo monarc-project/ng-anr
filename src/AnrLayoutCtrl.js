@@ -1843,6 +1843,7 @@
             AnrService.getOperationalRiskScales($scope.model.anr.id, $scope.opRisksLanguageSelected).then(function (data) {
                 let allScales = data.data;
                 $scope.opRiskImpactScaleValues = [];
+                $scope.opRiskImpactScalesTooltips = {};
 
                 $scope.opRiskLikelihoodScale = allScales.filter(scale => scale.type == 2)[0];
 
@@ -1850,6 +1851,13 @@
                 $scope.opRiskScalesAreHidden = allScales.filter(scale => scale.isHidden == true).length > 0 ? true : false;
                 $scope.opRiskImpactScales.min = $scope.opRiskImpactScales[0].min;
                 $scope.opRiskImpactScales.max = $scope.opRiskImpactScales[0].max + 1;
+
+                allScales.forEach(function(scale) {
+                    $scope.opRiskImpactScalesTooltips[scale.id] = scale.label + '\n';
+                    scale.comments.forEach(function(comment) {
+                       $scope.opRiskImpactScalesTooltips[scale.id] += comment.scaleValue + ' : ' + comment.comment + '\n';
+                    })
+                });
 
                 $scope.defaultCommentsData = $scope.opRiskImpactScales[0].comments.map(function(scale) {
                     $scope.opRiskImpactScaleValues.push(scale.scaleValue);
