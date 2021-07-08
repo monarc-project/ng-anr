@@ -508,7 +508,6 @@
             $scope.recommandation_set_uuid = recommandationSetId;
         };
 
-
         $scope.updateSheetRiskTarget = function () {
             if ($scope.sheet_risk) {
               if(parseInt($scope.sheet_risk.threatRate) > -1 && parseInt($scope.sheet_risk.vulnerabilityRate) > -1){
@@ -639,7 +638,6 @@
         };
 
         $scope.nextOpRisk = function(){
-            AnrService.getAnrRiskOwners($scope.model.anr.id, {});
             let nextOpRisk = $scope.opRisks_instance[$scope.idxOpRisks + 1];
             $scope.opRisks_instance[$scope.idxOpRisks] = $scope.opsheet_risk;
             $scope.openOpRiskSheet(nextOpRisk, $scope.opRisks_instance);
@@ -663,6 +661,16 @@
                 $scope.updateAnrRisksOpTable();
             })
           }
+        };
+
+        $scope.queryOwnerSearch = function (query) {
+            var promise = $q.defer();
+            AnrService.getAnrRiskOwners($scope.model.anr.id, {filter: query}).then(function (data) {
+                promise.resolve(data.owners.map(owner => owner.name));
+            }, function () {
+                promise.reject();
+            });
+            return promise.promise;
         };
 
         $scope.$on('recommandations-loaded', function (ev, recs) {

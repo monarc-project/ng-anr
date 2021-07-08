@@ -68,10 +68,21 @@
             </tr>
             <tr>
                 <td class="bold" translate>Risk owner</td>
-                <td  colspan="3" edit-readonly="isAnrReadOnly">
-                  <md-input-container class="md-block" layout="row" flex>
-                      <input ng-model="sheet_risk.owner" ng-change="ownerChanged()">
-                  </md-input-container>
+                <td colspan="3" edit-readonly="isAnrReadOnly">
+                    <md-autocomplete
+                            flex
+                            md-input-name="owner"
+                            md-no-cache="true"
+                            md-selected-item="sheet_risk.owner"
+                            md-search-text="ownerSearchText"
+                            md-items="item in queryOwnerSearch(ownerSearchText)"
+                            md-item-text="item"
+                            md-min-length="0"
+                            md-floating-label=" ">
+                        <md-item-template>
+                            <span md-highlight-text="ownerSearchText" md-highlight-flags="^i">{{item}}</span>
+                        </md-item-template>
+                    </md-autocomplete>
                 </td>
             </tr>
             <tr >
