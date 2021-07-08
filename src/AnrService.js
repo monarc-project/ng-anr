@@ -46,6 +46,13 @@
                 },
                 'query': {
                     isArray: false
+                }r getAnrRiskOwners = function (anr_
+            });
+
+        self.AnrRiskOwnersResource = $resource('api/' + anr + '/:anrId/risk-owners', { anrId: '@anrId'},
+            {
+                'query': {
+                    isArray: false
                 }
             });
 
@@ -377,6 +384,12 @@
             return self.AnrRisksResource.query(query).$promise;
         };
 
+        var getAnrRiskOwners = function (anr_id, params) {
+            var query = angular.copy(params);
+            query.anrId = anr_id;
+            return self.AnrRiskOwnersResource.query(query).$promise;
+        };
+
         var createInstanceRisk = function (anr_id, params, success, error) {
             params.anrId = anr_id;
             new self.AnrRisksResource(params).$save(success, error);
@@ -465,6 +478,7 @@
 
             getAnrRisks: getAnrRisks,
             getAnrRisksOp: getAnrRisksOp,
+            getAnrRiskOwners: getAnrRiskOwners,
 
         };
     }

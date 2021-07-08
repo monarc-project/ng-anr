@@ -639,6 +639,7 @@
         };
 
         $scope.nextOpRisk = function(){
+            AnrService.getAnrRiskOwners($scope.model.anr.id, {});
             let nextOpRisk = $scope.opRisks_instance[$scope.idxOpRisks + 1];
             $scope.opRisks_instance[$scope.idxOpRisks] = $scope.opsheet_risk;
             $scope.openOpRiskSheet(nextOpRisk, $scope.opRisks_instance);
