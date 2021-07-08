@@ -666,7 +666,7 @@
         $scope.queryOwnerSearch = function (query) {
             var promise = $q.defer();
             AnrService.getAnrRiskOwners($scope.model.anr.id, {filter: query}).then(function (data) {
-                promise.resolve(data.owners.map(owner => owner.name));
+                promise.resolve(data.instanceRiskOwners.map(owner => owner.name));
             }, function () {
                 promise.reject();
             });
