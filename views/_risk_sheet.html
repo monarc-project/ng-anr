@@ -76,7 +76,7 @@
                                 md-no-cache="true"
                                 md-selected-item="sheet_risk.owner"
                                 md-search-text="ownerSearchText"
-                                md-items="item in queryOwnerSearch(ownerSearchText)"
+                                md-items="item in queryOwnerSearch(ownerSearchText,'sheet_risk')"
                                 md-item-text="item"
                                 md-min-length="0"
                                 md-floating-label=" ">
@@ -84,12 +84,6 @@
                                 <span md-highlight-text="ownerSearchText" md-highlight-flags="^i">{{item}}</span>
                             </md-item-template>
                         </md-autocomplete>
-                        <md-button class="md-icon-button md-primary" ng-click="createNewOwner(ownerSearchText,'sheet_risk')" ng-show="!sheet_risk.owner && ownerSearchText">
-                          <md-tooltip md-direction="left">
-                              {{ 'Add a owner' | translate }}
-                          </md-tooltip>
-                            <md-icon>add_to_photos</md-icon>
-                        </md-button>
                     </div>
                 </td>
             </tr>

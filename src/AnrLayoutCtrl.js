@@ -663,19 +663,20 @@
           }
         };
 
-        $scope.queryOwnerSearch = function (query) {
+        $scope.queryOwnerSearch = function (query,scope) {
             var promise = $q.defer();
             AnrService.getAnrRiskOwners($scope.model.anr.id, {filter: query}).then(function (data) {
-                promise.resolve(data.instanceRiskOwners.map(owner => owner.name));
+                let ownerNames = data.instanceRiskOwners.map(owner => owner.name);
+                if (ownerNames.length == 0) {
+                    $scope[scope].owner = query;
+                }
+                promise.resolve(ownerNames);
+
             }, function () {
                 promise.reject();
             });
             return promise.promise;
         };
-
-        $scope.createNewOwner = function(search,scope) {
-            $scope[scope].owner = search;
-        }
 
         $scope.$on('recommandations-loaded', function (ev, recs) {
             $scope._copyRecs = recs;
