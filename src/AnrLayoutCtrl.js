@@ -666,12 +666,16 @@
         $scope.queryOwnerSearch = function (query) {
             var promise = $q.defer();
             AnrService.getAnrRiskOwners($scope.model.anr.id, {filter: query}).then(function (data) {
-                promise.resolve(data.owners.map(owner => owner.name));
+                promise.resolve(data.instanceRiskOwners.map(owner => owner.name));
             }, function () {
                 promise.reject();
             });
             return promise.promise;
         };
+
+        $scope.createNewOwner = function(search,scope) {
+            $scope[scope].owner = search;
+        }
 
         $scope.$on('recommandations-loaded', function (ev, recs) {
             $scope._copyRecs = recs;

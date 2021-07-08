@@ -64,20 +64,33 @@
                 <tr>
                     <td class="bold" translate>Risk owner</td>
                     <td colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" edit-readonly="isAnrReadOnly">
-                        <md-autocomplete
-                                flex
-                                md-input-name="owner"
-                                md-no-cache="true"
-                                md-selected-item="opsheet_risk.owner"
-                                md-search-text="ownerSearchText"
-                                md-items="item in queryOwnerSearch(ownerSearchText)"
-                                md-item-text="item"
-                                md-min-length="0"
-                                md-floating-label=" ">
-                            <md-item-template>
-                                <span md-highlight-text="ownerSearchText" md-highlight-flags="^i">{{item}}</span>
-                            </md-item-template>
-                        </md-autocomplete>
+                        <div layout="row" layout-align="center center">
+                            <md-autocomplete
+                                    flex
+                                    md-input-name="owner"
+                                    md-no-cache="true"
+                                    md-selected-item="opsheet_risk.owner"
+                                    md-search-text="ownerSearchText"
+                                    md-items="item in queryOwnerSearch(ownerSearchText)"
+                                    md-item-text="item"
+                                    md-min-length="0"
+                                    md-floating-label=" ">
+                                <md-item-template>
+                                    <span md-highlight-text="ownerSearchText" md-highlight-flags="^i">{{item}}</span>
+                                </md-item-template>
+                                <md-not-found>
+                                    {{ 'No owner matching your search was found. Click on' | translate }}
+                                    <md-icon>add_to_photos</md-icon>
+                                    {{ 'to create it.' | translate }}
+                                </md-not-found>
+                            </md-autocomplete>
+                            <md-button class="md-icon-button md-primary" ng-click="createNewOwner(ownerSearchText,'opsheet_risk')" ng-show="!opsheet_risk.owner && ownerSearchText">
+                              <md-tooltip md-direction="left">
+                                  {{ 'Add a owner' | translate }}
+                              </md-tooltip>
+                                <md-icon>add_to_photos</md-icon>
+                            </md-button>
+                        </div>
                     </td>
                 </tr>
                 <tr>
