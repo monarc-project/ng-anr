@@ -46,7 +46,7 @@
                 },
                 'query': {
                     isArray: false
-                }r getAnrRiskOwners = function (anr_
+                }
             });
 
         self.AnrRiskOwnersResource = $resource('api/' + anr + '/:anrId/risk-owners', { anrId: '@anrId'},
