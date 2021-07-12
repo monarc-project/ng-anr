@@ -1861,16 +1861,27 @@
 
                 $scope.opRiskLikelihoodScale = allScales.filter(scale => scale.type == 2)[0];
 
-                $scope.opRiskImpactScales = allScales.filter(scale => scale.type == 1);
-                $scope.opRiskScalesAreHidden = allScales.filter(scale => scale.isHidden == true).length > 0 ? true : false;
-                $scope.opRiskImpactScales.min = $scope.opRiskImpactScales[0].min;
-                $scope.opRiskImpactScales.max = $scope.opRiskImpactScales[0].max + 1;
+                $scope.opRiskImpactTypeScale = allScales.filter(scale => scale.type == 1)[0];
+
+                $scope.opRiskImpactScales = $scope.opRiskImpactTypeScale.scaleTypes;
+                $scope.opRiskImpactScales.min = $scope.opRiskImpactTypeScale.min;
+                $scope.opRiskImpactScales.max = $scope.opRiskImpactTypeScale.max + 1;
+                $scope.opRiskScalesAreHidden = $scope.opRiskImpactScales.filter(scale => scale.isHidden == true).length > 0 ? true : false;
+
 
                 allScales.forEach(function(scale) {
-                    $scope.opRiskImpactScalesTooltips[scale.id] = scale.label + '\n';
-                    scale.comments.forEach(function(comment) {
-                       $scope.opRiskImpactScalesTooltips[scale.id] += comment.scaleValue + ' : ' + comment.comment + '\n';
+                    scale.scaleTypes.forEach(function(scaleType){
+                        $scope.opRiskImpactScalesTooltips[scaleType.id] = scaleType.label + '\n';
+                        scaleType.comments.forEach(function(comment) {
+                           $scope.opRiskImpactScalesTooltips[scaleType.id] += comment.scaleValue + ' : ' + comment.comment + '\n';
+                        })
                     })
+                    if (scale.comments.length > 0) {
+                        $scope.opRiskImpactScalesTooltips['likelihood'] = '';
+                        scale.comments.forEach(function(comment){
+                            $scope.opRiskImpactScalesTooltips['likelihood'] += comment.scaleValue + ' : ' + comment.comment + '\n';
+                        })
+                    }
                 });
 
                 $scope.defaultCommentsData = $scope.opRiskImpactScales[0].comments.map(function(scale) {
