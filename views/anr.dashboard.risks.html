@@ -86,14 +86,14 @@
                </tr>
 
                <tr>
-                   <th rowspan="2" ng-if="model.showRolfBrut" class="big-border-left" title="{{opRiskImpactScalesTooltips[opRiskLikelihoodScale.id]}}" translate>Prob.</th>
+                   <th rowspan="2" ng-if="model.showRolfBrut" class="big-border-left" title="{{opRiskImpactScalesTooltips['likelihood']}}" translate>Prob.</th>
                    <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}" ng-if="model.showRolfBrut" translate>
                        <span translate>Impact</span>
                        <md-icon class="md-primary icon-small no-margin"  ng-if="opRiskScalesAreHidden" ng-attr-title="{{ 'Some scales are hidden' | translate }}">announcement</md-icon>
                    </th>
                    <th rowspan="2" ng-if="model.showRolfBrut" translate>Inherent risk</th>
 
-                   <th rowspan="2" class="big-border-left" title="{{opRiskImpactScalesTooltips[opRiskLikelihoodScale.id]}}" translate>Prob.</th>
+                   <th rowspan="2" class="big-border-left" title="{{opRiskImpactScalesTooltips['likelihood']}}" translate>Prob.</th>
                    <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}" translate>
                        <span translate>Impact</span>
                        <md-icon class="md-primary icon-small no-margin"  ng-if="opRiskScalesAreHidden" ng-attr-title="{{ 'Some scales are hidden' | translate }}">announcement</md-icon>
