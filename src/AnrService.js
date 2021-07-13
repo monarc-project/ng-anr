@@ -335,8 +335,8 @@
             return self.OperationalRiskScalesResource.query({anrId: anr_id, language: language}).$promise;
         };
 
-        var createOperationalRiskScale = function (anr_id, label, min, max, comments, success, error) {
-            new self.OperationalRiskScalesResource({anrId: anr_id, label: label, min: min, max: max, comments : comments, type: 1}).$save(success, error);
+        var createOperationalRiskScale = function (anr_id, scaleId, label, min, max, comments, success, error) {
+            new self.OperationalRiskScalesResource({anrId: anr_id, scaleId: scaleId, label: label, min: min, max: max, comments : comments, type: 1}).$save(success, error);
         };
 
         var deleteOperationalRiskScales = function (ids, success, error) {
