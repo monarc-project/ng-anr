@@ -1801,6 +1801,7 @@
                   },
                   function() {
                     promise.resolve();
+                    $scope.updateOperationalRiskScales();
                   },
                   function(){
                     promise.reject();
