@@ -173,6 +173,7 @@
                         $scope.updateInstances();
                         $scope.updateObjectsLibrary();
                         $scope.updateScales();
+                        $scope.updateOperationalRiskScales();
                         $scope.updateReferentials();
 
                     }
@@ -213,6 +214,7 @@
                         $scope.updateInstances();
                         $scope.updateObjectsLibrary();
                         $scope.updateScales();
+                        $scope.updateOperationalRiskScales();
                         $scope.updateReferentials();
                         $scope.updateRecommandationsSets();
                         updateMethodProgress();
@@ -1976,7 +1978,6 @@
         };
 
         $scope.updateScales = function () {
-            $scope.updateOperationalRiskScales();
             AnrService.getScales($scope.model.anr.id).then(function (data) {
                 $scope.scalesCanChange = data.canChange && $scope.model.anr.cacheModelIsScalesUpdatable;
                 $scope.scaleThreat = ''; // Reset tooltip Prob. on table risks
