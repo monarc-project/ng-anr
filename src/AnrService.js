@@ -2,10 +2,10 @@
 
     angular
         .module('AnrModule')
-        .factory('AnrService', [ '$resource', '$rootScope', 'ObjlibService', AnrService ])
+        .factory('AnrService', [ '$resource', '$rootScope', 'MassDeleteService','ObjlibService', AnrService ])
         .controller('AnrService', ['$scope', 'ConfigService']);
 
-    function AnrService($resource, $rootScope, ObjlibService) {
+    function AnrService($resource, $rootScope, MassDeleteService, ObjlibService) {
         var self = this;
 
         self.AnrResource = $resource('api/anr/:anrId', { anrId: '@anrId' },
@@ -44,6 +44,13 @@
                 'patch': {
                     method: 'PATCH'
                 },
+                'query': {
+                    isArray: false
+                }
+            });
+
+        self.AnrRiskOwnersResource = $resource('api/' + anr + '/:anrId/risk-owners', { anrId: '@anrId'},
+            {
                 'query': {
                     isArray: false
                 }
@@ -144,6 +151,32 @@
             {
                 'update': {
                     method: 'PUT'
+                },
+                'query': {
+                    isArray: false
+                }
+            });
+
+        self.OperationalRiskScalesResource = $resource('api/' + anr + '/:anrId/operational-scales/:operationalRiskScaleId', { anrId: '@anrId', operationalRiskScaleId: '@operationalRiskScaleId' },
+            {
+                'update': {
+                    method: 'PUT'
+                },
+                'patch': {
+                    method: 'PATCH'
+                },
+                'query': {
+                    isArray: false
+                }
+            });
+
+        self.OperationalRiskScalesCommentResource = $resource('api/' + anr + '/:anrId/operational-scales/:operationalRiskScaleId/comments/:operationalRiskScaleCommentId', { anrId: '@anrId', operationalRiskScaleId: '@operationalRiskScaleId', operationalRiskScaleCommentId: "@operationalRiskScaleCommentId" },
+            {
+                'update': {
+                    method: 'PUT'
+                },
+                'patch': {
+                    method: 'PATCH'
                 },
                 'query': {
                     isArray: false
@@ -259,22 +292,11 @@
             return self.ScalesTypesResource.query({anrId: anr_id, order:'position'}).$promise;
         };
 
-        var createScaleType = function (anr_id, scale_id, label1, langue = null, success, error) {
-             if ($rootScope.OFFICE_MODE == "FO") {
-                new self.ScalesTypesResource({anrId: anr_id, anr: anr_id, scale: scale_id, Label: label1, isHidden: false, isSys: false, implicitPosition: 2, langue: $rootScope.getAnrLanguage().toString()}).$save(success, error);
-             } else {
-        	      new self.ScalesTypesResource({anrId: anr_id, anr: anr_id, scale: scale_id, Label: label1, isHidden: false, isSys: false, implicitPosition: 2, langue: langue}).$save(success, error);
-             }
+        var createScaleType = function (anr_id, scale_id, labels, success, error) {
+            new self.ScalesTypesResource({anrId: anr_id, scale: scale_id, labels: labels, implicitPosition: 2}).$save(success, error);
         };
 
-        var patchScaleType = function (anr_id, scale_type_id, data, langue = null, success, error) {
-            if (data.hasOwnProperty("label")) {
-                if ($rootScope.OFFICE_MODE == "FO") {
-                    langue = $rootScope.getAnrLanguage().toString();
-                }
-                data['label' + langue] = data['label'];
-                delete data['label'];
-            }
+        var patchScaleType = function (anr_id, scale_type_id, data, success, error) {
             self.ScalesTypesResource.patch({anrId: anr_id, scaleTypeId: scale_type_id}, data, success, error);
         };
 
@@ -287,12 +309,17 @@
             return self.ScalesCommentResource.query({anrId: anr_id, scaleId: type}).$promise;
         };
 
-        var createScaleComment = function ( anr_id, scale_id, row, comment, type_impact_id, langue = null, success, error) {
-             if ($rootScope.OFFICE_MODE == "FO") {
-                new self.ScalesCommentResource({anrId: anr_id, scaleId: scale_id, val: row, scaleImpactType: type_impact_id, comment: comment, langue: $rootScope.getAnrLanguage().toString()}).$save(success, error);
-             } else {
-        	      new self.ScalesCommentResource({anrId: anr_id, scaleId: scale_id, val: row, scaleImpactType: type_impact_id, comment: comment, langue: langue }).$save(success, error);
-             }
+        var createScaleComment = function ( anr_id, scale_id, row, comments, type_impact_id, success, error) {
+            let params = {
+              anrId: anr_id,
+              scaleId: scale_id,
+              scaleIndex: row,
+              scaleValue: row,
+              scaleImpactType: type_impact_id,
+              [Object.keys(comments)]: Object.values(comments)[0]
+            };
+
+            new self.ScalesCommentResource(params).$save(success, error);
         };
 
         var updateScaleComment = function (anr_id, scale_id, comment_id, params, success, error) {
@@ -302,6 +329,37 @@
 
             return self.ScalesCommentResource.update({anrId: anr_id, scaleId: scale_id, commentId: comment_id}, params, success, error);
         };
+
+        // operational scales
+        var getOperationalRiskScales = function (anr_id, language) {
+            return self.OperationalRiskScalesResource.query({anrId: anr_id, language: language}).$promise;
+        };
+
+        var createOperationalRiskScale = function (anr_id, scaleId, label, min, max, comments, success, error) {
+            new self.OperationalRiskScalesResource({anrId: anr_id, scaleId: scaleId, label: label, min: min, max: max, comments : comments, type: 1}).$save(success, error);
+        };
+
+        var deleteOperationalRiskScales = function (ids, success, error) {
+            if ($rootScope.OFFICE_MODE == 'FO') {
+                MassDeleteService.deleteMass('api/client-anr/' + $rootScope.getUrlAnrId() + '/operational-scales', ids, success, error);
+            } else {
+                MassDeleteService.deleteMass('api/delete-operational-scales', ids, success, error);
+            }
+        };
+
+        var updateOperationalRiskScale = function (anr_id, scale_id, params, success, error) {
+            return self.OperationalRiskScalesResource.update({anrId: anr_id, operationalRiskScaleId: scale_id}, params, success, error);
+        };
+
+        var updateValueForAllOperationalRiskScale = function(anr_id, params, success,error){
+            return self.OperationalRiskScalesResource.patch({anrId: anr_id}, params, success, error);
+        };
+
+        //operational risk scale comment
+        var updateOperationalRiskScaleComment = function (anr_id, scale_id, comment_id, params, success, error) {
+            return self.OperationalRiskScalesCommentResource.update({anrId: anr_id, operationalRiskScaleId: scale_id, operationalRiskScaleCommentId: comment_id}, params, success, error);
+        };
+
 
         // Instances (unforeseen) consequences
         var getInstancesConsequences = function (anr_id) {
@@ -324,6 +382,12 @@
             var query = angular.copy(params);
             query.anrId = anr_id;
             return self.AnrRisksResource.query(query).$promise;
+        };
+
+        var getAnrRiskOwners = function (anr_id, params) {
+            var query = angular.copy(params);
+            query.anrId = anr_id;
+            return self.AnrRiskOwnersResource.query(query).$promise;
         };
 
         var createInstanceRisk = function (anr_id, params, success, error) {
@@ -376,9 +440,17 @@
             patchScaleType: patchScaleType,
             deleteScaleType: deleteScaleType,
 
+            getOperationalRiskScales: getOperationalRiskScales,
+            createOperationalRiskScale: createOperationalRiskScale,
+            deleteOperationalRiskScales: deleteOperationalRiskScales,
+            updateOperationalRiskScale: updateOperationalRiskScale,
+            updateValueForAllOperationalRiskScale: updateValueForAllOperationalRiskScale,
+
             getScaleComments: getScaleComments,
             createScaleComment: createScaleComment,
             updateScaleComment: updateScaleComment,
+
+            updateOperationalRiskScaleComment: updateOperationalRiskScaleComment,
 
             getInstances: getInstances,
             getInstance: getInstance,
@@ -406,6 +478,7 @@
 
             getAnrRisks: getAnrRisks,
             getAnrRisksOp: getAnrRisksOp,
+            getAnrRiskOwners: getAnrRiskOwners,
 
         };
     }

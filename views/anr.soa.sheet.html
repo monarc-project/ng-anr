@@ -91,69 +91,92 @@
          <tr>
              <th rowspan="3" translate>Asset</th>
              <th rowspan="3" translate>Risk description</th>
-             <th ng-if="model.showRolfBrut" class="big-border-left" colspan="7" translate>Inherent risk</th>
-             <th colspan="8" class="big-border-left" translate>Net risk</th>
+             <th colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" ng-if="model.showRolfBrut" class="big-border-left"  translate>Inherent risk</th>
+             <th colspan="{{3 + (opRiskImpactScales | filter:{isHidden:false}).length}}" class="big-border-left" translate>Net risk</th>
              <th rowspan="3" class="big-border-left" translate>Treatment</th>
              <th rowspan="3" translate>Residual risk</th>
          </tr>
 
          <tr>
-             <th title="{{scaleThreat}}" rowspan="2" translate ng-if="model.showRolfBrut">Prob.</th>
-             <th colspan="5" translate ng-if="model.showRolfBrut">Impact</th>
-             <th rowspan="2" translate ng-if="model.showRolfBrut">Inherent risk</th>
+             <th rowspan="2" ng-if="model.showRolfBrut" class="big-border-left" title="{{opRiskImpactScalesTooltips['likelihood']}}" translate>Prob.</th>
+             <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}" ng-if="model.showRolfBrut" translate>
+                 <span translate>Impact</span>
+                 <md-icon class="md-primary icon-small no-margin"  ng-if="opRiskScalesAreHidden" ng-attr-title="{{ 'Some scales are hidden' | translate }}">announcement</md-icon>
+             </th>
+             <th rowspan="2" ng-if="model.showRolfBrut" translate>Inherent risk</th>
 
-             <th title="{{scaleThreat}}" rowspan="2" class="big-border-left" translate>Prob.</th>
-             <th colspan="5" translate>Impact</th>
+             <th rowspan="2" class="big-border-left" title="{{opRiskImpactScalesTooltips['likelihood']}}" translate>Prob.</th>
+             <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}" translate>
+                 <span translate>Impact</span>
+                 <md-icon class="md-primary icon-small no-margin"  ng-if="opRiskScalesAreHidden" ng-attr-title="{{ 'Some scales are hidden' | translate }}">announcement</md-icon>
+             </th>
              <th rowspan="2" translate>Current risk</th>
-             <th style="min-width: 200px" rowspan="2" translate>Existing controls</th>
+             <th rowspan="2" translate>Existing controls</th>
          </tr>
 
          <tr>
-             <th title="{{scaleR}}" ng-if="model.showRolfBrut">R</th>
-             <th title="{{scaleO}}" ng-if="model.showRolfBrut">O</th>
-             <th title="{{scaleL}}" ng-if="model.showRolfBrut">L</th>
-             <th title="{{scaleF}}" ng-if="model.showRolfBrut">F</th>
-             <th title="{{scaleP}}" ng-if="model.showRolfBrut">P</th>
-
-             <th title="{{scaleR}}">R</th>
-             <th title="{{scaleO}}">O</th>
-             <th title="{{scaleL}}">L</th>
-             <th title="{{scaleF}}">F</th>
-             <th title="{{scaleP}}">P</th>
+             <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" class="vertical-text" title="{{opRiskImpactScalesTooltips[scale.id]}}" ng-if="model.showRolfBrut">{{scale.label.substring(0,3)}}.</th>
+             <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" class="vertical-text" title="{{opRiskImpactScalesTooltips[scale.id]}}">{{scale.label.substring(0,3)}}.</th>
          </tr>
          </thead>
 
          <tbody>
          <tr ng-repeat="risk in soaMeasureOpRisks">
              <td title="{{instanceCache[risk.instanceInfos.id].completePath}}" class="preserve-newlines clickable-rows"><a ng-click="goToInstance(risk.instanceInfos.id,'OperRisk')">{{ _langField(risk.instanceInfos,'name') }}</td>
-     	       <td class="preserve-newlines" title="{{ _langField(risk,'description') }}">{{ _langField(risk,'label') || _langField(risk,'label') }}</td>
-             <td ng-if="model.showRolfBrut" class="big-border-left txtcenter" title="{{threatCommCache[risk.brutProb]}}">{{risk.brutProb | dashnull}}</td>
-             <td ng-if="model.showRolfBrut">{{risk.brutR | dashnull}}</td>
-             <td ng-if="model.showRolfBrut">{{risk.brutO | dashnull}}</td>
-             <td ng-if="model.showRolfBrut">{{risk.brutL | dashnull}}</td>
-             <td ng-if="model.showRolfBrut">{{risk.brutF | dashnull}}</td>
-             <td ng-if="model.showRolfBrut">{{risk.brutP | dashnull}}</td>
+             <td class="preserve-newlines" title="{{ _langField(risk,'description') }}">{{ _langField(risk,'label') }}</td>
+             <td
+              ng-if="model.showRolfBrut"
+              class="big-border-left txtcenter"
+              title="{{(opRiskLikelihoodScale.comments | filter:{scaleValue:risk.brutProb}).length > 0 ?
+                  (opRiskLikelihoodScale.comments | filter:{scaleValue:risk.brutProb})[0].comment :
+                  null}}">
+              {{risk.brutProb | dashnull}}
+             </td>
+             <td
+              ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}"
+              ng-if="model.showRolfBrut"
+              class="txtcenter"
+              title="{{(scale.comments | filter:{scaleValue:risk.scales[scale.id].brutValue}).length > 0 ?
+                  (scale.comments | filter:{scaleValue:risk.scales[scale.id].brutValue})[0].comment :
+                  null}}">
+              {{risk.scales[scale.id].brutValue | dashnull}}
+             </td>
+
              <td ng-if="model.showRolfBrut" class="tbl-risk-calc txtcenter"
                  ng-class="{'green': risk.cacheBrutRisk >= 0 && risk.cacheBrutRisk <= thresholds.rolf_thresholds.min,
                             'orange': risk.cacheBrutRisk > thresholds.rolf_thresholds.min && risk.cacheBrutRisk <= thresholds.rolf_thresholds.max,
-                            'red': risk.cacheBrutRisk > thresholds.rolf_thresholds.max}">{{risk.cacheBrutRisk|dashnull}}</td>
-             <td class="small txtcenter big-border-left" title="{{threatCommCache[risk.netProb]}}">{{risk.netProb | dashnull}}</td>
-             <td class="txtcenter">{{risk.netR | dashnull}}</td>
-             <td class="txtcenter">{{risk.netO | dashnull}}</td>
-             <td class="txtcenter">{{risk.netL | dashnull}}</td>
-             <td class="txtcenter">{{risk.netF | dashnull}}</td>
-             <td class="txtcenter">{{risk.netP | dashnull}}</td>
+                            'red': risk.cacheBrutRisk > thresholds.rolf_thresholds.max}">
+                            {{ risk.cacheBrutRisk | dashnull }}
+             </td>
+             <td
+              class="small txtcenter big-border-left"
+              title="{{(opRiskLikelihoodScale.comments | filter:{scaleValue:risk.netProb}).length > 0 ?
+                  (opRiskLikelihoodScale.comments | filter:{scaleValue:risk.netProb})[0].comment :
+                  null}}">
+              {{ risk.netProb | dashnull }}
+             </td>
+             <td
+              ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}"
+              class="txtcenter"
+              title="{{(scale.comments | filter:{scaleValue:risk.scales[scale.id].netValue}).length > 0 ?
+                  (scale.comments | filter:{scaleValue:risk.scales[scale.id].netValue})[0].comment :
+                  null}}">
+              {{ risk.scales[scale.id].netValue | dashnull }}
+             </td>
              <td class="tbl-risk-calc txtcenter"
                  ng-class="{'green': risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min,
                             'orange': risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max,
-                            'red': risk.cacheNetRisk > thresholds.rolf_thresholds.max}">{{ risk.cacheNetRisk|dashnull }}</td>
+                            'red': risk.cacheNetRisk > thresholds.rolf_thresholds.max}">
+                            {{ risk.cacheNetRisk|dashnull }}
+             </td>
              <td class="preserve-newlines">{{risk.comment}}</td>
-             <td class="small txtcenter" ng-if="instmode == 'obj'">-</td>
-             <td class="txtcenter big-border-left"> {{treatmentStr(risk.kindOfMeasure)|translate}}</td>
+             <td class="txtcenter big-border-left"> {{ treatmentStr(risk.kindOfMeasure) | translate }}</td>
              <td class="tbl-risk-calc txtcenter"
-                 ng-class="{'green': (risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min && risk.cacheTargetedRisk==-1) || risk.cacheTargetedRisk >= 0 && risk.cacheTargetedRisk <= thresholds.rolf_thresholds.min ,
-                            'orange': (risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max && risk.cacheTargetedRisk==-1) || risk.cacheTargetedRisk > thresholds.rolf_thresholds.min && risk.cacheTargetedRisk <= thresholds.rolf_thresholds.max,
-                            'red': (risk.cacheNetRisk > thresholds.rolf_thresholds.max && risk.cacheTargetedRisk==-1) || risk.cacheTargetedRisk > thresholds.rolf_thresholds.max}">{{ risk.cacheTargetedRisk==-1 ? risk.cacheNetRisk : risk.cacheTargetedRisk | dashnull }}</td>
+                 ng-class="{'green': (risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min && risk.cacheTargetRisk==-1) || risk.cacheTargetRisk >= 0 && risk.cacheTargetRisk <= thresholds.rolf_thresholds.min ,
+                            'orange': (risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max && risk.cacheTargetRisk==-1) || risk.cacheTargetRisk > thresholds.rolf_thresholds.min && risk.cacheTargetRisk <= thresholds.rolf_thresholds.max,
+                            'red': (risk.cacheNetRisk > thresholds.rolf_thresholds.max && risk.cacheTargetRisk==-1) || risk.cacheTargetRisk > thresholds.rolf_thresholds.max}">
+                            {{ risk.cacheTargetRisk == -1 ? risk.cacheNetRisk : risk.cacheTargetRisk | dashnull }}
+            </td>
          </tr>
          </tbody>
      </table>

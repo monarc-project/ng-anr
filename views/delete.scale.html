@@ -1,0 +1,41 @@
+<md-dialog md-theme="light" class="dialog-width">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 translate>Delete scales</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <md-table-container flex>
+        <table md-table>
+            <thead md-head>
+            <tr class="md-row">
+              <th md-column translate>Scale Name</th>
+              <th md-column translate>To delete ?</th>
+            </tr>
+            </thead>
+            <tbody md-body>
+            <tr class="md-row" ng-repeat="scale in scales">
+              <td class="md-cell">{{scale.label ? scale.label : scale['label' + language]}}</td>
+              <td class="md-cell">
+                <md-checkbox ng-model="scale.selected" ng-change='scaleSelected()'>
+                </md-checkbox>
+              </td>
+            </tr>
+            </tbody>
+        </table>
+      </md-table-container>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <span flex></span>
+        <md-button ng-click="cancel()">
+            {{ 'Cancel' | translate }}
+        </md-button>
+        <md-button ng-click="delete($event)" ng-disabled="validator" type="submit" class="md-accent md-hue-3">
+            {{ 'Delete' | translate }}
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

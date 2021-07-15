@@ -67,6 +67,35 @@
                 </td>
             </tr>
             <tr>
+                <td class="bold" translate>Risk owner</td>
+                <td colspan="3" edit-readonly="isAnrReadOnly">
+                    <div layout="row" layout-align="center center">
+                        <md-autocomplete
+                                flex
+                                md-input-name="owner"
+                                md-no-cache="true"
+                                md-selected-item="sheet_risk.owner"
+                                md-search-text="ownerSearchText"
+                                md-items="item in queryOwnerSearch(ownerSearchText,'sheet_risk')"
+                                md-item-text="item"
+                                md-min-length="0"
+                                md-floating-label=" ">
+                            <md-item-template>
+                                <span md-highlight-text="ownerSearchText" md-highlight-flags="^i">{{item}}</span>
+                            </md-item-template>
+                        </md-autocomplete>
+                    </div>
+                </td>
+            </tr>
+            <tr >
+                <td class="bold" translate>Risk context</td>
+                <td  colspan="3" edit-readonly="isAnrReadOnly">
+                  <md-input-container class="md-block" layout="row" flex>
+                    <input ng-model="sheet_risk.context" ng-change="contextChanged()">
+                  </md-input-container>
+                </td>
+            </tr>
+            <tr>
                 <td class="bold" translate>Existing controls</td>
                 <td colspan="3">{{ sheet_risk.comment }}</td>
             </tr>
@@ -103,7 +132,7 @@
                         </md-button>
                     </div>
                 </td>
-                <td colspan="3">                    
+                <td colspan="3">
                     <ul class="no-list-style no-padding no-margin">
                         <li ng-repeat="recommandation in recommandations | orderBy : 'importance'">
                             <p><a class="md-primary" ui-sref="main.project.anr.risksplan.sheet({modelId: model.anr.id, recId: recommandation.recommandation.uuid})" ng-attr-title="{{ 'Implementation of the risk treatment plan' | translate }}" ><md-icon>open_in_new</md-icon></a>
@@ -111,7 +140,7 @@
                                 <a ng-if="recommandation.recommandation.importance == 0" class="md-mandatory-field txtright" translate>Importance is required</a>
                             </p>
                         </li>
-                    </ul>                    
+                    </ul>
                 </td>
             </tr>
             <tr>
