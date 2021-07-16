@@ -2094,7 +2094,7 @@
                     function(risk){
                         rootModel.cacheBrutRisk = risk.cacheBrutRisk;
                         rootModel.cacheNetRisk = risk.cacheNetRisk;
-                        rootModel.cacheTargetRisk = risk.cacheTargetedRisk;
+                        rootModel.cacheTargetedRisk = risk.cacheTargetedRisk;
                         result.resolve(true);
                     },
                     function(){
@@ -2105,7 +2105,7 @@
                 AnrService.updateInstanceOpRisk($scope.model.anr.id, model.id, model, function(risk){
                     model.cacheBrutRisk = risk.cacheBrutRisk;
                     model.cacheNetRisk = risk.cacheNetRisk;
-                    model.cacheTargetRisk = risk.cacheTargetedRisk;
+                    model.cacheTargetedRisk = risk.cacheTargetedRisk;
                     result.resolve(true);
                 }, function(){
                     result.reject(false);
