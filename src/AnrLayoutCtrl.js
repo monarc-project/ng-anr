@@ -859,6 +859,7 @@
                             if($scope.model && $scope.model.anr){
                                 // Update scales, in case we made changes to risks, and our ANR isn't scaleupdatable anymore
                                 $scope.updateScales();
+                                $scope.updateOperationalRiskScales();
                             }
                         });
                         break;
