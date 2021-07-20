@@ -137,19 +137,15 @@
             finalArray[recLine]+=','+gettextCatalog.getString('Risk description');
             if ($scope.model.anr.showRolfBrut) {
               finalArray[recLine]+=','+gettextCatalog.getString('Prob.(Inherent risk)');
-              finalArray[recLine]+=','+gettextCatalog.getString('R (Inherent risk)');
-              finalArray[recLine]+=','+gettextCatalog.getString('O (Inherent risk)');
-              finalArray[recLine]+=','+gettextCatalog.getString('L (Inherent risk)');
-              finalArray[recLine]+=','+gettextCatalog.getString('F (Inherent risk)');
-              finalArray[recLine]+=','+gettextCatalog.getString('P (Inherent risk)');
+              $scope.opRiskImpactScales.forEach(scale => {
+                  finalArray[recLine]+=',' + scale.label + '(' + gettextCatalog.getString('Inherent risk') + ')';
+              })
               finalArray[recLine]+=','+gettextCatalog.getString('Inherent risk');
             }
             finalArray[recLine]+=','+gettextCatalog.getString('Prob.(Net risk)');
-            finalArray[recLine]+=','+gettextCatalog.getString('R (Net risk)');
-            finalArray[recLine]+=','+gettextCatalog.getString('O (Net risk)');
-            finalArray[recLine]+=','+gettextCatalog.getString('L (Net risk)');
-            finalArray[recLine]+=','+gettextCatalog.getString('F (Net risk)');
-            finalArray[recLine]+=','+gettextCatalog.getString('P (Net risk)');
+            $scope.opRiskImpactScales.forEach(scale => {
+                finalArray[recLine]+=',' + scale.label + '(' + gettextCatalog.getString('Net risk') + ')';
+            })
             finalArray[recLine]+=','+gettextCatalog.getString('Current risk (Net risk)');
             finalArray[recLine]+=','+gettextCatalog.getString('Existing controls');
             finalArray[recLine]+=','+gettextCatalog.getString('Treatment');
@@ -164,102 +160,70 @@
                 if ($scope.model.anr.showRolfBrut) {
                     if (risks[risk].brutProb =='-1') {
                         finalArray[recLine]+=','+"\""+' '+"\"";
-                    } else {
-                    finalArray[recLine]+=','+"\""+risks[risk].brutProb+"\"";}
+                    }else {
+                        finalArray[recLine]+=','+"\""+risks[risk].brutProb+"\"";
+                    }
 
-                    if (risks[risk].brutR =='-1') {
-                        finalArray[recLine]+=','+"\""+' '+"\"";
-                    } else {
-                    finalArray[recLine]+=','+"\""+risks[risk].brutR+"\"";}
-
-                    if (risks[risk].brutO =='-1') {
-                        finalArray[recLine]+=','+"\""+' '+"\"";
-                    } else {
-                    finalArray[recLine]+=','+"\""+risks[risk].brutO+"\"";}
-
-                    if (risks[risk].brutL =='-1') {
-                        finalArray[recLine]+=','+"\""+' '+"\"";
-                    } else {
-                    finalArray[recLine]+=','+"\""+risks[risk].brutL+"\"";}
-
-                    if (risks[risk].brutF =='-1') {
-                        finalArray[recLine]+=','+"\""+' '+"\"";
-                    } else {
-                    finalArray[recLine]+=','+"\""+risks[risk].brutF+"\"";}
-
-                    if (risks[risk].brutP =='-1') {
-                        finalArray[recLine]+=','+"\""+' '+"\"";
-                    } else {
-                    finalArray[recLine]+=','+"\""+risks[risk].brutP+"\"";}
+                    for(scale in risks[risk].scales) {
+                        if (risks[risk].scales[scale].brutValue == -1) {
+                            finalArray[recLine]+=','+"\""+' '+"\"";
+                        }else {
+                            finalArray[recLine]+=','+"\""+risks[risk].scales[scale].brutValue+"\"";
+                        }
+                    }
 
                     if (risks[risk].cacheBrutRisk =='-1' ) {
                         finalArray[recLine]+=','+"\""+' '+"\"";
-                    } else {
-                    finalArray[recLine]+=','+"\""+risks[risk].cacheBrutRisk+"\"";}
+                    }else {
+                        finalArray[recLine]+=','+"\""+risks[risk].cacheBrutRisk+"\"";
+                    }
                 }
 
                 if (risks[risk].netProb =='-1') {
                     finalArray[recLine]+=','+"\""+' '+"\"";
-                } else {
-                finalArray[recLine]+=','+"\""+risks[risk].netProb+"\"";}
+                }else {
+                    finalArray[recLine]+=','+"\""+risks[risk].netProb+"\"";
+                }
 
-                if (risks[risk].netR =='-1') {
-                    finalArray[recLine]+=','+"\""+' '+"\"";
-                } else {
-                finalArray[recLine]+=','+"\""+risks[risk].netR+"\"";}
-
-                if (risks[risk].netO =='-1') {
-                    finalArray[recLine]+=','+"\""+' '+"\"";
-                } else {
-                finalArray[recLine]+=','+"\""+risks[risk].netO+"\"";}
-
-                if (risks[risk].netL =='-1') {
-                    finalArray[recLine]+=','+"\""+' '+"\"";
-                } else {
-                finalArray[recLine]+=','+"\""+risks[risk].netL+"\"";}
-
-                if (risks[risk].netF =='-1') {
-                    finalArray[recLine]+=','+"\""+' '+"\"";
-                } else {
-                finalArray[recLine]+=','+"\""+risks[risk].netF+"\"";}
-
-                if (risks[risk].netP =='-1') {
-                    finalArray[recLine]+=','+"\""+' '+"\"";
-                } else {
-                finalArray[recLine]+=','+"\""+risks[risk].netP+"\"";}
+                for(scale in risks[risk].scales) {
+                    if (risks[risk].scales[scale].netValue == -1) {
+                        finalArray[recLine]+=','+"\""+' '+"\"";
+                    }else {
+                        finalArray[recLine]+=','+"\""+risks[risk].scales[scale].netValue+"\"";
+                    }
+                }
 
                 if (risks[risk].icacheNetRisk =='-1') {
                     finalArray[recLine]+=','+"\""+' '+"\"";
-                } else {
-                finalArray[recLine]+=','+"\""+risks[risk].cacheNetRisk+"\"";}
+                }else {
+                    finalArray[recLine]+=','+"\""+risks[risk].cacheNetRisk+"\"";
+                }
 
                 if (risks[risk].comment ==null) {
                     finalArray[recLine]+=','+"\""+' '+"\"";
-                } else {
-                finalArray[recLine]+=','+"\""+risks[risk].comment+"\"";}
+                }else {
+                    finalArray[recLine]+=','+"\""+risks[risk].comment+"\"";
+                }
 
                 if (risks[risk].kindOfMeasure =='1') {
                     finalArray[recLine]+=','+"\""+gettextCatalog.getString('Reduction')+"\"";
-
-                } else if (risks[risk].kindOfMeasure =='2') {
+                }else if (risks[risk].kindOfMeasure =='2') {
                     finalArray[recLine]+=','+"\""+gettextCatalog.getString('Denied')+"\"";
-
-                } else if (risks[risk].kindOfMeasure =='3') {
+                }else if (risks[risk].kindOfMeasure =='3') {
                     finalArray[recLine]+=','+"\""+gettextCatalog.getString('Accepted')+"\"";
-
-                } else if (risks[risk].kindOfMeasure =='4') {
+                }else if (risks[risk].kindOfMeasure =='4') {
                     finalArray[recLine]+=','+"\""+gettextCatalog.getString('Shared')+"\"";
-
-                } else {
+                }else {
                     finalArray[recLine]+=','+"\""+gettextCatalog.getString('Not treated')+"\"";
                 }
 
                 if (risks[risk].cacheTargetedRisk =='-1' && risks[risk].cacheNetRisk =='-1') {
                     finalArray[recLine]+=','+"\""+' '+"\"";
-                } else if (risks[risk].cacheTargetedRisk =='-1') {
-                finalArray[recLine]+=','+"\""+risks[risk].cacheNetRisk+"\"";
-                } else {
-                finalArray[recLine]+=','+"\""+risks[risk].cacheTargetedRisk+"\"";}
+                }else if (risks[risk].cacheTargetedRisk =='-1') {
+                    finalArray[recLine]+=','+"\""+risks[risk].cacheNetRisk+"\"";
+                }else {
+                    finalArray[recLine]+=','+"\""+risks[risk].cacheTargetedRisk+"\"";
+                }
             }
           }
 
