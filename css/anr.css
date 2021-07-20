@@ -1041,7 +1041,12 @@ md-progress-linear.yellow .md-container {
 }
 
 /* Trix buttons */
-trix-toolbar button.link, trix-toolbar button.strike, trix-toolbar button.code {
+trix-toolbar button.trix-button--icon-link,
+trix-toolbar button.trix-button--icon-code,
+trix-toolbar button.trix-button--icon-quote,
+trix-toolbar button.trix-button--icon-increase-nesting-level,
+trix-toolbar button.trix-button--icon-decrease-nesting-level,
+trix-toolbar span.trix-button-group--file-tools {
     display: none
 }
 
