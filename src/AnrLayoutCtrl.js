@@ -2857,7 +2857,7 @@
                     else
                       finalArray[recLine]+=','+"\""+' '+"\"";
                     finalArray[recLine]+=','+"\""+rec.importance+"\"";
-                    finalArray[recLine]+=','+"\""+$scope._langField(rec.risks[risk].instance,'name')+"\"";
+                    finalArray[recLine]+=','+"\""+rec.risks[risk].path+"\"";
                     if (rec.risks[risk].comment !=null )
                       finalArray[recLine]+=','+"\""+rec.risks[risk].comment+"\"";
                     else
@@ -2877,7 +2877,7 @@
                     finalArray[recLine]="\""+rec.code+"\"";
                     finalArray[recLine]+=','+"\""+rec.description+"\"";
                     finalArray[recLine]+=','+"\""+rec.importance+"\"";
-                    finalArray[recLine]+=','+"\""+$scope._langField(rec.risksop[riskop].instance,'name')+"\"";
+                    finalArray[recLine]+=','+"\""+rec.risksop[riskop].path+"\"";
                     if (rec.risksop[riskop].comment !=null )
                       finalArray[recLine]+=','+"\""+rec.risksop[riskop].comment+"\"";
                     else
