@@ -27,7 +27,7 @@
                 <input type="file" name="file" ngf-drop ngf-select ng-repeat="i in range(0, file_range)"
                        ng-model="file[i]"
                        class="md-upload-dropbox md-padding md-whiteframe-3dp"
-                       ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-allow-dir="false">
+                       ngf-drag-over-class="'dragover'" ngf-multiple="false" ngf-allow-dir="false" ngf-pattern="'application/json,.json'" accept=".json,.bin">
                 </input>
 
                 <md-input-container class="md-block">
@@ -38,10 +38,10 @@
 
                 <div layout="row" layout-align="end center">
                         <md-button ng-disabled="file.length < 1" ng-show="!isImportingIn" ng-click="uploadFile(file)">
-                        <md-icon>file_download</md-icon>
-                        {{ 'Import file' | translate }}
+                            <md-icon>file_download</md-icon>
+                            {{ 'Import file' | translate }}
                         </md-button>
-						      <md-progress-circular ng-show="isImportingIn" md-mode="indeterminate" md-diameter="40"></md-progress-circular>&nbsp;
+                        <md-progress-circular ng-show="isImportingIn" md-mode="indeterminate" md-diameter="40"></md-progress-circular>&nbsp;
                     <h3 ng-show="isImportingIn" >{{ 'Importing file...' | translate }}</h3>
                 </div>
             </div>
