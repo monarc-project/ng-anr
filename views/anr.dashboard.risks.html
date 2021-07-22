@@ -103,8 +103,8 @@
                </tr>
 
                <tr>
-                   <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" class="vertical-text" title="{{opRiskImpactScalesTooltips[scale.id]}}" ng-if="model.showRolfBrut">{{scale.label.substring(0,3)}}.</th>
-                   <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" class="vertical-text" title="{{opRiskImpactScalesTooltips[scale.id]}}">{{scale.label.substring(0,3)}}.</th>
+                   <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" title="{{opRiskImpactScalesTooltips[scale.id]}}" ng-if="model.showRolfBrut">{{scale.label.substring(0,3)}}.</th>
+                   <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" title="{{opRiskImpactScalesTooltips[scale.id]}}">{{scale.label.substring(0,3)}}.</th>
                </tr>
                </thead>
 
