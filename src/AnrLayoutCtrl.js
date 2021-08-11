@@ -175,7 +175,7 @@
                         $scope.updateScales();
                         $scope.updateOperationalRiskScales();
                         $scope.updateReferentials();
-
+                        $scope.updateOperationalRiskScales();
                     }
 
                     isModelLoading = false;
@@ -524,8 +524,8 @@
 
         $scope.resetSheet = function (redir) {
             if($scope.sheet_risk){
+                $scope.saveRiskSheet($scope.sheet_risk);
                 if($scope.OFFICE_MODE == 'FO'){
-                    $scope.saveRiskSheet($scope.sheet_risk);
                     if(!redir){
                         if($stateParams.instId){
                             $state.transitionTo('main.project.anr.instance',{modelId:$stateParams.modelId, instId:$stateParams.instId},{inherit:true,notify:true,reload:false,location:'replace'});
@@ -545,14 +545,13 @@
 
         $scope.openOpRiskSheet = function (risk, oprisks) {
             $scope.opRisks_instance = oprisks;
-            if($scope.OFFICE_MODE == 'FO'){
-                if($stateParams.instId){
-                    $state.transitionTo('main.project.anr.instance.riskop',{modelId:$stateParams.modelId, instId:$stateParams.instId, riskopId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
-                }else{
-                    $state.transitionTo('main.project.anr.riskop',{modelId:$stateParams.modelId, riskopId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
-                }
-                $scope.opsheet_risk = angular.copy(risk);
+            if($stateParams.instId){
+                $state.transitionTo('main.project.anr.instance.riskop',{modelId:$stateParams.modelId, instId:$stateParams.instId, riskopId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
+            }else{
+                $state.transitionTo('main.project.anr.riskop',{modelId:$stateParams.modelId, riskopId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
             }
+            $scope.opsheet_risk = angular.copy(risk);
+
             $timeout(function() {
                 $scope.ToolsAnrService.currentTab = 1;
                 $scope.sheet_risk = undefined;
@@ -571,8 +570,8 @@
 
         $scope.resetOpSheet = function (redir) {
             if($scope.opsheet_risk){
+                $scope.saveOpRiskSheet($scope.opsheet_risk);
                 if($scope.OFFICE_MODE == 'FO'){
-                  $scope.saveOpRiskSheet($scope.opsheet_risk);
                     if(!redir){
                         if($stateParams.instId){
                             $state.transitionTo('main.project.anr.instance',{modelId:$stateParams.modelId, instId:$stateParams.instId},{inherit:true,notify:true,reload:false,location:'replace'});
