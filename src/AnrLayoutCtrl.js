@@ -472,9 +472,6 @@
                 }else{
                     $state.transitionTo('main.project.anr.risk',{modelId:$stateParams.modelId, riskId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
                 }
-                $scope.idxRisks = risks.findIndex(infoRisk => infoRisk.id == $stateParams.riskId);
-            }else {
-                $scope.idxRisks = risks.findIndex(infoRisk => infoRisk.id == risk.id);
             }
             $timeout(function() {
                 $scope.ToolsAnrService.currentTab = 0;
@@ -499,6 +496,11 @@
                 }
                 $scope.reducAmount = reducAmount;
                 $scope._copyRecs = [];
+                if($scope.OFFICE_MODE == 'FO'){
+                    $scope.idxRisks = risks.findIndex(infoRisk => infoRisk.id == $stateParams.riskId);
+                }else {
+                    $scope.idxRisks = risks.findIndex(infoRisk => infoRisk.id == risk.id);
+                }
                 $scope.updateSheetRiskTarget();
             });
         };
@@ -569,6 +571,11 @@
                   }
                 });
                 $scope._copyRecs = [];
+                if($scope.OFFICE_MODE == 'FO'){
+                    $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.id == $stateParams.riskopId);
+                }else {
+                    $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.rolfRisk == risk.rolfRisk);
+                }
             });
         };
 
