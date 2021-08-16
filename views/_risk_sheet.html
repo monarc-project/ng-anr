@@ -66,7 +66,7 @@
                     <div ng-if="sheet_risk.vulnerabilityRate > -1"><strong>{{ sheet_risk.vulnerabilityRate }}</strong> - {{ _langField(comms.vuln[sheet_risk.vulnerabilityRate],'comment') }}</div>
                 </td>
             </tr>
-            <tr>
+            <tr ng-if="OFFICE_MODE == 'FO'">
                 <td class="bold" translate>Risk owner</td>
                 <td colspan="3" edit-readonly="isAnrReadOnly">
                     <div layout="row" layout-align="center center">
@@ -87,7 +87,7 @@
                     </div>
                 </td>
             </tr>
-            <tr >
+            <tr ng-if="OFFICE_MODE == 'FO'">
                 <td class="bold" translate>Risk context</td>
                 <td  colspan="3" edit-readonly="isAnrReadOnly">
                   <md-input-container class="md-block" layout="row" flex>

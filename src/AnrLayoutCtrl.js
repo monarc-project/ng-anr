@@ -472,6 +472,9 @@
                 }else{
                     $state.transitionTo('main.project.anr.risk',{modelId:$stateParams.modelId, riskId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
                 }
+                $scope.idxRisks = risks.findIndex(infoRisk => infoRisk.id == $stateParams.riskId);
+            }else {
+                $scope.idxRisks = risks.findIndex(infoRisk => infoRisk.id == risk.id);
             }
             $timeout(function() {
                 $scope.ToolsAnrService.currentTab = 0;
@@ -496,7 +499,6 @@
                 }
                 $scope.reducAmount = reducAmount;
                 $scope._copyRecs = [];
-                $scope.idxRisks = risks.findIndex(risk => risk.id == $stateParams.riskId);
                 $scope.updateSheetRiskTarget();
             });
         };
@@ -550,12 +552,15 @@
                 }else{
                     $state.transitionTo('main.project.anr.riskop',{modelId:$stateParams.modelId, riskopId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
                 }
-                $scope.opsheet_risk = angular.copy(risk);
+                $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.id == $stateParams.riskopId);
+            }else {
+                $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.rolfRisk == risk.rolfRisk);
             }
 
             $timeout(function() {
                 $scope.ToolsAnrService.currentTab = 1;
                 $scope.sheet_risk = undefined;
+                $scope.opsheet_risk = angular.copy(risk);
                 RiskService.getRisk($scope.opsheet_risk.rolfRisk).then(function (data) {
                   if (!angular.equals(data['measures'], {})) {
                     $scope.opsheet_risk.measures = data['measures'];
@@ -564,8 +569,6 @@
                   }
                 });
                 $scope._copyRecs = [];
-                $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.id == $stateParams.riskopId);
-
             });
         };
 
