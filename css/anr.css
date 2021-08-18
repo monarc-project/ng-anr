@@ -537,8 +537,7 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 .tbl-soa {
     text-align: center;
     vertical-align: middle;
-    color: white;
-
+    color: black;
 }
 
 .soa-table {
@@ -556,21 +555,20 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
     font-size: 16px;
 }
 
-.tbl-soa .green, .tbl-soa.green {
+
+.tbl-soa.green {
     background: #D6F107;
-    color: black;
 }
 
-.tbl-soa .orange, .tbl-soa.orange {
+.tbl-soa.orange {
     background: #FFBC1C;
-    color: black;
 }
 
-.tbl-soa .red, .tbl-soa.red {
+.tbl-soa.red {
     background: #FD661F;
     color: white;
 }
-.tbl-soa .gray, .tbl-soa.gray {
+.tbl-soa.gray {
     background: #BDBDBD;
 }
 
