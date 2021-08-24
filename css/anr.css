@@ -643,6 +643,7 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 
 .horz-expanding-impacts-table {
     overflow-x: auto;
+    padding: 2px;
 }
 
 .title-impacts-table {
