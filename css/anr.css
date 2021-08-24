@@ -641,6 +641,27 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 
 }
 
+.horz-expanding-impacts-table {
+    overflow-x: auto;
+}
+
+.title-impacts-table {
+    width: 130px;
+    min-width: 130px
+}
+
+.title-impacts-table div {
+    display: inline-flex;
+}
+
+.title-impacts-table div button {
+    display: contents;
+}
+
+.title-impacts-table div md-icon {
+    padding: 0 8px;
+}
+
 /** Inline edit customization */
 div.ng-inline-edit {
     display: inline;

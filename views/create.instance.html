@@ -10,61 +10,121 @@
             </div>
         </md-toolbar>
         <md-dialog-content>
-            <div class="md-dialog-content" layout="column">
-                <div layout="row" layout-align="space-around center" style="margin-left: 35px">
+            <div class="md-dialog-content">
+                <div layout="row" layout-align="space-around center">
                     <h4 translate>Consequences</h4>
-                    <md-switch style="margin:0px; height: auto; line-height: auto;" ng-model="display.hidden" ng-true-value="true" ng-false-value="false">{{ 'Show hidden consequences' | translate }}</md-switch>
+                    <md-switch
+                        class="no-margin"
+                        ng-model="display.hidden"
+                        ng-true-value="true"
+                        ng-false-value="false">
+                        {{ 'Show hidden consequences' | translate }}
+                    </md-switch>
                 </div>
-                <div layout="row">
-                        <div layout="column" style="border: 1px solid #DFDFDF; padding: 1em; margin-left: 20px; margin-right: 20px;" flex= "13">
-                            <p><md-button class="md-icon-button""></md-button></p>
-                            <div style="margin: 19px 0">
-                              <span title="{{scaleCommCache[1][calculeImpact('c')]}}"><b>{{ 'Confidentiality' | translate }}</b></span>
-                            </div>
-                            <div style="margin: 18px 0">
-                              <span title="{{scaleCommCache[2][calculeImpact('i')]}}"><b>{{ 'Integrity' | translate }}</b></span>
-                            </div>
-                            <div style="margin: 18px 0">
-                              <span title="{{scaleCommCache[3][calculeImpact('d')]}}"><b>{{ 'Availability' | translate }}</b></span>
-                            </div>
-                        </div>
-                        <div layout="row" style="border: 1px solid #DFDFDF; padding: 1em; text-align: center; white-space: nowrap" flex= "80">
-                            <div layout="column" ng-repeat="(idx, col) in instance.consequences" ng-if="!col.isHidden || display.hidden" flex>
-                                <p title={{tooltipScale[col.scaleImpactType]}}>{{ _langField(col,'scaleImpactTypeDescription') }} <md-button class="md-icon-button" ng-click="setConsequenceVisibility(col.id, !!col.isHidden)"><md-icon>{{ col.isHidden ? 'visibility_off' : 'visibility' }}</md-icon></md-button></p>
-                                <md-input-container style="margin: 8px 0">
-                                    <md-select ng-model="instance.consequences[idx].c_risk" ng-disabled="col.isHidden" aria-label="C" title="{{scaleCommCache[col.scaleImpactType][instance.consequences[idx].c_risk]}}">
-                                        <md-option value="-1">{{ 'Unknown' | translate }}</md-option>
-                                        <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val" title="{{scaleCommCache[col.scaleImpactType][val]}}">{{val}}</md-option>
-                                    </md-select>
-                                </md-input-container>
+                <div class="horz-expanding-impacts-table">
+                    <table class="md-html-table">
+                        <thead>
+                            <tr>
+                                <th class="no-border"></th>
+                                <th class="no-border"></th>
+                                <th class="title-impacts-table"
+                                    title="{{tooltipScale[col.scaleImpactType]}}"
+                                    ng-repeat="(idx, col) in instance.consequences"
+                                    ng-if="!col.isHidden || display.hidden">
+                                    <div layout="row">
+                                        <p>{{ _langField(col,'scaleImpactTypeDescription') }}</p>
+                                        <md-button class="md-icon-button" ng-click="setConsequenceVisibility(col.id, !!col.isHidden)">
+                                            <md-icon>{{ col.isHidden ? 'visibility_off' : 'visibility' }}</md-icon>
+                                        </md-button>
+                                    </div>
+                                </th>
+                                <th class="no-border"></th>
+                                <th>{{ 'Max' | translate }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th title="{{scaleCommCache[1][calculeImpact('c')]}}">
+                                    <b>{{ 'Confidentiality' | translate }}</b>
+                                </th>
+                                <td class="no-border"></td>
+                                <td class="txtcenter" ng-repeat="(idx, col) in instance.consequences" ng-if="!col.isHidden || display.hidden">
+                                    <md-input-container class="no-margin">
+                                        <md-select
+                                            ng-model="instance.consequences[idx].c_risk"
+                                            ng-disabled="col.isHidden"
+                                            title="{{scaleCommCache[col.scaleImpactType][instance.consequences[idx].c_risk]}}">
+                                            <md-option value="-1">{{ 'Unknown' | translate }}</md-option>
+                                            <md-option
+                                                ng-repeat="val in range(scales.impacts.min, scales.impacts.max)"
+                                                ng-value="val"
+                                                title="{{scaleCommCache[col.scaleImpactType][val]}}">
+                                                {{val}}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                </td>
+                                <td class="no-border"></td>
+                                <th title="{{scaleCommCache[1][calculeImpact('c')]}}">
+                                    <b>{{ calculeImpact('c') > -1 ? (calculeImpact('c') | dashnull) : '-' }}</b>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th title="{{scaleCommCache[2][calculeImpact('i')]}}">
+                                    <b>{{ 'Integrity' | translate }}</b>
+                                </th>
+                                <td class="no-border"></td>
+                                <td class="txtcenter" ng-repeat="(idx, col) in instance.consequences" ng-if="!col.isHidden || display.hidden">
+                                    <md-input-container class="no-margin">
+                                        <md-select
+                                            ng-model="instance.consequences[idx].i_risk"
+                                            ng-disabled="col.isHidden"
+                                            title="{{scaleCommCache[col.scaleImpactType][instance.consequences[idx].i_risk]}}"
+                                            >
+                                            <md-option value="-1">{{ 'Unknown' | translate }}</md-option>
+                                            <md-option
+                                                ng-repeat="val in range(scales.impacts.min, scales.impacts.max)"
+                                                ng-value="val"
+                                                title="{{scaleCommCache[col.scaleImpactType][val]}}">
+                                                {{val}}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                </td>
+                                <td class="no-border"></td>
+                                <th title="{{scaleCommCache[2][calculeImpact('i')]}}">
+                                    <b>{{ calculeImpact('i') > -1 ? (calculeImpact('i') | dashnull) : '-'}}</b>
+                                </th>
+                            </tr>
+                            <tr>
+                                <th title="{{scaleCommCache[3][calculeImpact('d')]}}">
+                                    <b>{{ 'Availability' | translate }}</b>
+                                </th>
+                                <td class="no-border"></td>
+                                <td class="txtcenter" ng-repeat="(idx, col) in instance.consequences" ng-if="!col.isHidden || display.hidden">
+                                    <md-input-container class="no-margin">
+                                        <md-select
+                                            ng-model="instance.consequences[idx].d_risk"
+                                            ng-disabled="col.isHidden"
+                                            title="{{scaleCommCache[col.scaleImpactType][instance.consequences[idx].d_risk]}}">
+                                            <md-option value="-1">{{ 'Unknown' | translate }}</md-option>
+                                            <md-option
+                                                ng-repeat="val in range(scales.impacts.min, scales.impacts.max)"
+                                                ng-value="val"
+                                                title="{{scaleCommCache[col.scaleImpactType][val]}}">
+                                                {{val}}
+                                            </md-option>
+                                        </md-select>
+                                    </md-input-container>
+                                </td>
+                                <td class="no-border"></td>
+                                <th title="{{scaleCommCache[3][calculeImpact('d')]}}">
+                                    <b>{{ calculeImpact('d') > -1 ? (calculeImpact('d') | dashnull) : '-' }}</b>
+                                </th>
+                            </tr>
 
-                                <md-input-container style="margin: 8px 0">
-                                    <md-select ng-model="instance.consequences[idx].i_risk" ng-disabled="col.isHidden" aria-label="I" title="{{scaleCommCache[col.scaleImpactType][instance.consequences[idx].i_risk]}}">
-                                        <md-option value="-1">{{ 'Unknown' | translate }}</md-option>
-                                        <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val" title="{{scaleCommCache[col.scaleImpactType][val]}}">{{val}}</md-option>
-                                    </md-select>
-                                </md-input-container>
-
-                                <md-input-container style="margin: 8px 0">
-                                    <md-select ng-model="instance.consequences[idx].d_risk" ng-disabled="col.isHidden" aria-label="D" title="{{scaleCommCache[col.scaleImpactType][instance.consequences[idx].d_risk]}}">
-                                        <md-option value="-1">{{ 'Unknown' | translate }}</md-option>
-                                        <md-option ng-repeat="val in range(scales.impacts.min, scales.impacts.max)" ng-value="val" title="{{scaleCommCache[col.scaleImpactType][val]}}">{{val}}</md-option>
-                                    </md-select>
-                                </md-input-container>
-                            </div>
-                        </div>
-                        <div layout="column" style="border: 1px solid #DFDFDF; padding: 1em; text-align: center; margin-left: 20px; margin-right: 20px;" flex= "7">
-                            <p><md-button class="md-icon-button"">{{ 'Max' | translate }}</md-button></p>
-                            <div style="margin: 19px 0">
-                                <span title="{{scaleCommCache[1][calculeImpact('c')]}}"><b>{{ calculeImpact('c') > -1 ? (calculeImpact('c') | dashnull) : '-' }}</b></span>
-                            </div>
-                            <div style="margin: 18px 0">
-                                <span title="{{scaleCommCache[2][calculeImpact('i')]}}"><b>{{ calculeImpact('i') > -1 ? (calculeImpact('i') | dashnull) : '-'}}</b></span>
-                            </div>
-                            <div style="margin: 18px 0">
-                                <span title="{{scaleCommCache[3][calculeImpact('d')]}}"><b>{{ calculeImpact('d') > -1 ? (calculeImpact('d') | dashnull) : '-' }}</b></span>
-                            </div>
-                        </div>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </md-dialog-content>
