@@ -5,7 +5,7 @@
                 <tr>
                     <th class="column-scales-table no-border" rowspan="2"></th>
                     <th class="column-scales-table" translate rowspan="2">Prob.</th>
-                    <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}" translate>
+                    <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}">
                         <span translate>Impact</span>
                         <md-icon class="md-primary icon-small no-margin"  ng-if="opRiskScalesAreHidden" ng-attr-title="{{ 'Some scales are hidden' | translate }}">announcement</md-icon>
                     </th>
