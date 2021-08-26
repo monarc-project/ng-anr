@@ -1872,6 +1872,12 @@
                 let allScales = data.data;
                 $scope.opRiskImpactScaleValues = [];
                 $scope.opRiskImpactScalesTooltips = {};
+                if ($scope.opRiskImpactScales == 'undefined') {
+                    $scope.opRiskImpactScales = {
+                        min: 0,
+                        max: 0,
+                    }
+                }
 
                 $scope.opRiskLikelihoodScale = allScales.filter(scale => scale.type == 2)[0];
 
