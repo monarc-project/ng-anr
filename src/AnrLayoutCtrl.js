@@ -1883,7 +1883,7 @@
 
                 $scope.opRiskImpactTypeScale = allScales.filter(scale => scale.type == 1)[0];
 
-                $scope.opRiskImpactScales = $scope.opRiskImpactTypeScale.scaleTypes;
+                $scope.opRiskImpactScales = angular.copy($scope.opRiskImpactTypeScale.scaleTypes);
                 $scope.opRiskImpactScales.min = $scope.opRiskImpactTypeScale.min;
                 $scope.opRiskImpactScales.max = $scope.opRiskImpactTypeScale.max + 1;
                 $scope.opRiskScalesAreHidden = $scope.opRiskImpactScales.filter(scale => scale.isHidden == true).length > 0 ? true : false;
