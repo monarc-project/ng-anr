@@ -87,14 +87,14 @@
 
                <tr>
                    <th rowspan="2" ng-if="model.showRolfBrut" class="big-border-left" title="{{opRiskImpactScalesTooltips['likelihood']}}" translate>Prob.</th>
-                   <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}" ng-if="model.showRolfBrut" translate>
+                   <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}" ng-if="model.showRolfBrut">
                        <span translate>Impact</span>
                        <md-icon class="md-primary icon-small no-margin"  ng-if="opRiskScalesAreHidden" ng-attr-title="{{ 'Some scales are hidden' | translate }}">announcement</md-icon>
                    </th>
                    <th rowspan="2" ng-if="model.showRolfBrut" translate>Inherent risk</th>
 
                    <th rowspan="2" class="big-border-left" title="{{opRiskImpactScalesTooltips['likelihood']}}" translate>Prob.</th>
-                   <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}" translate>
+                   <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}">
                        <span translate>Impact</span>
                        <md-icon class="md-primary icon-small no-margin"  ng-if="opRiskScalesAreHidden" ng-attr-title="{{ 'Some scales are hidden' | translate }}">announcement</md-icon>
                    </th>
@@ -103,8 +103,8 @@
                </tr>
 
                <tr>
-                   <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" class="vertical-text" title="{{opRiskImpactScalesTooltips[scale.id]}}" ng-if="model.showRolfBrut">{{scale.label.substring(0,3)}}.</th>
-                   <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" class="vertical-text" title="{{opRiskImpactScalesTooltips[scale.id]}}">{{scale.label.substring(0,3)}}.</th>
+                   <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" title="{{opRiskImpactScalesTooltips[scale.id]}}" ng-if="model.showRolfBrut">{{scale.label.substring(0,3)}}.</th>
+                   <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" title="{{opRiskImpactScalesTooltips[scale.id]}}">{{scale.label.substring(0,3)}}.</th>
                </tr>
                </thead>
 
@@ -160,10 +160,10 @@
                    <td class="preserve-newlines">{{risk.comment}}</td>
                    <td class="txtcenter big-border-left"> {{ treatmentStr(risk.kindOfMeasure) | translate }}</td>
                    <td class="tbl-risk-calc txtcenter"
-                       ng-class="{'green': (risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min && risk.cacheTargetRisk==-1) || risk.cacheTargetRisk >= 0 && risk.cacheTargetRisk <= thresholds.rolf_thresholds.min ,
-                                  'orange': (risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max && risk.cacheTargetRisk==-1) || risk.cacheTargetRisk > thresholds.rolf_thresholds.min && risk.cacheTargetRisk <= thresholds.rolf_thresholds.max,
-                                  'red': (risk.cacheNetRisk > thresholds.rolf_thresholds.max && risk.cacheTargetRisk==-1) || risk.cacheTargetRisk > thresholds.rolf_thresholds.max}">
-                                  {{ risk.cacheTargetRisk == -1 ? risk.cacheNetRisk : risk.cacheTargetRisk | dashnull }}
+                       ng-class="{'green': (risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min && risk.cacheTargetedRisk==-1) || risk.cacheTargetedRisk >= 0 && risk.cacheTargetedRisk <= thresholds.rolf_thresholds.min ,
+                                  'orange': (risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max && risk.cacheTargetedRisk==-1) || risk.cacheTargetedRisk > thresholds.rolf_thresholds.min && risk.cacheTargetedRisk <= thresholds.rolf_thresholds.max,
+                                  'red': (risk.cacheNetRisk > thresholds.rolf_thresholds.max && risk.cacheTargetedRisk==-1) || risk.cacheTargetedRisk > thresholds.rolf_thresholds.max}">
+                                  {{ risk.cacheTargetedRisk == -1 ? risk.cacheNetRisk : risk.cacheTargetedRisk | dashnull }}
                   </td>
                </tr>
                </tbody>

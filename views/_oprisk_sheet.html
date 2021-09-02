@@ -5,7 +5,7 @@
                 <tr>
                     <th class="column-scales-table no-border" rowspan="2"></th>
                     <th class="column-scales-table" translate rowspan="2">Prob.</th>
-                    <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}" translate>
+                    <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}">
                         <span translate>Impact</span>
                         <md-icon class="md-primary icon-small no-margin"  ng-if="opRiskScalesAreHidden" ng-attr-title="{{ 'Some scales are hidden' | translate }}">announcement</md-icon>
                     </th>
@@ -41,16 +41,16 @@
                       ng-if="instmode != 'obj'"
                       edit-readonly="isAnrReadOnly"
                       edit-localmodel="opsheet_risk.scales[scale.id]"
-                      edit-field="targetValue"
+                      edit-field="targetedValue"
                       edit-filter="dashnull">
                     </td>
                     <td
                       class="tbl-risk-calc"
                       ng-class="{
-                        'green': opsheet_risk.cacheTargetRisk >= 0 && opsheet_risk.cacheTargetRisk <= thresholds.rolf_thresholds.min,
-                        'orange': opsheet_risk.cacheTargetRisk > thresholds.rolf_thresholds.min && opsheet_risk.cacheTargetRisk <= thresholds.rolf_thresholds.max,
-                        'red': opsheet_risk.cacheTargetRisk > thresholds.rolf_thresholds.max}">
-                        {{ opsheet_risk.cacheTargetRisk > -1 ? (opsheet_risk.cacheTargetRisk | dashnull) : '-' }}
+                        'green': opsheet_risk.cacheTargetedRisk >= 0 && opsheet_risk.cacheTargetedRisk <= thresholds.rolf_thresholds.min,
+                        'orange': opsheet_risk.cacheTargetedRisk > thresholds.rolf_thresholds.min && opsheet_risk.cacheTargetedRisk <= thresholds.rolf_thresholds.max,
+                        'red': opsheet_risk.cacheTargetedRisk > thresholds.rolf_thresholds.max}">
+                        {{ opsheet_risk.cacheTargetedRisk > -1 ? (opsheet_risk.cacheTargetedRisk | dashnull) : '-' }}
                       </td>
                 </tr>
                 <tr>
@@ -61,7 +61,7 @@
                     <td class="bold" translate>Risk description</td>
                     <td colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}">{{ _langField(opsheet_risk,"label") }}</td>
                 </tr>
-                <tr>
+                <tr ng-if="OFFICE_MODE == 'FO'">
                     <td class="bold" translate>Risk owner</td>
                     <td colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" edit-readonly="isAnrReadOnly">
                         <div layout="row" layout-align="center center">
@@ -82,7 +82,7 @@
                         </div>
                     </td>
                 </tr>
-                <tr>
+                <tr ng-if="OFFICE_MODE == 'FO'">
                     <td class="bold" translate>Risk context</td>
                     <td  colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" edit-readonly="isAnrReadOnly">
                       <md-input-container class="md-block" layout="row" flex>

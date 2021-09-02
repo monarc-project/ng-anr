@@ -282,7 +282,7 @@
             let hexColor = d3.color(color(d.value)).formatHex()
             return hexColor
           } else {
-            let hexColor = d3.color(color(d.value)).formatHex()
+            let hexColor = d3.color(color(d.category)).formatHex()
             return hexColor
           }
         }

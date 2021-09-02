@@ -537,8 +537,7 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 .tbl-soa {
     text-align: center;
     vertical-align: middle;
-    color: white;
-
+    color: black;
 }
 
 .soa-table {
@@ -556,21 +555,20 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
     font-size: 16px;
 }
 
-.tbl-soa .green, .tbl-soa.green {
+
+.tbl-soa.green {
     background: #D6F107;
-    color: black;
 }
 
-.tbl-soa .orange, .tbl-soa.orange {
+.tbl-soa.orange {
     background: #FFBC1C;
-    color: black;
 }
 
-.tbl-soa .red, .tbl-soa.red {
+.tbl-soa.red {
     background: #FD661F;
     color: white;
 }
-.tbl-soa .gray, .tbl-soa.gray {
+.tbl-soa.gray {
     background: #BDBDBD;
 }
 
@@ -641,6 +639,28 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 .anr-scales-demo-block.orange {
     background: #FFBC1C;
 
+}
+
+.horz-expanding-impacts-table {
+    overflow-x: auto;
+    padding: 2px;
+}
+
+.title-impacts-table {
+    width: 130px;
+    min-width: 130px
+}
+
+.title-impacts-table div {
+    display: inline-flex;
+}
+
+.title-impacts-table div button {
+    display: contents;
+}
+
+.title-impacts-table div md-icon {
+    padding: 0 8px;
 }
 
 /** Inline edit customization */
@@ -1041,7 +1061,12 @@ md-progress-linear.yellow .md-container {
 }
 
 /* Trix buttons */
-trix-toolbar button.link, trix-toolbar button.strike, trix-toolbar button.code {
+trix-toolbar button.trix-button--icon-link,
+trix-toolbar button.trix-button--icon-code,
+trix-toolbar button.trix-button--icon-quote,
+trix-toolbar button.trix-button--icon-increase-nesting-level,
+trix-toolbar button.trix-button--icon-decrease-nesting-level,
+trix-toolbar span.trix-button-group--file-tools {
     display: none
 }
 

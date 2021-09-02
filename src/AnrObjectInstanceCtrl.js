@@ -339,7 +339,7 @@
                     continue;
                 }
 
-                var scaleType = $scope.scales_types[(letter == 'c' ? 1 : (letter == 'i' ? 2 : 3))];
+                var scaleType = $scope.scales_types[(letter == 'c' ? 0 : (letter == 'i' ? 1 : 2))];
                 var scaleComm = $scope.scaleCommCache[key];
 
                 if (scaleType && !scaleType.isHidden) {

@@ -175,7 +175,6 @@
                         $scope.updateScales();
                         $scope.updateOperationalRiskScales();
                         $scope.updateReferentials();
-
                     }
 
                     isModelLoading = false;
@@ -497,7 +496,11 @@
                 }
                 $scope.reducAmount = reducAmount;
                 $scope._copyRecs = [];
-                $scope.idxRisks = risks.findIndex(risk => risk.id == $stateParams.riskId);
+                if($scope.OFFICE_MODE == 'FO'){
+                    $scope.idxRisks = risks.findIndex(infoRisk => infoRisk.id == $stateParams.riskId);
+                }else {
+                    $scope.idxRisks = risks.findIndex(infoRisk => infoRisk.id == risk.id);
+                }
                 $scope.updateSheetRiskTarget();
             });
         };
@@ -525,8 +528,8 @@
         $scope.resetSheet = function (redir) {
             if($scope.sheet_risk){
                 if($scope.OFFICE_MODE == 'FO'){
-                    $scope.saveRiskSheet($scope.sheet_risk);
                     if(!redir){
+                        $scope.saveRiskSheet($scope.sheet_risk);
                         if($stateParams.instId){
                             $state.transitionTo('main.project.anr.instance',{modelId:$stateParams.modelId, instId:$stateParams.instId},{inherit:true,notify:true,reload:false,location:'replace'});
                         }else{
@@ -551,11 +554,15 @@
                 }else{
                     $state.transitionTo('main.project.anr.riskop',{modelId:$stateParams.modelId, riskopId:risk.id},{inherit:true,notify:true,reload:false,location:'replace'});
                 }
-                $scope.opsheet_risk = angular.copy(risk);
+                $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.id == $stateParams.riskopId);
+            }else {
+                $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.rolfRisk == risk.rolfRisk);
             }
+
             $timeout(function() {
                 $scope.ToolsAnrService.currentTab = 1;
                 $scope.sheet_risk = undefined;
+                $scope.opsheet_risk = angular.copy(risk);
                 RiskService.getRisk($scope.opsheet_risk.rolfRisk).then(function (data) {
                   if (!angular.equals(data['measures'], {})) {
                     $scope.opsheet_risk.measures = data['measures'];
@@ -564,15 +571,18 @@
                   }
                 });
                 $scope._copyRecs = [];
-                $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.id == $stateParams.riskopId);
-
+                if($scope.OFFICE_MODE == 'FO'){
+                    $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.id == $stateParams.riskopId);
+                }else {
+                    $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.rolfRisk == risk.rolfRisk);
+                }
             });
         };
 
         $scope.resetOpSheet = function (redir) {
             if($scope.opsheet_risk){
                 if($scope.OFFICE_MODE == 'FO'){
-                  $scope.saveOpRiskSheet($scope.opsheet_risk);
+                    $scope.saveOpRiskSheet($scope.opsheet_risk);
                     if(!redir){
                         if($stateParams.instId){
                             $state.transitionTo('main.project.anr.instance',{modelId:$stateParams.modelId, instId:$stateParams.instId},{inherit:true,notify:true,reload:false,location:'replace'});
@@ -859,6 +869,7 @@
                             if($scope.model && $scope.model.anr){
                                 // Update scales, in case we made changes to risks, and our ANR isn't scaleupdatable anymore
                                 $scope.updateScales();
+                                $scope.updateOperationalRiskScales();
                             }
                         });
                         break;
@@ -1861,12 +1872,18 @@
                 let allScales = data.data;
                 $scope.opRiskImpactScaleValues = [];
                 $scope.opRiskImpactScalesTooltips = {};
+                if ($scope.opRiskImpactScales == 'undefined') {
+                    $scope.opRiskImpactScales = {
+                        min: 0,
+                        max: 0,
+                    }
+                }
 
                 $scope.opRiskLikelihoodScale = allScales.filter(scale => scale.type == 2)[0];
 
                 $scope.opRiskImpactTypeScale = allScales.filter(scale => scale.type == 1)[0];
 
-                $scope.opRiskImpactScales = $scope.opRiskImpactTypeScale.scaleTypes;
+                $scope.opRiskImpactScales = angular.copy($scope.opRiskImpactTypeScale.scaleTypes);
                 $scope.opRiskImpactScales.min = $scope.opRiskImpactTypeScale.min;
                 $scope.opRiskImpactScales.max = $scope.opRiskImpactTypeScale.max + 1;
                 $scope.opRiskScalesAreHidden = $scope.opRiskImpactScales.filter(scale => scale.isHidden == true).length > 0 ? true : false;
@@ -2094,7 +2111,7 @@
                     function(risk){
                         rootModel.cacheBrutRisk = risk.cacheBrutRisk;
                         rootModel.cacheNetRisk = risk.cacheNetRisk;
-                        rootModel.cacheTargetRisk = risk.cacheTargetedRisk;
+                        rootModel.cacheTargetedRisk = risk.cacheTargetedRisk;
                         result.resolve(true);
                     },
                     function(){
@@ -2105,7 +2122,7 @@
                 AnrService.updateInstanceOpRisk($scope.model.anr.id, model.id, model, function(risk){
                     model.cacheBrutRisk = risk.cacheBrutRisk;
                     model.cacheNetRisk = risk.cacheNetRisk;
-                    model.cacheTargetRisk = risk.cacheTargetedRisk;
+                    model.cacheTargetedRisk = risk.cacheTargetedRisk;
                     result.resolve(true);
                 }, function(){
                     result.reject(false);
@@ -2857,7 +2874,7 @@
                     else
                       finalArray[recLine]+=','+"\""+' '+"\"";
                     finalArray[recLine]+=','+"\""+rec.importance+"\"";
-                    finalArray[recLine]+=','+"\""+$scope._langField(rec.risks[risk].instance,'name')+"\"";
+                    finalArray[recLine]+=','+"\""+rec.risks[risk].path+"\"";
                     if (rec.risks[risk].comment !=null )
                       finalArray[recLine]+=','+"\""+rec.risks[risk].comment+"\"";
                     else
@@ -2877,7 +2894,7 @@
                     finalArray[recLine]="\""+rec.code+"\"";
                     finalArray[recLine]+=','+"\""+rec.description+"\"";
                     finalArray[recLine]+=','+"\""+rec.importance+"\"";
-                    finalArray[recLine]+=','+"\""+$scope._langField(rec.risksop[riskop].instance,'name')+"\"";
+                    finalArray[recLine]+=','+"\""+rec.risksop[riskop].path+"\"";
                     if (rec.risksop[riskop].comment !=null )
                       finalArray[recLine]+=','+"\""+rec.risksop[riskop].comment+"\"";
                     else

@@ -55,7 +55,7 @@
                         <md-option value="cacheBrutRisk"  ng-if="model.showRolfBrut" >{{ 'Inherent risk' | translate }}</md-option>
                         <md-option value="netProb">{{ 'Net probability' | translate }}</md-option>
                         <md-option value="cacheNetRisk">{{ 'Net risk' | translate }}</md-option>
-                        <md-option value="cacheTargetRisk">{{ 'Residual risk' | translate }}</md-option>
+                        <md-option value="cacheTargetedRisk">{{ 'Residual risk' | translate }}</md-option>
                     </md-select>
                 </md-input-container>
 
@@ -102,7 +102,7 @@
           <th rowspan="2"  ng-if="model.showRolfBrut" translate>Inherent risk</th>
 
           <th rowspan="2" class="big-border-left" title="{{opRiskImpactScalesTooltips['likelihood']}}" translate>Prob.</th>
-          <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}" translate>
+          <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}">
               <span translate>Impact</span>
               <md-icon class="md-primary icon-small no-margin"  ng-if="opRiskScalesAreHidden" ng-attr-title="{{ 'Some scales are hidden' | translate }}">announcement</md-icon>
           </th>
@@ -111,8 +111,8 @@
       </tr>
 
       <tr ng-if="instmode != 'obj'">
-          <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" class="vertical-text" title="{{opRiskImpactScalesTooltips[scale.id]}}" ng-if="model.showRolfBrut">{{scale.label.substring(0,3)}}.</th>
-          <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" class="vertical-text" title="{{opRiskImpactScalesTooltips[scale.id]}}">{{scale.label.substring(0,3)}}.</th>
+          <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" title="{{opRiskImpactScalesTooltips[scale.id]}}" ng-if="model.showRolfBrut">{{scale.label.substring(0,3)}}.</th>
+          <th ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}" title="{{opRiskImpactScalesTooltips[scale.id]}}">{{scale.label.substring(0,3)}}.</th>
       </tr>
       </thead>
 
@@ -200,10 +200,10 @@
             class="tbl-risk-calc txtcenter"
             ng-if="instmode != 'obj'"
             ng-class="{
-                'green': (risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min && risk.cacheTargetRisk==-1) || risk.cacheTargetRisk >= 0 && risk.cacheTargetRisk <= thresholds.rolf_thresholds.min ,
-                'orange': (risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max && risk.cacheTargetRisk==-1) || risk.cacheTargetRisk > thresholds.rolf_thresholds.min && risk.cacheTargetRisk <= thresholds.rolf_thresholds.max,
-                'red': (risk.cacheNetRisk > thresholds.rolf_thresholds.max && risk.cacheTargetRisk==-1) || risk.cacheTargetRisk > thresholds.rolf_thresholds.max}">
-                {{ risk.cacheTargetRisk == '-1' ? risk.cacheNetRisk : risk.cacheTargetRisk | dashnull }}
+                'green': (risk.cacheNetRisk >= 0 && risk.cacheNetRisk <= thresholds.rolf_thresholds.min && risk.cacheTargetedRisk==-1) || risk.cacheTargetedRisk >= 0 && risk.cacheTargetedRisk <= thresholds.rolf_thresholds.min ,
+                'orange': (risk.cacheNetRisk > thresholds.rolf_thresholds.min && risk.cacheNetRisk <= thresholds.rolf_thresholds.max && risk.cacheTargetedRisk==-1) || risk.cacheTargetedRisk > thresholds.rolf_thresholds.min && risk.cacheTargetedRisk <= thresholds.rolf_thresholds.max,
+                'red': (risk.cacheNetRisk > thresholds.rolf_thresholds.max && risk.cacheTargetedRisk==-1) || risk.cacheTargetedRisk > thresholds.rolf_thresholds.max}">
+                {{ risk.cacheTargetedRisk == '-1' ? risk.cacheNetRisk : risk.cacheTargetedRisk | dashnull }}
           </td>
       </tr>
       </tbody>

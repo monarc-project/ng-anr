@@ -254,7 +254,7 @@
                                 inline-edit-callback="onEditOpRiskScale(scale.id, 'label', newValue)"
                                 inline-edit-btn-edit=""
                                 inline-edit-on-blur="save"
-                                inline-edit-on-click>
+                                inline-edit-on-click inline-edit-placeholder="{{ scale.label ? scale.label : '...' }}">
                             </span>
                             <span class="text-blue">
                             </span>
@@ -266,7 +266,7 @@
                   </thead>
 
                   <tbody ng-if="opRiskImpactScales.min != opRiskImpactScales.max && opRiskImpactScales.max > 0">
-                    <tr ng-repeat="i in range(opRiskImpactScales.min,opRiskImpactScales.max - 1)" edit-model="opRiskImpactScales">
+                    <tr ng-repeat="i in range(0,opRiskImpactScales[0].comments.length - 1)" edit-model="opRiskImpactScales">
                         <th
                             edit-readonly="isAnrReadOnly"
                             edit-canchange="scalesCanChange"
