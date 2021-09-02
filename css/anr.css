@@ -163,6 +163,14 @@ table.md-table tbody.md-body>tr.md-row:hover {
     display: block;
 }
 
+.icon-small {
+    font-size:15px;
+    height: 20px;
+    width: 20px;
+    min-height: 20px;
+    min-width: 20px;
+}
+
 .checkbox-center {
     text-align: center !important;
 }
@@ -529,8 +537,7 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 .tbl-soa {
     text-align: center;
     vertical-align: middle;
-    color: white;
-
+    color: black;
 }
 
 .soa-table {
@@ -548,21 +555,20 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
     font-size: 16px;
 }
 
-.tbl-soa .green, .tbl-soa.green {
+
+.tbl-soa.green {
     background: #D6F107;
-    color: black;
 }
 
-.tbl-soa .orange, .tbl-soa.orange {
+.tbl-soa.orange {
     background: #FFBC1C;
-    color: black;
 }
 
-.tbl-soa .red, .tbl-soa.red {
+.tbl-soa.red {
     background: #FD661F;
     color: white;
 }
-.tbl-soa .gray, .tbl-soa.gray {
+.tbl-soa.gray {
     background: #BDBDBD;
 }
 
@@ -635,6 +641,28 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 
 }
 
+.horz-expanding-impacts-table {
+    overflow-x: auto;
+    padding: 2px;
+}
+
+.title-impacts-table {
+    width: 130px;
+    min-width: 130px
+}
+
+.title-impacts-table div {
+    display: inline-flex;
+}
+
+.title-impacts-table div button {
+    display: contents;
+}
+
+.title-impacts-table div md-icon {
+    padding: 0 8px;
+}
+
 /** Inline edit customization */
 div.ng-inline-edit {
     display: inline;
@@ -702,6 +730,10 @@ span textarea {
     text-align: center;
 }
 
+.vertical-text {
+    transform: rotate(-90deg);
+}
+
 .anr-formula-container {
     padding: 5px;
     margin-left: 16px;
@@ -722,14 +754,22 @@ span textarea {
     font-weight: bold;
 }
 
+
+.op-riks-table {
+    overflow-x: auto;
+}
+
 .horz-expanding-table {
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 .horz-expanding-table .md-html-table td, .horz-expanding-table .md-html-table td span span {
     min-width: 200px;
 }
 
+.column-scales-table {
+    width: 10%
+}
 
 /*.angular-ui-tree-nodes .angular-ui-tree-nodes {
     padding-left: 6px;
@@ -1021,7 +1061,12 @@ md-progress-linear.yellow .md-container {
 }
 
 /* Trix buttons */
-trix-toolbar button.link, trix-toolbar button.strike, trix-toolbar button.code {
+trix-toolbar button.trix-button--icon-link,
+trix-toolbar button.trix-button--icon-code,
+trix-toolbar button.trix-button--icon-quote,
+trix-toolbar button.trix-button--icon-increase-nesting-level,
+trix-toolbar button.trix-button--icon-decrease-nesting-level,
+trix-toolbar span.trix-button-group--file-tools {
     display: none
 }
 
@@ -1047,6 +1092,11 @@ trix-toolbar button.link, trix-toolbar button.strike, trix-toolbar button.code {
 .big-border-left {
     border-left-width: 2px !important;
     border-left-style: solid !important;
+    border-color: #DDDDDD;
+}
+.big-border-right {
+    border-right-width: 2px !important;
+    border-right-style: solid !important;
     border-color: #DDDDDD;
 }
 

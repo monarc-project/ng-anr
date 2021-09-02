@@ -21,18 +21,19 @@ angular.module('AnrModule').directive('editable', function(){
 			this.saveChange = function(field, direction){
 				field.error = false;
 
-				if( $attrs.forceCallback == undefined && field.initialValue == field.editedValue){
+				if( $attrs.forceCallback == undefined && (field.initialValue == field.editedValue || field.editedValue == null) ){
 					// value didn't change, don't call callback
 					field.cancel();
 					if(direction != undefined){
 						this.moveEdition(field, direction);
 					}
+
 					return true;
 				}
 
 
 				field.model[field.name] = field.editedValue;
-				var result = this.callback.call(null, field.model, field.name);
+				var result = this.callback.call(null, field.model, field.name, field.rootModel);
 
 				if(result.then == undefined){
 					this.handleCallbackReturn(result, field, direction);
@@ -119,7 +120,7 @@ angular.module('AnrModule').directive('editable', function(){
 			}
 
 			if (attrs.editType == 'number') {
-				tmpl += '<input class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'number\'" type="number" ng-model="field.editedValue" placeholder="{{placeholder}}" escape="cancelEdition()" action="saveEdition" autofocus/>';
+				tmpl += '<input class="edit-field" min={{min}} max={{max}} ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'number\'" type="number" ng-model="field.editedValue" placeholder="{{placeholder}}" escape="cancelEdition()" action="saveEdition" autofocus/>';
 			} else if (attrs.editType == 'textarea') {
 				tmpl += '<textarea class="edit-field" ng-class="{editerror: field.error}" ng-if="field.edited && field.type == \'textarea\'" ng-model="field.editedValue" placeholder="{{placeholder}}" escape="cancelEdition()" action="saveEdition" autofocus></textarea>';
 			} else {
@@ -134,24 +135,29 @@ angular.module('AnrModule').directive('editable', function(){
 			localmodel: '=editLocalmodel',
 			placeholder: '@editPlaceholder',
 			class: '@editClass',
+			min: '@editMin',
+			max: '@editMax',
 			show: "=ngShow",
 			filter: '@editFilter',
 			readOnly: '=editReadonly',
+			canChange: '=editCanchange',
 		},
 		link: function(scope, element, attrs, ctrls){
 			scope.editableCtrl = ctrls[0];
 			scope.modelCtrl = ctrls[1];
 
+			var rootModel = scope.modelCtrl.model;
 			var model = scope.localmodel !== undefined ? scope.localmodel : scope.modelCtrl.model;
-
 			scope.field = {
 				edited: false,
 				model: model,
+				rootModel: rootModel,
 				name: scope.name ? scope.name : angular.copy(scope.ngName),
 				shown: true,
 				type: attrs.editType && attrs.editType != "" ? attrs.editType : 'text',
 				editedValue: null,
 				readOnly: scope.readOnly !== undefined ? scope.readOnly : false,
+				canChange: scope.canChange !== undefined ? scope.canChange : true,
 				edit: function(){
 					this.edited = true;
 					this.initialValue = this.model[this.name];
@@ -196,7 +202,7 @@ angular.module('AnrModule').directive('editable', function(){
 			});
 
 			element.on('click', function(){
-				if( ! scope.field.edited && !scope.field.readOnly ){
+				if( !scope.field.edited && !scope.field.readOnly && scope.field.canChange){
 					scope.$apply(function(){
 						scope.startEdition();
 					});

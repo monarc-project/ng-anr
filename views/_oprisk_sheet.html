@@ -3,55 +3,103 @@
         <table class="md-html-table" editable callback="changeRiskOp">
             <thead>
                 <tr>
-                    <th class="no-border"></th>
-                    <th style="width:12%;" translate>Prob.</th>
-                    <th style="width:12%;">R</th>
-                    <th style="width:12%;">O</th>
-                    <th style="width:12%;">L</th>
-                    <th style="width:12%;">F</th>
-                    <th style="width:12%;">P</th>
-                    <th style="width:12%;" translate>MAX risk</th>
+                    <th class="column-scales-table no-border" rowspan="2"></th>
+                    <th class="column-scales-table" translate rowspan="2">Prob.</th>
+                    <th colspan="{{(opRiskImpactScales | filter:{isHidden:false}).length}}">
+                        <span translate>Impact</span>
+                        <md-icon class="md-primary icon-small no-margin"  ng-if="opRiskScalesAreHidden" ng-attr-title="{{ 'Some scales are hidden' | translate }}">announcement</md-icon>
+                    </th>
+                    <th class="column-scales-table" translate rowspan="2">MAX risk</th>
+                </tr>
+                <tr>
+                    <th class="column-scales-table" ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}">{{ scale.label }}</th>
                 </tr>
             </thead>
             <tbody>
                 <tr class="tbl-risk-calc">
                     <td class="bold txtleft" translate>Current risk</td>
                     <td>{{ opsheet_risk.netProb > -1 ? (opsheet_risk.netProb | dashnull) : '-' }}</td>
-                    <td>{{ opsheet_risk.netR > -1 ? (opsheet_risk.netR | dashnull) : '-' }}</td>
-                    <td>{{ opsheet_risk.netO > -1 ? (opsheet_risk.netO | dashnull) : '-' }}</td>
-                    <td>{{ opsheet_risk.netL > -1 ? (opsheet_risk.netL | dashnull) : '-' }}</td>
-                    <td>{{ opsheet_risk.netF > -1 ? (opsheet_risk.netF | dashnull) : '-' }}</td>
-                    <td>{{ opsheet_risk.netP > -1 ? (opsheet_risk.netP | dashnull) : '-' }}</td>
-                    <td class="tbl-risk-calc" ng-class="{'green': opsheet_risk.cacheNetRisk >= 0 && opsheet_risk.cacheNetRisk <= thresholds.rolf_thresholds.min, 'orange': opsheet_risk.cacheNetRisk > thresholds.rolf_thresholds.min && opsheet_risk.cacheNetRisk <= thresholds.rolf_thresholds.max, 'red': opsheet_risk.cacheNetRisk > thresholds.rolf_thresholds.max}">{{ opsheet_risk.cacheNetRisk > -1 ? (opsheet_risk.cacheNetRisk | dashnull) : '-' }}</td>
+                    <td ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}">
+                        {{ opsheet_risk.scales[scale.id].netValue > -1 ? (opsheet_risk.scales[scale.id].netValue | dashnull) : '-' }}
+                    </td>
+                    <td
+                      class="tbl-risk-calc"
+                      ng-class="{
+                        'green': opsheet_risk.cacheNetRisk >= 0 && opsheet_risk.cacheNetRisk <= thresholds.rolf_thresholds.min,
+                        'orange': opsheet_risk.cacheNetRisk > thresholds.rolf_thresholds.min && opsheet_risk.cacheNetRisk <= thresholds.rolf_thresholds.max,
+                        'red': opsheet_risk.cacheNetRisk > thresholds.rolf_thresholds.max
+                      }">
+                      {{ opsheet_risk.cacheNetRisk > -1 ? (opsheet_risk.cacheNetRisk | dashnull) : '-' }}
+                    </td>
                 </tr>
                 <tr class="tbl-risk-calc" edit-model="opsheet_risk">
                     <td class="bold txtleft" translate>Residual risk</td>
                     <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedProb" edit-filter="dashnull"></td>
-                    <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedR" edit-filter="dashnull"></td>
-                    <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedO" edit-filter="dashnull"></td>
-                    <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedL" edit-filter="dashnull"></td>
-                    <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedF" edit-filter="dashnull"></td>
-                    <td class="small" edit-readonly="isAnrReadOnly" edit-field="targetedP" edit-filter="dashnull"></td>
-                    <td class="tbl-risk-calc" ng-class="{'green': opsheet_risk.cacheTargetedRisk >= 0 && opsheet_risk.cacheTargetedRisk <= thresholds.rolf_thresholds.min, 'orange': opsheet_risk.cacheTargetedRisk > thresholds.rolf_thresholds.min && opsheet_risk.cacheTargetedRisk <= thresholds.rolf_thresholds.max, 'red': opsheet_risk.cacheTargetedRisk > thresholds.rolf_thresholds.max}">{{ opsheet_risk.cacheTargetedRisk > -1 ? (opsheet_risk.cacheTargetedRisk | dashnull) : '-' }}</td>
+                    <td
+                      ng-repeat="scale in opRiskImpactScales | filter:{isHidden:false}"
+                      class="small txtcenter"
+                      ng-if="instmode != 'obj'"
+                      edit-readonly="isAnrReadOnly"
+                      edit-localmodel="opsheet_risk.scales[scale.id]"
+                      edit-field="targetedValue"
+                      edit-filter="dashnull">
+                    </td>
+                    <td
+                      class="tbl-risk-calc"
+                      ng-class="{
+                        'green': opsheet_risk.cacheTargetedRisk >= 0 && opsheet_risk.cacheTargetedRisk <= thresholds.rolf_thresholds.min,
+                        'orange': opsheet_risk.cacheTargetedRisk > thresholds.rolf_thresholds.min && opsheet_risk.cacheTargetedRisk <= thresholds.rolf_thresholds.max,
+                        'red': opsheet_risk.cacheTargetedRisk > thresholds.rolf_thresholds.max}">
+                        {{ opsheet_risk.cacheTargetedRisk > -1 ? (opsheet_risk.cacheTargetedRisk | dashnull) : '-' }}
+                      </td>
                 </tr>
                 <tr>
                     <td class="bold" translate>Asset</td>
-                    <td class="bold" colspan="7"><md-icon ng-if="opsheet_risk.instanceInfos.scope == 2" class="md-tree-global-icon">language</md-icon>{{ _langField(opsheet_risk.instanceInfos,"name") }}</td>
+                    <td class="bold" colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}"><md-icon ng-if="opsheet_risk.instanceInfos.scope == 2" class="md-tree-global-icon">language</md-icon>{{ _langField(opsheet_risk.instanceInfos,"name") }}</td>
                 </tr>
                 <tr>
                     <td class="bold" translate>Risk description</td>
-                    <td colspan="7">{{ _langField(opsheet_risk,"label") }}</td>
+                    <td colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}">{{ _langField(opsheet_risk,"label") }}</td>
+                </tr>
+                <tr ng-if="OFFICE_MODE == 'FO'">
+                    <td class="bold" translate>Risk owner</td>
+                    <td colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" edit-readonly="isAnrReadOnly">
+                        <div layout="row" layout-align="center center">
+                            <md-autocomplete
+                                    flex
+                                    md-input-name="owner"
+                                    md-no-cache="true"
+                                    md-selected-item="opsheet_risk.owner"
+                                    md-search-text="ownerSearchText"
+                                    md-items="item in queryOwnerSearch(ownerSearchText,'opsheet_risk')"
+                                    md-item-text="item"
+                                    md-min-length="0"
+                                    md-floating-label=" ">
+                                <md-item-template>
+                                    <span md-highlight-text="ownerSearchText" md-highlight-flags="^i">{{item}}</span>
+                                </md-item-template>
+                            </md-autocomplete>
+                        </div>
+                    </td>
+                </tr>
+                <tr ng-if="OFFICE_MODE == 'FO'">
+                    <td class="bold" translate>Risk context</td>
+                    <td  colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" edit-readonly="isAnrReadOnly">
+                      <md-input-container class="md-block" layout="row" flex>
+                        <input ng-model="opsheet_risk.context">
+                      </md-input-container>
+                    </td>
                 </tr>
                 <tr>
                     <td class="bold" translate>Risk probability</td>
-                    <td colspan="7">
+                    <td colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}">
                         <div ng-if="opsheet_risk.netProb == -1">-</div>
                         <div ng-if="opsheet_risk.netProb > -1"><strong>{{ opsheet_risk.netProb }}</strong> - {{ _langField(comms.threat[opsheet_risk.netProb],'comment') }}</div>
                     </td>
                 </tr>
                 <tr>
                     <td class="bold" translate>Existing controls</td>
-                    <td colspan="7">
+                    <td colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}">
                         {{opsheet_risk.comment}}
                     </td>
                 </tr>
@@ -86,7 +134,7 @@
                             </md-button>
                         </div>
                     </td>
-                    <td colspan="7">
+                    <td colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}">
                         <ul class="no-list-style no-padding no-margin">
                             <li ng-repeat="recommandation in _copyRecs | orderBy : 'importance'">
                                 <p><a class="md-primary" ui-sref="main.project.anr.risksplan.sheet({modelId: model.anr.id, recId: recommandation.recommandation.uuid})" ng-attr-title="{{ 'Implementation of the risk treatment plan' | translate }}" ><md-icon>open_in_new</md-icon></a>
@@ -99,7 +147,7 @@
                 </tr>
                 <tr>
                     <td class="bold" translate>Kind of treatment</td>
-                    <td colspan="7" style="padding-top:0px;padding-bottom:0px;">
+                    <td colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" style="padding-top:0px;padding-bottom:0px;">
                         <md-input-container class="md-block" style="width: 200px;margin:0px;">
                             <md-icon>widgets</md-icon>
                             <md-select ng-model="opsheet_risk.kindOfMeasure" ng-disabled="isAnrReadOnly">
@@ -114,7 +162,7 @@
                 </tr>
                 <tr>
                     <td class="bold" translate>Security referentials</td>
-                    <td colspan="7">
+                    <td colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}">
                       <md-tabs md-dynamic-height="true">
                         <md-tab ng-repeat="ref in referentials.items.referentials" label="{{ _langField(ref,'label')}}"
                                 md-on-select="selectReferential(ref.uuid)" md-on-deselect="deselectReferentialsTab()">
