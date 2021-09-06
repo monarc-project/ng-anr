@@ -138,7 +138,7 @@
                                 <div layout="row">
                                     <div flex>
                                         <md-button class="trix-info-toolbar-button" ng-click="toggleGuide()"><md-icon>info</md-icon></md-button>
-                                        <trix-editor angular-trix ng-model="anr.synthThreat" style="min-height: 250px; min-width: 550px; border: 1px solid #AAAAAA;" class="md-padding"></trix-editor>
+                                        <trix-editor angular-trix ng-model="anr.synthThreat" style="min-height: 250px; min-width: 550px; border: 1px solid #AAAAAA;" prevent-trix-file-accept = "true" class="md-padding"></trix-editor>
                                     </div>
 
                                     <md-card style="max-width: 320px" ng-if="guideVisible">
