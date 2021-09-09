@@ -314,6 +314,11 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 .txtright {
     text-align: right;
 }
+
+.align-right {
+    float: right;
+}
+
 .txtleft {
     text-align: left;
 }
