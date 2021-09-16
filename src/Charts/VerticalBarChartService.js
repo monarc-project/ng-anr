@@ -62,7 +62,7 @@
           .tickSize(-width)
           .tickSizeOuter(0);
 
-        var numberFormat = d3.format(".3");
+        var numberFormat = d3.format(".5");
 
         d3.select(tag).select("svg").remove();
         d3.selectAll(".tooltip" + tag.substring(1)).remove();
