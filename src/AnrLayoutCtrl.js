@@ -49,9 +49,6 @@
             $scope.display = {show_hidden_impacts: false, anrSelectedTabIndex: 0};
         }
 
-        $scope.scalesCanChange = false;
-        $scope.isAnrReadOnly = true;
-
         var self = this;
 
         $scope.ToolsAnrService = ToolsAnrService;
@@ -1558,7 +1555,22 @@
             return promise;
         };
 
+        var patchComm = function (id, newValue) {
+            var promise = $q.defer();
+            AnrService.patchScaleType($scope.model.anr.id, id, {['label' + $scope.scales.language]: newValue}, function () {
+                promise.resolve();
+            }, function () {
+                promise.reject();
+            });
+
+            return promise;
+        };
+
         $scope.onImpactCommChanged = function (model, value) {
+
+            if (value == 'label' + $scope.scales.language) {
+                return patchComm(model.id, model[value]);
+            }
             if (!model.id) {
                 return createComm($scope.scales.impacts.id, model.scaleValue, model[value], model.scaleImpactType);
             } else {
@@ -1808,7 +1820,25 @@
                       $scope.updateOperationalRiskScales();
                   }
               );
-            } else {
+            }
+            if (value == 'label') {
+                AnrService.updateOperationalRiskScale(
+                    $scope.model.anr.id,
+                    model.id,
+                    {
+                        language: $scope.opRisksLanguageSelected,
+                        [value] : model[value]
+                    },
+                    function() {
+                        promise.resolve();
+                        $scope.updateOperationalRiskScales();
+                    },
+                    function(){
+                        promise.reject();
+                    }
+                )
+            }
+            if (value == 'comment') {
               AnrService.updateOperationalRiskScaleComment(
                   $scope.model.anr.id,
                   model.scaleId,
@@ -2074,10 +2104,6 @@
                     cb();
                 }
             });
-        };
-
-        $scope.checkCommentVisibility = function(comment){
-            return comment && ! $scope.scales_types_by_id[comment.scaleImpactType].isHidden || $scope.display.show_hidden_impacts ;
         };
 
         $scope.onRisksTableEdited = function (model, name) {
