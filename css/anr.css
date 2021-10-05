@@ -668,33 +668,6 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
     padding: 0 8px;
 }
 
-/** Inline edit customization */
-div.ng-inline-edit {
-    display: inline;
-}
-
-span.ng-inline-edit__text {
-    cursor: pointer;
-}
-
-span.ng-inline-edit__text--placeholder {
-    font-style: italic;
-    color: #888888;
-}
-
-
-.text-blue span.ng-inline-edit__text--placeholder {
-    color: #2196F3;
-}
-
-div.ng-inline-edit input, div.ng-inline-edit textarea {
-    border-top: none;
-    border-left: none;
-    border-right: none;
-    border-bottom: 1px solid #2196F3;
-    outline: none;
-}
-
 input, textarea {
     border-top: 1px solid #2196F3;;
     border-left: 1px solid #2196F3;;
