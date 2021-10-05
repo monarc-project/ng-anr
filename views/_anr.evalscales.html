@@ -311,7 +311,7 @@
             </md-card>
 
             <div editable callback="onOpRiskImpactScaleChanged" layout="row">
-                <h4 edit-model="opRiskImpactScales">
+                <h4 edit-model="opRiskScales.impacts">
                     <span translate>Impacts scale:</span>&nbsp;
                     <span class="text-blue"
                         edit-readonly="isAnrReadOnly"
@@ -373,7 +373,7 @@
                         </tr>
                     </thead>
 
-                    <tbody ng-if="opRiskImpactScales.min != opRiskImpactScales.max && opRiskImpactScales.max > 0">
+                    <tbody ng-if="opRiskScales.impacts.min != opRiskScales.impacts.max && opRiskScales.impacts.max > 0">
                         <tr ng-repeat="i in range(0,opRiskImpactScales[0].comments.length - 1)" edit-model="opRiskImpactScales">
                             <th edit-readonly="isAnrReadOnly"
                                 edit-canchange="scalesCanChange"
@@ -398,19 +398,19 @@
             </div>
 
             <div editable callback="onOpRiskLikelihoodScaleChanged" layout="row">
-                <h4 edit-model="opRiskLikelihoodScale"><span translate>Likelihood scale:</span> [
+                <h4 edit-model="opRiskScales.threats"><span translate>Likelihood scale:</span> [
                   <span class="text-blue"
                         edit-readonly="isAnrReadOnly"
                         edit-canchange="scalesCanChange"
                         edit-min="0"
-                        edit-max="{{opRiskLikelihoodScale.max - 1}}"
+                        edit-max="{{opRiskScales.threats.max - 1}}"
                         edit-field="min"
                         edit-type="number">
                   </span> -
                   <span class="text-blue"
                         edit-readonly="isAnrReadOnly"
                         edit-canchange="scalesCanChange"
-                        edit-min="{{opRiskLikelihoodScale.min + 1}}"
+                        edit-min="{{opRiskScales.threats.min + 1}}"
                         edit-max="20"
                         edit-field="max"
                         edit-type="number">
@@ -418,7 +418,7 @@
                 </h4>
             </div>
 
-            <div ng-if="opRiskLikelihoodScale.min != opRiskLikelihoodScale.max && opRiskLikelihoodScale.max > 0"
+            <div ng-if="opRiskScales.threats.min != opRiskScales.threats.max && opRiskScales.threats.max > 0"
                 callback="onOpRiskScaleCommChanged"
                 editable>
                 <ul class="no-list-style">

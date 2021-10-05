@@ -1439,6 +1439,11 @@
             vulns: {min: 0, max: 3},
         };
 
+        $scope.opRiskScales = {
+            impacts: {min: 0, max: 5},
+            threats: {min:0, max: 5}
+        }
+
         $scope.comms = {
             impact: [],
             threat: [],
@@ -1872,20 +1877,16 @@
                 let allScales = data.data;
                 $scope.opRiskImpactScaleValues = [];
                 $scope.opRiskImpactScalesTooltips = {};
-                if ($scope.opRiskImpactScales == 'undefined') {
-                    $scope.opRiskImpactScales = {
-                        min: 0,
-                        max: 0,
-                    }
-                }
 
                 $scope.opRiskLikelihoodScale = allScales.filter(scale => scale.type == 2)[0];
+                $scope.opRiskScales.threats.min = $scope.opRiskLikelihoodScale.min;
+                $scope.opRiskScales.threats.max = $scope.opRiskLikelihoodScale.max;
 
                 $scope.opRiskImpactTypeScale = allScales.filter(scale => scale.type == 1)[0];
 
-                $scope.opRiskImpactScales = angular.copy($scope.opRiskImpactTypeScale.scaleTypes);
-                $scope.opRiskImpactScales.min = $scope.opRiskImpactTypeScale.min;
-                $scope.opRiskImpactScales.max = $scope.opRiskImpactTypeScale.max + 1;
+                $scope.opRiskImpactScales = $scope.opRiskImpactTypeScale.scaleTypes;
+                $scope.opRiskScales.impacts.min = $scope.opRiskImpactTypeScale.min;
+                $scope.opRiskScales.impacts.max = $scope.opRiskImpactTypeScale.max + 1;
                 $scope.opRiskScalesAreHidden = $scope.opRiskImpactScales.filter(scale => scale.isHidden == true).length > 0 ? true : false;
 
 
