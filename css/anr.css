@@ -669,9 +669,9 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
 }
 
 input, textarea {
-    border-top: 1px solid #2196F3;;
-    border-left: 1px solid #2196F3;;
-    border-right: 1px solid #2196F3;;
+    border-top: 1px solid #2196F3;
+    border-left: 1px solid #2196F3;
+    border-right: 1px solid #2196F3;
     border-bottom: 1px solid #2196F3;
     outline: none;
 }
@@ -679,6 +679,15 @@ input, textarea {
 td input.edit-field {
 	text-align: center;
 	width: 1.5em;
+}
+
+.title-impacts-table textarea {
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    text-align: center;
+	height: 20px;
+	width: 100%;
 }
 
 textarea {
