@@ -690,13 +690,6 @@ span textarea {
 	height: 100%;
 	width: 70%;
 }
-.small div.ng-inline-edit input {
-    width: 64px;
-}
-
-.large div.ng-inline-edit textarea {
-    width: 100%
-}
 
 .anr-table-toptitle {
     text-align: center
