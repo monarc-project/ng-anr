@@ -1072,7 +1072,7 @@
                 MeasureService.getMeasures({referential: $scope.referential_uuid, order:'code'}).then(function (data) {
                     var measuresRefSelected = data;
                     $mdDialog.show({
-                        controller: ['$scope', '$mdDialog', 'ReferentialService', 'MeasureService','ConfigService', 'MeasureMeasureService', '$q', 'measures', 'referentials', 'referentialSelected', MatchReferentialDialogCtrl],
+                        controller: ['$scope', '$mdDialog', '$mdMedia', 'ReferentialService', 'MeasureService','ConfigService', 'MeasureMeasureService', '$q', 'measures', 'referentials', 'referentialSelected', MatchReferentialDialogCtrl],
                         templateUrl: 'views/anr/match.referentials.html',
                         targetEvent: ev,
                         preserveScope: false,
@@ -1088,6 +1088,39 @@
                 });
             });
         };
+
+        $scope.importNewMatch = function (ev) {
+            $mdDialog.cancel();
+
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'MeasureService', 'ConfigService', ImportMatchDialogCtrl],
+                templateUrl: 'views/anr/import.match.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen
+            })
+                .then(function (asset) {
+                    AssetService.createAsset(asset,
+                        function () {
+                            $scope.$parent.updateAssets();
+
+                            if (asset.mode == 0 && asset.models && asset.models.length > 0) {
+                                // If we create a generic asset, but we still have specific models, we should warn
+                                toastr.warning(gettextCatalog.getString('The asset type has been created successfully, however without models, the element may not be specific.'));
+                            } else {
+                                toastr.success(gettextCatalog.getString('The asset type has been created successfully.'),
+                                               gettextCatalog.getString('Creation successful'));
+                            }
+                        }
+                    );
+                }, function (reject) {
+                  $scope.handleRejectionDialog(reject);
+                });
+        };
+
 
         $scope.deleteReferential = function (ev, item) {
             var confirm = $mdDialog.confirm()
@@ -3351,7 +3384,7 @@
         }
     }
 
-    function MatchReferentialDialogCtrl($scope, $mdDialog, ReferentialService, MeasureService, ConfigService, MeasureMeasureService, $q, measures, referentials, referentialSelected) {
+    function MatchReferentialDialogCtrl($scope, $mdDialog, $mdMedia, ReferentialService, MeasureService, ConfigService, MeasureMeasureService, $q, measures, referentials, referentialSelected) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = ConfigService.getDefaultLanguageIndex();
         $scope.measuresRefSelected = measures.measures;
@@ -3451,12 +3484,111 @@
             })
         };
 
+        $scope.importMatchRefs = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', importMatchRefDialogCtrl],
+                templateUrl: 'views/anr/create.match.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                }
+            })
+        };
+
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
 
         $scope.create = function() {
             $mdDialog.hide($scope.matchMeasures);
+        };
+    }
+
+    function importMatchRefDialogCtrl($scope, $mdDialog) {
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+    }
+
+    function ImportMatchDialogCtrl($rootScope, $scope, $http, $mdDialog, MeasureService, ConfigService) {
+        $scope.languages = ConfigService.getLanguages();
+        $scope.language = $scope.getAnrLanguage();
+        var measures_uuid = [];
+        var mosp_query_organizations = 'v2/organization/?per_page=500';
+
+        $http.get($rootScope.mospApiUrl + mosp_query_organizations)
+        .then(function(org) {
+            var mosp_query_all_refs_match = 'v2/object/?schema_uuid=24d133a5-fab5-4be6-b455-55068cee7a28&per_page=3000';
+
+            $http.get($rootScope.mospApiUrl + mosp_query_all_refs_match)
+            .then(function(matches) {
+                $scope.all_matches = matches.data.data.filter(object => !angular.equals({}, object.json_object));
+                var org_ids = Array.from(new Set($scope.all_matches.map(match => match.organization.id)));
+                $scope.organizations = org.data.data.filter(org => org_ids.includes(org.id));
+                $scope.hideSpinLoader = true;
+            });
+        });
+
+        $scope.selectOrganization = function() {
+            // Retrieve the assets from the selected organization
+            $scope.searchText = '';
+            MeasureService.getMeasures().then(data => {
+                measures_uuid = data.measures.map(measure => measure.uuid);
+                matches_uuid = $scope.all_matches
+                    .filter(match => match.organization.id == $scope.organization.id)
+                    .map(match => match.json_object.values.map(value => value.match))
+                console.log(measures_uuid);
+                console.log(matches_uuid);
+            })
+            $scope.mosp_assets = $scope.all_matches.filter(
+                    match => match.organization.id == $scope.organization.id
+                )
+                $scope.hideSpinLoader = true;
+                $scope.dataLoaded = true;
+            // $scope.mosp_assets = [];
+            // if (assets_uuid.length == 0) {
+            //   $scope.hideSpinLoader = false;
+            //   $scope.dataLoaded = false;
+            //   AssetService.getAssets().then(data => {
+            //     assets_uuid = data.assets.map(asset => asset.uuid);
+            //     $scope.mosp_assets = $scope.all_matches.filter(
+            //         asset => asset.organization.id == $scope.organization.id &&
+            //         !assets_uuid.includes(asset.json_object.uuid) &&
+            //         asset.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
+            //     );
+            //     $scope.hideSpinLoader = true;
+            //     $scope.dataLoaded = true;
+            //   });
+            // } else{
+            //   $scope.mosp_assets = $scope.all_matches.filter(
+            //       asset => asset.organizationid == $scope.organization.id &&
+            //       !assets_uuid.includes(asset.json_object.uuid) &&
+            //       asset.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
+            //   );
+            // }
+        }
+
+        $scope.getMatches = function(searchText) {
+            // filter on the name and and the theme
+            return $scope.mosp_assets.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()));
+        };
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.import = function() {
+            var asset = $scope.asset.json_object;
+            for (var i = 1; i <=4; i++) {
+                asset['label'+i] = asset.label;
+                asset['description'+i] = asset.description;
+            }
+            asset['type'] = asset['type'] == 'Primary' ? 1 : 2;
+            $mdDialog.hide(asset);
         };
     }
 
