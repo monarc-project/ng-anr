@@ -1,5 +1,5 @@
 <md-dialog md-theme="light" class="dialog-width">
-    <form name="assetForm">
+    <form name="matchForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 translate>Import a referentials match from MOSP</h2>
@@ -28,7 +28,7 @@
                         ng-disabled="!dataLoaded"
                         flex
                         md-no-cache="true"
-                        md-selected-item="asset"
+                        md-selected-item="match"
                         md-search-text="searchText"
                         md-items="item in getMatches(searchText)"
                         md-item-text="item.name"
@@ -40,7 +40,7 @@
                             <span md-highlight-text="searchText" md-highlight-flags="i">{{ item.name }}</span>
                         </md-item-template>
                         <md-not-found>
-                             {{ 'No asset matching your search was found' | translate }}
+                             {{ 'No referentials match was found in your search' | translate }}
                         </md-not-found>
                     </md-autocomplete>
                 </div>
@@ -51,7 +51,7 @@
             <md-button ng-click="cancel()">
                 {{ 'Cancel' | translate }}
             </md-button>
-            <md-button ng-click="import()" ng-disabled="assetForm.$error.required" type="submit" class="md-accent md-hue-3">
+            <md-button ng-click="import()" ng-disabled="matchForm.$error.required" type="submit" class="md-accent md-hue-3">
                 {{ 'Import' | translate }}
             </md-button>
         </md-dialog-actions>

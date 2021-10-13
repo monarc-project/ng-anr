@@ -1094,7 +1094,7 @@
 
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'MeasureService', 'ConfigService', ImportMatchDialogCtrl],
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ReferentialService', ImportMatchDialogCtrl],
                 templateUrl: 'views/anr/import.match.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -1102,25 +1102,17 @@
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen
             })
-                .then(function (asset) {
-                    AssetService.createAsset(asset,
-                        function () {
-                            $scope.$parent.updateAssets();
-
-                            if (asset.mode == 0 && asset.models && asset.models.length > 0) {
-                                // If we create a generic asset, but we still have specific models, we should warn
-                                toastr.warning(gettextCatalog.getString('The asset type has been created successfully, however without models, the element may not be specific.'));
-                            } else {
-                                toastr.success(gettextCatalog.getString('The asset type has been created successfully.'),
-                                               gettextCatalog.getString('Creation successful'));
-                            }
+                .then(function (matches) {
+                    MeasureMeasureService.createMeasureMeasure(matches,
+                        function() {
+                            toastr.success(gettextCatalog.getString('The matches have been created successfully.'),
+                                           gettextCatalog.getString('Creation successful'));
                         }
                     );
                 }, function (reject) {
                   $scope.handleRejectionDialog(reject);
                 });
         };
-
 
         $scope.deleteReferential = function (ev, item) {
             var confirm = $mdDialog.confirm()
@@ -3514,10 +3506,8 @@
         };
     }
 
-    function ImportMatchDialogCtrl($rootScope, $scope, $http, $mdDialog, MeasureService, ConfigService) {
-        $scope.languages = ConfigService.getLanguages();
-        $scope.language = $scope.getAnrLanguage();
-        var measures_uuid = [];
+    function ImportMatchDialogCtrl($rootScope, $scope, $http, $mdDialog, ReferentialService) {
+        var referentials_uuid = [];
         var mosp_query_organizations = 'v2/organization/?per_page=500';
 
         $http.get($rootScope.mospApiUrl + mosp_query_organizations)
@@ -3534,47 +3524,34 @@
         });
 
         $scope.selectOrganization = function() {
-            // Retrieve the assets from the selected organization
             $scope.searchText = '';
-            MeasureService.getMeasures().then(data => {
-                measures_uuid = data.measures.map(measure => measure.uuid);
-                matches_uuid = $scope.all_matches
-                    .filter(match => match.organization.id == $scope.organization.id)
-                    .map(match => match.json_object.values.map(value => value.match))
-                console.log(measures_uuid);
-                console.log(matches_uuid);
-            })
-            $scope.mosp_assets = $scope.all_matches.filter(
-                    match => match.organization.id == $scope.organization.id
-                )
-                $scope.hideSpinLoader = true;
-                $scope.dataLoaded = true;
-            // $scope.mosp_assets = [];
-            // if (assets_uuid.length == 0) {
-            //   $scope.hideSpinLoader = false;
-            //   $scope.dataLoaded = false;
-            //   AssetService.getAssets().then(data => {
-            //     assets_uuid = data.assets.map(asset => asset.uuid);
-            //     $scope.mosp_assets = $scope.all_matches.filter(
-            //         asset => asset.organization.id == $scope.organization.id &&
-            //         !assets_uuid.includes(asset.json_object.uuid) &&
-            //         asset.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
-            //     );
-            //     $scope.hideSpinLoader = true;
-            //     $scope.dataLoaded = true;
-            //   });
-            // } else{
-            //   $scope.mosp_assets = $scope.all_matches.filter(
-            //       asset => asset.organizationid == $scope.organization.id &&
-            //       !assets_uuid.includes(asset.json_object.uuid) &&
-            //       asset.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
-            //   );
-            // }
+
+            $scope.mosp_matches = [];
+            if (referentials_uuid.length == 0) {
+                $scope.hideSpinLoader = false;
+                $scope.dataLoaded = false;
+                ReferentialService.getReferentials().then(data => {
+                    referentials_uuid = data.referentials.map(referential => referential.uuid);
+                        $scope.mosp_matches = $scope.all_matches.filter(
+                            match => match.organization.id == $scope.organization.id &&
+                            match.json_object['security referentials UUID']
+                                .every(uuid => referentials_uuid.includes(uuid))
+                        );
+                        $scope.hideSpinLoader = true;
+                        $scope.dataLoaded = true;
+                })
+            } else{
+                $scope.mosp_matches = $scope.all_matches.filter(
+                    match => match.organization.id == $scope.organization.id &&
+                    match.json_object['security referentials UUID']
+                        .every(uuid => referentials_uuid.includes(uuid))
+                );
+            }
         }
 
         $scope.getMatches = function(searchText) {
             // filter on the name and and the theme
-            return $scope.mosp_assets.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()));
+            return $scope.mosp_matches.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()));
         };
 
         $scope.cancel = function() {
@@ -3582,13 +3559,10 @@
         };
 
         $scope.import = function() {
-            var asset = $scope.asset.json_object;
-            for (var i = 1; i <=4; i++) {
-                asset['label'+i] = asset.label;
-                asset['description'+i] = asset.description;
-            }
-            asset['type'] = asset['type'] == 'Primary' ? 1 : 2;
-            $mdDialog.hide(asset);
+            var matches = $scope.match.json_object.values.map(
+                ({control: father, match: child}) => ({father, child})
+            );
+            $mdDialog.hide(matches);
         };
     }
 
