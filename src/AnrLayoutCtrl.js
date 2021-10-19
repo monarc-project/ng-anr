@@ -825,7 +825,8 @@
                             ($state.$current.name == 'main.project.anr.object' && $stateParams.objectId) ||
                             ($state.$current.name == 'main.project.anr.instance' && $stateParams.instId) ||
                             ($state.$current.name == 'main.project.anr.instance.risk' && $stateParams.instId && $stateParams.riskId) ||
-                            ($state.$current.name == 'main.project.anr.instance.riskop' && $stateParams.instId && $stateParams.riskopId)){
+                            ($state.$current.name == 'main.project.anr.instance.riskop' && $stateParams.instId && $stateParams.riskopId) ||
+                            $state.$current.name == 'main.project.anr.risksplan'){
                             if($stateParams.instId){
                                 $rootScope.anr_selected_instance_id = $stateParams.instId;
                                 $rootScope.anr_selected_object_id = null;
