@@ -1,0 +1,37 @@
+<md-dialog md-theme="light" class="dialog-width">
+    <md-toolbar>
+        <div class="md-toolbar-tools">
+            <h2 translate>Import a referentials match</h2>
+            <span flex></span>
+            <md-button class="md-icon-button" ng-click="cancel()">
+                <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+            </md-button>
+        </div>
+    </md-toolbar>
+    <md-dialog-content>
+        <div class="md-dialog-content">
+            <md-card ng-if="OFFICE_MODE == 'FO'" layout="row" >
+                <span flex></span>
+                <md-button class="md-primary" ng-click="importFile($event,'Matches')" ng-controller="AnrKbMgmtCtrl">
+                    <md-icon>play_for_work</md-icon><span>&nbsp;{{ 'Import from file' | translate }}</span>
+                </md-button>
+                <span flex></span>
+                <md-button class="md-primary" ng-click="importNewMatch($event)" ng-controller="AnrKbMgmtCtrl">
+                    <md-icon>cloud_download</md-icon><span>&nbsp;{{ 'Import from MOSP' | translate }}</span>
+                </md-button>
+                <span flex></span>
+            </md-card>
+            <md-card ng-if="OFFICE_MODE == 'BO'" layout="row" layout-align="center center">
+                <md-button class="md-primary" ng-click="importFile($event,'Matches')" ng-controller="BackofficeKbInfoCtrl">
+                    <md-icon>play_for_work</md-icon><span>&nbsp;{{ 'Import from file' | translate }}</span>
+                </md-button>
+            </md-card>
+        </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+        <span flex></span>
+        <md-button ng-click="cancel()">
+            {{ 'Cancel' | translate }}
+        </md-button>
+    </md-dialog-actions>
+</md-dialog>

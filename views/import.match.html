@@ -1,0 +1,59 @@
+<md-dialog md-theme="light" class="dialog-width">
+    <form name="matchForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Import a referentials match from MOSP</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <md-progress-circular class="spinloader" ng-disabled="hideSpinLoader" md-diameter="60"></md-progress-circular>
+            <div class="md-dialog-content">
+                <md-input-container class="md-block" flex>
+                    <md-icon>account_balance</md-icon>
+                    <label translate>Organization</label>
+                    <md-select ng-model="organization['id']" ng-disabled="!hideSpinLoader" ng-change="selectOrganization()" required>
+                        <md-option ng-repeat="org in organizations" ng-value="org.id">{{ org.name }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <div layout="row" layout-align="center center" flex>
+                    <div class="md-padding-right">
+                      <md-icon class="black">push_pin</md-icon>
+                    </div>
+                    <md-autocomplete
+                        ng-disabled="!dataLoaded"
+                        flex
+                        md-no-cache="true"
+                        md-selected-item="match"
+                        md-search-text="searchText"
+                        md-items="item in getMatches(searchText)"
+                        md-item-text="item.name"
+                        md-delay="300"
+                        md-min-length="0"
+                        md-floating-label="{{ 'Referentials match' | translate }}"
+                        required
+                        <md-item-template>
+                            <span md-highlight-text="searchText" md-highlight-flags="i">{{ item.name }}</span>
+                        </md-item-template>
+                        <md-not-found>
+                             {{ 'No referentials match was found in your search' | translate }}
+                        </md-not-found>
+                    </md-autocomplete>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="import()" ng-disabled="matchForm.$error.required" type="submit" class="md-accent md-hue-3">
+                {{ 'Import' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

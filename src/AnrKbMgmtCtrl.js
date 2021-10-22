@@ -1072,7 +1072,7 @@
                 MeasureService.getMeasures({referential: $scope.referential_uuid, order:'code'}).then(function (data) {
                     var measuresRefSelected = data;
                     $mdDialog.show({
-                        controller: ['$scope', '$mdDialog', 'ReferentialService', 'MeasureService','ConfigService', 'MeasureMeasureService', '$q', 'measures', 'referentials', 'referentialSelected', MatchReferentialDialogCtrl],
+                        controller: ['$scope', '$mdDialog', '$mdMedia', 'ReferentialService', 'MeasureService','ConfigService', 'MeasureMeasureService', '$q', 'measures', 'referentials', 'referentialSelected', MatchReferentialDialogCtrl],
                         templateUrl: 'views/anr/match.referentials.html',
                         targetEvent: ev,
                         preserveScope: false,
@@ -1087,6 +1087,31 @@
                     })
                 });
             });
+        };
+
+        $scope.importNewMatch = function (ev) {
+            $mdDialog.cancel();
+
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ReferentialService', ImportMatchDialogCtrl],
+                templateUrl: 'views/anr/import.match.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen
+            })
+                .then(function (matches) {
+                    MeasureMeasureService.createMeasureMeasure(matches,
+                        function() {
+                            toastr.success(gettextCatalog.getString('The matches have been created successfully.'),
+                                           gettextCatalog.getString('Creation successful'));
+                        }
+                    );
+                }, function (reject) {
+                  $scope.handleRejectionDialog(reject);
+                });
         };
 
         $scope.deleteReferential = function (ev, item) {
@@ -3351,7 +3376,7 @@
         }
     }
 
-    function MatchReferentialDialogCtrl($scope, $mdDialog, ReferentialService, MeasureService, ConfigService, MeasureMeasureService, $q, measures, referentials, referentialSelected) {
+    function MatchReferentialDialogCtrl($scope, $mdDialog, $mdMedia, ReferentialService, MeasureService, ConfigService, MeasureMeasureService, $q, measures, referentials, referentialSelected) {
         $scope.languages = ConfigService.getLanguages();
         $scope.language = ConfigService.getDefaultLanguageIndex();
         $scope.measuresRefSelected = measures.measures;
@@ -3451,12 +3476,93 @@
             })
         };
 
+        $scope.importMatchRefs = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', importMatchRefDialogCtrl],
+                templateUrl: 'views/anr/create.match.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                }
+            })
+        };
+
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
 
         $scope.create = function() {
             $mdDialog.hide($scope.matchMeasures);
+        };
+    }
+
+    function importMatchRefDialogCtrl($scope, $mdDialog) {
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+    }
+
+    function ImportMatchDialogCtrl($rootScope, $scope, $http, $mdDialog, ReferentialService) {
+        var referentials_uuid = [];
+        var mosp_query_organizations = 'v2/organization/?per_page=500';
+
+        $http.get($rootScope.mospApiUrl + mosp_query_organizations)
+        .then(function(org) {
+            var mosp_query_all_refs_match = 'v2/object/?schema_uuid=24d133a5-fab5-4be6-b455-55068cee7a28&per_page=3000';
+
+            $http.get($rootScope.mospApiUrl + mosp_query_all_refs_match)
+            .then(function(matches) {
+                $scope.all_matches = matches.data.data.filter(object => !angular.equals({}, object.json_object));
+                var org_ids = Array.from(new Set($scope.all_matches.map(match => match.organization.id)));
+                $scope.organizations = org.data.data.filter(org => org_ids.includes(org.id));
+                $scope.hideSpinLoader = true;
+            });
+        });
+
+        $scope.selectOrganization = function() {
+            $scope.searchText = '';
+
+            $scope.mosp_matches = [];
+            if (referentials_uuid.length == 0) {
+                $scope.hideSpinLoader = false;
+                $scope.dataLoaded = false;
+                ReferentialService.getReferentials().then(data => {
+                    referentials_uuid = data.referentials.map(referential => referential.uuid);
+                        $scope.mosp_matches = $scope.all_matches.filter(
+                            match => match.organization.id == $scope.organization.id &&
+                            match.json_object['security referentials UUID']
+                                .every(uuid => referentials_uuid.includes(uuid))
+                        );
+                        $scope.hideSpinLoader = true;
+                        $scope.dataLoaded = true;
+                })
+            } else{
+                $scope.mosp_matches = $scope.all_matches.filter(
+                    match => match.organization.id == $scope.organization.id &&
+                    match.json_object['security referentials UUID']
+                        .every(uuid => referentials_uuid.includes(uuid))
+                );
+            }
+        }
+
+        $scope.getMatches = function(searchText) {
+            // filter on the name and and the theme
+            return $scope.mosp_matches.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()));
+        };
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        $scope.import = function() {
+            var matches = $scope.match.json_object.values.map(
+                ({control: father, match: child}) => ({father, child})
+            );
+            $mdDialog.hide(matches);
         };
     }
 

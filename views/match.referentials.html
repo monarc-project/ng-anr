@@ -24,18 +24,12 @@
                            </md-tooltip>
                            <md-icon>call_made</md-icon>
                          </md-button>
-                         <md-button ng-if="OFFICE_MODE == 'FO'" class="md-icon-button md-primary" ng-click="importFile($event,'Matches')" ng-controller="AnrKbMgmtCtrl">
-                           <md-tooltip md-direction="left">
-                               {{ 'Import Match referentials' | translate }}
-                           </md-tooltip>
-                           <md-icon>play_for_work</md-icon>
-                         </md-button>
-                         <md-button ng-if="OFFICE_MODE == 'BO'" class="md-icon-button md-primary" ng-click="importFile($event,'Matches')" ng-controller="BackofficeKbInfoCtrl">
-                           <md-tooltip md-direction="left">
-                               {{ 'Import Match referentials' | translate }}
-                           </md-tooltip>
-                           <md-icon>play_for_work</md-icon>
-                         </md-button>
+                         <md-button class="md-icon-button md-primary" ng-click="importMatchRefs()">
+                            <md-tooltip md-direction="left">
+                                {{ 'Import Match referentials' | translate }}
+                            </md-tooltip>
+                            <md-icon>play_for_work</md-icon>
+                          </md-button>
                      </div>
                    </div>
                   </form>
