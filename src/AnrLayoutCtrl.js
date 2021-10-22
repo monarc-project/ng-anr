@@ -1193,6 +1193,14 @@
                 return !$scope.isAnrReadOnly && !scopeDrag.$modelValue.component && !$scope.anr_instance_tree_is_patching;
             },
 
+            beforeDrop: function (e) {
+                let nodeSourceId = e.source.nodeScope.$modelValue.id;
+                let nodeDestId = e.dest.nodesScope.node ? e.dest.nodesScope.node.id : undefined;
+                if (nodeSourceId == nodeDestId) {
+                    return false;
+                }
+            },
+
             accept: function (sourceNodeScope, destNodeScope, destIndex) {
                 return (sourceNodeScope.$modelValue.type != 'libcat');
             },
