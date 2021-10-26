@@ -172,7 +172,7 @@
                     type: asset.type
                   })
                 );
-              let csv = Papa.unparse(allAssets,{quotes: true});
+              let csv = Papa.unparse(allAssets,{quotes: true, delimiter: ";"});
               let contentT = 'text/csv; charset=utf-8';
               DownloadService.downloadCSV(csv, 'allAssets.csv',contentT);
             });
@@ -418,7 +418,7 @@
                     theme: threat.theme ? threat.theme['label' + $scope.language] : null
                   })
                 );
-              let csv = Papa.unparse(allThreats,{quotes: true});
+              let csv = Papa.unparse(allThreats,{quotes: true, delimiter: ";"});
               let contentT = 'text/csv; charset=utf-8';
               DownloadService.downloadCSV(csv, 'allThreats.csv',contentT);
             });
@@ -672,7 +672,7 @@
                     description: vulnerability['description' + $scope.language],
                   })
                 );
-              let csv = Papa.unparse(allVulnerabilities,{quotes: true});
+              let csv = Papa.unparse(allVulnerabilities,{quotes: true, delimiter: ";"});
               let contentT = 'text/csv; charset=utf-8';
               DownloadService.downloadCSV(csv, 'allVulnerabilities.csv',contentT);
             });
@@ -920,7 +920,7 @@
                     referential: measure.referential['label' + $scope.language]
                   })
                 );
-              let csv = Papa.unparse(allMeasures,{quotes: true});
+              let csv = Papa.unparse(allMeasures,{quotes: true, delimiter: ";"});
               let filename = 'allControls_' + $scope.referential['label' + $scope.language] +'.csv';
               let contentT = 'text/csv; charset=utf-8';
               DownloadService.downloadCSV(csv,filename,contentT);
@@ -1368,7 +1368,7 @@
                     )
                   })
                 );
-              let csv = Papa.unparse(allAmvs,{quotes: true});
+              let csv = Papa.unparse(allAmvs,{quotes: true, delimiter: ";"});
               let contentT = 'text/csv; charset=utf-8';
               DownloadService.downloadCSV(csv,'allInfoRisk.csv',contentT);
           });
@@ -1887,7 +1887,7 @@
                     label: tag['label' + $scope.language],
                   })
                 );
-              let csv = Papa.unparse(allTags,{quotes: true});
+              let csv = Papa.unparse(allTags,{quotes: true, delimiter: ";"});
               let contentT = 'text/csv; charset=utf-8';
               DownloadService.downloadCSV(csv,'allTags.csv',contentT);
             });
@@ -2076,7 +2076,7 @@
                     )
                   })
                 );
-              let csv = Papa.unparse(allOpRisks,{quotes: true});
+              let csv = Papa.unparse(allOpRisks,{quotes: true, delimiter: ";"});
               let contentT = 'text/csv; charset=utf-8';
               DownloadService.downloadCSV(csv,'allOpRisks.csv',contentT);
             });
@@ -2347,7 +2347,7 @@
                     set: recommendation.recommandationSet['label' + $scope.language]
                   })
                 );
-              let csv = Papa.unparse(allRecommendations,{quotes: true});
+              let csv = Papa.unparse(allRecommendations,{quotes: true, delimiter: ";"});
               let filename = 'allRecommendations_' + $scope.recommandationSet['label' + $scope.language] +  '.csv';
               let contentT = 'text/csv; charset=utf-8';
               DownloadService.downloadCSV(csv,filename,contentT);
