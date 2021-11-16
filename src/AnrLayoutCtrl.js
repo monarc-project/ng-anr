@@ -85,6 +85,12 @@
                     ($state.$current.name == 'main.project.anr.riskop' && $stateParams.riskopId) ||
                     ($state.$current.name == 'main.project.anr.instance.risk' && $stateParams.riskId && $stateParams.instId) ||
                     ($state.$current.name == 'main.project.anr.instance.riskop' && $stateParams.riskopId && $stateParams.instId)){
+                        if ($scope.sheet_risk) {
+                            $scope.saveRiskSheet($scope.sheet_risk);
+                        }
+                        if ($scope.opsheet_risk) {
+                            $scope.saveOpRiskSheet($scope.opsheet_risk);
+                        }
                 }else if($scope.display.anrSelectedTabIndex == 0){
                     $scope.resetSheet(true);
                     $scope.resetOpSheet(true);
