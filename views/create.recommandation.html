@@ -87,7 +87,7 @@
                 {{ 'Delete' | translate }}
             </md-button>
             <md-button ng-if="recommandation.recommandation.uuid && !isRecoContext" ng-disabled="isAnrReadOnly" ng-click="detachRecommandation($event, recommandation)">{{ 'Detach' | translate }}</md-button>
-            <md-button ng-click="create()" ng-disabled="!recommendationSet || riskForm.$invalid || isAnrReadOnly" type="submit" class="md-accent md-hue-3">
+            <md-button ng-click="create()" ng-disabled="(!recommandation.recommandation.uuid && !recommendationSet) || riskForm.$invalid || isAnrReadOnly" type="submit" class="md-accent md-hue-3">
                 {{ (recommandation.recommandation.uuid ? 'Save' : 'Create') | translate }}
             </md-button>
         </md-dialog-actions>
