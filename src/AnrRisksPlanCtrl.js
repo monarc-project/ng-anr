@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrRisksPlanCtrl', [
             '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$state', 'TreatmentPlanService',
-            'ClientRecommandationService', '$q', '$timeout',
+            'ClientRecommandationService', '$q',
             AnrRisksPlanCtrl
         ]);
 
@@ -12,13 +12,10 @@
      * ANR > RISKS PLAN PROCESSING
      */
     function AnrRisksPlanCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, TreatmentPlanService,
-                              ClientRecommandationService, $q, $timeout) {
-
-        $timeout(function () {
-            TreatmentPlanService.getTreatmentPlans({anr: $scope.model.anr.id}).then(function (data) {
-                $scope.recommendations = data['recommandations-risks'];
-            });
-        },500)  // $timeout to avoid async issue when there is an instance risk/oprisk update on going
+                              ClientRecommandationService, $q) {
+        TreatmentPlanService.getTreatmentPlans({anr: $scope.model.anr.id}).then(function (data) {
+            $scope.recommendations = data['recommandations-risks'];
+        });
 
         $scope.clearDate = function (model) {
             this.rec.duedate = null;
