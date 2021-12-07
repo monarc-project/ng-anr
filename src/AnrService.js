@@ -49,10 +49,13 @@
                 }
             });
 
-        self.AnrRiskOwnersResource = $resource('api/' + anr + '/:anrId/risk-owners', { anrId: '@anrId'},
+        self.AnrRiskOwnersResource = $resource('api/' + anr + '/:anrId/risk-owners/:ownerId', { anrId: '@anrId', ownerId: '@ownerId' },
             {
                 'query': {
                     isArray: false
+                },
+                'update': {
+                    method: 'PUT'
                 }
             });
 
@@ -384,12 +387,6 @@
             return self.AnrRisksResource.query(query).$promise;
         };
 
-        var getAnrRiskOwners = function (anr_id, params) {
-            var query = angular.copy(params);
-            query.anrId = anr_id;
-            return self.AnrRiskOwnersResource.query(query).$promise;
-        };
-
         var createInstanceRisk = function (anr_id, params, success, error) {
             params.anrId = anr_id;
             new self.AnrRisksResource(params).$save(success, error);
@@ -419,6 +416,18 @@
 
         var deleteInstanceRiskOp = function (anr_id, risk_id, success, error) {
             self.AnrRisksOpResource.delete({anrId: anr_id, instId: risk_id}, success, error);
+        };
+
+        //Risk owners
+
+        var getAnrRiskOwners = function (anr_id, params) {
+            var query = angular.copy(params);
+            query.anrId = anr_id;
+            return self.AnrRiskOwnersResource.query(query).$promise;
+        };
+
+        var updateRiskOwner = function (anr_id, id, params, success, error) {
+            self.AnrRiskOwnersResource.update({anrId: anr_id, ownerId: id}, params, success, error);
         };
 
 
@@ -478,7 +487,9 @@
 
             getAnrRisks: getAnrRisks,
             getAnrRisksOp: getAnrRisksOp,
+
             getAnrRiskOwners: getAnrRiskOwners,
+            updateRiskOwner: updateRiskOwner,
 
         };
     }

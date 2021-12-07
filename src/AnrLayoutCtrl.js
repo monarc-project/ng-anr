@@ -481,6 +481,11 @@
                 $scope.ToolsAnrService.currentTab = 0;
                 $scope.opsheet_risk = undefined;
                 $scope.sheet_risk = angular.copy(risk);
+                if ($scope.sheet_risk.owner.id) {
+                    $scope.selectedOwnerItem = $scope.sheet_risk.owner;
+                }else {
+                    $scope.selectedOwnerItem = null;
+                }
                 AmvService.getAmv($scope.sheet_risk.amv).then(function (data) {
                   if (!angular.equals(data['measures'], {})) {
                     $scope.sheet_risk.measures = data['measures'];
@@ -686,12 +691,75 @@
                 if (!ownerNames.includes(query) && query.length > 0) {
                     $scope[scope].owner = query;
                 }
-                promise.resolve(ownerNames);
+                promise.resolve(data.instanceRiskOwners);
 
             }, function () {
                 promise.reject();
             });
             return promise.promise;
+        };
+
+        $scope.selectedOwnerItemChange = function (item,scope) {
+            $scope[scope].owner = null;
+            if (item) {
+                $scope[scope].owner = item.name;
+            }
+        }
+
+        $scope.editOwner = function (ev, owner) {
+            console.log(owner);
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'owner', EditOwnerDialogCtrl],
+                templateUrl: 'views/anr/edit.owner.html',
+                targetEvent: ev,
+                preserveScope: false,
+                multiple: true,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                  'owner': owner
+                }
+            })
+                .then(function (owner) {
+                    AnrService.updateRiskOwner($scope.model.anr.id, owner.id, owner,
+                        function () {
+                            $scope.selectedOwnerItem = angular.copy(owner);
+                            $scope.selectedOwnerItemChange(owner,owner.scope);
+                            toastr.success(
+                                gettextCatalog.getString('The owner has been edited successfully.'),
+                                gettextCatalog.getString('Edition successful')
+                            );
+                        },
+                        function (reject) {
+                            $scope.handleRejectionDialog(reject);
+                        }
+                    );
+                });
+        };
+
+        $scope.deleteOwner = function (ev, owner){
+            var confirm = $mdDialog.confirm()
+                .multiple(true)
+                .title(gettextCatalog.getString('Are you sure you want to delete owner?',
+                    {label: owner.name}))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .targetEvent(ev)
+                .theme('light')
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                  AnrService.deleteOwner(owner.id,
+                      function () {
+                        $scope.selectedThemeItemChange();
+                         toastr.success(
+                            gettextCatalog.getString('The owner has been deleted.'),
+                            gettextCatalog.getString('Deletion successful')
+                        );
+                      }
+                  );
+            });
         };
 
         $scope.$on('recommandations-loaded', function (ev, recs) {
@@ -3646,6 +3714,23 @@
         $scope.cancel = function () {
             $mdDialog.cancel();
         };
+    }
+
+    function EditOwnerDialogCtrl($scope, $mdDialog, owner) {
+
+        if (owner != undefined && owner != null) {
+            $scope.owner = owner;
+        }
+
+        $scope.save = function(scope) {
+            $scope.owner.scope = scope
+            $mdDialog.hide($scope.owner);
+        };
+
+        $scope.cancel = function () {
+            $mdDialog.cancel();
+        };
+
     }
 
 })();

@@ -74,16 +74,23 @@
                                 flex
                                 md-input-name="owner"
                                 md-no-cache="true"
-                                md-selected-item="sheet_risk.owner"
+                                md-selected-item="selectedOwnerItem"
                                 md-search-text="ownerSearchText"
                                 md-items="item in queryOwnerSearch(ownerSearchText,'sheet_risk')"
-                                md-item-text="item"
+                                md-selected-item-change="selectedOwnerItemChange(item,'sheet_risk')"
+                                md-item-text="item.name"
                                 md-min-length="0"
                                 md-floating-label=" ">
                             <md-item-template>
-                                <span md-highlight-text="ownerSearchText" md-highlight-flags="^i">{{item}}</span>
+                                <span md-highlight-text="ownerSearchText" md-highlight-flags="^i">{{item.name}}</span>
                             </md-item-template>
                         </md-autocomplete>
+                        <md-button class="md-icon-button md-primary" ng-click="editOwner($event,selectedOwnerItem)" ng-show="selectedOwnerItem.id">
+                            <md-icon>edit</md-icon>
+                        </md-button>
+                        <md-button class="md-icon-button md-warn" ng-click="deleteOwner($event,selectedOwnerItem)" ng-show="selectedOwnerItem.id">
+                            <md-icon>delete</md-icon>
+                        </md-button>
                     </div>
                 </td>
             </tr>

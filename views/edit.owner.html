@@ -1,0 +1,35 @@
+<md-dialog md-theme="light" class="dialog-width">
+    <form name="ownerForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Edit Owner</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content">
+                <md-input-container class="md-block" flex>
+                    <label translate>Name</label>
+                    <md-icon>label</md-icon>
+                    <input ng-model="owner.name" name="name" required>
+                    <div ng-messages="ownerForm.name.$error">
+                        <div ng-message="required">{{ 'The name may not be empty' | translate }}</div>
+                    </div>
+                </md-input-container>
+            </div>
+
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="save('sheet_risk')" ng-disabled="ownerForm.$error.required" type="submit" class="md-accent md-hue-3">
+                {{ 'Save' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>
