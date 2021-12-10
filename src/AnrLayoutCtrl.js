@@ -750,7 +750,7 @@
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-                  AnrService.deleteOwner(owner.id,
+                  AnrService.deleteOwner($scope.model.anr.id, owner.id,
                       function () {
                         $scope.selectedThemeItemChange();
                          toastr.success(

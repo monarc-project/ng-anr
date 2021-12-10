@@ -430,8 +430,8 @@
             self.AnrRiskOwnersResource.update({anrId: anr_id, ownerId: id}, params, success, error);
         };
 
-        var deleteOwner = function (anr_id, risk_id, success, error) {
-            self.AnrRiskOwnersResource.delete({anrId: anr_id, instId: risk_id}, success, error);
+        var deleteOwner = function (anr_id, id, success, error) {
+            self.AnrRiskOwnersResource.delete({anrId: anr_id, ownerId: id}, success, error);
         };
 
 
