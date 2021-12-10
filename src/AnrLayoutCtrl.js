@@ -752,7 +752,7 @@
             $mdDialog.show(confirm).then(function() {
                   AnrService.deleteOwner($scope.model.anr.id, owner.id,
                       function () {
-                        $scope.selectedThemeItemChange();
+                        //$scope.selectedOwnerItemChange();
                          toastr.success(
                             gettextCatalog.getString('The owner has been deleted.'),
                             gettextCatalog.getString('Deletion successful')
