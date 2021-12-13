@@ -707,7 +707,6 @@
         }
 
         $scope.editOwner = function (ev, owner) {
-            console.log(owner);
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'owner', EditOwnerDialogCtrl],
@@ -740,11 +739,12 @@
         };
 
         $scope.deleteOwner = function (ev, owner){
+            let numberOfUsed = parseInt(owner.numberOfInstancesRisks,10) + parseInt (owner.numberOfOperationalInstancesRisks,10);
             var confirm = $mdDialog.confirm()
                 .multiple(true)
                 .title(gettextCatalog.getString('Are you sure you want to delete owner?',
                     {label: owner.name}))
-                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .textContent(gettextCatalog.getString('This operation is irreversible. The user is used '+numberOfUsed+' time(s)'))
                 .targetEvent(ev)
                 .theme('light')
                 .ok(gettextCatalog.getString('Delete'))
@@ -752,7 +752,7 @@
             $mdDialog.show(confirm).then(function() {
                   AnrService.deleteOwner($scope.model.anr.id, owner.id,
                       function () {
-                        //$scope.selectedOwnerItemChange();
+                      //   $scope.selectedOwnerItemChange(null,'sheet_risk');
                          toastr.success(
                             gettextCatalog.getString('The owner has been deleted.'),
                             gettextCatalog.getString('Deletion successful')
