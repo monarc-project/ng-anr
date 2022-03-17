@@ -804,7 +804,10 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', '$state', 'TreatmentPlanService', 'ClientRecommandationService', 'anr', 'subStep', 'thresholds', 'editRecommandationContext', 'gettextCatalog',  MethodEditRisksDialog],
+                controller: ['$scope', '$mdDialog', '$state', 'TreatmentPlanService',
+                'ClientRecommandationService', 'DownloadService', 'anr', 'subStep',
+                'thresholds', 'editRecommandationContext', 'gettextCatalog',
+                MethodEditRisksDialog],
                 templateUrl: 'views/anr/risks.evalcontext.html',
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -2830,7 +2833,9 @@
         };
     }
 
-    function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService, ClientRecommandationService, anr, subStep, thresholds,editRecommandationContext,gettextCatalog) {
+    function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService,
+        ClientRecommandationService, DownloadService, anr, subStep, thresholds,
+        editRecommandationContext, gettextCatalog) {
         $scope.thresholds = thresholds;
         $scope.subStep = subStep;
         $scope.isAnrReadOnly = !anr.rwd;
@@ -2952,20 +2957,14 @@
               }
             }
 
-          let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
+          let csvContent = "";
           for(var j = 0; j < finalArray.length; ++j)
               {
                let row = finalArray[j].toString().replace(/\n|\r/g,' ')+","+"\r\n";
                csvContent += row ;
               }
 
-
-          var encodedUri = encodeURI(csvContent);
-          var link = document.createElement("a");
-          link.setAttribute("href", encodedUri);
-          link.setAttribute("download", "risktreatmantplan.csv");
-          document.body.appendChild(link); // Required for FF
-          link.click(); // This will download the data file named "my_data.csv".
+          DownloadService.downloadCSV(csvContent, 'risktreatmantplan.csv', 'text/csv');
         };
 
         $scope.openRecommendation = function (rec) {

@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrRisksPlanCtrl', [
             '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$state', 'TreatmentPlanService',
-            'ClientRecommandationService', '$q',
+            'ClientRecommandationService', 'DownloadService', '$q',
             AnrRisksPlanCtrl
         ]);
 
@@ -12,7 +12,7 @@
      * ANR > RISKS PLAN PROCESSING
      */
     function AnrRisksPlanCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, TreatmentPlanService,
-                              ClientRecommandationService, $q) {
+                              ClientRecommandationService, DownloadService, $q) {
         TreatmentPlanService.getTreatmentPlans({anr: $scope.model.anr.id}).then(function (data) {
             $scope.recommendations = data['recommandations-risks'];
         });
@@ -83,20 +83,14 @@
               finalArray[recLine]+=','+gettextCatalog.getString('Coming');
           }
 
-          let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
+          let csvContent = "";
           for(var j = 0; j < finalArray.length; ++j)
               {
                let row = finalArray[j].toString().replace(/\n|\r/g,' ')+","+"\r\n";
                csvContent += row ;
               }
 
-
-          var encodedUri = encodeURI(csvContent);
-          var link = document.createElement("a");
-          link.setAttribute("href", encodedUri);
-          link.setAttribute("download", "recommendationslist.csv");
-          document.body.appendChild(link); // Required for FF
-          link.click(); // This will download the data file named "my_data.csv".
+          DownloadService.downloadCSV(csvContent, 'recommendationslist.csv', 'text/csv');
         };
     }
 

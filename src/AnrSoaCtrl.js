@@ -5,14 +5,14 @@
         .controller('AnrSoaCtrl', [
             '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog', '$state', '$stateParams', 'MeasureService',
             'SOACategoryService' , 'ClientSoaService',  '$q', 'ReferentialService', 'TableHelperService', 'MeasureMeasureService',
-            AnrSoaCtrl
+            'DownloadService', AnrSoaCtrl
         ]);
 
     /**
      * ANR > STATEMENT OF APPLICABILITY
      */
     function AnrSoaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, $stateParams, MeasureService, SOACategoryService,
-                                  ClientSoaService,  $q, ReferentialService, TableHelperService, MeasureMeasureService) {
+                                  ClientSoaService,  $q, ReferentialService, TableHelperService, MeasureMeasureService, DownloadService) {
 
         $scope.updateSoaReferentials = function () {
             $scope.soa_measures = [];
@@ -297,18 +297,13 @@
                     }
                 }
 
-                let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
+                let csvContent = "";
                 for(var j = 0; j < finalArray.length; ++j) {
                     let row = finalArray[j].toString().replace(/\n|\r/g,' ') + "," + "\r\n";
                     csvContent += row ;
                 }
 
-                var encodedUri = encodeURI(csvContent);
-                var link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", "soa.csv");
-                document.body.appendChild(link);
-                link.click();  // This will download the data file named "soa.csv".
+                DownloadService.downloadCSV(csvContent, 'soa.csv', 'text/csv');
             });
 
         };

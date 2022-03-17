@@ -1179,7 +1179,7 @@
         $scope.export = function (ev, all, record) {
             finalArray=[];
             recLine = 0;
-            let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
+            let csvContent = "";
             finalArray[recLine]= 'Name';
             finalArray[recLine]+=','+'Creation date';
             finalArray[recLine]+=','+'Last updated date';
@@ -1224,23 +1224,13 @@
             if(all == true) {
                 $scope.generateAllRecordsContentCsv().then(function(data) {
                     csvContent += data;
-                    var encodedUri = encodeURI(csvContent);
-                    var link = document.createElement("a");
-                    link.setAttribute("href", encodedUri);
-                    link.setAttribute("download", "records_list.csv");
-                    document.body.appendChild(link);
-                    link.click();  // This will download the data file named "record.csv".
+                    DownloadService.downloadCSV(csvContent, 'records_list.csv', 'text/csv');
                 });
             } else {
                 $scope.generateRecordContentCsv(record.id).then(function(data) {
                     csvContent += data;
-                    var encodedUri = encodeURI(csvContent);
-                    var link = document.createElement("a");
-                    link.setAttribute("href", encodedUri);
                     var fileName = record.label + ".csv";
-                    link.setAttribute("download", fileName);
-                    document.body.appendChild(link);
-                    link.click();  // This will download the data file named "record.csv".
+                    DownloadService.downloadCSV(csvContent, fileName, 'text/csv');
                 });
             }
         }

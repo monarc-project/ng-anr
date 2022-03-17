@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrRisksPlanSheetCtrl', [
             '$scope', 'toastr', '$mdMedia', '$mdDialog', '$stateParams', 'gettextCatalog', '$state', 'TreatmentPlanService',
-            'ClientRecommandationService', '$q',
+            'ClientRecommandationService', 'DownloadService', '$q',
             AnrRisksPlanSheetCtrl
         ]);
 
@@ -12,7 +12,7 @@
      * ANR > RISKS PLAN PROCESSING
      */
     function AnrRisksPlanSheetCtrl($scope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog, $state,
-                                   TreatmentPlanService, ClientRecommandationService, $q) {
+                                   TreatmentPlanService, ClientRecommandationService, DownloadService, $q) {
 
         $scope.rec_risks = [];
 
@@ -158,20 +158,14 @@
                 finalArray[recLine]+=','+"\""+' '+"\"";
             }
           }
-          let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
+          let csvContent = "";
           for(var j = 0; j < finalArray.length; ++j)
               {
                let row = finalArray[j].toString().replace(/\n|\r/g,' ')+","+"\r\n";
                csvContent += row ;
               }
 
-
-          var encodedUri = encodeURI(csvContent);
-          var link = document.createElement("a");
-          link.setAttribute("href", encodedUri);
-          link.setAttribute("download", "recommendationrisks.csv");
-          document.body.appendChild(link); // Required for FF
-          link.click(); // This will download the data file named "my_data.csv".
+          DownloadService.downloadCSV(csvContent, 'recommendationrisks.csv', 'text/csv');
         };
 
     }

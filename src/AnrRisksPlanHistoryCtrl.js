@@ -3,9 +3,9 @@
     angular
         .module('AnrModule')
         .controller('AnrRisksPlanHistoryCtrl', [
-            '$scope', 'toastr', '$mdMedia', '$mdDialog', '$stateParams', 'gettextCatalog', '$state', 'TreatmentPlanService',
-            'ClientRecommandationService', '$q',
-            AnrRisksPlanHistoryCtrl
+            '$scope', 'toastr', '$mdMedia', '$mdDialog', '$stateParams', 'gettextCatalog',
+            '$state', 'TreatmentPlanService','ClientRecommandationService', 'DownloadService',
+            '$q', AnrRisksPlanHistoryCtrl
         ]);
 
     /**
@@ -13,8 +13,9 @@
      */
 
 
-function AnrRisksPlanHistoryCtrl($scope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog, $state,
-                                   TreatmentPlanService, ClientRecommandationService, $q) {
+function AnrRisksPlanHistoryCtrl($scope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog,
+                                $state, TreatmentPlanService, ClientRecommandationService, DownloadService,
+                                $q) {
 
         $scope.backToList = function () {
             $state.transitionTo('main.project.anr.risksplan', {modelId: $stateParams.modelId});
@@ -121,20 +122,14 @@ function AnrRisksPlanHistoryCtrl($scope, toastr, $mdMedia, $mdDialog, $statePara
             else
               finalArray[recLine]+=','+"\""+' '+"\"";
           }
-          let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
+          let csvContent = "";
           for(var j = 0; j < finalArray.length; ++j)
               {
                let row = finalArray[j].toString().replace(/\n|\r/g,' ')+","+"\r\n";
                csvContent += row ;
               }
 
-
-          var encodedUri = encodeURI(csvContent);
-          var link = document.createElement("a");
-          link.setAttribute("href", encodedUri);
-          link.setAttribute("download", "implementationhistory.csv");
-          document.body.appendChild(link); // Required for FF
-          link.click(); // This will download the data file named "my_data.csv".
+          DownloadService.downloadCSV(csvContent, 'implementationhistory.csv', 'text/csv');
         };
     }
 

@@ -3,13 +3,13 @@
     angular
         .module('AnrModule')
         .controller('AnrSoaSheetCtrl', [
-            '$scope', '$rootScope', 'gettextCatalog', '$state', '$stateParams',
+            '$scope', '$rootScope', 'gettextCatalog', '$state', '$stateParams', 'DownloadService',
             AnrSoaSheetCtrl]);
 
     /**
     * ANR > STATEMENT OF APPLICABILITY > Risks
     */
-    function AnrSoaSheetCtrl($scope, $rootScope, gettextCatalog, $state, $stateParams) {
+    function AnrSoaSheetCtrl($scope, $rootScope, gettextCatalog, $state, $stateParams, DownloadService) {
 
         $scope.soaSheetfirstRefresh = true;
 
@@ -227,18 +227,13 @@
             }
           }
 
-            let csvContent = "data:text/csv;charset=UTF-8,\uFEFF";
+            let csvContent = "";
             for (var j = 0; j < finalArray.length; ++j) {
                 let row = finalArray[j].toString().replace(/\n|\r/g,' ') +"," + "\r\n";
                 csvContent += row ;
             }
 
-            var encodedUri = encodeURI(csvContent);
-            var link = document.createElement("a");
-            link.setAttribute("href", encodedUri);
-            link.setAttribute("download", (KindOfRisk === 'InfoRisk') ? "soaInformationRisks.csv" : "soaOperationalRisks.csv");
-            document.body.appendChild(link);
-            link.click(); // This will download the data file named "soaRisks.csv".
+            DownloadService.downloadCSV(csvContent, (KindOfRisk === 'InfoRisk') ? "soaInformationRisks.csv" : "soaOperationalRisks.csv", 'text/csv');
         };
 
         $scope.backToList = function () {
