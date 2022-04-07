@@ -1,0 +1,31 @@
+<md-dialog md-theme="light">
+    <form>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Context information</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon aria-label="{{ 'Close dialog' | translate }}">close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content class="md-dialog-content">
+            <md-input-container ng-repeat="field in contextFields" layout="row">
+                <md-icon>label</md-icon>
+                <label>{{field}}</label>
+                <input>
+            </md-input-container>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <md-button ng-click="cancel()">
+                {{ 'Cancel' | translate }}
+            </md-button>
+            <md-button ng-click="add()">
+                {{ 'Add' | translate }}
+            </md-button>
+            <md-button ng-click="save()" class="md-primary">
+                {{ 'Save' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

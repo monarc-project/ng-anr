@@ -197,6 +197,26 @@
                 });
         };
 
+        $scope.contextInstance = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'mode', contextInstanceDialog],
+                templateUrl: 'views/anr/context.instance.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    mode: 'instance'
+                }
+            })
+                .then(function () {
+                }, function (reject) {
+                  $scope.handleRejectionDialog(reject);
+                });
+        };
 
         $scope.detachInstance = function (ev, instance) {
             var onrecord = false;
@@ -384,25 +404,18 @@
     }
 
 
-    function ExportInstanceDialog($scope, $mdDialog, mode) {
-        $scope.mode = mode;
-        $scope.exportData = {
-            password: '',
-            simple_mode: true,
-            assessments: 0,
-            controls: true,
-            recommendations: true,
-            soas: true
-        };
-
+    function contextInstanceDialog($scope, $mdDialog, mode) {
+        $scope.contextFields = ['Owner','Constructor', 'Reference'];
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
+        $scope.add = function() {
+            $scope.contextFields.push("new item");
+        }
 
-        $scope.export = function() {
-            $mdDialog.hide($scope.exportData);
+        $scope.save = function() {
+            $mdDialog.hide();
         };
-
     }
 
     function CreateInstanceDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, AnrService, instance, scales, scaleCommCache) {
