@@ -201,18 +201,15 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'mode', contextInstanceDialog],
+                controller: ['$scope', '$mdDialog', 'gettextCatalog', contextInstanceDialog],
                 templateUrl: 'views/anr/context.instance.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
-                locals: {
-                    mode: 'instance'
-                }
             })
-                .then(function () {
+                .then(function (context) {
                 }, function (reject) {
                   $scope.handleRejectionDialog(reject);
                 });
@@ -403,18 +400,62 @@
         });
     }
 
+    function ExportInstanceDialog($scope, $mdDialog, mode) {
+        $scope.mode = mode;
+        $scope.exportData = {
+            password: '',
+            simple_mode: true,
+            assessments: 0,
+            controls: true,
+            recommendations: true,
+            soas: true
+        };
 
-    function contextInstanceDialog($scope, $mdDialog, mode) {
-        $scope.contextFields = ['Owner','Constructor', 'Reference'];
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
-        $scope.add = function() {
-            $scope.contextFields.push("new item");
+
+        $scope.export = function() {
+            $mdDialog.hide($scope.exportData);
+        };
+
+    }
+
+
+    function contextInstanceDialog($scope, $mdDialog, gettextCatalog) {
+        $scope.contextFields = ['Owner','Constructor', 'Reference'];
+        $scope.context = $scope.contextFields.reduce((o, key) => ({ ...o, [key]: null}), {});
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+        $scope.add = function(ev) {
+            let fieldLabel = $mdDialog.prompt()
+                .title(gettextCatalog.getString('Field name'))
+                .placeholder(gettextCatalog.getString('label'))
+                .ariaLabel(gettextCatalog.getString('Field name'))
+                .theme('light')
+                .targetEvent(ev)
+                .required(true)
+                .ok(gettextCatalog.getString('Create'))
+                .cancel(gettextCatalog.getString('Cancel'));
+
+
+            $mdDialog.show(
+                fieldLabel
+                .multiple(true)
+            )
+            .then(function (fieldLabel) {
+                if($scope.contextFields.indexOf(fieldLabel) == -1){
+                    $scope.contextFields.push(fieldLabel);
+                    $scope.context[fieldLabel] = null;
+                }
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
+            });
         }
 
         $scope.save = function() {
-            $mdDialog.hide();
+            $mdDialog.hide($scope.context);
         };
     }
 
