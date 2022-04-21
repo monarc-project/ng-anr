@@ -1405,3 +1405,15 @@ md-select-menu md-content
     font-size: 12px;
     outline: none;
 }
+
+.metadataInstanceChips button.md-icon-button {
+    padding: 0;
+    height: 20px;
+    width: 24px;
+}
+.metadataInstanceChips button.md-icon-button md-icon {
+    font-size: 18px;
+}
+.metadataInstanceChips span {
+    padding-right: 4px;
+}
