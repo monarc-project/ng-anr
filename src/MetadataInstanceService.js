@@ -7,10 +7,10 @@
     function MetadataInstanceService($resource, $rootScope) {
         var self = this;
 
-        var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId/" : "";
+        var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId" : "anr";
 
         var makeResource = function () {
-            self.MetadataInstanceResource = $resource('api/' + anr + 'metadatas-on-instances/:metadataId', {
+            self.MetadataInstanceResource = $resource('api/' + anr + '/metadatas-on-instances/:metadataId', {
                     metadataId: '@id',
                     urlAnrId: $rootScope.getUrlAnrId()
                 },
