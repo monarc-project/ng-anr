@@ -1411,9 +1411,11 @@ md-select-menu md-content
     height: 20px;
     width: 24px;
 }
+
 .metadataInstanceChips button.md-icon-button md-icon {
     font-size: 18px;
 }
+
 .metadataInstanceChips span {
     padding-right: 4px;
 }
