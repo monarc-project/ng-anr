@@ -45,12 +45,12 @@
             self.MetadataInstanceResource.update(params, success, error);
         };
 
-        var deleteMetadata = function (id, success, error) {
-            self.MetadataInstanceResource.delete({metadataId: id}, success, error);
+        var deleteMetadata = function (id, anrId, success, error) {
+            self.MetadataInstanceResource.delete({metadataId: id, anrId:anrId}, success, error);
         };
 
-        var patchMetadata = function (id, params, success, error) {
-            self.MetadataInstanceResource.patch({metadataId: id}, params, success, error);
+        var patchMetadata = function (id, anrId, params, success, error) {
+            self.MetadataInstanceResource.patch({metadataId: id, anrId:anrId}, params, success, error);
         }
 
         return {
