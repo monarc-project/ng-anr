@@ -33,8 +33,8 @@
             return self.MetadataInstanceResource.query(params).$promise;
         };
 
-        var getMetadata = function (id) {
-            return self.MetadataInstanceResource.query({metadataId: id}).$promise;
+        var getMetadata = function (id, anrId, language) {
+            return self.MetadataInstanceResource.query({metadataId: id, anrId:anrId, language:language}).$promise;
         };
 
         var createMetadata = function (params, success, error) {
