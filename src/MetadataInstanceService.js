@@ -41,8 +41,8 @@
           return  new self.MetadataInstanceResource(params).$save(success, error);
         };
 
-        var updateMetadata = function (params, success, error) {
-            self.MetadataInstanceResource.update(params, success, error);
+        var updateMetadata = function (anrId, params, success, error) {
+            self.MetadataInstanceResource.update({anrId:anrId}, params, success, error);
         };
 
         var deleteMetadata = function (id, anrId, success, error) {
