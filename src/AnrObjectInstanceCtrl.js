@@ -4,8 +4,8 @@
         .module('AnrModule')
         .controller('AnrObjectInstanceCtrl', [
             '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$state', 'DownloadService', 'TableHelperService', '$http',
-            'ModelService', 'ObjlibService', '$stateParams', 'AnrService', '$rootScope', '$timeout', '$location', 'InstanceService', '$q',
-            '$sce',
+            'ModelService', 'ObjlibService', '$stateParams', 'AnrService', '$rootScope', '$timeout', '$location', 'InstanceService',
+            'MetadataInstanceService', '$q', '$sce',
             AnrObjectInstanceCtrl
         ]);
 
@@ -14,7 +14,7 @@
      */
     function AnrObjectInstanceCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, DownloadService,
                                             TableHelperService, $http, ModelService, ObjlibService, $stateParams, AnrService,
-                                            $rootScope, $timeout, $location, InstanceService, $q, $sce) {
+                                            $rootScope, $timeout, $location, InstanceService, MetadataInstanceService, $q, $sce) {
 
         $scope.instance = {};
         $scope.resetSheet(true);
@@ -201,15 +201,31 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'gettextCatalog', contextInstanceDialog],
+                controller: ['$scope', '$mdDialog', 'gettextCatalog', 'MetadataInstanceService', 'instance', contextInstanceDialog],
                 templateUrl: 'views/anr/context.instance.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
+                locals: {
+                    instance : $scope.instance,
+                }
             })
-                .then(function (context) {
+                .then(function (metadatas) {
+                    let metadatasToCreate = metadatas.filter(x => !x.instMetadataId && x.comment);
+                    let metadatasToUpdate = metadatas.filter(x => x.instMetadataId && x.comment);
+                    if (metadatasToCreate.length > 0) {
+                        MetadataInstanceService.createIntanceMetadata(
+                            {instId: $scope.instance.id,metadatas: metadatasToCreate}
+                        )
+                    }
+                    if (metadatasToUpdate.length > 0) {
+                        // MetadataInstanceService.createIntanceMetadata(
+                        //     {instId: $scope.instance.id,metadatas: metadatasToCreate}
+                        // )
+                    }
+
                 }, function (reject) {
                   $scope.handleRejectionDialog(reject);
                 });
@@ -422,9 +438,31 @@
     }
 
 
-    function contextInstanceDialog($scope, $mdDialog, gettextCatalog) {
-        $scope.contextFields = ['Owner','Constructor', 'Reference'];
-        $scope.context = $scope.contextFields.reduce((o, key) => ({ ...o, [key]: null}), {});
+    function contextInstanceDialog($scope, $mdDialog, gettextCatalog, MetadataInstanceService, instance) {
+        $scope.languageCode = $scope.getLanguageCode($scope.getAnrLanguage());
+        MetadataInstanceService.getMetadatas(
+            {language:$scope.languageCode}
+        ).then(function(data){
+            $scope.metadatas = data.data;
+            MetadataInstanceService.getInstanceMetadatas(
+                {instId:instance.id, language:$scope.languageCode}
+            ).then(function(data){
+                let instancesMetadatas = data.data;
+                instancesMetadatas.forEach(instanceMetadata => {
+                    $scope.metadatas.forEach((metadata, index, metadatas) => {
+                        if (metadata.id == instanceMetadata.metadataId) {
+                            metadatas[index]['comment'] = {
+                                [$scope.languageCode] : instanceMetadata[$scope.languageCode]
+                            };
+                            metadatas[index]['instMetadataId'] = instanceMetadata.id;
+                        }
+                    });
+                });
+            });
+        });
+
+
+
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
@@ -455,7 +493,7 @@
         }
 
         $scope.save = function() {
-            $mdDialog.hide($scope.context);
+            $mdDialog.hide($scope.metadatas);
         };
     }
 

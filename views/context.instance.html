@@ -10,10 +10,10 @@
             </div>
         </md-toolbar>
         <md-dialog-content class="md-dialog-content">
-            <md-input-container ng-repeat="field in contextFields" layout="row">
+            <md-input-container ng-repeat="metadata in metadatas" layout="row">
                 <md-icon>label</md-icon>
-                <label>{{field}}</label>
-                <input ng-model="context[field]">
+                <label>{{metadata[languageCode]}}</label>
+                <input ng-model="metadata['comment'][languageCode]">
             </md-input-container>
             <div layout-align="center" layout="row">
                 <md-button class="md-primary" ng-click="add($event)">

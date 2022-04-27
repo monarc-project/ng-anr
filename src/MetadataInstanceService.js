@@ -31,7 +31,8 @@
             {
                 id: '@id',
                 urlAnrId: $rootScope.getUrlAnrId(),
-                anrId: '@anrId'
+                anrId: '@anrId',
+                instId: '@instId',
             },
             {
                 'update': {
