@@ -19,9 +19,6 @@
                     'update': {
                         method: 'PUT'
                     },
-                    'patch': {
-                        method: 'PATCH'
-                    },
                     'query': {
                         isArray: false
                     }
@@ -49,10 +46,6 @@
             self.MetadataInstanceResource.delete({metadataId: id, anrId:anrId}, success, error);
         };
 
-        var patchMetadata = function (id, anrId, params, success, error) {
-            self.MetadataInstanceResource.patch({metadataId: id, anrId:anrId}, params, success, error);
-        }
-
         return {
             makeResource: makeResource,
             getMetadatas: getMetadatas,
@@ -60,7 +53,6 @@
             createMetadata: createMetadata,
             updateMetadata: updateMetadata,
             deleteMetadata: deleteMetadata,
-            patchMetadata: patchMetadata,
         };
     }
 
