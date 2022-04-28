@@ -9,40 +9,45 @@
 
         var anr = $rootScope.OFFICE_MODE == "FO" ? "client-anr/:urlAnrId" : "anr/:anrId";
 
-        self.FieldMetadataResource = $resource(
-            'api/' + anr + '/metadatas-on-instances/:metadataId',
-            {
-                metadataId: '@id',
-                urlAnrId: $rootScope.getUrlAnrId(),
-                anrId: '@anrId'
-            },
-            {
-                'update': {
-                    method: 'PUT'
-                },
-                'query': {
-                    isArray: false
-                }
-            }
-        );
+        var makeResource = function () {
 
-        self.InstanceMetadataResource = $resource(
-            'api/' + anr + '/instances/:instId/instances_metadatas/:id',
-            {
-                id: '@id',
-                urlAnrId: $rootScope.getUrlAnrId(),
-                anrId: '@anrId',
-                instId: '@instId',
-            },
-            {
-                'update': {
-                    method: 'PUT'
+            self.FieldMetadataResource = $resource(
+                'api/' + anr + '/metadatas-on-instances/:metadataId',
+                {
+                    metadataId: '@id',
+                    urlAnrId: $rootScope.getUrlAnrId(),
+                    anrId: '@anrId'
                 },
-                'query': {
-                    isArray: false
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'query': {
+                        isArray: false
+                    }
                 }
-            }
-        );
+            );
+
+            self.InstanceMetadataResource = $resource(
+                'api/' + anr + '/instances/:instId/instances_metadatas/:id',
+                {
+                    id: '@id',
+                    urlAnrId: $rootScope.getUrlAnrId(),
+                    anrId: '@anrId',
+                    instId: '@instId',
+                },
+                {
+                    'update': {
+                        method: 'PUT'
+                    },
+                    'query': {
+                        isArray: false
+                    }
+                }
+            );
+        }
+
+        makeResource();
 
         var getMetadatas = function (params) {
             return self.FieldMetadataResource.query(params).$promise;
@@ -76,8 +81,8 @@
           return  new self.InstanceMetadataResource(params).$save(success, error);
         };
 
-        var updateInstanceMetadata = function (params, success, error) {
-            self.InstanceMetadataResource.update(params, success, error);
+        var updateInstanceMetadata = function (instId, params, success, error) {
+            self.InstanceMetadataResource.update({instId:instId}, params, success, error);
         };
 
         var deleteInstanceMetadata = function (id, success, error) {
@@ -85,6 +90,8 @@
         };
 
         return {
+
+            makeResource:makeResource,
 
             //Fields Metadatas
             getMetadatas: getMetadatas,

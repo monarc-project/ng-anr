@@ -13,7 +13,10 @@
             <md-input-container ng-repeat="metadata in metadatas" layout="row">
                 <md-icon>label</md-icon>
                 <label>{{metadata[languageCode]}}</label>
-                <input ng-model="metadata['comment'][languageCode]">
+                <input
+                    ng-model="metadata['instanceMetadata'][languageCode]"
+                    ng-model-options="{ updateOn: 'blur', debounce:0 }"
+                    ng-change="updateInstanceMetadata(metadata, metadata['instanceMetadata'][languageCode])">
             </md-input-container>
             <div layout-align="center" layout="row">
                 <md-button class="md-primary" ng-click="add($event)">
@@ -22,14 +25,5 @@
                 </md-button>
             </div>
         </md-dialog-content>
-        <md-dialog-actions layout="row">
-            <span flex></span>
-            <md-button ng-click="cancel()">
-                {{ 'Cancel' | translate }}
-            </md-button>
-            <md-button ng-click="save()" class="md-primary">
-                {{ 'Save' | translate }}
-            </md-button>
-        </md-dialog-actions>
     </form>
 </md-dialog>

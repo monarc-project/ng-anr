@@ -212,23 +212,6 @@
                     instance : $scope.instance,
                 }
             })
-                .then(function (metadatas) {
-                    let metadatasToCreate = metadatas.filter(x => !x.instMetadataId && x.comment);
-                    let metadatasToUpdate = metadatas.filter(x => x.instMetadataId && x.comment);
-                    if (metadatasToCreate.length > 0) {
-                        MetadataInstanceService.createIntanceMetadata(
-                            {instId: $scope.instance.id,metadatas: metadatasToCreate}
-                        )
-                    }
-                    if (metadatasToUpdate.length > 0) {
-                        // MetadataInstanceService.createIntanceMetadata(
-                        //     {instId: $scope.instance.id,metadatas: metadatasToCreate}
-                        // )
-                    }
-
-                }, function (reject) {
-                  $scope.handleRejectionDialog(reject);
-                });
         };
 
         $scope.detachInstance = function (ev, instance) {
@@ -434,34 +417,25 @@
         $scope.export = function() {
             $mdDialog.hide($scope.exportData);
         };
-
     }
 
 
     function contextInstanceDialog($scope, $mdDialog, gettextCatalog, MetadataInstanceService, instance) {
         $scope.languageCode = $scope.getLanguageCode($scope.getAnrLanguage());
-        MetadataInstanceService.getMetadatas(
-            {language:$scope.languageCode}
-        ).then(function(data){
+        MetadataInstanceService.getInstanceMetadatas({instId:instance.id}).then(function(data){
             $scope.metadatas = data.data;
-            MetadataInstanceService.getInstanceMetadatas(
-                {instId:instance.id, language:$scope.languageCode}
-            ).then(function(data){
-                let instancesMetadatas = data.data;
-                instancesMetadatas.forEach(instanceMetadata => {
-                    $scope.metadatas.forEach((metadata, index, metadatas) => {
-                        if (metadata.id == instanceMetadata.metadataId) {
-                            metadatas[index]['comment'] = {
-                                [$scope.languageCode] : instanceMetadata[$scope.languageCode]
-                            };
-                            metadatas[index]['instMetadataId'] = instanceMetadata.id;
-                        }
-                    });
-                });
-            });
         });
 
-
+        $scope.updateInstanceMetadata = function(metadata, comment) {
+            if (metadata.instanceMetadata.id) {
+                MetadataInstanceService.updateInstanceMetadata(instance.id,metadata.instanceMetadata);
+            } else {
+                metadata.instanceMetadata = {
+                    [$scope.languageCode] : comment
+                };
+                MetadataInstanceService.createIntanceMetadata({instId: instance.id, metadata: [metadata]});
+            }
+        }
 
         $scope.cancel = function() {
             $mdDialog.cancel();
@@ -491,10 +465,6 @@
               $scope.handleRejectionDialog(reject);
             });
         }
-
-        $scope.save = function() {
-            $mdDialog.hide($scope.metadatas);
-        };
     }
 
     function CreateInstanceDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, AnrService, instance, scales, scaleCommCache) {
