@@ -441,7 +441,7 @@
             $mdDialog.cancel();
         };
         $scope.add = function(ev) {
-            let fieldLabel = $mdDialog.prompt()
+            let fieldMetadata = $mdDialog.prompt()
                 .title(gettextCatalog.getString('Field name'))
                 .placeholder(gettextCatalog.getString('label'))
                 .ariaLabel(gettextCatalog.getString('Field name'))
@@ -453,14 +453,23 @@
 
 
             $mdDialog.show(
-                fieldLabel
+                fieldMetadata
                 .multiple(true)
             )
-            .then(function (fieldLabel) {
-                if($scope.contextFields.indexOf(fieldLabel) == -1){
-                    $scope.contextFields.push(fieldLabel);
-                    $scope.context[fieldLabel] = null;
-                }
+            .then(function (fieldMetadata) {
+                metadatas = {
+                    [$scope.languageCode] : fieldMetadata
+                };
+                MetadataInstanceService.createMetadata(
+                    [metadatas],
+                    function(){
+                        MetadataInstanceService.getInstanceMetadatas({instId:instance.id})
+                            .then(function(data){
+                                $scope.metadatas = data.data;
+                            }
+                        );
+                    }
+                );
             }, function (reject) {
               $scope.handleRejectionDialog(reject);
             });
