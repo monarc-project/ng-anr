@@ -73,20 +73,12 @@
             return self.InstanceMetadataResource.query(params).$promise;
         };
 
-        var getInstanceMetadata = function (id, language) {
-            return self.InstanceMetadataResource.query({id: id, language:language}).$promise;
-        };
-
         var createIntanceMetadata = function (params, success, error) {
           return  new self.InstanceMetadataResource(params).$save(success, error);
         };
 
         var updateInstanceMetadata = function (instId, params, success, error) {
             self.InstanceMetadataResource.update({instId:instId}, params, success, error);
-        };
-
-        var deleteInstanceMetadata = function (id, success, error) {
-            self.InstanceMetadataResource.delete({id: id}, success, error);
         };
 
         return {
@@ -102,10 +94,8 @@
 
             //Instance Metadatas
             getInstanceMetadatas: getInstanceMetadatas,
-            getInstanceMetadata: getInstanceMetadata,
             createIntanceMetadata: createIntanceMetadata,
             updateInstanceMetadata: updateInstanceMetadata,
-            deleteInstanceMetadata: deleteInstanceMetadata,
         };
     }
 
