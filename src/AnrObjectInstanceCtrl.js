@@ -244,7 +244,6 @@
 
         };
 
-
         $scope.createSpecRiskOp = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
@@ -422,9 +421,7 @@
 
     function contextInstanceDialog($scope, $mdDialog, gettextCatalog, MetadataInstanceService, instance) {
         $scope.languageCode = $scope.getLanguageCode($scope.getAnrLanguage());
-        MetadataInstanceService.getInstanceMetadatas({instId:instance.id}).then(function(data){
-            $scope.metadatas = data.data;
-        });
+        updateMetadatas();
 
         $scope.updateInstanceMetadata = function(metadata, comment) {
             if (metadata.instanceMetadata.id) {
@@ -437,10 +434,27 @@
             }
         }
 
-        $scope.cancel = function() {
-            $mdDialog.cancel();
-        };
-        $scope.add = function(ev) {
+        $scope.deleteMetadata = function (ev, metadata) {
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Are you sure you want to delete the context field?'))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .targetEvent(ev)
+                .theme('light')
+                .multiple(true)
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                MetadataInstanceService.deleteMetadata(
+                    metadata.id,
+                    null,
+                    function(){
+                        updateMetadatas();
+                    }
+                );
+            });
+        }
+
+        $scope.addMetadata = function(ev) {
             let fieldMetadata = $mdDialog.prompt()
                 .title(gettextCatalog.getString('Field name'))
                 .placeholder(gettextCatalog.getString('label'))
@@ -463,16 +477,54 @@
                 MetadataInstanceService.createMetadata(
                     [metadatas],
                     function(){
-                        MetadataInstanceService.getInstanceMetadatas({instId:instance.id})
-                            .then(function(data){
-                                $scope.metadatas = data.data;
-                            }
-                        );
+                        updateMetadatas();
                     }
                 );
             }, function (reject) {
               $scope.handleRejectionDialog(reject);
             });
+        }
+
+        $scope.editMetadata = function(ev,metadata) {
+            let fieldMetadata = $mdDialog.prompt()
+                .title(gettextCatalog.getString('Field name'))
+                .placeholder(gettextCatalog.getString('label'))
+                .ariaLabel(gettextCatalog.getString('Field name'))
+                .theme('light')
+                .targetEvent(ev)
+                .required(true)
+                .ok(gettextCatalog.getString('Save'))
+                .cancel(gettextCatalog.getString('Cancel'));
+
+
+            $mdDialog.show(
+                fieldMetadata
+                .multiple(true)
+            )
+            .then(function (fieldMetadata) {
+                metadata[$scope.languageCode] = fieldMetadata;
+                MetadataInstanceService.updateMetadata(
+                    null,
+                    metadata,
+                    function(){
+                        updateMetadatas();
+                    }
+                )
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
+            });
+        }
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        function updateMetadatas(){
+            MetadataInstanceService.getInstanceMetadatas({instId:instance.id})
+                .then(function(data){
+                    $scope.metadatas = data.data;
+                }
+            );
         }
     }
 

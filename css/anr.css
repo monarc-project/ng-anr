@@ -1040,6 +1040,10 @@ md-progress-linear.yellow .md-container {
     margin-bottom: 0;
 }
 
+.no-margin-bottom {
+    margin-bottom: 0;
+}
+
 /* Trix buttons */
 trix-toolbar button.trix-button--icon-link,
 trix-toolbar button.trix-button--icon-code,
@@ -1418,4 +1422,8 @@ md-select-menu md-content
 
 .metadataInstanceChips span {
     padding-right: 4px;
+}
+
+.display-contents {
+    display: contents;
 }

@@ -10,16 +10,25 @@
             </div>
         </md-toolbar>
         <md-dialog-content class="md-dialog-content">
-            <md-input-container ng-repeat="metadata in metadatas" layout="row">
-                <md-icon>label</md-icon>
-                <label>{{metadata[languageCode]}}</label>
-                <input
-                    ng-model="metadata['instanceMetadata'][languageCode]"
-                    ng-model-options="{ updateOn: 'blur', debounce:0 }"
-                    ng-change="updateInstanceMetadata(metadata, metadata['instanceMetadata'][languageCode])">
-            </md-input-container>
+            <div  ng-repeat="metadata in metadatas" layout="row">
+                <md-input-container class="no-margin-bottom" layout="row" flex>
+                    <md-icon>label</md-icon>
+                    <label>{{metadata[languageCode]}}</label>
+                    <input
+                        ng-model="metadata['instanceMetadata'][languageCode]"
+                        ng-model-options="{ updateOn: 'blur', debounce:0 }"
+                        ng-change="updateInstanceMetadata(metadata, metadata['instanceMetadata'][languageCode])">
+                </md-input-container>
+                <md-button class="md-icon-button md-primary display-contents" ng-click="editMetadata($event, metadata)" ng-show="metadata.isDeletable" >
+                    <md-icon>edit</md-icon>
+                </md-button>
+                <md-button class="md-icon-button md-warn display-contents" ng-click="deleteMetadata($event, metadata)" ng-show="metadata.isDeletable" >
+                    <md-icon>delete</md-icon>
+                </md-button>
+
+            </div>
             <div layout-align="center" layout="row">
-                <md-button class="md-primary" ng-click="add($event)">
+                <md-button class="md-primary" ng-click="addMetadata($event)">
                     <md-icon>add_circle_outline</md-icon>
                     {{ 'Add an information' | translate }}
                 </md-button>
