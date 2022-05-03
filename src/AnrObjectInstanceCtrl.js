@@ -436,7 +436,7 @@
 
         $scope.deleteMetadata = function (ev, metadata) {
             var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to delete the context field?'))
+                .title(gettextCatalog.getString('Are you sure you want to delete the asset context field?'))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
                 .theme('light')
@@ -456,9 +456,9 @@
 
         $scope.addMetadata = function(ev) {
             let fieldMetadata = $mdDialog.prompt()
-                .title(gettextCatalog.getString('Field name'))
-                .placeholder(gettextCatalog.getString('label'))
-                .ariaLabel(gettextCatalog.getString('Field name'))
+                .title(gettextCatalog.getString('Field label'))
+                .placeholder(gettextCatalog.getString('Label'))
+                .ariaLabel(gettextCatalog.getString('Field label'))
                 .theme('light')
                 .targetEvent(ev)
                 .required(true)
@@ -487,9 +487,9 @@
 
         $scope.editMetadata = function(ev,metadata) {
             let fieldMetadata = $mdDialog.prompt()
-                .title(gettextCatalog.getString('Field name'))
-                .placeholder(gettextCatalog.getString('label'))
-                .ariaLabel(gettextCatalog.getString('Field name'))
+                .title(gettextCatalog.getString('Field label'))
+                .placeholder(gettextCatalog.getString('Label'))
+                .ariaLabel(gettextCatalog.getString('Field label'))
                 .theme('light')
                 .targetEvent(ev)
                 .required(true)
