@@ -1806,6 +1806,24 @@
             };
         }
 
+        $scope.complianceScale = [
+            {level:0, label: { fr: 'Non-existent' }, color:'#FFFFFF'},
+            {level:1, label: { fr: 'Initial' }, color:'#FD661F'},
+            {level:2, label: { fr: 'Managed' }, color:'#FD661F'},
+            {level:3, label: { fr: 'Defined' }, color:'#FFBC1C'},
+            {level:4, label: { fr: 'Quantitatively Managed' }, color:'#FFBC1C'},
+            {level:5, label: { fr: 'Optimized' }, color:'#D6F107'},
+        ];
+
+        $scope.complianceScaleLanguage = 'fr';
+
+        $scope.complianceScaleLevels = {max: $scope.complianceScale.length};
+
+        $scope.onComplianceScaleChanged = function (model, value, rootModel) {
+            console.log(model, value, rootModel);
+            let promise = $q.defer();
+            return promise;
+        }
         $scope.switchOpRisksLanguage = function(){
           $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
           $scope.updateOperationalRiskScales();

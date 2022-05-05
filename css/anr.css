@@ -751,6 +751,12 @@ span textarea {
     width: 10%
 }
 
+.center-block {
+    margin: auto;
+    display: block;
+}
+
+
 /*.angular-ui-tree-nodes .angular-ui-tree-nodes {
     padding-left: 6px;
 }
