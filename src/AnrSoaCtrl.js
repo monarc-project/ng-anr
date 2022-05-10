@@ -286,8 +286,7 @@
                     else {
                         finalArray[recLine] += ','
                             + "\""
-                            + $scope.soaScale.comments[soas[soa].compliance]
-                                .label[$scope.getLanguageCode($scope.soaScale.language)]
+                            + $scope.soaScale.comments[soas[soa].compliance].comment
                             + "\"";
                     }
                 }

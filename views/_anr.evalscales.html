@@ -553,26 +553,25 @@
                     <tr>
                         <th style="width:1%;"></th>
                         <th translate>Level of compliance</th>
-                        <th translate>Color</th>
+                        <th translate>Colour</th>
                     </tr>
                 </thead>
 
                 <tbody>
                     <tr ng-repeat="scaleComment in soaScale.comments" edit-model="scaleComment">
-                        <th>{{scaleComment.level}}
+                        <th>{{scaleComment.scaleIndex}}
                         </th>
                         <td class="preserve-newlines"
                             edit-readonly="isAnrReadOnly"
-                            edit-field="{{$root.getLanguageCode(soaScale.language)}}"
-                            edit-localmodel="scaleComment.label"
+                            edit-field="comment"
                             edit-type="textarea"
                             edit-placeholder="{{ 'Click here to type...' | translate }}">
                         </td>
                         <td>
                             <input class="center-block"
                                 type="color"
-                                ng-model="scaleComment.color"
-                                ng-change="onComplianceScaleChanged(scaleComment,'color')">
+                                ng-model="scaleComment.colour"
+                                ng-change="onComplianceScaleChanged(scaleComment,'colour')">
                         </td>
                     </tr>
                 </tbody>
