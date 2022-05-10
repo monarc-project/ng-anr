@@ -94,25 +94,15 @@
                       <md-tooltip>{{ 'Results of risk assessment' | translate }}</md-tooltip>
                     </button>
                   </td>
-                  <td  edit-field="remarks" edit-readonly="isAnrReadOnly" class="preserve-newlines"  edit-type="textarea"></td>
-                  <td  edit-field="evidences" edit-readonly="isAnrReadOnly" class="preserve-newlines" edit-type="textarea"></td>
-                  <td  edit-field="actions"  edit-readonly="isAnrReadOnly" class="preserve-newlines" edit-type="textarea"></td>
-                  <td
-                    class="tbl-soa"
-                    ng-class="{
-                        'green' : soa.compliance == '5' && soa.EX==0,
-                        'orange' : (soa.compliance == '4' || soa.compliance == '3') && soa.EX==0,
-                        'red' : (soa.compliance == '2' || soa.compliance == '1') && soa.EX==0,
-                        'gray': soa.EX==1
-                    }">
+                  <td edit-field="remarks" edit-readonly="isAnrReadOnly" class="preserve-newlines"  edit-type="textarea"></td>
+                  <td edit-field="evidences" edit-readonly="isAnrReadOnly" class="preserve-newlines" edit-type="textarea"></td>
+                  <td edit-field="actions"  edit-readonly="isAnrReadOnly" class="preserve-newlines" edit-type="textarea"></td>
+                  <td class="tbl-soa" ng-style="{background: soaScale.comments[soa.compliance].color}" ng-class="{'gray': soa.EX==1}">
                     <md-input-container ng-if="soa.EX=='0'" >
-                        <md-select ng-disabled="isAnrReadOnly" ng-model="soa.compliance" ng-change="onTableEdited(soa, 'compliance') "  style="width: 110px;">
-                            <md-option value="0">{{ 'Non-existent' | translate }}</md-option>
-                            <md-option value="1">{{ 'Initial' | translate }}</md-option>
-                            <md-option value="2">{{ 'Managed' | translate }}</md-option>
-                            <md-option value="3">{{ 'Defined' | translate }}</md-option>
-                            <md-option value="4">{{ 'Quantitatively Managed' | translate }}</md-option>
-                            <md-option value="5">{{ 'Optimized' | translate }}</md-option>
+                        <md-select ng-disabled="isAnrReadOnly" ng-model="soa.compliance" ng-change="onTableEdited(soa, 'compliance')" style="width: 110px;">
+                            <md-option ng-repeat="scaleComment in soaScale.comments" value="{{ scaleComment.level }}">
+                                {{ scaleComment.label[getLanguageCode(soaScale.language)] }}
+                            </md-option>
                         </md-select>
                     </md-input-container>
                   </td>
