@@ -6,7 +6,7 @@
             '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'gettext', 'TableHelperService',
             'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
             '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService', 'ClientRecommandationService',
-            'ReferentialService', 'AmvService', 'RiskService', AnrLayoutCtrl
+            'ReferentialService', 'AmvService', 'RiskService', 'SoaScaleService', AnrLayoutCtrl
         ]);
 
     /**
@@ -15,7 +15,7 @@
     function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, gettext, TableHelperService, ModelService,
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
                            $transitions, DownloadService, $mdPanel, $injector, ConfigService, ClientRecommandationService,
-                           ReferentialService, AmvService, RiskService) {
+                           ReferentialService, AmvService, RiskService, SoaScaleService) {
 
 
         if ($scope.OFFICE_MODE == 'FO') {
@@ -154,6 +154,7 @@
 
         $scope.updateModel = function (justCore, cb) {
             isModelLoading = true;
+            let defaultLanguageIndex = ConfigService.getDefaultLanguageIndex();
             if ($scope.OFFICE_MODE == 'BO') {
                 ModelService.getModel($stateParams.modelId).then(function (data) {
                     $scope.model = data;
@@ -161,10 +162,22 @@
                     $scope.isAnrReadOnly = false;
                     $scope.languages = ConfigService.getLanguages();
                     $scope.opRisksScales = {
-                      language : ConfigService.getDefaultLanguageIndex()
+                      language : defaultLanguageIndex
                     };
                     $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
-                    $scope.scales.language = ConfigService.getDefaultLanguageIndex();
+                    $scope.scales.language = defaultLanguageIndex;
+                    $scope.soaScale = {
+                        levels : { max: 6 },
+                        language : defaultLanguageIndex,
+                        comments : [
+                            {level:0, label: { fr: 'Non-existent' }, color:'#FFFFFF'},
+                            {level:1, label: { fr: 'Initial' }, color:'#FD661F'},
+                            {level:2, label: { fr: 'Managed' }, color:'#FD661F'},
+                            {level:3, label: { fr: 'Defined' }, color:'#FFBC1C'},
+                            {level:4, label: { fr: 'Quantitatively Managed' }, color:'#FFBC1C'},
+                            {level:5, label: { fr: 'Optimized' }, color:'#D6F107'},
+                        ]
+                    };
                     thresholdsWatchSetup = false;
                     $scope.thresholds = {
                         thresholds: {min: $scope.model.anr.seuil1, max: $scope.model.anr.seuil2},
@@ -201,6 +214,18 @@
                     $scope.scales.language = data.language;
                     $scope.opRisksScales = {
                       language : data.language
+                    };
+                    $scope.soaScale = {
+                        levels : { max: 6 },
+                        language : data.language,
+                        comments : [
+                            {level:0, label: { fr: 'Non-existent' }, color:'#FFFFFF'},
+                            {level:1, label: { fr: 'Initial' }, color:'#FD661F'},
+                            {level:2, label: { fr: 'Managed' }, color:'#FD661F'},
+                            {level:3, label: { fr: 'Defined' }, color:'#FFBC1C'},
+                            {level:4, label: { fr: 'Quantitatively Managed' }, color:'#FFBC1C'},
+                            {level:5, label: { fr: 'Optimized' }, color:'#D6F107'},
+                        ]
                     };
                     $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
                     $scope.$parent.$parent.clientCurrentAnr = data;
@@ -1806,18 +1831,9 @@
             };
         }
 
-        $scope.complianceScale = [
-            {level:0, label: { fr: 'Non-existent' }, color:'#FFFFFF'},
-            {level:1, label: { fr: 'Initial' }, color:'#FD661F'},
-            {level:2, label: { fr: 'Managed' }, color:'#FD661F'},
-            {level:3, label: { fr: 'Defined' }, color:'#FFBC1C'},
-            {level:4, label: { fr: 'Quantitatively Managed' }, color:'#FFBC1C'},
-            {level:5, label: { fr: 'Optimized' }, color:'#D6F107'},
-        ];
+        $scope.switchSoaScaleLanguage = function(){
+        };
 
-        $scope.complianceScaleLanguage = 'fr';
-
-        $scope.complianceScaleLevels = {max: $scope.complianceScale.length};
 
         $scope.onComplianceScaleChanged = function (model, value, rootModel) {
             console.log(model, value, rootModel);

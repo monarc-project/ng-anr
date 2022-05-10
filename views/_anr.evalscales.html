@@ -525,7 +525,7 @@
         <md-tab label="{{ 'Compliance' | translate }}">
             <md-input-container ng-if="OFFICE_MODE == 'BO'">
                 <md-icon>language</md-icon>
-                <md-select ng-model="complianceScaleLanguage" ng-change="switchOpRisksLanguage()">
+                <md-select ng-model="soaScale.language" ng-change="switchSoaScaleLanguage()">
                     <md-option ng-repeat="(index, lang) in languages" value="{{ index }}">
                         <countryflag country="{{ languages[index].flag }}"></countryflag>
                         {{ languages[index].name | translate }}
@@ -534,7 +534,7 @@
             </md-input-container>
 
             <div editable callback="onComplianceScaleChanged" layout="row">
-                <h4 edit-model="complianceScaleLevels">
+                <h4 edit-model="soaScale.levels">
                     <span translate>Compliance scale:</span>&nbsp;
                     <span class="text-blue"
                         edit-readonly="isAnrReadOnly"
@@ -558,21 +558,21 @@
                 </thead>
 
                 <tbody>
-                    <tr ng-repeat="scale in complianceScale" edit-model="scale">
-                        <th>{{scale.level}}
+                    <tr ng-repeat="scaleComment in soaScale.comments" edit-model="scaleComment">
+                        <th>{{scaleComment.level}}
                         </th>
                         <td class="preserve-newlines"
                             edit-readonly="isAnrReadOnly"
-                            edit-field="{{complianceScaleLanguage}}"
-                            edit-localmodel="scale.label"
+                            edit-field="{{$root.getLanguageCode(soaScale.language)}}"
+                            edit-localmodel="scaleComment.label"
                             edit-type="textarea"
                             edit-placeholder="{{ 'Click here to type...' | translate }}">
                         </td>
                         <td>
                             <input class="center-block"
                                 type="color"
-                                ng-model="scale.color"
-                                ng-change="onComplianceScaleChanged(scale,'color')">
+                                ng-model="scaleComment.color"
+                                ng-change="onComplianceScaleChanged(scaleComment,'color')">
                         </td>
                     </tr>
                 </tbody>
