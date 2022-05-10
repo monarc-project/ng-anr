@@ -36,7 +36,7 @@
         };
 
         var getSoaScaleComment = function (id, anrId, language) {
-            return self.SoaScaleCommentResource.query({SoaScaleCommentId: id, anrId:anrId, language:language}).$promise;
+            return self.SoaScaleCommentResource.query({soaScaleCommentId: id, anrId:anrId, language:language}).$promise;
         };
 
         var createSoaScaleComment = function (params, success, error) {
@@ -48,7 +48,7 @@
         };
 
         var deleteSoaScaleComment = function (id, anrId, success, error) {
-            self.SoaScaleCommentResource.delete({SoaScaleCommentId: id, anrId:anrId}, success, error);
+            self.SoaScaleCommentResource.delete({soaScaleCommentId: id, anrId:anrId}, success, error);
         };
 
 
