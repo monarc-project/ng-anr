@@ -284,16 +284,11 @@
                     if(soas[soa].compliance==null || soas[soa].EX==1)
                         finalArray[recLine] += ','+"\""+' '+"\"";
                     else {
-                        if(soas[soa].compliance == 1)
-                            finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Initial') + "\"";
-                        if(soas[soa].compliance == 2)
-                            finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Managed') + "\"";
-                        if(soas[soa].compliance == 3)
-                            finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Defined') + "\"";
-                        if(soas[soa].compliance == 4)
-                            finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Quantitatively Managed') + "\"";
-                        if(soas[soa].compliance == 5)
-                            finalArray[recLine] += ',' + "\"" + gettextCatalog.getString('Optimized') + "\"";
+                        finalArray[recLine] += ','
+                            + "\""
+                            + $scope.soaScale.comments[soas[soa].compliance]
+                                .label[$scope.getLanguageCode($scope.soaScale.language)]
+                            + "\"";
                     }
                 }
 
