@@ -219,12 +219,12 @@
                         levels : { max: 6 },
                         language : data.language,
                         comments : [
-                            {level:0, label: { fr: 'Non-existent' }, color:'#FFFFFF'},
-                            {level:1, label: { fr: 'Initial' }, color:'#FD661F'},
-                            {level:2, label: { fr: 'Managed' }, color:'#FD661F'},
-                            {level:3, label: { fr: 'Defined' }, color:'#FFBC1C'},
-                            {level:4, label: { fr: 'Quantitatively Managed' }, color:'#FFBC1C'},
-                            {level:5, label: { fr: 'Optimized' }, color:'#D6F107'},
+                            {scaleIndex:0, comment: 'Non-existent', colour:'#FFFFFF'},
+                            {scaleIndex:1, comment: 'Initial', colour:'#FD661F'},
+                            {scaleIndex:2, comment: 'Managed', colour:'#FD661F'},
+                            {scaleIndex:3, comment: 'Defined', colour:'#FFBC1C'},
+                            {scaleIndex:4, comment: 'Quantitatively Managed', colour:'#FFBC1C'},
+                            {scaleIndex:5, comment: 'Optimized', colour:'#D6F107'},
                         ]
                     };
                     $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
