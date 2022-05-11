@@ -171,7 +171,7 @@
                         language:$scope.getLanguageCode(defaultLanguageIndex)
                     }).then(function(data){
                         $scope.soaScale = {
-                            levels : {max: data.data.filter(x => !x.isHidden).length},
+                            levels : {max: data.data.filter(comment => !comment.isHidden).length},
                             language : defaultLanguageIndex,
                             comments : data.data
                         };
@@ -220,7 +220,7 @@
                         language:$scope.getLanguageCode(defaultLanguageIndex)
                     }).then(function(data){
                         $scope.soaScale = {
-                            levels : {max: data.data.filter(x => !x.isHidden).length},
+                            levels : {max: data.data.filter(comment => !comment.isHidden).length},
                             language : language,
                             comments : data.data
                         };

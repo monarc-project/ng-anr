@@ -548,7 +548,7 @@
                 </h4>
             </div>
 
-            <table editable callback="onComplianceScaleChanged" class="md-html-table" flex="50">
+            <table editable callback="onComplianceScaleChanged" class="md-html-table" flex="50" >
                 <thead>
                     <tr>
                         <th style="width:1%;"></th>
@@ -557,8 +557,11 @@
                     </tr>
                 </thead>
 
-                <tbody ng-if="soaScaleIsUpdated">
-                    <tr class="soa-scale-comments" ng-repeat="scaleComment in soaScale.comments" edit-model="scaleComment" ng-if="!scaleComment.isHidden" >
+                <tbody>
+                    <tr class="soa-scale-comments"
+                        ng-repeat="scaleComment in soaScale.comments | filter:{ isHidden : false }"
+                        edit-model="scaleComment"
+                        ng-if="soaScaleIsUpdated">
                         <th>{{scaleComment.scaleIndex}}
                         </th>
                         <td class="preserve-newlines"
