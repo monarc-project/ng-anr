@@ -213,23 +213,7 @@
                     $scope.languages = ConfigService.getLanguages();
                     $scope.scales.language = language;
                     $scope.opRisksScales = {
-<<<<<<< HEAD
                       language : language
-=======
-                      language : data.language
-                    };
-                    $scope.soaScale = {
-                        levels : { max: 6 },
-                        language : data.language,
-                        comments : [
-                            {scaleIndex:0, comment: 'Non-existent', colour:'#FFFFFF'},
-                            {scaleIndex:1, comment: 'Initial', colour:'#FD661F'},
-                            {scaleIndex:2, comment: 'Managed', colour:'#FD661F'},
-                            {scaleIndex:3, comment: 'Defined', colour:'#FFBC1C'},
-                            {scaleIndex:4, comment: 'Quantitatively Managed', colour:'#FFBC1C'},
-                            {scaleIndex:5, comment: 'Optimized', colour:'#D6F107'},
-                        ]
->>>>>>> b8cf9caebe97977e679828b9651305eba40e044f
                     };
                     SoaScaleCommentService.getSoaScaleComments({
                         anrId:$rootScope.anr_id,
