@@ -22,6 +22,9 @@
                     'update': {
                         method: 'PUT'
                     },
+                    'patch': {
+                        method: 'PATCH'
+                    },
                     'query': {
                         isArray: false
                     }
@@ -47,6 +50,10 @@
             self.SoaScaleCommentResource.update({anrId:anrId}, params, success, error);
         };
 
+        var patchSoaScaleComment = function (anrId, params, success, error) {
+            self.SoaScaleCommentResource.patch({anrId:anrId}, params, success, error);
+        };
+
         var deleteSoaScaleComment = function (id, anrId, success, error) {
             self.SoaScaleCommentResource.delete({soaScaleCommentId: id, anrId:anrId}, success, error);
         };
@@ -60,6 +67,7 @@
             getSoaScaleComment: getSoaScaleComment,
             createSoaScaleComment: createSoaScaleComment,
             updateSoaScaleComment: updateSoaScaleComment,
+            patchSoaScaleComment: patchSoaScaleComment,
             deleteSoaScaleComment: deleteSoaScaleComment,
         };
     }

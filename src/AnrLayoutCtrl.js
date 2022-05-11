@@ -1832,25 +1832,39 @@
         $scope.soaScaleIsUpdated = true;
 
         $scope.switchSoaScaleLanguage = function () {
-                $scope.soaScaleIsUpdated = false;
-                SoaScaleCommentService.getSoaScaleComments({
-                    anrId:$rootScope.anr_id,
-                    language:$scope.getLanguageCode($scope.soaScale.language)
-                }).then(function(data){
-                    $scope.soaScale.comments = data.data;
-                    $scope.soaScaleIsUpdated = true;
-                });
+            $scope.updateSoaScale();
         };
 
-
-        $scope.onComplianceScaleChanged = function (model, value, rootModel) {
-            console.log(model, value, rootModel);
-            let promise = $q.defer();
-            return promise;
+        $scope.updateSoaScale = function () {
+            $scope.soaScaleIsUpdated = false;
+            SoaScaleCommentService.getSoaScaleComments({
+                anrId:$rootScope.anr_id,
+                language:$scope.getLanguageCode($scope.soaScale.language)
+            }).then(function(data){
+                $scope.soaScale.comments = data.data;
+                $scope.soaScaleIsUpdated = true;
+            });
         }
+
+
+        $scope.onComplianceScaleChanged = function (model, value) {
+            let promise = $q.defer();
+            if (value == 'max') {
+                SoaScaleCommentService.patchSoaScaleComment(
+                    $rootScope.anr_id,
+                    {numberOfLevels:model[value]},
+                    function() {
+                        promise.resolve();
+                        $scope.updateSoaScale();
+                    }
+                );
+            }
+            return promise;
+        };
+
         $scope.switchOpRisksLanguage = function(){
-          $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
-          $scope.updateOperationalRiskScales();
+            $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
+            $scope.updateOperationalRiskScales();
         };
 
         $scope.onOpRiskImpactScaleChanged = function (model, value) {
