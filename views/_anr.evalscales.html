@@ -557,8 +557,8 @@
                     </tr>
                 </thead>
 
-                <tbody>
-                    <tr ng-repeat="scaleComment in soaScale.comments" edit-model="scaleComment" ng-if="soaScaleIsUpdated">
+                <tbody ng-if="soaScaleIsUpdated">
+                    <tr ng-repeat="scaleComment in soaScale.comments" edit-model="scaleComment" ng-if="!scaleComment.isHidden" >
                         <th>{{scaleComment.scaleIndex}}
                         </th>
                         <td class="preserve-newlines"
