@@ -677,6 +677,11 @@ td input.edit-field {
 	width: 100%;
 }
 
+.soa-scale-comments textarea {
+	height: 20px;
+	width: 98%;
+}
+
 textarea {
 	height: 100px;
 	width: 100%;
