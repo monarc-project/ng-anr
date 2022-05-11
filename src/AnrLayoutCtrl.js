@@ -1829,7 +1829,17 @@
             };
         }
 
-        $scope.switchSoaScaleLanguage = function(){
+        $scope.soaScaleIsUpdated = true;
+
+        $scope.switchSoaScaleLanguage = function () {
+                $scope.soaScaleIsUpdated = false;
+                SoaScaleCommentService.getSoaScaleComments({
+                    anrId:$rootScope.anr_id,
+                    language:$scope.getLanguageCode($scope.soaScale.language)
+                }).then(function(data){
+                    $scope.soaScale.comments = data.data;
+                    $scope.soaScaleIsUpdated = true;
+                });
         };
 
 
