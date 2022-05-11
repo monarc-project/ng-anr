@@ -171,7 +171,7 @@
                         language:$scope.getLanguageCode(defaultLanguageIndex)
                     }).then(function(data){
                         $scope.soaScale = {
-                            levels : { max:data.data.filter(x => !x.isHidden).length },
+                            levels : {max: data.data.filter(x => !x.isHidden).length},
                             language : defaultLanguageIndex,
                             comments : data.data
                         };
@@ -220,7 +220,7 @@
                         language:$scope.getLanguageCode(defaultLanguageIndex)
                     }).then(function(data){
                         $scope.soaScale = {
-                            levels : { max: data.data.length },
+                            levels : {max: data.data.filter(x => !x.isHidden).length},
                             language : language,
                             comments : data.data
                         };
@@ -1829,39 +1829,6 @@
             };
         }
 
-        $scope.soaScaleIsUpdated = true;
-
-        $scope.switchSoaScaleLanguage = function () {
-            $scope.updateSoaScale();
-        };
-
-        $scope.updateSoaScale = function () {
-            $scope.soaScaleIsUpdated = false;
-            SoaScaleCommentService.getSoaScaleComments({
-                anrId:$rootScope.anr_id,
-                language:$scope.getLanguageCode($scope.soaScale.language)
-            }).then(function(data){
-                $scope.soaScale.comments = data.data;
-                $scope.soaScaleIsUpdated = true;
-            });
-        }
-
-
-        $scope.onComplianceScaleChanged = function (model, value) {
-            let promise = $q.defer();
-            if (value == 'max') {
-                SoaScaleCommentService.patchSoaScaleComment(
-                    $rootScope.anr_id,
-                    {numberOfLevels:model[value]},
-                    function() {
-                        promise.resolve();
-                        $scope.updateSoaScale();
-                    }
-                );
-            }
-            return promise;
-        };
-
         $scope.switchOpRisksLanguage = function(){
             $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
             $scope.updateOperationalRiskScales();
@@ -2098,6 +2065,48 @@
             }, function (reject) {
                 $scope.handleRejectionDialog(reject);
             });
+        };
+
+        $scope.soaScaleIsUpdated = true;
+
+        $scope.switchSoaScaleLanguage = function () {
+            $scope.updateSoaScale();
+        };
+
+        $scope.updateSoaScale = function () {
+            $scope.soaScaleIsUpdated = false;
+            SoaScaleCommentService.getSoaScaleComments({
+                anrId:$rootScope.anr_id,
+                language:$scope.getLanguageCode($scope.soaScale.language)
+            }).then(function(data){
+                $scope.soaScale.comments = data.data;
+                $scope.soaScaleIsUpdated = true;
+            });
+        }
+
+        $scope.onComplianceScaleChanged = function (model, value) {
+            let promise = $q.defer();
+            if (value == 'max') {
+                SoaScaleCommentService.patchSoaScaleComment(
+                    $rootScope.anr_id,
+                    {numberOfLevels:model[value]},
+                    function() {
+                        promise.resolve();
+                        $scope.updateSoaScale();
+                    }
+                );
+            }else {
+                let language = $scope.getLanguageCode($scope.soaScale.language);
+                SoaScaleCommentService.updateSoaScaleComment(
+                    model.id,
+                    {anrId: $rootScope.anr_id, language: language, [value]:model[value]},
+                    function() {
+                        promise.resolve();
+                        $scope.updateSoaScale();
+                    }
+                );
+            }
+            return promise;
         };
 
         $scope.updateScales = function () {

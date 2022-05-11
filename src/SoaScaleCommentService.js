@@ -46,8 +46,8 @@
           return  new self.SoaScaleCommentResource(params).$save(success, error);
         };
 
-        var updateSoaScaleComment = function (anrId, params, success, error) {
-            self.SoaScaleCommentResource.update({anrId:anrId}, params, success, error);
+        var updateSoaScaleComment = function (id , params, success, error) {
+            self.SoaScaleCommentResource.update({soaScaleCommentId: id}, params, success, error);
         };
 
         var patchSoaScaleComment = function (anrId, params, success, error) {

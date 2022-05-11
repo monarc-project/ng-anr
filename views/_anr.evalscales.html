@@ -571,6 +571,7 @@
                             <input class="center-block"
                                 type="color"
                                 ng-model="scaleComment.colour"
+                                ng-model-options="{ updateOn: 'blur', debounce:0 }"
                                 ng-change="onComplianceScaleChanged(scaleComment,'colour')">
                         </td>
                     </tr>
