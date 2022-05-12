@@ -281,7 +281,7 @@
                         finalArray[recLine] += ','+"\""+soas[soa].actions+"\"";
 
                     // compliance
-                    if(soas[soa].compliance==null || soas[soa].EX==1)
+                    if(soas[soa].compliance==null || soas[soa].EX==1 || $scope.soaScale.comments[soas[soa].compliance].isHidden)
                         finalArray[recLine] += ','+"\""+' '+"\"";
                     else {
                         finalArray[recLine] += ','
