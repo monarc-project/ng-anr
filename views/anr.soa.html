@@ -97,10 +97,12 @@
                   <td edit-field="remarks" edit-readonly="isAnrReadOnly" class="preserve-newlines"  edit-type="textarea"></td>
                   <td edit-field="evidences" edit-readonly="isAnrReadOnly" class="preserve-newlines" edit-type="textarea"></td>
                   <td edit-field="actions"  edit-readonly="isAnrReadOnly" class="preserve-newlines" edit-type="textarea"></td>
-                  <td class="tbl-soa" ng-style="{background: soaScale.comments[soa.compliance].colour}" ng-class="{'gray': soa.EX==1}">
+                  <td class="tbl-soa"
+                    ng-style="{background: (soaScale.comments | filter:{ isHidden : false })[soa.compliance] ? soaScale.comments[soa.compliance].colour : 'none' }"
+                    ng-class="{'gray': soa.EX==1}">
                     <md-input-container ng-if="soa.EX=='0'" >
                         <md-select ng-disabled="isAnrReadOnly" ng-model="soa.compliance" ng-change="onTableEdited(soa, 'compliance')" style="width: 110px;">
-                            <md-option ng-repeat="scaleComment in soaScale.comments" value="{{ scaleComment.scaleIndex }}">
+                            <md-option ng-repeat="scaleComment in soaScale.comments | filter:{ isHidden : false }" value="{{ scaleComment.scaleIndex }}">
                                 {{ scaleComment.comment }}
                             </md-option>
                         </md-select>
