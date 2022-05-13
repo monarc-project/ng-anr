@@ -155,7 +155,6 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             var importOptions = ['remarks', 'evidences', 'actions'];
             var justificationOptions = ['EX', 'LR', 'CO', 'BR', 'BP', 'RRA'];
-            var avg = [];
 
             $mdDialog.show({
                     controller: ['$scope', '$mdDialog', 'referentials', 'referential', 'anrId', importSoaFromDialogCtrl],
