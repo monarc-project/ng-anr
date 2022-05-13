@@ -4,8 +4,8 @@
         .module('AnrModule')
         .controller('AnrSoaCtrl', [
             '$scope', '$rootScope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$state', '$stateParams',
-            'MeasureService','SOACategoryService', 'ClientSoaService', '$q', 'ReferentialService', 'TableHelperService',
-            'MeasureMeasureService','DownloadService', AnrSoaCtrl
+            'MeasureService', 'SOACategoryService', 'ClientSoaService', '$q', 'ReferentialService', 'TableHelperService',
+            'MeasureMeasureService', 'DownloadService', AnrSoaCtrl
         ]);
 
     /**
@@ -185,9 +185,8 @@
                                 let avg = [];
                                 child.measure.measuresLinked.forEach(measureLinked => {
                                     fathersFiltered.push(fathers.filter(father => father.measure.uuid == measureLinked))
-
                                 });
-                                fathersFiltered.flat().forEach(father =>{
+                                fathersFiltered.flat().forEach(father => {
                                     importOptions.forEach(function(option) {
                                         if (importSoa[option] && father[option]) {
                                             if (child[option]) {
@@ -219,7 +218,7 @@
                                                 avg.push(child.compliance);
                                             }
                                             avg.push(father.compliance);
-                                            let sum = avg.reduce((acc, x) => acc + x , 0);
+                                            let sum = avg.reduce((acc, x) => acc + x, 0);
                                             child.compliance = Math.round(sum / avg.length);
                                         } else if (child.compliance > father.compliance) {
                                             child.compliance = father.compliance;
