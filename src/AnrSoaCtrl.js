@@ -123,9 +123,14 @@
                     model[name] = 0;
             }
             if (name == 'soaScaleComment') {
-                model.soaScaleComment = getSoaScaleCommentByIndex(model[name]['scaleIndex']);
+                var soaScaleComment = getSoaScaleCommentByIndex(model[name]['scaleIndex']);
+                model.soaScaleComment = soaScaleComment.id;
             }
-            ClientSoaService.updateSoa(model.id, model, function() {
+
+            ClientSoaService.updateSoa(model.id, {[name]: model[name]}, function() {
+                if (soaScaleComment) {
+                    model.soaScaleComment = soaScaleComment;
+                }
                 promise.resolve(true);
             }, function() {
                 promise.reject(false);
