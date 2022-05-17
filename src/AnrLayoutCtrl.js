@@ -2106,6 +2106,7 @@
                     }
                 );
             }
+            $rootScope.$broadcast('soaScaleUpdated')
             return promise;
         };
 

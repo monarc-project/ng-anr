@@ -49,6 +49,10 @@
             $scope.updateSoaMeasures();
         });
 
+        $rootScope.$on('soaScaleUpdated', function() {
+            $scope.updateSoaMeasures();
+        });
+
         $scope.selectReferential = function(referentialId) {
             $scope.referential_uuid = referentialId;
             $scope.updateSoaMeasures();
@@ -60,8 +64,8 @@
                     "soa_measures[" + "'" + referentialId + "'" + "].query.filter",
                     "soa_measures[" + "'" + referentialId + "'" + "].query.order"
                 ],
-                function() {
-                    if ($scope.referential_uuid) {
+                function(newValues,oldValues) {
+                    if (!newValues.every((val, idx) => val === oldValues[idx]) && $scope.referential_uuid) {
                         $scope.updateSoaMeasures();
                     }
                 }
