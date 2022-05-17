@@ -118,8 +118,8 @@
                 } else
                     model[name] = 0;
             }
-            if (name == 'compliance') {
-                model.soaScaleComment = $scope.soaScale.comments[model.compliance].id;
+            if (name == 'soaScaleComment') {
+                model.soaScaleComment = getSoaScaleCommentByIndex(model[name]['scaleIndex']);
             }
             ClientSoaService.updateSoa(model.id, model, function() {
                 promise.resolve(true);
@@ -205,24 +205,23 @@
                                             }
                                         });
                                     }
-                                    if (importSoa.compliance && father.compliance !== null && !child.EX) {
-                                        if (child.compliance !== null && $scope.soaScale.comments[child.compliance].isHidden) {
-                                            child.compliance = 0;
+                                    if (importSoa.compliance && father.soaScaleComment !== null && !child.EX) {
+                                        if (child.soaScaleComment !== null && child.soaScaleComment.isHidden) {
+                                            child.soaScaleComment = getSoaScaleCommentByIndex(0);
                                         }
-                                        if ($scope.soaScale.comments[father.compliance].isHidden) {
-                                            father.compliance = 0;
+                                        if (father.soaScaleComment.isHidden) {
+                                            father.soaScaleComment = getSoaScaleCommentByIndex(0);
                                         }
                                         if (importSoa.calcul == 'average') {
                                             if (avg.length == 0) {
-                                                avg.push(child.compliance);
+                                                avg.push(child.soaScaleComment.scaleIndex);
                                             }
-                                            avg.push(father.compliance);
+                                            avg.push(father.soaScaleComment.scaleIndex);
                                             let sum = avg.reduce((acc, x) => acc + x, 0);
-                                            child.compliance = Math.round(sum / avg.length);
-                                        } else if (child.compliance > father.compliance) {
-                                            child.compliance = father.compliance;
+                                            child.soaScaleComment = getSoaScaleCommentByIndex(Math.round(sum / avg.length));
+                                        } else if (child.soaScaleComment.scaleIndex > father.soaScaleComment.scaleIndex) {
+                                            child.soaScaleComment = father.soaScaleComment;
                                         }
-                                        child.soaScaleComment = $scope.soaScale.comments[child.compliance].id;
                                     }
                                 });
                             });
@@ -299,12 +298,12 @@
                         finalArray[recLine] += ',' + "\"" + soas[soa].actions + "\"";
 
                     // compliance
-                    if (soas[soa].compliance == null || soas[soa].EX == 1 || $scope.soaScale.comments[soas[soa].compliance].isHidden)
+                    if (soas[soa].soaScaleComment == null || soas[soa].EX == 1 || soas[soa].soaScaleComment.isHidden)
                         finalArray[recLine] += ',' + "\"" + ' ' + "\"";
                     else {
                         finalArray[recLine] += ',' +
                             "\"" +
-                            $scope.soaScale.comments[soas[soa].compliance].comment +
+                            soas[soa].soaScaleComment.comment +
                             "\"";
                     }
                 }
@@ -319,6 +318,11 @@
             });
 
         };
+
+        function getSoaScaleCommentByIndex(index) {
+            return angular.copy($scope.soaScale.comments)
+                .find(comment => comment.scaleIndex == index);
+        }
     }
 
     function importSoaFromDialogCtrl($scope, $mdDialog, referentials, referential, anr) {
