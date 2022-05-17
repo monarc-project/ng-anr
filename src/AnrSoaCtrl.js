@@ -206,7 +206,7 @@
                                         });
                                     }
                                     if (importSoa.compliance && father.soaScaleComment !== null && !child.EX) {
-                                        if (child.soaScaleComment !== null && child.soaScaleComment.isHidden) {
+                                        if (child.soaScaleComment == null || child.soaScaleComment.isHidden) {
                                             child.soaScaleComment = getSoaScaleCommentByIndex(0);
                                         }
                                         if (father.soaScaleComment.isHidden) {
@@ -219,7 +219,7 @@
                                             avg.push(father.soaScaleComment.scaleIndex);
                                             let sum = avg.reduce((acc, x) => acc + x, 0);
                                             child.soaScaleComment = getSoaScaleCommentByIndex(Math.round(sum / avg.length));
-                                        } else if (child.soaScaleComment.scaleIndex > father.soaScaleComment.scaleIndex) {
+                                        } else if (child.soaScaleComment == null || child.soaScaleComment.scaleIndex > father.soaScaleComment.scaleIndex) {
                                             child.soaScaleComment = father.soaScaleComment;
                                         }
                                     }
