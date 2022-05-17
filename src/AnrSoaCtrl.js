@@ -127,7 +127,7 @@
                 model.soaScaleComment = soaScaleComment.id;
             }
 
-            ClientSoaService.updateSoa(model.id, {[name]: model[name]}, function() {
+            ClientSoaService.updateSoa(model.id, {[name] : model[name]}, function() {
                 if (soaScaleComment) {
                     model.soaScaleComment = soaScaleComment;
                 }
