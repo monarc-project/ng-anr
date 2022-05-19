@@ -5,7 +5,7 @@
                 <md-icon>language</md-icon>
                 <md-select ng-model="scales.language" ng-change="switchLanguage()">
                     <md-option ng-repeat="(index, lang) in languages" value="{{ index }}">
-                        <countryflag country="{{ languages[index].flag }}"></countryflag>
+                        <span class="fi fi-{{ languages[index].flag }}"></span>
                         {{ languages[index].name | translate }}
                     </md-option>
                 </md-select>
@@ -291,7 +291,7 @@
                 <md-icon>language</md-icon>
                 <md-select ng-model="opRisksScales.language" ng-change="switchOpRisksLanguage()">
                     <md-option ng-repeat="(index, lang) in languages" value="{{ index }}">
-                        <countryflag country="{{ languages[index].flag }}"></countryflag>
+                        <span class="fi fi-{{ languages[index].flag }}"></span>
                         {{ languages[index].name | translate }}
                     </md-option>
                 </md-select>
