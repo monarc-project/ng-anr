@@ -13,12 +13,12 @@
 
             <md-card md-theme="default"
                 class="md-card-crit"
-                ng-if="(!scalesCanChange || !model.anr.cacheModelIsScalesUpdatable) && OFFICE_MODE == 'FO'">
+                ng-if="(!scalesCanChange || !model.anr.cacheModelAreScalesUpdatable) && OFFICE_MODE == 'FO'">
                 <md-card-content>
-                    <p ng-if="model.anr.cacheModelIsScalesUpdatable" translate>
+                    <p ng-if="model.anr.cacheModelAreScalesUpdatable" translate>
                         Some of the risks of your analysis, your library, or your trends assessment have already been assessed. This being done, you may not edit the scales values.
                     </p>
-                    <p ng-if="!model.anr.cacheModelIsScalesUpdatable" translate>
+                    <p ng-if="!model.anr.cacheModelAreScalesUpdatable" translate>
                         The risk analysis model used does not allow you to change the scales values.
                     </p>
                 </md-card-content>
@@ -299,12 +299,12 @@
 
             <md-card md-theme="default"
                 class="md-card-crit"
-                ng-if="(!scalesCanChange || !model.anr.cacheModelIsScalesUpdatable) && OFFICE_MODE == 'FO'">
+                ng-if="(!scalesCanChange || !model.anr.cacheModelAreScalesUpdatable) && OFFICE_MODE == 'FO'">
                 <md-card-content>
-                    <p ng-if="model.anr.cacheModelIsScalesUpdatable" translate>
+                    <p ng-if="model.anr.cacheModelAreScalesUpdatable" translate>
                         Some of the risks of your analysis, your library, or your trends assessment have already been assessed. This being done, you may not edit the scales values.
                     </p>
-                    <p ng-if="!model.anr.cacheModelIsScalesUpdatable" translate>
+                    <p ng-if="!model.anr.cacheModelAreScalesUpdatable" translate>
                         The risk analysis model used does not allow you to change the scales values.
                     </p>
                 </md-card-content>

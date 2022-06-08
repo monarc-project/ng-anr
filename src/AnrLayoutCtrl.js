@@ -2046,7 +2046,7 @@
 
         $scope.updateScales = function () {
             AnrService.getScales($scope.model.anr.id).then(function (data) {
-                $scope.scalesCanChange = data.canChange && $scope.model.anr.cacheModelIsScalesUpdatable;
+                $scope.scalesCanChange = data.canChange && $scope.model.anr.cacheModelAreScalesUpdatable;
                 $scope.scaleThreat = ''; // Reset tooltip Prob. on table risks
                 $scope.scaleVul = ''; // Reset tooltip Qualif. on table risks
                 for (var i = 0; i < data.scales.length; ++i) {
