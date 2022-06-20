@@ -5,7 +5,7 @@
                 <md-icon>language</md-icon>
                 <md-select ng-model="scales.language" ng-change="switchLanguage()">
                     <md-option ng-repeat="(index, lang) in languages" value="{{ index }}">
-                        <countryflag country="{{ languages[index].flag }}"></countryflag>
+                        <span class="fi fi-{{ languages[index].flag }}"></span>
                         {{ languages[index].name | translate }}
                     </md-option>
                 </md-select>
@@ -91,21 +91,21 @@
                             <th class="title-impacts-table"
                                 ng-show="!type.isHidden || display.show_hidden_impacts"
                                 ng-repeat="type in scales_types"
-                                ng-class="{'big-border-right': type.type_id == 3}">
+                                ng-class="{'big-border-right': type.type == 'D'}">
                                 <span class="text-blue"
-                                    ng-if="type.type_id == 1 ||
-                                        type.type_id == 2 ||
-                                        type.type_id == 3">
+                                    ng-if="type.type == 'C'||
+                                        type.type == 'I' ||
+                                        type.type == 'D'">
                                         {{ type['label' + scales.language] }}
                                 </span>
                                 <div layout="row"
-                                    ng-if="type.type_id != 1 &&
-                                        type.type_id != 2 &&
-                                        type.type_id != 3"
+                                    ng-if="type.type != 'C' &&
+                                        type.type != 'I' &&
+                                        type.type != 'D'"
                                     edit-model="type">
                                     <p class="text-blue"
                                         edit-readonly="isAnrReadOnly"
-                                        edit-field="{{'label' + scales.language}}"
+                                        edit-field edit-ng-field="'label' + scales.language"
                                         edit-placeholder="{{ 'Click here to type...' | translate }}"
                                         edit-type="textarea">
                                     </p>
@@ -123,7 +123,7 @@
                         <tr ng-repeat="i in range(scales.impacts.min, scales.impacts.max)" edit-model="comms.impact[i]">
                         <th>{{ i }}</th>
                         <td class="preserve-newlines"
-                            ng-class="{'big-border-right': type.type_id == 3}"
+                            ng-class="{'big-border-right': type.type == 'D'}"
                             ng-show="!type.isHidden || display.show_hidden_impacts"
                             ng-repeat="type in scales_types"
                             edit-readonly="isAnrReadOnly"
@@ -291,7 +291,7 @@
                 <md-icon>language</md-icon>
                 <md-select ng-model="opRisksScales.language" ng-change="switchOpRisksLanguage()">
                     <md-option ng-repeat="(index, lang) in languages" value="{{ index }}">
-                        <countryflag country="{{ languages[index].flag }}"></countryflag>
+                        <span class="fi fi-{{ languages[index].flag }}"></span>
                         {{ languages[index].name | translate }}
                     </md-option>
                 </md-select>
