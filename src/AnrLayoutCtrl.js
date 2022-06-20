@@ -6,7 +6,7 @@
             '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'gettext', 'TableHelperService',
             'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
             '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService', 'ClientRecommandationService',
-            'ReferentialService', 'AmvService', 'RiskService', AnrLayoutCtrl
+            'ReferentialService', 'AmvService', 'RiskService', 'SoaScaleCommentService', AnrLayoutCtrl
         ]);
 
     /**
@@ -15,7 +15,7 @@
     function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, gettext, TableHelperService, ModelService,
                            ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
                            $transitions, DownloadService, $mdPanel, $injector, ConfigService, ClientRecommandationService,
-                           ReferentialService, AmvService, RiskService) {
+                           ReferentialService, AmvService, RiskService, SoaScaleCommentService) {
 
 
         if ($scope.OFFICE_MODE == 'FO') {
@@ -154,6 +154,7 @@
 
         $scope.updateModel = function (justCore, cb) {
             isModelLoading = true;
+            let defaultLanguageIndex = ConfigService.getDefaultLanguageIndex();
             if ($scope.OFFICE_MODE == 'BO') {
                 ModelService.getModel($stateParams.modelId).then(function (data) {
                     $scope.model = data;
@@ -161,10 +162,21 @@
                     $scope.isAnrReadOnly = false;
                     $scope.languages = ConfigService.getLanguages();
                     $scope.opRisksScales = {
-                      language : ConfigService.getDefaultLanguageIndex()
+                      language : defaultLanguageIndex
                     };
                     $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
-                    $scope.scales.language = ConfigService.getDefaultLanguageIndex();
+                    $scope.scales.language = defaultLanguageIndex;
+                    SoaScaleCommentService.getSoaScaleComments({
+                        anrId:$rootScope.anr_id,
+                        language:$scope.getLanguageCode(defaultLanguageIndex)
+                    }).then(function(data){
+                        $scope.soaScale = {
+                            levels : {max: data.data.filter(comment => !comment.isHidden).length},
+                            language : defaultLanguageIndex,
+                            comments : data.data
+                        };
+                    });
+
                     thresholdsWatchSetup = false;
                     $scope.thresholds = {
                         thresholds: {min: $scope.model.anr.seuil1, max: $scope.model.anr.seuil2},
@@ -190,6 +202,7 @@
             } else {
                 var ClientAnrService = $injector.get('ClientAnrService');
                 ClientAnrService.getAnr($stateParams.modelId).then(function (data) {
+                    let language = data.language;
                     $scope.model = {
                         id: null,
                         anr: data,
@@ -198,10 +211,20 @@
                     $scope.rolfBrut = { show : $scope.model.showRolfBrut == 1 ? true: false}
                     $scope.isAnrReadOnly = (data.rwd == 0);
                     $scope.languages = ConfigService.getLanguages();
-                    $scope.scales.language = data.language;
+                    $scope.scales.language = language;
                     $scope.opRisksScales = {
-                      language : data.language
+                      language : language
                     };
+                    SoaScaleCommentService.getSoaScaleComments({
+                        anrId:$rootScope.anr_id,
+                        language:$scope.getLanguageCode(defaultLanguageIndex)
+                    }).then(function(data){
+                        $scope.soaScale = {
+                            levels : {max: data.data.filter(comment => !comment.isHidden).length},
+                            language : language,
+                            comments : data.data
+                        };
+                    });
                     $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
                     $scope.$parent.$parent.clientCurrentAnr = data;
 
@@ -1807,8 +1830,8 @@
         }
 
         $scope.switchOpRisksLanguage = function(){
-          $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
-          $scope.updateOperationalRiskScales();
+            $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
+            $scope.updateOperationalRiskScales();
         };
 
         $scope.onOpRiskImpactScaleChanged = function (model, value) {
@@ -2042,6 +2065,49 @@
             }, function (reject) {
                 $scope.handleRejectionDialog(reject);
             });
+        };
+
+        $scope.soaScaleIsUpdated = true;
+
+        $scope.switchSoaScaleLanguage = function () {
+            $scope.updateSoaScale();
+        };
+
+        $scope.updateSoaScale = function () {
+            $scope.soaScaleIsUpdated = false;
+            SoaScaleCommentService.getSoaScaleComments({
+                anrId:$rootScope.anr_id,
+                language:$scope.getLanguageCode($scope.soaScale.language)
+            }).then(function(data){
+                $scope.soaScale.comments = data.data;
+                $scope.soaScaleIsUpdated = true;
+            });
+        }
+
+        $scope.onComplianceScaleChanged = function (model, value) {
+            let promise = $q.defer();
+            if (value == 'max') {
+                SoaScaleCommentService.patchSoaScaleComment(
+                    $rootScope.anr_id,
+                    {numberOfLevels:model[value]},
+                    function() {
+                        promise.resolve();
+                        $scope.updateSoaScale();
+                    }
+                );
+            }else {
+                let language = $scope.getLanguageCode($scope.soaScale.language);
+                SoaScaleCommentService.updateSoaScaleComment(
+                    model.id,
+                    {anrId: $rootScope.anr_id, language: language, [value]:model[value]},
+                    function() {
+                        promise.resolve();
+                        $scope.updateSoaScale();
+                    }
+                );
+            }
+            $rootScope.$broadcast('soaScaleUpdated')
+            return promise;
         };
 
         $scope.updateScales = function () {

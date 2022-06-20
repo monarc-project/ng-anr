@@ -78,7 +78,7 @@
                 <table editable callback="onImpactCommChanged" class="md-html-table big-border-all">
                     <thead class="big-border-bottom">
                         <tr>
-                            <th rowspan="2"></th>
+                            <th rowspan="2" style="width:1%;"></th>
                             <th colspan="3" class="text-blue" translate>
                                 Impacts
                             </th>
@@ -521,6 +521,64 @@
                     </div>
                 </div>
             </form>
+        </md-tab>
+        <md-tab label="{{ 'Compliance' | translate }}">
+            <md-input-container ng-if="OFFICE_MODE == 'BO'">
+                <md-icon>language</md-icon>
+                <md-select ng-model="soaScale.language" ng-change="switchSoaScaleLanguage()">
+                    <md-option ng-repeat="(index, lang) in languages" value="{{ index }}">
+                        <countryflag country="{{ languages[index].flag }}"></countryflag>
+                        {{ languages[index].name | translate }}
+                    </md-option>
+                </md-select>
+            </md-input-container>
+
+            <div editable callback="onComplianceScaleChanged" layout="row">
+                <h4 edit-model="soaScale.levels">
+                    <span translate>Compliance scale:</span>&nbsp;
+                    <span class="text-blue"
+                        edit-readonly="isAnrReadOnly"
+                        edit-min="1"
+                        edit-max="20"
+                        edit-field="max"
+                        edit-type="number">
+                    </span>&nbsp;
+                    <span translate>Levels</span>
+                </h4>
+            </div>
+
+            <table editable callback="onComplianceScaleChanged" class="md-html-table" flex="50" >
+                <thead>
+                    <tr>
+                        <th style="width:1%;"></th>
+                        <th translate>Level of compliance</th>
+                        <th translate>Colour</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr class="soa-scale-comments"
+                        ng-repeat="scaleComment in soaScale.comments | filter:{ isHidden : false }"
+                        edit-model="scaleComment"
+                        ng-if="soaScaleIsUpdated">
+                        <th>{{scaleComment.scaleIndex}}
+                        </th>
+                        <td class="preserve-newlines"
+                            edit-readonly="isAnrReadOnly"
+                            edit-field="comment"
+                            edit-type="textarea"
+                            edit-placeholder="{{ 'Click here to type...' | translate }}">
+                        </td>
+                        <td>
+                            <input class="center-block"
+                                type="color"
+                                ng-model="scaleComment.colour"
+                                ng-model-options="{ updateOn: 'blur', debounce:0 }"
+                                ng-change="onComplianceScaleChanged(scaleComment,'colour')">
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
         </md-tab>
     </md-tabs>
 </div>

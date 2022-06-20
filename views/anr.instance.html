@@ -33,6 +33,11 @@
                             </md-button>
                         </md-menu-item>
                         <md-menu-item>
+                            <md-button class="md-primary" ng-click="contextInstance($event)">
+                                <md-icon class="md-light-theme material-icons">info</md-icon><span class="black">{{ 'Asset context' | translate }}</span>
+                            </md-button>
+                        </md-menu-item>
+                        <md-menu-item>
                             <md-button class="md-primary" ng-click="showObjectInLibrary(instance.object.uuid);">
                                 <md-icon class="md-light-theme material-icons">folder_open</md-icon><span class="black">{{ 'See asset in the library' | translate }}</span>
                             </md-button>
