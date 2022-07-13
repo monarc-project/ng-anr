@@ -217,7 +217,7 @@
                     };
                     SoaScaleCommentService.getSoaScaleComments({
                         anrId:$rootScope.anr_id,
-                        language:$scope.getLanguageCode(defaultLanguageIndex)
+                        language:$scope.getLanguageCode(language)
                     }).then(function(data){
                         $scope.soaScale = {
                             levels : {max: data.data.filter(comment => !comment.isHidden).length},
