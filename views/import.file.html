@@ -81,7 +81,8 @@
                       <th ng-if="items[tab].mode" colspan="1" class="big-border-left"><p>mode</p></th>
                       <th ng-if="items[tab].theme && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'theme' + language}}</p></th>
                       <th ng-if="items[tab].theme && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>theme</p></th>
-                      <th ng-if="items[tab].category" colspan="1" class="big-border-left"><p>category</p></th>
+                      <th ng-if="items[tab].category && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'category' + language}}</p></th>
+                      <th ng-if="items[tab].category && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>category</p></th>
                       <th ng-if="items[tab].tags" colspan="1" class="big-border-left"><p>tags</p></th>
                       <th ng-if="items[tab].importance" colspan="1" class="big-border-left"><p>importance</p></th>
                       <th ng-if="items[tab].control" colspan="1" class="big-border-left"><p>control</p></th>
@@ -126,7 +127,8 @@
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].importance"><span class="anr-importance" ng-repeat="i in range(1, input.importance)">&bull;</span></td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].theme && OFFICE_MODE == 'FO'"><span ng-class="{'md-mandatory-field': input.alert}">{{input.theme}}</span></td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].theme && OFFICE_MODE == 'BO'">{{input['theme label' + language]}}</td>
-                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].category"><span ng-class="{'md-mandatory-field': input.alert}">{{input.category}}</span></td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].category && OFFICE_MODE == 'FO'"><span ng-class="{'md-mandatory-field': input.alert}">{{input.category}}</span></td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].category && OFFICE_MODE == 'BO'">{{input['category label' + language]}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].tags"><span ng-class="{'md-mandatory-field': input.alert}">{{input.tags}}</span></td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].control">{{input.control}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].match">{{input.match}}</td>
@@ -145,10 +147,10 @@
                                                            OFFICE_MODE == 'FO' ? item.field : item.fieldBis}}</b>
                             <span>[<i>{{item.type}}</i>]</span>
                             <span class="md-mandatory-field" ng-if="item.required">*</span>
-                            <p ng-if="!item.field.includes('theme') && item.field != 'category' && item.field != 'tags'"><span translate>Example:</span><i class="preserve-newlines">{{item.example}}</i></p>
-                            <div ng-if="item.field.includes('theme') || item.field == 'category' || item.field == 'tags'">
+                            <p ng-if="!item.field.includes('theme') && !item.field.includes('category') && item.field != 'tags'"><span translate>Example:</span><i class="preserve-newlines">{{item.example}}</i></p>
+                            <div ng-if="item.field.includes('theme') || item.field.includes('category') || item.field == 'tags'">
                               <p ng-if="item.field.includes('theme')" translate>List of themes:</p>
-                              <p ng-if="item.field == 'category'" translate>List of categories:</p>
+                              <p ng-if="item.field.includes('category')" translate>List of categories:</p>
                               <p ng-if="item.field == 'tags'">
                                 <span translate>Multiple tags must be separated by a slash</span> (/)<br>
                                 <span translate>Ex: Tag1/Tag2/Tag3</span><br><br>
