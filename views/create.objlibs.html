@@ -23,6 +23,11 @@
                     </md-button>
                     <span flex></span>
                 </md-card>
+                <md-card ng-if="!objlib.uuid && OFFICE_MODE == 'BO'" layout="row" layout-align="center center">
+                  <md-button class="md-primary" ng-click="importFile($event,'Assets library')"  ng-controller="BackofficeKbInfoCtrl">
+                      <md-icon>play_for_work</md-icon><span>&nbsp;{{ 'Import from file' | translate }}</span>
+                  </md-button>
+                </md-card>
                 <md-subheader>{{ 'Labels and descriptions' | translate }}</md-subheader>
 
                 <md-input-container class="md-block"  ng-hide="OFFICE_MODE == 'FO'" flex>
@@ -73,12 +78,6 @@
                         <md-option value="1">{{ 'Specific' | translate }}</md-option>
                     </md-select>
                 </md-input-container>
-
-                <!--<md-input-container class="md-block" layout="row" ng-if="mode=='anr'" flex>
-                    <label translate>Maximum unavailability (days)</label>
-                    <md-icon>power_settings_new</md-icon>
-                    <input ng-model="objlib.disponibility">
-                </md-input-container>-->
 
                 <md-input-container class="md-block" layout="row" ng-if="mode=='anr_inst'" flex>
                     <label translate>Confidentiality</label>
@@ -131,12 +130,12 @@
                                 md-search-text="assetSearchText"
                                 md-selected-item-change="selectedAssetItemChange(item)"
                                 md-items="item in queryAssetSearch(assetSearchText)"
-                                md-item-text="item.code + ' - ' + _langField(item,'label')"
+                                md-item-text="item.code + ' - ' + OFFICE_MODE == 'FO' ? _langField(item,'label') : item['label' + language]"
                                 md-min-length="0"
                                 md-input-name="asset"
                                 md-floating-label="{{ 'Asset type' | translate }}">
                             <md-item-template>
-                                <span md-highlight-text="assetSearchText" md-highlight-flags="^i">{{ item.code }} - {{ _langField(item,'label') }}</span>
+                                <span md-highlight-text="assetSearchText" md-highlight-flags="^i">{{ item.code }} - {{ OFFICE_MODE == 'FO' ? _langField(item,'label') : item['label' + language] }}</span>
                             </md-item-template>
 
                             <md-not-found>
@@ -157,7 +156,7 @@
                         <label translate>Category</label>
                         <md-select required ng-model="objlib.category">
                             <md-option ng-if="objlib.category == 'null' && objlib.uuid > 0" ng-value="null">{{ 'Not set' | translate }}</md-option>
-                            <md-option ng-repeat="cat in categories" ng-value="cat.id">{{ _langField(cat,'label') }}</md-option>
+                            <md-option ng-repeat="cat in categories" ng-value="cat.id">{{ OFFICE_MODE == 'FO' ? _langField(cat,'label') : cat['label' + language] }}</md-option>
                         </md-select>
                     </md-input-container>
                     <md-button class="md-icon-button md-primary" ng-if="objlib.category" ng-click="editCategory($event, objlib.category)"><md-icon>edit</md-icon></md-button>
@@ -174,13 +173,13 @@
                                 md-search-text="tagSearchText"
                                 md-selected-item-change="selectedTagItemChange(item)"
                                 md-items="item in queryTagSearch(tagSearchText)"
-                                md-item-text="_langField(item,'label')"
+                                md-item-text="OFFICE_MODE == 'FO' ? _langField(item,'label') : item['label' + language]"
                                 md-min-length="0"
                                 md-input-name="tag"
 				                        md-clear-button="true"
                                 md-floating-label="{{ 'Operational risk Tag' | translate }}">
                             <md-item-template>
-                                <span md-highlight-text="tagSearchText" md-highlight-flags="^i">{{ _langField(item,'label') }}</span>
+                                <span md-highlight-text="tagSearchText" md-highlight-flags="^i">{{ OFFICE_MODE == 'FO' ? _langField(item,'label') : item['label' + language] }}</span>
                             </md-item-template>
 
                             <md-not-found>

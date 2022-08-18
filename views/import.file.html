@@ -62,38 +62,42 @@
                       <th ng-if="items[tab].threat_c" colspan="1" class="big-border-left"><p>c</p></th>
                       <th ng-if="items[tab].threat_i" colspan="1" class="big-border-left"><p>i</p></th>
                       <th ng-if="items[tab].threat_a" colspan="1" class="big-border-left"><p>a</p></th>
-                      <th ng-if="items[tab].threat_theme && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>theme</p></th>
-                      <th ng-if="items[tab].threat_theme && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'theme' + language}}</p></th>
+                      <th ng-if="items[tab].theme && OFFICE_MODE == 'FO' && tab=='Information risks'" colspan="1" class="big-border-left"><p>theme</p></th>
+                      <th ng-if="items[tab].theme && OFFICE_MODE == 'BO' && tab=='Information risks'" colspan="1" class="big-border-left"><p>{{'theme' + language}}</p></th>
                       <th ng-if="items[tab].vulnerability_code" colspan="1" class="big-border-left"><p>code</p></th>
                       <th ng-if="items[tab].vulnerability_label && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>label</p></th>
                       <th ng-if="items[tab].vulnerability_label && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'label' + language}}</p></th>
                       <th ng-if="items[tab].vulnerability_description && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>description</p></th>
                       <th ng-if="items[tab].vulnerability_description && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'description' + language}}</p></th>
                       <th ng-if="items[tab].code" colspan="1" class="big-border-left"><p>code</p></th>
+                      <th ng-if="items[tab].name && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'name' + language}}</p></th>
                       <th ng-if="items[tab].label && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'label' + language}}</p></th>
                       <th ng-if="items[tab].label && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>label</p></th>
                       <th ng-if="items[tab].description && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'description' + language}}</p></th>
                       <th ng-if="items[tab].description && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>description</p></th>
+                      <th ng-if="items[tab].asset_type && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>asset type code</p></th>
                       <th ng-if="items[tab].type" colspan="1" class="big-border-left"><p>type</p></th>
                       <th ng-if="items[tab].c" colspan="1" class="big-border-left"><p>c</p></th>
                       <th ng-if="items[tab].i" colspan="1" class="big-border-left"><p>i</p></th>
                       <th ng-if="items[tab].a" colspan="1" class="big-border-left"><p>a</p></th>
+                      <th ng-if="items[tab].scope" colspan="1" class="big-border-left"><p>scope</p></th>
                       <th ng-if="items[tab].mode" colspan="1" class="big-border-left"><p>mode</p></th>
-                      <th ng-if="items[tab].theme && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'theme' + language}}</p></th>
-                      <th ng-if="items[tab].theme && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>theme</p></th>
-                      <th ng-if="items[tab].category && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'category' + language}}</p></th>
+                      <th ng-if="items[tab].theme && OFFICE_MODE == 'BO' && tab=='Threats'" colspan="1" class="big-border-left"><p>{{'theme' + language}}</p></th>
+                      <th ng-if="items[tab].theme && OFFICE_MODE == 'FO' && tab=='Threats'" colspan="1" class="big-border-left"><p>theme</p></th>
+                      <th ng-if="items[tab].rolfTag" colspan="1" class="big-border-left"><p>operational risk tag</p></th>
                       <th ng-if="items[tab].category && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>category</p></th>
-                      <th ng-if="items[tab].tags" colspan="1" class="big-border-left"><p>tags</p></th>
+                      <th ng-if="items[tab].category && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'category' + language}}</p></th>
+                      <th ng-if="items[tab].tag && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>tag</p></th>
+                      <th ng-if="items[tab].tag && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'tag' + language}}</p></th>
                       <th ng-if="items[tab].importance" colspan="1" class="big-border-left"><p>importance</p></th>
                       <th ng-if="items[tab].control" colspan="1" class="big-border-left"><p>control</p></th>
                       <th ng-if="items[tab].match" colspan="1" class="big-border-left"><p>match</p></th>
                       <th ng-if="importData.length > 0 && check" colspan="1" class="big-border-left"><p>error</p></th>
-
                     </tr>
                   </thead>
 
                   <tbody>
-                  <tr ng-repeat="input in importData">
+                  <tr ng-repeat="input in importData" ng-if="!isProcessing">
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].asset_code">{{input['asset code']}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].asset_label && OFFICE_MODE == 'FO'">{{input['asset label']}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].asset_label && OFFICE_MODE == 'BO'">{{input['asset label' + language]}}</td>
@@ -107,29 +111,35 @@
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].threat_c">{{input['threat c']}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].threat_i">{{input['threat i']}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].threat_a">{{input['threat a']}}</td>
-                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].threat_theme && OFFICE_MODE == 'FO'">{{input['threat theme']}}</td>
-                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].threat_theme && OFFICE_MODE == 'BO'">{{input['threat theme label' + language]}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].theme && OFFICE_MODE == 'FO' && tab=='Information risks'"><span ng-class="{'md-mandatory-field': input.alert}">{{input['threat theme']}}</span></td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].theme && OFFICE_MODE == 'BO' && tab=='Information risks'"><span ng-class="{'md-mandatory-field': input.alert}">{{input['threat theme label' + language]}}</span></td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].vulnerability_code">{{input['vulnerability code']}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].vulnerability_label && OFFICE_MODE == 'FO'">{{input['vulnerability label']}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].vulnerability_label && OFFICE_MODE == 'BO'">{{input['vulnerability label' + language]}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].vulnerability_description && OFFICE_MODE == 'FO'">{{input['vulnerability description']}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].vulnerability_description && OFFICE_MODE == 'BO'">{{input['vulnerability description' + language]}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].code">{{input.code}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].name && OFFICE_MODE == 'BO'">{{input['name' + language]}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].name && OFFICE_MODE == 'FO'">{{input.name}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].label && OFFICE_MODE == 'BO'">{{input['label' + language]}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].label && OFFICE_MODE == 'FO'">{{input.label}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].description && OFFICE_MODE == 'BO'">{{input['description' + language]}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].description && OFFICE_MODE == 'FO'">{{input.description}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].asset_type">{{input['asset type code']}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].type">{{input.type}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].c">{{input.c}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].i">{{input.i}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].a">{{input.a}}</td>
-                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].mode"><span ng-class="{'md-mandatory-field': input.alert}">{{input.mode}}</span></td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].scope">{{input.scope}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].mode">{{input.mode}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].importance"><span class="anr-importance" ng-repeat="i in range(1, input.importance)">&bull;</span></td>
-                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].theme && OFFICE_MODE == 'FO'"><span ng-class="{'md-mandatory-field': input.alert}">{{input.theme}}</span></td>
-                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].theme && OFFICE_MODE == 'BO'">{{input['theme label' + language]}}</td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].theme && OFFICE_MODE == 'FO' && tab=='Threats'"><span ng-class="{'md-mandatory-field': input.alert}">{{input.theme}}</span></td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].theme && OFFICE_MODE == 'BO' && tab=='Threats'"><span ng-class="{'md-mandatory-field': input.alert}">{{input['theme label' + language]}}</span></td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].rolfTag">{{input['operational risk tag']}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].category && OFFICE_MODE == 'FO'"><span ng-class="{'md-mandatory-field': input.alert}">{{input.category}}</span></td>
-                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].category && OFFICE_MODE == 'BO'">{{input['category label' + language]}}</td>
-                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].tags"><span ng-class="{'md-mandatory-field': input.alert}">{{input.tags}}</span></td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].category && OFFICE_MODE == 'BO'"><span ng-class="{'md-mandatory-field': input.alert}">{{input['category label' + language]}}</span></td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].tag && OFFICE_MODE == 'FO'"><span ng-class="{'md-mandatory-field': input.alert}">{{input.tag}}</span></td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].tag && OFFICE_MODE == 'BO'"><span ng-class="{'md-mandatory-field': input.alert}">{{input['tag label' + language]}}</span></td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].control">{{input.control}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].match">{{input.match}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="importData.length > 0 && check" class="preserve-newlines">{{input.error}}</td>
@@ -147,11 +157,16 @@
                                                            OFFICE_MODE == 'FO' ? item.field : item.fieldBis}}</b>
                             <span>[<i>{{item.type}}</i>]</span>
                             <span class="md-mandatory-field" ng-if="item.required">*</span>
-                            <p ng-if="!item.field.includes('theme') && !item.field.includes('category') && item.field != 'tags'"><span translate>Example:</span><i class="preserve-newlines">{{item.example}}</i></p>
-                            <div ng-if="item.field.includes('theme') || item.field.includes('category') || item.field == 'tags'">
+                            <p ng-if="!item.field.includes('theme') && !item.field.includes('category') && !item.field.includes('tag')"><span translate>Example:</span><i class="preserve-newlines">{{item.example}}</i></p>
+                            <div ng-if="item.field.includes('theme') || item.field.includes('category') || item.field.includes('tag')">
                               <p ng-if="item.field.includes('theme')" translate>List of themes:</p>
-                              <p ng-if="item.field.includes('category')" translate>List of categories:</p>
-                              <p ng-if="item.field == 'tags'">
+                              <p ng-if="item.field.includes('category') && tab!=='Assets library'" translate>List of categories:</p>
+                              <p ng-if="item.field.includes('category') && tab=='Assets library'">
+                                <span translate>Multiple categories must be separated by a "double greater than"</span> (>>)<br>
+                                <span translate>Ex: Category1/ Category2/ Category3</span><br><br>
+                                <span translate>List of categories:</span>
+                              </p>
+                              <p ng-if="item.field.includes('tag')">
                                 <span translate>Multiple tags must be separated by a slash</span> (/)<br>
                                 <span translate>Ex: Tag1/Tag2/Tag3</span><br><br>
                                 <span translate>List of tags:</span>
