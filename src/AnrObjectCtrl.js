@@ -418,7 +418,7 @@
             })
                 .then(function (objlib) {
                     if (objlib) {
-                        objlib.father = $scope.object.uuid;
+                        objlib.parent = $scope.object.uuid;
 
                         ObjlibService.createObjlibNode(objlib,
                             function () {

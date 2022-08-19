@@ -3764,9 +3764,7 @@
             });
         };
 
-        ThreatService.getThemes().then(function (data) {
-           $scope.listThemes = data['themes'];
-        });
+        $scope.listThemes = [];
 
         if (amv != undefined && amv != null) {
             $scope.amv = amv;
