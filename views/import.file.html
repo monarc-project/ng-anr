@@ -166,9 +166,13 @@
                                 <span translate>Ex: Category1/ Category2/ Category3</span><br><br>
                                 <span translate>List of categories:</span>
                               </p>
-                              <p ng-if="item.field.includes('tag')">
+                              <p ng-if="item.field.includes('tag') && tab=='Operational risks'">
                                 <span translate>Multiple tags must be separated by a slash</span> (/)<br>
                                 <span translate>Ex: Tag1/Tag2/Tag3</span><br><br>
+                                <span translate>List of tags:</span>
+                              </p>
+                              <p ng-if="item.field.includes('tag') && tab=='Assets library'">
+                                <span translate>Only one tag to link</span><br>
                                 <span translate>List of tags:</span>
                               </p>
                               <p class="md-theme-list" ng-repeat="externalItem in actualExternalItems">{{externalItem['label' + language]}}</p>
