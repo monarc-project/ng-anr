@@ -381,7 +381,7 @@
         };
 
         $scope.cloneObject = function (ev) {
-            var url = 'api/objects-duplication';
+            var url = 'api/anr/' + $scope.model.anr.id + '/objects-duplication';
             if ($scope.OFFICE_MODE == 'FO') {
                 url = 'api/client-anr/' + $scope.model.anr.id + '/objects-duplication';
             }
