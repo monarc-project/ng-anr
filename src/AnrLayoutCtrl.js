@@ -3084,13 +3084,12 @@
           }
           await buildItemRecurse(child.child, parentPathLabels).then(data => {
             let child_output = data;
-            q.resolve(output.concat(child_output));
+            output = output.concat(data)
           });
-
-        } else {
-          q.resolve(output);
         }
       }
+      q.resolve(output);
+
       return q.promise;
     };
 
