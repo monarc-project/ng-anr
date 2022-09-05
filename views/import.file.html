@@ -87,7 +87,7 @@
                       <th ng-if="items[tab].rolfTag" colspan="1" class="big-border-left"><p>operational risk tag</p></th>
                       <th ng-if="items[tab].category && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>category</p></th>
                       <th ng-if="items[tab].category && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'category' + language}}</p></th>
-                      <th ng-if="items[tab].tag && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>tag</p></th>
+                      <th ng-if="items[tab].tag && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>tags</p></th>
                       <th ng-if="items[tab].tag && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'tag' + language}}</p></th>
                       <th ng-if="items[tab].importance" colspan="1" class="big-border-left"><p>importance</p></th>
                       <th ng-if="items[tab].control" colspan="1" class="big-border-left"><p>control</p></th>
@@ -138,7 +138,7 @@
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].rolfTag">{{input['operational risk tag']}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].category && OFFICE_MODE == 'FO'"><span ng-class="{'md-mandatory-field': input.alert}">{{input.category}}</span></td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].category && OFFICE_MODE == 'BO'"><span ng-class="{'md-mandatory-field': input.alert}">{{input['category label' + language]}}</span></td>
-                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].tag && OFFICE_MODE == 'FO'"><span ng-class="{'md-mandatory-field': input.alert}">{{input.tag}}</span></td>
+                    <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].tag && OFFICE_MODE == 'FO'"><span ng-class="{'md-mandatory-field': input.alert}">{{input.tags}}</span></td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].tag && OFFICE_MODE == 'BO'"><span ng-class="{'md-mandatory-field': input.alert}">{{input['tag label' + language]}}</span></td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].control">{{input.control}}</td>
                     <td ng-class="{'md-mandatory-field': input.error}" ng-if="items[tab].match">{{input.match}}</td>
