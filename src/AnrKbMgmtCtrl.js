@@ -5232,7 +5232,7 @@
 		};
 
 		$scope.uploadFile = async function() {
-            let filedata = angular.copy($scope.importData);
+			let filedata = angular.copy($scope.importData);
 			var itemFields = ['uuid', 'label' + $scope.language, 'description' + $scope.language];
 
 			switch (tab) {
@@ -5289,16 +5289,16 @@
 				}
 
 				if (tab == 'Information risks') {
-                    let theme = null;
-                    if (row[extItemField]) {
-                        if (inExternalItemsFound(row[extItemField])) {
-                            theme = inExternalItemsFound(row[extItemField]);
-                        } else {
-                            await createTheme(row[extItemField]).then(function(id) {
-                                theme = id;
-                            });
-                        }
-                    }
+					let theme = null;
+					if (row[extItemField]) {
+						if (inExternalItemsFound(row[extItemField])) {
+							theme = inExternalItemsFound(row[extItemField]);
+						} else {
+							await createTheme(row[extItemField]).then(function(id) {
+								theme = id;
+							});
+						}
+					}
 
 					filedata[i] = {
 						asset: {
@@ -5316,7 +5316,7 @@
 							c: (!row['threat c'] || row['threat c'] == 0 || row['threat c'].toLowerCase() == 'false' ? false : true),
 							i: (!row['threat i'] || row['threat i'] == 0 || row['threat i'].toLowerCase() == 'false' ? false : true),
 							a: (!row['threat a'] || row['threat a'] == 0 || row['threat a'].toLowerCase() == 'false' ? false : true),
-                            theme: theme
+							theme: theme
 						},
 						vulnerability: {
 							uuid: row['vulnerability uuid'],
