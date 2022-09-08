@@ -77,7 +77,7 @@
 		.controller('AnrKbMgmtCtrl', [
 			'$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
 			'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'ClientSoaService',
-			'TagService', 'RiskService', 'SOACategoryService', 'ReferentialService', 'MeasureMeasureService',
+			'TagService', 'RiskService', 'ObjlibService', 'SOACategoryService', 'ReferentialService', 'MeasureMeasureService',
 			'ClientRecommandationService', 'DownloadService', '$state', '$timeout', '$rootScope', AnrKbMgmtCtrl
 		])
 	/**
@@ -85,7 +85,7 @@
 	 */
 	function AnrKbMgmtCtrl($scope, $stateParams, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService,
 		AssetService, ThreatService, VulnService, AmvService, MeasureService, ClientSoaService, TagService,
-		RiskService, SOACategoryService, ReferentialService, MeasureMeasureService, ClientRecommandationService,
+		RiskService, ObjlibService, SOACategoryService, ReferentialService, MeasureMeasureService, ClientRecommandationService,
 		DownloadService, $state, $timeout, $rootScope) {
 		$scope.gettext = gettextCatalog.getString;
 		TableHelperService.resetBookmarks();
@@ -2862,7 +2862,7 @@
 			$mdDialog.show({
 					controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService',
 						'AmvService', 'ClientRecommandationService', 'SOACategoryService', 'TagService', 'RiskService',
-						'MeasureMeasureService', 'gettextCatalog', '$q', 'tab', 'categories',
+						'MeasureMeasureService', 'ObjlibService', 'gettextCatalog', '$q', 'tab', 'categories',
 						'libraryCategoriesPath', 'referential', 'tags', 'recommandationSet', ImportFileDialogCtrl
 					],
 					templateUrl: 'views/anr/import.file.html',
@@ -2941,6 +2941,14 @@
 							ClientRecommandationService.createRecommandationMass(importData, function(result) {
 								$scope.$parent.updateRecommandations();
 								successCreateObject(result);
+							});
+							break;
+						case 'Assets library':
+							ObjlibService.createObjlib(importData, function(result) {
+								if ($rootScope.hookUpdateObjlib) {
+									$rootScope.hookUpdateObjlib(true);
+								}
+								successCreateObject(result)
 							});
 							break;
 						default:
@@ -4635,7 +4643,7 @@
 
 	function ImportFileDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService, MeasureService,
 		AmvService, ClientRecommandationService, SOACategoryService, TagService, RiskService, MeasureMeasureService,
-		gettextCatalog, $q, tab, categories, libraryCategoriesPath, referential, tags, recommandationSet) {
+		ObjlibService, gettextCatalog, $q, tab, categories, libraryCategoriesPath, referential, tags, recommandationSet) {
 		$scope.tab = tab;
 		$scope.guideVisible = false;
 		$scope.language = $scope.getAnrLanguage();
@@ -5008,7 +5016,45 @@
 					'type': 'integer',
 					'example': '1, 2 ' + gettextCatalog.getString('or') + ' 3'
 				}
-			}
+			},
+			'Assets library': {
+				'name': {
+					'field': 'name',
+					'required': true,
+					'type': 'text',
+					'example': 'C16, 123, CAZ, C-12'
+				},
+				'label': {
+					'field': 'label',
+					'required': true,
+					'type': 'text',
+					'example': gettextCatalog.getString('No IT charter specifying the rules of use')
+				},
+				'asset_type': {
+					'field': 'asset type code',
+					'required': true,
+					'type': 'text',
+					'example': 'Asset type code must exist in the Knowledge Base'
+				},
+				'scope': {
+					'field': 'scope',
+					'required': true,
+					'type': '1,2',
+					'example': '\n1: ' + gettextCatalog.getString('local') + '\n2: ' + gettextCatalog.getString('global')
+				},
+				'rolfTag': {
+					'field': 'operational risk tag',
+					'required': false,
+					'type': 'text',
+					'example': 'Only one operational risk tag can be linked and must exist in the Knowledge Base'
+				},
+				'category': {
+					'field': 'category',
+					'required': true,
+					'type': 'text',
+					'example': $scope.actualExternalItems
+				},
+			},
 		};
 
 		$scope.parseFile = function(fileContent) {
@@ -5096,11 +5142,13 @@
 							row.isPrimaryAsset = assetType.type == 1 ? true : false;
 						}
 
-						if (row['operational risk tag'] && row.isPrimaryAsset && !allTags.map(tag => tag.code.toLowerCase()).includes(row['operational risk tag'].toLowerCase().trim())) {
-							row.error += gettextCatalog.getString('the operational risk tag does not exist. Create it before import') + "\n";;
-							$scope.check = true;
-						} else if (row['operational risk tag']) {
-							row.rolfTag = allTags.find(tag => tag.code.toLowerCase() === row['operational risk tag'].toLowerCase().trim()).id
+						if (row['operational risk tag'] && row.isPrimaryAsset) {
+							if (!allTags.map(tag => tag.code.toLowerCase()).includes(row['operational risk tag'].toLowerCase().trim())) {
+								row.error += gettextCatalog.getString('the operational risk tag does not exist. Create it before import') + "\n";;
+								$scope.check = true;
+							} else if (row['operational risk tag']) {
+								row.rolfTag = allTags.find(tag => tag.code.toLowerCase() === row['operational risk tag'].toLowerCase().trim()).id
+							}
 						}
 
 						if (row[extItemField]) {
@@ -5113,14 +5161,12 @@
 							let libraryCategories = [];
 							parentIdsPaths = [];
 
-							for (let i = 1; i <= 4; i++) {
-								let [categoryFound, parentIds] = findExternalObjectsCategory(row[extItemField.slice(0, -1) + i].split(">>"), allTreeViewCategories);
-								libraryCategories[i] = categoryFound
-								row.parentIdsPath = parentIds;
-							}
-							row.categoriesToCreate = libraryCategories.every(lc => !lc);
+							let [categoryFound, parentIds] = findExternalObjectsCategory(row[extItemField].split(">>"), allTreeViewCategories);
+							row.parentIdsPath = parentIds;
 
-							if (libraryCategories.every(lc => !lc) && !libraryCategoryPaths.includes(path)) {
+							row.categoriesToCreate = (!categoryFound ? true : false);
+
+							if (!categoryFound && !libraryCategoryPaths.includes(path)) {
 								libraryCategoryPaths.push(path);
 								extItemToCreate.push(row[extItemField]);
 								row.alert = $scope.check ? false : true;
@@ -5232,7 +5278,7 @@
 
 		$scope.uploadFile = async function() {
 			let filedata = angular.copy($scope.importData);
-			var itemFields = ['uuid', 'label' + $scope.language, 'description' + $scope.language];
+			var itemFields = ['uuid', 'label' + $scope.language, 'description' + $scope.language, 'name' + $scope.language];
 
 			switch (tab) {
 				case 'Controls':
@@ -5250,8 +5296,6 @@
 			for (var index in $scope.items[tab]) {
 				itemFields.push($scope.items[tab][index]['field']);
 			}
-
-
 
 			for await (var [i, row] of filedata.entries()) {
 				if (tab == 'Threats') {
@@ -5326,6 +5370,45 @@
 					}
 				}
 
+				if (tab == 'Assets library') {
+					libraryCategoryPaths = [];
+					let libraryCategories = row[extItemField].toString().split(">>");
+
+					for await (let [index, libraryCategory] of libraryCategories.entries()) {
+						if (row.categoriesToCreate && row.parentIdsPath.length - index == 0) {
+							let libraryCategoryFound = allLibraryCategories.find(category => {
+								let parent = index == 0 ? null : row.parentIdsPath[index - 1];
+								return category['label' + $scope.language].toLowerCase().trim() == libraryCategory.toLowerCase().trim() &&
+									category.parent == parent;
+							});
+
+							if (!libraryCategoryFound) {
+								let categoryToCreate = {
+									parent: index == 0 ? null : row.parentIdsPath[index - 1],
+									implicitPosition: 2,
+									position: null,
+									['label' + $scope.language]: libraryCategory.trim(),
+								};
+								await createLibraryCategory(categoryToCreate).then(function(id) {
+									row.parentIdsPath.push(id);
+								});
+							} else {
+								row.parentIdsPath.push(libraryCategoryFound.id);
+							}
+						}
+					}
+
+					filedata[i] = {
+						asset: row.asset,
+						category: row.parentIdsPath[row.parentIdsPath.length - 1],
+						implicitPosition: 2,
+						['label' + $scope.language]: row.label ? row.label.trim() : null,
+						['name' + $scope.language]: row.name ? row.name.trim() : null,
+						rolfTag: row.rolfTag,
+						scope: row.isPrimaryAsset ? 1 : row.scope,
+					}
+				}
+
 				if (tab == 'Recommendations') {
 					row.recommandationSet = recommandationSet.uuid;
 					row.anr = recommandationSet.anr.id;
@@ -5388,6 +5471,18 @@
 			$mdDialog.cancel();
 		};
 
+		function getFlatLibCategories(categories) {
+			return categories.reduce((acc, category) => {
+				if (category.child && category.child.length) {
+					acc.push(category)
+					acc = acc.concat(getFlatLibCategories(category.child));
+				} else {
+					acc.push(category);
+				}
+				return acc;
+			}, []);
+		}
+
 		function findExternalItem(externalItem, actualExternalItems, field) {
 			let externalItemFound = actualExternalItems.find(actualExternalItem =>
 				actualExternalItem['label' + $scope.language] &&
@@ -5404,6 +5499,30 @@
 			}
 
 			return externalItemFound;
+		};
+
+		function findExternalObjectsCategory(externalCategory, actualTreeViewsCategories) {
+			let categoryFound = actualTreeViewsCategories.find(category =>
+				category['label' + $scope.language] &&
+				category['label' + $scope.language].toLowerCase().trim() == externalCategory[0].toLowerCase().trim()
+			);
+
+			if (!categoryFound) return [false, parentIdsPaths];
+
+			if (externalCategory.length == 1) {
+				if (!parentIdsPaths.includes(categoryFound.id)) parentIdsPaths.push(categoryFound.id);
+				return [true, parentIdsPaths];
+			}
+
+			if (externalCategory.length > 1 && categoryFound.child) {
+				if (!parentIdsPaths.includes(categoryFound.id)) parentIdsPaths.push(categoryFound.id);
+				externalCategory.shift();
+				return findExternalObjectsCategory(externalCategory, categoryFound.child)
+			} else {
+				if (!parentIdsPaths.includes(categoryFound.id)) parentIdsPaths.push(categoryFound.id);
+				return [false, parentIdsPaths]
+			}
+
 		};
 
 		function inExternalItemsFound(label) {
@@ -5438,11 +5557,11 @@
 					.ok(gettextCatalog.getString('Create & Import'))
 					.cancel(gettextCatalog.getString('Cancel'));
 				$mdDialog.show(confirm)
-                .then(function() {
-					$scope.uploadFile();
-				},function(reject) {
-					$scope.handleRejectionDialog(reject);
-				});
+					.then(function() {
+						$scope.uploadFile();
+					}, function(reject) {
+						$scope.handleRejectionDialog(reject);
+					});
 			}
 		}
 

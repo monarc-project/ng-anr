@@ -71,11 +71,12 @@
                       <th ng-if="items[tab].vulnerability_description && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'description' + language}}</p></th>
                       <th ng-if="items[tab].code" colspan="1" class="big-border-left"><p>code</p></th>
                       <th ng-if="items[tab].name && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'name' + language}}</p></th>
+                      <th ng-if="items[tab].name && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>name</p></th>
                       <th ng-if="items[tab].label && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'label' + language}}</p></th>
                       <th ng-if="items[tab].label && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>label</p></th>
                       <th ng-if="items[tab].description && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>{{'description' + language}}</p></th>
                       <th ng-if="items[tab].description && OFFICE_MODE == 'FO'" colspan="1" class="big-border-left"><p>description</p></th>
-                      <th ng-if="items[tab].asset_type && OFFICE_MODE == 'BO'" colspan="1" class="big-border-left"><p>asset type code</p></th>
+                      <th ng-if="items[tab].asset_type" colspan="1" class="big-border-left"><p>asset type code</p></th>
                       <th ng-if="items[tab].type" colspan="1" class="big-border-left"><p>type</p></th>
                       <th ng-if="items[tab].c" colspan="1" class="big-border-left"><p>c</p></th>
                       <th ng-if="items[tab].i" colspan="1" class="big-border-left"><p>i</p></th>
@@ -157,26 +158,26 @@
                                                            OFFICE_MODE == 'FO' ? item.field : item.fieldBis}}</b>
                             <span>[<i>{{item.type}}</i>]</span>
                             <span class="md-mandatory-field" ng-if="item.required">*</span>
-                            <p ng-if="!item.field.includes('theme') && !item.field.includes('category') && !item.field.includes('tag')"><span translate>Example:</span><i class="preserve-newlines">{{item.example}}</i></p>
-                            <div ng-if="item.field.includes('theme') || item.field.includes('category') || item.field.includes('tag')">
+                            <p ng-if="!item.field.includes('theme') && !item.field.includes('category') && !item.field.tag"><span translate>Example:</span><i class="preserve-newlines">{{item.example}}</i></p>
+                            <div ng-if="item.field.includes('theme') || item.field.includes('category') || item.field.tag">
                               <p ng-if="item.field.includes('theme')" translate>List of themes:</p>
                               <p ng-if="item.field.includes('category') && tab!=='Assets library'" translate>List of categories:</p>
                               <p ng-if="item.field.includes('category') && tab=='Assets library'">
-                                <span translate>Multiple categories must be separated by a "double greater than"</span> (>>)<br>
+                                <span translate>Multiple categories must be separated by a "double greater than"</span> (>>)<br><br>
                                 <span translate>Ex: Category1/ Category2/ Category3</span><br><br>
                                 <span translate>List of categories:</span>
                               </p>
                               <p ng-if="item.field.includes('tag') && tab=='Operational risks'">
-                                <span translate>Multiple tags must be separated by a slash</span> (/)<br>
+                                <span translate>Multiple tags must be separated by a slash</span> (/)<br><br>
                                 <span translate>Ex: Tag1/Tag2/Tag3</span><br><br>
-                                <span translate>List of tags:</span>
-                              </p>
-                              <p ng-if="item.field.includes('tag') && tab=='Assets library'">
-                                <span translate>Only one tag to link</span><br>
                                 <span translate>List of tags:</span>
                               </p>
                               <p class="md-theme-list" ng-repeat="externalItem in actualExternalItems">{{externalItem['label' + language]}}</p>
                             </div>
+                            <p ng-if="item.field.rolftag && tab=='Assets library'">
+                              <span translate>Only one tag to link</span><br>
+                              <span translate>Example:</span><i class="preserve-newlines">{{item.example}}</i>
+                            </p>
                           </div>
                         </md-list-item>
                     </md-list>

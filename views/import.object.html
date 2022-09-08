@@ -11,21 +11,22 @@
         </md-toolbar>
         <md-dialog-content>
             <div class="md-dialog-content">
+                <div ng-show="dialog_mode">
+                    <md-radio-group ng-model="import.mode">
+                        <b><label translate>Import method:</label></b>
+                        <md-radio-button value="duplicate" style="margin-top: 10px;">{{ 'By duplicating' | translate }}</md-radio-button>
+                        <md-radio-button value="merge">{{ 'By merging' | translate }}</md-radio-button>
+                    </md-radio-group>
 
-                <md-radio-group ng-model="import.mode">
-                    <b><label translate>Import method:</label></b>
-                    <md-radio-button value="duplicate" style="margin-top: 10px;">{{ 'By duplicating' | translate }}</md-radio-button>
-                    <md-radio-button value="merge">{{ 'By merging' | translate }}</md-radio-button>
-                </md-radio-group>
-
-                <md-card class="md-card-info">
-                    <md-card-content translate>
-                        Only global assets can be imported by merge.
-                    </md-card-content>
-                </md-card>
-
-                <div layout="row" ng-show="dialog_mode == null">
-                    <md-button flex ng-click="dialog_mode = 'file'" class="md-raised">{{ 'Import from file' | translate }}</md-button>
+                    <md-card class="md-card-info">
+                        <md-card-content translate>
+                            Only global assets can be imported by merge.
+                        </md-card-content>
+                    </md-card>
+                </div>
+                <div layout="column" ng-show="dialog_mode == null">
+                    <md-button flex ng-click="importFile($event,'Assets library')" ng-controller="AnrKbMgmtCtrl" class="md-raised">{{ 'Import from file (csv, xlsx)' | translate }}</md-button>
+                    <md-button flex ng-click="dialog_mode = 'file'" class="md-raised">{{ 'Import from MONARC export file ' | translate }}</md-button>
                     <md-button flex ng-click="openCommonList()" class="md-raised">{{ 'Import from MONARC library' | translate }}</md-button>
                 </div>
 
