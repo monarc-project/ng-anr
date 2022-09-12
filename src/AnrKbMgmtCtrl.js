@@ -2860,10 +2860,10 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService', 'MeasureService',
-						'AmvService', 'ClientRecommandationService', 'SOACategoryService', 'TagService', 'RiskService',
-						'MeasureMeasureService', 'ObjlibService', 'gettextCatalog', '$q', 'tab', 'categories',
-						'libraryCategoriesPath', 'referential', 'tags', 'recommandationSet', ImportFileDialogCtrl
+					controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService',
+						'VulnService', 'MeasureService', 'ClientRecommandationService', 'SOACategoryService',
+						'TagService', 'RiskService', 'MeasureMeasureService', 'ObjlibService', 'gettextCatalog',
+						'$q', 'tab', 'referential', 'recommandationSet', ImportFileDialogCtrl
 					],
 					templateUrl: 'views/anr/import.file.html',
 					targetEvent: ev,
@@ -2873,10 +2873,7 @@
 					fullscreen: useFullScreen,
 					locals: {
 						'tab': tab,
-						'categories': $scope.listCategories,
-						'libraryCategoriesPath': $scope.categories,
 						'referential': $scope.RefSelected,
-						'tags': $scope.listTags,
 						'recommandationSet': $scope.RecSetSelected,
 					}
 				})
@@ -4202,10 +4199,6 @@
 		$scope.language = $scope.getAnrLanguage();
 		$scope.riskopReferentials = referentials;
 
-		TagService.getTags().then(function(data) {
-			$scope.listTags = data['tags'];
-		});
-
 		tagSearchText = null;
 		tagSelectedItem = null;
 		$scope.queryTagSearch = function(query) {
@@ -4641,9 +4634,11 @@
 		};
 	}
 
-	function ImportFileDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService, MeasureService,
-		AmvService, ClientRecommandationService, SOACategoryService, TagService, RiskService, MeasureMeasureService,
-		ObjlibService, gettextCatalog, $q, tab, categories, libraryCategoriesPath, referential, tags, recommandationSet) {
+	function ImportFileDialogCtrl($scope, $mdDialog, AssetService, ThreatService,
+		VulnService, MeasureService, ClientRecommandationService, SOACategoryService,
+		TagService, RiskService, MeasureMeasureService, ObjlibService, gettextCatalog,
+		$q, tab, referential, recommandationSet) {
+
 		$scope.tab = tab;
 		$scope.guideVisible = false;
 		$scope.language = $scope.getAnrLanguage();
@@ -4673,7 +4668,7 @@
 					codes = data.threats.map(threat => threat.code.toLowerCase());
 				});
 				ThreatService.getThemes().then(function(data) {
-					$scope.actualExternalItems = data['themes'];
+					$scope.actualExternalItems = data.themes;
 				});
 				break;
 			case 'Vulnerabilties':
@@ -4684,7 +4679,6 @@
 			case 'Controls':
 				externalItem = 'category';
 				pluralExtItem = 'categories';
-				$scope.actualExternalItems = categories;
 				MeasureService.getMeasures({
 					referential: referential
 				}).then(function(data) {
@@ -4694,14 +4688,14 @@
 					order: $scope._langField('label'),
 					referential: referential.uuid
 				}).then(function(data) {
-					$scope.actualExternalItems = data['categories'];
+					$scope.actualExternalItems = data.categories;
 				});
 				break;
 			case 'Information risks':
 				externalItem = 'theme';
 				pluralExtItem = 'themes';
 				ThreatService.getThemes().then(function(data) {
-					$scope.actualExternalItems = data['themes'];
+					$scope.actualExternalItems = data.themes;
 				});
 				break;
 			case 'Tags':
@@ -4737,7 +4731,6 @@
 			case 'Assets library':
 				externalItem = 'category';
 				pluralExtItem = 'categories';
-				$scope.actualExternalItems = libraryCategoriesPath;
 				AssetService.getAssets().then(function(data) {
 					codes = data.assets;
 				});
@@ -4747,6 +4740,7 @@
 				ObjlibService.getObjlibsCats().then(function(data) {
 					allLibraryCategories = getFlatLibCategories(data.categories);
 					allTreeViewCategories = data.categories;
+					$scope.actualExternalItems = getLibraryCategoriesPath(data.categories);
 				});
 				break;
 			default:
@@ -5482,6 +5476,26 @@
 				return acc;
 			}, []);
 		}
+
+		function getLibraryCategoriesPath(categories, parentPath) {
+			return categories.reduce((acc, category) => {
+				if (parentPath) {
+					for (let i = 1; i <= 4; i++) {
+						category['label' + i] = parentPath['label' + i] + " >> " + category['label' + i];
+					}
+				}
+				acc.push(category);
+
+				if (category.child && category.child.length) {
+					let parentPathLabels = {};
+					for (let i = 1; i <= 4; i++) {
+						parentPathLabels['label' + i] = category['label' + i]
+					}
+					acc = acc.concat(getLibraryCategoriesPath(category.child, parentPathLabels));
+				}
+				return acc;
+			}, []);
+		};
 
 		function findExternalItem(externalItem, actualExternalItems, field) {
 			let externalItemFound = actualExternalItems.find(actualExternalItem =>
