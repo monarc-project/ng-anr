@@ -3820,7 +3820,6 @@
   }
 
   function ImportObjectDialogCtrl($scope, $mdDialog, ObjlibService, toastr, gettextCatalog, Upload, hookUpdateObjlib) {
-    $scope.dialog_mode = null;
     $scope.file = [];
     $scope.file_range = 0;
     $scope.isImportingIn = false;
@@ -3911,7 +3910,11 @@
     };
 
     $scope.cancel = function() {
-      $mdDialog.cancel();
+        if ($scope.dialog_mode) {
+            $scope.dialog_mode = null;
+        } else {
+            $mdDialog.cancel();
+        }
     };
   }
 
