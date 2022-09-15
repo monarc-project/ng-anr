@@ -103,7 +103,7 @@
                         {{opsheet_risk.comment}}
                     </td>
                 </tr>
-                <tr ng-if="OFFICE_MODE == 'FO'" ng-controller="RiskRecommendationPartialCtrl" monarc-mode="operational">
+                <tr ng-if="OFFICE_MODE == 'FO'" ng-controller="RiskRecommendationPartialCtrl" monarc-mode="operational" ng-init="updateRecommandations()">
                     <td class="bold" style="vertical-align:top;">
                         <span translate>Recommendations</span>
                         <div layout="row" layout-align="center center">
@@ -189,8 +189,4 @@
               <md-icon>chevron_right</md-icon>
           </md-button>
     </div>
-
-    <!-- <ng-include ng-if="OFFICE_MODE == 'FO'" monarc-mode="operational" ng-controller="RiskRecommendationPartialCtrl" src="'views/anr/_risk_rec_create_form.html'"></ng-include>
-    <ng-include ng-if="OFFICE_MODE == 'FO'" monarc-mode="operational" ng-controller="RiskRecommendationPartialCtrl" src="'views/anr/_risk_rec_form.html'"></ng-include> -->
-
 </div>
