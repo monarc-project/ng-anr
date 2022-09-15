@@ -38,7 +38,7 @@
                     ClientRecommandationService.attachToRisk($scope.model.anr.id, data.id, riskId, isOpRiskMode,
                         function () {
                             toastr.success(gettextCatalog.getString("The recommendation has been attached to this risk."));
-                            updateRecommandations();
+                            $scope.updateRecommandations();
                         });
                 })
             }, function (reject) {
@@ -71,7 +71,7 @@
                 rec.recommandation.anr = $scope.model.anr.id;
                 ClientRecommandationService.updateRecommandation(rec.recommandation, function () {
                     toastr.success(gettextCatalog.getString("The recommendation has been edited successfully"));
-                    updateRecommandations();
+                    $scope.updateRecommandations();
                 });
             }, function (reject) {
               $scope.handleRejectionDialog(reject);
@@ -98,7 +98,7 @@
                 function () {
                     toastr.success(gettextCatalog.getString("The recommendation has been attached to this risk."));
                     $scope.rec_edit.rec = null;
-                    updateRecommandations();
+                    $scope.updateRecommandations();
                 });
         };
 
@@ -114,7 +114,7 @@
             $mdDialog.show(confirm).then(function() {
                 ClientRecommandationService.detachFromRisk($scope.model.anr.id, recommandation.id,
                     function () {
-                        updateRecommandations();
+                        $scope.updateRecommandations();
                         toastr.success(gettextCatalog.getString('The recommendation has been detached.'),
                             gettextCatalog.getString('Operation successful'));
                     }
@@ -141,7 +141,7 @@
 
                     ClientRecommandationService.attachToRisk($scope.model.anr.id, data.id, riskId, isOpRiskMode,
                         function () {
-                            updateRecommandations();
+                            $scope.updateRecommandations();
                             toastr.success(gettextCatalog.getString("The recommendation has been attached to this risk."));
                         });
                 })
@@ -162,7 +162,7 @@
             $mdDialog.show(confirm).then(function() {
                 ClientRecommandationService.deleteRecommandation({anr: $scope.model.anr.id, id: recommandation.recommandation.uuid},
                     function () {
-                        updateRecommandations();
+                        $scope.updateRecommandations();
                         toastr.success(gettextCatalog.getString('The recommendation has been deleted successfully'),
                             gettextCatalog.getString('Operation successful'));
                     }
@@ -172,12 +172,12 @@
             });
         }
 
-        var updateRecommandations = function () {
+        $scope.updateRecommandations = function () {
             // We need to debounce the update here as the view uses twice the controller. The data is shared
             // through the broadcast event, but we have no way to know which controller will take care of the actual
             // API request. The first one will "lock" updateDebounce in the scope, and the other one will skip
             // the request.
-            if (!$rootScope.updateDebounce) {
+            if (!$rootScope.updateDebounce && riskId) {
                 $rootScope.updateDebounce = true;
 
                 ClientRecommandationService.getRiskRecommandations($scope.model.anr.id, riskId, isOpRiskMode).then(function (data) {
@@ -193,11 +193,6 @@
         $rootScope.$on('recommandations-loaded', function (ev, recs) {
             $scope.recommandations = recs;
         })
-
-        $timeout(function () {
-            updateRecommandations();
-        })
-
     }
 
     function CreateRecommandationDialog($scope, $mdDialog, ClientRecommandationService, gettextCatalog, toastr, $q, anrId,
