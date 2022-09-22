@@ -154,11 +154,10 @@
                     <md-list>
                         <md-list-item ng-repeat="item in items[tab]" >
                           <div class="md-list-item-text">
-                            <b class="preserve-newlines">{{!item.field.includes('label') ||
-                                                           OFFICE_MODE == 'FO' ? item.field : item.fieldBis}}</b>
+                            <b class="preserve-newlines">{{item.fieldBis? item.fieldBis : item.field}}</b>
                             <span>[<i>{{item.type}}</i>]</span>
                             <span class="md-mandatory-field" ng-if="item.required">*</span>
-                            <p ng-if="!item.field.includes('theme') && !item.field.includes('category') && !item.field.tag"><span translate>Example:</span><i class="preserve-newlines">{{item.example}}</i></p>
+                            <p ng-if="!item.field.includes('theme') && !item.field.includes('category') && !item.field.tag"><span translate>Example:</span><i class="preserve-newlines">{{item.example | translate}}</i></p>
                             <div ng-if="item.field.includes('theme') || item.field.includes('category') || item.field.tag">
                               <p ng-if="item.field.includes('theme')" translate>List of themes:</p>
                               <p ng-if="item.field.includes('category') && tab!=='Assets library'" translate>List of categories:</p>
