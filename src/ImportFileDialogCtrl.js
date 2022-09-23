@@ -291,6 +291,7 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 			} else if (tab == 'Recommendations') {
 				let codeList = angular.copy(codes);
 				file.data.forEach(row => {
+					row.error = '';
 					if (row.code) {
 						if (codeList.includes(row.code.toLowerCase().trim())) {
 							row.error += gettextCatalog.getString('code is already in use') + "\n";;
@@ -370,6 +371,7 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 			'theme',
 			'category',
 			'referential',
+			'recommandationset'
 		];
 
 		let multilangueFields = [
@@ -580,12 +582,21 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 				row.tags = tagsIds;
 			}
 
-			if (row['label']) {
-				row['label' + $scope.language] = row['label'];
-			}
+			if ($scope.OFFICE_MODE == 'FO') {
+				if (row.label) {
+					filedata[i]['label' + $scope.language] = row.label.trim();
+					delete row.label;
+				}
 
-			if (row['description'] && tab !== 'Recommendations') {
-				row['description' + $scope.language] = row['description'];
+				if (row.description && tab !== 'Recommendations') {
+					filedata[i]['description' + $scope.language] = row.description.trim();
+					delete row.description;
+				}
+
+				if (row.name) {
+					filedata[i]['name' + $scope.language] = row.name.trim();
+					delete row.name;
+				}
 			}
 
 			for (let key of Object.keys(row)) {
