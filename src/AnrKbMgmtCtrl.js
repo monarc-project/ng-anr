@@ -2457,7 +2457,7 @@
 		$scope.selectRecommandationSet = function(RecommandationSetId, index) {
 			$scope.recSetTabSelected = index;
 			$scope.recommandation_set_uuid = RecommandationSetId;
-			ClientRecommandationService.getRecommandationSet($scope.model.anr.id, RecommandationSetId).then(function(data) {
+			ClientRecommandationService.getRecommandationSet(RecommandationSetId).then(function(data) {
 				$scope.recommandationSet = data;
 			});
 
@@ -2484,7 +2484,6 @@
 		$scope.exportAllRecommendations = function() {
 			let query = {
 				recommandationSet: $scope.recommandation_set_uuid,
-				anr: $scope.model.anr.id
 			}
 			ClientRecommandationService.getRecommandations(query)
 				.then(data => {
@@ -2509,7 +2508,6 @@
 		};
 
 		$scope.toggleRecommandationStatus = function(recommandation) {
-			recommandation.anr = $scope.model.anr.id;
 			recommandation.recommandationSet = recommandation.recommandationSet.uuid;
 			recommandation.status = !recommandation.status;
 			ClientRecommandationService.updateRecommandation(recommandation, function() {
@@ -2520,7 +2518,6 @@
 		$scope.updateRecommandationsSets = function() {
 			$scope.updatingRecommandationsSets = false;
 			$scope.recommandationsSets.promise = ClientRecommandationService.getRecommandationsSets({
-				anr: $scope.model.anr.id,
 				order: 'createdAt'
 			});
 			$scope.recommandationsSets.promise.then(
@@ -2537,7 +2534,7 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ClientRecommandationService', 'ConfigService', 'recommandationSet', 'anrId', ImportRecommandationSetDialogCtrl],
+					controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ClientRecommandationService', 'ConfigService', 'recommandationSet', ImportRecommandationSetDialogCtrl],
 					templateUrl: 'views/anr/import.recommandationsSets.html',
 					targetEvent: ev,
 					preserveScope: false,
@@ -2546,7 +2543,6 @@
 					fullscreen: useFullScreen,
 					locals: {
 						'recommandationSet': recommandationSet,
-						'anrId': $scope.model.anr.id
 					}
 				})
 				.then(function(result) {
@@ -2577,7 +2573,7 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'ConfigService', 'recommandationSet', 'anrId', CreateRecommandationSetDialogCtrl],
+					controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'ConfigService', 'recommandationSet', CreateRecommandationSetDialogCtrl],
 					templateUrl: 'views/anr/create.recommandationsSets.html',
 					targetEvent: ev,
 					preserveScope: true,
@@ -2585,12 +2581,10 @@
 					clickOutsideToClose: false,
 					fullscreen: useFullScreen,
 					locals: {
-						'recommandationSet': recommandationSet,
-						'anrId': $scope.model.anr.id
+						'recommandationSet': recommandationSet
 					}
 				})
 				.then(function(recommandationSet) {
-					recommandationSet.anr = $scope.model.anr.id;
 					var cont = recommandationSet.cont;
 					recommandationSet.cont = undefined;
 
@@ -2620,9 +2614,9 @@
 		$scope.editRecommandationSet = function(ev, recommandationSet) {
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-			ClientRecommandationService.getRecommandationSet($scope.model.anr.id, recommandationSet).then(function(recommandationSetData) {
+			ClientRecommandationService.getRecommandationSet(recommandationSet).then(function(recommandationSetData) {
 				$mdDialog.show({
-						controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'ConfigService', 'recommandationSet', 'anrId', CreateRecommandationSetDialogCtrl],
+						controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'ConfigService', 'recommandationSet', CreateRecommandationSetDialogCtrl],
 						templateUrl: 'views/anr/create.recommandationsSets.html',
 						targetEvent: ev,
 						preserveScope: false,
@@ -2630,12 +2624,10 @@
 						clickOutsideToClose: false,
 						fullscreen: useFullScreen,
 						locals: {
-							'recommandationSet': recommandationSetData,
-							'anrId': $scope.model.anr.id
+							'recommandationSet': recommandationSetData
 						}
 					})
 					.then(function(recommandationSet) {
-						recommandationSet.anr = $scope.model.anr.id;
 						ClientRecommandationService.updateRecommandationSet(recommandationSet,
 							function() {
 								$scope.updateRecommandationsSets();
@@ -2666,10 +2658,7 @@
 				.ok(gettextCatalog.getString('Delete'))
 				.cancel(gettextCatalog.getString('Cancel'));
 			$mdDialog.show(confirm).then(function() {
-				ClientRecommandationService.deleteRecommandationSet({
-						anr: $scope.model.anr.id,
-						id: recommandationSet
-					},
+				ClientRecommandationService.deleteRecommandationSet({id: recommandationSet},
 					function() {
 						$scope.updateRecommandationsSets();
 						toastr.success(gettextCatalog.getString('The recommendation set has been deleted.', {
@@ -2686,9 +2675,7 @@
 			query.status = $scope.recommandations.activeFilter;
 			if ($scope.model !== undefined) {
 				query.recommandationSet = $scope.recommandation_set_uuid;
-				query.anr = $scope.model.anr.id;
 			} else if ($scope.RecSetSelected !== undefined) {
-				query.anr = $scope.RecSetSelected.anr.id;
 				query.recommandationSet = $scope.RecSetSelected.uuid;
 			}
 
@@ -2713,7 +2700,7 @@
 			$mdDialog.show({
 					controller: ['$scope', '$mdDialog',
 						'ClientRecommandationService', 'ConfigService', 'recommandation', 'recommandationSet',
-						'anrId', CreateRecommandationDialogCtrl
+						CreateRecommandationDialogCtrl
 					],
 					templateUrl: 'views/anr/create.recommandation-kbase.html',
 					targetEvent: ev,
@@ -2723,8 +2710,7 @@
 					fullscreen: useFullScreen,
 					locals: {
 						'recommandation': recommandation,
-						'recommandationSet': $scope.recommandationSet,
-						'anrId': $scope.model.anr.id
+						'recommandationSet': $scope.recommandationSet
 					}
 				})
 				.then(function(recommandation) {
@@ -2757,11 +2743,11 @@
 		$scope.editRecommandation = function(ev, recommandation) {
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-			ClientRecommandationService.getRecommandation($scope.model.anr.id, recommandation.uuid).then(function(recommandationData) {
+			ClientRecommandationService.getRecommandation(recommandation.uuid).then(function(recommandationData) {
 				$mdDialog.show({
 						controller: ['$scope', '$mdDialog',
 							'ClientRecommandationService', 'ConfigService', 'recommandation', 'recommandationSet',
-							'anrId', CreateRecommandationDialogCtrl
+							CreateRecommandationDialogCtrl
 						],
 						templateUrl: 'views/anr/create.recommandation-kbase.html',
 						targetEvent: ev,
@@ -2771,13 +2757,11 @@
 						fullscreen: useFullScreen,
 						locals: {
 							'recommandation': recommandationData,
-							'recommandationSet': $scope.recommandationSet,
-							'anrId': $scope.model.anr.id
+							'recommandationSet': $scope.recommandationSet
 						}
 					})
 					.then(function(recommandation) {
 						recommandation.recommandationSet = recommandation.recommandationSet.uuid;
-						recommandation.anr = $scope.model.anr.id;
 						ClientRecommandationService.updateRecommandation(recommandation,
 							function() {
 								$scope.updateRecommandations();
@@ -2808,10 +2792,7 @@
 				.ok(gettextCatalog.getString('Delete'))
 				.cancel(gettextCatalog.getString('Cancel'));
 			$mdDialog.show(confirm).then(function() {
-				ClientRecommandationService.deleteRecommandation({
-						anr: $scope.model.anr.id,
-						id: item.uuid
-					},
+				ClientRecommandationService.deleteRecommandation({id: item.uuid},
 					function() {
 						toastr.success(gettextCatalog.getString('The recommendation has been deleted.', {
 							label: $scope._langField(item, 'label')
@@ -2934,7 +2915,6 @@
 							});
 							break;
 						case 'Recommendations':
-							importData.anr = $scope.RecSetSelected.anr.id;
 							ClientRecommandationService.createRecommandationMass(importData, function(result) {
 								$scope.$parent.updateRecommandations();
 								successCreateObject(result);
@@ -4346,7 +4326,7 @@
 		};
 	}
 
-	function ImportRecommandationSetDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ClientRecommandationService, ConfigService, recommandationSet, anrId) {
+	function ImportRecommandationSetDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ClientRecommandationService, ConfigService, recommandationSet) {
 		$scope.languages = ConfigService.getLanguages();
 		$scope.language = $scope.getAnrLanguage();
 		var recommandations_sets_uuid = [];
@@ -4371,9 +4351,7 @@
 			if (recommandations_sets_uuid.length == 0) {
 				$scope.hideSpinLoader = false;
 				$scope.dataLoaded = false;
-				ClientRecommandationService.getRecommandationsSets({
-					anr: anrId
-				}).then(data => {
+				ClientRecommandationService.getRecommandationsSets().then(data => {
 					recommandations_sets_uuid = data['recommandations-sets'].map(recommandationSet => recommandationSet.uuid);
 					$scope.mosp_recommandations_sets = $scope.all_recommandations.filter(
 						recommandationSet => recommandationSet.organization.id == $scope.organization.id &&
@@ -4413,12 +4391,9 @@
 				$scope.recommandationSet['label' + i] = recSet_temp['name'];
 			}
 			delete $scope.recommandationSet.id;
-			$scope.recommandationSet.anr = anrId;
 			var recommendations = recSet_temp.json_object.values;
-			recommendations.anr = anrId;
 			recommendations.map(function(recommandation) {
 				recommandation['recommandationSet'] = recSet_temp.json_object.uuid;
-				recommandation['anr'] = anrId;
 			})
 			result = {
 				recommandationSet: $scope.recommandationSet,
@@ -4428,7 +4403,7 @@
 		};
 	}
 
-	function CreateRecommandationSetDialogCtrl($scope, $mdDialog, ClientRecommandationService, ConfigService, recommandationSet, anrId) {
+	function CreateRecommandationSetDialogCtrl($scope, $mdDialog, ClientRecommandationService, ConfigService, recommandationSet) {
 		$scope.languages = ConfigService.getLanguages();
 		$scope.language = $scope.getAnrLanguage();
 		var defaultLang = angular.copy($scope.language);
@@ -4469,7 +4444,7 @@
 	}
 
 	function CreateRecommandationDialogCtrl($scope, $mdDialog, ClientRecommandationService,
-		ConfigService, recommandation, recommandationSet, anrId) {
+		ConfigService, recommandation, recommandationSet) {
 
 		$scope.languages = ConfigService.getLanguages();
 		$scope.language = $scope.getAnrLanguage();
@@ -4486,19 +4461,15 @@
 			};
 		}
 
-		$scope.loadOptions = function(ev, anrID) {
-			ClientRecommandationService.getRecommandations({
-				anr: anrId
-			}).then(function(data) {
+		$scope.loadOptions = function(ev) {
+			ClientRecommandationService.getRecommandations().then(function(data) {
 				$scope.options = data.recommandations;
 			});
 			return $scope.options;
 		};
 
-		$scope.loadSetOptions = function(ev, anrID) {
-			ClientRecommandationService.getRecommandationsSets({
-				anr: anrId
-			}).then(function(data) {
+		$scope.loadSetOptions = function(ev) {
+			ClientRecommandationService.getRecommandationsSets().then(function(data) {
 				$scope.setOptions = data['recommandations-sets'];
 			});
 			return $scope.setOptions;

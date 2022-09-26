@@ -37,7 +37,7 @@ function AnrRisksPlanHistoryCtrl($scope, toastr, $mdMedia, $mdDialog, $statePara
             }
         };
 
-        ClientRecommandationService.getRecommandationHistory($stateParams.modelId).then(function (data) {
+        ClientRecommandationService.getRecommandationHistory().then(function (data) {
             $scope.history = data['recommandations-historics'];
 
         })

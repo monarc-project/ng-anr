@@ -27,7 +27,6 @@
             var promise = $q.defer();
 
             var params = {
-                anr: $scope.model.anr.id,
                 uuid: model.uuid,
             };
 

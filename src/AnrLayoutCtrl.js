@@ -316,9 +316,7 @@
 
     $scope.updateRecommandationsSets = function() {
       $scope.recommandationsSets = [];
-      ClientRecommandationService.getRecommandationsSets({
-        anr: $scope.model.anr.id
-      }).then(function(data) {
+      ClientRecommandationService.getRecommandationsSets().then(function(data) {
         $scope.recommandationsSets = data['recommandations-sets'];
         $scope.updatingRecommandationsSets = true;
       });
@@ -913,7 +911,6 @@
           rwd: $scope.model.anr.rwd
         }
       }).then(function() {
-        rec.anr = $scope.model.anr.id;
         ClientRecommandationService.updateRecommandation(rec, function() {
           toastr.success(gettextCatalog.getString("The recommendation has been edited successfully"));
           $scope.methodProgress[2].steps[1].action($scope.methodProgress[2].steps[1]);
@@ -3212,19 +3209,16 @@
       onUpdate: function(evt) {
         if (evt.newIndex == 0) {
           ClientRecommandationService.updateRecommandation({
-            anr: anr.id,
             uuid: evt.model.uuid,
             implicitPosition: 1
           });
         } else if (evt.newIndex == $scope.recommendations.length - 1) {
           ClientRecommandationService.updateRecommandation({
-            anr: anr.id,
             uuid: evt.model.uuid,
             implicitPosition: 2
           });
         } else {
           ClientRecommandationService.updateRecommandation({
-            anr: anr.id,
             uuid: evt.model.uuid,
             implicitPosition: 3,
             previous: $scope.recommendations[evt.newIndex - 1].uuid
