@@ -49,7 +49,7 @@
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'gettextCatalog', 'toastr', '$q',
-                            'rwd', 'rec' , 'detachRecommandation', 'copyRecommandation', 'deleteRecommandation', CreateRecommandationDialog],
+                            'rwd', 'rec' , 'detachRecommandation', 'deleteRecommandation', CreateRecommandationDialog],
                 templateUrl: 'views/anr/create.recommandation.html',
                 targetEvent: ev,
                 preserveScope: false,
@@ -60,7 +60,6 @@
                     ClientRecommandationService: ClientRecommandationService,
                     rec: rec,
                     detachRecommandation: $scope.detachRecommandation,
-                    copyRecommandation: $scope.copyRecommandation,
                     deleteRecommandation: $scope.deleteRecommandation,
                     rwd: $scope.model.anr.rwd
                 }
@@ -122,31 +121,6 @@
             });
         }
 
-        $scope.copyRecommandation = function (ev, recommandation) {
-            reco = recommandation.recommandation ? recommandation.recommandation : recommandation;
-            var confirm = $mdDialog.confirm()
-                .title(gettextCatalog.getString('Are you sure you want to copy the recommendation?',
-                    {code: reco.code}))
-                .targetEvent(ev)
-                .theme('light')
-                .ok(gettextCatalog.getString('Copy'))
-                .cancel(gettextCatalog.getString('Cancel'));
-
-            $mdDialog.show(confirm).then(function() {
-                ClientRecommandationService.copyRecommandation(reco, function (data) {
-                    toastr.success(gettextCatalog.getString("The recommendation has been copied successfully"));
-
-                    ClientRecommandationService.attachToRisk(data.id, riskId, isOpRiskMode,
-                        function () {
-                            $scope.updateRecommandations();
-                            toastr.success(gettextCatalog.getString("The recommendation has been attached to this risk."));
-                        });
-                })
-            },function(){
-                $scope.editRecommandation(ev,recommandation);
-            });
-        }
-
         $scope.deleteRecommandation = function(ev, recommandation){
             $mdDialog.cancel();
             var confirm = $mdDialog.confirm()
@@ -194,13 +168,12 @@
     }
 
     function CreateRecommandationDialog($scope, $mdDialog, ClientRecommandationService, gettextCatalog, toastr, $q,
-                                        rwd, rec, detachRecommandation, copyRecommandation, deleteRecommandation) {
+                                        rwd, rec, detachRecommandation, deleteRecommandation) {
         $scope.language = $scope.getAnrLanguage();
         $scope.recommendationSet = null;
         $scope.recommandation = rec;
         $scope.deleteConfirmation = false;
         $scope.detachRecommandation = detachRecommandation;
-        $scope.copyRecommandation = copyRecommandation;
         $scope.deleteRecommandation = deleteRecommandation;
         $scope.isAnrReadOnly = !rwd;
 
