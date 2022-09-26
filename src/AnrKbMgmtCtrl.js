@@ -2823,7 +2823,7 @@
 				for (var i = 0; i < $scope.recommandations.selected.length; ++i) {
 					ids.push($scope.recommandations.selected[i].uuid);
 				}
-				ClientRecommandationService.deleteMassRecommandation($scope.model.anr.id, ids, function() {
+				ClientRecommandationService.deleteMassRecommandation(ids, function() {
 					toastr.success(gettextCatalog.getString('{{count}} recommendations have been deleted.', {
 						count: count
 					}), gettextCatalog.getString('Deletion successful'));
