@@ -564,7 +564,6 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 
 			if (tab == 'Recommendations') {
 				row.recommandationSet = recommandationSet.uuid;
-				row.anr = recommandationSet.anr.id;
 			}
 
 			if (tab == 'Operational risks') {
