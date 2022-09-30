@@ -52,11 +52,18 @@
         var y = d3.scaleLinear()
             .range([height, 0]);
 
+        var y2 = d3.scaleLinear()
+            .range([height, 0]);
+
         var xAxis = d3.axisBottom(x0)
             .tickFormat((d,i) => { return categoriesNames[i]});
 
         var yAxis = d3.axisLeft(y)
             .tickSize(-width)
+            .tickSizeOuter(0);
+
+        var y2Axis = d3.axisRight(y2)
+            .tickSize(width)
             .tickSizeOuter(0);
 
         var color = d3.scaleOrdinal()
@@ -130,6 +137,8 @@
         x0.domain(categoriesUuids);
         x1.domain(seriesNames).range([0, x0.bandwidth()]);
         y.domain([0, d3.max(data, function(category) { return d3.max(category.series.map(function(d){return d[options.nameValue];}))})]).nice();
+        y2.domain([0, d3.max(data, function(category) { return d3.max(category.series.map(function(d){return d['average'];}))})]).nice();
+
 
         svg.append("g")
             .attr("class", "xAxis")
@@ -158,6 +167,21 @@
         svg.selectAll(".yAxis").selectAll(".tick")
           .nodes().shift()
           .remove();
+
+        svg.append("g")
+            .attr("class", "y2Axis")
+            .call(y2Axis)
+          .append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 6)
+            .attr("dy", ".71em")
+            .style("text-anchor", "end");
+
+        svg.selectAll(".y2Axis").selectAll(".tick")
+          .nodes().shift()
+          .remove();
+
+
         customizeTicks();
 
         var category = svg.selectAll(".category")
@@ -294,6 +318,12 @@
               .attr("opacity", 0.7)
               .attr("transform", `translate(1,0)`)
               .attr("stroke", "lightgrey");
+
+          var y2Ticks = svg.selectAll(".y2Axis").selectAll(".tick")
+          y2Ticks.selectAll("line")
+              .attr("opacity", 0.7)
+              .attr("transform", `translate(1,0)`)
+              .attr("stroke", "lightgrey");
         }
 
         function updateGroupedChart(newSeries,newCategories,newData) {
@@ -306,6 +336,14 @@
                 }))
               })])
               .nice();
+
+              y2.domain([0, d3.max(newData, function(category) {
+                  return d3.max(category.series.map(function(d){
+                    if (filtered.indexOf(d.label.replace(/\s/g, '')) == -1)
+                    return d['average'];
+                  }))
+                })])
+                .nice();
 
             svg.select(".xAxis")
               .call(xAxis);
@@ -388,6 +426,14 @@
         }
 
         function updateStackedChart(newCategories,newData) {
+            var line = d3.line()
+                .defined(function(d) { return !isNaN(d['average']); })
+                .x(d => x0(d.label) + x0.bandwidth() / 2)
+                .y(d => {
+                    console.log(d);
+                    return y2(d.average)
+                })
+
           x0.domain(newCategories);
           var dataFiltered = newData.map(function(cat){
                         return cat.series.filter(function(serie){
@@ -396,8 +442,11 @@
                       });
 
           var maxValues = dataFiltered.map(x => x.map(d => d[options.nameValue]).reduce((a, b) => a + b, 0));
+          var maxY2Values = dataFiltered.map(x => x.map(d => d['average']).reduce((a, b) => a + b, 0));
 
           y.domain([0, d3.max(maxValues)]).nice();
+          y2.domain([0, d3.max(maxY2Values)]).nice();
+
 
           svg.select(".xAxis")
             .call(xAxis)
@@ -415,9 +464,23 @@
           svg.select(".yAxis")
             .transition()
             .call(yAxis)
-            .duration(500)
+            .duration(500);
+
+          svg.select(".y2Axis")
+            .transition()
+            .call(y2Axis)
+            .duration(500);
 
           customizeTicks();
+
+          // console.log(dataFiltered);
+
+          svg.append("path")
+          .attr("fill", "none")
+          .attr("stroke", "currentColor")
+          .attr("stroke-miterlimit", 1)
+          .attr("stroke-width", 3)
+          .attr("d", d => line(dataFiltered));
 
           var categories = svg.selectAll(".category");
 
