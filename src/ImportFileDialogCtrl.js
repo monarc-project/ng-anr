@@ -1165,19 +1165,19 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 					'field': 'name',
 					'required': true,
 					'type': 'text',
-					'example': 'C16, 123, CAZ, C-12'
+					'example': gettextCatalog.getString('Desktop Computer') + ', ' + gettextCatalog.getString('Network and Telecom')
 				},
 				'label': {
 					'field': 'label',
 					'required': true,
 					'type': 'text',
-					'example': gettextCatalog.getString('No IT charter specifying the rules of use')
+					'example': gettextCatalog.getString('Any further information')
 				},
 				'asset_type': {
 					'field': 'asset type code',
 					'required': true,
 					'type': 'text',
-					'example': 'Asset type code must exist in the Knowledge Base'
+					'example': gettextCatalog.getString('Asset type code must exist in the Knowledge Base')
 				},
 				'scope': {
 					'field': 'scope',
@@ -1189,7 +1189,7 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 					'field': 'operational risk tag',
 					'required': false,
 					'type': 'text',
-					'example': 'Only one operational risk tag can be linked and must exist in the Knowledge Base'
+					'example': gettextCatalog.getString('Only one operational risk tag can be linked and must exist in the Knowledge Base')
 				},
 				'category': {
 					'field': 'category',
@@ -1482,20 +1482,20 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 					'fieldBis': 'name1\nname2\nname3\nname4',
 					'required': true,
 					'type': 'text',
-					'example': 'C16, 123, CAZ, C-12'
+					'example': gettextCatalog.getString('Desktop Computer') + ', ' + gettextCatalog.getString('Network and Telecom')
 				},
 				'label': {
 					'field': 'label' + $scope.defaultLang,
 					'fieldBis': 'label1\nlabel2\nlabel3\nlabel4',
 					'required': true,
 					'type': 'text',
-					'example': gettextCatalog.getString('No IT charter specifying the rules of use')
+					'example': gettextCatalog.getString('Any further information')
 				},
 				'asset_type': {
 					'field': 'asset type code',
 					'required': true,
 					'type': 'text',
-					'example': 'Asset type code must exist in the Knowledge Base'
+					'example': gettextCatalog.getString('Asset type code must exist in the Knowledge Base')
 				},
 				'scope': {
 					'field': 'scope',
@@ -1513,7 +1513,7 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 					'field': 'operational risk tag',
 					'required': false,
 					'type': 'text',
-					'example': 'Only one operational risk tag can be linked and must exist in the Knowledge Base'
+					'example': gettextCatalog.getString('Only one operational risk tag can be linked and must exist in the Knowledge Base')
 				},
 				'category': {
 					'field': 'category label' + $scope.defaultLang,
