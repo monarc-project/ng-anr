@@ -69,6 +69,17 @@
         var color = d3.scaleOrdinal()
             .range(options.color);
 
+        var line = d3.line()
+            .defined(function(d) { return !isNaN(d.average); })
+            .curve(d3.curveMonotoneX)
+            .x(function(d) {
+                return x0(d.uuid) + x0.bandwidth() /2;
+            })
+            .y(function(d) {
+                 return y2(d.average);
+             });
+
+
         d3.select(tag).select("svg").remove();
         d3.selectAll(".tooltip" + tag.substring(1)).remove();
 
@@ -137,7 +148,6 @@
         x0.domain(categoriesUuids);
         x1.domain(seriesNames).range([0, x0.bandwidth()]);
         y.domain([0, d3.max(data, function(category) { return d3.max(category.series.map(function(d){return d[options.nameValue];}))})]).nice();
-        y2.domain([0, d3.max(data, function(category) { return d3.max(category.series.map(function(d){return d['average'];}))})]).nice();
 
 
         svg.append("g")
@@ -337,14 +347,6 @@
               })])
               .nice();
 
-              y2.domain([0, d3.max(newData, function(category) {
-                  return d3.max(category.series.map(function(d){
-                    if (filtered.indexOf(d.label.replace(/\s/g, '')) == -1)
-                    return d['average'];
-                  }))
-                })])
-                .nice();
-
             svg.select(".xAxis")
               .call(xAxis);
 
@@ -426,15 +428,9 @@
         }
 
         function updateStackedChart(newCategories,newData) {
-            var line = d3.line()
-                .defined(function(d) { return !isNaN(d['average']); })
-                .x(d => x0(d.label) + x0.bandwidth() / 2)
-                .y(d => {
-                    console.log(d);
-                    return y2(d.average)
-                })
-
           x0.domain(newCategories);
+
+
           var dataFiltered = newData.map(function(cat){
                         return cat.series.filter(function(serie){
                           return filtered.indexOf(serie.label.replace(/\s/g, '')) == -1
@@ -442,7 +438,16 @@
                       });
 
           var maxValues = dataFiltered.map(x => x.map(d => d[options.nameValue]).reduce((a, b) => a + b, 0));
-          var maxY2Values = dataFiltered.map(x => x.map(d => d['average']).reduce((a, b) => a + b, 0));
+          var averages = [];
+          dataFiltered.map(cat => {
+              averages.push(
+                  {
+                      uuid: cat[0].uuid,
+                      average: cat.map(x => x.value).reduce((a, b) => a + b, 0) > 0 ? cat.map(x => x.sum).reduce((a, b) => a + b, 0)/cat.map(x => x.value).reduce((a, b) => a + b, 0) : 0
+                  }
+              )
+          })
+          var maxY2Values = averages.map(x => x.average);
 
           y.domain([0, d3.max(maxValues)]).nice();
           y2.domain([0, d3.max(maxY2Values)]).nice();
@@ -472,15 +477,6 @@
             .duration(500);
 
           customizeTicks();
-
-          // console.log(dataFiltered);
-
-          svg.append("path")
-          .attr("fill", "none")
-          .attr("stroke", "currentColor")
-          .attr("stroke-miterlimit", 1)
-          .attr("stroke-width", 3)
-          .attr("d", d => line(dataFiltered));
 
           var categories = svg.selectAll(".category");
 
@@ -556,6 +552,15 @@
                   .duration(500);
                 }
               });
+
+              categories.append("path")
+              .attr("class", "line")
+              .attr("fill", "none")
+              .attr("stroke", "black")
+              .attr("stroke-width", 2)
+
+              svg.selectAll('.line')
+                  .attr('d', function(d) {return line(averages)});
         }
 
         function mouseover() {
