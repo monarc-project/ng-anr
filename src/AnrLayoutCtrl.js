@@ -1235,37 +1235,20 @@
 
         $scope.libTreeCallbacks = {
             beforeDrag: function (scopeDrag) {
-                return !$scope.isAnrReadOnly && (scopeDrag.$modelValue.type != 'libcat' || scopeDrag.$modelValue.depth == 0) && (scopeDrag.$modelValue.uuid != null) && !$scope.anr_instance_tree_is_patching;
+                return !$scope.isAnrReadOnly
+                  && scopeDrag.$modelValue.type !== 'libcat'
+                  && scopeDrag.$modelValue.uuid != null
+                  && !$scope.anr_instance_tree_is_patching;
             },
 
             accept: function (sourceNodeScope, destNodeScope, destIndex) {
-
-
-                return (sourceNodeScope.$treeScope.$id == destNodeScope.$treeScope.$id
-                && sourceNodeScope.$modelValue.depth == 0
-                && destNodeScope.$parent.$type == 'uiTree');
+                return sourceNodeScope.$treeScope.$id === destNodeScope.$treeScope.$id
+                  && sourceNodeScope.$modelValue.depth === 0
+                  && destNodeScope.$parent.$type === 'uiTree';
             },
 
             dropped: function (e) {
-
-                if (e.source.nodesScope.$treeScope.$id == e.dest.nodesScope.$treeScope.$id) {
-                    if(e.source.nodeScope.$modelValue.type == 'libcat'){//si on bouge un objet, ça n'a pas d'intérêt de patcher les catégories
-                        // We moved something locally inside the objects library (a first-level node), patch it
-                        var total_categ = $scope.has_virtual_categ ? $scope.anr_obj_library_data.length - 1 : $scope.anr_obj_library_data.length;
-                        var impPos = e.dest.index == 0 ? 1 : (e.dest.index >= total_categ - 1 ? 2 : 3);
-
-                        AnrService.patchLibraryCategory($scope.model.anr.id, e.source.nodeScope.$modelValue.uuid, {
-                            implicitPosition: impPos,
-                            //e.dest.index starts to 0 so previous is e.dest.index + 1 - 1.
-                            //Give position instead of id because we don't have the id of the anr_object_category entity
-                            previous: impPos == 3 ? e.dest.index : null,
-                            anr: $scope.model.anr.id
-                        }, function () {
-                            $scope.updateObjectsLibrary();
-                        });
-                    }
-                    return true;
-                } else {
+                if (e.source.nodesScope.$treeScope.$id !== e.dest.nodesScope.$treeScope.$id) {
                     // Make a copy of the item from the library tree to the inst tree
                     var copy = angular.copy(e.source.nodeScope.$modelValue);
                     e.source.nodeScope.$modelValue.type = 'inst';
@@ -1284,9 +1267,9 @@
 
                         $scope.$broadcast('object-instancied', {oid: copy.uuid});
                     });
-
-                    return true;
                 }
+
+                return true;
             }
         };
 
