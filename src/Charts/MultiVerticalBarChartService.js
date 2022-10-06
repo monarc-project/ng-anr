@@ -19,6 +19,7 @@
       *        {int}      rotationXAxisLabel - degrees to rotate x Axis labels
       *        {float}    offsetXAxisLabel - Offset dy for x Axis labels
       *        {boolean}  showValues - show labels of values
+      *        {boolean}  multipleYaxis - set a second y axis
       *        {boolean}  showLegend - show legend
       *        {string}   nameValue - define key to set as value
       * @return {svg} chart svg
@@ -33,6 +34,7 @@
           rotationXAxisLabel: 0,
           offsetXAxisLabel: 0,
           showValues : true,
+          multipleYaxis: false,
           showLegend : true,
           nameValue : 'value'
         } //default options for the graph
@@ -70,13 +72,11 @@
             .range(options.color);
 
         var line = d3.line()
-            .defined(function(d) { return !isNaN(d.average); })
             .curve(d3.curveMonotoneX)
-            .x(function(d) {
-                return x0(d.uuid) + x0.bandwidth() /2;
-            })
-            .y(function(d) {
-                 return y2(d.average);
+            .x((d) => {return x0(d.uuid) + x0.bandwidth() /2})
+            .y((d) => {
+                if (!isNaN(d.average)) return y2(d.average)
+                return y2(0)
              });
 
 
@@ -167,32 +167,55 @@
 
         svg.append("g")
             .attr("class", "yAxis")
-            .call(yAxis)
-          .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end");
+            .call(yAxis);
 
         svg.selectAll(".yAxis").selectAll(".tick")
           .nodes().shift()
           .remove();
 
-        svg.append("g")
-            .attr("class", "y2Axis")
-            .call(y2Axis)
-          .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end");
+        customizeTicks("yAxis");
 
-        svg.selectAll(".y2Axis").selectAll(".tick")
-          .nodes().shift()
-          .remove();
+        svg.append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 0 - margin.left)
+          .attr("x",0 - (height / 2))
+          .attr("dy", "1em")
+          .style("text-anchor", "middle")
+          .attr("font-size",10)
+          .text(gettextCatalog.getString("Number of risks"));
 
+        if (options.multipleYaxis) {
+            let averages = [];
+            data.map(cat => {
+              averages.push(
+                {
+                  uuid: cat.series[0].uuid,
+                  average: d3.sum(cat.series.map(x => x.sum)) / d3.sum(cat.series.map(x => x.value))
+                }
+              )
+            })
 
-        customizeTicks();
+            y2.domain([0, d3.max(averages.map(x => x.average))]).nice();
+
+            svg.append("g")
+                .attr("class", "y2Axis")
+                .call(y2Axis);
+
+            svg.selectAll(".y2Axis").selectAll(".tick")
+              .nodes().shift()
+              .remove();
+
+            customizeTicks("y2Axis");
+
+            svg.append("text")
+              .attr("transform", "rotate(-90)")
+              .attr("y", width)
+              .attr("x",0 - (height / 2))
+              .attr("dy", "2.5em")
+              .style("text-anchor", "middle")
+              .attr("font-size",10)
+              .text(gettextCatalog.getString("Max. risk value average"));
+        }
 
         var category = svg.selectAll(".category")
             .data(data)
@@ -202,13 +225,6 @@
             .on("mouseover", function() { mouseover() })
             .on("mousemove", function(d) { mousemove(d,this) })
             .on("mouseleave", function() { mouseleave() })
-
-        if(options.onClickFunction){
-          category
-              .on("mousedown", function() { mouseleave() })
-              .on("click", options.onClickFunction);
-        }
-
 
         category.selectAll("rect")
             .data(function(d) { return d.series; })
@@ -225,6 +241,11 @@
             .attr("height", function(d) { return height - y(d[options.nameValue]); })
             .duration(500);
 
+        if (options.onClickFunction){
+          category
+              .on("mousedown", function() { mouseleave() })
+              .on("click", options.onClickFunction);
+        }
 
         if (options.showValues) {
           category.selectAll("text")
@@ -237,6 +258,15 @@
               .attr("font-size",10)
               .attr("font-weight","bold")
               .text(function(d) { return d[options.nameValue]; });
+        }
+
+        if (options.multipleYaxis) {
+            svg.append("path")
+              .attr("class", "averageLine")
+              .attr("fill", "none")
+              .attr("stroke", "black")
+              .attr("stroke-opacity", 0.7)
+              .attr("stroke-width", 1);
         }
 
         if (options.showLegend) {
@@ -278,7 +308,6 @@
               .attr("font-size",10)
               .text(function(d) {return d; });
         }
-
 
         function getNewSeries(d){
           id = d.id.split("id").pop();
@@ -322,15 +351,9 @@
           return newSeries;
         };
 
-        function customizeTicks(){
-          var yTicks = svg.selectAll(".yAxis").selectAll(".tick")
-          yTicks.selectAll("line")
-              .attr("opacity", 0.7)
-              .attr("transform", `translate(1,0)`)
-              .attr("stroke", "lightgrey");
-
-          var y2Ticks = svg.selectAll(".y2Axis").selectAll(".tick")
-          y2Ticks.selectAll("line")
+        function customizeTicks(axis){
+          let ticks  = svg.selectAll("." + axis).selectAll(".tick")
+          ticks.selectAll("line")
               .attr("opacity", 0.7)
               .attr("transform", `translate(1,0)`)
               .attr("stroke", "lightgrey");
@@ -365,7 +388,16 @@
               .call(yAxis)
               .duration(500);
 
-            customizeTicks();
+            customizeTicks("yAxis");
+
+            if (options.multipleYaxis) {
+                svg.select(".y2Axis")
+                  .transition()
+                  .call(y2Axis)
+                  .duration(500);
+
+                customizeTicks("y2Axis");
+            }
 
             var categories = svg.selectAll(".category");
 
@@ -430,27 +462,15 @@
         function updateStackedChart(newCategories,newData) {
           x0.domain(newCategories);
 
-
           var dataFiltered = newData.map(function(cat){
                         return cat.series.filter(function(serie){
                           return filtered.indexOf(serie.label.replace(/\s/g, '')) == -1
                         })
                       });
 
-          var maxValues = dataFiltered.map(x => x.map(d => d[options.nameValue]).reduce((a, b) => a + b, 0));
-          var averages = [];
-          dataFiltered.map(cat => {
-              averages.push(
-                  {
-                      uuid: cat[0].uuid,
-                      average: cat.map(x => x.value).reduce((a, b) => a + b, 0) > 0 ? cat.map(x => x.sum).reduce((a, b) => a + b, 0)/cat.map(x => x.value).reduce((a, b) => a + b, 0) : 0
-                  }
-              )
-          })
-          var maxY2Values = averages.map(x => x.average);
+          var maxValues = dataFiltered.map(x => d3.sum(x.map(d => d[options.nameValue])));
 
           y.domain([0, d3.max(maxValues)]).nice();
-          y2.domain([0, d3.max(maxY2Values)]).nice();
 
 
           svg.select(".xAxis")
@@ -471,12 +491,29 @@
             .call(yAxis)
             .duration(500);
 
-          svg.select(".y2Axis")
-            .transition()
-            .call(y2Axis)
-            .duration(500);
+          customizeTicks("yAxis");
 
-          customizeTicks();
+          if (options.multipleYaxis) {
+              let averages = [];
+              dataFiltered.map(cat => {
+                averages.push(
+                  {
+                    uuid: cat[0].uuid,
+                    average: d3.sum(cat.map(x => x.sum)) / d3.sum(cat.map(x => x.value))
+                  }
+                )
+              })
+
+              y2.domain([0, d3.max(averages.map(x => x.average))]).nice();
+
+              svg.select(".y2Axis")
+                .call(y2Axis)
+
+              customizeTicks("y2Axis");
+
+              svg.selectAll('.averageLine')
+                .attr('d', () => line(averages))
+          }
 
           var categories = svg.selectAll(".category");
 
@@ -553,14 +590,7 @@
                 }
               });
 
-              categories.append("path")
-              .attr("class", "line")
-              .attr("fill", "none")
-              .attr("stroke", "black")
-              .attr("stroke-width", 2)
 
-              svg.selectAll('.line')
-                  .attr('d', function(d) {return line(averages)});
         }
 
         function mouseover() {
