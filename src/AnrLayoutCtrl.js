@@ -3016,7 +3016,7 @@
       ObjlibService.getObjlibs({category: -1, model: $stateParams.modelId}).then(function(uncategorizedData) {
         ObjlibService.getObjlibsCats({model: $stateParams.modelId}).then(async function(x) {
           await buildItemRecurse(x.categories, "").then(data => {
-            let uncategorized = {}
+            let uncategorized = []
             if (uncategorizedData.objects.length) {
               uncategorized.id = -1;
               uncategorizedData.objects.forEach(object => {
