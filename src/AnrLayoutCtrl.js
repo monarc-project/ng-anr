@@ -3014,7 +3014,7 @@
 
     $scope.loadCategs = async function() {
       await findLibraryObjects(-1).then(async function(uncategorizedData) {
-        ObjlibService.getObjlibsCats().then(async function(x) {
+        ObjlibService.getObjlibsCats({model: $stateParams.modelId}).then(async function(x) {
           await buildItemRecurse(x.categories, "").then(data => {
             var uncategorized = []
             if (uncategorizedData.length) {
