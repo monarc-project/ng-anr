@@ -16,6 +16,7 @@
        *        {array}    color - colors pallete of series
        *        {boolean}  colorGradient - get color pallete on gradient range
        *        {boolean}  showValues - show labels of values
+       *        {boolean}  multipleYaxis - set a second y axis
        *        {boolean}  showLegend - show legend
        *        {string}   yLabel - y axis label
        *        {int}      rotationXAxisLabel - degrees to rotate x Axis labels
@@ -38,6 +39,7 @@
           color: d3.schemeCategory10,
           colorGradient: false,
           showValues: true,
+          multipleYaxis: false,
           showLegend: true,
           rotationXAxisLabel: 0,
           offsetXAxisLabel: 0,
@@ -56,11 +58,26 @@
         var y = d3.scaleLinear()
           .range([height, 0]);
 
+        var y2 = d3.scaleLinear()
+          .range([height, 0]);
+
         var xAxis = d3.axisBottom(x);
 
         var yAxis = d3.axisLeft(y)
           .tickSize(-width)
           .tickSizeOuter(0);
+
+        var y2Axis = d3.axisRight(y2)
+          .tickSize(width)
+          .tickSizeOuter(0);
+
+        var line = d3.line()
+          .curve(d3.curveMonotoneX)
+          .x(d => {return x(d.category) + x.bandwidth() /2})
+          .y(d => {
+              if (!isNaN(d.average)) return y2(d.average)
+              return y2(0)
+           });
 
         var numberFormat = d3.format(".5");
 
@@ -114,6 +131,7 @@
         var filtered = []; //to control legend selections
         var categoriesNames = data.map(d => d.category);
         var values = data.map(d => d.value);
+        var averages = [];
         var color = d3.scaleOrdinal()
           .range(options.color)
 
@@ -170,7 +188,41 @@
             .remove();
         }
 
-        customizeTicks();
+        customizeTicks("yAxis");
+
+        svg.append("text")
+          .attr("transform", "rotate(-90)")
+          .attr("y", 0 - margin.left)
+          .attr("x",0 - (height / 2))
+          .attr("dy", "1em")
+          .style("text-anchor", "middle")
+          .attr("font-size",10)
+          .text(gettextCatalog.getString("Number of risks"));
+
+        if (options.multipleYaxis) {
+            data.map(d => {
+              averages.push(
+                {
+                  category: d.category,
+                  average: d.sum / d.value
+                }
+              )
+            })
+
+            y2.domain([0, d3.max(averages.map(x => x.average))]).nice();
+
+            svg.append("g")
+                .attr("class", "y2Axis")
+                .call(y2Axis);
+
+            if (svg.selectAll(".y2Axis").selectAll(".tick").nodes().shift()) {
+              svg.selectAll(".y2Axis").selectAll(".tick")
+                .nodes().shift()
+                .remove();
+            }
+
+            customizeTicks("y2Axis");
+        }
 
         var category = svg.selectAll(".category")
           .data(data)
@@ -238,6 +290,27 @@
             })
             .attr("opacity", 1)
             .duration(500);
+        }
+
+        if (options.multipleYaxis) {
+          svg.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", width)
+            .attr("x",0 - (height / 2))
+            .attr("dy", "2.5em")
+            .style("text-anchor", "middle")
+            .attr("font-size",10)
+            .text(gettextCatalog.getString("Max. risk value average"));
+
+          svg.append("path")
+            .attr("class", "averageLine")
+            .attr("fill", "none")
+            .attr("stroke", "black")
+            .attr("stroke-opacity", 0.7)
+            .attr("stroke-width", 1);
+
+          svg.selectAll('.averageLine')
+            .attr('d', () => line(averages))
         }
 
         if (options.showLegend) {
@@ -326,9 +399,9 @@
           return newCategories;
         };
 
-        function customizeTicks() {
-          var yTicks = svg.selectAll(".yAxis").selectAll(".tick")
-          yTicks.selectAll("line")
+        function customizeTicks(axis) {
+          let ticks = svg.selectAll("." + axis).selectAll(".tick")
+          ticks.selectAll("line")
             .attr("opacity", 0.7)
             .attr("transform", `translate(1,0)`)
             .attr("stroke", "lightgrey");
@@ -354,7 +427,7 @@
             .call(yAxis)
             .duration(500);
 
-          customizeTicks();
+          customizeTicks("yAxis");
 
           var categories = svg.selectAll(".category");
 
