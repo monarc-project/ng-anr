@@ -22,7 +22,7 @@
                 <div layout="column" flex="45">
                     <p class="md-title" translate>Current risks</p>
                     <div layout="row" layout-align="start center" layout-wrap="">
-                        <md-input-container flex="30">
+                        <md-input-container flex="20">
                             <label translate>Display current risks by</label>
                             <md-select ng-model="displayCurrentRisksBy">
                                 <md-option value="level" selected>{{ 'Level' | translate }}</md-option>
@@ -31,11 +31,20 @@
                             </md-select>
                         </md-input-container>
 
-                        <md-input-container ng-show ="displayCurrentRisksBy=='level'" flex="30">
+                        <md-input-container ng-show ="displayCurrentRisksBy=='level'">
                             <label translate >Chart type</label>
                             <md-select ng-model="currentRisksOptions" >
                                 <md-option value="vertical" selected>{{ 'Discrete Bar Chart' | translate }}</md-option>
                                 <md-option value="donut" >{{ 'Donut Chart' | translate }}</md-option>
+                            </md-select >
+                        </md-input-container >
+
+                        <md-input-container ng-show ="currentRisksOptions=='vertical'">
+                            <label translate >Treatment</label>
+                            <md-select ng-model="currentRisksTreatmentOptions" >
+                                <md-option value="all" selected>{{ 'All risks' | translate }}</md-option>
+                                <md-option value="treated" >{{ 'Risks treated' | translate }}</md-option>
+                                <md-option value="not_treated" >{{ 'Risks not treated' | translate }}</md-option>
                             </md-select >
                         </md-input-container >
 
@@ -68,7 +77,7 @@
                 <div layout="column" flex="45">
                     <p class="md-title" translate>Residual risks</p>
                     <div layout="row" layout-align="start center" layout-wrap="">
-                        <md-input-container flex="30">
+                        <md-input-container flex="20">
                             <label translate>Display residual risks by</label>
                             <md-select ng-model="displayTargetRisksBy">
                                 <md-option value="level" selected>{{ 'Level' | translate }}</md-option>
@@ -77,12 +86,21 @@
                             </md-select>
                         </md-input-container>
 
-                        <md-input-container ng-show ="displayTargetRisksBy=='level'" flex="30">
+                        <md-input-container ng-show="displayTargetRisksBy=='level'">
                             <label translate>Chart type</label>
                             <md-select ng-model="targetRisksOptions">
                                 <md-option value="vertical" selected>{{ 'Discrete Bar Chart' | translate }}</md-option>
                                 <md-option value="donut" >{{ 'Donut Chart' | translate }}</md-option>
                             </md-select>
+                        </md-input-container>
+
+                        <md-input-container ng-show="targetRisksOptions=='vertical'">
+                            <label translate >Treatment</label>
+                            <md-select ng-model="targetRisksTreatmentOptions" >
+                                <md-option value="all" selected>{{ 'All risks' | translate }}</md-option>
+                                <md-option value="treated" >{{ 'Risks treated' | translate }}</md-option>
+                                <md-option value="not_treated" >{{ 'Risks not treated' | translate }}</md-option>
+                            </md-select >
                         </md-input-container>
 
                         <md-button class="md-icon-button" title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphTargetRisks', 'targetRisksChartBy' + displayTargetRisksBy)">
