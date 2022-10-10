@@ -3013,23 +3013,22 @@
     }
 
     $scope.loadCategs = async function() {
-      await findLibraryObjects(-1).then(async function(uncategorizedData) {
-        ObjlibService.getObjlibsCats({model: $stateParams.modelId}).then(async function(x) {
-          await buildItemRecurse(x.categories, "").then(data => {
-            var uncategorized = []
-            if (uncategorizedData.length) {
-              uncategorized = [{
-                id: -1,
-                libraryObjects: uncategorizedData
-              }];
-              for (let i = 1; i <= 4; i++) {
-                uncategorized[0]['label' + i] = gettextCatalog.getString("Uncategorized")
+        ObjlibService.getObjlibs({category: -1, model: $stateParams.modelId}).then(function(uncategorizedData) {
+          ObjlibService.getObjlibsCats({model: $stateParams.modelId}).then(async function(x) {
+            await buildItemRecurse(x.categories, "").then(data => {
+              let uncategorized = []
+              if (uncategorizedData.objects.length) {
+                uncategorized = [{
+                  id: -1,
+                  objects: uncategorizedData.objects
+                }];
+                for (let i = 1; i <= 4; i++) {
+                  uncategorized[0]['label' + i] = gettextCatalog.getString("Uncategorized")
+                }
               }
-            }
-            $scope.categories = uncategorized.concat(data);
+              $scope.categories = uncategorized.concat(data);
+            });
           });
-        });
-
       });
     };
 
@@ -3067,12 +3066,10 @@
             child['label' + i] = parentPath['label' + i] + " >> " + child['label' + i];
           }
         }
-        await findLibraryObjects(child.id).then(data => {
-          if (data.length) {
-            child.libraryObjects = data;
-            output.push(child);
-          }
-        });
+
+        if (child.objects.length) {
+          output.push(child);
+        }
 
         if (child.child && child.child.length > 0) {
           let parentPathLabels = {};
@@ -3089,26 +3086,6 @@
 
       return q.promise;
     };
-
-    async function findLibraryObjects(categoryId) {
-      var q = $q.defer();
-
-      ObjlibService.getObjlibs({
-        category: categoryId,
-        model: $stateParams.modelId,
-        lock: true
-      }).then(function(x) {
-        if (x && x.objects) {
-          q.resolve(x.objects);
-        } else {
-          q.reject();
-        }
-      }, function(x) {
-        q.reject(x);
-      });
-
-      return q.promise;
-    }
   }
 
   function ExportAnrDialog($scope, $mdDialog, mode) {

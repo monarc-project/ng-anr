@@ -28,7 +28,7 @@
                     <md-icon>class</md-icon>
                     <label translate>Asset</label>
                     <md-select flex ng-model="selected_object" ng-change="changeObject()">
-                        <md-option ng-repeat="object in objlib.category.libraryObjects" ng-value="object">{{ _langField(object,'name') }}</md-option>
+                        <md-option ng-repeat="object in objlib.category.objects" ng-value="object">{{ _langField(object,'name') }}</md-option>
                     </md-select>
                 </md-input-container>
             </div>
