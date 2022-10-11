@@ -310,20 +310,29 @@
             .attr("stroke-width", 1);
 
           svg.selectAll('.averageLine')
-            .attr('d', () => line(averages))
+            .attr('d', () => {if (!isNaN(y2.domain()[1])) return line(averages)});
         }
 
         if (options.showLegend) {
+          var dataLength = 0;
           var legend = svg.selectAll(".legend")
             .data(data)
             .enter().append("g")
             .attr("class", "legend")
             .attr("transform", (d, i) => {
-              return `translate(${margin.right},${i * 20})`;
+              let textLength = getWidth(d);
+              if (i == 0) {
+                dataLength = textLength + 30;
+                return `translate(0,-30)`;
+              } else {
+                let preDataLength = dataLength;
+                dataLength += textLength + 30;
+                return `translate(${preDataLength},${-30})`;
+              }
             })
 
           legend.append("rect")
-            .attr("x", width - margin.right + 10)
+            .attr("x", width - dataLength)
             .attr("width", 18)
             .attr("height", 18)
             .attr("fill", (d) => {
@@ -341,7 +350,7 @@
             });
 
           legend.append("text")
-            .attr("x", width - margin.right + 35)
+            .attr("x", width - dataLength + 25)
             .attr("y", 9)
             .attr("dy", ".35em")
             .attr("font-size", 10)
@@ -414,6 +423,29 @@
                 return d.value;
             })])
             .nice();
+
+          if (options.multipleYaxis) {
+            averages = [];
+            data.map(d => {
+                if (filtered.indexOf(d.category.replace(/\s/g, '')) == -1) {
+                    averages.push(
+                      {
+                        category: d.category,
+                        average: d.sum / d.value
+                      }
+                    )
+                }
+            })
+            y2.domain([0, d3.max(averages.map(x => x.average))]).nice();
+
+            svg.select(".y2Axis")
+              .call(y2Axis)
+
+            customizeTicks("y2Axis");
+
+            svg.selectAll('.averageLine')
+              .attr('d', () => {if (!isNaN(y2.domain()[1])) return line(averages)});
+          }
 
           if (options.forceDomainY) {
             y.domain([options.forceDomainY.min, options.forceDomainY.max]).nice()
@@ -571,6 +603,13 @@
               }
             }
           });
+        }
+
+        function getWidth(text) {
+          var canvas = document.createElement('canvas'),
+          context = canvas.getContext('2d');
+          context.font = '10px Helvetica';
+          return context.measureText(text).width;
         }
 
       }
