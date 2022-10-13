@@ -40,7 +40,7 @@
                             </md-select >
                         </md-input-container >
 
-                        <md-input-container ng-show ="displayCurrentRisksBy=='level' && currentRisksOptions=='vertical'">
+                        <md-input-container ng-show ="displayCurrentRisksBy!=='treatment'" flex="20">
                             <label translate >Filter by treatment</label>
                             <md-select ng-model="currentRisksTreatmentOptions" >
                                 <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
@@ -100,7 +100,7 @@
                             </md-select>
                         </md-input-container>
 
-                        <md-input-container ng-show="displayTargetRisksBy=='level' && targetRisksOptions=='vertical'">
+                        <md-input-container ng-show="displayTargetRisksBy!=='treatment'" flex="20">
                             <label translate >Filter by treatment</label>
                             <md-select ng-model="targetRisksTreatmentOptions" >
                                 <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
@@ -164,7 +164,7 @@
                             </md-select >
                         </md-input-container>
 
-                        <md-input-container ng-show="displayCurrentOpRisksBy=='level' && currentOpRisksOptions=='vertical'">
+                        <md-input-container ng-show="displayCurrentOpRisksBy!=='treatment'" flex="20">
                             <label translate >Filter by treatment</label>
                             <md-select ng-model="currentOpRisksTreatmentOptions" >
                                 <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
@@ -224,7 +224,7 @@
                             </md-select>
                         </md-input-container>
 
-                        <md-input-container ng-show="displayTargetOpRisksBy=='level' && targetOpRisksOptions=='vertical'">
+                        <md-input-container ng-show="displayTargetOpRisksBy=='treatment'" flex="20">
                             <label translate >Filter by treatment</label>
                             <md-select ng-model="targetOpRisksTreatmentOptions" >
                                 <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
