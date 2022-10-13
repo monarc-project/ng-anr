@@ -224,7 +224,7 @@
                             </md-select>
                         </md-input-container>
 
-                        <md-input-container ng-show="displayTargetOpRisksBy=='treatment'" flex="20">
+                        <md-input-container ng-show="displayTargetOpRisksBy!=='treatment'" flex="20">
                             <label translate >Filter by treatment</label>
                             <md-select ng-model="targetOpRisksTreatmentOptions" >
                                 <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
