@@ -436,7 +436,11 @@
                     )
                 }
             })
-            y2.domain([0, d3.max(averages.map(x => x.average))]).nice();
+            y2.domain([
+                0,
+                d3.max(averages.map(x => x.average)) ? d3.max(averages.map(x => x.average)) : 1
+            ]).nice();
+
 
             svg.select(".y2Axis")
               .call(y2Axis)

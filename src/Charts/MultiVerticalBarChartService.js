@@ -131,6 +131,7 @@
         var categoriesUuids = data.map(function(d) { return d.uuid; });
         var categoriesNames = data.map(function(d) { return d.category; });
         var seriesNames = [...new Set(data.flatMap(x => x.series.flatMap(x=>x.label)))];
+        var seriesValues = data.flatMap(x => x.series.flatMap(x=>x[options.nameValue]));
 
         if (options.externalFilter) {
           $timeout(function(){
@@ -147,8 +148,7 @@
 
         x0.domain(categoriesUuids);
         x1.domain(seriesNames).range([0, x0.bandwidth()]);
-        y.domain([0, d3.max(data, function(category) { return d3.max(category.series.map(function(d){return d[options.nameValue];}))})]).nice();
-
+        y.domain([0, d3.max(seriesValues) > 0  ? d3.max(seriesValues) : 1]).nice();
 
         svg.append("g")
             .attr("class", "xAxis")
@@ -201,9 +201,12 @@
                 .attr("class", "y2Axis")
                 .call(y2Axis);
 
-            svg.selectAll(".y2Axis").selectAll(".tick")
-              .nodes().shift()
-              .remove();
+            if (svg.selectAll(".y2Axis").selectAll(".tick").nodes().shift()) {
+                svg.selectAll(".y2Axis").selectAll(".tick")
+                  .nodes().shift()
+                  .remove();
+            }
+
 
             customizeTicks("y2Axis");
 
@@ -470,8 +473,7 @@
 
           var maxValues = dataFiltered.map(x => d3.sum(x.map(d => d[options.nameValue])));
 
-          y.domain([0, d3.max(maxValues)]).nice();
-
+          y.domain([0, d3.max(maxValues) > 0 ? d3.max(maxValues) : 1]).nice();
 
           svg.select(".xAxis")
             .call(xAxis)
@@ -504,7 +506,10 @@
                 )
               })
 
-              y2.domain([0, d3.max(averages.map(x => x.average))]).nice();
+              y2.domain([
+                  0,
+                  d3.max(averages.map(x => x.average)) ? d3.max(averages.map(x => x.average)) : 1
+              ]).nice();
 
               svg.select(".y2Axis")
                 .call(y2Axis)
@@ -512,7 +517,7 @@
               customizeTicks("y2Axis");
 
               svg.selectAll('.averageLine')
-                .attr('d', () => line(averages))
+                .attr('d', () => {if (!isNaN(y2.domain()[1])) return line(averages)});
           }
 
           var categories = svg.selectAll(".category");
