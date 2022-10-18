@@ -2,11 +2,15 @@
 
   angular
     .module('AnrModule')
-    .factory('ChartService', ['MultiVerticalBarChartService', 'VerticalBarChartService', 'MultiHorizontalBarChartService', 'HorizontalBarChartService', 'LineChartService',
-                              'MultiLineChartService','RadarChartService', 'HeatmapChartService', 'MultiHeatmapChartService', 'DonutChartService', ChartService]);
+    .factory('ChartService', ['MultiVerticalBarChartService', 'VerticalBarChartService', 'MultiHorizontalBarChartService',
+                              'HorizontalBarChartService', 'MiniHorizontalBarChartsService', 'LineChartService',
+                              'MultiLineChartService','RadarChartService', 'HeatmapChartService',
+                              'MultiHeatmapChartService', 'DonutChartService', ChartService]);
 
-      function ChartService(MultiVerticalBarChartService, VerticalBarChartService, MultiHorizontalBarChartService, HorizontalBarChartService,LineChartService,
-                            MultiLineChartService, RadarChartService, HeatmapChartService, MultiHeatmapChartService, DonutChartService){
+      function ChartService(MultiVerticalBarChartService, VerticalBarChartService, MultiHorizontalBarChartService,
+                            HorizontalBarChartService, MiniHorizontalBarChartsService, LineChartService,
+                            MultiLineChartService, RadarChartService, HeatmapChartService,
+                            MultiHeatmapChartService, DonutChartService){
 
         var multiVerticalBarChart = function (tag, data, parameters){
           MultiVerticalBarChartService.draw(tag, data, parameters);
@@ -19,6 +23,9 @@
         }
         var horizontalBarChart = function (tag, data, parameters){
           HorizontalBarChartService.draw(tag, data, parameters);
+        }
+        var minihorizontalBarCharts = function (tag, data, parameters){
+          MiniHorizontalBarChartsService.draw(tag, data, parameters);
         }
         var lineChart = function (tag, data, parameters){
           LineChartService.draw(tag, data, parameters);
@@ -45,6 +52,7 @@
             verticalBarChart: verticalBarChart,
             multiHorizontalBarChart: multiHorizontalBarChart,
             horizontalBarChart: horizontalBarChart,
+            minihorizontalBarCharts: minihorizontalBarCharts,
             lineChart: lineChart,
             multiLineChart: multiLineChart,
             radarChart: radarChart,

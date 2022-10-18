@@ -273,10 +273,11 @@
                         <md-option value="occurrence" selected>{{ 'Occurrence' | translate }}</md-option>
                         <md-option value="probability" >{{ 'Probability' | translate }}</md-option>
                         <md-option value="max_associated_risk" >{{ 'Max. associated risk level' | translate }}</md-option>
+                        <md-option value="parentAsset" >{{ 'Parent asset' | translate }}</md-option>
                     </md-select>
                 </md-input-container>
 
-                <md-input-container flex>
+                <md-input-container ng-show="displayThreatsBy!=='parentAsset'" flex>
                     <label translate>Chart type</label>
                     <md-select ng-model="threatsOptions">
                         <md-option value="vertical">{{ 'Discrete Bar Chart' | translate }}</md-option>
@@ -284,11 +285,20 @@
                     </md-select>
                 </md-input-container>
 
-                <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphThreats', 'threatsChartBy' + displayThreatsBy)">
+                <md-input-container ng-show="displayThreatsBy=='parentAsset'" flex>
+                    <label translate>Chart type</label>
+                    <md-select ng-model="threatsParentAssetsOptions">
+                        <md-option value="3">{{ 'Top' | translate }} 3</md-option>
+                        <md-option value="5" selected>{{ 'Top' | translate }} 5</md-option>
+                        <md-option value="10">{{ 'Top' | translate }} 10</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-button ng-show="displayThreatsBy!=='parentAsset'" class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphThreats', 'threatsChartBy' + displayThreatsBy)">
                     <md-icon class="md-warn">file_download</md-icon>
                 </md-button>
             </div>
-            <d3 id="graphThreats" layout="row" layout-align="center center"></d3>
+            <d3 style="{{displayThreatsBy=='parentAsset' ? 'display:block' : 'display:flex'}}" id="graphThreats" layout="row" layout-align="center center"></d3>
         </md-tab>
 
         <md-tab label="{{ 'Vulnerabilities' | translate }}">
