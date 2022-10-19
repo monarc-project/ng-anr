@@ -175,14 +175,15 @@
 
         customizeTicks("yAxis");
 
-        svg.append("text")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 0 - margin.left)
-          .attr("x",0 - (height / 2))
-          .attr("dy", "1em")
-          .style("text-anchor", "middle")
-          .attr("font-size",10)
-          .text(gettextCatalog.getString("Number of risks"));
+        if (options.yLabel) {
+            svg.append("text")
+              .attr("transform", "rotate(-90)")
+              .attr("x", -height/2)
+              .attr("dy", "-2em")
+              .style("text-anchor", "middle")
+              .attr("font-size",10)
+              .text(gettextCatalog.getString(options.yLabel));
+        }
 
         if (options.multipleYaxis) {
             let averages = [];
@@ -199,7 +200,8 @@
 
             svg.append("g")
                 .attr("class", "y2Axis")
-                .call(y2Axis);
+                .call(y2Axis)
+                .call(g => g.select(".domain").remove());
 
             if (svg.selectAll(".y2Axis").selectAll(".tick").nodes().shift()) {
                 svg.selectAll(".y2Axis").selectAll(".tick")
@@ -210,14 +212,16 @@
 
             customizeTicks("y2Axis");
 
-            svg.append("text")
-              .attr("transform", "rotate(-90)")
-              .attr("y", width)
-              .attr("x",0 - (height / 2))
-              .attr("dy", "2.5em")
-              .style("text-anchor", "middle")
-              .attr("font-size",10)
-              .text(gettextCatalog.getString("Max. risk value average"));
+            if (options.y2Label) {
+                svg.append("text")
+                  .attr("transform", "rotate(-90)")
+                  .attr("y", width)
+                  .attr("x", -height/2)
+                  .attr("dy", "2.5em")
+                  .style("text-anchor", "middle")
+                  .attr("font-size",10)
+                  .text(gettextCatalog.getString(options.y2Label));
+            }
         }
 
         var category = svg.selectAll(".category")
@@ -396,8 +400,9 @@
             if (options.multipleYaxis) {
                 svg.select(".y2Axis")
                   .transition()
+                  .duration(500)
                   .call(y2Axis)
-                  .duration(500);
+                  .call(g => g.select(".domain").remove());
 
                 customizeTicks("y2Axis");
             }
@@ -512,7 +517,10 @@
               ]).nice();
 
               svg.select(".y2Axis")
+                .transition()
+                .duration(500)
                 .call(y2Axis)
+                .call(g => g.select(".domain").remove());
 
               customizeTicks("y2Axis");
 

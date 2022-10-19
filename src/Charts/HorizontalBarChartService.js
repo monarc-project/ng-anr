@@ -135,7 +135,7 @@
           svg.append("text")
             .attr("x", width / 2)
             .attr("y", height)
-            .attr("dy", "3em")
+            .attr("dy", "2em")
             .attr("font-size", 10)
             .style("text-anchor", "middle")
             .text(options.xLabel);

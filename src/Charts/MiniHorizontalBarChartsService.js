@@ -115,12 +115,22 @@
 						x.domain([options.forceDomainX.min, options.forceDomainX.max]).nice()
 					}
 
-					svg = d3.selectAll(".minichart" + index).select("g");
+					svg = d3.select(tag).selectAll(".minichart" + index).select("g");
 
 					svg.append("g")
 						.attr("class", "xAxis")
 						.attr("transform", `translate(0,${height})`)
 						.call(xAxis);
+
+					if (options.xLabel) {
+						svg.append("text")
+							.attr("x", width / 2)
+							.attr("y", height)
+							.attr("dy", "2em")
+							.attr("font-size", 10)
+							.style("text-anchor", "middle")
+							.text(options.xLabel);
+					}
 
 					svg.append("text")
 						.attr("x", (width / 2))

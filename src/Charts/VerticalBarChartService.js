@@ -19,6 +19,7 @@
        *        {boolean}  multipleYaxis - set a second y axis
        *        {boolean}  showLegend - show legend
        *        {string}   yLabel - y axis label
+       *        {string}   y2Label - y axis label
        *        {int}      rotationXAxisLabel - degrees to rotate x Axis labels
        *        {float}    offsetXAxisLabel - Offset dy for x Axis labels
        *        {object}   forceDomainY - Force min and max of y axis, ex. min: 0, max: 10
@@ -172,14 +173,13 @@
           .call(yAxis)
 
         if (options.yLabel) {
-          svg.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("x", -(height + margin.bottom) / 2)
-            .attr("dy", "-3em")
-            .attr("dx", "2em")
-            .attr("font-size", 10)
-            .style("text-anchor", "middle")
-            .text(options.yLabel);
+            svg.append("text")
+              .attr("transform", "rotate(-90)")
+              .attr("x", -height/2)
+              .attr("dy", "-2em")
+              .style("text-anchor", "middle")
+              .attr("font-size",10)
+              .text(gettextCatalog.getString(options.yLabel));
         }
 
         if (svg.selectAll(".yAxis").selectAll(".tick").nodes().shift()) {
@@ -189,15 +189,6 @@
         }
 
         customizeTicks("yAxis");
-
-        svg.append("text")
-          .attr("transform", "rotate(-90)")
-          .attr("y", 0 - margin.left)
-          .attr("x",0 - (height / 2))
-          .attr("dy", "1em")
-          .style("text-anchor", "middle")
-          .attr("font-size",10)
-          .text(gettextCatalog.getString("Number of risks"));
 
         if (options.multipleYaxis) {
             data.map(d => {
@@ -213,7 +204,8 @@
 
             svg.append("g")
                 .attr("class", "y2Axis")
-                .call(y2Axis);
+                .call(y2Axis)
+                .call(g => g.select(".domain").remove());
 
             if (svg.selectAll(".y2Axis").selectAll(".tick").nodes().shift()) {
               svg.selectAll(".y2Axis").selectAll(".tick")
@@ -293,14 +285,16 @@
         }
 
         if (options.multipleYaxis) {
-          svg.append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", width)
-            .attr("x",0 - (height / 2))
-            .attr("dy", "2.5em")
-            .style("text-anchor", "middle")
-            .attr("font-size",10)
-            .text(gettextCatalog.getString("Max. risk value average"));
+            if (options.y2Label) {
+                svg.append("text")
+                  .attr("transform", "rotate(-90)")
+                  .attr("y", width)
+                  .attr("x", -height/2)
+                  .attr("dy", "2.5em")
+                  .style("text-anchor", "middle")
+                  .attr("font-size",10)
+                  .text(gettextCatalog.getString(options.y2Label));
+            }
 
           svg.append("path")
             .attr("class", "averageLine")
@@ -444,6 +438,7 @@
 
             svg.select(".y2Axis")
               .call(y2Axis)
+              .call(g => g.select(".domain").remove());
 
             customizeTicks("y2Axis");
 
