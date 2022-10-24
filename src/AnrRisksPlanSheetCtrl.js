@@ -17,10 +17,10 @@
         $scope.rec_risks = [];
 
         var updateRecs = function () {
-            ClientRecommandationService.getRecommandation($stateParams.modelId, $stateParams.recId).then(function (data) {
+            ClientRecommandationService.getRecommandation($stateParams.recId).then(function (data) {
                 $scope.rec = data;
             });
-            ClientRecommandationService.getRecommandationRisks($stateParams.modelId, $stateParams.recId).then(function (data) {
+            ClientRecommandationService.getRecommandationRisks($stateParams.recId).then(function (data) {
                 // Filter out non-treated risks
                 var recrisks = data['recommandations-risks'];
                 $scope.rec_risks = [];
@@ -65,7 +65,7 @@
                     risk: risk
                 }
             }).then(function (impl) {
-                ClientRecommandationService.validateRecommandationRisk($scope.model.anr.id, risk.id, impl, function () {
+                ClientRecommandationService.validateRecommandationRisk(risk.id, impl, function () {
                     toastr.success(gettextCatalog.getString("The recommendation has been successfully validated."));
                     updateRecs();
                 })
@@ -78,7 +78,7 @@
             var params = {};
             params[name] = field[name];
 
-            ClientRecommandationService.updateRecommandationRisk($scope.model.anr.id, field.id, params, function () {
+            ClientRecommandationService.updateRecommandationRisk(field.id, params, function () {
 
             });
             return true;

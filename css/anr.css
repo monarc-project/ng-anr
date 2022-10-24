@@ -560,21 +560,8 @@ md-input-container .hint.ng-leave, md-input-container .hint.ng-enter.ng-enter-ac
     font-size: 16px;
 }
 
-
-.tbl-soa.green {
-    background: #D6F107;
-}
-
-.tbl-soa.orange {
-    background: #FFBC1C;
-}
-
-.tbl-soa.red {
-    background: #FD661F;
-    color: white;
-}
 .tbl-soa.gray {
-    background: #BDBDBD;
+    background: #BDBDBD !important;
 }
 
 /** soaTable compliance  */
@@ -690,6 +677,11 @@ td input.edit-field {
 	width: 100%;
 }
 
+.soa-scale-comments textarea {
+	height: 20px;
+	width: 98%;
+}
+
 textarea {
 	height: 100px;
 	width: 100%;
@@ -750,6 +742,12 @@ span textarea {
 .column-scales-table {
     width: 10%
 }
+
+.center-block {
+    margin: auto;
+    display: block;
+}
+
 
 /*.angular-ui-tree-nodes .angular-ui-tree-nodes {
     padding-left: 6px;
@@ -1037,6 +1035,10 @@ md-progress-linear.yellow .md-container {
 }
 
 .md-checkbox-no-bottom-margin {
+    margin-bottom: 0;
+}
+
+.no-margin-bottom {
     margin-bottom: 0;
 }
 
@@ -1404,4 +1406,22 @@ md-select-menu md-content
     margin: 2px;
     font-size: 12px;
     outline: none;
+}
+
+.metadataInstanceChips button.md-icon-button {
+    padding: 0;
+    height: 20px;
+    width: 24px;
+}
+
+.metadataInstanceChips button.md-icon-button md-icon {
+    font-size: 18px;
+}
+
+.metadataInstanceChips span {
+    padding-right: 4px;
+}
+
+.display-contents {
+    display: contents;
 }

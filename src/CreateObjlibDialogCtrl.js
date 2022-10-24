@@ -49,13 +49,19 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
                 var child = children[i];
 
                 if (parentPath != "") {
-                    child[$scope._langField('label')] = parentPath + " >> " + $scope._langField(child,'label');
+                    for (let i = 1; i <= 4; i++) {
+                        child['label' + i] = parentPath['label' + i] + " >> " + child['label' + i];
+                    }
                 }
-
                 output.push(child);
 
                 if (child.child && child.child.length > 0) {
-                    var child_output = buildItemRecurse(child.child, $scope._langField(child,'label'));
+                    let parentPathLabels = {};
+                    for (let i = 1; i <= 4; i++) {
+                        parentPathLabels['label' + i] = child['label' + i]
+                    }
+
+                    var child_output = buildItemRecurse(child.child, parentPathLabels);
                     output = output.concat(child_output);
                 }
             }

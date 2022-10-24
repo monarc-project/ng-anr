@@ -4,8 +4,8 @@
         .module('AnrModule')
         .controller('AnrObjectInstanceCtrl', [
             '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$state', 'DownloadService', 'TableHelperService', '$http',
-            'ModelService', 'ObjlibService', '$stateParams', 'AnrService', '$rootScope', '$timeout', '$location', 'InstanceService', '$q',
-            '$sce',
+            'ModelService', 'ObjlibService', '$stateParams', 'AnrService', '$rootScope', '$timeout', '$location', 'InstanceService',
+            'MetadataInstanceService', '$q', '$sce',
             AnrObjectInstanceCtrl
         ]);
 
@@ -14,7 +14,7 @@
      */
     function AnrObjectInstanceCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, DownloadService,
                                             TableHelperService, $http, ModelService, ObjlibService, $stateParams, AnrService,
-                                            $rootScope, $timeout, $location, InstanceService, $q, $sce) {
+                                            $rootScope, $timeout, $location, InstanceService, MetadataInstanceService, $q, $sce) {
 
         $scope.instance = {};
         $scope.resetSheet(true);
@@ -197,6 +197,22 @@
                 });
         };
 
+        $scope.contextInstance = function (ev) {
+            var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+            $mdDialog.show({
+                controller: ['$scope', '$mdDialog', 'gettextCatalog', 'MetadataInstanceService', 'instance', contextInstanceDialog],
+                templateUrl: 'views/anr/context.instance.html',
+                targetEvent: ev,
+                preserveScope: false,
+                scope: $scope.$dialogScope.$new(),
+                clickOutsideToClose: false,
+                fullscreen: useFullScreen,
+                locals: {
+                    instance : $scope.instance,
+                }
+            })
+        };
 
         $scope.detachInstance = function (ev, instance) {
             var onrecord = false;
@@ -227,7 +243,6 @@
             }
 
         };
-
 
         $scope.createSpecRiskOp = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
@@ -383,7 +398,6 @@
         });
     }
 
-
     function ExportInstanceDialog($scope, $mdDialog, mode) {
         $scope.mode = mode;
         $scope.exportData = {
@@ -402,7 +416,116 @@
         $scope.export = function() {
             $mdDialog.hide($scope.exportData);
         };
+    }
 
+
+    function contextInstanceDialog($scope, $mdDialog, gettextCatalog, MetadataInstanceService, instance) {
+        $scope.languageCode = $scope.getLanguageCode($scope.getAnrLanguage());
+        updateMetadatas();
+
+        $scope.updateInstanceMetadata = function(metadata, comment) {
+            if (metadata.instanceMetadata.id) {
+                MetadataInstanceService.updateInstanceMetadata(instance.id,metadata.instanceMetadata);
+            } else {
+                metadata.instanceMetadata = {
+                    [$scope.languageCode] : comment
+                };
+                MetadataInstanceService.createIntanceMetadata({instId: instance.id, metadata: [metadata]});
+            }
+        }
+
+        $scope.deleteMetadata = function (ev, metadata) {
+            var confirm = $mdDialog.confirm()
+                .title(gettextCatalog.getString('Are you sure you want to delete the asset context field?'))
+                .textContent(gettextCatalog.getString('This operation is irreversible.'))
+                .targetEvent(ev)
+                .theme('light')
+                .multiple(true)
+                .ok(gettextCatalog.getString('Delete'))
+                .cancel(gettextCatalog.getString('Cancel'));
+            $mdDialog.show(confirm).then(function() {
+                MetadataInstanceService.deleteMetadata(
+                    metadata.id,
+                    null,
+                    function(){
+                        updateMetadatas();
+                    }
+                );
+            });
+        }
+
+        $scope.addMetadata = function(ev) {
+            let fieldMetadata = $mdDialog.prompt()
+                .title(gettextCatalog.getString('Field label'))
+                .placeholder(gettextCatalog.getString('Label'))
+                .ariaLabel(gettextCatalog.getString('Field label'))
+                .theme('light')
+                .targetEvent(ev)
+                .required(true)
+                .ok(gettextCatalog.getString('Create'))
+                .cancel(gettextCatalog.getString('Cancel'));
+
+
+            $mdDialog.show(
+                fieldMetadata
+                .multiple(true)
+            )
+            .then(function (fieldMetadata) {
+                metadatas = {
+                    [$scope.languageCode] : fieldMetadata
+                };
+                MetadataInstanceService.createMetadata(
+                    [metadatas],
+                    function(){
+                        updateMetadatas();
+                    }
+                );
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
+            });
+        }
+
+        $scope.editMetadata = function(ev,metadata) {
+            let fieldMetadata = $mdDialog.prompt()
+                .title(gettextCatalog.getString('Field label'))
+                .placeholder(gettextCatalog.getString('Label'))
+                .ariaLabel(gettextCatalog.getString('Field label'))
+                .theme('light')
+                .targetEvent(ev)
+                .required(true)
+                .ok(gettextCatalog.getString('Save'))
+                .cancel(gettextCatalog.getString('Cancel'));
+
+
+            $mdDialog.show(
+                fieldMetadata
+                .multiple(true)
+            )
+            .then(function (fieldMetadata) {
+                metadata[$scope.languageCode] = fieldMetadata;
+                MetadataInstanceService.updateMetadata(
+                    null,
+                    metadata,
+                    function(){
+                        updateMetadatas();
+                    }
+                )
+            }, function (reject) {
+              $scope.handleRejectionDialog(reject);
+            });
+        }
+
+        $scope.cancel = function() {
+            $mdDialog.cancel();
+        };
+
+        function updateMetadatas(){
+            MetadataInstanceService.getInstanceMetadatas({instId:instance.id})
+                .then(function(data){
+                    $scope.metadatas = data.data;
+                }
+            );
+        }
     }
 
     function CreateInstanceDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, AnrService, instance, scales, scaleCommCache) {

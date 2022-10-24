@@ -207,6 +207,10 @@
             new self.LibraryResource({anrId: anr_id, objectId: object_id}).$save(success, error);
         };
 
+        var addExistingWholeCategoryToLibrary = function (anr_id, cat_id, success, error) {
+            new self.LibraryResource({anrId: anr_id, categoryId: cat_id}).$save(success, error);
+        };
+
         var addNewObjectToLibrary = function (anr_id, object, success, error) {
             ObjlibService.createObjlib(object, function (data) {
                 addExistingObjectToLibrary(anr_id, data.id, success, error);
@@ -426,6 +430,7 @@
             patchAnr: patchAnr,
 
             addExistingObjectToLibrary: addExistingObjectToLibrary,
+            addExistingWholeCategoryToLibrary: addExistingWholeCategoryToLibrary,
             addNewObjectToLibrary: addNewObjectToLibrary,
             removeObjectFromLibrary: removeObjectFromLibrary,
             getObjectsLibrary: getObjectsLibrary,
