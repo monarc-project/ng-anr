@@ -421,7 +421,7 @@
 
     function contextInstanceDialog($scope, $mdDialog, gettextCatalog, MetadataInstanceService, instance) {
         $scope.languageCode = $scope.getLanguageCode($scope.getAnrLanguage());
-        updateMetadatas();
+        updateMetadataList();
 
         $scope.updateInstanceMetadata = function(metadata, comment) {
             if (metadata.instanceMetadata.id) {
@@ -430,7 +430,7 @@
                 metadata.instanceMetadata = {
                     [$scope.languageCode] : comment
                 };
-                MetadataInstanceService.createIntanceMetadata({instId: instance.id, metadata: [metadata]});
+                MetadataInstanceService.createInstanceMetadata({instId: instance.id, metadata: [metadata]});
             }
         }
 
@@ -447,8 +447,8 @@
                 MetadataInstanceService.deleteMetadata(
                     metadata.id,
                     null,
-                    function(){
-                        updateMetadatas();
+                    function() {
+                        updateMetadataList();
                     }
                 );
             });
@@ -471,13 +471,13 @@
                 .multiple(true)
             )
             .then(function (fieldMetadata) {
-                metadatas = {
+                metadataList = {
                     [$scope.languageCode] : fieldMetadata
                 };
                 MetadataInstanceService.createMetadata(
-                    [metadatas],
+                    [metadataList],
                     function(){
-                        updateMetadatas();
+                        updateMetadataList();
                     }
                 );
             }, function (reject) {
@@ -506,8 +506,8 @@
                 MetadataInstanceService.updateMetadata(
                     null,
                     metadata,
-                    function(){
-                        updateMetadatas();
+                    function() {
+                        updateMetadataList();
                     }
                 )
             }, function (reject) {
@@ -519,10 +519,10 @@
             $mdDialog.cancel();
         };
 
-        function updateMetadatas(){
-            MetadataInstanceService.getInstanceMetadatas({instId:instance.id})
+        function updateMetadataList(){
+            MetadataInstanceService.getInstanceMetadataList({instId:instance.id})
                 .then(function(data){
-                    $scope.metadatas = data.data;
+                    $scope.metadataList = data.data;
                 }
             );
         }
