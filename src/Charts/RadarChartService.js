@@ -44,7 +44,7 @@
             .append("g")
               .attr("transform", `translate(${margin.left},${margin.top})`);
 
-        if (data == undefined) {
+        if (data.flatMap(x => x.series).length === 0) {
           svg.append('text')
             .attr("x", (width / 2))
             .attr("y", (width * .1))
