@@ -37,7 +37,7 @@
                     <label translate>Parent category</label>
                     <md-select ng-model="parentCategory" ng-model-options="{trackBy: '$value.id'}" md-on-close="updateCategoryChildren()" required>
                         <md-option value="null">{{ 'Root (none)' | translate }}</md-option>
-                        <md-option ng-repeat="cat in categories" ng-value="cat">{{ _langField(cat,'label') }}</md-option>
+                        <md-option ng-repeat="cat in categories" ng-value="cat">{{ OFFICE_MODE == 'FO' ? _langField(cat,'label') : cat['label' + language] }}</md-option>
                     </md-select>
                 </md-input-container>
 
