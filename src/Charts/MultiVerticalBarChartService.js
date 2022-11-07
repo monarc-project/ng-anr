@@ -30,7 +30,7 @@
           margin : {top: 15, right: 100, bottom: 30, left: 40},
           width : 400,
           height : 300,
-          color : ["#D6F107","#FFBC1C","#FD661F"],
+          color : d3.schemeCategory10,
           rotationXAxisLabel: 0,
           offsetXAxisLabel: 0,
           showValues : true,
@@ -279,7 +279,7 @@
         if (options.showLegend) {
           var dataLength = 0;
           var legend = svg.selectAll(".legend")
-              .data(seriesNames.slice().reverse())
+              .data(seriesNames)
             .enter().append("g")
               .attr("class", "legend")
               .attr("transform", function(d,i) {

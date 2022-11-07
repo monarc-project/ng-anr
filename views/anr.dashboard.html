@@ -53,6 +53,14 @@
                             </md-select >
                         </md-input-container >
 
+                        <md-input-container ng-show ="displayCurrentRisksBy=='treatment'" flex="20">
+                            <label translate >Display treatment by</label>
+                            <md-select ng-model="currentRisksTreatmentAndAssetOptions" >
+                                <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
+                                <md-option value="asset" >{{ 'All assets' | translate }}</md-option>
+                                <md-option value="parentAsset" >{{ 'Parent asset' | translate }}</md-option>
+                            </md-select >
+                        </md-input-container >
                         <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphCurrentRisks', 'currentRisksChartBy' + displayCurrentRisksBy)">
                             <md-icon class="md-warn">file_download</md-icon>
                         </md-button>
@@ -113,6 +121,14 @@
                             </md-select >
                         </md-input-container>
 
+                        <md-input-container ng-show ="displayTargetRisksBy=='treatment'" flex="20">
+                            <label translate >Display treatment by</label>
+                            <md-select ng-model="targetRisksTreatmentAndAssetOptions" >
+                                <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
+                                <md-option value="asset" >{{ 'All assets' | translate }}</md-option>
+                                <md-option value="parentAsset" >{{ 'Parent asset' | translate }}</md-option>
+                            </md-select >
+                        </md-input-container >
                         <md-button class="md-icon-button" title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphTargetRisks', 'targetRisksChartBy' + displayTargetRisksBy)">
                             <md-icon class="md-warn">file_download</md-icon>
                         </md-button>
@@ -177,6 +193,15 @@
                             </md-select >
                         </md-input-container>
 
+                        <md-input-container ng-show ="displayCurrentOpRisksBy=='treatment'" flex="20">
+                            <label translate >Display treatment by</label>
+                            <md-select ng-model="currentOpRisksTreatmentAndAssetOptions" >
+                                <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
+                                <md-option value="asset" >{{ 'All assets' | translate }}</md-option>
+                                <md-option value="parentAsset" >{{ 'Parent asset' | translate }}</md-option>
+                            </md-select >
+                        </md-input-container >
+
                         <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphCurrentRisks', 'currentRisksChartBy' + displayCurrentRisksBy)">
                             <md-icon class="md-warn">file_download</md-icon>
                         </md-button>
@@ -236,6 +261,15 @@
                                 <md-option value="shared" >{{ 'Shared' | translate }}</md-option>
                             </md-select >
                         </md-input-container>
+
+                        <md-input-container ng-show ="displayTargetOpRisksBy=='treatment'" flex="20">
+                            <label translate >Display treatment by</label>
+                            <md-select ng-model="targetOpRisksTreatmentAndAssetOptions" >
+                                <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
+                                <md-option value="asset" >{{ 'All assets' | translate }}</md-option>
+                                <md-option value="parentAsset" >{{ 'Parent asset' | translate }}</md-option>
+                            </md-select >
+                        </md-input-container >
 
                         <md-button class="md-icon-button" title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphTargetRisks', 'targetRisksChartBy' + displayTargetRisksBy)">
                             <md-icon class="md-warn">file_download</md-icon>
