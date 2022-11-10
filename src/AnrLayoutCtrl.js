@@ -3013,24 +3013,31 @@
     }
 
     $scope.loadCategs = async function() {
-        ObjlibService.getObjlibs({category: -1, model: $stateParams.modelId}).then(function(uncategorizedData) {
-          ObjlibService.getObjlibsCats({model: $stateParams.modelId}).then(async function(x) {
-            await buildItemRecurse(x.categories, "").then(data => {
-              let uncategorized = []
-              if (uncategorizedData.objects.length) {
-                uncategorized = [{
-                  id: -1,
-                  objects: uncategorizedData.objects
-                }];
-                for (let i = 1; i <= 4; i++) {
-                  uncategorized[0]['label' + i] = gettextCatalog.getString("Uncategorized")
-                }
+      ObjlibService.getObjlibs({category: -1, model: $stateParams.modelId}).then(function(uncategorizedData) {
+        ObjlibService.getObjlibsCats({model: $stateParams.modelId}).then(async function(x) {
+          await buildItemRecurse(x.categories, "").then(data => {
+            let uncategorized = []
+            if (uncategorizedData.objects.length) {
+              uncategorized.id = -1;
+              uncategorizedData.objects.forEach(object => {
+                object.isLinkedToAnr = false
+              });
+              uncategorized.objects = uncategorizedData.objects
+
+              for (let i = 1; i <= 4; i++) {
+                uncategorized['label' + i] = gettextCatalog.getString("Uncategorized")
               }
-              $scope.categories = uncategorized.concat(data);
-            });
+              uncategorized = [uncategorized];
+            }
+            $scope.categories = uncategorized.concat(data);
           });
+        });
       });
     };
+
+    $scope.checkIsLinkedToAnr = function(category) {
+        return category.objects.map(object => object.isLinkedToAnr).some(link => !link);
+    }
 
     $scope.changeCateg = async function() {
       $scope.objlib.category = $scope.selected_categ

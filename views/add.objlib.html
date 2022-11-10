@@ -16,19 +16,19 @@
             </div>
 
             <div class="md-dialog-content" layout="column" flex="75" ng-show="categories" >
-                <p translate>Pick an existing asset from the knowledge base</p>
+                <p translate>Pick an existing category or asset from the knowledge base</p>
                 <md-input-container class="md-block" flex>
                     <md-icon>class</md-icon>
                     <label translate>Category</label>
                     <md-select flex ng-model="selected_categ" ng-change="changeCateg()">
-                        <md-option ng-repeat="cat in categories" ng-value="cat">{{ _langField(cat,'label') }}</md-option>
+                        <md-option ng-repeat="cat in categories | filter: checkIsLinkedToAnr" ng-value="cat">{{ _langField(cat,'label') }}</md-option>
                     </md-select>
                 </md-input-container>
                 <md-input-container class="md-block" flex>
                     <md-icon>class</md-icon>
                     <label translate>Asset</label>
                     <md-select flex ng-model="selected_object" ng-change="changeObject()">
-                        <md-option ng-repeat="object in objlib.category.objects" ng-value="object">{{ _langField(object,'name') }}</md-option>
+                        <md-option ng-repeat="object in objlib.category.objects | filter: { isLinkedToAnr: false }" ng-value="object">{{ _langField(object,'name') }}</md-option>
                     </md-select>
                 </md-input-container>
             </div>
@@ -38,7 +38,7 @@
             <md-button ng-click="cancel()">
                 {{ 'Cancel' | translate }}
             </md-button>
-            <md-button ng-click="createCategory()" ng-disabled="!objlib.category.id" type="submit" class="md-accent md-hue-3">
+            <md-button ng-click="createCategory()" ng-disabled="!objlib.category.id || objlib.category.id == -1" type="submit" class="md-accent md-hue-3">
                 {{ 'Add a whole category' | translate }}
             </md-button>
             <md-button ng-click="createObject()" ng-disabled="!objlib.object.uuid || !objlib.category.id" type="submit" class="md-accent md-hue-3">

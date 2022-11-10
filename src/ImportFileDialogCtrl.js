@@ -489,8 +489,6 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 						description1: row['vulnerability description2'] ? row['vulnerability description2'].trim() : null,
 						description1: row['vulnerability description3'] ? row['vulnerability description3'].trim() : null,
 						description1: row['vulnerability description4'] ? row['vulnerability description4'].trim() : null,
-						['label' + $scope.language]: row['vulnerability label'],
-						['description' + $scope.language]: row['vulnerability description']
 					}
 				}
 
@@ -825,12 +823,12 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 		let themeLabel = row[extItemField];
 		if ($scope.OFFICE_MODE == 'BO') {
 			themeToCreate = {
-				label1: row['theme label1'] ? row['theme label1'].trim() : null,
-				label2: row['theme label2'] ? row['theme label2'].trim() : null,
-				label3: row['theme label3'] ? row['theme label3'].trim() : null,
-				label4: row['theme label4'] ? row['theme label4'].trim() : null,
+				label1: row['threat theme label1'] ? row['threat theme label1'].trim() : null,
+				label2: row['threat theme label2'] ? row['threat theme label2'].trim() : null,
+				label3: row['threat theme label3'] ? row['threat theme label3'].trim() : null,
+				label4: row['threat theme label4'] ? row['threat theme label4'].trim() : null,
 			};
-			themeLabel = row['theme label' + $scope.defaultLang];
+			themeLabel = row['threat theme label' + $scope.defaultLang];
 		}
 
 		ThreatService.createTheme(themeToCreate,
