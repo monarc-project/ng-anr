@@ -11,9 +11,9 @@
     var makeResource = function () {
 
       self.FieldMetadataResource = $resource(
-        'api/' + anr + '/instances-metadata/:metadataId',
+        'api/' + anr + '/instances-metadata-fields/:metadataFieldId',
         {
-          metadataId: '@id',
+          metadataFieldId: '@id',
           urlAnrId: $rootScope.getUrlAnrId(),
           anrId: '@anrId'
         },
@@ -48,24 +48,24 @@
 
     makeResource();
 
-    var getMetadataList = function (params) {
+    var getMetadataFields = function (params) {
       return self.FieldMetadataResource.query(params).$promise;
     };
 
-    var getMetadata = function (id, anrId, language) {
-      return self.FieldMetadataResource.query({metadataId: id, anrId: anrId, language: language}).$promise;
+    var getMetadataField = function (id, anrId, language) {
+      return self.FieldMetadataResource.query({metadataFieldId: id, anrId: anrId, language: language}).$promise;
     };
 
-    var createMetadata = function (params, success, error) {
+    var createMetadataField = function (params, success, error) {
       return new self.FieldMetadataResource(params).$save(success, error);
     };
 
-    var updateMetadata = function (anrId, params, success, error) {
+    var updateMetadataFields = function (anrId, params, success, error) {
       self.FieldMetadataResource.update({anrId: anrId}, params, success, error);
     };
 
-    var deleteMetadata = function (id, anrId, success, error) {
-      self.FieldMetadataResource.delete({metadataId: id, anrId: anrId}, success, error);
+    var deleteMetadataField = function (id, anrId, success, error) {
+      self.FieldMetadataResource.delete({metadataFieldId: id, anrId: anrId}, success, error);
     };
 
     var getInstanceMetadataList = function (params) {
@@ -84,11 +84,11 @@
       makeResource: makeResource,
 
       // Fields Metadata.
-      getMetadataList: getMetadataList,
-      getMetadata: getMetadata,
-      createMetadata: createMetadata,
-      updateMetadata: updateMetadata,
-      deleteMetadata: deleteMetadata,
+      getMetadataFields: getMetadataFields,
+      getMetadataField: getMetadataField,
+      createMetadataField: createMetadataField,
+      updateMetadataFields: updateMetadataFields,
+      deleteMetadataField: deleteMetadataField,
 
       // Instance Metadata.
       getInstanceMetadataList: getInstanceMetadataList,
