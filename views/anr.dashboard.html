@@ -22,16 +22,17 @@
                 <div layout="column" flex="45">
                     <p class="md-title" translate>Current risks</p>
                     <div layout="row" layout-align="start center" layout-wrap="">
-                        <md-input-container flex="30">
+                        <md-input-container flex="20">
                             <label translate>Display current risks by</label>
                             <md-select ng-model="displayCurrentRisksBy">
                                 <md-option value="level" selected>{{ 'Level' | translate }}</md-option>
+                                <md-option value="treatment" >{{ 'Treatment' | translate }}</md-option>
                                 <md-option value="asset" >{{ 'All assets' | translate }}</md-option>
                                 <md-option value="parentAsset" >{{ 'Parent asset' | translate }}</md-option>
                             </md-select>
                         </md-input-container>
 
-                        <md-input-container ng-show ="displayCurrentRisksBy=='level'" flex="30">
+                        <md-input-container ng-show ="displayCurrentRisksBy=='level'">
                             <label translate >Chart type</label>
                             <md-select ng-model="currentRisksOptions" >
                                 <md-option value="vertical" selected>{{ 'Discrete Bar Chart' | translate }}</md-option>
@@ -39,6 +40,27 @@
                             </md-select >
                         </md-input-container >
 
+                        <md-input-container ng-show ="displayCurrentRisksBy!=='treatment'" flex="20">
+                            <label translate >Filter by treatment</label>
+                            <md-select ng-model="currentRisksTreatmentOptions" >
+                                <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
+                                <md-option value="treated" >{{ 'Treated' | translate }}</md-option>
+                                <md-option value="not_treated" >{{ 'Not treated' | translate }}</md-option>
+                                <md-option value="reduction" >{{ 'Reduction' | translate }}</md-option>
+                                <md-option value="denied" >{{ 'Denied' | translate }}</md-option>
+                                <md-option value="accepted" >{{ 'Accepted' | translate }}</md-option>
+                                <md-option value="shared" >{{ 'Shared' | translate }}</md-option>
+                            </md-select >
+                        </md-input-container >
+
+                        <md-input-container ng-show ="displayCurrentRisksBy=='treatment'" flex="20">
+                            <label translate >Display treatment by</label>
+                            <md-select ng-model="currentRisksTreatmentAndAssetOptions" >
+                                <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
+                                <md-option value="asset" >{{ 'All assets' | translate }}</md-option>
+                                <md-option value="parentAsset" >{{ 'Parent asset' | translate }}</md-option>
+                            </md-select >
+                        </md-input-container >
                         <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphCurrentRisks', 'currentRisksChartBy' + displayCurrentRisksBy)">
                             <md-icon class="md-warn">file_download</md-icon>
                         </md-button>
@@ -68,16 +90,17 @@
                 <div layout="column" flex="45">
                     <p class="md-title" translate>Residual risks</p>
                     <div layout="row" layout-align="start center" layout-wrap="">
-                        <md-input-container flex="30">
+                        <md-input-container flex="20">
                             <label translate>Display residual risks by</label>
                             <md-select ng-model="displayTargetRisksBy">
                                 <md-option value="level" selected>{{ 'Level' | translate }}</md-option>
+                                <md-option value="treatment" >{{ 'Treatment' | translate }}</md-option>
                                 <md-option value="asset" >{{ 'All assets' | translate }}</md-option>
                                 <md-option value="parentAsset" >{{ 'Parent asset' | translate }}</md-option>
                             </md-select>
                         </md-input-container>
 
-                        <md-input-container ng-show ="displayTargetRisksBy=='level'" flex="30">
+                        <md-input-container ng-show="displayTargetRisksBy=='level'">
                             <label translate>Chart type</label>
                             <md-select ng-model="targetRisksOptions">
                                 <md-option value="vertical" selected>{{ 'Discrete Bar Chart' | translate }}</md-option>
@@ -85,6 +108,27 @@
                             </md-select>
                         </md-input-container>
 
+                        <md-input-container ng-show="displayTargetRisksBy!=='treatment'" flex="20">
+                            <label translate >Filter by treatment</label>
+                            <md-select ng-model="targetRisksTreatmentOptions" >
+                                <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
+                                <md-option value="treated" >{{ 'Treated' | translate }}</md-option>
+                                <md-option value="not_treated" >{{ 'Not treated' | translate }}</md-option>
+                                <md-option value="reduction" >{{ 'Reduction' | translate }}</md-option>
+                                <md-option value="denied" >{{ 'Denied' | translate }}</md-option>
+                                <md-option value="accepted" >{{ 'Accepted' | translate }}</md-option>
+                                <md-option value="shared" >{{ 'Shared' | translate }}</md-option>
+                            </md-select >
+                        </md-input-container>
+
+                        <md-input-container ng-show ="displayTargetRisksBy=='treatment'" flex="20">
+                            <label translate >Display treatment by</label>
+                            <md-select ng-model="targetRisksTreatmentAndAssetOptions" >
+                                <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
+                                <md-option value="asset" >{{ 'All assets' | translate }}</md-option>
+                                <md-option value="parentAsset" >{{ 'Parent asset' | translate }}</md-option>
+                            </md-select >
+                        </md-input-container >
                         <md-button class="md-icon-button" title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphTargetRisks', 'targetRisksChartBy' + displayTargetRisksBy)">
                             <md-icon class="md-warn">file_download</md-icon>
                         </md-button>
@@ -118,22 +162,45 @@
                 <div layout="column" flex="45">
                     <p class="md-title" translate>Current risks</p>
                     <div layout="row" layout-align="start center" layout-wrap="">
-                        <md-input-container flex="30">
+                        <md-input-container flex="20">
                             <label translate>Display current operational risks by</label>
                             <md-select ng-model="displayCurrentOpRisksBy">
                                 <md-option value="level" selected>{{ 'Level' | translate }}</md-option>
+                                <md-option value="treatment" >{{ 'Treatment' | translate }}</md-option>
                                 <md-option value="asset" >{{ 'All assets' | translate }}</md-option>
                                 <md-option value="parentAsset" >{{ 'Parent asset' | translate }}</md-option>
                             </md-select>
                         </md-input-container>
 
-                        <md-input-container ng-show ="displayCurrentOpRisksBy=='level'" flex="30">
+                        <md-input-container ng-show ="displayCurrentOpRisksBy=='level'">
                             <label translate >Chart type</label>
                             <md-select ng-model="currentOpRisksOptions" >
                                 <md-option value="vertical" selected>{{ 'Discrete Bar Chart' | translate }}</md-option>
                                 <md-option value="donut" >{{ 'Donut Chart' | translate }}</md-option>
                             </md-select >
                         </md-input-container>
+
+                        <md-input-container ng-show="displayCurrentOpRisksBy!=='treatment'" flex="20">
+                            <label translate >Filter by treatment</label>
+                            <md-select ng-model="currentOpRisksTreatmentOptions" >
+                                <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
+                                <md-option value="treated" >{{ 'Treated' | translate }}</md-option>
+                                <md-option value="not_treated" >{{ 'Not treated' | translate }}</md-option>
+                                <md-option value="reduction" >{{ 'Reduction' | translate }}</md-option>
+                                <md-option value="denied" >{{ 'Denied' | translate }}</md-option>
+                                <md-option value="accepted" >{{ 'Accepted' | translate }}</md-option>
+                                <md-option value="shared" >{{ 'Shared' | translate }}</md-option>
+                            </md-select >
+                        </md-input-container>
+
+                        <md-input-container ng-show ="displayCurrentOpRisksBy=='treatment'" flex="20">
+                            <label translate >Display treatment by</label>
+                            <md-select ng-model="currentOpRisksTreatmentAndAssetOptions" >
+                                <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
+                                <md-option value="asset" >{{ 'All assets' | translate }}</md-option>
+                                <md-option value="parentAsset" >{{ 'Parent asset' | translate }}</md-option>
+                            </md-select >
+                        </md-input-container >
 
                         <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphCurrentRisks', 'currentRisksChartBy' + displayCurrentRisksBy)">
                             <md-icon class="md-warn">file_download</md-icon>
@@ -164,22 +231,45 @@
                 <div layout="column" flex="45">
                     <p class="md-title" translate>Residual risks</p>
                     <div layout="row" layout-align="start center" layout-wrap="">
-                        <md-input-container flex="30">
+                        <md-input-container flex="20">
                             <label translate>Display residual operational risks by</label>
                             <md-select ng-model="displayTargetOpRisksBy">
                                 <md-option value="level" selected>{{ 'Level' | translate }}</md-option>
+                                <md-option value="treatment" >{{ 'Treatment' | translate }}</md-option>
                                 <md-option value="asset" >{{ 'All assets' | translate }}</md-option>
                                 <md-option value="parentAsset" >{{ 'Parent asset' | translate }}</md-option>
                             </md-select>
                         </md-input-container>
 
-                        <md-input-container ng-show ="displayTargetOpRisksBy=='level'" flex="30">
+                        <md-input-container ng-show ="displayTargetOpRisksBy=='level'">
                             <label translate>Chart type</label>
                             <md-select ng-model="targetOpRisksOptions">
                                 <md-option value="vertical" selected>{{ 'Discrete Bar Chart' | translate }}</md-option>
                                 <md-option value="donut" >{{ 'Donut Chart' | translate }}</md-option>
                             </md-select>
                         </md-input-container>
+
+                        <md-input-container ng-show="displayTargetOpRisksBy!=='treatment'" flex="20">
+                            <label translate >Filter by treatment</label>
+                            <md-select ng-model="targetOpRisksTreatmentOptions" >
+                                <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
+                                <md-option value="treated" >{{ 'Treated' | translate }}</md-option>
+                                <md-option value="not_treated" >{{ 'Not treated' | translate }}</md-option>
+                                <md-option value="reduction" >{{ 'Reduction' | translate }}</md-option>
+                                <md-option value="denied" >{{ 'Denied' | translate }}</md-option>
+                                <md-option value="accepted" >{{ 'Accepted' | translate }}</md-option>
+                                <md-option value="shared" >{{ 'Shared' | translate }}</md-option>
+                            </md-select >
+                        </md-input-container>
+
+                        <md-input-container ng-show ="displayTargetOpRisksBy=='treatment'" flex="20">
+                            <label translate >Display treatment by</label>
+                            <md-select ng-model="targetOpRisksTreatmentAndAssetOptions" >
+                                <md-option value="all" selected>{{ 'All (unfiltered)' | translate }}</md-option>
+                                <md-option value="asset" >{{ 'All assets' | translate }}</md-option>
+                                <md-option value="parentAsset" >{{ 'Parent asset' | translate }}</md-option>
+                            </md-select >
+                        </md-input-container >
 
                         <md-button class="md-icon-button" title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphTargetRisks', 'targetRisksChartBy' + displayTargetRisksBy)">
                             <md-icon class="md-warn">file_download</md-icon>
@@ -217,10 +307,11 @@
                         <md-option value="occurrence" selected>{{ 'Occurrence' | translate }}</md-option>
                         <md-option value="probability" >{{ 'Probability' | translate }}</md-option>
                         <md-option value="max_associated_risk" >{{ 'Max. associated risk level' | translate }}</md-option>
+                        <md-option value="parentAsset" >{{ 'Parent asset' | translate }}</md-option>
                     </md-select>
                 </md-input-container>
 
-                <md-input-container flex>
+                <md-input-container ng-show="displayThreatsBy!=='parentAsset'" flex>
                     <label translate>Chart type</label>
                     <md-select ng-model="threatsOptions">
                         <md-option value="vertical">{{ 'Discrete Bar Chart' | translate }}</md-option>
@@ -228,11 +319,20 @@
                     </md-select>
                 </md-input-container>
 
-                <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphThreats', 'threatsChartBy' + displayThreatsBy)">
+                <md-input-container ng-show="displayThreatsBy=='parentAsset'" flex>
+                    <label translate>Number of threats to display</label>
+                    <md-select ng-model="threatsParentAssetsOptions">
+                        <md-option value="3">3</md-option>
+                        <md-option value="5" selected> 5</md-option>
+                        <md-option value="10">10</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-button ng-show="displayThreatsBy!=='parentAsset'" class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphThreats', 'threatsChartBy' + displayThreatsBy)">
                     <md-icon class="md-warn">file_download</md-icon>
                 </md-button>
             </div>
-            <d3 id="graphThreats" layout="row" layout-align="center center"></d3>
+            <d3 style="{{displayThreatsBy=='parentAsset' ? 'display:block' : 'display:flex'}}" id="graphThreats" layout="row" layout-align="center center"></d3>
         </md-tab>
 
         <md-tab label="{{ 'Vulnerabilities' | translate }}">
@@ -243,10 +343,11 @@
                         <md-option value="occurrence" selected>{{ 'Occurrence' | translate }}</md-option>
                         <md-option value="qualification" >{{ 'Qualification' | translate }}</md-option>
                         <md-option value="max_associated_risk">{{ 'Max. associated risk level' | translate }}</md-option>
+                        <md-option value="parentAsset" >{{ 'Parent asset' | translate }}</md-option>
                     </md-select>
                 </md-input-container>
 
-                <md-input-container flex>
+                <md-input-container ng-show="displayVulnerabilitiesBy!=='parentAsset'" flex>
                     <label translate>Number of vulnerabilities to display</label>
                     <md-select ng-model="vulnerabilitiesDisplayed">
                         <md-option value="5" > 5 </md-option>
@@ -259,7 +360,7 @@
                     </md-select>
                 </md-input-container>
 
-                <md-input-container flex>
+                <md-input-container ng-show="displayVulnerabilitiesBy!=='parentAsset'" flex>
                     <label translate>Chart type</label>
                     <md-select ng-model="vulnerabilitiesOptions">
                         <md-option value="vertical" selected> {{ 'Discrete Bar Chart' | translate }} </md-option>
@@ -267,11 +368,20 @@
                     </md-select>
                 </md-input-container>
 
-                <md-button class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphVulnerabilities', 'vulnerabilitiesChartBy' + displayVulnerabilitiesBy)">
+                <md-input-container ng-show="displayVulnerabilitiesBy=='parentAsset'" flex>
+                    <label translate>Number of vulnerabilities to display</label>
+                    <md-select ng-model="vulnerabilitiesParentAssetsOptions">
+                        <md-option value="3">3</md-option>
+                        <md-option value="5" selected>5</md-option>
+                        <md-option value="10">10</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-button ng-show="displayVulnerabilitiesBy!=='parentAsset'" class="md-icon-button " title="{{ 'Export (PNG)' | translate }}" ng-disabled="!dashboard.export" ng-click="exportAsPNG('graphVulnerabilities', 'vulnerabilitiesChartBy' + displayVulnerabilitiesBy)">
                     <md-icon class="md-warn">file_download</md-icon>
                 </md-button>
             </div>
-            <d3 id="graphVulnerabilities" layout="row" layout-align="center center"></d3>
+            <d3 style="{{displayVulnerabilitiesBy=='parentAsset' ? 'display:block' : 'display:flex'}}" id="graphVulnerabilities" layout="row" layout-align="center center"></d3>
         </md-tab>
 
         <md-tab label="{{ 'Cartography' | translate }}">

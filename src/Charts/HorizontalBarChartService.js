@@ -60,7 +60,7 @@
 
         var numberFormat = d3.format(".5");
 
-        d3.select(tag).select("svg").remove();
+        d3.select(tag).selectAll("svg").remove();
         d3.selectAll(".tooltip" + tag.substring(1)).remove();
 
         var svg = d3.select(tag).append("svg")
@@ -135,7 +135,7 @@
           svg.append("text")
             .attr("x", width / 2)
             .attr("y", height)
-            .attr("dy", "3em")
+            .attr("dy", "2em")
             .attr("font-size", 10)
             .style("text-anchor", "middle")
             .text(options.xLabel);

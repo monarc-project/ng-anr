@@ -19,6 +19,7 @@
       *        {int}      rotationXAxisLabel - degrees to rotate x Axis labels
       *        {float}    offsetXAxisLabel - Offset dy for x Axis labels
       *        {boolean}  showValues - show labels of values
+      *        {boolean}  multipleYaxis - set a second y axis
       *        {boolean}  showLegend - show legend
       *        {string}   nameValue - define key to set as value
       * @return {svg} chart svg
@@ -29,10 +30,11 @@
           margin : {top: 15, right: 100, bottom: 30, left: 40},
           width : 400,
           height : 300,
-          color : ["#D6F107","#FFBC1C","#FD661F"],
+          color : d3.schemeCategory10,
           rotationXAxisLabel: 0,
           offsetXAxisLabel: 0,
           showValues : true,
+          multipleYaxis: false,
           showLegend : true,
           nameValue : 'value'
         } //default options for the graph
@@ -52,6 +54,9 @@
         var y = d3.scaleLinear()
             .range([height, 0]);
 
+        var y2 = d3.scaleLinear()
+            .range([height, 0]);
+
         var xAxis = d3.axisBottom(x0)
             .tickFormat((d,i) => { return categoriesNames[i]});
 
@@ -59,8 +64,21 @@
             .tickSize(-width)
             .tickSizeOuter(0);
 
+        var y2Axis = d3.axisRight(y2)
+            .tickSize(width)
+            .tickSizeOuter(0);
+
         var color = d3.scaleOrdinal()
             .range(options.color);
+
+        var line = d3.line()
+            .curve(d3.curveMonotoneX)
+            .x((d) => {return x0(d.uuid) + x0.bandwidth() /2})
+            .y((d) => {
+                if (!isNaN(d.average)) return y2(d.average)
+                return y2(0)
+             });
+
 
         d3.select(tag).select("svg").remove();
         d3.selectAll(".tooltip" + tag.substring(1)).remove();
@@ -113,6 +131,7 @@
         var categoriesUuids = data.map(function(d) { return d.uuid; });
         var categoriesNames = data.map(function(d) { return d.category; });
         var seriesNames = [...new Set(data.flatMap(x => x.series.flatMap(x=>x.label)))];
+        var seriesValues = data.flatMap(x => x.series.flatMap(x=>x[options.nameValue]));
 
         if (options.externalFilter) {
           $timeout(function(){
@@ -129,7 +148,7 @@
 
         x0.domain(categoriesUuids);
         x1.domain(seriesNames).range([0, x0.bandwidth()]);
-        y.domain([0, d3.max(data, function(category) { return d3.max(category.series.map(function(d){return d[options.nameValue];}))})]).nice();
+        y.domain([0, d3.max(seriesValues) > 0  ? d3.max(seriesValues) : 1]).nice();
 
         svg.append("g")
             .attr("class", "xAxis")
@@ -148,17 +167,62 @@
 
         svg.append("g")
             .attr("class", "yAxis")
-            .call(yAxis)
-          .append("text")
-            .attr("transform", "rotate(-90)")
-            .attr("y", 6)
-            .attr("dy", ".71em")
-            .style("text-anchor", "end");
+            .call(yAxis);
 
         svg.selectAll(".yAxis").selectAll(".tick")
           .nodes().shift()
           .remove();
-        customizeTicks();
+
+        customizeTicks("yAxis");
+
+        if (options.yLabel) {
+            svg.append("text")
+              .attr("transform", "rotate(-90)")
+              .attr("x", -height/2)
+              .attr("dy", "-2em")
+              .style("text-anchor", "middle")
+              .attr("font-size",10)
+              .text(gettextCatalog.getString(options.yLabel));
+        }
+
+        if (options.multipleYaxis) {
+            let averages = [];
+            data.map(cat => {
+              averages.push(
+                {
+                  uuid: cat.series[0].uuid,
+                  average: d3.sum(cat.series.map(x => x.sum)) / d3.sum(cat.series.map(x => x.value))
+                }
+              )
+            })
+
+            y2.domain([0, d3.max(averages.map(x => x.average))]).nice();
+
+            svg.append("g")
+                .attr("class", "y2Axis")
+                .call(y2Axis)
+                .call(g => g.select(".domain").remove());
+
+            if (svg.selectAll(".y2Axis").selectAll(".tick").nodes().shift()) {
+                svg.selectAll(".y2Axis").selectAll(".tick")
+                  .nodes().shift()
+                  .remove();
+            }
+
+
+            customizeTicks("y2Axis");
+
+            if (options.y2Label) {
+                svg.append("text")
+                  .attr("transform", "rotate(-90)")
+                  .attr("y", width)
+                  .attr("x", -height/2)
+                  .attr("dy", "2.5em")
+                  .style("text-anchor", "middle")
+                  .attr("font-size",10)
+                  .text(gettextCatalog.getString(options.y2Label));
+            }
+        }
 
         var category = svg.selectAll(".category")
             .data(data)
@@ -168,13 +232,6 @@
             .on("mouseover", function() { mouseover() })
             .on("mousemove", function(d) { mousemove(d,this) })
             .on("mouseleave", function() { mouseleave() })
-
-        if(options.onClickFunction){
-          category
-              .on("mousedown", function() { mouseleave() })
-              .on("click", options.onClickFunction);
-        }
-
 
         category.selectAll("rect")
             .data(function(d) { return d.series; })
@@ -191,6 +248,11 @@
             .attr("height", function(d) { return height - y(d[options.nameValue]); })
             .duration(500);
 
+        if (options.onClickFunction){
+          category
+              .on("mousedown", function() { mouseleave() })
+              .on("click", options.onClickFunction);
+        }
 
         if (options.showValues) {
           category.selectAll("text")
@@ -205,10 +267,19 @@
               .text(function(d) { return d[options.nameValue]; });
         }
 
+        if (options.multipleYaxis) {
+            svg.append("path")
+              .attr("class", "averageLine")
+              .attr("fill", "none")
+              .attr("stroke", "black")
+              .attr("stroke-opacity", 0.7)
+              .attr("stroke-width", 1);
+        }
+
         if (options.showLegend) {
           var dataLength = 0;
           var legend = svg.selectAll(".legend")
-              .data(seriesNames.slice().reverse())
+              .data(seriesNames)
             .enter().append("g")
               .attr("class", "legend")
               .attr("transform", function(d,i) {
@@ -244,7 +315,6 @@
               .attr("font-size",10)
               .text(function(d) {return d; });
         }
-
 
         function getNewSeries(d){
           id = d.id.split("id").pop();
@@ -288,9 +358,9 @@
           return newSeries;
         };
 
-        function customizeTicks(){
-          var yTicks = svg.selectAll(".yAxis").selectAll(".tick")
-          yTicks.selectAll("line")
+        function customizeTicks(axis){
+          let ticks  = svg.selectAll("." + axis).selectAll(".tick")
+          ticks.selectAll("line")
               .attr("opacity", 0.7)
               .attr("transform", `translate(1,0)`)
               .attr("stroke", "lightgrey");
@@ -325,7 +395,17 @@
               .call(yAxis)
               .duration(500);
 
-            customizeTicks();
+            customizeTicks("yAxis");
+
+            if (options.multipleYaxis) {
+                svg.select(".y2Axis")
+                  .transition()
+                  .duration(500)
+                  .call(y2Axis)
+                  .call(g => g.select(".domain").remove());
+
+                customizeTicks("y2Axis");
+            }
 
             var categories = svg.selectAll(".category");
 
@@ -389,15 +469,16 @@
 
         function updateStackedChart(newCategories,newData) {
           x0.domain(newCategories);
+
           var dataFiltered = newData.map(function(cat){
                         return cat.series.filter(function(serie){
                           return filtered.indexOf(serie.label.replace(/\s/g, '')) == -1
                         })
                       });
 
-          var maxValues = dataFiltered.map(x => x.map(d => d[options.nameValue]).reduce((a, b) => a + b, 0));
+          var maxValues = dataFiltered.map(x => d3.sum(x.map(d => d[options.nameValue])));
 
-          y.domain([0, d3.max(maxValues)]).nice();
+          y.domain([0, d3.max(maxValues) > 0 ? d3.max(maxValues) : 1]).nice();
 
           svg.select(".xAxis")
             .call(xAxis)
@@ -415,9 +496,37 @@
           svg.select(".yAxis")
             .transition()
             .call(yAxis)
-            .duration(500)
+            .duration(500);
 
-          customizeTicks();
+          customizeTicks("yAxis");
+
+          if (options.multipleYaxis) {
+              let averages = [];
+              dataFiltered.map(cat => {
+                averages.push(
+                  {
+                    uuid: cat[0].uuid,
+                    average: d3.sum(cat.map(x => x.sum)) / d3.sum(cat.map(x => x.value))
+                  }
+                )
+              })
+
+              y2.domain([
+                  0,
+                  d3.max(averages.map(x => x.average)) ? d3.max(averages.map(x => x.average)) : 1
+              ]).nice();
+
+              svg.select(".y2Axis")
+                .transition()
+                .duration(500)
+                .call(y2Axis)
+                .call(g => g.select(".domain").remove());
+
+              customizeTicks("y2Axis");
+
+              svg.selectAll('.averageLine')
+                .attr('d', () => {if (!isNaN(y2.domain()[1])) return line(averages)});
+          }
 
           var categories = svg.selectAll(".category");
 
@@ -493,6 +602,8 @@
                   .duration(500);
                 }
               });
+
+
         }
 
         function mouseover() {
