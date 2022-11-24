@@ -2,7 +2,7 @@
     <md-card flex>
         <div class="md-padding-left md-padding-right" layout="column" layout-gt-md="row" layout-align="space-between center">
             <div layout="row" layout-align="start center" class="border-right mw250p">
-                <div flex ng-if="instance" class="active-inst">
+                <div flex ng-if="instance" class="active-inst" ng-class="{'forceBreakWord': !_langField(instance,'name').includes(' ')}">
                     <h2 class="no-margin">
                         <md-icon ng-if="instance.object.scope == 2" style="color: #F57C00">language</md-icon>
                         {{ _langField(instance,'name') }}
