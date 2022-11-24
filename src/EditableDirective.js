@@ -76,7 +76,7 @@ angular.module('AnrModule').directive('editable', function(){
 					next_position = current_pos + 1 < this.fields.length ? current_pos + 1 : 0;
 				}
 
-				while (!this.fields[next_position].shown && this.fields[next_position].readOnly) {
+				while (this.fields.length && !this.fields[next_position].shown && this.fields[next_position].readOnly) {
 					if(direction == 'prev'){
 						next_position = next_position - 1 >= 0 ? next_position - 1 : this.fields.length - 1;
 					}
@@ -85,7 +85,7 @@ angular.module('AnrModule').directive('editable', function(){
 					}
 				}
 
-				this.fields[next_position].edit();
+				if (this.fields.length) this.fields[next_position].edit();
 			};
 		}]
 	}
@@ -249,10 +249,13 @@ angular.module('AnrModule').directive('editable', function(){
     },
     link: function(scope, element, attrs) {
     	function triggerValidation(direction){
-    		scope.$apply(function() {
-    			scope.callback.call(null, direction);
-        });
-        return event.preventDefault();
+            setTimeout(function () {
+              scope.$apply(function() {
+                  scope.callback.call(null, direction);
+              });
+            }, 0);
+
+            return event.preventDefault();
     	}
       element.bind("keydown keypress", function(event) {
         if ( element.prop('tagName').toLowerCase() == "textarea" && ((event.which === 13 && event.ctrlKey) || (event.which === 13 && event.metaKey))) {
