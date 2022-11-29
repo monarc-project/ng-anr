@@ -91,16 +91,16 @@
                             </div>
                         </md-autocomplete>
 
-                        <md-button class="md-icon-button md-primary" ng-click="createNewTheme($event, theme, themeSearchText)" ng-show="!threat.theme.id && themeSearchText">
+                        <md-button class="md-icon-button md-primary" ng-click="createNewTheme($event, theme, themeSearchText)" ng-show="!threat.theme.id || themeSearchText !== threat.theme['label' + language]">
                           <md-tooltip md-direction="left">
                               {{ 'Add a theme' | translate }}
                           </md-tooltip>
                             <md-icon>add_to_photos</md-icon>
                         </md-button>
-                        <md-button class="md-icon-button md-primary" ng-click="editTheme($event,threat.theme)" ng-show="threat.theme.id">
-                            <md-icon>edit</md-icon>
+                        <md-button class="md-icon-button md-primary" ng-click="editTheme($event,threat.theme)" ng-show="threat.theme.id" ng-hide="themeSearchText !== threat.theme['label' + language]">
+                            <md-icon>edit</md-icon>                           
                         </md-button>
-                        <md-button class="md-icon-button md-warn" ng-click="deleteTheme($event,threat.theme)" ng-show="threat.theme.id">
+                        <md-button class="md-icon-button md-warn" ng-click="deleteTheme($event,threat.theme)" ng-show="threat.theme.id" ng-hide="themeSearchText !== threat.theme['label' + language]">
                             <md-icon>delete</md-icon>
                         </md-button>
                     </div>
