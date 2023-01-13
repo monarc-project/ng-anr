@@ -2926,6 +2926,21 @@
       });
     }
 
+    $scope.cancelInstanceImport = function(ev, parentId) {
+      var confirm = $mdDialog.confirm()
+        .title(gettextCatalog.getString('Are you sure you want cancel the import process?'))
+        .textContent(gettextCatalog.getString('This operation is irreversible and the analysis will be not complete.'))
+        .targetEvent(ev)
+        .ok(gettextCatalog.getString('Yes'))
+        .theme('light')
+        .cancel(gettextCatalog.getString('No'));
+      $mdDialog.show(confirm).then(function() {
+        $http.delete('api/client-anr/' + $scope.model.anr.id + '/instances/import').then(function(data) {});
+      }, function (reject) {
+        $scope.handleRejectionDialog(reject);
+      });
+    }
+
     $scope.openAnrMenu = function($mdMenuEvent, ev) {
       $mdMenuEvent();
     }

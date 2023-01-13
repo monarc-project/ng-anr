@@ -30,6 +30,11 @@
                             <md-icon class="md-light-theme material-icons">play_for_work</md-icon><span class="black">{{ 'Import a risk analysis' | translate }}</span>
                         </md-button>
                     </md-menu-item>
+                    <md-menu-item ng-if="model.anr.status == 2 || model.anr.status == 3">
+                        <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="cancelInstanceImport($event)">
+                            <md-icon class="md-light-theme material-icons">play_for_work</md-icon><span class="black">{{ 'Cancel import process (test mode -> should be in different place)' | translate }}</span>
+                        </md-button>
+                    </md-menu-item>
                     <md-menu-item>
                         <md-button class="md-primary" ng-click="exportAnr($event)">
                             <md-icon class="md-light-theme material-icons">call_made</md-icon><span class="black">{{ 'Export the whole risk analysis' | translate }}</span>
