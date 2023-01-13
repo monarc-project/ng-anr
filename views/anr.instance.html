@@ -2,7 +2,7 @@
     <md-card flex>
         <div class="md-padding-left md-padding-right" layout="column" layout-gt-md="row" layout-align="space-between center">
             <div layout="row" layout-align="start center" class="border-right mw250p">
-                <div flex ng-if="instance" class="active-inst">
+                <div flex ng-if="instance" class="active-inst" ng-class="{'forceBreakWord': !_langField(instance,'name').includes(' ')}">
                     <h2 class="no-margin">
                         <md-icon ng-if="instance.object.scope == 2" style="color: #F57C00">language</md-icon>
                         {{ _langField(instance,'name') }}
@@ -27,7 +27,7 @@
                                 <md-icon class="md-light-theme material-icons">play_for_work</md-icon><span class="black">{{ 'Import analysis' | translate }}</span>
                             </md-button>
                         </md-menu-item>
-                        <md-menu-item>
+                        <md-menu-item ng-if="OFFICE_MODE == 'FO'">
                             <md-button class="md-primary" ng-click="exportInstance($event)">
                                 <md-icon class="md-light-theme material-icons">call_made</md-icon><span class="black">{{ 'Export analysis' | translate }}</span>
                             </md-button>

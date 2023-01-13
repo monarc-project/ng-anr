@@ -234,7 +234,7 @@
               <md-tooltip md-direction="left">
                   {{ 'Add a referential' | translate }}
               </md-tooltip>
-              <md-icon class="md-icon-button md-primary">add_to_photos</md-icon>
+              <md-icon>add_to_photos</md-icon>
             </md-button>
             <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly && referentials.items.referentials.length > 0" ng-click="editReferential($event,referential_uuid)">
               <md-tooltip md-direction="left">
@@ -606,7 +606,7 @@
                 <md-tooltip md-direction="left">
                     {{ 'Add a recommendation set' | translate }}
                 </md-tooltip>
-                <md-icon class="md-icon-button md-primary">add_to_photos</md-icon>
+                <md-icon>add_to_photos</md-icon>
               </md-button>
               <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly && recommandationsSets.items['recommandations-sets'].length > 0" ng-click="editRecommandationSet($event,recommandation_set_uuid)">
                 <md-tooltip md-direction="left">

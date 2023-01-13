@@ -846,6 +846,10 @@ md-chips.md-default-theme .md-chips, md-chips .md-chips {
     color: #F57C00;
 }
 
+.forceBreakWord {
+    word-break: break-all;
+}
+
 .active-inst {
     font-weight: bold;
     color: #388E3C;

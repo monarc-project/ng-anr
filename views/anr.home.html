@@ -4,7 +4,7 @@
             <div flex ng-if="!model.anr">
                 <md-progress-circular md-indeterminate="true"></md-progress-circular>
             </div>
-            <div flex ng-if="model.anr" class="active-inst">
+            <div flex ng-if="model.anr" class="active-inst" ng-class="{'forceBreakWord': !_langField(model.anr,'label').includes(' ')}">
                 <h2 ng-if="OFFICE_MODE == 'FO'" class="no-margin ">
                     {{ _langField(model.anr,'label') }}
                 </h2>

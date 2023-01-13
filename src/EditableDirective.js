@@ -1,30 +1,30 @@
-angular.module('AnrModule').directive('editable', function(){
-	return{
+angular.module('AnrModule').directive('editable', function() {
+	return {
 		restrict: 'A',
 		scope: {
 			callback: '=',
 			visibleCallback: '=visible'
 		},
-		controller: ['$scope', '$attrs', function($scope, $attrs){
+		controller: ['$scope', '$attrs', function($scope, $attrs) {
 			this.fields = [];
-			this.addField = function(field){
+			this.addField = function(field) {
 				this.fields.push(field);
 			};
 
-			this.destroyField = function (field) {
+			this.destroyField = function(field) {
 				this.fields.splice(this.fields.indexOf(field), 1);
 			};
 
 			this.callback = $scope.callback;
 			this.visibleCallback = $scope.visibleCallback;
 
-			this.saveChange = function(field, direction){
+			this.saveChange = function(field, direction) {
 				field.error = false;
 
-				if( $attrs.forceCallback == undefined && (field.initialValue == field.editedValue || field.editedValue == null) ){
+				if ($attrs.forceCallback == undefined && (field.initialValue == field.editedValue || field.editedValue == null)) {
 					// value didn't change, don't call callback
 					field.cancel();
-					if(direction != undefined){
+					if (direction != undefined) {
 						this.moveEdition(field, direction);
 					}
 
@@ -35,52 +35,52 @@ angular.module('AnrModule').directive('editable', function(){
 				field.model[field.name] = field.editedValue;
 				var result = this.callback.call(null, field.model, field.name, field.rootModel);
 
-				if(result.then == undefined){
+				if (result.then == undefined) {
 					this.handleCallbackReturn(result, field, direction);
-				}
-				else{
+				} else {
 					var self = this;
-					result.then(function(){	 self.handleCallbackReturn(true, field, direction);}, function(){ self.handleCallbackReturn(false, field, direction);} );
+					result.then(function() {
+						self.handleCallbackReturn(true, field, direction);
+					}, function() {
+						self.handleCallbackReturn(false, field, direction);
+					});
 				}
 				return true;
 			};
 
-			this.checkVisibility = function(field){
-				if(this.visibleCallback){
+			this.checkVisibility = function(field) {
+				if (this.visibleCallback) {
 					return this.visibleCallback.call(null, field.model);
-				}
-				else return true;
+				} else return true;
 			};
 
-			this.handleCallbackReturn = function(success, field, direction){
-				if( success ){//gestion des erreurs
+			this.handleCallbackReturn = function(success, field, direction) {
+				if (success) { //gestion des erreurs
 					field.error = false;
 					field.edited = false;
 
-					if(direction != undefined){
+					if (direction != undefined) {
 						this.moveEdition(field, direction);
 					}
-				}
-				else{
+				} else {
 					field.error = true;
 				}
 			};
 
-			this.moveEdition = function(field, direction){
+			this.moveEdition = function(field, direction) {
+				if (!this.fields.length) return;
 				var current_pos = this.fields.indexOf(field);
 				var next_position = 0;
-				if(direction == 'prev'){
+				if (direction == 'prev') {
 					next_position = current_pos - 1 >= 0 ? current_pos - 1 : this.fields.length - 1;
-				}
-				else{//next
+				} else { //next
 					next_position = current_pos + 1 < this.fields.length ? current_pos + 1 : 0;
 				}
 
 				while (!this.fields[next_position].shown && this.fields[next_position].readOnly) {
-					if(direction == 'prev'){
+					if (direction == 'prev') {
 						next_position = next_position - 1 >= 0 ? next_position - 1 : this.fields.length - 1;
-					}
-					else{//next
+					} else { //next
 						next_position = next_position + 1 < this.fields.length ? next_position + 1 : 0;
 					}
 				}
@@ -89,24 +89,24 @@ angular.module('AnrModule').directive('editable', function(){
 			};
 		}]
 	}
-}).directive('editModel', ['$parse', function($parse){
+}).directive('editModel', ['$parse', function($parse) {
 
 	return {
 		require: ['^^editable', 'editModel'],
 		restrict: 'A',
-		scope:{
+		scope: {
 			editModel: "=",
 		},
-		controller: ['$scope', '$attrs', function($scope, $attrs){
+		controller: ['$scope', '$attrs', function($scope, $attrs) {
 			this.model = $scope.editModel;
 		}]
 	}
 
-}]).directive('editField', ['$parse', '$timeout', function($parse, $timeout){
+}]).directive('editField', ['$parse', '$timeout', function($parse, $timeout) {
 	return {
 		require: ['^^editable', '^^editModel'],
 		restrict: 'A',
-		template: function (elem, attrs) {
+		template: function(elem, attrs) {
 			var tmpl = '<span ng-class="class" ng-if="! field.edited">{{field.model[field.name]';
 
 			if (attrs.editFilter) {
@@ -142,7 +142,7 @@ angular.module('AnrModule').directive('editable', function(){
 			readOnly: '=editReadonly',
 			canChange: '=editCanchange',
 		},
-		link: function(scope, element, attrs, ctrls){
+		link: function(scope, element, attrs, ctrls) {
 			scope.editableCtrl = ctrls[0];
 			scope.modelCtrl = ctrls[1];
 
@@ -158,12 +158,12 @@ angular.module('AnrModule').directive('editable', function(){
 				editedValue: null,
 				readOnly: scope.readOnly !== undefined ? scope.readOnly : false,
 				canChange: scope.canChange !== undefined ? scope.canChange : true,
-				edit: function(){
+				edit: function() {
 					this.edited = true;
 					this.initialValue = this.model[this.name];
 					this.editedValue = angular.copy(this.model[this.name]);
 
-					$timeout(function () {
+					$timeout(function() {
 						// Find and focus the input element
 						for (var i in element[0].childNodes) {
 							var e = element[0].childNodes[i];
@@ -177,7 +177,7 @@ angular.module('AnrModule').directive('editable', function(){
 
 
 				},
-				cancel: function(){
+				cancel: function() {
 					this.model[this.name] = this.initialValue;
 					this.edited = false;
 					this.error = false;
@@ -189,36 +189,36 @@ angular.module('AnrModule').directive('editable', function(){
 			scope.editableCtrl.addField(scope.field);
 
 			if (scope.ngName) {
-				scope.$watch('ngName', function (newValue) {
+				scope.$watch('ngName', function(newValue) {
 					if (newValue != scope.name) {
 						scope.field.name = scope.ngName;
 					}
 				});
 			}
-			scope.$watch('show', function (newValue) {
+			scope.$watch('show', function(newValue) {
 				if (newValue != scope.shown) {
 					scope.field.shown = scope.editableCtrl.checkVisibility(scope.field);
 				}
 			});
 
-			element.on('click', function(){
-				if( !scope.field.edited && !scope.field.readOnly && scope.field.canChange){
-					scope.$apply(function(){
+			element.on('click', function() {
+				if (!scope.field.edited && !scope.field.readOnly && scope.field.canChange) {
+					scope.$apply(function() {
 						scope.startEdition();
 					});
 				}
 			});
 
-			scope.startEdition = function(){
+			scope.startEdition = function() {
 				scope.field.edit();
 			};
 
-			scope.cancelEdition = function(){
+			scope.cancelEdition = function() {
 				scope.field.cancel();
 			};
 
-			scope.saveEdition = function(direction){
-					scope.editableCtrl.saveChange(scope.field, direction);
+			scope.saveEdition = function(direction) {
+				scope.editableCtrl.saveChange(scope.field, direction);
 			};
 
 			scope.$on('$destroy', function() {
@@ -226,13 +226,13 @@ angular.module('AnrModule').directive('editable', function(){
 			});
 		}
 	}
-}]).directive('escape', function(){
+}]).directive('escape', function() {
 	return {
 		restrict: 'A',
-		link: function(scope, element, attrs){
-			element.bind("keydown keypress", function(event){
-				if( event.which == 27){
-					scope.$apply(function(){
+		link: function(scope, element, attrs) {
+			element.bind("keydown keypress", function(event) {
+				if (event.which == 27) {
+					scope.$apply(function() {
 						scope.$eval(attrs.escape);
 					});
 					event.preventDefault();
@@ -242,37 +242,37 @@ angular.module('AnrModule').directive('editable', function(){
 		}
 	};
 }).directive('action', function() {
-  return {
-    restrict: 'A',
-    scope:{
-    	callback: '=action'
-    },
-    link: function(scope, element, attrs) {
-    	function triggerValidation(direction){
-    		scope.$apply(function() {
-    			scope.callback.call(null, direction);
-        });
-        return event.preventDefault();
-    	}
-      element.bind("keydown keypress", function(event) {
-        if ( element.prop('tagName').toLowerCase() == "textarea" && ((event.which === 13 && event.ctrlKey) || (event.which === 13 && event.metaKey))) {
-           	triggerValidation();
-        }
-        else if(element.prop('tagName').toLowerCase() != "textarea" && event.which === 13){
-      		triggerValidation();
-      	}
-      	else if(event.which == 9 && event.shiftKey){//Shift TAB
-      		triggerValidation('prev');
-      	}
-      	else if(event.which == 9){//TAB
-      		triggerValidation('next');
-      	}
+	return {
+		restrict: 'A',
+		scope: {
+			callback: '=action'
+		},
+		link: function(scope, element, attrs) {
+			function triggerValidation(direction) {
+				setTimeout(function() {
+					scope.$apply(function() {
+						scope.callback.call(null, direction);
+					});
+				}, 0);
 
-      });
+				return event.preventDefault();
+			}
+			element.bind("keydown keypress", function(event) {
+				if (element.prop('tagName').toLowerCase() == "textarea" && ((event.which === 13 && event.ctrlKey) || (event.which === 13 && event.metaKey))) {
+					triggerValidation();
+				} else if (element.prop('tagName').toLowerCase() != "textarea" && event.which === 13) {
+					triggerValidation();
+				} else if (event.which == 9 && event.shiftKey) { //Shift TAB
+					triggerValidation('prev');
+				} else if (event.which == 9) { //TAB
+					triggerValidation('next');
+				}
 
-      element.bind("blur", function(event) {
-      	triggerValidation();
-      });
-    }
-  };
+			});
+
+			element.bind("blur", function(event) {
+				triggerValidation();
+			});
+		}
+	};
 });

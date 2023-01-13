@@ -3591,12 +3591,6 @@
   }
 
   function ToolsInterviewDialog($scope, $mdDialog, ClientInterviewService, toastr, gettextCatalog, anr) {
-    $scope.new_interview = {
-      'date': null,
-      'service': null,
-      'content': null
-    }
-
     $scope.isAnrReadOnly = !anr.rwd;
     $scope.showInterviewForm = false;
 
@@ -3605,6 +3599,11 @@
     }
 
     var reloadInterviews = function() {
+      $scope.new_interview = {
+        date: null,
+        service: null,
+        content: null
+      }
       ClientInterviewService.getInterviews({
         anr: anr.id
       }).then(function(data) {
@@ -3627,8 +3626,7 @@
           content: $scope.new_interview.content
         }, function() {
           reloadInterviews();
-          $scope.new_interview = {};
-          $scope.interviewForm.$setPristine();
+          $scope.toggleInterviewForm();
         });
       } else {
         ClientInterviewService.createInterview({
@@ -3638,8 +3636,7 @@
           content: $scope.new_interview.content
         }, function() {
           reloadInterviews();
-          $scope.new_interview = {};
-          $scope.interviewForm.$setPristine();
+          $scope.toggleInterviewForm();
         });
       }
     };
