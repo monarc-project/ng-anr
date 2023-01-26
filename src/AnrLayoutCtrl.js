@@ -4023,7 +4023,13 @@
         if (response.data.errors && response.data.errors.length > 0) {
           toastr.warning(gettextCatalog.getString("Some files could not be imported"));
         } else {
-          toastr.success(gettextCatalog.getString("The instance has been imported successfully"));
+          if (response.data.isBackgroundProcess) {
+            toastr.success(
+              gettextCatalog.getString("The import process is added to the queue and will be executed soon.")
+            );
+          } else {
+            toastr.success(gettextCatalog.getString("The instance has been imported successfully"));
+          }
           hookUpdateObjlib();
           $mdDialog.cancel();
 
