@@ -2926,7 +2926,7 @@
       });
     }
 
-    $scope.cancelInstanceImport = function(ev, parentId) {
+    $scope.cancelInstanceImport = function(ev) {
       var confirm = $mdDialog.confirm()
         .title(gettextCatalog.getString('Are you sure you want cancel the import process?'))
         .textContent(gettextCatalog.getString('This operation is irreversible and the analysis will be not complete.'))
@@ -2938,6 +2938,24 @@
         $http.delete('api/client-anr/' + $scope.model.anr.id + '/instances/import').then(function(data) {});
       }, function (reject) {
         $scope.handleRejectionDialog(reject);
+      });
+    }
+
+    $scope.getErrorLog = function(ev) {
+      $http.get('api/client-anr/' + $scope.model.anr.id + '/instances/import').then(function(data) {
+        var messages = '';
+        if (data.data.messages) {
+          data.data.messages.forEach(message => {
+            messages += message + "\n\n";
+          });
+        }
+        var confirm = $mdDialog.confirm()
+          .title(gettextCatalog.getString('Import log messages'))
+          .textContent('Analysis status: ' + data.data.status + "\n\n" + 'Import results:' + messages)
+          .targetEvent(ev)
+          .theme('light')
+          .cancel(gettextCatalog.getString('Close'));
+        $mdDialog.show(confirm);
       });
     }
 
