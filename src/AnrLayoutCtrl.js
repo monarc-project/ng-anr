@@ -3986,11 +3986,13 @@
     $scope.file = [];
     $scope.file_range = 0;
     $scope.isImportingIn = false;
+    $scope.isBackgroundProcessActive = $rootScope.isBackgroundProcessActive;
     $scope.import = {
       mode: 'merge',
       password: '',
+      createSnapshot: $scope.isBackgroundProcessActive,
     };
-
+    
     $scope.uploadFile = function(file) {
       $scope.isImportingIn = true;
       file.upload = Upload.upload({
@@ -3999,7 +4001,8 @@
           'mode': $scope.import.mode,
           file: file,
           password: $scope.import.password,
-          idparent: parentId
+          idparent: parentId,
+          createSnapshot : $scope.import.createSnapshot
         }
       });
 
