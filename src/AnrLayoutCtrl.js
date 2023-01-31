@@ -2907,7 +2907,7 @@
     $scope.importInstance = function(ev, parentId) {
       var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
       $mdDialog.show({
-        controller: ['$scope', '$mdDialog', 'AnrService', 'toastr', 'gettextCatalog', 'Upload', 'instanceId', 'parentId', 'hookUpdateObjlib', ImportInstanceDialogCtrl],
+        controller: ['$scope', '$rootScope', '$state', '$mdDialog', 'AnrService', 'toastr', 'gettextCatalog', 'Upload', 'instanceId', 'parentId', 'hookUpdateObjlib', ImportInstanceDialogCtrl],
         templateUrl: 'views/anr/import.instance.html',
         targetEvent: ev,
         preserveScope: false,
@@ -2923,39 +2923,6 @@
 
       }, function(reject) {
         $scope.handleRejectionDialog(reject);
-      });
-    }
-
-    $scope.cancelInstanceImport = function(ev) {
-      var confirm = $mdDialog.confirm()
-        .title(gettextCatalog.getString('Are you sure you want cancel the import process?'))
-        .textContent(gettextCatalog.getString('This operation is irreversible and the analysis will be not complete.'))
-        .targetEvent(ev)
-        .ok(gettextCatalog.getString('Yes'))
-        .theme('light')
-        .cancel(gettextCatalog.getString('No'));
-      $mdDialog.show(confirm).then(function() {
-        $http.delete('api/client-anr/' + $scope.model.anr.id + '/instances/import').then(function(data) {});
-      }, function (reject) {
-        $scope.handleRejectionDialog(reject);
-      });
-    }
-
-    $scope.getErrorLog = function(ev) {
-      $http.get('api/client-anr/' + $scope.model.anr.id + '/instances/import').then(function(data) {
-        var messages = '';
-        if (data.data.messages) {
-          data.data.messages.forEach(message => {
-            messages += message + "\n\n";
-          });
-        }
-        var confirm = $mdDialog.confirm()
-          .title(gettextCatalog.getString('Import log messages'))
-          .textContent('Analysis status: ' + data.data.status + "\n\n" + 'Import results:' + messages)
-          .targetEvent(ev)
-          .theme('light')
-          .cancel(gettextCatalog.getString('Close'));
-        $mdDialog.show(confirm);
       });
     }
 
@@ -4015,7 +3982,7 @@
     };
   }
 
-  function ImportInstanceDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload, instanceId, parentId, hookUpdateObjlib) {
+  function ImportInstanceDialogCtrl($scope, $rootScope, $state, $mdDialog, AnrService, toastr, gettextCatalog, Upload, instanceId, parentId, hookUpdateObjlib) {
     $scope.file = [];
     $scope.file_range = 0;
     $scope.isImportingIn = false;
@@ -4045,12 +4012,13 @@
             toastr.success(
               gettextCatalog.getString("The import process is added to the queue and will be executed soon.")
             );
+            $rootScope.$broadcast('fo-anr-changed');
+            $state.transitionTo('main.project');
           } else {
             toastr.success(gettextCatalog.getString("The instance has been imported successfully"));
+            hookUpdateObjlib();
           }
-          hookUpdateObjlib();
           $mdDialog.cancel();
-
         }
       });
     }
