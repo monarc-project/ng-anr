@@ -30,6 +30,9 @@
                             <md-icon class="md-light-theme material-icons">play_for_work</md-icon><span class="black">{{ 'Import a risk analysis' | translate }}</span>
                         </md-button>
                     </md-menu-item>
+                    <md-menu-item ng-if="model.anr.status == 9">
+                      <span class="black">{{ 'There is an import error (Restore a snapshot or remove analysis)' | translate }}</span>
+                    </md-menu-item>
                     <md-menu-item>
                         <md-button class="md-primary" ng-click="exportAnr($event)">
                             <md-icon class="md-light-theme material-icons">call_made</md-icon><span class="black">{{ 'Export the whole risk analysis' | translate }}</span>
