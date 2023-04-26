@@ -6,7 +6,7 @@
       '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'gettext', 'TableHelperService',
       'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
       '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService', 'ClientRecommandationService',
-      'ReferentialService', 'AmvService', 'RiskService', 'SoaScaleCommentService', AnrLayoutCtrl
+      'ReferentialService', 'AmvService', 'RiskService', 'SoaScaleCommentService', 'UserService', AnrLayoutCtrl
     ]);
 
   /**
@@ -15,7 +15,7 @@
   function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, gettext, TableHelperService, ModelService,
     ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
     $transitions, DownloadService, $mdPanel, $injector, ConfigService, ClientRecommandationService,
-    ReferentialService, AmvService, RiskService, SoaScaleCommentService) {
+    ReferentialService, AmvService, RiskService, SoaScaleCommentService, UserService) {
 
 
     if ($scope.OFFICE_MODE == 'FO') {
@@ -179,7 +179,7 @@
 
     $scope.updateModel = function(justCore, cb) {
       isModelLoading = true;
-      let defaultLanguageIndex = ConfigService.getDefaultLanguageIndex();
+      let defaultLanguageIndex = UserService.getUiLanguage();
       if ($scope.OFFICE_MODE == 'BO') {
         ModelService.getModel($stateParams.modelId).then(function(data) {
           $scope.model = data;
@@ -3973,7 +3973,7 @@
       password: '',
       createSnapshot: $scope.isBackgroundProcessActive,
     };
-    
+
     $scope.uploadFile = function(file) {
       $scope.isImportingIn = true;
       file.upload = Upload.upload({
