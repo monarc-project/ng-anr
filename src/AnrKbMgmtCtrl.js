@@ -4443,63 +4443,51 @@
 
 	function CreateRecommandationDialogCtrl($scope, $mdDialog, ClientRecommandationService,
 		ConfigService, recommandation, recommandationSet) {
-
-		$scope.languages = ConfigService.getLanguages();
-		$scope.language = $scope.getAnrLanguage();
-		$scope.categorySearchText = '';
-		$scope.RecSetSelected = recommandationSet;
-		if (recommandation != undefined && recommandation != null) {
-			$scope.recommandation = recommandation;
-		} else {
-			$scope.recommandation = {
-				recommandationSet: recommandationSet,
-				code: '',
-				description: '',
-				importance: '',
+		
+		ClientRecommandationService.getRecommandationsSets().then(function(data) {
+			$scope.recommandationSets = data['recommandations-sets'];
+			$scope.languages = ConfigService.getLanguages();
+			$scope.language = $scope.getAnrLanguage();
+			$scope.categorySearchText = '';
+			$scope.RecSetSelected = recommandationSet;
+			if (recommandation != undefined && recommandation != null) {
+				$scope.recommandation = recommandation;
+			} else {
+				$scope.recommandation = {
+					recommandationSet: recommandationSet,
+					code: '',
+					description: '',
+					importance: '',
+				};
+			}
+	
+			$scope.loadOptions = function(ev) {
+				ClientRecommandationService.getRecommandations().then(function(data) {
+					$scope.options = data.recommandations;
+				});
+				return $scope.options;
 			};
-		}
-
-		$scope.loadOptions = function(ev) {
-			ClientRecommandationService.getRecommandations().then(function(data) {
-				$scope.options = data.recommandations;
-			});
-			return $scope.options;
-		};
-
-		$scope.loadSetOptions = function(ev) {
-			ClientRecommandationService.getRecommandationsSets().then(function(data) {
-				$scope.setOptions = data['recommandations-sets'];
-			});
-			return $scope.setOptions;
-		};
-
-		$scope.setSelectedRecommendation = function(ev, selectedRec) {
-			if (selectedRec !== undefined) {
-				$scope.recommandation['code'] = selectedRec.code;
-				$scope.recommandation['importance'] = selectedRec.importance;
-				$scope.recommandation['description'] = selectedRec.description;
-			}
-		};
-
-		$scope.setSelectedRecommendationSet = function(ev, selectedRecSet) {
-			if (selectedRecSet !== undefined) {
-				$scope.recommandation['recommandationSet'] = selectedRecSet;
-				$scope.RecSetSelected = selectedRecSet;
-			}
-		};
-
-		$scope.cancel = function() {
-			$mdDialog.cancel();
-		};
-
-		$scope.create = function() {
-			$mdDialog.hide($scope.recommandation);
-		};
-		$scope.createAndContinue = function() {
-			$scope.recommandation.cont = true;
-			$mdDialog.hide($scope.recommandation);
-		};
-
+		
+			$scope.setSelectedRecommendation = function(ev, selectedRec) {
+				if (selectedRec !== undefined) {
+					$scope.recommandation['code'] = selectedRec.code;
+					$scope.recommandation['importance'] = selectedRec.importance;
+					$scope.recommandation['description'] = selectedRec.description;
+				}
+			};
+		
+			$scope.cancel = function() {
+				$mdDialog.cancel();
+			};
+	
+			$scope.create = function() {
+				$mdDialog.hide($scope.recommandation);
+			};
+			$scope.createAndContinue = function() {
+				$scope.recommandation.cont = true;
+				$mdDialog.hide($scope.recommandation);
+			};
+		})
 	}
 
 	function ImportAmvDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ConfigService, AssetService, ThreatService, VulnService, AmvService, amv) {

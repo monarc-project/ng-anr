@@ -2888,7 +2888,7 @@
     $scope.importInstance = function(ev, parentId) {
       var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
       $mdDialog.show({
-        controller: ['$scope', '$mdDialog', 'AnrService', 'toastr', 'gettextCatalog', 'Upload', 'instanceId', 'parentId', 'hookUpdateObjlib', ImportInstanceDialogCtrl],
+        controller: ['$scope', '$rootScope', '$state', '$mdDialog', 'AnrService', 'toastr', 'gettextCatalog', 'Upload', 'instanceId', 'parentId', 'hookUpdateObjlib', ImportInstanceDialogCtrl],
         templateUrl: 'views/anr/import.instance.html',
         targetEvent: ev,
         preserveScope: false,
@@ -3963,15 +3963,17 @@
     };
   }
 
-  function ImportInstanceDialogCtrl($scope, $mdDialog, AnrService, toastr, gettextCatalog, Upload, instanceId, parentId, hookUpdateObjlib) {
+  function ImportInstanceDialogCtrl($scope, $rootScope, $state, $mdDialog, AnrService, toastr, gettextCatalog, Upload, instanceId, parentId, hookUpdateObjlib) {
     $scope.file = [];
     $scope.file_range = 0;
     $scope.isImportingIn = false;
+    $scope.isBackgroundProcessActive = $rootScope.isBackgroundProcessActive;
     $scope.import = {
       mode: 'merge',
       password: '',
+      createSnapshot: $scope.isBackgroundProcessActive,
     };
-
+    
     $scope.uploadFile = function(file) {
       $scope.isImportingIn = true;
       file.upload = Upload.upload({
@@ -3980,7 +3982,8 @@
           'mode': $scope.import.mode,
           file: file,
           password: $scope.import.password,
-          idparent: parentId
+          idparent: parentId,
+          createSnapshot : $scope.import.createSnapshot
         }
       });
 
@@ -3989,10 +3992,17 @@
         if (response.data.errors && response.data.errors.length > 0) {
           toastr.warning(gettextCatalog.getString("Some files could not be imported"));
         } else {
-          toastr.success(gettextCatalog.getString("The instance has been imported successfully"));
-          hookUpdateObjlib();
+          if (response.data.isBackgroundProcess) {
+            toastr.success(
+              gettextCatalog.getString("The import process is added to the queue and will be executed soon.")
+            );
+            $rootScope.$broadcast('fo-anr-changed');
+            $state.transitionTo('main.project');
+          } else {
+            toastr.success(gettextCatalog.getString("The instance has been imported successfully"));
+            hookUpdateObjlib();
+          }
           $mdDialog.cancel();
-
         }
       });
     }

@@ -49,7 +49,7 @@
              <td  class="preserve-newlines big-border-left txtleft" title="{{_langField(risk,'threatDescription')}}">{{_langField(risk,'threatLabel')}}</td>
              <td  class="txtcenter" title="{{threatCommCache[risk.threatRate]}}">{{risk.threatRate|dashnull}}</td>
              <td  class="txtleft" title="{{_langField(risk,'vulnDescription')}}">{{_langField(risk,'vulnLabel')}}</td>
-             <td  class="txtleft" >{{risk.comment }}</td>
+             <td  class="preserve-newlines big-border-left txtleft" >{{risk.comment }}</td>
              <td  class="txtcenter" title="{{vulnsCommCache[risk.vulnerabilityRate]}}">{{risk.vulnerabilityRate | dashnull}}</td>
              <td  ng-disabled="!risk.c_risk_enabled" class="tbl-risk-calc big-border-left"
                   ng-class="{'green': risk.c_risk >= 0 && risk.c_risk <= thresholds.thresholds.min,
