@@ -2314,7 +2314,7 @@
           scales: $scope.opRiskImpactScales,
         }
       }).then(function(ids) {
-        AnrService.deleteOperationalRiskScales(ids, function() {
+        AnrService.deleteOperationalRiskScales(ids, $scope.model.anr.id, function() {
           toastr.success(gettextCatalog.getString('{{count}} scales have been deleted.', {
             count: ids.length
           }), gettextCatalog.getString('Deletion successful'));

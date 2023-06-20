@@ -343,12 +343,12 @@
             new self.OperationalRiskScalesResource({anrId: anr_id, scaleId: scaleId, label: label, min: min, max: max, comments : comments, type: 1}).$save(success, error);
         };
 
-        var deleteOperationalRiskScales = function (ids, success, error) {
-            if ($rootScope.OFFICE_MODE == 'FO') {
-                MassDeleteService.deleteMass('api/client-anr/' + $rootScope.getUrlAnrId() + '/operational-scales', ids, success, error);
-            } else {
-                MassDeleteService.deleteMass('api/delete-operational-scales', ids, success, error);
-            }
+        var deleteOperationalRiskScales = function (ids, anrId, success, error) {
+          let deleteUri = 'api/anr/' + anrId + '/operational-scales';
+          if ($rootScope.OFFICE_MODE == 'FO') {
+            deleteUri = 'api/client-anr/' + $rootScope.getUrlAnrId() + '/operational-scales';
+          }
+          MassDeleteService.deleteMass(deleteUri, ids, success, error);
         };
 
         var updateOperationalRiskScale = function (anr_id, scale_id, params, success, error) {
