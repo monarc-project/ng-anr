@@ -821,14 +821,17 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 			['label' + $scope.language]: row[extItemField].toString().trim()
 		}
 		let themeLabel = row[extItemField];
-		if ($scope.OFFICE_MODE == 'BO') {
+		if ($scope.OFFICE_MODE === 'BO') {
+			let themeLabel1 = extItemField.replace(/\d{1}$/, '1')
+			let themeLabel2 = extItemField.replace(/\d{1}$/, '2')
+			let themeLabel3 = extItemField.replace(/\d{1}$/, '3')
+			let themeLabel4 = extItemField.replace(/\d{1}$/, '4')
 			themeToCreate = {
-				label1: row['threat theme label1'] ? row['threat theme label1'].trim() : null,
-				label2: row['threat theme label2'] ? row['threat theme label2'].trim() : null,
-				label3: row['threat theme label3'] ? row['threat theme label3'].trim() : null,
-				label4: row['threat theme label4'] ? row['threat theme label4'].trim() : null,
+				label1: row[themeLabel1] ? row[themeLabel1].trim() : null,
+				label2: row[themeLabel2] ? row[themeLabel2].trim() : null,
+				label3: row[themeLabel3] ? row[themeLabel3].trim() : null,
+				label4: row[themeLabel4] ? row[themeLabel4].trim() : null,
 			};
-			themeLabel = row['threat theme label' + $scope.defaultLang];
 		}
 
 		ThreatService.createTheme(themeToCreate,
