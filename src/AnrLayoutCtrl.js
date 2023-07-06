@@ -1427,7 +1427,7 @@
               break;
             }
           }
-          if (!atLeastOneChildVisible && $scope.removeAccents(label).indexOf($scope.removeAccents(filterText)) >= 0) {
+          if ($scope.removeAccents(label).indexOf($scope.removeAccents(filterText)) >= 0) {
             return true;
           }
 
