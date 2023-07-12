@@ -337,7 +337,11 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 							} else {
 								let tags = [];
 								for (let i = 1; i <= 4; i++) {
-									tags[i] = row[extItemField.slice(0, -1) + i].toString().split("/");
+									if (row[extItemField.slice(0, -1) + i]) {
+										tags[i] = row[extItemField.slice(0, -1) + i].toString().split("/");
+									} else {
+										tags[i] = '';
+									}
 								}
 
 								tags[1].map((x, i) => {
