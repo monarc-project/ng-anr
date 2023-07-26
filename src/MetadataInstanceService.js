@@ -11,7 +11,7 @@
     var makeResource = function () {
 
       self.FieldMetadataResource = $resource(
-        'api/' + anr + '/instances-metadata-fields/:metadataFieldId',
+        'api/' + anr + '/anr-instances-metadata-fields/:metadataFieldId',
         {
           metadataFieldId: '@id',
           urlAnrId: $rootScope.getUrlAnrId(),
