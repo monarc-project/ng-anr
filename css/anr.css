@@ -1429,3 +1429,13 @@ md-select-menu md-content
 .display-contents {
     display: contents;
 }
+
+.anr-list-label {
+    display: block;
+    margin-bottom: -20px;
+}
+
+.anr-list-details {
+    display: block;
+    font-size: 10px;
+}
