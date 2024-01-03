@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrRisksPlanCtrl', [
             '$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$state', 'TreatmentPlanService',
-            'ClientRecommandationService', 'DownloadService', '$q',
+            'ClientRecommendationService', 'DownloadService', '$q',
             AnrRisksPlanCtrl
         ]);
 
@@ -12,9 +12,9 @@
      * ANR > RISKS PLAN PROCESSING
      */
     function AnrRisksPlanCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, $state, TreatmentPlanService,
-                              ClientRecommandationService, DownloadService, $q) {
+                              ClientRecommendationService, DownloadService, $q) {
         TreatmentPlanService.getTreatmentPlans({anr: $scope.model.anr.id}).then(function (data) {
-            $scope.recommendations = data['recommandations-risks'];
+            $scope.recommendations = data['recommendations-risks'];
         });
 
         $scope.clearDate = function (model) {
@@ -40,7 +40,7 @@
             }
             params[name] = model[name];
 
-            ClientRecommandationService.updateRecommandation(params, function () {
+            ClientRecommendationService.updateRecommendation(params, function () {
                 promise.resolve(true);
             }, function () {
                 promise.reject(false);

@@ -78,15 +78,15 @@
 			'$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
 			'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'ClientSoaService',
 			'TagService', 'RiskService', 'ObjlibService', 'SOACategoryService', 'ReferentialService', 'MeasureMeasureService',
-			'ClientRecommandationService', 'DownloadService', '$state', '$timeout', '$rootScope', AnrKbMgmtCtrl
+			'ClientRecommendationService', 'DownloadService', '$state', '$timeout', '$rootScope', AnrKbMgmtCtrl
 		])
 	/**
 	 * ANR > KB
 	 */
 	function AnrKbMgmtCtrl($scope, $stateParams, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService,
-		AssetService, ThreatService, VulnService, AmvService, MeasureService, ClientSoaService, TagService,
-		RiskService, ObjlibService, SOACategoryService, ReferentialService, MeasureMeasureService, ClientRecommandationService,
-		DownloadService, $state, $timeout, $rootScope) {
+												 AssetService, ThreatService, VulnService, AmvService, MeasureService, ClientSoaService, TagService,
+												 RiskService, ObjlibService, SOACategoryService, ReferentialService, MeasureMeasureService, ClientRecommendationService,
+												 DownloadService, $state, $timeout, $rootScope) {
 		$scope.gettext = gettextCatalog.getString;
 		TableHelperService.resetBookmarks();
 
@@ -126,7 +126,7 @@
 				case 'objlibs':
 					$scope.currentTabIndex = 5;
 					break;
-				case 'recommandations':
+				case 'recommendations':
 					$scope.currentTabIndex = 6;
 					break;
 			}
@@ -217,17 +217,17 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'asset', CreateAssetDialogCtrl],
-					templateUrl: 'views/anr/create.assets.html',
-					targetEvent: ev,
-					preserveScope: true,
-					scope: $scope,
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen,
-					locals: {
-						'asset': asset
-					}
-				})
+				controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'asset', CreateAssetDialogCtrl],
+				templateUrl: 'views/anr/create.assets.html',
+				targetEvent: ev,
+				preserveScope: true,
+				scope: $scope,
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen,
+				locals: {
+					'asset': asset
+				}
+			})
 				.then(function(asset) {
 					var cont = asset.cont;
 					asset.cont = undefined;
@@ -266,14 +266,14 @@
 
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 			$mdDialog.show({
-					controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'AssetService', 'ConfigService', ImportAssetDialogCtrl],
-					templateUrl: 'views/anr/import.asset.html',
-					targetEvent: ev,
-					preserveScope: false,
-					scope: $scope.$dialogScope.$new(),
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen
-				})
+				controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'AssetService', 'ConfigService', ImportAssetDialogCtrl],
+				templateUrl: 'views/anr/import.asset.html',
+				targetEvent: ev,
+				preserveScope: false,
+				scope: $scope.$dialogScope.$new(),
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen
+			})
 				.then(function(asset) {
 					AssetService.createAsset(asset,
 						function() {
@@ -297,17 +297,17 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 			AssetService.getAsset(asset.uuid).then(function(assetData) {
 				$mdDialog.show({
-						controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'asset', CreateAssetDialogCtrl],
-						templateUrl: 'views/anr/create.assets.html',
-						targetEvent: ev,
-						preserveScope: false,
-						scope: $scope.$dialogScope.$new(),
-						clickOutsideToClose: false,
-						fullscreen: useFullScreen,
-						locals: {
-							'asset': assetData
-						}
-					})
+					controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'asset', CreateAssetDialogCtrl],
+					templateUrl: 'views/anr/create.assets.html',
+					targetEvent: ev,
+					preserveScope: false,
+					scope: $scope.$dialogScope.$new(),
+					clickOutsideToClose: false,
+					fullscreen: useFullScreen,
+					locals: {
+						'asset': assetData
+					}
+				})
 					.then(function(asset) {
 						AssetService.updateAsset(asset,
 							function() {
@@ -480,17 +480,17 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'ModelService', 'ThreatService', 'ConfigService', 'threat', CreateThreatDialogCtrl],
-					templateUrl: 'views/anr/create.threats.html',
-					targetEvent: ev,
-					preserveScope: true,
-					scope: $scope,
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen,
-					locals: {
-						'threat': threat
-					}
-				})
+				controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'ModelService', 'ThreatService', 'ConfigService', 'threat', CreateThreatDialogCtrl],
+				templateUrl: 'views/anr/create.threats.html',
+				targetEvent: ev,
+				preserveScope: true,
+				scope: $scope,
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen,
+				locals: {
+					'threat': threat
+				}
+			})
 				.then(function(threat) {
 					var themeBackup = threat.theme;
 					var cont = threat.cont;
@@ -536,14 +536,14 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ConfigService', 'ThreatService', ImportThreatDialogCtrl],
-					templateUrl: 'views/anr/import.threat.html',
-					targetEvent: ev,
-					preserveScope: false,
-					scope: $scope.$dialogScope.$new(),
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen
-				})
+				controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ConfigService', 'ThreatService', ImportThreatDialogCtrl],
+				templateUrl: 'views/anr/import.threat.html',
+				targetEvent: ev,
+				preserveScope: false,
+				scope: $scope.$dialogScope.$new(),
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen
+			})
 				.then(function(threat) {
 					ThreatService.createThreat(threat,
 						function() {
@@ -569,17 +569,17 @@
 			ThreatService.getThreat(threat.uuid).then(function(threatData) {
 				$scope.controls = [{}]; //hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
 				$mdDialog.show({
-						controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'ModelService', 'ThreatService', 'ConfigService', 'threat', CreateThreatDialogCtrl],
-						templateUrl: 'views/anr/create.threats.html',
-						targetEvent: ev,
-						preserveScope: false,
-						scope: $scope.$dialogScope.$new(),
-						clickOutsideToClose: false,
-						fullscreen: useFullScreen,
-						locals: {
-							'threat': threatData
-						}
-					})
+					controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', '$q', 'ModelService', 'ThreatService', 'ConfigService', 'threat', CreateThreatDialogCtrl],
+					templateUrl: 'views/anr/create.threats.html',
+					targetEvent: ev,
+					preserveScope: false,
+					scope: $scope.$dialogScope.$new(),
+					clickOutsideToClose: false,
+					fullscreen: useFullScreen,
+					locals: {
+						'threat': threatData
+					}
+				})
 					.then(function(threat) {
 						var themeBackup = threat.theme;
 						if (threat.theme) {
@@ -751,14 +751,14 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ConfigService', 'VulnService', ImportVulnerabilityDialogCtrl],
-					templateUrl: 'views/anr/import.vulnerability.html',
-					targetEvent: ev,
-					preserveScope: false,
-					scope: $scope.$dialogScope.$new(),
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen
-				})
+				controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ConfigService', 'VulnService', ImportVulnerabilityDialogCtrl],
+				templateUrl: 'views/anr/import.vulnerability.html',
+				targetEvent: ev,
+				preserveScope: false,
+				scope: $scope.$dialogScope.$new(),
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen
+			})
 				.then(function(vuln) {
 					VulnService.createVuln(vuln,
 						function() {
@@ -782,17 +782,17 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'vuln', CreateVulnDialogCtrl],
-					templateUrl: 'views/anr/create.vulns.html',
-					targetEvent: ev,
-					preserveScope: true,
-					scope: $scope,
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen,
-					locals: {
-						'vuln': vuln
-					}
-				})
+				controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'vuln', CreateVulnDialogCtrl],
+				templateUrl: 'views/anr/create.vulns.html',
+				targetEvent: ev,
+				preserveScope: true,
+				scope: $scope,
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen,
+				locals: {
+					'vuln': vuln
+				}
+			})
 				.then(function(vuln) {
 					var cont = vuln.cont;
 					vuln.cont = undefined;
@@ -831,17 +831,17 @@
 			VulnService.getVuln(vuln.uuid).then(function(vulnData) {
 				$scope.controls = [{}]; //hack pour le bug référencé dans les forums de Material quand on ouvre deux fois d'affilée la modal
 				$mdDialog.show({
-						controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'vuln', CreateVulnDialogCtrl],
-						templateUrl: 'views/anr/create.vulns.html',
-						targetEvent: ev,
-						preserveScope: false,
-						scope: $scope.$dialogScope.$new(),
-						clickOutsideToClose: false,
-						fullscreen: useFullScreen,
-						locals: {
-							'vuln': vulnData
-						}
-					})
+					controller: ['$scope', '$mdDialog', 'ModelService', 'ConfigService', 'vuln', CreateVulnDialogCtrl],
+					templateUrl: 'views/anr/create.vulns.html',
+					targetEvent: ev,
+					preserveScope: false,
+					scope: $scope.$dialogScope.$new(),
+					clickOutsideToClose: false,
+					fullscreen: useFullScreen,
+					locals: {
+						'vuln': vulnData
+					}
+				})
 					.then(function(vuln) {
 						VulnService.updateVuln(vuln,
 							function() {
@@ -1028,14 +1028,14 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ReferentialService', ImportReferentialDialogCtrl],
-					templateUrl: 'views/anr/import.referentials.html',
-					targetEvent: ev,
-					preserveScope: false,
-					scope: $scope.$dialogScope.$new(),
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen
-				})
+				controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ReferentialService', ImportReferentialDialogCtrl],
+				templateUrl: 'views/anr/import.referentials.html',
+				targetEvent: ev,
+				preserveScope: false,
+				scope: $scope.$dialogScope.$new(),
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen
+			})
 				.then(function(result) {
 					var referential = result.referential;
 					var categories = result.categories;
@@ -1072,18 +1072,18 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$scope', '$mdDialog', 'ReferentialService', 'ConfigService', 'referential', 'anrId', CreateReferentialDialogCtrl],
-					templateUrl: 'views/anr/create.referentials.html',
-					targetEvent: ev,
-					preserveScope: true,
-					scope: $scope,
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen,
-					locals: {
-						'referential': referential,
-						'anrId': $scope.model.anr.id
-					}
-				})
+				controller: ['$scope', '$mdDialog', 'ReferentialService', 'ConfigService', 'referential', 'anrId', CreateReferentialDialogCtrl],
+				templateUrl: 'views/anr/create.referentials.html',
+				targetEvent: ev,
+				preserveScope: true,
+				scope: $scope,
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen,
+				locals: {
+					'referential': referential,
+					'anrId': $scope.model.anr.id
+				}
+			})
 				.then(function(referential) {
 					var cont = referential.cont;
 					referential.cont = undefined;
@@ -1115,18 +1115,18 @@
 
 			ReferentialService.getReferential(referential).then(function(referentialData) {
 				$mdDialog.show({
-						controller: ['$scope', '$mdDialog', 'ReferentialService', 'ConfigService', 'referential', 'anrId', CreateReferentialDialogCtrl],
-						templateUrl: 'views/anr/create.referentials.html',
-						targetEvent: ev,
-						preserveScope: false,
-						scope: $scope.$dialogScope.$new(),
-						clickOutsideToClose: false,
-						fullscreen: useFullScreen,
-						locals: {
-							'referential': referentialData,
-							'anrId': $scope.model.anr.id
-						}
-					})
+					controller: ['$scope', '$mdDialog', 'ReferentialService', 'ConfigService', 'referential', 'anrId', CreateReferentialDialogCtrl],
+					templateUrl: 'views/anr/create.referentials.html',
+					targetEvent: ev,
+					preserveScope: false,
+					scope: $scope.$dialogScope.$new(),
+					clickOutsideToClose: false,
+					fullscreen: useFullScreen,
+					locals: {
+						'referential': referentialData,
+						'anrId': $scope.model.anr.id
+					}
+				})
 					.then(function(referential) {
 						ReferentialService.updateReferential(referential,
 							function() {
@@ -1181,14 +1181,14 @@
 
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 			$mdDialog.show({
-					controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ReferentialService', ImportMatchDialogCtrl],
-					templateUrl: 'views/anr/import.match.html',
-					targetEvent: ev,
-					preserveScope: false,
-					scope: $scope.$dialogScope.$new(),
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen
-				})
+				controller: ['$rootScope', '$scope', '$http', '$mdDialog', 'ReferentialService', ImportMatchDialogCtrl],
+				templateUrl: 'views/anr/import.match.html',
+				targetEvent: ev,
+				preserveScope: false,
+				scope: $scope.$dialogScope.$new(),
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen
+			})
 				.then(function(matches) {
 					MeasureMeasureService.createMeasureMeasure(matches,
 						function() {
@@ -1246,22 +1246,22 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'SOACategoryService',
-						'MeasureService', 'ReferentialService', 'ConfigService', '$q', 'measure', 'referential',
-						'anrId', CreateMeasureDialogCtrl
-					],
-					templateUrl: 'views/anr/create.measures.html',
-					targetEvent: ev,
-					preserveScope: true,
-					scope: $scope,
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen,
-					locals: {
-						'measure': measure,
-						'referential': $scope.referential,
-						'anrId': $scope.model.anr
-					}
-				})
+				controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'SOACategoryService',
+					'MeasureService', 'ReferentialService', 'ConfigService', '$q', 'measure', 'referential',
+					'anrId', CreateMeasureDialogCtrl
+				],
+				templateUrl: 'views/anr/create.measures.html',
+				targetEvent: ev,
+				preserveScope: true,
+				scope: $scope,
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen,
+				locals: {
+					'measure': measure,
+					'referential': $scope.referential,
+					'anrId': $scope.model.anr
+				}
+			})
 				.then(function(measure) {
 					var cont = measure.cont;
 					measure.cont = undefined;
@@ -1293,22 +1293,22 @@
 
 			MeasureService.getMeasure(measure.uuid).then(function(measureData) {
 				$mdDialog.show({
-						controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'SOACategoryService',
-							'MeasureService', 'ReferentialService', 'ConfigService', '$q', 'measure', 'referential',
-							'anrId', CreateMeasureDialogCtrl
-						],
-						templateUrl: 'views/anr/create.measures.html',
-						targetEvent: ev,
-						preserveScope: false,
-						scope: $scope.$dialogScope.$new(),
-						clickOutsideToClose: false,
-						fullscreen: useFullScreen,
-						locals: {
-							'measure': measureData,
-							'referential': $scope.referential,
-							'anrId': $scope.model.anr
-						}
-					})
+					controller: ['$scope', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'SOACategoryService',
+						'MeasureService', 'ReferentialService', 'ConfigService', '$q', 'measure', 'referential',
+						'anrId', CreateMeasureDialogCtrl
+					],
+					templateUrl: 'views/anr/create.measures.html',
+					targetEvent: ev,
+					preserveScope: false,
+					scope: $scope.$dialogScope.$new(),
+					clickOutsideToClose: false,
+					fullscreen: useFullScreen,
+					locals: {
+						'measure': measureData,
+						'referential': $scope.referential,
+						'anrId': $scope.model.anr
+					}
+				})
 					.then(function(measure) {
 						measure.referential = $scope.referential.uuid;
 						MeasureService.updateMeasure(measure,
@@ -1387,7 +1387,7 @@
 		/*
 		 * AMVS TAB
 		 */
-		$scope.amvs = TableHelperService.build('asset:position', 20, 1, '');
+		$scope.amvs = TableHelperService.build('status', 20, 1, '');
 
 		$scope.amvs.activeFilter = 1;
 
@@ -1489,17 +1489,17 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$scope', '$mdDialog', 'referentials', updateMeasuresAMVDialogCtrl],
-					templateUrl: 'views/anr/updateMeasures.amvs.html',
-					targetEvent: ev,
-					preserveScope: false,
-					scope: $scope.$dialogScope.$new(),
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen,
-					locals: {
-						'referentials': $scope.referentials_filter.items['referentials'],
-					}
-				})
+				controller: ['$scope', '$mdDialog', 'referentials', updateMeasuresAMVDialogCtrl],
+				templateUrl: 'views/anr/updateMeasures.amvs.html',
+				targetEvent: ev,
+				preserveScope: false,
+				scope: $scope.$dialogScope.$new(),
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen,
+				locals: {
+					'referentials': $scope.referentials_filter.items['referentials'],
+				}
+			})
 
 				.then(function(params) {
 					AmvService.patchAmvs(params,
@@ -1520,14 +1520,14 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ConfigService', 'AssetService', 'ThreatService', 'VulnService', 'AmvService', ImportAmvDialogCtrl],
-					templateUrl: 'views/anr/import.amv.html',
-					targetEvent: ev,
-					preserveScope: false,
-					scope: $scope.$dialogScope.$new(),
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen
-				})
+				controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ConfigService', 'AssetService', 'ThreatService', 'VulnService', 'AmvService', ImportAmvDialogCtrl],
+				templateUrl: 'views/anr/import.amv.html',
+				targetEvent: ev,
+				preserveScope: false,
+				scope: $scope.$dialogScope.$new(),
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen
+			})
 				.then(function(amv) {
 					var new_amv = {
 						uuid: amv.amv.uuid,
@@ -1554,21 +1554,21 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService',
-						'MeasureService', 'ReferentialService', 'ConfigService', 'AmvService',
-						'$q', 'amv', 'referentials', CreateAmvDialogCtrl
-					],
-					templateUrl: 'views/anr/create.amvs.html',
-					targetEvent: ev,
-					preserveScope: false,
-					scope: $scope.$dialogScope.$new(),
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen,
-					locals: {
-						'amv': amv,
-						'referentials': $scope.referentials_filter.items['referentials']
-					}
-				})
+				controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService',
+					'MeasureService', 'ReferentialService', 'ConfigService', 'AmvService',
+					'$q', 'amv', 'referentials', CreateAmvDialogCtrl
+				],
+				templateUrl: 'views/anr/create.amvs.html',
+				targetEvent: ev,
+				preserveScope: false,
+				scope: $scope.$dialogScope.$new(),
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen,
+				locals: {
+					'amv': amv,
+					'referentials': $scope.referentials_filter.items['referentials']
+				}
+			})
 				.then(function(amv) {
 					var amvBackup = angular.copy(amv);
 
@@ -1615,21 +1615,21 @@
 
 			AmvService.getAmv(amv).then(function(amvData) {
 				$mdDialog.show({
-						controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService',
-							'MeasureService', 'ReferentialService', 'ConfigService', 'AmvService',
-							'$q', 'amv', 'referentials', CreateAmvDialogCtrl
-						],
-						templateUrl: 'views/anr/create.amvs.html',
-						targetEvent: ev,
-						preserveScope: false,
-						scope: $scope.$dialogScope.$new(),
-						clickOutsideToClose: false,
-						fullscreen: useFullScreen,
-						locals: {
-							'amv': amvData,
-							'referentials': $scope.referentials_filter.items['referentials']
-						}
-					})
+					controller: ['$scope', '$mdDialog', 'AssetService', 'ThreatService', 'VulnService',
+						'MeasureService', 'ReferentialService', 'ConfigService', 'AmvService',
+						'$q', 'amv', 'referentials', CreateAmvDialogCtrl
+					],
+					templateUrl: 'views/anr/create.amvs.html',
+					targetEvent: ev,
+					preserveScope: false,
+					scope: $scope.$dialogScope.$new(),
+					clickOutsideToClose: false,
+					fullscreen: useFullScreen,
+					locals: {
+						'amv': amvData,
+						'referentials': $scope.referentials_filter.items['referentials']
+					}
+				})
 					.then(function(amv) {
 						var amvBackup = angular.copy(amv);
 						if (amv.threat) {
@@ -1823,19 +1823,19 @@
 
 			$scope.objLibDialog = $mdDialog;
 			$scope.objLibDialog.show({
-					controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', CreateObjlibDialogCtrl],
-					templateUrl: 'views/anr/create.objlibs.html',
-					targetEvent: ev,
-					preserveScope: false,
-					scope: $scope.$dialogScope.$new(),
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen,
-					locals: {
-						mode: 'bdc',
-						objLibDialog: $scope,
-						objlib: objlib
-					}
-				})
+				controller: ['$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AssetService', 'ObjlibService', 'ConfigService', 'TagService', '$q', 'mode', 'objLibDialog', 'objlib', CreateObjlibDialogCtrl],
+				templateUrl: 'views/anr/create.objlibs.html',
+				targetEvent: ev,
+				preserveScope: false,
+				scope: $scope.$dialogScope.$new(),
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen,
+				locals: {
+					mode: 'bdc',
+					objLibDialog: $scope,
+					objlib: objlib
+				}
+			})
 				.then(function(objlib) {
 					if (objlib) {
 						var cont = objlib.cont;
@@ -2037,17 +2037,17 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$scope', '$mdDialog', 'ConfigService', 'tag', CreateTagDialogCtrl],
-					templateUrl: 'views/anr/create.tags.html',
-					targetEvent: ev,
-					preserveScope: true,
-					scope: $scope,
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen,
-					locals: {
-						'tag': tag
-					}
-				})
+				controller: ['$scope', '$mdDialog', 'ConfigService', 'tag', CreateTagDialogCtrl],
+				templateUrl: 'views/anr/create.tags.html',
+				targetEvent: ev,
+				preserveScope: true,
+				scope: $scope,
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen,
+				locals: {
+					'tag': tag
+				}
+			})
 				.then(function(tag) {
 					TagService.createTag(tag,
 						function() {
@@ -2071,17 +2071,17 @@
 
 			TagService.getTag(tag.id).then(function(tagData) {
 				$mdDialog.show({
-						controller: ['$scope', '$mdDialog', 'ConfigService', 'tag', CreateTagDialogCtrl],
-						templateUrl: 'views/anr/create.tags.html',
-						targetEvent: ev,
-						preserveScope: false,
-						scope: $scope.$dialogScope.$new(),
-						clickOutsideToClose: false,
-						fullscreen: useFullScreen,
-						locals: {
-							'tag': tagData
-						}
-					})
+					controller: ['$scope', '$mdDialog', 'ConfigService', 'tag', CreateTagDialogCtrl],
+					templateUrl: 'views/anr/create.tags.html',
+					targetEvent: ev,
+					preserveScope: false,
+					scope: $scope.$dialogScope.$new(),
+					clickOutsideToClose: false,
+					fullscreen: useFullScreen,
+					locals: {
+						'tag': tagData
+					}
+				})
 					.then(function(tag) {
 						TagService.updateTag(tag,
 							function() {
@@ -2257,17 +2257,17 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$scope', '$mdDialog', 'referentials', updateMeasuresAMVDialogCtrl],
-					templateUrl: 'views/anr/updateMeasures.amvs.html',
-					targetEvent: ev,
-					preserveScope: false,
-					scope: $scope.$dialogScope.$new(),
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen,
-					locals: {
-						'referentials': $scope.opRisksRef_filter.items['referentials'],
-					}
-				})
+				controller: ['$scope', '$mdDialog', 'referentials', updateMeasuresAMVDialogCtrl],
+				templateUrl: 'views/anr/updateMeasures.amvs.html',
+				targetEvent: ev,
+				preserveScope: false,
+				scope: $scope.$dialogScope.$new(),
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen,
+				locals: {
+					'referentials': $scope.opRisksRef_filter.items['referentials'],
+				}
+			})
 
 				.then(function(params) {
 					RiskService.patchRisks(params,
@@ -2285,18 +2285,18 @@
 		$scope.createNewRisk = function(ev, risk) {
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 			$mdDialog.show({
-					controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'TagService', 'MeasureService', 'risk', 'referentials', CreateRiskDialogCtrl],
-					templateUrl: 'views/anr/create.risks.html',
-					targetEvent: ev,
-					preserveScope: true,
-					scope: $scope,
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen,
-					locals: {
-						'risk': risk,
-						'referentials': $scope.opRisksRef_filter.items['referentials']
-					}
-				})
+				controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'TagService', 'MeasureService', 'risk', 'referentials', CreateRiskDialogCtrl],
+				templateUrl: 'views/anr/create.risks.html',
+				targetEvent: ev,
+				preserveScope: true,
+				scope: $scope,
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen,
+				locals: {
+					'risk': risk,
+					'referentials': $scope.opRisksRef_filter.items['referentials']
+				}
+			})
 				.then(function(risk) {
 					var riskBackup = angular.copy(risk);
 
@@ -2335,18 +2335,18 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 			RiskService.getRisk(risk.id).then(function(riskData) {
 				$mdDialog.show({
-						controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'TagService', 'MeasureService', 'risk', 'referentials', CreateRiskDialogCtrl],
-						templateUrl: 'views/anr/create.risks.html',
-						targetEvent: ev,
-						preserveScope: false,
-						scope: $scope.$dialogScope.$new(),
-						clickOutsideToClose: false,
-						fullscreen: useFullScreen,
-						locals: {
-							'risk': riskData,
-							'referentials': $scope.opRisksRef_filter.items['referentials']
-						}
-					})
+					controller: ['$scope', '$mdDialog', '$q', 'ConfigService', 'TagService', 'MeasureService', 'risk', 'referentials', CreateRiskDialogCtrl],
+					templateUrl: 'views/anr/create.risks.html',
+					targetEvent: ev,
+					preserveScope: false,
+					scope: $scope.$dialogScope.$new(),
+					clickOutsideToClose: false,
+					fullscreen: useFullScreen,
+					locals: {
+						'risk': riskData,
+						'referentials': $scope.opRisksRef_filter.items['referentials']
+					}
+				})
 					.then(function(risk) {
 						var riskBackup = angular.copy(risk);
 						var riskTagIds = [];
@@ -2427,141 +2427,141 @@
 		};
 
 		/*
-		 * RECOMMANDATIONS SETS TAB
+		 * RecommendationS SETS TAB
 		 */
-		$scope.recommandations = TableHelperService.build('code', 20, 1, '');
+		$scope.recommendations = TableHelperService.build('code', 20, 1, '');
 
-		$scope.recommandations.activeFilter = 1;
+		$scope.recommendations.activeFilter = 1;
 
-		$scope.recommandationsSets = [];
+		$scope.recommendationsSets = [];
 
-		$scope.selectRecommandationsTab = function() {
+		$scope.selectRecommendationsTab = function() {
 			$state.transitionTo('main.kb_mgmt.info_risk', {
-				'tab': 'recommandations'
+				'tab': 'recommendations'
 			});
-			$scope.updateRecommandationsSets();
+			$scope.updateRecommendationsSets();
 		};
 
-		$scope.deselectRecommandationsTab = function() {
-			TableHelperService.unwatchSearch($scope.recommandations);
-			$scope.recommandations.selected = [];
+		$scope.deselectRecommendationsTab = function() {
+			TableHelperService.unwatchSearch($scope.recommendations);
+			$scope.recommendations.selected = [];
 		};
 
 		$rootScope.$on('anrUpdated', function() {
 			if ($scope.currentTabIndex == 3) {
-				$scope.deselectRecommandationsTab();
-				$scope.selectRecommandationsTab();
+				$scope.deselectRecommendationsTab();
+				$scope.selectRecommendationsTab();
 			}
 		});
 
-		$scope.selectRecommandationSet = function(RecommandationSetId, index) {
+		$scope.selectRecommendationSet = function(RecommendationSetId, index) {
 			$scope.recSetTabSelected = index;
-			$scope.recommandation_set_uuid = RecommandationSetId;
-			ClientRecommandationService.getRecommandationSet(RecommandationSetId).then(function(data) {
-				$scope.recommandationSet = data;
+			$scope.recommendation_set_uuid = RecommendationSetId;
+			ClientRecommendationService.getRecommendationSet(RecommendationSetId).then(function(data) {
+				$scope.recommendationSet = data;
 			});
 
-			var initRecommandationsFilter = true;
-			initRecommandationsFilter = $scope.$watch('recommandations.activeFilter', function() {
-				if (initRecommandationsFilter) {
-					initRecommandationsFilter = false;
+			var initRecommendationsFilter = true;
+			initRecommendationsFilter = $scope.$watch('recommendations.activeFilter', function() {
+				if (initRecommendationsFilter) {
+					initRecommendationsFilter = false;
 				} else {
-					$scope.updateRecommandations();
+					$scope.updateRecommendations();
 				}
 			});
-			TableHelperService.watchSearch($scope, 'recommandations.query.filter', $scope.recommandations.query, $scope.updateRecommandations, $scope.recommandations);
+			TableHelperService.watchSearch($scope, 'recommendations.query.filter', $scope.recommendations.query, $scope.updateRecommendations, $scope.recommendations);
 		};
 
-		$scope.deselectRecommandationsSetsTab = function() {
-			TableHelperService.removeFilter($scope.recommandations);
-			$scope.recommandations.selected = [];
+		$scope.deselectRecommendationsSetsTab = function() {
+			TableHelperService.removeFilter($scope.recommendations);
+			$scope.recommendations.selected = [];
 		};
 
-		$scope.removeRecommandationsFilter = function() {
-			TableHelperService.removeFilter($scope.recommandations);
+		$scope.removeRecommendationsFilter = function() {
+			TableHelperService.removeFilter($scope.recommendations);
 		};
 
 		$scope.exportAllRecommendations = function() {
 			let query = {
-				recommandationSet: $scope.recommandation_set_uuid,
+				recommendationSet: $scope.recommendation_set_uuid,
 			}
-			ClientRecommandationService.getRecommandations(query)
+			ClientRecommendationService.getRecommendations(query)
 				.then(data => {
-					let allRecommendations = data.recommandations
+					let allRecommendations = data.recommendations
 						.map(recommendation =>
 							({
 								uuid: recommendation.uuid,
 								code: recommendation.code,
 								description: recommendation.description,
 								importance: recommendation.importance,
-								set: recommendation.recommandationSet['label' + $scope.language]
+								set: recommendation.recommendationSet['label' + $scope.language]
 							})
 						);
 					let csv = Papa.unparse(allRecommendations, {
 						quotes: true,
 						delimiter: ";"
 					});
-					let filename = 'allRecommendations_' + $scope.recommandationSet['label' + $scope.language] + '.csv';
+					let filename = 'allRecommendations_' + $scope.recommendationSet['label' + $scope.language] + '.csv';
 					let contentT = 'text/csv; charset=utf-8';
 					DownloadService.downloadCSV(csv, filename, contentT);
 				});
 		};
 
-		$scope.toggleRecommandationStatus = function(recommandation) {
-			recommandation.recommandationSet = recommandation.recommandationSet.uuid;
-			recommandation.status = !recommandation.status;
-			ClientRecommandationService.updateRecommandation(recommandation, function() {
-				$scope.updateRecommandations();
+		$scope.toggleRecommendationStatus = function(recommendation) {
+			recommendation.recommendationSet = recommendation.recommendationSet.uuid;
+			recommendation.status = !recommendation.status;
+			ClientRecommendationService.updateRecommendation(recommendation, function() {
+				$scope.updateRecommendations();
 			});
 		}
 
-		$scope.updateRecommandationsSets = function() {
-			$scope.updatingRecommandationsSets = false;
-			$scope.recommandationsSets.promise = ClientRecommandationService.getRecommandationsSets({
+		$scope.updateRecommendationsSets = function() {
+			$scope.updatingRecommendationsSets = false;
+			$scope.recommendationsSets.promise = ClientRecommendationService.getRecommendationsSets({
 				order: 'createdAt'
 			});
-			$scope.recommandationsSets.promise.then(
+			$scope.recommendationsSets.promise.then(
 				function(data) {
-					$scope.recommandationsSets.items = data;
-					$scope.updatingRecommandationsSets = true;
+					$scope.recommendationsSets.items = data;
+					$scope.updatingRecommendationsSets = true;
 				}
 			)
 		};
 
-		$scope.importNewRecommandationSet = function(ev, recommandationSet) {
+		$scope.importNewRecommendationSet = function(ev, recommendationSet) {
 			$mdDialog.cancel();
 
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ClientRecommandationService', 'ConfigService', 'recommandationSet', ImportRecommandationSetDialogCtrl],
-					templateUrl: 'views/anr/import.recommandationsSets.html',
-					targetEvent: ev,
-					preserveScope: false,
-					scope: $scope.$dialogScope.$new(),
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen,
-					locals: {
-						'recommandationSet': recommandationSet,
-					}
-				})
+				controller: ['$rootScope', '$scope', '$http', '$mdDialog', '$q', 'ClientRecommendationService', 'ConfigService', 'recommendationSet', ImportRecommendationSetDialogCtrl],
+				templateUrl: 'views/anr/import.recommendationsSets.html',
+				targetEvent: ev,
+				preserveScope: false,
+				scope: $scope.$dialogScope.$new(),
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen,
+				locals: {
+					'recommendationSet': recommendationSet,
+				}
+			})
 				.then(function(result) {
-					var recommandationSet = result.recommandationSet;
-					var recommandations = result.recommendations;
+					var recommendationSet = result.recommendationSet;
+					var recommendations = result.recommendations;
 
-					ClientRecommandationService.createRecommandationSet(recommandationSet,
+					ClientRecommendationService.createRecommendationSet(recommendationSet,
 						function() {
-							ClientRecommandationService.createRecommandationMass(recommandations, function(result) {
-								$scope.$parent.updateRecommandationsSets();
+							ClientRecommendationService.createRecommendationMass(recommendations, function(result) {
+								$scope.$parent.updateRecommendationsSets();
 								toastr.success(gettextCatalog.getString('The recommendation set has been imported successfully.', {
-									recommandationSetLabel: $scope._langField(recommandationSet, 'label')
+									recommendationSetLabel: $scope._langField(recommendationSet, 'label')
 								}), gettextCatalog.getString('Creation successful'));
 								$rootScope.$broadcast('recommendationsSetsUpdated');
 								$rootScope.$broadcast('recommendationsUpdated');
 							});
 						},
 						function() {
-							$scope.importNewRecommandationSet(ev, recommandationSet);
+							$scope.importNewRecommendationSet(ev, recommendationSet);
 						}
 					);
 				}, function(reject) {
@@ -2569,41 +2569,41 @@
 				});
 		};
 
-		$scope.createNewRecommandationSet = function(ev, recommandationSet) {
+		$scope.createNewRecommendationSet = function(ev, recommendationSet) {
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'ConfigService', 'recommandationSet', CreateRecommandationSetDialogCtrl],
-					templateUrl: 'views/anr/create.recommandationsSets.html',
-					targetEvent: ev,
-					preserveScope: true,
-					scope: $scope,
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen,
-					locals: {
-						'recommandationSet': recommandationSet
-					}
-				})
-				.then(function(recommandationSet) {
-					var cont = recommandationSet.cont;
-					recommandationSet.cont = undefined;
+				controller: ['$scope', '$mdDialog', 'ClientRecommendationService', 'ConfigService', 'recommendationSet', CreateRecommendationSetDialogCtrl],
+				templateUrl: 'views/anr/create.recommendationsSets.html',
+				targetEvent: ev,
+				preserveScope: true,
+				scope: $scope,
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen,
+				locals: {
+					'recommendationSet': recommendationSet
+				}
+			})
+				.then(function(recommendationSet) {
+					var cont = recommendationSet.cont;
+					recommendationSet.cont = undefined;
 
 					if (cont) {
-						$scope.createNewRecommandationSet(ev);
+						$scope.createNewRecommendationSet(ev);
 					}
 
-					ClientRecommandationService.createRecommandationSet(recommandationSet,
+					ClientRecommendationService.createRecommendationSet(recommendationSet,
 						function() {
-							$scope.recSetTabSelected = $scope.recommandationsSets.items.count + 1;
-							$scope.updateRecommandationsSets();
+							$scope.recSetTabSelected = $scope.recommendationsSets.items.count + 1;
+							$scope.updateRecommendationsSets();
 							toastr.success(gettextCatalog.getString('The recommendation set has been created successfully.', {
-								recommandationSetLabel: $scope._langField(recommandationSet, 'label')
+								recommendationSetLabel: $scope._langField(recommendationSet, 'label')
 							}), gettextCatalog.getString('Creation successful'));
 							$rootScope.$broadcast('recommendationsSetsUpdated');
 						},
 
 						function() {
-							$scope.createNewRecommandationSet(ev, recommandationSet);
+							$scope.createNewRecommendationSet(ev, recommendationSet);
 						}
 					);
 				}, function(reject) {
@@ -2611,34 +2611,34 @@
 				});
 		};
 
-		$scope.editRecommandationSet = function(ev, recommandationSet) {
+		$scope.editRecommendationSet = function(ev, recommendationSet) {
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-			ClientRecommandationService.getRecommandationSet(recommandationSet).then(function(recommandationSetData) {
+			ClientRecommendationService.getRecommendationSet(recommendationSet).then(function(recommendationSetData) {
 				$mdDialog.show({
-						controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'ConfigService', 'recommandationSet', CreateRecommandationSetDialogCtrl],
-						templateUrl: 'views/anr/create.recommandationsSets.html',
-						targetEvent: ev,
-						preserveScope: false,
-						scope: $scope.$dialogScope.$new(),
-						clickOutsideToClose: false,
-						fullscreen: useFullScreen,
-						locals: {
-							'recommandationSet': recommandationSetData
-						}
-					})
-					.then(function(recommandationSet) {
-						ClientRecommandationService.updateRecommandationSet(recommandationSet,
+					controller: ['$scope', '$mdDialog', 'ClientRecommendationService', 'ConfigService', 'recommendationSet', CreateRecommendationSetDialogCtrl],
+					templateUrl: 'views/anr/create.recommendationsSets.html',
+					targetEvent: ev,
+					preserveScope: false,
+					scope: $scope.$dialogScope.$new(),
+					clickOutsideToClose: false,
+					fullscreen: useFullScreen,
+					locals: {
+						'recommendationSet': recommendationSetData
+					}
+				})
+					.then(function(recommendationSet) {
+						ClientRecommendationService.updateRecommendationSet(recommendationSet,
 							function() {
-								$scope.updateRecommandationsSets();
+								$scope.updateRecommendationsSets();
 								toastr.success(gettextCatalog.getString('The recommendation set has been edited successfully.', {
-									recommandationSetLabel: $scope._langField(recommandationSet, 'label')
+									recommendationSetLabel: $scope._langField(recommendationSet, 'label')
 								}), gettextCatalog.getString('Edition successful'));
 								$rootScope.$broadcast('recommendationsSetsUpdated');
 							},
 
 							function() {
-								$scope.editRecommandationSet(ev, recommandationSet);
+								$scope.editRecommendationSet(ev, recommendationSet);
 							}
 						);
 					}, function(reject) {
@@ -2647,10 +2647,10 @@
 			});
 		};
 
-		$scope.deleteRecommandationSet = function(ev, recommandationSet) {
+		$scope.deleteRecommendationSet = function(ev, recommendationSet) {
 			var confirm = $mdDialog.confirm()
 				.title(gettextCatalog.getString('Are you sure you want to delete recommendation set?', {
-					label: $scope._langField(recommandationSet, 'label')
+					label: $scope._langField(recommendationSet, 'label')
 				}))
 				.textContent(gettextCatalog.getString('This operation is irreversible.'))
 				.targetEvent(ev)
@@ -2658,11 +2658,11 @@
 				.ok(gettextCatalog.getString('Delete'))
 				.cancel(gettextCatalog.getString('Cancel'));
 			$mdDialog.show(confirm).then(function() {
-				ClientRecommandationService.deleteRecommandationSet({id: recommandationSet},
+				ClientRecommendationService.deleteRecommendationSet({id: recommendationSet},
 					function() {
-						$scope.updateRecommandationsSets();
+						$scope.updateRecommendationsSets();
 						toastr.success(gettextCatalog.getString('The recommendation set has been deleted.', {
-							label: $scope._langField(recommandationSet, 'label')
+							label: $scope._langField(recommendationSet, 'label')
 						}), gettextCatalog.getString('Deletion successful'));
 						$rootScope.$broadcast('recommendationsSetsUpdated');
 					}
@@ -2670,69 +2670,69 @@
 			});
 		};
 
-		$scope.updateRecommandations = function() {
-			var query = angular.copy($scope.recommandations.query);
-			query.status = $scope.recommandations.activeFilter;
+		$scope.updateRecommendations = function() {
+			var query = angular.copy($scope.recommendations.query);
+			query.status = $scope.recommendations.activeFilter;
 			if ($scope.model !== undefined) {
-				query.recommandationSet = $scope.recommandation_set_uuid;
+				query.recommendationSet = $scope.recommendation_set_uuid;
 			} else if ($scope.RecSetSelected !== undefined) {
-				query.recommandationSet = $scope.RecSetSelected.uuid;
+				query.recommendationSet = $scope.RecSetSelected.uuid;
 			}
 
-			if ($scope.recommandations.previousQueryOrder != $scope.recommandations.query.order) {
-				$scope.recommandations.query.page = query.page = 1;
-				$scope.recommandations.previousQueryOrder = $scope.recommandations.query.order;
+			if ($scope.recommendations.previousQueryOrder != $scope.recommendations.query.order) {
+				$scope.recommendations.query.page = query.page = 1;
+				$scope.recommendations.previousQueryOrder = $scope.recommendations.query.order;
 			}
 
-			$scope.recommandations.promise = ClientRecommandationService.getRecommandations(query);
-			$scope.recommandations.promise.then(
+			$scope.recommendations.promise = ClientRecommendationService.getRecommendations(query);
+			$scope.recommendations.promise.then(
 				function(data) {
-					$scope.recommandations.items = data;
+					$scope.recommendations.items = data;
 				}
 			)
 
 		};
 
-		$scope.createNewRecommandation = function(ev, recommandation) {
+		$scope.createNewRecommendation = function(ev, recommendation) {
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 
 			$mdDialog.show({
-					controller: ['$scope', '$mdDialog',
-						'ClientRecommandationService', 'ConfigService', 'recommandation', 'recommandationSet',
-						CreateRecommandationDialogCtrl
-					],
-					templateUrl: 'views/anr/create.recommandation-kbase.html',
-					targetEvent: ev,
-					preserveScope: true,
-					scope: $scope,
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen,
-					locals: {
-						'recommandation': recommandation,
-						'recommandationSet': $scope.recommandationSet
-					}
-				})
-				.then(function(recommandation) {
-					var cont = recommandation.cont;
-					recommandation.cont = undefined;
-					recommandation.anr = $scope.model.anr.id;
-					recommandation.recommandationSet = $scope.recommandationSet.uuid;
+				controller: ['$scope', '$mdDialog',
+					'ClientRecommendationService', 'ConfigService', 'recommendation', 'recommendationSet',
+					CreateRecommendationDialogCtrl
+				],
+				templateUrl: 'views/anr/create.recommendation-kbase.html',
+				targetEvent: ev,
+				preserveScope: true,
+				scope: $scope,
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen,
+				locals: {
+					'recommendation': recommendation,
+					'recommendationSet': $scope.recommendationSet
+				}
+			})
+				.then(function(recommendation) {
+					var cont = recommendation.cont;
+					recommendation.cont = undefined;
+					recommendation.anr = $scope.model.anr.id;
+					recommendation.recommendationSet = $scope.recommendationSet.uuid;
 					if (cont) {
-						$scope.createNewRecommandation(ev);
+						$scope.createNewRecommendation(ev);
 					}
 
-					ClientRecommandationService.createRecommandation(recommandation,
+					ClientRecommendationService.createRecommendation(recommendation,
 						function() {
-							$scope.recommandations.activeFilter = 1;
-							$scope.updateRecommandations();
+							$scope.recommendations.activeFilter = 1;
+							$scope.updateRecommendations();
 							toastr.success(gettextCatalog.getString('The recommendation has been created successfully.', {
-								recommandationLabel: $scope._langField(recommandation, 'label')
+								recommendationLabel: $scope._langField(recommendation, 'label')
 							}), gettextCatalog.getString('Creation successful'));
-							$rootScope.$broadcast('recommandationsUpdated');
+							$rootScope.$broadcast('recommendationsUpdated');
 						},
 						function(err) {
-							$scope.createNewRecommandation(ev, recommandation);
+							$scope.createNewRecommendation(ev, recommendation);
 						}
 					);
 				}, function(reject) {
@@ -2740,39 +2740,39 @@
 				});
 		};
 
-		$scope.editRecommandation = function(ev, recommandation) {
+		$scope.editRecommendation = function(ev, recommendation) {
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
-			ClientRecommandationService.getRecommandation(recommandation.uuid).then(function(recommandationData) {
+			ClientRecommendationService.getRecommendation(recommendation.uuid).then(function(recommendationData) {
 				$mdDialog.show({
-						controller: ['$scope', '$mdDialog',
-							'ClientRecommandationService', 'ConfigService', 'recommandation', 'recommandationSet',
-							CreateRecommandationDialogCtrl
-						],
-						templateUrl: 'views/anr/create.recommandation-kbase.html',
-						targetEvent: ev,
-						preserveScope: false,
-						scope: $scope.$dialogScope.$new(),
-						clickOutsideToClose: false,
-						fullscreen: useFullScreen,
-						locals: {
-							'recommandation': recommandationData,
-							'recommandationSet': $scope.recommandationSet
-						}
-					})
-					.then(function(recommandation) {
-						recommandation.recommandationSet = recommandation.recommandationSet.uuid;
-						ClientRecommandationService.updateRecommandation(recommandation,
+					controller: ['$scope', '$mdDialog',
+						'ClientRecommendationService', 'ConfigService', 'recommendation', 'recommendationSet',
+						CreateRecommendationDialogCtrl
+					],
+					templateUrl: 'views/anr/create.recommendation-kbase.html',
+					targetEvent: ev,
+					preserveScope: false,
+					scope: $scope.$dialogScope.$new(),
+					clickOutsideToClose: false,
+					fullscreen: useFullScreen,
+					locals: {
+						'recommendation': recommendationData,
+						'recommendationSet': $scope.recommendationSet
+					}
+				})
+					.then(function(recommendation) {
+						recommendation.recommendationSet = recommendation.recommendationSet.uuid;
+						ClientRecommendationService.updateRecommendation(recommendation,
 							function() {
-								$scope.updateRecommandations();
+								$scope.updateRecommendations();
 								toastr.success(gettextCatalog.getString('The recommendation has been edited successfully.', {
-									recommandationLabel: $scope._langField(recommandation, 'label')
+									recommendationLabel: $scope._langField(recommendation, 'label')
 								}), gettextCatalog.getString('Edition successful'));
-								$rootScope.$broadcast('recommandationsUpdated');
+								$rootScope.$broadcast('recommendationsUpdated');
 							},
 
 							function() {
-								$scope.editRecommandation(ev, recommandation);
+								$scope.editRecommendation(ev, recommendation);
 							}
 						);
 					}, function(reject) {
@@ -2781,7 +2781,7 @@
 			});
 		};
 
-		$scope.deleteRecommandation = function(ev, item) {
+		$scope.deleteRecommendation = function(ev, item) {
 			var confirm = $mdDialog.confirm()
 				.title(gettextCatalog.getString('Are you sure you want to delete recommendation?', {
 					label: $scope._langField(item, 'label')
@@ -2792,22 +2792,22 @@
 				.ok(gettextCatalog.getString('Delete'))
 				.cancel(gettextCatalog.getString('Cancel'));
 			$mdDialog.show(confirm).then(function() {
-				ClientRecommandationService.deleteRecommandation({id: item.uuid},
+				ClientRecommendationService.deleteRecommendation({id: item.uuid},
 					function() {
 						toastr.success(gettextCatalog.getString('The recommendation has been deleted.', {
 							label: $scope._langField(item, 'label')
 						}), gettextCatalog.getString('Deletion successful'));
-						$scope.updateRecommandations();
-						$scope.recommandations.selected = $scope.recommandations.selected.filter(recSelected => recSelected.uuid != item.uuid);
-						$rootScope.$broadcast('recommandationsUpdated');
+						$scope.updateRecommendations();
+						$scope.recommendations.selected = $scope.recommendations.selected.filter(recSelected => recSelected.uuid != item.uuid);
+						$rootScope.$broadcast('recommendationsUpdated');
 					}
 				);
 			});
 		};
 
-		$scope.deleteMassRecommandation = function(ev, item) {
+		$scope.deleteMassRecommendation = function(ev, item) {
 			var outpromise = null;
-			var count = $scope.recommandations.selected.length;
+			var count = $scope.recommendations.selected.length;
 
 			var confirm = $mdDialog.confirm()
 				.title(gettextCatalog.getString('Are you sure you want to delete the {{count}} selected recommendations?', {
@@ -2820,16 +2820,16 @@
 				.cancel(gettextCatalog.getString('Cancel'));
 			$mdDialog.show(confirm).then(function() {
 				var ids = [];
-				for (var i = 0; i < $scope.recommandations.selected.length; ++i) {
-					ids.push($scope.recommandations.selected[i].uuid);
+				for (var i = 0; i < $scope.recommendations.selected.length; ++i) {
+					ids.push($scope.recommendations.selected[i].uuid);
 				}
-				ClientRecommandationService.deleteMassRecommandation(ids, function() {
+				ClientRecommendationService.deleteMassRecommendation(ids, function() {
 					toastr.success(gettextCatalog.getString('{{count}} recommendations have been deleted.', {
 						count: count
 					}), gettextCatalog.getString('Deletion successful'));
-					$scope.updateRecommandations();
-					$scope.recommandations.selected = [];
-					$rootScope.$broadcast('recommandationsUpdated');
+					$scope.updateRecommendations();
+					$scope.recommendations.selected = [];
+					$rootScope.$broadcast('recommendationsUpdated');
 				});
 			});
 		};
@@ -2841,23 +2841,23 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
 			$mdDialog.show({
-					controller: ['$scope', '$http', '$mdDialog', 'ConfigService', 'AssetService', 'ThreatService',
-                        'VulnService', 'MeasureService', 'ClientRecommandationService', 'SOACategoryService', 'TagService',
-                        'RiskService', 'MeasureMeasureService', 'ObjlibService', 'gettextCatalog', '$q', 'tab', 'referential',
-                        'recommandationSet', ImportFileDialogCtrl
-					],
-					templateUrl: 'views/anr/import.file.html',
-					targetEvent: ev,
-					scope: $scope.$dialogScope.$new(),
-					preserveScope: false,
-					clickOutsideToClose: false,
-					fullscreen: useFullScreen,
-					locals: {
-						'tab': tab,
-						'referential': $scope.RefSelected,
-						'recommandationSet': $scope.RecSetSelected,
-					}
-				})
+				controller: ['$scope', '$http', '$mdDialog', 'ConfigService', 'AssetService', 'ThreatService',
+					'VulnService', 'MeasureService', 'ClientRecommendationService', 'SOACategoryService', 'TagService',
+					'RiskService', 'MeasureMeasureService', 'ObjlibService', 'gettextCatalog', '$q', 'tab', 'referential',
+					'recommendationSet', ImportFileDialogCtrl
+				],
+				templateUrl: 'views/anr/import.file.html',
+				targetEvent: ev,
+				scope: $scope.$dialogScope.$new(),
+				preserveScope: false,
+				clickOutsideToClose: false,
+				fullscreen: useFullScreen,
+				locals: {
+					'tab': tab,
+					'referential': $scope.RefSelected,
+					'recommendationSet': $scope.RecSetSelected,
+				}
+			})
 				.then(function(importData) {
 					switch (tab) {
 
@@ -2915,8 +2915,8 @@
 							});
 							break;
 						case 'Recommendations':
-							ClientRecommandationService.createRecommandationMass(importData, function(result) {
-								$scope.$parent.updateRecommandations();
+							ClientRecommendationService.createRecommendationMass(importData, function(result) {
+								$scope.$parent.updateRecommendations();
 								successCreateObject(result);
 							});
 							break;
@@ -3025,8 +3025,8 @@
 					assets_uuid = data.assets.map(asset => asset.uuid);
 					$scope.mosp_assets = $scope.all_assets.filter(
 						asset => asset.organization.id == $scope.organization.id &&
-						!assets_uuid.includes(asset.json_object.uuid) &&
-						asset.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
+							!assets_uuid.includes(asset.json_object.uuid) &&
+							asset.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
 					);
 					$scope.hideSpinLoader = true;
 					$scope.dataLoaded = true;
@@ -3034,8 +3034,8 @@
 			} else {
 				$scope.mosp_assets = $scope.all_assets.filter(
 					asset => asset.organizationid == $scope.organization.id &&
-					!assets_uuid.includes(asset.json_object.uuid) &&
-					asset.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
+						!assets_uuid.includes(asset.json_object.uuid) &&
+						asset.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
 				);
 			}
 		}
@@ -3142,18 +3142,18 @@
 			var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 			ThreatService.getTheme(theme.id).then(function(themeData) {
 				$mdDialog.show({
-						controller: ['$scope', '$mdDialog', 'ConfigService', 'theme', CreateThemeDialogCtrl],
-						templateUrl: 'views/anr/create.themes.html',
-						targetEvent: ev,
-						preserveScope: false,
-						multiple: true,
-						scope: $scope.$dialogScope.$new(),
-						clickOutsideToClose: false,
-						fullscreen: useFullScreen,
-						locals: {
-							'theme': theme
-						}
-					})
+					controller: ['$scope', '$mdDialog', 'ConfigService', 'theme', CreateThemeDialogCtrl],
+					templateUrl: 'views/anr/create.themes.html',
+					targetEvent: ev,
+					preserveScope: false,
+					multiple: true,
+					scope: $scope.$dialogScope.$new(),
+					clickOutsideToClose: false,
+					fullscreen: useFullScreen,
+					locals: {
+						'theme': theme
+					}
+				})
 					.then(function(theme) {
 						ThreatService.updateTheme(theme,
 							function() {
@@ -3237,8 +3237,8 @@
 					threats_uuid = data.threats.map(threat => threat.uuid);
 					$scope.mosp_threats = $scope.all_threats.filter(
 						threat => threat.organization.id == $scope.organization.id &&
-						!threats_uuid.includes(threat.json_object.uuid) &&
-						threat.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
+							!threats_uuid.includes(threat.json_object.uuid) &&
+							threat.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
 					);
 					$scope.hideSpinLoader = true;
 					$scope.dataLoaded = true;
@@ -3246,8 +3246,8 @@
 			} else {
 				$scope.mosp_threats = $scope.all_threats.filter(
 					threat => threat.organization.id == $scope.organization.id &&
-					!threats_uuid.includes(threat.json_object.uuid) &&
-					threat.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
+						!threats_uuid.includes(threat.json_object.uuid) &&
+						threat.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
 				);
 			}
 		}
@@ -3382,8 +3382,8 @@
 					vulnerabilities_uuid = data.vulnerabilities.map(vulnerability => vulnerability.uuid);
 					$scope.mosp_vulnerabilities = $scope.all_vulns.filter(
 						vulnerability => vulnerability.organization.id == $scope.organization.id &&
-						!vulnerabilities_uuid.includes(vulnerability.json_object.uuid) &&
-						vulnerability.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
+							!vulnerabilities_uuid.includes(vulnerability.json_object.uuid) &&
+							vulnerability.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
 					);
 					$scope.hideSpinLoader = true;
 					$scope.dataLoaded = true;
@@ -3391,8 +3391,8 @@
 			} else {
 				$scope.mosp_vulnerabilities = $scope.all_vulns.filter(
 					vulnerability => vulnerability.organization.id == $scope.organization.id &&
-					!vulnerabilities_uuid.includes(vulnerability.json_object.uuid) &&
-					vulnerability.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
+						!vulnerabilities_uuid.includes(vulnerability.json_object.uuid) &&
+						vulnerability.json_object.language == $scope.languages[$scope.language].code.toUpperCase()
 				);
 			}
 		};
@@ -3449,7 +3449,7 @@
 					referentials_uuid = data.referentials.map(refetential => refetential.uuid);
 					$scope.mosp_referentials = $scope.all_referentials.filter(
 						ref => ref.organization.id == $scope.organization.id &&
-						!referentials_uuid.includes(ref.json_object.uuid)
+							!referentials_uuid.includes(ref.json_object.uuid)
 					);
 					$scope.dataLoaded = true;
 					$scope.hideSpinLoader = true;
@@ -3457,7 +3457,7 @@
 			} else {
 				$scope.mosp_referentials = $scope.all_referentials.filter(
 					ref => ref.organization.id == $scope.organization.id &&
-					!referentials_uuid.includes(ref.json_object.uuid)
+						!referentials_uuid.includes(ref.json_object.uuid)
 				);
 			}
 		}
@@ -3713,8 +3713,8 @@
 					referentials_uuid = data.referentials.map(referential => referential.uuid);
 					$scope.mosp_matches = $scope.all_matches.filter(
 						match => match.organization.id == $scope.organization.id &&
-						match.json_object['security referentials UUID']
-						.every(uuid => referentials_uuid.includes(uuid))
+							match.json_object['security referentials UUID']
+								.every(uuid => referentials_uuid.includes(uuid))
 					);
 					$scope.hideSpinLoader = true;
 					$scope.dataLoaded = true;
@@ -3722,8 +3722,8 @@
 			} else {
 				$scope.mosp_matches = $scope.all_matches.filter(
 					match => match.organization.id == $scope.organization.id &&
-					match.json_object['security referentials UUID']
-					.every(uuid => referentials_uuid.includes(uuid))
+						match.json_object['security referentials UUID']
+							.every(uuid => referentials_uuid.includes(uuid))
 				);
 			}
 		}
@@ -3740,9 +3740,9 @@
 		$scope.import = function() {
 			var matches = $scope.match.json_object.values.map(
 				({
-					control: father,
-					match: child
-				}) => ({
+					 control: father,
+					 match: child
+				 }) => ({
 					father,
 					child
 				})
@@ -3752,8 +3752,8 @@
 	}
 
 	function CreateMeasureDialogCtrl($scope, toastr, $mdMedia, $mdDialog, gettextCatalog, SOACategoryService,
-		MeasureService, ReferentialService, ConfigService, $q, measure, referential,
-		anrId) {
+																	 MeasureService, ReferentialService, ConfigService, $q, measure, referential,
+																	 anrId) {
 
 		$scope.languages = ConfigService.getLanguages();
 		$scope.language = $scope.getAnrLanguage();
@@ -3819,20 +3819,20 @@
 
 			SOACategoryService.getCategory(category.id).then(function(categoryData) {
 				$mdDialog.show({
-						controller: ['$scope', '$mdDialog', 'ConfigService', 'referential', 'category', 'anrId', CreateCategoryDialogCtrl],
-						templateUrl: 'views/anr/create.categories.html',
-						targetEvent: ev,
-						preserveScope: false,
-						multiple: true,
-						scope: $scope.$dialogScope.$new(),
-						clickOutsideToClose: false,
-						fullscreen: useFullScreen,
-						locals: {
-							'referential': referential,
-							'category': categoryData,
-							'anrId': anrId
-						}
-					})
+					controller: ['$scope', '$mdDialog', 'ConfigService', 'referential', 'category', 'anrId', CreateCategoryDialogCtrl],
+					templateUrl: 'views/anr/create.categories.html',
+					targetEvent: ev,
+					preserveScope: false,
+					multiple: true,
+					scope: $scope.$dialogScope.$new(),
+					clickOutsideToClose: false,
+					fullscreen: useFullScreen,
+					locals: {
+						'referential': referential,
+						'category': categoryData,
+						'anrId': anrId
+					}
+				})
 					.then(function(category) {
 						SOACategoryService.updateCategory(category,
 							function() {
@@ -3945,8 +3945,8 @@
 	}
 
 	function CreateAmvDialogCtrl($scope, $mdDialog, AssetService, ThreatService, VulnService,
-		MeasureService, ReferentialService, ConfigService, AmvService,
-		$q, amv, referentials) {
+															 MeasureService, ReferentialService, ConfigService, AmvService,
+															 $q, amv, referentials) {
 		$scope.languages = ConfigService.getLanguages();
 		$scope.defaultLang = $scope.getAnrLanguage();
 		$scope.amvReferentials = referentials;
@@ -3962,7 +3962,9 @@
 			});
 		};
 
-    $scope.listThemes = [];
+		ThreatService.getThemes().then(function(data) {
+			$scope.listThemes = data['themes'];
+		});
 
 		if (amv != undefined && amv != null) {
 			$scope.amv = amv;
@@ -4324,19 +4326,19 @@
 		};
 	}
 
-	function ImportRecommandationSetDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ClientRecommandationService, ConfigService, recommandationSet) {
+	function ImportRecommendationSetDialogCtrl($rootScope, $scope, $http, $mdDialog, $q, ClientRecommendationService, ConfigService, recommendationSet) {
 		$scope.languages = ConfigService.getLanguages();
 		$scope.language = $scope.getAnrLanguage();
-		var recommandations_sets_uuid = [];
+		var recommendations_sets_uuid = [];
 		var mosp_query_organizations = 'v2/organization/?per_page=500'
 
 		$http.get($rootScope.mospApiUrl + mosp_query_organizations)
 			.then(function(org) {
-				var mosp_query_recommandations_sets = 'v2/object/?schema_uuid=ac048422-2bd2-40c0-8447-41a607639f3a&per_page=500'
-				$http.get($rootScope.mospApiUrl + mosp_query_recommandations_sets)
-					.then(function(recommandations) {
-						$scope.all_recommandations = recommandations.data.data.filter(object => !angular.equals({}, object.json_object));
-						var org_ids = Array.from(new Set($scope.all_recommandations.map(recommandation => recommandation.organization.id)));
+				var mosp_query_recommendations_sets = 'v2/object/?schema_uuid=ac048422-2bd2-40c0-8447-41a607639f3a&per_page=500'
+				$http.get($rootScope.mospApiUrl + mosp_query_recommendations_sets)
+					.then(function(recommendations) {
+						$scope.all_recommendations = recommendations.data.data.filter(object => !angular.equals({}, object.json_object));
+						var org_ids = Array.from(new Set($scope.all_recommendations.map(recommendation => recommendation.organization.id)));
 						$scope.organizations = org.data.data.filter(org => org_ids.includes(org.id));
 						$scope.hideSpinLoader = true;
 					});
@@ -4345,23 +4347,23 @@
 		$scope.selectOrganization = function() {
 			// Retrieve the assets from the selected organization
 			$scope.searchText = '';
-			$scope.mosp_recommandations_sets = [];
-			if (recommandations_sets_uuid.length == 0) {
+			$scope.mosp_recommendations_sets = [];
+			if (recommendations_sets_uuid.length == 0) {
 				$scope.hideSpinLoader = false;
 				$scope.dataLoaded = false;
-				ClientRecommandationService.getRecommandationsSets().then(data => {
-					recommandations_sets_uuid = data['recommandations-sets'].map(recommandationSet => recommandationSet.uuid);
-					$scope.mosp_recommandations_sets = $scope.all_recommandations.filter(
-						recommandationSet => recommandationSet.organization.id == $scope.organization.id &&
-						!recommandations_sets_uuid.includes(recommandationSet.json_object.uuid)
+				ClientRecommendationService.getRecommendationsSets().then(data => {
+					recommendations_sets_uuid = data['recommendations-sets'].map(recommendationSet => recommendationSet.uuid);
+					$scope.mosp_recommendations_sets = $scope.all_recommendations.filter(
+						recommendationSet => recommendationSet.organization.id == $scope.organization.id &&
+							!recommendations_sets_uuid.includes(recommendationSet.json_object.uuid)
 					);
 					$scope.hideSpinLoader = true;
 					$scope.dataLoaded = true;
 				});
 			} else {
-				$scope.mosp_recommandations_sets = $scope.all_recommandations.filter(
-					recommandationSet => recommandationSet.organization.id == $scope.organization.id &&
-					!recommandations_sets_uuid.includes(recommandationSet.json_object.uuid)
+				$scope.mosp_recommendations_sets = $scope.all_recommendations.filter(
+					recommendationSet => recommendationSet.organization.id == $scope.organization.id &&
+						!recommendations_sets_uuid.includes(recommendationSet.json_object.uuid)
 				);
 			}
 		}
@@ -4374,7 +4376,7 @@
 		 * @return             the list of available recommendations sets to import
 		 */
 		$scope.getMatches = function(searchText) {
-			return $scope.mosp_recommandations_sets.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()));
+			return $scope.mosp_recommendations_sets.filter(r => r['name'].toLowerCase().includes(searchText.toLowerCase()));
 		};
 
 		$scope.cancel = function() {
@@ -4382,35 +4384,35 @@
 		};
 
 		$scope.import = function() {
-			var recSet_temp = $scope.mosp_recommandations_sets.find(r => r['id'] === $scope.recommandationSet.id);
+			var recSet_temp = $scope.mosp_recommendations_sets.find(r => r['id'] === $scope.recommendationSet.id);
 
-			$scope.recommandationSet['uuid'] = recSet_temp.json_object.uuid;
+			$scope.recommendationSet['uuid'] = recSet_temp.json_object.uuid;
 			for (var i = 1; i <= 4; i++) {
-				$scope.recommandationSet['label' + i] = recSet_temp['name'];
+				$scope.recommendationSet['label' + i] = recSet_temp['name'];
 			}
-			delete $scope.recommandationSet.id;
+			delete $scope.recommendationSet.id;
 			var recommendations = recSet_temp.json_object.values;
-			recommendations.map(function(recommandation) {
-				recommandation['recommandationSet'] = recSet_temp.json_object.uuid;
+			recommendations.map(function(recommendation) {
+				recommendation['recommendationSet'] = recSet_temp.json_object.uuid;
 			})
 			result = {
-				recommandationSet: $scope.recommandationSet,
+				recommendationSet: $scope.recommendationSet,
 				recommendations: recommendations
 			}
 			$mdDialog.hide(result);
 		};
 	}
 
-	function CreateRecommandationSetDialogCtrl($scope, $mdDialog, ClientRecommandationService, ConfigService, recommandationSet) {
+	function CreateRecommendationSetDialogCtrl($scope, $mdDialog, ClientRecommendationService, ConfigService, recommendationSet) {
 		$scope.languages = ConfigService.getLanguages();
 		$scope.language = $scope.getAnrLanguage();
 		var defaultLang = angular.copy($scope.language);
 
-		if (recommandationSet != undefined && recommandationSet != null) {
-			$scope.recommandationSet = recommandationSet;
-			delete $scope.recommandationSet.recommandations;
+		if (recommendationSet != undefined && recommendationSet != null) {
+			$scope.recommendationSet = recommendationSet;
+			delete $scope.recommendationSet.recommendations;
 		} else {
-			$scope.recommandationSet = {
+			$scope.recommendationSet = {
 				label1: '',
 				label2: '',
 				label3: '',
@@ -4424,68 +4426,68 @@
 
 		$scope.create = function() {
 			for (var i = 1; i <= 4; i++) {
-				if ($scope.recommandationSet['label' + i] == '' && i != defaultLang) {
-					$scope.recommandationSet['label' + i] = $scope.recommandationSet['label' + defaultLang];
+				if ($scope.recommendationSet['label' + i] == '' && i != defaultLang) {
+					$scope.recommendationSet['label' + i] = $scope.recommendationSet['label' + defaultLang];
 				}
 			}
-			$mdDialog.hide($scope.recommandationSet);
+			$mdDialog.hide($scope.recommendationSet);
 		};
 		$scope.createAndContinue = function() {
 			for (var i = 1; i <= 4; i++) {
-				if ($scope.recommandationSet['label' + i] == '' && i != defaultLang) {
-					$scope.recommandationSet['label' + i] = $scope.recommandationSet['label' + defaultLang];
+				if ($scope.recommendationSet['label' + i] == '' && i != defaultLang) {
+					$scope.recommendationSet['label' + i] = $scope.recommendationSet['label' + defaultLang];
 				}
 			}
-			$scope.recommandationSet.cont = true;
-			$mdDialog.hide($scope.recommandationSet);
+			$scope.recommendationSet.cont = true;
+			$mdDialog.hide($scope.recommendationSet);
 		}
 	}
 
-	function CreateRecommandationDialogCtrl($scope, $mdDialog, ClientRecommandationService,
-		ConfigService, recommandation, recommandationSet) {
-		
-		ClientRecommandationService.getRecommandationsSets().then(function(data) {
-			$scope.recommandationSets = data['recommandations-sets'];
+	function CreateRecommendationDialogCtrl($scope, $mdDialog, ClientRecommendationService,
+																					ConfigService, recommendation, recommendationSet) {
+
+		ClientRecommendationService.getRecommendationsSets().then(function(data) {
+			$scope.recommendationSets = data['recommendations-sets'];
 			$scope.languages = ConfigService.getLanguages();
 			$scope.language = $scope.getAnrLanguage();
 			$scope.categorySearchText = '';
-			$scope.RecSetSelected = recommandationSet;
-			if (recommandation != undefined && recommandation != null) {
-				$scope.recommandation = recommandation;
+			$scope.RecSetSelected = recommendationSet;
+			if (recommendation != undefined && recommendation != null) {
+				$scope.recommendation = recommendation;
 			} else {
-				$scope.recommandation = {
-					recommandationSet: recommandationSet,
+				$scope.recommendation = {
+					recommendationSet: recommendationSet,
 					code: '',
 					description: '',
 					importance: '',
 				};
 			}
-	
+
 			$scope.loadOptions = function(ev) {
-				ClientRecommandationService.getRecommandations().then(function(data) {
-					$scope.options = data.recommandations;
+				ClientRecommendationService.getRecommendations().then(function(data) {
+					$scope.options = data.recommendations;
 				});
 				return $scope.options;
 			};
-		
+
 			$scope.setSelectedRecommendation = function(ev, selectedRec) {
 				if (selectedRec !== undefined) {
-					$scope.recommandation['code'] = selectedRec.code;
-					$scope.recommandation['importance'] = selectedRec.importance;
-					$scope.recommandation['description'] = selectedRec.description;
+					$scope.recommendation['code'] = selectedRec.code;
+					$scope.recommendation['importance'] = selectedRec.importance;
+					$scope.recommendation['description'] = selectedRec.description;
 				}
 			};
-		
+
 			$scope.cancel = function() {
 				$mdDialog.cancel();
 			};
-	
+
 			$scope.create = function() {
-				$mdDialog.hide($scope.recommandation);
+				$mdDialog.hide($scope.recommendation);
 			};
 			$scope.createAndContinue = function() {
-				$scope.recommandation.cont = true;
-				$mdDialog.hide($scope.recommandation);
+				$scope.recommendation.cont = true;
+				$mdDialog.hide($scope.recommendation);
 			};
 		})
 	}
@@ -4519,7 +4521,7 @@
 					let amvs_uuid = data.amvs.map(amv => amv.uuid);
 					$scope.mosp_amvs = $scope.all_amvs.filter(
 						amv => amv.organization.id == $scope.organization.id &&
-						!amvs_uuid.includes(amv.json_object.uuid)
+							!amvs_uuid.includes(amv.json_object.uuid)
 					);
 					$scope.dataLoaded = true;
 					$scope.hideSpinLoader = true;
@@ -4527,7 +4529,7 @@
 			} else {
 				$scope.mosp_amvs = $scope.all_amvs.filter(
 					amv => amv.organization.id == $scope.organization.id &&
-					!amvs_uuid.includes(amv.json_object.uuid)
+						!amvs_uuid.includes(amv.json_object.uuid)
 				);
 			}
 		}

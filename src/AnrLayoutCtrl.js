@@ -5,7 +5,7 @@
     .controller('AnrLayoutCtrl', [
       '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'gettext', 'TableHelperService',
       'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
-      '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService', 'ClientRecommandationService',
+      '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService', 'ClientRecommendationService',
       'ReferentialService', 'AmvService', 'RiskService', 'SoaScaleCommentService', 'UserService', AnrLayoutCtrl
     ]);
 
@@ -14,7 +14,7 @@
    */
   function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, gettext, TableHelperService, ModelService,
     ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
-    $transitions, DownloadService, $mdPanel, $injector, ConfigService, ClientRecommandationService,
+    $transitions, DownloadService, $mdPanel, $injector, ConfigService, ClientRecommendationService,
     ReferentialService, AmvService, RiskService, SoaScaleCommentService, UserService) {
 
 
@@ -285,7 +285,7 @@
             $scope.updateScales();
             $scope.updateOperationalRiskScales();
             $scope.updateReferentials();
-            $scope.updateRecommandationsSets();
+            $scope.updateRecommendationsSets();
             updateMethodProgress();
 
           }
@@ -314,11 +314,11 @@
       });
     };
 
-    $scope.updateRecommandationsSets = function() {
-      $scope.recommandationsSets = [];
-      ClientRecommandationService.getRecommandationsSets().then(function(data) {
-        $scope.recommandationsSets = data['recommandations-sets'];
-        $scope.updatingRecommandationsSets = true;
+    $scope.updateRecommendationsSets = function() {
+      $scope.recommendationsSets = [];
+      ClientRecommendationService.getRecommendationsSets().then(function(data) {
+        $scope.recommendationsSets = data['recommendations-sets'];
+        $scope.updatingRecommendationsSets = true;
       });
     };
 
@@ -357,8 +357,8 @@
       });
     };
 
-    $rootScope.$on('recommandationsSetsUpdated', function() {
-      $scope.updateRecommandationsSets();
+    $rootScope.$on('recommendationsSetsUpdated', function() {
+      $scope.updateRecommendationsSets();
     });
 
     $rootScope.$on('referentialsUpdated', function() {
@@ -598,8 +598,8 @@
       $scope.referential_uuid = referentialId;
     };
 
-    $scope.selectRecommandationSet = function(recommandationSetId) {
-      $scope.recommandation_set_uuid = recommandationSetId;
+    $scope.selectRecommendationSet = function(recommendationSetId) {
+      $scope.recommendation_set_uuid = recommendationSetId;
     };
 
     $scope.updateSheetRiskTarget = function() {
@@ -833,7 +833,7 @@
       return promise.promise;
     };
 
-    $scope.$on('recommandations-loaded', function(ev, recs) {
+    $scope.$on('recommendations-loaded', function(ev, recs) {
       $scope._copyRecs = recs;
     });
 
@@ -892,15 +892,15 @@
       });
     };
 
-    $scope.editRecommandationContext = function(ev, rec) {
+    $scope.editRecommendationContext = function(ev, rec) {
       ev.preventDefault();
       if ($mdDialog) {
         $mdDialog.cancel();
       }
       var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
       $mdDialog.show({
-        controller: ['$scope', '$mdDialog', 'rec', 'rwd', 'ClientRecommandationService', CreateRecommandationDialogContext],
-        templateUrl: 'views/anr/create.recommandation.html',
+        controller: ['$scope', '$mdDialog', 'rec', 'rwd', 'ClientRecommendationService', CreateRecommendationDialogContext],
+        templateUrl: 'views/anr/create.recommendation.html',
         targetEvent: ev,
         preserveScope: false,
         scope: $scope.$dialogScope.$new(),
@@ -911,7 +911,7 @@
           rwd: $scope.model.anr.rwd
         }
       }).then(function() {
-        ClientRecommandationService.updateRecommandation(rec, function() {
+        ClientRecommendationService.updateRecommendation(rec, function() {
           toastr.success(gettextCatalog.getString("The recommendation has been edited successfully"));
           $scope.methodProgress[2].steps[1].action($scope.methodProgress[2].steps[1]);
         });
@@ -920,9 +920,9 @@
       });
     }
 
-    function CreateRecommandationDialogContext($scope, $mdDialog, rec, rwd) {
-      $scope.recommandation = {
-        recommandation: rec
+    function CreateRecommendationDialogContext($scope, $mdDialog, rec, rwd) {
+      $scope.recommendation = {
+        recommendation: rec
       };
       $scope.isAnrReadOnly = !rwd
       $scope.isRecoContext = true;
@@ -932,7 +932,7 @@
       };
 
       $scope.create = function() {
-        $mdDialog.hide($scope.recommandation);
+        $mdDialog.hide($scope.recommendation);
       };
 
       $scope.cancel = function() {
@@ -945,8 +945,8 @@
 
       $mdDialog.show({
         controller: ['$scope', '$mdDialog', '$state', 'TreatmentPlanService',
-          'ClientRecommandationService', 'DownloadService', 'anr', 'subStep',
-          'thresholds', 'editRecommandationContext', 'gettextCatalog',
+          'ClientRecommendationService', 'DownloadService', 'anr', 'subStep',
+          'thresholds', 'editRecommendationContext', 'gettextCatalog',
           MethodEditRisksDialog
         ],
         templateUrl: 'views/anr/risks.evalcontext.html',
@@ -958,7 +958,7 @@
           subStep: step,
           anr: $scope.model.anr,
           thresholds: $scope.thresholds,
-          editRecommandationContext: $scope.editRecommandationContext
+          editRecommendationContext: $scope.editRecommendationContext
         }
       }).then(function(data) {
 
@@ -3160,12 +3160,12 @@
   }
 
   function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService,
-    ClientRecommandationService, DownloadService, anr, subStep, thresholds,
-    editRecommandationContext, gettextCatalog) {
+    ClientRecommendationService, DownloadService, anr, subStep, thresholds,
+    editRecommendationContext, gettextCatalog) {
     $scope.thresholds = thresholds;
     $scope.subStep = subStep;
     $scope.isAnrReadOnly = !anr.rwd;
-    $scope.editRecommandationContext = editRecommandationContext;
+    $scope.editRecommendationContext = editRecommendationContext;
     $scope.sortableConf = {
       animation: 50,
       handle: '.grab-handle',
@@ -3173,17 +3173,17 @@
       forceFallback: true,
       onUpdate: function(evt) {
         if (evt.newIndex == 0) {
-          ClientRecommandationService.updateRecommandation({
+          ClientRecommendationService.updateRecommendation({
             uuid: evt.model.uuid,
             implicitPosition: 1
           });
         } else if (evt.newIndex == $scope.recommendations.length - 1) {
-          ClientRecommandationService.updateRecommandation({
+          ClientRecommendationService.updateRecommendation({
             uuid: evt.model.uuid,
             implicitPosition: 2
           });
         } else {
-          ClientRecommandationService.updateRecommandation({
+          ClientRecommendationService.updateRecommendation({
             uuid: evt.model.uuid,
             implicitPosition: 3,
             previous: $scope.recommendations[evt.newIndex - 1].uuid
@@ -3198,7 +3198,7 @@
       TreatmentPlanService.getTreatmentPlans({
         anr: anr.id
       }).then(function(data) {
-        $scope.recommendations = data['recommandations-risks'];
+        $scope.recommendations = data['recommendations-risks'];
 
         // Preprocess row spans
         for (var i = 0; i < $scope.recommendations.length; ++i) {

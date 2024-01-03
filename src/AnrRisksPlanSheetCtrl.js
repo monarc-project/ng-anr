@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrRisksPlanSheetCtrl', [
             '$scope', 'toastr', '$mdMedia', '$mdDialog', '$stateParams', 'gettextCatalog', '$state', 'TreatmentPlanService',
-            'ClientRecommandationService', 'DownloadService', '$q',
+            'ClientRecommendationService', 'DownloadService', '$q',
             AnrRisksPlanSheetCtrl
         ]);
 
@@ -12,17 +12,17 @@
      * ANR > RISKS PLAN PROCESSING
      */
     function AnrRisksPlanSheetCtrl($scope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog, $state,
-                                   TreatmentPlanService, ClientRecommandationService, DownloadService, $q) {
+                                   TreatmentPlanService, ClientRecommendationService, DownloadService, $q) {
 
         $scope.rec_risks = [];
 
         var updateRecs = function () {
-            ClientRecommandationService.getRecommandation($stateParams.recId).then(function (data) {
+            ClientRecommendationService.getRecommendation($stateParams.recId).then(function (data) {
                 $scope.rec = data;
             });
-            ClientRecommandationService.getRecommandationRisks($stateParams.recId).then(function (data) {
+            ClientRecommendationService.getRecommendationRisks($stateParams.recId).then(function (data) {
                 // Filter out non-treated risks
-                var recrisks = data['recommandations-risks'];
+                var recrisks = data['recommendations-risks'];
                 $scope.rec_risks = [];
                 $scope.rec_risksOp = [];
 
@@ -54,7 +54,7 @@
 
             $mdDialog.show({
                 controller: ['$scope', '$mdDialog', 'recommendation', 'risk', ValidateMeasureDialog],
-                templateUrl: 'views/anr/validate.recommandation.html',
+                templateUrl: 'views/anr/validate.recommendation.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -65,7 +65,7 @@
                     risk: risk
                 }
             }).then(function (impl) {
-                ClientRecommandationService.validateRecommandationRisk(risk.id, impl, function () {
+                ClientRecommendationService.validateRecommendationRisk(risk.id, impl, function () {
                     toastr.success(gettextCatalog.getString("The recommendation has been successfully validated."));
                     updateRecs();
                 })
@@ -78,7 +78,7 @@
             var params = {};
             params[name] = field[name];
 
-            ClientRecommandationService.updateRecommandationRisk(field.id, params, function () {
+            ClientRecommendationService.updateRecommendationRisk(field.id, params, function () {
 
             });
             return true;

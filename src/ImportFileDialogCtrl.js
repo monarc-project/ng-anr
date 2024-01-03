@@ -1,7 +1,7 @@
 function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetService, ThreatService,
-	VulnService, MeasureService, ClientRecommandationService, SOACategoryService, TagService,
+	VulnService, MeasureService, ClientRecommendationService, SOACategoryService, TagService,
 	RiskService, MeasureMeasureService, ObjlibService, gettextCatalog, $q, tab, referential,
-	recommandationSet) {
+	recommendationSet) {
 
 	$scope.tab = tab;
 	$scope.guideVisible = false;
@@ -87,10 +87,10 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 			});
 			break;
 		case 'Recommendations':
-			ClientRecommandationService.getRecommandations({
-				anr: recommandationSet.anr.id
+			ClientRecommendationService.getRecommendations({
+				anr: recommendationSet.anr.id
 			}).then(data => {
-				codes = data.recommandations.map(recommandation => recommandation.code.toLowerCase());;
+				codes = data.recommendations.map(recommendation => recommendation.code.toLowerCase());;
 			});
 			break;
 		case 'Assets library':
@@ -232,6 +232,9 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 						} else {
 							let libraryCategories = [];
 							for (let i = 1; i <= 4; i++) {
+								if (row[extItemField.slice(0, -1) + i] === undefined) {
+									continue;
+								}
 								let [categoryFound, parentIds] = findExternalObjectsCategory(row[extItemField.slice(0, -1) + i].split(">>"), allTreeViewCategories);
 								libraryCategories[i] = categoryFound
 								row.parentIdsPath = parentIds;
@@ -375,7 +378,7 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 			'theme',
 			'category',
 			'referential',
-			'recommandationset'
+			'recommendationset'
 		];
 
 		let multilangueFields = [
@@ -532,9 +535,9 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 									implicitPosition: 2,
 									position: null,
 									label1: row['category label1'].toString().split(">>")[index] ? row['category label1'].toString().split(">>")[index].trim() : null,
-									label2: row['category label2'].toString().split(">>")[index] ? row['category label2'].toString().split(">>")[index].trim() : null,
-									label3: row['category label3'].toString().split(">>")[index] ? row['category label3'].toString().split(">>")[index].trim() : null,
-									label4: row['category label4'].toString().split(">>")[index] ? row['category label4'].toString().split(">>")[index].trim() : null,
+									label2: row['category label2'] ? row['category label2'].toString().split(">>")[index].trim() : "",
+									label3: row['category label3'] ? row['category label3'].toString().split(">>")[index].trim() : "",
+									label4: row['category label4'] ? row['category label4'].toString().split(">>")[index].trim() : "",
 								};
 							}
 							await createLibraryCategory(categoryToCreate).then(function(id) {
@@ -565,7 +568,7 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 			}
 
 			if (tab == 'Recommendations') {
-				row.recommandationSet = recommandationSet.uuid;
+				row.recommendationSet = recommendationSet.uuid;
 			}
 
 			if (tab == 'Operational risks') {
