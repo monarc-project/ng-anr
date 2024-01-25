@@ -219,10 +219,6 @@
             return self.LibraryResource.query({anrId: anr_id}).$promise;
         };
 
-        var patchLibraryObject = function (anr_id, object_id, obj, success, error) {
-            self.LibraryResource.patch({anrId: anr_id, objectId: object_id}, obj, success, error);
-        };
-
         var patchLibraryCategory = function (anr_id, cat_id, obj, success, error) {
             self.LibraryCategoryResource.patch({anrId: anr_id, catId: cat_id}, obj, success, error);
         };
@@ -252,17 +248,22 @@
             self.InstanceResource.patch({instId: instance_id, anrId: anr_id, parent: parent_id, position: position}, success, error);
         };
 
+        var createInstanceRisk = function (anr_id, params, success, error) {
+            params.anrId = anr_id;
+            new self.InstanceRiskResource(params).$save(success, error);
+        };
+
         var updateInstanceRisk = function (anr_id, id, params, success, error) {
             self.InstanceRiskResource.update({anrId: anr_id, riskId: id}, params, success, error);
         };
 
-        var createInstanceRisk = function (anr_id, params, success, error) {
-          params.anrId = anr_id;
-          new self.InstanceRiskResource(params).$save(success, error);
+        var deleteInstanceRisk = function (anr_id, risk_id, success, error) {
+          self.InstanceRiskResource.delete({anrId: anr_id, riskId: risk_id}, success, error);
         };
 
-        var deleteInstanceRisk = function (anr_id, risk_id, success, error) {
-          self.InstanceRiskResource.delete({anrId: anr_id, instId: risk_id}, success, error);
+        var createInstanceRiskOp = function (anr_id, params, success, error) {
+            params.anrId = anr_id;
+            new self.InstanceOpRiskResource(params).$save(success, error);
         };
 
         var updateInstanceOpRisk = function (anr_id, id, params, success, error) {
@@ -271,6 +272,10 @@
 
         var patchInstanceOpRisk = function (anr_id, id, params, success, error) {
             self.InstanceOpRiskResource.patch({anrId: anr_id, riskId: id}, params, success, error);
+        };
+
+        var deleteInstanceRiskOp = function (anr_id, risk_id, success, error) {
+            self.InstanceOpRiskResource.delete({anrId: anr_id, riskId: risk_id}, success, error);
         };
 
 
@@ -398,15 +403,6 @@
             return self.AnrRisksOpResource.query(query).$promise;
         };
 
-        var createInstanceRiskOp = function (anr_id, params, success, error) {
-            params.anrId = anr_id;
-            new self.AnrRisksOpResource(params).$save(success, error);
-        };
-
-        var deleteInstanceRiskOp = function (anr_id, risk_id, success, error) {
-            self.AnrRisksOpResource.delete({anrId: anr_id, instId: risk_id}, success, error);
-        };
-
 
         return {
             patchAnr: patchAnr,
@@ -416,7 +412,6 @@
             addNewObjectToLibrary: addNewObjectToLibrary,
             removeObjectFromLibrary: removeObjectFromLibrary,
             getObjectsLibrary: getObjectsLibrary,
-            patchLibraryObject: patchLibraryObject,
             patchLibraryCategory: patchLibraryCategory,
 
             getScales: getScales,
