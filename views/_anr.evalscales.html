@@ -110,9 +110,9 @@
                                         edit-type="textarea">
                                     </p>
                                     <md-button class="md-icon-button md-primary"
-                                        ng-if="!isAnrReadOnly"
+                                        ng-if="!isAnrReadOnly && scalesCanChange"
                                         ng-click="setImpactVisibility(type.id, !!type.isHidden)">
-                                        <md-icon>{{ type.isHidden ? 'visibility' : 'visibility_off' }}</md-icon>
+                                        <md-icon>{{ type.isHidden ? 'visibility_off' : 'visibility' }}</md-icon>
                                     </md-button>
                                 </div>
                             </th>
@@ -363,9 +363,9 @@
                                         edit-type="textarea">
                                     </p>
                                     <md-button class="md-icon-button md-primary"
-                                        ng-if="!isAnrReadOnly && ((opRiskImpactScales | filter:{isHidden:false}).length > 1 || display.show_hidden_opRisks_impacts)"
+                                        ng-if="!isAnrReadOnly && scalesCanChange && ((opRiskImpactScales | filter:{isHidden:false}).length > 1 || display.show_hidden_opRisks_impacts)"
                                         ng-click="onEditOpRiskScale(scale.id, 'isHidden', !scale.isHidden)">
-                                        <md-icon>{{ scale.isHidden ? 'visibility' : 'visibility_off' }}</md-icon>
+                                        <md-icon>{{ scale.isHidden ? 'visibility_off' : 'visibility' }}</md-icon>
                                     </md-button>
                                 </div>
                             </th>
