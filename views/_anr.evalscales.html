@@ -63,7 +63,7 @@
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
                     <md-button
-                        ng-if="!isAnrReadOnly && (scales_types | filter:{type:'CUS'}).length >= 1"
+                        ng-if="!isAnrReadOnly && scalesCanChange && (scales_types | filter:{type:'CUS'}).length >= 1"
                         class="md-icon-button md-warn"
                         ng-click="deleteInformationRiskScales()">
                         <md-tooltip md-direction="left">
@@ -336,7 +336,7 @@
                         </md-tooltip>
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
-                    <md-button ng-if="!isAnrReadOnly && opRiskImpactScales.length >= 1"
+                    <md-button ng-if="!isAnrReadOnly && scalesCanChange && opRiskImpactScales.length >= 1"
                         class="md-icon-button md-warn"
                         ng-click="deleteOperationalRiskScales()">
                         <md-tooltip md-direction="left">
