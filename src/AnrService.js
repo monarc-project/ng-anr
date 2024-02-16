@@ -289,11 +289,11 @@
         };
 
         var getScalesTypes = function (anr_id) {
-            return self.ScalesTypesResource.query({anrId: anr_id, order:'position'}).$promise;
+            return self.ScalesTypesResource.query({anrId: anr_id}).$promise;
         };
 
         var createScaleType = function (anr_id, scale_id, labels, success, error) {
-            new self.ScalesTypesResource({anrId: anr_id, scale: scale_id, labels: labels, implicitPosition: 2}).$save(success, error);
+            new self.ScalesTypesResource({anrId: anr_id, scale: scale_id, labels: labels}).$save(success, error);
         };
 
         var patchScaleType = function (anr_id, scale_type_id, data, success, error) {

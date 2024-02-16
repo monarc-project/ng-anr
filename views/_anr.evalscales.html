@@ -63,7 +63,7 @@
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
                     <md-button
-                        ng-if="!isAnrReadOnly && scalesCanChange && (scales_types | filter:{type:'CUS'}).length >= 1"
+                        ng-if="!isAnrReadOnly && (scalesCanChange || OFFICE_MODE == 'BO') && (scales_types | filter:{type:'CUS'}).length >= 1"
                         class="md-icon-button md-warn"
                         ng-click="deleteInformationRiskScales()">
                         <md-tooltip md-direction="left">
@@ -110,7 +110,7 @@
                                         edit-type="textarea">
                                     </p>
                                     <md-button class="md-icon-button md-primary"
-                                        ng-if="!isAnrReadOnly && scalesCanChange"
+                                        ng-if="!isAnrReadOnly && (scalesCanChange || OFFICE_MODE == 'BO')"
                                         ng-click="setImpactVisibility(type.id, !!type.isHidden)">
                                         <md-icon>{{ type.isHidden ? 'visibility_off' : 'visibility' }}</md-icon>
                                     </md-button>
@@ -336,7 +336,7 @@
                         </md-tooltip>
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
-                    <md-button ng-if="!isAnrReadOnly && scalesCanChange && opRiskImpactScales.length >= 1"
+                    <md-button ng-if="!isAnrReadOnly && (scalesCanChange || OFFICE_MODE == 'BO') && opRiskImpactScales.length >= 1"
                         class="md-icon-button md-warn"
                         ng-click="deleteOperationalRiskScales()">
                         <md-tooltip md-direction="left">
@@ -363,7 +363,7 @@
                                         edit-type="textarea">
                                     </p>
                                     <md-button class="md-icon-button md-primary"
-                                        ng-if="!isAnrReadOnly && scalesCanChange && ((opRiskImpactScales | filter:{isHidden:false}).length > 1 || display.show_hidden_opRisks_impacts)"
+                                        ng-if="!isAnrReadOnly && (scalesCanChange || OFFICE_MODE == 'BO') && ((opRiskImpactScales | filter:{isHidden:false}).length > 1 || display.show_hidden_opRisks_impacts)"
                                         ng-click="onEditOpRiskScale(scale.id, 'isHidden', !scale.isHidden)">
                                         <md-icon>{{ scale.isHidden ? 'visibility_off' : 'visibility' }}</md-icon>
                                     </md-button>
