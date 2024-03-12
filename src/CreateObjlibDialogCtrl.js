@@ -25,7 +25,7 @@ function CreateObjlibDialogCtrl($scope, $mdDialog, toastr, gettextCatalog, Asset
         }
     } else {
         $scope.objlib = {
-            mode: ($scope.model !== undefined && $scope.model.isRegulator) ? 1 : 0,
+            mode: 0,
             scope: 1,
             label1: '',
             label2: '',
