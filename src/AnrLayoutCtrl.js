@@ -236,6 +236,7 @@
         var ClientAnrService = $injector.get('ClientAnrService');
         ClientAnrService.getAnr($stateParams.modelId).then(function(data) {
           let language = data.language;
+          let languageCode = data.languageCode;
           $scope.model = {
             id: null,
             anr: data,
@@ -252,7 +253,7 @@
           };
           SoaScaleCommentService.getSoaScaleComments({
             anrId: $rootScope.anr_id,
-            language: $scope.getLanguageCode(language)
+            language: languageCode
           }).then(function(data) {
             $scope.soaScale = {
               levels: {
