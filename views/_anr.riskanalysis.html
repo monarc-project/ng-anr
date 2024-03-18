@@ -25,7 +25,7 @@
                 </md-button>
                 <md-button ui-sref="main.project.anr({modelId: model.anr.id})" ng-click="clearSelectedInstAndObj();"  ng-if="OFFICE_MODE == 'FO'" layout="row" layout-align="start center" style="margin:0;" ng-class="{'active-inst': anr_selected_object_id == null && anr_selected_instance_id == null}">
                     <md-progress-circular md-diameter="20" ng-if="anr_instance_tree_is_patching"></md-progress-circular>
-                    <md-icon ng-if="!anr_instance_tree_is_patching">home</md-icon> &nbsp; <span>{{ _langField(model.anr,'label') }}</span> <span flex></span>
+                    <md-icon ng-if="!anr_instance_tree_is_patching">home</md-icon> &nbsp; <span>{{ model.anr.label }}</span> <span flex></span>
                 </md-button>
 
                 <div class="angular-ui-tree" ui-tree="insTreeCallbacks" data-drag-delay="150" id="insTree">
