@@ -4,13 +4,12 @@
             <div flex ng-if="!model.anr">
                 <md-progress-circular md-indeterminate="true"></md-progress-circular>
             </div>
-            <div flex ng-if="model.anr" class="active-inst" ng-class="{'forceBreakWord': !_langField(model.anr,'label').includes(' ')}">
-                <h2 ng-if="OFFICE_MODE == 'FO'" class="no-margin ">
-                    {{ _langField(model.anr,'label') }}
-                </h2>
-                <h2 ng-if="OFFICE_MODE == 'BO'" class="no-margin ">
-                    {{ _langField(model,'label') }}
-                </h2>
+            <div flex ng-if="model.anr && OFFICE_MODE == 'FO'" class="active-inst" ng-class="{'forceBreakWord': model.anr.label.includes(' ')}">
+                <h2 class="no-margin ">{{ model.anr.label }}</h2>
+                <span ng-if="OFFICE_MODE == 'FO'">{{ model.anr.description }}</span>
+            </div>
+            <div flex ng-if="model.anr && OFFICE_MODE == 'BO'" class="active-inst" ng-class="{'forceBreakWord': !_langField(model.anr,'label').includes(' ')}">
+                <h2 class="no-margin ">{{ _langField(model,'label') }}</h2>
                 <span>{{ _langField(model.anr,'description') }}</span>
             </div>
 
