@@ -2464,9 +2464,9 @@
 
         model.max_risk = model.cacheMaxRisk = data.cacheMaxRisk;
         model.target_risk = model.cacheTargetedRisk = data.cacheTargetedRisk;
-        model.c_risk = data.riskC;
-        model.i_risk = data.riskI;
-        model.d_risk = data.riskD;
+        model.c_risk = data.riskConfidentiality;
+        model.i_risk = data.riskIntegrity;
+        model.d_risk = data.riskAvailability;
       }, function() {
         promise.reject(false);
       });
@@ -2911,6 +2911,13 @@
     $scope.openAnrMenu = function($mdMenuEvent, ev) {
       $mdMenuEvent();
     }
+
+    $scope.showSuccessfulMessageOnObjectCreation = function() {
+      toastr.success(
+        gettextCatalog.getString('The asset has been created successfully.'),
+        gettextCatalog.getString('Creation successful')
+      );
+    }
   }
 
   // Dialogs
@@ -2963,6 +2970,7 @@
         AnrService.addNewObjectToLibrary(anr.id, objlib, function(data) {
           $parentScope.updateObjectsLibrary(false, function() {
             if ($scope.OFFICE_MODE == 'FO') {
+              $parentScope.showSuccessfulMessageOnObjectCreation();
               $state.transitionTo('main.project.anr.object', {
                 modelId: anr.id,
                 objectId: data.id

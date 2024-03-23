@@ -206,9 +206,13 @@
         };
 
         var addNewObjectToLibrary = function (anr_id, object, success, error) {
+          if ($rootScope.OFFICE_MODE === 'BO') {
             ObjlibService.createObjlib(object, function (data) {
-                addExistingObjectToLibrary(anr_id, data.id, success, error);
+              addExistingObjectToLibrary(anr_id, data.id, success, error);
             }, error);
+          } else {
+            ObjlibService.createObjlib(object, success, error);
+          }
         };
 
         var removeObjectFromLibrary = function (anr_id, object_id, success, error) {
