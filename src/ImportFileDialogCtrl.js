@@ -80,7 +80,9 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 			break;
 		case 'Matches':
 			MeasureMeasureService.getMeasuresMeasures().then(function(data) {
-				matches = data.MeasureMeasure.map(mm => mm.father.uuid.toLowerCase() + mm.child.uuid.toLowerCase());
+				matches = data.measuresLinks.map(
+					mm => mm.masterMeasure.uuid.toLowerCase() + mm.linkedMeasure.uuid.toLowerCase()
+				);
 			});
 			MeasureService.getMeasures().then(function(data) {
 				allMeasures = data.measures;
@@ -263,7 +265,7 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 							$scope.check = true;
 						} else {
 							let measureControl = allMeasures.find(measure => measure.uuid == row.control.toLowerCase().trim());
-							row.father = row.control;
+							row.masterMeasureUuid = row.control;
 							row.control = measureControl.referential['label' + $scope.language] +
 								" : " +
 								measureControl.code +
@@ -277,7 +279,7 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 							$scope.check = true;
 						} else {
 							let measureMatch = allMeasures.find(measure => measure.uuid == row.match.toLowerCase().trim());
-							row.child = row.match;
+							row.linkedMeasureUuid = row.match;
 							row.match = measureMatch.referential['label' + $scope.language] +
 								" : " +
 								measureMatch.code +
@@ -285,7 +287,9 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 								measureMatch['label' + $scope.language];
 						}
 
-						if (!row.error.length && matches.includes(row.father.toLowerCase().trim() + row.child.toLowerCase().trim())) {
+						if (!row.error.length && matches.includes(
+							row.masterMeasureUuid.toLowerCase().trim() + row.linkedMeasureUuid.toLowerCase().trim()
+						)) {
 							row.error += gettextCatalog.getString('this matching is already in use') + "\n";
 							$scope.check = true;
 						}
@@ -400,7 +404,7 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 				itemFields.push('asset uuid', 'threat uuid', 'vulnerability uuid');
 				break;
 			case 'Matches':
-				itemFields.push('father', 'child');
+				itemFields.push('masterMeasureUuid', 'linkedMeasureUuid');
 				break;
 			default:
 		}

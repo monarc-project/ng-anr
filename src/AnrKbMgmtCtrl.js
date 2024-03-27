@@ -3567,11 +3567,11 @@
 				$scope.matchMeasures[ref.uuid] = [];
 				$scope.measuresRefSelected.forEach(function(measure) {
 					$scope.matchMeasures[ref.uuid][measure.uuid] = [];
-					if (Array.isArray(measure.measuresLinked) && Array.isArray(ref.measures)) {
-						measure.measuresLinked.forEach(function(measureLinked) {
-							var measureFound = ref.measures.filter(ml => ml.uuid == measureLinked.uuid);
+					if (Array.isArray(measure.linkedMeasures) && Array.isArray(ref.measures)) {
+						measure.linkedMeasures.forEach(function(linkedMeasure) {
+							var measureFound = ref.measures.filter(ml => ml.uuid == linkedMeasure.uuid);
 							if (measureFound.length > 0) {
-								$scope.matchMeasures[ref.uuid][measure.uuid].push(measureLinked);
+								$scope.matchMeasures[ref.uuid][measure.uuid].push(linkedMeasure);
 							}
 						})
 					}
@@ -3612,43 +3612,41 @@
 			return promise.promise;
 		};
 
-		$scope.addMeasureLinked = function(fatherId, childId) {
-			var measuremeasure = {
-				father: fatherId,
-				child: childId,
+		$scope.addLinkedMeasure = function (masterMeasureUuid, linkedMeasureUuid) {
+			let measureLink = {
+				masterMeasureUuid: masterMeasureUuid,
+				linkedMeasureUuid: linkedMeasureUuid,
 			};
-			MeasureMeasureService.createMeasureMeasure(measuremeasure);
+			MeasureMeasureService.createMeasureMeasure(measureLink);
 		};
 
-		$scope.deleteMeasureLinked = function(fatherId, childId) {
-			var measuremeasure = {
-				father: fatherId,
-				child: childId,
+		$scope.deleteLinkedMeasure = function (masterMeasureUuid, linkedMeasureUuid) {
+			let measureLink = {
+				masterMeasureUuid: masterMeasureUuid,
+				linkedMeasureUuid: linkedMeasureUuid,
 			};
-			MeasureMeasureService.deleteMeasureMeasure(measuremeasure);
+			MeasureMeasureService.deleteMeasureMeasure(measureLink);
 		};
 
 		$scope.exportMatchRefs = function() {
-			var csv = '';
-			MeasureMeasureService.getMeasuresMeasures().then(function(data) {
-				var measuresLinked = data.measuresmeasures;
-				keys = ['father', 'child'];
-				var csv = 'control,match\n';
-				var uuids = $scope.measuresRefSelected.map(item => item.uuid);
-				var measuresLinkedRefSelected = measuresLinked.filter(measure => uuids.includes(measure.father));
-
-				measuresLinkedRefSelected.forEach(function(item) {
-					ctr = 0;
-					keys.forEach(function(key) {
+			MeasureMeasureService.getMeasuresMeasures().then(function (data) {
+				let measuresLinks = data.measuresLinks;
+				let keys = ['masterMeasure', 'linkedMeasure'];
+				let csv = 'control,match\n';
+				let uuids = $scope.measuresRefSelected.map(item => item.uuid);
+				let linkedMeasuresRefSelected = measuresLinks.filter(measure => uuids.includes(measure.masterMeasure.uuid));
+				linkedMeasuresRefSelected.forEach(function (item) {
+					let ctr = 0;
+					keys.forEach(function (key) {
 						if (ctr > 0) csv += ',';
-						csv += item[key];
+						csv += item[key].uuid;
 						ctr++;
 					});
 					csv += '\n';
 				});
 
 				data = encodeURI('data:text/csv;charset=UTF-8,﻿' + csv);
-				link = document.createElement('a');
+				let link = document.createElement('a');
 				link.setAttribute('href', data);
 				link.setAttribute('download', 'matchReferentials.csv');
 				document.body.appendChild(link);
