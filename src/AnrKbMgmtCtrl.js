@@ -1050,6 +1050,8 @@
 								}).then(function(data) {
 									measures.map(function(measure) {
 										measure.category = data.categories.find(c => c['label' + $scope.language].toLowerCase().trim() === measure.category.toLowerCase().trim()).id;
+										measure.categoryId = measure.category.id
+										measure.referentialUuid = referential.uuid
 									})
 									MeasureService.createMeasure(measures, function() {
 										$scope.$parent.updateReferentials();
@@ -1265,7 +1267,8 @@
 				.then(function(measure) {
 					var cont = measure.cont;
 					measure.cont = undefined;
-					measure.referential = $scope.referential.uuid;
+					measure.referentialUuid = $scope.referential.uuid;
+					measure.categoryId = measure.category.id
 					if (cont) {
 						$scope.createNewMeasure(ev);
 					}
@@ -1310,7 +1313,8 @@
 					}
 				})
 					.then(function(measure) {
-						measure.referential = $scope.referential.uuid;
+						measure.referentialUuid = $scope.referential.uuid;
+						measure.categoryId = measure.category.id;
 						MeasureService.updateMeasure(measure,
 							function() {
 								$scope.updateMeasures();
@@ -2490,7 +2494,6 @@
 					let allRecommendations = data.recommendations
 						.map(recommendation =>
 							({
-								uuid: recommendation.uuid,
 								code: recommendation.code,
 								description: recommendation.description,
 								importance: recommendation.importance,

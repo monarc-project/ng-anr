@@ -264,7 +264,7 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 							row.error += gettextCatalog.getString('control does not exist') + "\n";
 							$scope.check = true;
 						} else {
-							let measureControl = allMeasures.find(measure => measure.uuid == row.control.toLowerCase().trim());
+							let measureControl = allMeasures.find(measure => measure.uuid === row.control.toLowerCase().trim());
 							row.masterMeasureUuid = row.control;
 							row.control = measureControl.referential['label' + $scope.language] +
 								" : " +
@@ -278,7 +278,7 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 							row.error += gettextCatalog.getString('match does not exist') + "\n";
 							$scope.check = true;
 						} else {
-							let measureMatch = allMeasures.find(measure => measure.uuid == row.match.toLowerCase().trim());
+							let measureMatch = allMeasures.find(measure => measure.uuid === row.match.toLowerCase().trim());
 							row.linkedMeasureUuid = row.match;
 							row.match = measureMatch.referential['label' + $scope.language] +
 								" : " +
@@ -398,13 +398,13 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 		}
 		switch (tab) {
 			case 'Controls':
-				itemFields.push('referential');
+				itemFields.push('referentialuuid', 'categoryid');
 				break;
 			case 'Information risks':
 				itemFields.push('asset uuid', 'threat uuid', 'vulnerability uuid');
 				break;
 			case 'Matches':
-				itemFields.push('masterMeasureUuid', 'linkedMeasureUuid');
+				itemFields.push('mastermeasureuuid', 'linkedmeasureuuid');
 				break;
 			default:
 		}
@@ -435,13 +435,15 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 			}
 
 			if (tab == 'Controls') {
-				row.referential = referential;
+				row.referentialUuid = referential;
 				if (row[extItemField]) {
 					if (inExternalItemsFound(row[extItemField])) {
 						row.category = inExternalItemsFound(row[extItemField]);
+						row.categoryId = row.category;
 					} else {
 						await createCategory(row).then(function(id) {
 							row.category = id;
+							row.categoryId = row.category;
 						});
 					}
 				}
