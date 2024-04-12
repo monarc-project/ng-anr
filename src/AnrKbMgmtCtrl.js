@@ -1157,7 +1157,8 @@
 				var matchReferentials = data;
 				MeasureService.getMeasures({
 					referential: $scope.referential_uuid,
-					order: 'code'
+					order: 'code',
+					includeLinks: true
 				}).then(function(data) {
 					var measuresRefSelected = data;
 					$mdDialog.show({
