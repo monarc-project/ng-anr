@@ -40,6 +40,10 @@
 
                 <md-subheader ng-if="mode == 'anr' || mode == 'instance'">{{ 'Export options' | translate }}</md-subheader>
 
+                <div layout="row">
+                    <div><md-switch ng-if="mode == 'anr'" ng-model="exportData.assetsLibrary">{{ 'Include assets library?' | translate }}</md-switch></div>
+                </div>
+
                 <md-input-container class="md-block" flex ng-if="mode == 'anr' || mode == 'instance'">
                     <label translate>Export with assessments?</label>
                     <md-select ng-model="exportData.assessments" style="min-width: 200px">

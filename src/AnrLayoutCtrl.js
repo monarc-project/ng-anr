@@ -2622,7 +2622,8 @@
             controls: exports.controls,
             recommendations: exports.recommendations,
             soas: exports.soas,
-            records: exports.records
+            records: exports.records,
+            assetsLibrary: exports.assetsLibrary
           }).then(function(data) {
             var contentD = data.headers('Content-Disposition'),
               contentT = data.headers('Content-Type');
@@ -3096,7 +3097,8 @@
       controls: true,
       recommendations: true,
       soas: true,
-      records: true
+      records: true,
+      assetsLibrary: true
     };
 
     $scope.cancel = function() {
