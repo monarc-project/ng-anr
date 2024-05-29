@@ -2551,6 +2551,7 @@
 			})
 				.then(function(result) {
 					var recommendationSet = result.recommendationSet;
+					recommendationSet.label = recommendationSet.name;
 					var recommendations = result.recommendations;
 
 					ClientRecommendationService.createRecommendationSet(recommendationSet,
