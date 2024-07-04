@@ -53,12 +53,16 @@
             $scope.updateSoaMeasures();
         });
 
+        $scope.listener = null;
         $scope.selectReferential = function(referentialId) {
+            if ($scope.listener !== null) {
+                $scope.listener();
+            }
             $scope.referential_uuid = referentialId;
             $scope.updateSoaMeasures();
             $scope.updateCategories(referentialId);
 
-            $scope.$watchGroup(
+            $scope.listener = $scope.$watchGroup(
                 [
                     "soa_measures[" + "'" + referentialId + "'" + "].selectedCategory",
                     "soa_measures[" + "'" + referentialId + "'" + "].query.filter",
