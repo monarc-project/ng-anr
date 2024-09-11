@@ -8,7 +8,7 @@ This software is licensed under
 
 - Copyright (C) 2016-2020 Jérôme Lombardi - https://github.com/jerolomb
 - Copyright (C) 2016-2020 Juan Rocha - https://github.com/jfrocha
-- Copyright (C) 2016-2020 SMILE gie securitymadein.lu
+- Copyright (C) 2016-2024 Luxembourg House of Cybersecurity https://lhc.lu
 - Copyright (C) 2017-2020 Cédric Bonhomme - https://www.cedricbonhomme.org
 - Copyright (C) 2016-2017 Guillaume Lesniak
 - Copyright (C) 2016-2017 Thomas Metois
