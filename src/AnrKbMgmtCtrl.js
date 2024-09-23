@@ -1049,8 +1049,7 @@
 									referential: referential.uuid
 								}).then(function(data) {
 									measures.map(function(measure) {
-										measure.category = data.categories.find(c => c['label' + $scope.language].toLowerCase().trim() === measure.category.toLowerCase().trim()).id;
-										measure.categoryId = measure.category.id
+										measure.categoryId = data.categories.find(c => c['label' + $scope.language].toLowerCase().trim() === measure.category.toLowerCase().trim()).id;
 										measure.referentialUuid = referential.uuid
 									})
 									MeasureService.createMeasure(measures, function() {
