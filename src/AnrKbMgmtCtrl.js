@@ -189,7 +189,6 @@
 				let allAssets = data.assets
 					.map(asset =>
 						({
-							uuid: asset.uuid,
 							code: asset.code,
 							label: asset['label' + $scope.language],
 							description: asset['description' + $scope.language],
@@ -449,7 +448,6 @@
 				let allThreats = data.threats
 					.map(threat =>
 						({
-							uuid: threat.uuid,
 							code: threat.code,
 							label: threat['label' + $scope.language],
 							description: threat['description' + $scope.language],
@@ -722,7 +720,6 @@
 				let allVulnerabilities = data.vulnerabilities
 					.map(vulnerability =>
 						({
-							uuid: vulnerability.uuid,
 							code: vulnerability.code,
 							label: vulnerability['label' + $scope.language],
 							description: vulnerability['description' + $scope.language],
@@ -984,7 +981,6 @@
 					let allMeasures = data.measures
 						.map(measure =>
 							({
-								uuid: measure.uuid,
 								code: measure.code,
 								label: measure['label' + $scope.language],
 								category: measure.category ? measure.category['label' + $scope.language] : null,
@@ -1452,7 +1448,6 @@
 			AmvService.getAmvs().then(data => {
 				let allAmvs = data.amvs.map(amv =>
 					({
-						uuid: amv.uuid,
 						'asset code': amv.asset.code,
 						'asset label': amv.asset['label' + $scope.language],
 						'asset description': amv.asset['description' + $scope.language],
@@ -3742,11 +3737,11 @@
 		$scope.import = function() {
 			var matches = $scope.match.json_object.values.map(
 				({
-					 control: father,
-					 match: child
+					 control: masterMeasureUuid,
+					 match: linkedMeasureUuid
 				 }) => ({
-					father,
-					child
+					masterMeasureUuid,
+					linkedMeasureUuid
 				})
 			);
 			$mdDialog.hide(matches);
