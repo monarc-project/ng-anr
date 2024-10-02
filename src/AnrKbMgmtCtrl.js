@@ -1387,7 +1387,7 @@
 		/*
 		 * AMVS TAB
 		 */
-		$scope.amvs = TableHelperService.build('status', 20, 1, '');
+		$scope.amvs = TableHelperService.build('asset', 20, 1, '');
 
 		$scope.amvs.activeFilter = 1;
 
