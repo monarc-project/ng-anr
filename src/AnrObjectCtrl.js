@@ -382,8 +382,12 @@
 
         $scope.cloneObject = function (ev) {
             var url = 'api/objects-duplication';
-            if ($scope.OFFICE_MODE == 'FO') {
-                url = 'api/client-anr/' + $scope.model.anr.id + '/objects-duplication';
+            if ($scope.model !== undefined) {
+                if ($scope.OFFICE_MODE === 'FO') {
+                    url = 'api/client-anr/' + $scope.model.anr.id + '/objects-duplication';
+                } else {
+                    url = 'api/anr/' + $scope.model.anr.id + '/objects-duplication';
+                }
             }
             $http.post(url, {id: $scope.object.uuid, implicitPosition: 2}).then(function (data) {
                 toastr.success(gettextCatalog.getString('The asset has been duplicated successfully.'), gettextCatalog.getString('Duplication successful'));
@@ -418,7 +422,7 @@
             })
                 .then(function (objlib) {
                     if (objlib) {
-                        objlib.father = $scope.object.uuid;
+                        objlib.parent = $scope.object.uuid;
 
                         ObjlibService.createObjlibNode(objlib,
                             function () {

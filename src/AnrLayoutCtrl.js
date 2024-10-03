@@ -5,8 +5,8 @@
     .controller('AnrLayoutCtrl', [
       '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'gettext', 'TableHelperService',
       'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
-      '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService', 'ClientRecommandationService',
-      'ReferentialService', 'AmvService', 'RiskService', 'SoaScaleCommentService', AnrLayoutCtrl
+      '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService', 'ClientRecommendationService',
+      'ReferentialService', 'AmvService', 'RiskService', 'SoaScaleCommentService', 'UserService', AnrLayoutCtrl
     ]);
 
   /**
@@ -14,8 +14,8 @@
    */
   function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, gettext, TableHelperService, ModelService,
     ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
-    $transitions, DownloadService, $mdPanel, $injector, ConfigService, ClientRecommandationService,
-    ReferentialService, AmvService, RiskService, SoaScaleCommentService) {
+    $transitions, DownloadService, $mdPanel, $injector, ConfigService, ClientRecommendationService,
+    ReferentialService, AmvService, RiskService, SoaScaleCommentService, UserService) {
 
 
     if ($scope.OFFICE_MODE == 'FO') {
@@ -179,7 +179,7 @@
 
     $scope.updateModel = function(justCore, cb) {
       isModelLoading = true;
-      let defaultLanguageIndex = ConfigService.getDefaultLanguageIndex();
+      let defaultLanguageIndex = UserService.getUiLanguage();
       if ($scope.OFFICE_MODE == 'BO') {
         ModelService.getModel($stateParams.modelId).then(function(data) {
           $scope.model = data;
@@ -236,6 +236,7 @@
         var ClientAnrService = $injector.get('ClientAnrService');
         ClientAnrService.getAnr($stateParams.modelId).then(function(data) {
           let language = data.language;
+          let languageCode = data.languageCode;
           $scope.model = {
             id: null,
             anr: data,
@@ -252,7 +253,7 @@
           };
           SoaScaleCommentService.getSoaScaleComments({
             anrId: $rootScope.anr_id,
-            language: $scope.getLanguageCode(language)
+            language: languageCode
           }).then(function(data) {
             $scope.soaScale = {
               levels: {
@@ -285,7 +286,7 @@
             $scope.updateScales();
             $scope.updateOperationalRiskScales();
             $scope.updateReferentials();
-            $scope.updateRecommandationsSets();
+            $scope.updateRecommendationsSets();
             updateMethodProgress();
 
           }
@@ -314,11 +315,11 @@
       });
     };
 
-    $scope.updateRecommandationsSets = function() {
-      $scope.recommandationsSets = [];
-      ClientRecommandationService.getRecommandationsSets().then(function(data) {
-        $scope.recommandationsSets = data['recommandations-sets'];
-        $scope.updatingRecommandationsSets = true;
+    $scope.updateRecommendationsSets = function() {
+      $scope.recommendationsSets = [];
+      ClientRecommendationService.getRecommendationsSets().then(function(data) {
+        $scope.recommendationsSets = data['recommendations-sets'];
+        $scope.updatingRecommendationsSets = true;
       });
     };
 
@@ -357,8 +358,8 @@
       });
     };
 
-    $rootScope.$on('recommandationsSetsUpdated', function() {
-      $scope.updateRecommandationsSets();
+    $rootScope.$on('recommendationsSetsUpdated', function() {
+      $scope.updateRecommendationsSets();
     });
 
     $rootScope.$on('referentialsUpdated', function() {
@@ -598,8 +599,8 @@
       $scope.referential_uuid = referentialId;
     };
 
-    $scope.selectRecommandationSet = function(recommandationSetId) {
-      $scope.recommandation_set_uuid = recommandationSetId;
+    $scope.selectRecommendationSet = function(recommendationSetId) {
+      $scope.recommendation_set_uuid = recommendationSetId;
     };
 
     $scope.updateSheetRiskTarget = function() {
@@ -833,7 +834,7 @@
       return promise.promise;
     };
 
-    $scope.$on('recommandations-loaded', function(ev, recs) {
+    $scope.$on('recommendations-loaded', function(ev, recs) {
       $scope._copyRecs = recs;
     });
 
@@ -892,15 +893,15 @@
       });
     };
 
-    $scope.editRecommandationContext = function(ev, rec) {
+    $scope.editRecommendationContext = function(ev, rec) {
       ev.preventDefault();
       if ($mdDialog) {
         $mdDialog.cancel();
       }
       var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
       $mdDialog.show({
-        controller: ['$scope', '$mdDialog', 'rec', 'rwd', 'ClientRecommandationService', CreateRecommandationDialogContext],
-        templateUrl: 'views/anr/create.recommandation.html',
+        controller: ['$scope', '$mdDialog', 'rec', 'rwd', 'ClientRecommendationService', CreateRecommendationDialogContext],
+        templateUrl: 'views/anr/create.recommendation.html',
         targetEvent: ev,
         preserveScope: false,
         scope: $scope.$dialogScope.$new(),
@@ -911,7 +912,7 @@
           rwd: $scope.model.anr.rwd
         }
       }).then(function() {
-        ClientRecommandationService.updateRecommandation(rec, function() {
+        ClientRecommendationService.updateRecommendation(rec, function() {
           toastr.success(gettextCatalog.getString("The recommendation has been edited successfully"));
           $scope.methodProgress[2].steps[1].action($scope.methodProgress[2].steps[1]);
         });
@@ -920,9 +921,9 @@
       });
     }
 
-    function CreateRecommandationDialogContext($scope, $mdDialog, rec, rwd) {
-      $scope.recommandation = {
-        recommandation: rec
+    function CreateRecommendationDialogContext($scope, $mdDialog, rec, rwd) {
+      $scope.recommendation = {
+        recommendation: rec
       };
       $scope.isAnrReadOnly = !rwd
       $scope.isRecoContext = true;
@@ -932,7 +933,7 @@
       };
 
       $scope.create = function() {
-        $mdDialog.hide($scope.recommandation);
+        $mdDialog.hide($scope.recommendation);
       };
 
       $scope.cancel = function() {
@@ -945,8 +946,8 @@
 
       $mdDialog.show({
         controller: ['$scope', '$mdDialog', '$state', 'TreatmentPlanService',
-          'ClientRecommandationService', 'DownloadService', 'anr', 'subStep',
-          'thresholds', 'editRecommandationContext', 'gettextCatalog',
+          'ClientRecommendationService', 'DownloadService', 'anr', 'subStep',
+          'thresholds', 'editRecommendationContext', 'gettextCatalog',
           MethodEditRisksDialog
         ],
         templateUrl: 'views/anr/risks.evalcontext.html',
@@ -958,7 +959,7 @@
           subStep: step,
           anr: $scope.model.anr,
           thresholds: $scope.thresholds,
-          editRecommandationContext: $scope.editRecommandationContext
+          editRecommendationContext: $scope.editRecommendationContext
         }
       }).then(function(data) {
 
@@ -1427,7 +1428,7 @@
               break;
             }
           }
-          if (!atLeastOneChildVisible && $scope.removeAccents(label).indexOf($scope.removeAccents(filterText)) >= 0) {
+          if ($scope.removeAccents(label).indexOf($scope.removeAccents(filterText)) >= 0) {
             return true;
           }
 
@@ -1475,38 +1476,21 @@
     };
 
     $scope.libTreeCallbacks = {
-      beforeDrag: function(scopeDrag) {
-        return !$scope.isAnrReadOnly && (scopeDrag.$modelValue.type != 'libcat' || scopeDrag.$modelValue.depth == 0) && (scopeDrag.$modelValue.uuid != null) && !$scope.anr_instance_tree_is_patching;
+      beforeDrag: function (scopeDrag) {
+        return !$scope.isAnrReadOnly
+          && scopeDrag.$modelValue.type !== 'libcat'
+          && scopeDrag.$modelValue.uuid != null
+          && !$scope.anr_instance_tree_is_patching;
       },
 
-      accept: function(sourceNodeScope, destNodeScope, destIndex) {
-
-
-        return (sourceNodeScope.$treeScope.$id == destNodeScope.$treeScope.$id &&
-          sourceNodeScope.$modelValue.depth == 0 &&
-          destNodeScope.$parent.$type == 'uiTree');
+      accept: function (sourceNodeScope, destNodeScope, destIndex) {
+        return sourceNodeScope.$treeScope.$id === destNodeScope.$treeScope.$id
+          && sourceNodeScope.$modelValue.depth === 0
+          && destNodeScope.$parent.$type === 'uiTree';
       },
 
-      dropped: function(e) {
-
-        if (e.source.nodesScope.$treeScope.$id == e.dest.nodesScope.$treeScope.$id) {
-          if (e.source.nodeScope.$modelValue.type == 'libcat') { //si on bouge un objet, ça n'a pas d'intérêt de patcher les catégories
-            // We moved something locally inside the objects library (a first-level node), patch it
-            var total_categ = $scope.has_virtual_categ ? $scope.anr_obj_library_data.length - 1 : $scope.anr_obj_library_data.length;
-            var impPos = e.dest.index == 0 ? 1 : (e.dest.index >= total_categ - 1 ? 2 : 3);
-
-            AnrService.patchLibraryCategory($scope.model.anr.id, e.source.nodeScope.$modelValue.uuid, {
-              implicitPosition: impPos,
-              //e.dest.index starts to 0 so previous is e.dest.index + 1 - 1.
-              //Give position instead of id because we don't have the id of the anr_object_category entity
-              previous: impPos == 3 ? e.dest.index : null,
-              anr: $scope.model.anr.id
-            }, function() {
-              $scope.updateObjectsLibrary();
-            });
-          }
-          return true;
-        } else {
+      dropped: function (e) {
+        if (e.source.nodesScope.$treeScope.$id !== e.dest.nodesScope.$treeScope.$id) {
           // Make a copy of the item from the library tree to the inst tree
           var copy = angular.copy(e.source.nodeScope.$modelValue);
           e.source.nodeScope.$modelValue.type = 'inst';
@@ -1515,21 +1499,19 @@
           e.source.nodesScope.$modelValue.push(copy);
           // Also, tell the server to instantiate the object
           $scope.anr_instance_tree_is_patching = true;
-          AnrService.addInstance($scope.model.anr.id, copy.uuid, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function() {
+          AnrService.addInstance($scope.model.anr.id, copy.uuid, e.dest.nodesScope.$parent.$modelValue ? e.dest.nodesScope.$parent.$modelValue.id : 0, e.dest.index, function () {
             $scope.updateAnrRisksTable();
             $scope.updateAnrRisksOpTable();
-            $scope.updateInstances(function() {
+            $scope.updateInstances(function () {
               $scope.anr_instance_tree_is_patching = false;
               e.source.nodeScope.$modelValue.disableclick = false;
             });
 
-            $scope.$broadcast('object-instancied', {
-              oid: copy.uuid
-            });
+            $scope.$broadcast('object-instancied', {oid: copy.uuid});
           });
-
-          return true;
         }
+
+        return true;
       }
     };
 
@@ -2333,7 +2315,7 @@
           scales: $scope.opRiskImpactScales,
         }
       }).then(function(ids) {
-        AnrService.deleteOperationalRiskScales(ids, function() {
+        AnrService.deleteOperationalRiskScales(ids, $scope.model.anr.id, function() {
           toastr.success(gettextCatalog.getString('{{count}} scales have been deleted.', {
             count: ids.length
           }), gettextCatalog.getString('Deletion successful'));
@@ -2394,7 +2376,7 @@
 
     $scope.updateScales = function() {
       AnrService.getScales($scope.model.anr.id).then(function(data) {
-        $scope.scalesCanChange = data.canChange && $scope.model.anr.cacheModelIsScalesUpdatable;
+        $scope.scalesCanChange = data.canChange && $scope.model.anr.cacheModelAreScalesUpdatable;
         $scope.scaleThreat = ''; // Reset tooltip Prob. on table risks
         $scope.scaleVul = ''; // Reset tooltip Qualif. on table risks
         for (var i = 0; i < data.scales.length; ++i) {
@@ -2482,9 +2464,9 @@
 
         model.max_risk = model.cacheMaxRisk = data.cacheMaxRisk;
         model.target_risk = model.cacheTargetedRisk = data.cacheTargetedRisk;
-        model.c_risk = data.riskC;
-        model.i_risk = data.riskI;
-        model.d_risk = data.riskD;
+        model.c_risk = data.riskConfidentiality;
+        model.i_risk = data.riskIntegrity;
+        model.d_risk = data.riskAvailability;
       }, function() {
         promise.reject(false);
       });
@@ -2640,7 +2622,9 @@
             controls: exports.controls,
             recommendations: exports.recommendations,
             soas: exports.soas,
-            records: exports.records
+            records: exports.records,
+            assetsLibrary: exports.assetsLibrary,
+            knowledgeBase: exports.knowledgeBase
           }).then(function(data) {
             var contentD = data.headers('Content-Disposition'),
               contentT = data.headers('Content-Type');
@@ -2929,6 +2913,13 @@
     $scope.openAnrMenu = function($mdMenuEvent, ev) {
       $mdMenuEvent();
     }
+
+    $scope.showSuccessfulMessageOnObjectCreation = function() {
+      toastr.success(
+        gettextCatalog.getString('The asset has been created successfully.'),
+        gettextCatalog.getString('Creation successful')
+      );
+    }
   }
 
   // Dialogs
@@ -2981,6 +2972,7 @@
         AnrService.addNewObjectToLibrary(anr.id, objlib, function(data) {
           $parentScope.updateObjectsLibrary(false, function() {
             if ($scope.OFFICE_MODE == 'FO') {
+              $parentScope.showSuccessfulMessageOnObjectCreation();
               $state.transitionTo('main.project.anr.object', {
                 modelId: anr.id,
                 objectId: data.id
@@ -3106,7 +3098,8 @@
       controls: true,
       recommendations: true,
       soas: true,
-      records: true
+      records: true,
+      knowledgeBase: false
     };
 
     $scope.cancel = function() {
@@ -3179,12 +3172,12 @@
   }
 
   function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService,
-    ClientRecommandationService, DownloadService, anr, subStep, thresholds,
-    editRecommandationContext, gettextCatalog) {
+    ClientRecommendationService, DownloadService, anr, subStep, thresholds,
+    editRecommendationContext, gettextCatalog) {
     $scope.thresholds = thresholds;
     $scope.subStep = subStep;
     $scope.isAnrReadOnly = !anr.rwd;
-    $scope.editRecommandationContext = editRecommandationContext;
+    $scope.editRecommendationContext = editRecommendationContext;
     $scope.sortableConf = {
       animation: 50,
       handle: '.grab-handle',
@@ -3192,17 +3185,17 @@
       forceFallback: true,
       onUpdate: function(evt) {
         if (evt.newIndex == 0) {
-          ClientRecommandationService.updateRecommandation({
+          ClientRecommendationService.updateRecommendation({
             uuid: evt.model.uuid,
             implicitPosition: 1
           });
         } else if (evt.newIndex == $scope.recommendations.length - 1) {
-          ClientRecommandationService.updateRecommandation({
+          ClientRecommendationService.updateRecommendation({
             uuid: evt.model.uuid,
             implicitPosition: 2
           });
         } else {
-          ClientRecommandationService.updateRecommandation({
+          ClientRecommendationService.updateRecommendation({
             uuid: evt.model.uuid,
             implicitPosition: 3,
             previous: $scope.recommendations[evt.newIndex - 1].uuid
@@ -3217,7 +3210,7 @@
       TreatmentPlanService.getTreatmentPlans({
         anr: anr.id
       }).then(function(data) {
-        $scope.recommendations = data['recommandations-risks'];
+        $scope.recommendations = data['recommendations-risks'];
 
         // Preprocess row spans
         for (var i = 0; i < $scope.recommendations.length; ++i) {
@@ -3992,7 +3985,7 @@
       password: '',
       createSnapshot: $scope.isBackgroundProcessActive,
     };
-    
+
     $scope.uploadFile = function(file) {
       $scope.isImportingIn = true;
       file.upload = Upload.upload({

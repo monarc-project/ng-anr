@@ -1,7 +1,7 @@
 function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetService, ThreatService,
-	VulnService, MeasureService, ClientRecommandationService, SOACategoryService, TagService,
+	VulnService, MeasureService, ClientRecommendationService, SOACategoryService, TagService,
 	RiskService, MeasureMeasureService, ObjlibService, gettextCatalog, $q, tab, referential,
-	recommandationSet) {
+	recommendationSet) {
 
 	$scope.tab = tab;
 	$scope.guideVisible = false;
@@ -80,17 +80,19 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 			break;
 		case 'Matches':
 			MeasureMeasureService.getMeasuresMeasures().then(function(data) {
-				matches = data.MeasureMeasure.map(mm => mm.father.uuid.toLowerCase() + mm.child.uuid.toLowerCase());
+				matches = data.measuresLinks.map(
+					mm => mm.masterMeasure.uuid.toLowerCase() + mm.linkedMeasure.uuid.toLowerCase()
+				);
 			});
 			MeasureService.getMeasures().then(function(data) {
 				allMeasures = data.measures;
 			});
 			break;
 		case 'Recommendations':
-			ClientRecommandationService.getRecommandations({
-				anr: recommandationSet.anr.id
+			ClientRecommendationService.getRecommendations({
+				anr: recommendationSet.anr.id
 			}).then(data => {
-				codes = data.recommandations.map(recommandation => recommandation.code.toLowerCase());;
+				codes = data.recommendations.map(recommendation => recommendation.code.toLowerCase());;
 			});
 			break;
 		case 'Assets library':
@@ -232,6 +234,9 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 						} else {
 							let libraryCategories = [];
 							for (let i = 1; i <= 4; i++) {
+								if (row[extItemField.slice(0, -1) + i] === undefined) {
+									continue;
+								}
 								let [categoryFound, parentIds] = findExternalObjectsCategory(row[extItemField.slice(0, -1) + i].split(">>"), allTreeViewCategories);
 								libraryCategories[i] = categoryFound
 								row.parentIdsPath = parentIds;
@@ -259,8 +264,8 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 							row.error += gettextCatalog.getString('control does not exist') + "\n";
 							$scope.check = true;
 						} else {
-							let measureControl = allMeasures.find(measure => measure.uuid == row.control.toLowerCase().trim());
-							row.father = row.control;
+							let measureControl = allMeasures.find(measure => measure.uuid === row.control.toLowerCase().trim());
+							row.masterMeasureUuid = row.control;
 							row.control = measureControl.referential['label' + $scope.language] +
 								" : " +
 								measureControl.code +
@@ -273,8 +278,8 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 							row.error += gettextCatalog.getString('match does not exist') + "\n";
 							$scope.check = true;
 						} else {
-							let measureMatch = allMeasures.find(measure => measure.uuid == row.match.toLowerCase().trim());
-							row.child = row.match;
+							let measureMatch = allMeasures.find(measure => measure.uuid === row.match.toLowerCase().trim());
+							row.linkedMeasureUuid = row.match;
 							row.match = measureMatch.referential['label' + $scope.language] +
 								" : " +
 								measureMatch.code +
@@ -282,7 +287,9 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 								measureMatch['label' + $scope.language];
 						}
 
-						if (!row.error.length && matches.includes(row.father.toLowerCase().trim() + row.child.toLowerCase().trim())) {
+						if (!row.error.length && matches.includes(
+							row.masterMeasureUuid.toLowerCase().trim() + row.linkedMeasureUuid.toLowerCase().trim()
+						)) {
 							row.error += gettextCatalog.getString('this matching is already in use') + "\n";
 							$scope.check = true;
 						}
@@ -337,7 +344,11 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 							} else {
 								let tags = [];
 								for (let i = 1; i <= 4; i++) {
-									tags[i] = row[extItemField.slice(0, -1) + i].toString().split("/");
+									if (row[extItemField.slice(0, -1) + i]) {
+										tags[i] = row[extItemField.slice(0, -1) + i].toString().split("/");
+									} else {
+										tags[i] = '';
+									}
 								}
 
 								tags[1].map((x, i) => {
@@ -371,7 +382,7 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 			'theme',
 			'category',
 			'referential',
-			'recommandationset'
+			'recommendationset'
 		];
 
 		let multilangueFields = [
@@ -387,13 +398,13 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 		}
 		switch (tab) {
 			case 'Controls':
-				itemFields.push('referential');
+				itemFields.push('referentialuuid', 'categoryid');
 				break;
 			case 'Information risks':
 				itemFields.push('asset uuid', 'threat uuid', 'vulnerability uuid');
 				break;
 			case 'Matches':
-				itemFields.push('father', 'child');
+				itemFields.push('mastermeasureuuid', 'linkedmeasureuuid');
 				break;
 			default:
 		}
@@ -424,13 +435,15 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 			}
 
 			if (tab == 'Controls') {
-				row.referential = referential;
+				row.referentialUuid = referential;
 				if (row[extItemField]) {
 					if (inExternalItemsFound(row[extItemField])) {
 						row.category = inExternalItemsFound(row[extItemField]);
+						row.categoryId = row.category;
 					} else {
 						await createCategory(row).then(function(id) {
 							row.category = id;
+							row.categoryId = row.category;
 						});
 					}
 				}
@@ -528,9 +541,9 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 									implicitPosition: 2,
 									position: null,
 									label1: row['category label1'].toString().split(">>")[index] ? row['category label1'].toString().split(">>")[index].trim() : null,
-									label2: row['category label2'].toString().split(">>")[index] ? row['category label2'].toString().split(">>")[index].trim() : null,
-									label3: row['category label3'].toString().split(">>")[index] ? row['category label3'].toString().split(">>")[index].trim() : null,
-									label4: row['category label4'].toString().split(">>")[index] ? row['category label4'].toString().split(">>")[index].trim() : null,
+									label2: row['category label2'] ? row['category label2'].toString().split(">>")[index].trim() : "",
+									label3: row['category label3'] ? row['category label3'].toString().split(">>")[index].trim() : "",
+									label4: row['category label4'] ? row['category label4'].toString().split(">>")[index].trim() : "",
 								};
 							}
 							await createLibraryCategory(categoryToCreate).then(function(id) {
@@ -561,7 +574,7 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 			}
 
 			if (tab == 'Recommendations') {
-				row.recommandationSet = recommandationSet.uuid;
+				row.recommendationSet = recommendationSet.uuid;
 			}
 
 			if (tab == 'Operational risks') {
@@ -821,14 +834,17 @@ function ImportFileDialogCtrl($scope, $http, $mdDialog, ConfigService, AssetServ
 			['label' + $scope.language]: row[extItemField].toString().trim()
 		}
 		let themeLabel = row[extItemField];
-		if ($scope.OFFICE_MODE == 'BO') {
+		if ($scope.OFFICE_MODE === 'BO') {
+			let themeLabel1 = extItemField.replace(/\d{1}$/, '1')
+			let themeLabel2 = extItemField.replace(/\d{1}$/, '2')
+			let themeLabel3 = extItemField.replace(/\d{1}$/, '3')
+			let themeLabel4 = extItemField.replace(/\d{1}$/, '4')
 			themeToCreate = {
-				label1: row['threat theme label1'] ? row['threat theme label1'].trim() : null,
-				label2: row['threat theme label2'] ? row['threat theme label2'].trim() : null,
-				label3: row['threat theme label3'] ? row['threat theme label3'].trim() : null,
-				label4: row['threat theme label4'] ? row['threat theme label4'].trim() : null,
+				label1: row[themeLabel1] ? row[themeLabel1].trim() : null,
+				label2: row[themeLabel2] ? row[themeLabel2].trim() : null,
+				label3: row[themeLabel3] ? row[themeLabel3].trim() : null,
+				label4: row[themeLabel4] ? row[themeLabel4].trim() : null,
 			};
-			themeLabel = row['threat theme label' + $scope.defaultLang];
 		}
 
 		ThreatService.createTheme(themeToCreate,

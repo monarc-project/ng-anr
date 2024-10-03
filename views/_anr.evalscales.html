@@ -13,12 +13,12 @@
 
             <md-card md-theme="default"
                 class="md-card-crit"
-                ng-if="(!scalesCanChange || !model.anr.cacheModelIsScalesUpdatable) && OFFICE_MODE == 'FO'">
+                ng-if="(!scalesCanChange || !model.anr.cacheModelAreScalesUpdatable) && OFFICE_MODE == 'FO'">
                 <md-card-content>
-                    <p ng-if="model.anr.cacheModelIsScalesUpdatable" translate>
+                    <p ng-if="model.anr.cacheModelAreScalesUpdatable" translate>
                         Some of the risks of your analysis, your library, or your trends assessment have already been assessed. This being done, you may not edit the scales values.
                     </p>
-                    <p ng-if="!model.anr.cacheModelIsScalesUpdatable" translate>
+                    <p ng-if="!model.anr.cacheModelAreScalesUpdatable" translate>
                         The risk analysis model used does not allow you to change the scales values.
                     </p>
                 </md-card-content>
@@ -63,7 +63,7 @@
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
                     <md-button
-                        ng-if="!isAnrReadOnly && (scales_types | filter:{type:'CUS'}).length >= 1"
+                        ng-if="!isAnrReadOnly && (scalesCanChange || OFFICE_MODE == 'BO') && (scales_types | filter:{type:'CUS'}).length >= 1"
                         class="md-icon-button md-warn"
                         ng-click="deleteInformationRiskScales()">
                         <md-tooltip md-direction="left">
@@ -110,9 +110,9 @@
                                         edit-type="textarea">
                                     </p>
                                     <md-button class="md-icon-button md-primary"
-                                        ng-if="!isAnrReadOnly"
+                                        ng-if="!isAnrReadOnly && (scalesCanChange || OFFICE_MODE == 'BO')"
                                         ng-click="setImpactVisibility(type.id, !!type.isHidden)">
-                                        <md-icon>{{ type.isHidden ? 'visibility' : 'visibility_off' }}</md-icon>
+                                        <md-icon>{{ type.isHidden ? 'visibility_off' : 'visibility' }}</md-icon>
                                     </md-button>
                                 </div>
                             </th>
@@ -299,12 +299,12 @@
 
             <md-card md-theme="default"
                 class="md-card-crit"
-                ng-if="(!scalesCanChange || !model.anr.cacheModelIsScalesUpdatable) && OFFICE_MODE == 'FO'">
+                ng-if="(!scalesCanChange || !model.anr.cacheModelAreScalesUpdatable) && OFFICE_MODE == 'FO'">
                 <md-card-content>
-                    <p ng-if="model.anr.cacheModelIsScalesUpdatable" translate>
+                    <p ng-if="model.anr.cacheModelAreScalesUpdatable" translate>
                         Some of the risks of your analysis, your library, or your trends assessment have already been assessed. This being done, you may not edit the scales values.
                     </p>
-                    <p ng-if="!model.anr.cacheModelIsScalesUpdatable" translate>
+                    <p ng-if="!model.anr.cacheModelAreScalesUpdatable" translate>
                         The risk analysis model used does not allow you to change the scales values.
                     </p>
                 </md-card-content>
@@ -336,7 +336,7 @@
                         </md-tooltip>
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
-                    <md-button ng-if="!isAnrReadOnly && opRiskImpactScales.length >= 1"
+                    <md-button ng-if="!isAnrReadOnly && (scalesCanChange || OFFICE_MODE == 'BO') && opRiskImpactScales.length >= 1"
                         class="md-icon-button md-warn"
                         ng-click="deleteOperationalRiskScales()">
                         <md-tooltip md-direction="left">
@@ -363,9 +363,9 @@
                                         edit-type="textarea">
                                     </p>
                                     <md-button class="md-icon-button md-primary"
-                                        ng-if="!isAnrReadOnly && ((opRiskImpactScales | filter:{isHidden:false}).length > 1 || display.show_hidden_opRisks_impacts)"
+                                        ng-if="!isAnrReadOnly && (scalesCanChange || OFFICE_MODE == 'BO') && ((opRiskImpactScales | filter:{isHidden:false}).length > 1 || display.show_hidden_opRisks_impacts)"
                                         ng-click="onEditOpRiskScale(scale.id, 'isHidden', !scale.isHidden)">
-                                        <md-icon>{{ scale.isHidden ? 'visibility' : 'visibility_off' }}</md-icon>
+                                        <md-icon>{{ scale.isHidden ? 'visibility_off' : 'visibility' }}</md-icon>
                                     </md-button>
                                 </div>
                             </th>

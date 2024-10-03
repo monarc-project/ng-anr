@@ -4,23 +4,23 @@
         .module('AnrModule')
         .controller('RiskRecommendationPartialCtrl', [
             '$scope', '$rootScope', 'toastr', '$mdMedia', '$mdDialog', '$stateParams', 'gettextCatalog', '$state', '$q', '$attrs',
-            '$timeout', 'ClientRecommandationService',
+            '$timeout', 'ClientRecommendationService',
             RiskRecommendationPartialCtrl
         ]);
 
     function RiskRecommendationPartialCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog,
-                                            $state, $q, $attrs, $timeout, ClientRecommandationService) {
+                                            $state, $q, $attrs, $timeout, ClientRecommendationService) {
         var riskMode = $attrs.monarcMode; // information / operational
         var isOpRiskMode = (riskMode == 'operational');
         var riskId = (isOpRiskMode ? $stateParams.riskopId : $stateParams.riskId);
         var updateDebounce = false;
 
-        $scope.createRecommandation = function (ev) {
+        $scope.createRecommendation = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'gettextCatalog', 'toastr', '$q', 'rwd', CreateRecommandationDialog],
-                templateUrl: 'views/anr/create.recommandation.html',
+                controller: ['$scope', '$mdDialog', 'ClientRecommendationService', 'gettextCatalog', 'toastr', '$q', 'rwd', CreateRecommendationDialog],
+                templateUrl: 'views/anr/create.recommendation.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
@@ -30,13 +30,13 @@
                     rwd: $scope.model.anr.rwd
                 }
             }).then(function (rec) {
-                ClientRecommandationService.createRecommandation(rec.recommandation, function (data) {
+                ClientRecommendationService.createRecommendation(rec.recommendation, function (data) {
                     toastr.success(gettextCatalog.getString("The recommendation has been created successfully"));
 
-                    ClientRecommandationService.attachToRisk(data.id, riskId, isOpRiskMode,
+                    ClientRecommendationService.attachToRisk(data.id, riskId, isOpRiskMode,
                         function () {
                             toastr.success(gettextCatalog.getString("The recommendation has been attached to this risk."));
-                            $scope.updateRecommandations();
+                            $scope.updateRecommendations();
                         });
                 })
             }, function (reject) {
@@ -44,29 +44,29 @@
             });
         }
 
-        $scope.editRecommandation = function (ev, rec) {
+        $scope.editRecommendation = function (ev, rec) {
             ev.preventDefault();
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
             $mdDialog.show({
-                controller: ['$scope', '$mdDialog', 'ClientRecommandationService', 'gettextCatalog', 'toastr', '$q',
-                            'rwd', 'rec' , 'detachRecommandation', 'deleteRecommandation', CreateRecommandationDialog],
-                templateUrl: 'views/anr/create.recommandation.html',
+                controller: ['$scope', '$mdDialog', 'ClientRecommendationService', 'gettextCatalog', 'toastr', '$q',
+                            'rwd', 'rec' , 'detachRecommendation', 'deleteRecommendation', CreateRecommendationDialog],
+                templateUrl: 'views/anr/create.recommendation.html',
                 targetEvent: ev,
                 preserveScope: false,
                 scope: $scope.$dialogScope.$new(),
                 clickOutsideToClose: false,
                 fullscreen: useFullScreen,
                 locals: {
-                    ClientRecommandationService: ClientRecommandationService,
+                    ClientRecommendationService: ClientRecommendationService,
                     rec: rec,
-                    detachRecommandation: $scope.detachRecommandation,
-                    deleteRecommandation: $scope.deleteRecommandation,
+                    detachRecommendation: $scope.detachRecommendation,
+                    deleteRecommendation: $scope.deleteRecommendation,
                     rwd: $scope.model.anr.rwd
                 }
             }).then(function () {
-                ClientRecommandationService.updateRecommandation(rec.recommandation, function () {
+                ClientRecommendationService.updateRecommendation(rec.recommendation, function () {
                     toastr.success(gettextCatalog.getString("The recommendation has been edited successfully"));
-                    $scope.updateRecommandations();
+                    $scope.updateRecommendations();
                 });
             }, function (reject) {
               $scope.handleRejectionDialog(reject);
@@ -75,8 +75,8 @@
 
         $scope.queryRecSearch = function (query) {
             var q = $q.defer();
-            ClientRecommandationService.getRecommandations({order: 'code', filter: query}).then(function (data) {
-                q.resolve(data.recommandations);
+            ClientRecommendationService.getRecommendations({order: 'code', filter: query}).then(function (data) {
+                q.resolve(data.recommendations);
             }, function () {
                 q.reject();
             });
@@ -88,20 +88,20 @@
             rec: null
         };
 
-        $scope.attachRecommandation = function () {
-            ClientRecommandationService.attachToRisk($scope.rec_edit.rec.uuid, riskId, isOpRiskMode,
+        $scope.attachRecommendation = function () {
+            ClientRecommendationService.attachToRisk($scope.rec_edit.rec.uuid, riskId, isOpRiskMode,
                 function () {
                     toastr.success(gettextCatalog.getString("The recommendation has been attached to this risk."));
                     $scope.rec_edit.rec = null;
-                    $scope.updateRecommandations();
+                    $scope.updateRecommendations();
                 });
         };
 
-        $scope.detachRecommandation = function (ev, recommandation) {
+        $scope.detachRecommendation = function (ev, recommendation) {
             $mdDialog.cancel();
             var confirm = $mdDialog.confirm()
                 .title(gettextCatalog.getString('Are you sure you want to detach recommendation ?',
-                    {code: recommandation.recommandation.code}))
+                    {code: recommendation.recommendation.code}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
                 .theme('light')
@@ -109,42 +109,42 @@
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm)
             .then(function() {
-                ClientRecommandationService.detachFromRisk(recommandation.id,
+                ClientRecommendationService.detachFromRisk(recommendation.id,
                     function () {
-                        $scope.updateRecommandations();
+                        $scope.updateRecommendations();
                         toastr.success(gettextCatalog.getString('The recommendation has been detached.'),
                             gettextCatalog.getString('Operation successful'));
                     }
                 );
             },function(reject){
-                $scope.editRecommandation(ev,recommandation);
+                $scope.editRecommendation(ev,recommendation);
             });
         }
 
-        $scope.deleteRecommandation = function(ev, recommandation){
+        $scope.deleteRecommendation = function(ev, recommendation){
             $mdDialog.cancel();
             var confirm = $mdDialog.confirm()
                 .title(gettextCatalog.getString('Are you sure you want to delete recommendation?',
-                    {code: recommandation.recommandation.code}))
+                    {code: recommendation.recommendation.code}))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
                 .theme('light')
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
             $mdDialog.show(confirm).then(function() {
-                ClientRecommandationService.deleteRecommandation({id: recommandation.recommandation.uuid},
+                ClientRecommendationService.deleteRecommendation({id: recommendation.recommendation.uuid},
                     function () {
-                        $scope.updateRecommandations();
+                        $scope.updateRecommendations();
                         toastr.success(gettextCatalog.getString('The recommendation has been deleted successfully'),
                             gettextCatalog.getString('Operation successful'));
                     }
                 );
             },function(){
-                $scope.editRecommandation(ev,recommandation);
+                $scope.editRecommendation(ev,recommendation);
             });
         }
 
-        $scope.updateRecommandations = function () {
+        $scope.updateRecommendations = function () {
             // We need to debounce the update here as the view uses twice the controller. The data is shared
             // through the broadcast event, but we have no way to know which controller will take care of the actual
             // API request. The first one will "lock" updateDebounce in the scope, and the other one will skip
@@ -152,9 +152,9 @@
             if (!$rootScope.updateDebounce && riskId) {
                 $rootScope.updateDebounce = true;
 
-                ClientRecommandationService.getRiskRecommandations(riskId, isOpRiskMode).then(function (data) {
-                    $scope.recommandations = data['recommandations-risks'];
-                    $rootScope.$broadcast('recommandations-loaded', $scope.recommandations);
+                ClientRecommendationService.getRiskRecommendations(riskId, isOpRiskMode).then(function (data) {
+                    $scope.recommendations = data['recommendations-risks'];
+                    $rootScope.$broadcast('recommendations-loaded', $scope.recommendations);
                     $timeout(function () {
                         $rootScope.updateDebounce = false;
                     })
@@ -162,31 +162,31 @@
             }
         };
 
-        $rootScope.$on('recommandations-loaded', function (ev, recs) {
-            $scope.recommandations = recs;
+        $rootScope.$on('recommendations-loaded', function (ev, recs) {
+            $scope.recommendations = recs;
         })
     }
 
-    function CreateRecommandationDialog($scope, $mdDialog, ClientRecommandationService, gettextCatalog, toastr, $q,
-                                        rwd, rec, detachRecommandation, deleteRecommandation) {
+    function CreateRecommendationDialog($scope, $mdDialog, ClientRecommendationService, gettextCatalog, toastr, $q,
+                                        rwd, rec, detachRecommendation, deleteRecommendation) {
         $scope.language = $scope.getAnrLanguage();
         $scope.recommendationSet = null;
-        $scope.recommandation = rec;
+        $scope.recommendation = rec;
         $scope.deleteConfirmation = false;
-        $scope.detachRecommandation = detachRecommandation;
-        $scope.deleteRecommandation = deleteRecommandation;
+        $scope.detachRecommendation = detachRecommendation;
+        $scope.deleteRecommendation = deleteRecommendation;
         $scope.isAnrReadOnly = !rwd;
 
         $scope.loadOptions = function(ev) {
-            ClientRecommandationService.getRecommandations().then(function (data) {
-                $scope.options = data.recommandations;
+            ClientRecommendationService.getRecommendations().then(function (data) {
+                $scope.options = data.recommendations;
             });
             return $scope.options;
         };
         $scope.queryRecommendationSetSearch = function (query) {
             var promise = $q.defer();
-              ClientRecommandationService.getRecommandationsSets({filter: query}).then(function (data) {
-                promise.resolve(data['recommandations-sets']);
+              ClientRecommendationService.getRecommendationsSets({filter: query}).then(function (data) {
+                promise.resolve(data['recommendations-sets']);
             }, function () {
                 promise.reject();
             });
@@ -198,12 +198,9 @@
         }
 
         $scope.createNewRecommendationSet = function (ev, recommendationSetlabel) {
-          var recommendationSet = {};
-          for (var i = 1; i <=4; i++) {
-            recommendationSet['label' + i] =  recommendationSetlabel;
-          }
+          let recommendationSet = {label: recommendationSetlabel};
 
-          ClientRecommandationService.createRecommandationSet(recommendationSet,
+          ClientRecommendationService.createRecommendationSet(recommendationSet,
             function (status) {
               recommendationSet.uuid = status.id;
               $scope.selectedRecommendationSetItemChange(recommendationSet);
@@ -214,11 +211,11 @@
 
         $scope.setSelectedRecommendation = function(ev, selectedRec) {
             if (selectedRec !== undefined) {
-                $scope.recommandation = selectedRec;
-                $scope.recommandation['recommandation'] = {};
-                $scope.recommandation['recommandation']['code'] = selectedRec.code;
-                $scope.recommandation['recommandation']['importance'] = selectedRec.importance;
-                $scope.recommandation['recommandation']['description'] = selectedRec.description;
+                $scope.recommendation = selectedRec;
+                $scope.recommendation['recommendation'] = {};
+                $scope.recommendation['recommendation']['code'] = selectedRec.code;
+                $scope.recommendation['recommendation']['importance'] = selectedRec.importance;
+                $scope.recommendation['recommendation']['description'] = selectedRec.description;
             }
         };
 
@@ -232,10 +229,10 @@
 
         $scope.create = function () {
             if ($scope.recommendationSet == null) {
-                $scope.recommendationSet = $scope.recommandation.recommandation.recommandationSet;
+                $scope.recommendationSet = $scope.recommendation.recommendation.recommendationSet;
             }
-            $scope.recommandation.recommandation.recommandationSet = $scope.recommendationSet.uuid;
-            $mdDialog.hide($scope.recommandation);
+            $scope.recommendation.recommendation.recommendationSet = $scope.recommendationSet.uuid;
+            $mdDialog.hide($scope.recommendation);
         };
 
         $scope.cancel = function() {
@@ -243,7 +240,7 @@
         };
     }
 
-    function MeasureRecommandationAttachDialog($scope, $mdDialog, $q, MeasureService) {
+    function MeasureRecommendationAttachDialog($scope, $mdDialog, $q, MeasureService) {
         $scope.rec = {
             measure: null
         };

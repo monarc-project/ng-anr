@@ -1,5 +1,5 @@
 <md-dialog md-theme="light" class="dialog-width">
-    <form name="recommandationSetForm">
+    <form name="recommendationSetForm">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <h2 translate>Import a recommendation set from MOSP</h2>
@@ -28,7 +28,7 @@
                         ng-disabled="!dataLoaded"
                         flex
                         md-no-cache="true"
-                        md-selected-item="recommandationSet"
+                        md-selected-item="recommendationSet"
                         md-search-text="searchText"
                         md-items="item in getMatches(searchText)"
                         md-delay="300"
@@ -51,7 +51,7 @@
             <md-button ng-click="cancel()">
                 {{ 'Cancel' | translate }}
             </md-button>
-            <md-button ng-click="import()" ng-disabled="recommandationSetForm.$error.required" type="submit" class="md-accent md-hue-3">
+            <md-button ng-click="import()" ng-disabled="recommendationSetForm.$error.required" type="submit" class="md-accent md-hue-3">
                 {{ 'Import' | translate }}
             </md-button>
         </md-dialog-actions>

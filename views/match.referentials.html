@@ -52,8 +52,8 @@
                           <td ng-repeat="ref in referentialsList.referentials" ng-if="ref.uuid !== referentialSelected.uuid">
                             <md-chips ng-model="matchMeasures[ref.uuid][measure.uuid]"
                                       md-autocomplete-snap
-                                      md-on-add="addMeasureLinked(measure.uuid, $chip.uuid)"
-                                      md-on-remove="deleteMeasureLinked(measure.uuid, $chip.uuid)"
+                                      md-on-add="addLinkedMeasure(measure.uuid, $chip.uuid)"
+                                      md-on-remove="deleteLinkedMeasure(measure.uuid, $chip.uuid)"
                                       md-require-match="true">
 
                                 <md-autocomplete flex

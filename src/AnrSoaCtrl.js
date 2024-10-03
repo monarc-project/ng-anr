@@ -53,12 +53,16 @@
             $scope.updateSoaMeasures();
         });
 
+        $scope.listener = null;
         $scope.selectReferential = function(referentialId) {
+            if ($scope.listener !== null) {
+                $scope.listener();
+            }
             $scope.referential_uuid = referentialId;
             $scope.updateSoaMeasures();
             $scope.updateCategories(referentialId);
 
-            $scope.$watchGroup(
+            $scope.listener = $scope.$watchGroup(
                 [
                     "soa_measures[" + "'" + referentialId + "'" + "].selectedCategory",
                     "soa_measures[" + "'" + referentialId + "'" + "].query.filter",
@@ -183,16 +187,16 @@
                     ClientSoaService.getSoas({
                         referential: $scope.referential_uuid
                     }).then(function(data) {
-                        var childrens = data['soaMeasures'];
+                        var children = data['soaMeasures'];
                         ClientSoaService.getSoas({
                             referential: importSoa.refSelected
                         }).then(function(data) {
                             var fathers = data['soaMeasures'];
-                            childrens.forEach(child => {
+                            children.forEach(child => {
                                 let fathersFiltered = [];
                                 let avg = [];
-                                child.measure.measuresLinked.forEach(measureLinked => {
-                                    fathersFiltered.push(fathers.filter(father => father.measure.uuid == measureLinked))
+                                child.measure.linkedMeasures.forEach(linkedMeasure => {
+                                    fathersFiltered.push(fathers.filter(father => father.measure.uuid == linkedMeasure))
                                 });
                                 fathersFiltered.flat().forEach(father => {
                                     importOptions.forEach(function(option) {
@@ -235,7 +239,7 @@
                                 });
                             });
 
-                            ClientSoaService.updateSoa(null, childrens, function() {
+                            ClientSoaService.updateSoa(null, children, function() {
                                 $scope.updateSoaMeasures();
                                 toastr.success(gettextCatalog.getString('The SOA has been imported successfully.'),
                                     gettextCatalog.getString('Import successful'));

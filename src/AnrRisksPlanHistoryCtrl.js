@@ -4,7 +4,7 @@
         .module('AnrModule')
         .controller('AnrRisksPlanHistoryCtrl', [
             '$scope', 'toastr', '$mdMedia', '$mdDialog', '$stateParams', 'gettextCatalog',
-            '$state', 'TreatmentPlanService','ClientRecommandationService', 'DownloadService',
+            '$state', 'TreatmentPlanService','ClientRecommendationService', 'DownloadService',
             '$q', AnrRisksPlanHistoryCtrl
         ]);
 
@@ -14,7 +14,7 @@
 
 
 function AnrRisksPlanHistoryCtrl($scope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog,
-                                $state, TreatmentPlanService, ClientRecommandationService, DownloadService,
+                                $state, TreatmentPlanService, ClientRecommendationService, DownloadService,
                                 $q) {
 
         $scope.backToList = function () {
@@ -37,8 +37,8 @@ function AnrRisksPlanHistoryCtrl($scope, toastr, $mdMedia, $mdDialog, $statePara
             }
         };
 
-        ClientRecommandationService.getRecommandationHistory().then(function (data) {
-            $scope.history = data['recommandations-historics'];
+        ClientRecommendationService.getRecommendationHistory().then(function (data) {
+            $scope.history = data['recommendations-history'];
 
         })
 

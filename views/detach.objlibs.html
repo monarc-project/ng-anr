@@ -28,7 +28,7 @@
                     <tr md-row ng-repeat="node in parents">
                         <td md-cell>{{ _langField(node,'name') }}</td>
                         <td md-cell>
-                            <md-button class="md-icon-button md-warn" aria-title="{{ 'Detach' | translate }}" ng-click="detachObject($event, node)""><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></md-button>
+                            <md-button class="md-icon-button md-warn" aria-title="{{ 'Detach' | translate }}" ng-click="detachObject($event, node)"><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></md-button>
                         </td>
                     </tr>
                     </tbody>
@@ -49,7 +49,7 @@
                         <td md-cell>{{ _langField(node,'name') }}</td>
                         <td md-cell>
                             <md-button class="md-icon-button md-primary" aria-title="{{ _langField(node,'name') }}" ng-click="goToInstance(node.id)"><md-icon>folder_open</md-icon><md-tooltip md-direction="left">{{ _langField(node,'name') }}</md-tooltip></md-button>
-                            <md-button class="md-icon-button md-warn" aria-title="{{ 'Detach' | translate }}" ng-click="detachInstance($event,node)""><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></md-button>
+                            <md-button class="md-icon-button md-warn" aria-title="{{ 'Detach' | translate }}" ng-click="detachInstance($event,node)"><md-icon>content_cut</md-icon><md-tooltip md-direction="left">{{ 'Detach' | translate }}</md-tooltip></md-button>
                         </td>
                     </tr>
                     </tbody>

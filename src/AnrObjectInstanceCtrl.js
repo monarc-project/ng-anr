@@ -421,21 +421,21 @@
 
     function contextInstanceDialog($scope, $mdDialog, gettextCatalog, MetadataInstanceService, instance) {
         $scope.languageCode = $scope.getLanguageCode($scope.getAnrLanguage());
-        updateMetadatas();
+        updateInstanceMetadataList();
 
         $scope.updateInstanceMetadata = function(metadata, comment) {
             if (metadata.instanceMetadata.id) {
-                MetadataInstanceService.updateInstanceMetadata(instance.id,metadata.instanceMetadata);
+                MetadataInstanceService.updateInstanceMetadata(instance.id, metadata.instanceMetadata);
             } else {
                 metadata.instanceMetadata = {
                     [$scope.languageCode] : comment
                 };
-                MetadataInstanceService.createIntanceMetadata({instId: instance.id, metadata: [metadata]});
+                MetadataInstanceService.createInstanceMetadata({instId: instance.id, metadata: [metadata]});
             }
         }
 
-        $scope.deleteMetadata = function (ev, metadata) {
-            var confirm = $mdDialog.confirm()
+        $scope.deleteMetadata = function (ev, metadataField) {
+            let confirm = $mdDialog.confirm()
                 .title(gettextCatalog.getString('Are you sure you want to delete the asset context field?'))
                 .textContent(gettextCatalog.getString('This operation is irreversible.'))
                 .targetEvent(ev)
@@ -443,12 +443,13 @@
                 .multiple(true)
                 .ok(gettextCatalog.getString('Delete'))
                 .cancel(gettextCatalog.getString('Cancel'));
+
             $mdDialog.show(confirm).then(function() {
-                MetadataInstanceService.deleteMetadata(
-                    metadata.id,
+                MetadataInstanceService.deleteMetadataField(
+                  metadataField.id,
                     null,
-                    function(){
-                        updateMetadatas();
+                    function() {
+                        updateInstanceMetadataList();
                     }
                 );
             });
@@ -465,27 +466,24 @@
                 .ok(gettextCatalog.getString('Create'))
                 .cancel(gettextCatalog.getString('Cancel'));
 
-
-            $mdDialog.show(
-                fieldMetadata
-                .multiple(true)
-            )
-            .then(function (fieldMetadata) {
-                metadatas = {
+            $mdDialog
+              .show(fieldMetadata.multiple(true))
+              .then(function (fieldMetadata) {
+                let metadataField = {
                     [$scope.languageCode] : fieldMetadata
                 };
-                MetadataInstanceService.createMetadata(
-                    [metadatas],
+                MetadataInstanceService.createMetadataField(
+                    [metadataField],
                     function(){
-                        updateMetadatas();
+                        updateInstanceMetadataList();
                     }
                 );
-            }, function (reject) {
-              $scope.handleRejectionDialog(reject);
-            });
+              }, function (reject) {
+                $scope.handleRejectionDialog(reject);
+              });
         }
 
-        $scope.editMetadata = function(ev,metadata) {
+        $scope.editMetadata = function(ev, metadata) {
             let fieldMetadata = $mdDialog.prompt()
                 .title(gettextCatalog.getString('Field label'))
                 .placeholder(gettextCatalog.getString('Label'))
@@ -496,33 +494,30 @@
                 .ok(gettextCatalog.getString('Save'))
                 .cancel(gettextCatalog.getString('Cancel'));
 
-
-            $mdDialog.show(
-                fieldMetadata
-                .multiple(true)
-            )
-            .then(function (fieldMetadata) {
+            $mdDialog
+              .show(fieldMetadata.multiple(true))
+              .then(function (fieldMetadata) {
                 metadata[$scope.languageCode] = fieldMetadata;
-                MetadataInstanceService.updateMetadata(
+                MetadataInstanceService.updateMetadataFields(
                     null,
                     metadata,
-                    function(){
-                        updateMetadatas();
+                    function() {
+                        updateInstanceMetadataList();
                     }
                 )
-            }, function (reject) {
-              $scope.handleRejectionDialog(reject);
-            });
+              }, function (reject) {
+                $scope.handleRejectionDialog(reject);
+              });
         }
 
         $scope.cancel = function() {
             $mdDialog.cancel();
         };
 
-        function updateMetadatas(){
-            MetadataInstanceService.getInstanceMetadatas({instId:instance.id})
+        function updateInstanceMetadataList() {
+            MetadataInstanceService.getInstanceMetadataList({instId: instance.id})
                 .then(function(data){
-                    $scope.metadatas = data.data;
+                    $scope.instanceMetadata = data.data;
                 }
             );
         }

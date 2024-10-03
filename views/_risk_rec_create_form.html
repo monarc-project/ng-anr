@@ -1,5 +1,5 @@
 <div layout="column">
-    <md-button ng-click="createRecommandation($event)" ng-disabled="isAnrReadOnly">
+    <md-button ng-click="createRecommendation($event)" ng-disabled="isAnrReadOnly">
         <md-icon>add</md-icon>
         {{ 'Create a recommendation' | translate }}
     </md-button>
@@ -26,7 +26,7 @@
             </md-not-found>
         </md-autocomplete>
 
-        <md-button ng-click="attachRecommandation()" class="md-icon-button md-primary" ng-disabled="!rec_edit.rec || isAnrReadOnly">
+        <md-button ng-click="attachRecommendation()" class="md-icon-button md-primary" ng-disabled="!rec_edit.rec || isAnrReadOnly">
             <md-icon>link</md-icon>
         </md-button>
     </div>

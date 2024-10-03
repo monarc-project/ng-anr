@@ -66,7 +66,6 @@
                         <md-icon style="margin-right: 8px;">class</md-icon>
                         <md-autocomplete
                                 flex
-                                required
                                 md-input-name="theme"
                                 md-no-cache="true"
                                 md-selected-item="selectedThemeItem"
@@ -85,10 +84,6 @@
                                 <md-icon class="md-primary">add_to_photos</md-icon>
                                 {{ 'to create it.' | translate }}
                             </md-not-found>
-
-                            <div ng-messages="threatForm.theme.$error">
-                                <div ng-message="required">{{ 'The theme may not be empty' | translate }}</div>
-                            </div>
                         </md-autocomplete>
 
                         <md-button class="md-icon-button md-primary" ng-click="createNewTheme($event, theme, themeSearchText)" ng-show="!threat.theme.id || themeSearchText !== threat.theme['label' + language]">

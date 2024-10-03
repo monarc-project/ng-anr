@@ -25,12 +25,6 @@
 
         self.AnrRisksResource = $resource('api/' + anr + '/:anrId/risks/:instId', { anrId: '@anrId', instId: '@instId' },
             {
-                'update': {
-                    method: 'PUT'
-                },
-                'patch': {
-                    method: 'PATCH'
-                },
                 'query': {
                     isArray: false
                 }
@@ -212,9 +206,13 @@
         };
 
         var addNewObjectToLibrary = function (anr_id, object, success, error) {
+          if ($rootScope.OFFICE_MODE === 'BO') {
             ObjlibService.createObjlib(object, function (data) {
-                addExistingObjectToLibrary(anr_id, data.id, success, error);
+              addExistingObjectToLibrary(anr_id, data.id, success, error);
             }, error);
+          } else {
+            ObjlibService.createObjlib(object, success, error);
+          }
         };
 
         var removeObjectFromLibrary = function (anr_id, object_id, success, error) {
@@ -223,10 +221,6 @@
 
         var getObjectsLibrary = function (anr_id) {
             return self.LibraryResource.query({anrId: anr_id}).$promise;
-        };
-
-        var patchLibraryObject = function (anr_id, object_id, obj, success, error) {
-            self.LibraryResource.patch({anrId: anr_id, objectId: object_id}, obj, success, error);
         };
 
         var patchLibraryCategory = function (anr_id, cat_id, obj, success, error) {
@@ -258,20 +252,22 @@
             self.InstanceResource.patch({instId: instance_id, anrId: anr_id, parent: parent_id, position: position}, success, error);
         };
 
-        var getInstanceRisk = function (anr_id, id) {
-            return self.InstanceRiskResource.query({anrId: anr_id, riskId: id}).$promise;
+        var createInstanceRisk = function (anr_id, params, success, error) {
+            params.anrId = anr_id;
+            new self.InstanceRiskResource(params).$save(success, error);
         };
 
         var updateInstanceRisk = function (anr_id, id, params, success, error) {
             self.InstanceRiskResource.update({anrId: anr_id, riskId: id}, params, success, error);
         };
 
-        var patchInstanceRisk = function (anr_id, id, params, success, error) {
-            self.InstanceRiskResource.patch({anrId: anr_id, riskId: id}, params, success, error);
+        var deleteInstanceRisk = function (anr_id, risk_id, success, error) {
+          self.InstanceRiskResource.delete({anrId: anr_id, riskId: risk_id}, success, error);
         };
 
-        var getInstanceOpRisk = function (anr_id, id) {
-            return self.InstanceOpRiskResource.query({anrId: anr_id, riskId: id}).$promise;
+        var createInstanceRiskOp = function (anr_id, params, success, error) {
+            params.anrId = anr_id;
+            new self.InstanceOpRiskResource(params).$save(success, error);
         };
 
         var updateInstanceOpRisk = function (anr_id, id, params, success, error) {
@@ -280,6 +276,10 @@
 
         var patchInstanceOpRisk = function (anr_id, id, params, success, error) {
             self.InstanceOpRiskResource.patch({anrId: anr_id, riskId: id}, params, success, error);
+        };
+
+        var deleteInstanceRiskOp = function (anr_id, risk_id, success, error) {
+            self.InstanceOpRiskResource.delete({anrId: anr_id, riskId: risk_id}, success, error);
         };
 
 
@@ -293,11 +293,11 @@
         };
 
         var getScalesTypes = function (anr_id) {
-            return self.ScalesTypesResource.query({anrId: anr_id, order:'position'}).$promise;
+            return self.ScalesTypesResource.query({anrId: anr_id}).$promise;
         };
 
         var createScaleType = function (anr_id, scale_id, labels, success, error) {
-            new self.ScalesTypesResource({anrId: anr_id, scale: scale_id, labels: labels, implicitPosition: 2}).$save(success, error);
+            new self.ScalesTypesResource({anrId: anr_id, scale: scale_id, labels: labels}).$save(success, error);
         };
 
         var patchScaleType = function (anr_id, scale_type_id, data, success, error) {
@@ -343,12 +343,12 @@
             new self.OperationalRiskScalesResource({anrId: anr_id, scaleId: scaleId, label: label, min: min, max: max, comments : comments, type: 1}).$save(success, error);
         };
 
-        var deleteOperationalRiskScales = function (ids, success, error) {
-            if ($rootScope.OFFICE_MODE == 'FO') {
-                MassDeleteService.deleteMass('api/client-anr/' + $rootScope.getUrlAnrId() + '/operational-scales', ids, success, error);
-            } else {
-                MassDeleteService.deleteMass('api/delete-operational-scales', ids, success, error);
-            }
+        var deleteOperationalRiskScales = function (ids, anrId, success, error) {
+          let deleteUri = 'api/anr/' + anrId + '/operational-scales';
+          if ($rootScope.OFFICE_MODE == 'FO') {
+            deleteUri = 'api/client-anr/' + $rootScope.getUrlAnrId() + '/operational-scales';
+          }
+          MassDeleteService.deleteMass(deleteUri, ids, success, error);
         };
 
         var updateOperationalRiskScale = function (anr_id, scale_id, params, success, error) {
@@ -394,15 +394,6 @@
             return self.AnrRiskOwnersResource.query(query).$promise;
         };
 
-        var createInstanceRisk = function (anr_id, params, success, error) {
-            params.anrId = anr_id;
-            new self.AnrRisksResource(params).$save(success, error);
-        };
-
-        var deleteInstanceRisk = function (anr_id, risk_id, success, error) {
-            self.AnrRisksResource.delete({anrId: anr_id, instId: risk_id}, success, error);
-        };
-
         var getInstanceRisksOp = function (anr_id, inst_id, params) {
             var query = angular.copy(params);
             query.anrId = anr_id;
@@ -416,15 +407,6 @@
             return self.AnrRisksOpResource.query(query).$promise;
         };
 
-        var createInstanceRiskOp = function (anr_id, params, success, error) {
-            params.anrId = anr_id;
-            new self.AnrRisksOpResource(params).$save(success, error);
-        };
-
-        var deleteInstanceRiskOp = function (anr_id, risk_id, success, error) {
-            self.AnrRisksOpResource.delete({anrId: anr_id, instId: risk_id}, success, error);
-        };
-
 
         return {
             patchAnr: patchAnr,
@@ -434,7 +416,6 @@
             addNewObjectToLibrary: addNewObjectToLibrary,
             removeObjectFromLibrary: removeObjectFromLibrary,
             getObjectsLibrary: getObjectsLibrary,
-            patchLibraryObject: patchLibraryObject,
             patchLibraryCategory: patchLibraryCategory,
 
             getScales: getScales,
@@ -466,13 +447,10 @@
 
             getInstanceRisks: getInstanceRisks,
             getInstanceRisksOp: getInstanceRisksOp,
-            getInstanceRisk: getInstanceRisk,
             createInstanceRisk: createInstanceRisk,
             deleteInstanceRisk: deleteInstanceRisk,
             updateInstanceRisk: updateInstanceRisk,
-            patchInstanceRisk: patchInstanceRisk,
 
-            getInstanceOpRisk: getInstanceOpRisk,
             createInstanceOpRisk: createInstanceRiskOp,
             deleteInstanceOpRisk: deleteInstanceRiskOp,
             updateInstanceOpRisk: updateInstanceOpRisk,
