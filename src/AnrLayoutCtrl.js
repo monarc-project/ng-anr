@@ -2595,7 +2595,7 @@
       var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
       $mdDialog.show({
-          controller: ['$scope', '$mdDialog', 'mode', ExportAnrDialog],
+          controller: ['$scope', '$mdDialog', 'mode', 'ConfigService', ExportAnrDialog],
           templateUrl: 'views/anr/export.objlibs.html',
           targetEvent: ev,
           preserveScope: false,
@@ -2603,7 +2603,8 @@
           clickOutsideToClose: false,
           fullscreen: useFullScreen,
           locals: {
-            mode: 'anr'
+            mode: 'anr',
+            ConfigService: ConfigService,
           }
         })
         .then(function(exports) {
@@ -3087,19 +3088,20 @@
     };
   }
 
-  function ExportAnrDialog($scope, $mdDialog, mode) {
+  function ExportAnrDialog($scope, $mdDialog, mode, ConfigService) {
     $scope.mode = mode;
     $scope.exportData = {
       password: '',
       simple_mode: true,
-      assessments: 0,
+      assessments: ConfigService.isExportDefaultWithEval() ? 1 : 0,
       methodSteps: true,
       interviews: true,
       controls: true,
       recommendations: true,
       soas: true,
       records: true,
-      knowledgeBase: false
+      assetsLibrary: true,
+      knowledgeBase: true,
     };
 
     $scope.cancel = function() {
