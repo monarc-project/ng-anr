@@ -85,6 +85,7 @@
   <table class="md-html-table inputs-as-number big-border-all" ng-if="!opsheet_risk && oprisks.length > 0" editable callback="changeRiskOp">
       <thead class="big-border-bottom">
       <tr>
+          <th rowspan="3">ID</th>
           <th rowspan="3" translate>Asset</th>
           <th rowspan="3" translate>Risk description</th>
           <th colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" ng-if="model.showRolfBrut && instmode != 'obj'" class="big-border-left"  translate>Inherent risk</th>
@@ -118,6 +119,7 @@
 
       <tbody>
       <tr ng-repeat="risk in oprisks" edit-model="risk" ng-class="{'specific-blue': risk.specific == 1}">
+          <td title="{{risk.id}}">{{risk.id}}</td>
           <td class="preserve-newlines" title="{{instanceCache[risk.instanceInfos.id].completePath}}">{{ instmode == 'obj' ? _langField(object,'name') : _langField(risk.instanceInfos,'name') }}</td>
   	      <td class="preserve-newlines" title="{{ _langField(risk,'description') }}">{{ _langField(risk,'label') }}</td>
           <td

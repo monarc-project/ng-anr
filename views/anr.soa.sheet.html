@@ -17,6 +17,7 @@
       <table class="md-html-table soa-table md-html-table-grey big-border-all">
          <thead class="big-border-bottom"  >
          <tr>
+             <th rowspan="2">ID</th>
              <th rowspan="2" translate>Asset</th>
              <th colspan="3" translate>Impact</th>
              <th colspan="2" class="big-border-left" translate>Threat</th>
@@ -42,6 +43,7 @@
 
          <tbody>
            <tr class="txtleft" ng-repeat="risk in soaMeasureRisks" ng-if="soaMeasureRisks.length > 0">
+             <td title="{{risk.id}}">{{risk.id}}</td>
              <td  class="txtleft clickable-rows"><a ng-click="goToInstance(risk.instance, 'InfoRisk')"> {{_langField(risk,'instanceName')}}</a></td>
              <td  class="txtcenter" title="{{ scaleCommCache[1][risk.c_impact] }}">{{risk.c_impact|dashnull}}</td>
              <td  class="txtcenter" title="{{ scaleCommCache[2][risk.i_impact] }}">{{risk.i_impact|dashnull}}</td>

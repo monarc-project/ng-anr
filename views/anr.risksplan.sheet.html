@@ -9,6 +9,7 @@
     <table class="md-html-table" editable callback="onTableEdited">
         <thead ng-if="rec_risks.length > 0">
         <tr>
+            <th>ID</th>
             <th translate>Asset</th>
             <th translate>Threat</th>
             <th translate>Vulnerability</th>
@@ -21,6 +22,7 @@
         </thead>
         <tbody>
         <tr edit-model="risk" ng-repeat="risk in rec_risks">
+            <td title="{{risk.instanceRisk.id}}">{{risk.instanceRisk.id}}</td>
             <td><a ui-sref="main.project.anr.instance({modelId: model.anr.id, instId: risk.instance.id})" href="javascript:;">{{ _langField(risk.instance,'name') }}</a></td>
             <td>{{ risk.threat.code }} - {{ _langField(risk.threat,'label') }}</td>
             <td>{{ risk.vulnerability.code }} - {{ _langField(risk.vulnerability,'label') }}</td>
@@ -34,6 +36,7 @@
 
         <thead ng-if="rec_risksOp.length > 0">
         <tr>
+            <th>ID</th>
             <th translate>Asset</th>
             <th translate colspan="2">Risk description</th>
             <th translate>Existing controls</th>
@@ -45,6 +48,7 @@
         </thead>
         <tbody>
         <tr edit-model="risk" ng-repeat="risk in rec_risksOp">
+            <td title="{{risk.instanceRiskOp.id}}">{{risk.instanceRiskOp.id}}</td>
             <td><a ui-sref="main.project.anr.instance({modelId: model.anr.id, instId: risk.instance.id})" href="javascript:;">{{ _langField(risk.instance,'name') }}</a></td>
             <td colspan="2">{{ _langField(risk.instanceRiskOp,'riskCacheLabel') }}</td>
             <td>{{ risk.instanceRiskOp.comment }}</td>
