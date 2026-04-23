@@ -115,6 +115,11 @@
       }
     ];
     $scope.isCopilotAvailable = $rootScope.isCopilotEnabled === true;
+    $scope.$watch(function() {
+      return $rootScope.isCopilotEnabled;
+    }, function(isCopilotEnabled) {
+      $scope.isCopilotAvailable = isCopilotEnabled === true;
+    });
     $scope.copilotVisible = false;
     $scope.copilotLabels = {
       badge: gettext('React widget'),
