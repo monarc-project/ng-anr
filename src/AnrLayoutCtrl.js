@@ -83,6 +83,58 @@
     var isModelLoading = false;
     var __panel = null;
 
+    var copilotTabLabels = [
+      gettext('Risk analysis'),
+      gettext('Dashboard'),
+      gettext('Evaluation scales'),
+      gettext('Knowledge base'),
+      gettext('Record of processing activities'),
+      gettext('Statement of applicability'),
+      gettext('Risks')
+    ];
+
+    $scope.copilotPresets = [{
+        key: 'current-step',
+        label: gettext('Explain current step'),
+        question: gettext('Explain the current MONARC step')
+      },
+      {
+        key: 'what-next',
+        label: gettext('What next?'),
+        question: gettext('What next?')
+      },
+      {
+        key: 'context',
+        label: gettext('Suggest context text'),
+        question: gettext('Suggest context text for this screen')
+      },
+      {
+        key: 'recommendations',
+        label: gettext('Suggest recommendations'),
+        question: gettext('Suggest risk reduction recommendations for this screen')
+      }
+    ];
+    $scope.isCopilotAvailable = $rootScope.isCopilotEnabled === true;
+    $scope.copilotVisible = false;
+    $scope.copilotLabels = {
+      badge: gettext('React widget'),
+      title: gettext('Guidance copilot'),
+      subtitle: gettext('Read-only help for the current MONARC step, next actions, concepts, context text, and recommendations.'),
+      inputLabel: gettext('Ask the copilot'),
+      placeholder: gettext('Example: What next on this page?'),
+      askButton: gettext('Ask'),
+      showButton: gettext('Show copilot'),
+      hideButton: gettext('Hide copilot'),
+      generating: gettext('Generating guidance...'),
+      genericError: gettextCatalog.getString('The copilot could not generate guidance for this screen.'),
+      answerTitle: gettext('Copilot answer'),
+      confidenceTitle: gettext('Confidence'),
+      sourcesTitle: gettext('Sources'),
+      highConfidenceLabel: gettext('High'),
+      mediumConfidenceLabel: gettext('Medium'),
+      lowConfidenceLabel: gettext('Low')
+    };
+
     if ($scope.OFFICE_MODE == 'FO') {
       $rootScope.$on("$locationChangeStart", function(e, nextUrl, oldUrl) {
         if (nextUrl != oldUrl && nextUrl.substring(nextUrl.length - 4) == '/anr' && ($scope.display.anrSelectedTabIndex != 0 || $scope.opsheet_risk || $scope.sheet_risk)) {
@@ -450,6 +502,20 @@
         }
       }
       return str.join('&');
+    };
+
+    $scope.getCopilotPageContext = function() {
+      var tabIndex = $scope.display ? $scope.display.anrSelectedTabIndex : 0;
+
+      return {
+        routeName: $state.current.name,
+        tabIndex: tabIndex,
+        tabLabel: copilotTabLabels[tabIndex] || '',
+        selectedObjectUuid: $rootScope.anr_selected_object_id || null,
+        selectedInstanceId: $rootScope.anr_selected_instance_id || null,
+        selectedRiskId: $scope.sheet_risk ? $scope.sheet_risk.id : null,
+        selectedOpRiskId: $scope.opsheet_risk ? $scope.opsheet_risk.id : null
+      };
     };
 
     $scope.exportAnrRisksTable = function() {
