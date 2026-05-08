@@ -51,6 +51,7 @@
                         <md-select ng-model="risks_filters.order">
                             <md-option value="auditOrder" ng-if="instance.asset.type != 1 && instmode == 'inst'">{{ 'Audit order' | translate }}</md-option>
                             <md-option value="instance">{{ 'Asset' | translate }}</md-option>
+                            <md-option value="riskSource">{{ 'Risk source' | translate }}</md-option>
                             <md-option value="c_impact" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'C Impact' | translate }}</md-option>
                             <md-option value="i_impact" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'I Impact' | translate }}</md-option>
                             <md-option value="d_impact" ng-if="instance.asset.type == 1 || instmode == 'anr'">{{ 'A Impact' | translate }}</md-option>
@@ -86,6 +87,7 @@
         <tr>
             <th rowspan="2">ID</th>
             <th rowspan="2" translate>Asset</th>
+            <th rowspan="2" translate ng-if="OFFICE_MODE == 'FO'">Risk source</th>
             <th colspan="3" translate>Impact</th>
             <th colspan="2" class="big-border-left" translate>Threat</th>
             <th colspan="3" class="big-border-left" translate>Vulnerability</th>
@@ -112,6 +114,7 @@
         <tr ng-repeat="risk in risks" edit-model="risk" ng-class="{'specific-blue': risk.specific == 1}">
             <td title="{{risk.id}}">{{risk.id}}</td>
             <td title="{{instanceCache[risk.instance].completePath}}">{{_langField(instanceCache[risk.instance],'name')}}</td>
+            <td ng-if="OFFICE_MODE == 'FO'">{{ risk.riskSourceLabel || '-' }}</td>
             <td title="{{ scaleCommCache[1][risk.c_impact] }}" class="txtcenter">{{risk.c_impact|dashnull}}</td>
             <td title="{{ scaleCommCache[2][risk.i_impact] }}" class="txtcenter">{{risk.i_impact|dashnull}}</td>
             <td title="{{ scaleCommCache[3][risk.d_impact] }}" class="txtcenter">{{risk.d_impact|dashnull}}</td>

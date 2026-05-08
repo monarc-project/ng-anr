@@ -228,6 +228,70 @@
                                  md-total="{{vulns.items.count}}" md-on-paginate="updateVulns" md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
         </md-tab>
 
+        <md-tab label="{{ 'Risk Sources' | translate }}" md-on-select="selectRiskSourcesTab()" md-on-deselect="deselectRiskSourcesTab()">
+            <div layout="row" layout-align="start center" class="md-padding">
+                <h2 class="md-title md-padding-right md-padding-left">
+                    <span translate>Risk Sources</span>
+                    <md-button class="md-icon-button md-primary md-button ng-scope md-light-theme" aria-label="{{ 'Add a risk source' | translate }}" ng-if="!isAnrReadOnly" ng-click="openRiskSourceDialog($event)">
+                        <md-tooltip md-direction="left">
+                            {{ 'Add a risk source' | translate }}
+                        </md-tooltip>
+                        <md-icon>add_to_photos</md-icon>
+                    </md-button>
+                </h2>
+
+                <form flex name="riskSourcesKb.filter.form">
+                    <md-input-container class="md-block md-padding-left md-padding-right">
+                        <label><md-icon>search</md-icon> {{ 'Search...' | translate }}</label>
+                        <input ng-model="riskSourcesKb.query.filter" ng-model-options="riskSourcesKb.filter.options">
+                    </md-input-container>
+                </form>
+
+                <md-select aria-label="filter" ng-model="riskSourcesKb.activeFilter">
+                    <md-option value="all">{{ 'Show all' | translate }}</md-option>
+                    <md-option value="0">{{ 'Show inactive only' | translate }}</md-option>
+                    <md-option value="1">{{ 'Show active only' | translate }}</md-option>
+                </md-select>
+
+                <md-button class="md-icon-button md-primary" ng-click="removeRiskSourcesFilter()">
+                    <md-icon>settings_backup_restore</md-icon>
+                    <md-tooltip translate>Reset filter</md-tooltip>
+                </md-button>
+            </div>
+
+            <md-table-container flex>
+                <table md-table md-progress="riskSourcesKb.promise">
+                    <thead md-head md-order="riskSourcesKb.query.order" md-on-reorder="updateRiskSources">
+                    <tr md-row>
+                        <th md-column md-order-by="isActive"><span translate>Active</span></th>
+                        <th md-column md-order-by="label"><span translate>Label</span></th>
+                        <th md-column md-order-by="isDefault"><span translate>Type</span></th>
+                        <th md-column class="actions-column" ng-if="!isAnrReadOnly"><span translate>Actions</span></th>
+                    </tr>
+                    </thead>
+
+                    <tbody md-body>
+                    <tr md-row ng-repeat="riskSource in riskSourcesKb.items.riskSources">
+                        <td md-cell>
+                            <md-button class="md-icon-button md-primary" ng-click="!isAnrReadOnly && toggleRiskSourceStatus(riskSource)">
+                                <md-icon>{{ riskSource.isActive ? 'done' : 'clear' }}</md-icon>
+                            </md-button>
+                        </td>
+                        <td md-cell>{{ riskSource.label }}</td>
+                        <td md-cell>{{ (riskSource.isDefault ? 'Default' : 'Custom') | translate }}</td>
+                        <td md-cell ng-if="!isAnrReadOnly">
+                            <md-button class="md-icon-button md-primary" ng-click="openRiskSourceDialog($event, riskSource)"><md-icon>edit</md-icon></md-button>
+                            <md-button class="md-icon-button md-warn" ng-click="removeRiskSource($event, riskSource)" ng-if="!riskSource.isDefault"><md-icon>delete</md-icon></md-button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </md-table-container>
+
+            <md-table-pagination md-limit="riskSourcesKb.query.limit" md-limit-options="[20, 30, 50, 100]" md-page="riskSourcesKb.query.page"
+                                 md-total="{{riskSourcesKb.items.count}}" md-on-paginate="updateRiskSources" md-page-select md-label="{{paginationLabels}}"></md-table-pagination>
+        </md-tab>
+
         <md-tab label="{{ 'Referentials' | translate }}" md-on-select="selectMeasuresTab()" md-on-deselect="deselectMeasuresTab()">
           <md-tabs class="kb-sub-tabs" md-dynamic-height="true" md-border-bottom="" ng-if="updatingReferentials" md-selected="refTabSelected">
             <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="createNewReferential($event)">

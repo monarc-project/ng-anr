@@ -44,6 +44,27 @@
                 <td class="bold" translate>Asset</td>
                 <td class="bold" colspan="3"><md-icon ng-if="instanceCache[sheet_risk.instance].scope == 2" class="md-tree-global-icon">language</md-icon>{{ instanceCache[sheet_risk.instance].completePath }}</td>
             </tr>
+            <tr ng-if="OFFICE_MODE == 'FO'">
+                <td class="bold" translate>Risk source</td>
+                <td colspan="3" edit-readonly="isAnrReadOnly">
+                    <div layout="row" layout-align="start center">
+                        <md-input-container class="md-block" flex>
+                            <md-select ng-model="sheet_risk.riskSourceId" ng-change="updateSheetRiskSourceLabel()">
+                                <md-option ng-value="null">{{ 'None' | translate }}</md-option>
+                                <md-option ng-repeat="riskSource in riskSources" ng-value="riskSource.id">{{ riskSource.label }}</md-option>
+                            </md-select>
+                        </md-input-container>
+                        <md-button class="md-icon-button" ng-click="clearRiskSourceSelection()" ng-disabled="isAnrReadOnly" ng-if="sheet_risk.riskSourceId">
+                            <md-icon>clear</md-icon>
+                            <md-tooltip translate>Clear</md-tooltip>
+                        </md-button>
+                        <md-button class="md-icon-button md-primary" ng-click="createRiskSourceFromSheet($event)" ng-disabled="isAnrReadOnly">
+                            <md-icon>add</md-icon>
+                            <md-tooltip translate>Add a risk source</md-tooltip>
+                        </md-button>
+                    </div>
+                </td>
+            </tr>
             <tr>
                 <td class="bold" translate>Threat</td>
                 <td colspan="3">{{ _langField(sheet_risk,'threatLabel') }}</td>

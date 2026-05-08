@@ -77,7 +77,7 @@
 		.controller('AnrKbMgmtCtrl', [
 			'$scope', '$stateParams', 'toastr', '$mdMedia', '$mdDialog', 'gettextCatalog', 'TableHelperService',
 			'AssetService', 'ThreatService', 'VulnService', 'AmvService', 'MeasureService', 'ClientSoaService',
-			'TagService', 'RiskService', 'ObjlibService', 'SOACategoryService', 'ReferentialService', 'MeasureMeasureService',
+			'TagService', 'RiskService', 'RiskSourceService', 'ObjlibService', 'SOACategoryService', 'ReferentialService', 'MeasureMeasureService',
 			'ClientRecommendationService', 'DownloadService', '$state', '$timeout', '$rootScope', AnrKbMgmtCtrl
 		])
 	/**
@@ -85,7 +85,7 @@
 	 */
 	function AnrKbMgmtCtrl($scope, $stateParams, toastr, $mdMedia, $mdDialog, gettextCatalog, TableHelperService,
 												 AssetService, ThreatService, VulnService, AmvService, MeasureService, ClientSoaService, TagService,
-												 RiskService, ObjlibService, SOACategoryService, ReferentialService, MeasureMeasureService, ClientRecommendationService,
+												 RiskService, RiskSourceService, ObjlibService, SOACategoryService, ReferentialService, MeasureMeasureService, ClientRecommendationService,
 												 DownloadService, $state, $timeout, $rootScope) {
 		$scope.gettext = gettextCatalog.getString;
 		TableHelperService.resetBookmarks();
@@ -117,17 +117,20 @@
 				case 'vulns':
 					$scope.currentTabIndex = 2;
 					break;
-				case 'measures':
+				case 'risk-sources':
 					$scope.currentTabIndex = 3;
 					break;
-				case 'amvs':
+				case 'measures':
 					$scope.currentTabIndex = 4;
 					break;
-				case 'objlibs':
+				case 'amvs':
 					$scope.currentTabIndex = 5;
 					break;
-				case 'recommendations':
+				case 'objlibs':
 					$scope.currentTabIndex = 6;
+					break;
+				case 'recommendations':
+					$scope.currentTabIndex = 7;
 					break;
 			}
 		}
@@ -919,6 +922,123 @@
 		};
 
 		/*
+		 * RISK SOURCES TAB
+		 */
+		$scope.riskSourcesKb = TableHelperService.build('label', 20, 1, '');
+		$scope.riskSourcesKb.activeFilter = 1;
+		var riskSourcesFilterWatch;
+
+		$scope.selectRiskSourcesTab = function() {
+			$state.transitionTo('main.kb_mgmt.info_risk', {
+				'tab': 'risk-sources'
+			});
+			var initRiskSourcesFilter = true;
+			riskSourcesFilterWatch = $scope.$watch('riskSourcesKb.activeFilter', function() {
+				if (initRiskSourcesFilter) {
+					initRiskSourcesFilter = false;
+				} else {
+					$scope.updateRiskSources();
+				}
+			});
+			TableHelperService.watchSearch($scope, 'riskSourcesKb.query.filter', $scope.riskSourcesKb.query, $scope.updateRiskSources, $scope.riskSourcesKb);
+		};
+
+		$scope.deselectRiskSourcesTab = function() {
+			if (riskSourcesFilterWatch) {
+				riskSourcesFilterWatch();
+			}
+			TableHelperService.unwatchSearch($scope.riskSourcesKb);
+		};
+
+		$scope.updateRiskSources = function() {
+			var query = angular.copy($scope.riskSourcesKb.query);
+			query.status = $scope.riskSourcesKb.activeFilter;
+
+			if ($scope.riskSourcesKb.previousQueryOrder != $scope.riskSourcesKb.query.order) {
+				$scope.riskSourcesKb.query.page = query.page = 1;
+				$scope.riskSourcesKb.previousQueryOrder = $scope.riskSourcesKb.query.order;
+			}
+
+			$scope.riskSourcesKb.promise = RiskSourceService.getRiskSources(query);
+			$scope.riskSourcesKb.promise.then(function(data) {
+				$scope.riskSourcesKb.items = data;
+			});
+		};
+
+		$scope.removeRiskSourcesFilter = function() {
+			TableHelperService.removeFilter($scope.riskSourcesKb);
+		};
+
+		$scope.openRiskSourceDialog = function(ev, riskSource) {
+			var prompt = $mdDialog.prompt()
+				.title(gettextCatalog.getString(riskSource ? 'Edit risk source' : 'Add a risk source'))
+				.placeholder(gettextCatalog.getString('Risk source label'))
+				.ariaLabel(gettextCatalog.getString('Risk source label'))
+				.theme('light')
+				.targetEvent(ev)
+				.required(true)
+				.ok(gettextCatalog.getString(riskSource ? 'Save' : 'Create'))
+				.cancel(gettextCatalog.getString('Cancel'));
+
+			if (riskSource) {
+				prompt.initialValue(riskSource.label);
+			}
+
+			$mdDialog.show(prompt.multiple(true)).then(function(label) {
+				var payload = {
+					label: label.trim()
+				};
+
+				if (riskSource) {
+					payload.id = riskSource.id;
+					RiskSourceService.updateRiskSource(payload, function() {
+						$scope.updateRiskSources();
+						toastr.success(gettextCatalog.getString('The risk source has been edited successfully.'), gettextCatalog.getString('Edition successful'));
+					});
+				} else {
+					RiskSourceService.createRiskSource(payload, function() {
+						$scope.updateRiskSources();
+						toastr.success(gettextCatalog.getString('The risk source has been created successfully.'), gettextCatalog.getString('Creation successful'));
+					});
+				}
+			}, function(reject) {
+				$scope.handleRejectionDialog(reject);
+			});
+		};
+
+		$scope.toggleRiskSourceStatus = function(riskSource) {
+			RiskSourceService.updateRiskSource({
+				id: riskSource.id,
+				isActive: !riskSource.isActive
+			}, function() {
+				$scope.updateRiskSources();
+			});
+		};
+
+		$scope.removeRiskSource = function(ev, riskSource) {
+			var confirm = $mdDialog.confirm()
+				.title(gettextCatalog.getString('Are you sure you want to delete risk source?', {
+					label: riskSource.label
+				}))
+				.textContent(gettextCatalog.getString('This operation is irreversible.'))
+				.targetEvent(ev)
+				.theme('light')
+				.ok(gettextCatalog.getString('Delete'))
+				.cancel(gettextCatalog.getString('Cancel'));
+
+			$mdDialog.show(confirm).then(function() {
+				RiskSourceService.deleteRiskSource(riskSource.id, function() {
+					$scope.updateRiskSources();
+					toastr.success(gettextCatalog.getString('The risk source has been deleted.'), gettextCatalog.getString('Deletion successful'));
+				}, function(error) {
+					toastr.error(error.data.message, gettextCatalog.getString('Deletion failed'));
+				});
+			}, function(reject) {
+				$scope.handleRejectionDialog(reject);
+			});
+		};
+
+		/*
 		 * REFERENTIALS TAB
 		 */
 		$scope.measures = TableHelperService.build('code', 20, 1, '');
@@ -939,7 +1059,7 @@
 		};
 
 		$rootScope.$on('anrUpdated', function() {
-			if ($scope.currentTabIndex == 3) {
+			if ($scope.currentTabIndex == 4) {
 				$scope.deselectMeasuresTab();
 				$scope.selectMeasuresTab();
 			}
@@ -2447,7 +2567,7 @@
 		};
 
 		$rootScope.$on('anrUpdated', function() {
-			if ($scope.currentTabIndex == 3) {
+			if ($scope.currentTabIndex == 7) {
 				$scope.deselectRecommendationsTab();
 				$scope.selectRecommendationsTab();
 			}

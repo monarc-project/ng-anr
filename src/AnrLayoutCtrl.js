@@ -6,7 +6,7 @@
       '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'gettext', 'TableHelperService',
       'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
       '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService', 'ClientRecommendationService',
-      'ReferentialService', 'AmvService', 'RiskService', 'SoaScaleCommentService', 'UserService', AnrLayoutCtrl
+      'ReferentialService', 'AmvService', 'RiskService', 'RiskSourceService', 'SoaScaleCommentService', 'UserService', AnrLayoutCtrl
     ]);
 
   /**
@@ -15,7 +15,7 @@
   function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, gettext, TableHelperService, ModelService,
     ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
     $transitions, DownloadService, $mdPanel, $injector, ConfigService, ClientRecommendationService,
-    ReferentialService, AmvService, RiskService, SoaScaleCommentService, UserService) {
+    ReferentialService, AmvService, RiskService, RiskSourceService, SoaScaleCommentService, UserService) {
 
 
     if ($scope.OFFICE_MODE == 'FO') {
@@ -82,6 +82,7 @@
     var minWidthMenu = 80;
     var isModelLoading = false;
     var __panel = null;
+    $scope.riskSources = [];
 
     if ($scope.OFFICE_MODE == 'FO') {
       $rootScope.$on("$locationChangeStart", function(e, nextUrl, oldUrl) {
@@ -567,6 +568,8 @@
         $scope.ToolsAnrService.currentTab = 0;
         $scope.opsheet_risk = undefined;
         $scope.sheet_risk = angular.copy(risk);
+        $scope.updateSheetRiskSourceLabel();
+        $scope.loadRiskSources();
         AmvService.getAmv($scope.sheet_risk.amv).then(function(data) {
           if (!angular.equals(data['measures'], {})) {
             $scope.sheet_risk.measures = data['measures'];
@@ -815,6 +818,135 @@
           $scope.updateAnrRisksOpTable();
         })
       }
+    };
+
+    $scope.loadRiskSources = function(cb) {
+      RiskSourceService.getRiskSources({
+        status: true
+      }).then(function(data) {
+        $scope.riskSources = (data.riskSources || []).sort(function(a, b) {
+          return a.label.localeCompare(b.label);
+        });
+        $scope.ensureSelectedRiskSourceAvailable(cb);
+      }, function() {
+        if (cb) {
+          cb();
+        }
+      });
+    };
+
+    $scope.ensureSelectedRiskSourceAvailable = function(cb) {
+      if (!$scope.sheet_risk) {
+        if (cb) {
+          cb();
+        }
+        return;
+      }
+
+      var selectedRiskSourceId = $scope.sheet_risk.riskSourceId;
+
+      var hasSelectedRiskSource = $scope.riskSources.some(function(riskSource) {
+        return riskSource.id == selectedRiskSourceId;
+      });
+
+      if (!selectedRiskSourceId || hasSelectedRiskSource) {
+        $scope.updateSheetRiskSourceLabel();
+        if (cb) {
+          cb();
+        }
+        return;
+      }
+
+      RiskSourceService.getRiskSource(selectedRiskSourceId).then(function(riskSource) {
+        if (riskSource && !$scope.riskSources.some(function(source) {
+          return source.id == riskSource.id;
+        })) {
+          $scope.riskSources.push(riskSource);
+          $scope.riskSources.sort(function(a, b) {
+            return a.label.localeCompare(b.label);
+          });
+        }
+
+        $scope.updateSheetRiskSourceLabel();
+        if (cb) {
+          cb();
+        }
+      }, function() {
+        $scope.updateSheetRiskSourceLabel();
+        if (cb) {
+          cb();
+        }
+      });
+    };
+
+    $scope.updateSheetRiskSourceLabel = function() {
+      if (!$scope.sheet_risk) {
+        return;
+      }
+
+      var selectedRiskSourceId = $scope.sheet_risk.riskSourceId;
+
+      var selectedRiskSource = $scope.riskSources.find(function(riskSource) {
+        return riskSource.id == selectedRiskSourceId;
+      });
+
+      if (selectedRiskSource) {
+        $scope.sheet_risk.riskSourceId = selectedRiskSource.id;
+        $scope.sheet_risk.riskSourceLabel = selectedRiskSource.label;
+      } else if (selectedRiskSourceId === null || selectedRiskSourceId === '' || selectedRiskSourceId === undefined) {
+        $scope.clearRiskSourceSelection();
+      }
+    };
+
+    $scope.clearRiskSourceSelection = function() {
+      if (!$scope.sheet_risk) {
+        return;
+      }
+
+      $scope.sheet_risk.riskSourceId = null;
+      $scope.sheet_risk.riskSourceLabel = '';
+    };
+
+    $scope.createRiskSourceFromSheet = function(ev) {
+      if ($scope.isAnrReadOnly || !$scope.sheet_risk) {
+        return;
+      }
+
+      var prompt = $mdDialog.prompt()
+        .title(gettextCatalog.getString('Add a risk source'))
+        .placeholder(gettextCatalog.getString('Risk source label'))
+        .ariaLabel(gettextCatalog.getString('Risk source label'))
+        .theme('light')
+        .targetEvent(ev)
+        .required(true)
+        .ok(gettextCatalog.getString('Create'))
+        .cancel(gettextCatalog.getString('Cancel'));
+
+      $mdDialog.show(prompt.multiple(true)).then(function(label) {
+        var trimmedLabel = label.trim();
+        var existingRiskSource = $scope.riskSources.find(function(riskSource) {
+          return riskSource.label.toLowerCase() === trimmedLabel.toLowerCase();
+        });
+
+        if (existingRiskSource) {
+          $scope.sheet_risk.riskSourceId = existingRiskSource.id;
+          $scope.updateSheetRiskSourceLabel();
+          return;
+        }
+
+        RiskSourceService.createRiskSource({
+          label: trimmedLabel
+        }, function(riskSource) {
+          $scope.riskSources.push(riskSource);
+          $scope.riskSources.sort(function(a, b) {
+            return a.label.localeCompare(b.label);
+          });
+          $scope.sheet_risk.riskSourceId = riskSource.id;
+          $scope.updateSheetRiskSourceLabel();
+        });
+      }, function(reject) {
+        $scope.handleRejectionDialog(reject);
+      });
     };
 
     $scope.queryOwnerSearch = function(query, scope) {
