@@ -6,7 +6,8 @@
       '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'gettext', 'TableHelperService',
       'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
       '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService', 'ClientRecommendationService',
-      'ReferentialService', 'AmvService', 'RiskService', 'RiskSourceService', 'SoaScaleCommentService', 'UserService', AnrLayoutCtrl
+      'ReferentialService', 'AmvService', 'RiskService', 'RiskSourceService', 'ReassessmentTriggerService',
+      'SoaScaleCommentService', 'UserService', AnrLayoutCtrl
     ]);
 
   /**
@@ -15,7 +16,8 @@
   function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, gettext, TableHelperService, ModelService,
     ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
     $transitions, DownloadService, $mdPanel, $injector, ConfigService, ClientRecommendationService,
-    ReferentialService, AmvService, RiskService, RiskSourceService, SoaScaleCommentService, UserService) {
+    ReferentialService, AmvService, RiskService, RiskSourceService, ReassessmentTriggerService,
+    SoaScaleCommentService, UserService) {
 
 
     if ($scope.OFFICE_MODE == 'FO') {
@@ -905,6 +907,34 @@
 
       $scope.sheet_risk.riskSourceId = null;
       $scope.sheet_risk.riskSourceLabel = '';
+    };
+
+    $scope.openReassessmentTriggersDialog = function(ev) {
+      if ($scope.OFFICE_MODE !== 'FO') {
+        return;
+      }
+
+      var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+      $mdDialog.show({
+        controller: [
+          '$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'ReassessmentTriggerService',
+          'isAnrReadOnly', ReassessmentTriggersDialog
+        ],
+        templateUrl: 'views/anr/reassessment-triggers.html',
+        targetEvent: ev,
+        preserveScope: false,
+        scope: $scope.$dialogScope.$new(),
+        clickOutsideToClose: false,
+        fullscreen: useFullScreen,
+        locals: {
+          ReassessmentTriggerService: ReassessmentTriggerService,
+          isAnrReadOnly: $scope.isAnrReadOnly
+        }
+      }).then(function() {
+      }, function(reject) {
+        $scope.handleRejectionDialog(reject);
+      });
     };
 
     $scope.createRiskSourceFromSheet = function(ev) {
@@ -2752,6 +2782,7 @@
             assessments: exports.assessments,
             methodSteps: exports.methodSteps,
             interviews: exports.interviews,
+            reassessmentTriggers: exports.reassessmentTriggers,
             controls: exports.controls,
             recommendations: exports.recommendations,
             soas: exports.soas,
@@ -3228,6 +3259,7 @@
       assessments: ConfigService.isExportDefaultWithEval() ? 1 : 0,
       methodSteps: true,
       interviews: true,
+      reassessmentTriggers: true,
       controls: true,
       recommendations: true,
       soas: true,
@@ -3243,6 +3275,186 @@
     $scope.export = function() {
       $mdDialog.hide($scope.exportData);
     };
+  }
+
+  function ReassessmentTriggersDialog(
+    $scope,
+    $mdDialog,
+    toastr,
+    gettextCatalog,
+    ReassessmentTriggerService,
+    isAnrReadOnly
+  ) {
+    var otherTriggerOptionId = '__other__';
+    $scope.isAnrReadOnly = isAnrReadOnly;
+    $scope.dialog = {
+      items: [],
+      availableTriggers: [],
+      loading: true,
+      saving: false,
+      editingId: null,
+      form: {
+        selectedTriggerId: null,
+        triggerType: '',
+        description: '',
+        isActive: true
+      }
+    };
+
+    $scope.onSelectedReassessmentTriggerChange = function() {
+      var selectedTrigger = $scope.dialog.availableTriggers.find(function(trigger) {
+        return trigger.id === $scope.dialog.form.selectedTriggerId;
+      });
+
+      if (!selectedTrigger) {
+        $scope.dialog.form.triggerType = '';
+        $scope.dialog.form.description = '';
+        return;
+      }
+
+      $scope.dialog.form.triggerType = selectedTrigger.triggerType;
+      $scope.dialog.form.description = selectedTrigger.description || '';
+    };
+
+    $scope.refreshReassessmentTriggers = function() {
+      $scope.dialog.loading = true;
+      ReassessmentTriggerService.getReassessmentTriggers({
+        status: 'all'
+      }).then(function(data) {
+        $scope.dialog.items = data.reassessmentTriggers || [];
+        $scope.dialog.availableTriggers = (data.availableReassessmentTriggers || []).concat([{
+          id: otherTriggerOptionId,
+          triggerType: gettextCatalog.getString('Other'),
+          description: ''
+        }]);
+        $scope.dialog.loading = false;
+      }, function() {
+        $scope.dialog.loading = false;
+      });
+    };
+
+    $scope.resetReassessmentTriggerForm = function() {
+      $scope.dialog.editingId = null;
+      $scope.dialog.form = {
+        selectedTriggerId: null,
+        triggerType: '',
+        description: '',
+        isActive: true
+      };
+    };
+
+    $scope.editReassessmentTrigger = function(trigger) {
+      var selectedTrigger = $scope.dialog.availableTriggers.find(function(availableTrigger) {
+        return availableTrigger.triggerType === trigger.triggerType;
+      });
+      $scope.dialog.editingId = trigger.id;
+      $scope.dialog.form = {
+        selectedTriggerId: selectedTrigger ? selectedTrigger.id : null,
+        triggerType: trigger.triggerType || '',
+        description: trigger.description,
+        isActive: trigger.isActive
+      };
+    };
+
+    $scope.saveReassessmentTrigger = function() {
+      if (
+        $scope.isAnrReadOnly
+        || !$scope.dialog.form.triggerType
+        || !$scope.dialog.form.description
+        || !$scope.dialog.form.description.trim()
+      ) {
+        return;
+      }
+
+      var params = angular.copy($scope.dialog.form);
+      params.description = params.description.trim();
+
+      $scope.dialog.saving = true;
+
+      if ($scope.dialog.editingId) {
+        params.id = $scope.dialog.editingId;
+        ReassessmentTriggerService.updateReassessmentTrigger(params, function() {
+          toastr.success(gettextCatalog.getString('The reassessment trigger criterion has been updated.'));
+          $scope.dialog.saving = false;
+          $scope.refreshReassessmentTriggers();
+          $scope.resetReassessmentTriggerForm();
+        }, function() {
+          $scope.dialog.saving = false;
+        });
+
+        return;
+      }
+
+      params.position = $scope.dialog.items.length + 1;
+      ReassessmentTriggerService.createReassessmentTrigger(params, function() {
+        toastr.success(gettextCatalog.getString('The reassessment trigger criterion has been created.'));
+        $scope.dialog.saving = false;
+        $scope.refreshReassessmentTriggers();
+        $scope.resetReassessmentTriggerForm();
+      }, function() {
+        $scope.dialog.saving = false;
+      });
+    };
+
+    $scope.moveReassessmentTrigger = function(trigger, direction) {
+      if ($scope.isAnrReadOnly) {
+        return;
+      }
+
+      ReassessmentTriggerService.patchReassessmentTrigger({
+        id: trigger.id,
+        position: trigger.position + direction
+      }, function() {
+        $scope.refreshReassessmentTriggers();
+      });
+    };
+
+    $scope.toggleReassessmentTrigger = function(trigger) {
+      if ($scope.isAnrReadOnly) {
+        return;
+      }
+
+      ReassessmentTriggerService.patchReassessmentTrigger({
+        id: trigger.id,
+        isActive: !trigger.isActive
+      }, function() {
+        $scope.refreshReassessmentTriggers();
+      });
+    };
+
+    $scope.deleteReassessmentTrigger = function(trigger, ev) {
+      if ($scope.isAnrReadOnly) {
+        return;
+      }
+
+      var confirm = $mdDialog.confirm()
+        .title(gettextCatalog.getString('Delete reassessment trigger criterion?'))
+        .textContent(gettextCatalog.getString('This criterion will be removed from the analysis.'))
+        .targetEvent(ev)
+        .multiple(true)
+        .ok(gettextCatalog.getString('Delete'))
+        .cancel(gettextCatalog.getString('Cancel'));
+
+      $mdDialog.show(confirm).then(function() {
+        ReassessmentTriggerService.deleteReassessmentTrigger(trigger.id, function() {
+          toastr.success(gettextCatalog.getString('The reassessment trigger criterion has been deleted.'));
+          $scope.refreshReassessmentTriggers();
+          if ($scope.dialog.editingId === trigger.id) {
+            $scope.resetReassessmentTriggerForm();
+          }
+        });
+      });
+    };
+
+    $scope.close = function(updated) {
+      $mdDialog.hide(updated);
+    };
+
+    $scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+
+    $scope.refreshReassessmentTriggers();
   }
 
   function MethodEditContextDialog($scope, $mdDialog, GuideService, anr, subStep) {
