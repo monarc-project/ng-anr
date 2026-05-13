@@ -28,7 +28,7 @@
 
                 <div layout="row" layout-align="space-between center" layout-wrap>
                     <md-switch ng-model="dialog.form.isActive" ng-disabled="isAnrReadOnly || dialog.saving">
-                        {{ 'Active' | translate }}
+                        {{ 'Status' | translate }}
                     </md-switch>
                     <div layout="row">
                         <md-button ng-if="dialog.editingId" ng-click="resetReassessmentTriggerForm()" ng-disabled="dialog.saving">
