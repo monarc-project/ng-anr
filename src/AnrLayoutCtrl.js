@@ -77,6 +77,14 @@
     }
 
     var self = this;
+    var reviewFrequencyValues = [
+      'Monthly',
+      'Quarterly',
+      'Semi-annually',
+      'Annually',
+      'On trigger'
+    ];
+    var reviewFrequencyOtherValue = '__other__';
 
     $scope.ToolsAnrService = ToolsAnrService;
     $scope.GlobalResizeMenuSize = 230;
@@ -570,6 +578,7 @@
         $scope.ToolsAnrService.currentTab = 0;
         $scope.opsheet_risk = undefined;
         $scope.sheet_risk = angular.copy(risk);
+        $scope.initializeRiskReviewFields($scope.sheet_risk);
         $scope.updateSheetRiskSourceLabel();
         $scope.loadRiskSources();
         AmvService.getAmv($scope.sheet_risk.amv).then(function(data) {
@@ -805,7 +814,11 @@
 
     $scope.saveRiskSheet = function(sheet) {
       if (!$scope.isAnrReadOnly) {
-        AnrService.updateInstanceRisk($scope.model.anr.id, sheet.id, sheet, function() {
+        var payload = $scope.buildRiskSheetPayload(sheet);
+        AnrService.updateInstanceRisk($scope.model.anr.id, sheet.id, payload, function(response) {
+          sheet.lastReviewDate = response.lastReviewDate;
+          sheet.reviewFrequency = response.reviewFrequency;
+          $scope.initializeRiskReviewFields(sheet);
           $scope.$broadcast('risks-table-edited');
           $scope.updateAnrRisksTable();
           $scope.updateSheetRiskTarget();
@@ -907,6 +920,99 @@
 
       $scope.sheet_risk.riskSourceId = null;
       $scope.sheet_risk.riskSourceLabel = '';
+    };
+
+    $scope.initializeRiskReviewFields = function(sheet) {
+      if (!sheet) {
+        return;
+      }
+
+      sheet.lastReviewDateValue = $scope.parseDateValue(sheet.lastReviewDate);
+      $scope.syncReviewFrequencyState(sheet);
+    };
+
+    $scope.syncReviewFrequencyState = function(sheet) {
+      if (!sheet) {
+        return;
+      }
+
+      var reviewFrequency = sheet.reviewFrequency || '';
+      if (!reviewFrequency) {
+        sheet.reviewFrequencyOption = null;
+        sheet.reviewFrequencyCustom = '';
+        return;
+      }
+
+      if (reviewFrequencyValues.indexOf(reviewFrequency) !== -1) {
+        sheet.reviewFrequencyOption = reviewFrequency;
+        sheet.reviewFrequencyCustom = '';
+        return;
+      }
+
+      sheet.reviewFrequencyOption = reviewFrequencyOtherValue;
+      sheet.reviewFrequencyCustom = reviewFrequency;
+    };
+
+    $scope.buildRiskSheetPayload = function(sheet) {
+      var payload = angular.copy(sheet);
+      payload.lastReviewDate = $scope.formatDateValue(sheet.lastReviewDateValue);
+      payload.reviewFrequency = $scope.buildReviewFrequencyValue(sheet);
+      delete payload.lastReviewDateValue;
+      delete payload.reviewFrequencyOption;
+      delete payload.reviewFrequencyCustom;
+
+      return payload;
+    };
+
+    $scope.buildReviewFrequencyValue = function(sheet) {
+      if (!sheet || !sheet.reviewFrequencyOption) {
+        return null;
+      }
+
+      if (sheet.reviewFrequencyOption === reviewFrequencyOtherValue) {
+        var customReviewFrequency = (sheet.reviewFrequencyCustom || '').trim();
+        return customReviewFrequency === '' ? null : customReviewFrequency;
+      }
+
+      return sheet.reviewFrequencyOption;
+    };
+
+    $scope.parseDateValue = function(dateValue) {
+      if (!dateValue) {
+        return null;
+      }
+
+      var parts = dateValue.split('-');
+      if (parts.length !== 3) {
+        return null;
+      }
+
+      return new Date(parts[0], parts[1] - 1, parts[2]);
+    };
+
+    $scope.formatDateValue = function(dateValue) {
+      if (!dateValue) {
+        return null;
+      }
+
+      var reviewDate = new Date(dateValue);
+      if (isNaN(reviewDate.getTime())) {
+        return null;
+      }
+
+      var year = reviewDate.getFullYear();
+      var month = String(reviewDate.getMonth() + 1).padStart(2, '0');
+      var day = String(reviewDate.getDate()).padStart(2, '0');
+
+      return year + '-' + month + '-' + day;
+    };
+
+    $scope.clearLastReviewDate = function(sheet) {
+      if (!sheet) {
+        return;
+      }
+
+      sheet.lastReviewDateValue = null;
     };
 
     $scope.openReassessmentTriggersDialog = function(ev) {
@@ -3297,6 +3403,7 @@
         selectedTriggerId: null,
         triggerType: '',
         description: '',
+        monitoringApproach: '',
         isActive: true
       }
     };
@@ -3309,11 +3416,13 @@
       if (!selectedTrigger) {
         $scope.dialog.form.triggerType = '';
         $scope.dialog.form.description = '';
+        $scope.dialog.form.monitoringApproach = '';
         return;
       }
 
       $scope.dialog.form.triggerType = selectedTrigger.triggerType;
       $scope.dialog.form.description = selectedTrigger.description || '';
+      $scope.dialog.form.monitoringApproach = selectedTrigger.monitoringApproach || '';
     };
 
     $scope.refreshReassessmentTriggers = function() {
@@ -3325,7 +3434,8 @@
         $scope.dialog.availableTriggers = (data.availableReassessmentTriggers || []).concat([{
           id: otherTriggerOptionId,
           triggerType: gettextCatalog.getString('Other'),
-          description: ''
+          description: '',
+          monitoringApproach: ''
         }]);
         $scope.dialog.loading = false;
       }, function() {
@@ -3339,6 +3449,7 @@
         selectedTriggerId: null,
         triggerType: '',
         description: '',
+        monitoringApproach: '',
         isActive: true
       };
     };
@@ -3352,6 +3463,7 @@
         selectedTriggerId: selectedTrigger ? selectedTrigger.id : null,
         triggerType: trigger.triggerType || '',
         description: trigger.description,
+        monitoringApproach: trigger.monitoringApproach || '',
         isActive: trigger.isActive
       };
     };
@@ -3368,6 +3480,7 @@
 
       var params = angular.copy($scope.dialog.form);
       params.description = params.description.trim();
+      params.monitoringApproach = params.monitoringApproach ? params.monitoringApproach.trim() : '';
 
       $scope.dialog.saving = true;
 

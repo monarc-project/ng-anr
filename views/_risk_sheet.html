@@ -123,6 +123,49 @@
                 </td>
             </tr>
             <tr>
+                <td class="bold" translate>Monitoring and review</td>
+                <td colspan="3" edit-readonly="isAnrReadOnly">
+                    <div layout="column" layout-gap="8">
+                        <div layout="row" layout-wrap layout-align="start center" layout-gap="16">
+                            <div>
+                                <div class="md-caption" translate>Last review date</div>
+                                <div layout="row" layout-align="start center">
+                                    <md-datepicker
+                                        ng-disabled="isAnrReadOnly"
+                                        md-hide-icons="calendar"
+                                        ng-model="sheet_risk.lastReviewDateValue"
+                                        md-placeholder="{{ 'Last review date' | translate }}">
+                                    </md-datepicker>
+                                    <md-button
+                                        class="md-icon-button"
+                                        ng-click="clearLastReviewDate(sheet_risk)"
+                                        ng-if="sheet_risk.lastReviewDateValue && !isAnrReadOnly">
+                                        <md-icon>clear</md-icon>
+                                        <md-tooltip translate>Clear</md-tooltip>
+                                    </md-button>
+                                </div>
+                            </div>
+                            <md-input-container class="md-block" style="min-width: 240px;">
+                                <label translate>Review frequency</label>
+                                <md-select ng-model="sheet_risk.reviewFrequencyOption" ng-disabled="isAnrReadOnly">
+                                    <md-option ng-value="null">{{ 'None' | translate }}</md-option>
+                                    <md-option value="Monthly">{{ 'Monthly' | translate }}</md-option>
+                                    <md-option value="Quarterly">{{ 'Quarterly' | translate }}</md-option>
+                                    <md-option value="Semi-annually">{{ 'Semi-annually' | translate }}</md-option>
+                                    <md-option value="Annually">{{ 'Annually' | translate }}</md-option>
+                                    <md-option value="On trigger">{{ 'On trigger' | translate }}</md-option>
+                                    <md-option value="__other__">{{ 'Other' | translate }}</md-option>
+                                </md-select>
+                            </md-input-container>
+                        </div>
+                        <md-input-container class="md-block" ng-if="sheet_risk.reviewFrequencyOption === '__other__'">
+                            <label translate>Custom review frequency</label>
+                            <input ng-model="sheet_risk.reviewFrequencyCustom" ng-disabled="isAnrReadOnly">
+                        </md-input-container>
+                    </div>
+                </td>
+            </tr>
+            <tr>
                 <td class="bold" translate>Existing controls</td>
                 <td colspan="3">{{ sheet_risk.comment }}</td>
             </tr>

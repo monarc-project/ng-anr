@@ -25,6 +25,13 @@
                         <textarea ng-model="dialog.form.description" rows="3" md-select-on-focus ng-disabled="isAnrReadOnly || dialog.saving"></textarea>
                     </md-input-container>
                 </div>
+                <md-input-container class="md-block">
+                    <label translate>Monitoring approach</label>
+                    <textarea ng-model="dialog.form.monitoringApproach" rows="3" md-select-on-focus ng-disabled="isAnrReadOnly || dialog.saving"></textarea>
+                </md-input-container>
+                <div class="md-caption" translate>
+                    Describe how this trigger is monitored or detected, e.g. SOC alerts, vulnerability scans, audit findings, regulatory updates, supplier notifications.
+                </div>
 
                 <div layout="row" layout-align="space-between center" layout-wrap>
                     <md-switch ng-model="dialog.form.isActive" ng-disabled="isAnrReadOnly || dialog.saving">
@@ -50,37 +57,51 @@
                         <p class="no-margin" translate>No reassessment trigger criteria have been defined for this analysis.</p>
                     </div>
 
-                    <md-list ng-if="!dialog.loading && dialog.items.length > 0">
-                        <md-list-item class="md-3-line" ng-repeat="trigger in dialog.items track by trigger.id">
-                            <div class="md-list-item-text" layout="column">
-                                <h3>{{ trigger.triggerType }}</h3>
-                                <p>{{ trigger.description }}</p>
-                                <p ng-if="trigger.isActive" translate>Active</p>
-                                <p ng-if="!trigger.isActive" translate>Inactive</p>
-                            </div>
-                            <md-button class="md-icon-button" ng-click="moveReassessmentTrigger(trigger, -1)" ng-disabled="isAnrReadOnly || $first">
-                                <md-icon>keyboard_arrow_up</md-icon>
-                                <md-tooltip md-direction="top">{{ 'Move up' | translate }}</md-tooltip>
-                            </md-button>
-                            <md-button class="md-icon-button" ng-click="moveReassessmentTrigger(trigger, 1)" ng-disabled="isAnrReadOnly || $last">
-                                <md-icon>keyboard_arrow_down</md-icon>
-                                <md-tooltip md-direction="top">{{ 'Move down' | translate }}</md-tooltip>
-                            </md-button>
-                            <md-button class="md-icon-button" ng-click="toggleReassessmentTrigger(trigger)" ng-disabled="isAnrReadOnly">
-                                <md-icon>{{ trigger.isActive ? 'visibility' : 'visibility_off' }}</md-icon>
-                                <md-tooltip md-direction="top" ng-if="trigger.isActive" translate>Deactivate</md-tooltip>
-                                <md-tooltip md-direction="top" ng-if="!trigger.isActive" translate>Activate</md-tooltip>
-                            </md-button>
-                            <md-button class="md-icon-button" ng-click="editReassessmentTrigger(trigger)">
-                                <md-icon>edit</md-icon>
-                                <md-tooltip md-direction="top">{{ 'Edit' | translate }}</md-tooltip>
-                            </md-button>
-                            <md-button class="md-icon-button md-warn" ng-click="deleteReassessmentTrigger(trigger, $event)" ng-disabled="isAnrReadOnly">
-                                <md-icon>delete</md-icon>
-                                <md-tooltip md-direction="top">{{ 'Delete' | translate }}</md-tooltip>
-                            </md-button>
-                        </md-list-item>
-                    </md-list>
+                    <table class="md-html-table" ng-if="!dialog.loading && dialog.items.length > 0" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th translate>Trigger type</th>
+                                <th translate>Description</th>
+                                <th translate>Monitoring approach</th>
+                                <th translate>Status</th>
+                                <th translate>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="trigger in dialog.items track by trigger.id">
+                                <td>{{ trigger.triggerType }}</td>
+                                <td>{{ trigger.description }}</td>
+                                <td>{{ trigger.monitoringApproach || '-' }}</td>
+                                <td>
+                                    <span ng-if="trigger.isActive" translate>Active</span>
+                                    <span ng-if="!trigger.isActive" translate>Inactive</span>
+                                </td>
+                                <td>
+                                    <md-button class="md-icon-button" ng-click="moveReassessmentTrigger(trigger, -1)" ng-disabled="isAnrReadOnly || $first">
+                                        <md-icon>keyboard_arrow_up</md-icon>
+                                        <md-tooltip md-direction="top">{{ 'Move up' | translate }}</md-tooltip>
+                                    </md-button>
+                                    <md-button class="md-icon-button" ng-click="moveReassessmentTrigger(trigger, 1)" ng-disabled="isAnrReadOnly || $last">
+                                        <md-icon>keyboard_arrow_down</md-icon>
+                                        <md-tooltip md-direction="top">{{ 'Move down' | translate }}</md-tooltip>
+                                    </md-button>
+                                    <md-button class="md-icon-button" ng-click="toggleReassessmentTrigger(trigger)" ng-disabled="isAnrReadOnly">
+                                        <md-icon>{{ trigger.isActive ? 'visibility' : 'visibility_off' }}</md-icon>
+                                        <md-tooltip md-direction="top" ng-if="trigger.isActive" translate>Deactivate</md-tooltip>
+                                        <md-tooltip md-direction="top" ng-if="!trigger.isActive" translate>Activate</md-tooltip>
+                                    </md-button>
+                                    <md-button class="md-icon-button" ng-click="editReassessmentTrigger(trigger)">
+                                        <md-icon>edit</md-icon>
+                                        <md-tooltip md-direction="top">{{ 'Edit' | translate }}</md-tooltip>
+                                    </md-button>
+                                    <md-button class="md-icon-button md-warn" ng-click="deleteReassessmentTrigger(trigger, $event)" ng-disabled="isAnrReadOnly">
+                                        <md-icon>delete</md-icon>
+                                        <md-tooltip md-direction="top">{{ 'Delete' | translate }}</md-tooltip>
+                                    </md-button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </md-dialog-content>
