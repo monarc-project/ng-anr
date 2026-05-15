@@ -86,8 +86,13 @@
                     <td class="bold" translate>Risk context</td>
                     <td  colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" edit-readonly="isAnrReadOnly">
                       <md-input-container class="md-block" layout="row" flex>
-                        <input ng-model="opsheet_risk.context">
+                        <input
+                            ng-model="opsheet_risk.context"
+                            placeholder="{{ 'Example: An external attacker performs a phishing campaign, leading to credential compromise and unauthorized access to the email system.' | translate }}">
                       </md-input-container>
+                      <div class="md-caption" translate>
+                        Describe the risk context as a scenario, where possible including the risk source, event or cause, affected asset, and consequence.
+                      </div>
                     </td>
                 </tr>
                 <tr>
