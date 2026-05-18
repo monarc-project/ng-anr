@@ -12,7 +12,7 @@
         <md-dialog-content>
             <div class="md-dialog-content" layout="column" layout-gap="16">
                 <div layout="row" layout-wrap layout-gap="16">
-                    <md-input-container flex="30" flex-xs="100">
+                    <md-input-container flex="40" flex-xs="100">
                         <label translate>Trigger type</label>
                         <md-select ng-model="dialog.form.selectedTriggerId" ng-change="onSelectedReassessmentTriggerChange()" ng-disabled="isAnrReadOnly || dialog.saving">
                             <md-option ng-repeat="trigger in dialog.availableTriggers track by trigger.id" ng-value="trigger.id">
@@ -20,14 +20,14 @@
                             </md-option>
                         </md-select>
                     </md-input-container>
-                    <md-input-container flex flex-xs="100">
-                        <label translate>Description</label>
-                        <textarea ng-model="dialog.form.description" rows="3" md-select-on-focus ng-disabled="isAnrReadOnly || dialog.saving"></textarea>
-                    </md-input-container>
                 </div>
                 <md-input-container class="md-block">
+                    <label translate>Description</label>
+                    <textarea ng-model="dialog.form.description" rows="1" md-select-on-focus ng-disabled="isAnrReadOnly || dialog.saving"></textarea>
+                </md-input-container>
+                <md-input-container class="md-block">
                     <label translate>Monitoring approach</label>
-                    <textarea ng-model="dialog.form.monitoringApproach" rows="3" md-select-on-focus ng-disabled="isAnrReadOnly || dialog.saving"></textarea>
+                    <textarea ng-model="dialog.form.monitoringApproach" rows="1" md-select-on-focus ng-disabled="isAnrReadOnly || dialog.saving"></textarea>
                 </md-input-container>
                 <div class="md-caption" translate>
                     Describe how this trigger is monitored or detected, e.g. SOC alerts, vulnerability scans, audit findings, regulatory updates, supplier notifications.
