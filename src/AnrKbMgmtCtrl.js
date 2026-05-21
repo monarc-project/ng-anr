@@ -106,34 +106,110 @@
 			}
 		};
 
-		$scope.selectTab = function(tab) {
-			switch (tab) {
-				case 'assets':
-					$scope.currentTabIndex = 0;
+		$scope.kbGroupIndex = 0;
+		$scope.infoTabIndex = 0;
+		$scope.opTabIndex = 0;
+		$scope.supportTabIndex = 0;
+		$scope.recommendationsGroupTabIndex = 0;
+
+		$scope.deselectCurrentKbGroupTab = function() {
+			switch ($scope.kbGroupIndex) {
+				case 0:
+					switch ($scope.infoTabIndex) {
+						case 0:
+							$scope.deselectAssetsTab();
+							break;
+						case 1:
+							$scope.deselectThreatsTab();
+							break;
+						case 2:
+							$scope.deselectVulnsTab();
+							break;
+						case 3:
+							$scope.deselectAmvsTab();
+							break;
+					}
 					break;
-				case 'threats':
-					$scope.currentTabIndex = 1;
+				case 1:
+					switch ($scope.opTabIndex) {
+						case 0:
+							$scope.deselectTagsTab();
+							break;
+						case 1:
+							$scope.deselectRisksTab();
+							break;
+					}
 					break;
-				case 'vulns':
-					$scope.currentTabIndex = 2;
+				case 2:
+					switch ($scope.supportTabIndex) {
+						case 0:
+							$scope.deselectMeasuresTab();
+							break;
+						case 1:
+							$scope.deselectRiskSourcesTab();
+							break;
+					}
 					break;
-				case 'risk-sources':
-					$scope.currentTabIndex = 3;
-					break;
-				case 'measures':
-					$scope.currentTabIndex = 4;
-					break;
-				case 'amvs':
-					$scope.currentTabIndex = 5;
-					break;
-				case 'objlibs':
-					$scope.currentTabIndex = 6;
-					break;
-				case 'recommendations':
-					$scope.currentTabIndex = 7;
+				case 3:
+					$scope.deselectRecommendationsTab();
 					break;
 			}
-		}
+		};
+
+		$scope.selectKbGroup = function(groupIndex) {
+			if ($scope.kbGroupIndex !== groupIndex) {
+				$scope.deselectCurrentKbGroupTab();
+			}
+			$scope.kbGroupIndex = groupIndex;
+		};
+
+		$scope.syncKbTabSelection = function(tab) {
+			switch (tab) {
+				case 'assets':
+					$scope.kbGroupIndex = 0;
+					$scope.infoTabIndex = 0;
+					break;
+				case 'threats':
+					$scope.kbGroupIndex = 0;
+					$scope.infoTabIndex = 1;
+					break;
+				case 'vulns':
+					$scope.kbGroupIndex = 0;
+					$scope.infoTabIndex = 2;
+					break;
+				case 'amvs':
+					$scope.kbGroupIndex = 0;
+					$scope.infoTabIndex = 3;
+					break;
+				case 'tags':
+					$scope.kbGroupIndex = 1;
+					$scope.opTabIndex = 0;
+					break;
+				case 'risks':
+					$scope.kbGroupIndex = 1;
+					$scope.opTabIndex = 1;
+					break;
+				case 'measures':
+					$scope.kbGroupIndex = 2;
+					$scope.supportTabIndex = 0;
+					break;
+				case 'risk-sources':
+					$scope.kbGroupIndex = 2;
+					$scope.supportTabIndex = 1;
+					break;
+				case 'recommendations':
+					$scope.kbGroupIndex = 3;
+					$scope.recommendationsGroupTabIndex = 0;
+					break;
+			}
+		};
+
+		$scope.selectTab = function(tab) {
+			$scope.syncKbTabSelection(tab);
+		};
+
+		var initialKbTab = $stateParams.tab || ($state.current.name.indexOf('op_risk') !== -1 ? 'tags' : 'assets');
+		$scope.syncKbTabSelection(initialKbTab);
 
 		$scope.language = $scope.getAnrLanguage();
 
@@ -1063,7 +1139,7 @@
 		};
 
 		$rootScope.$on('anrUpdated', function() {
-			if ($scope.currentTabIndex == 4) {
+			if ($scope.kbGroupIndex === 2 && $scope.supportTabIndex === 0) {
 				$scope.deselectMeasuresTab();
 				$scope.selectMeasuresTab();
 			}
@@ -2095,20 +2171,6 @@
 		/*
 		 * Global helpers
 		 */
-		$scope.selectTagsTab = function(tab) {
-			switch (tab) {
-
-				case 'tags':
-					$scope.currentTabIndex = 1;
-					break;
-				case 'risks':
-					$scope.currentTabIndex = 2;
-					break;
-			}
-		}
-
-		$scope.selectTagsTab($scope.tab);
-
 		/**
 		 * TAGS
 		 */
@@ -2571,7 +2633,7 @@
 		};
 
 		$rootScope.$on('anrUpdated', function() {
-			if ($scope.currentTabIndex == 7) {
+			if ($scope.kbGroupIndex === 3) {
 				$scope.deselectRecommendationsTab();
 				$scope.selectRecommendationsTab();
 			}

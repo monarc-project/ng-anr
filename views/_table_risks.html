@@ -82,7 +82,8 @@
         <em>{{ 'There are no risks for this instance, or your filters returned no results.' | translate }}</em>
     </div>
 
-   <table editable callback="onRisksTableEdited" class="md-html-table md-html-table-grey big-border-all" ng-if="risks.length > 0">
+   <div class="risk-table-panel risk-table-panel-info" ng-if="risks.length > 0">
+   <table editable callback="onRisksTableEdited" class="md-html-table md-html-table-grey big-border-all risk-register-table" ng-if="risks.length > 0">
         <thead class="big-border-bottom">
         <tr>
             <th rowspan="2">ID</th>
@@ -135,6 +136,14 @@
                     <a class="pointer blue" title="{{ 'Open risk sheet' | translate }}" ng-click="openRiskSheet(risk,risks)">
                         {{treatmentStr(risk.kindOfMeasure)|translate}}
                     </a>
+                    <md-icon ng-if="OFFICE_MODE == 'FO' && risk.residualRiskDecision == 'rejected'"
+                        style="color: #FF8C00; font-size: 18px; vertical-align: middle; margin-left: 4px; cursor: default;">warning
+                        <md-tooltip md-direction="top">{{ 'Residual risk acceptance: Rejected' | translate }}</md-tooltip>
+                    </md-icon>
+                    <md-icon ng-if="OFFICE_MODE == 'FO' && risk.residualRiskDecision == 'accepted'"
+                        style="color: #4CAF50; font-size: 18px; vertical-align: middle; margin-left: 4px; cursor: default;">check_circle
+                        <md-tooltip md-direction="top">{{ 'Residual risk acceptance: Accepted' | translate }}</md-tooltip>
+                    </md-icon>
                 </div>
             </td>
             <td class="txtcenter tbl-risk-calc"
@@ -142,6 +151,7 @@
         </tr>
         </tbody>
     </table>
+    </div>
 
     <div layout="row" layout-align="end center" class="md-table-pagination">
         <md-button ng-click="createSpecRisk($event)" ng-if="OFFICE_MODE == 'FO' && !isAnrReadOnly && instmode == 'inst' && instance.asset.type != 1"><md-icon>add</md-icon> {{ 'Create a specific risk' | translate }}</md-button>

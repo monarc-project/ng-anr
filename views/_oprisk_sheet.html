@@ -57,6 +57,27 @@
                     <td class="bold" translate>Asset</td>
                     <td class="bold" colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}"><md-icon ng-if="opsheet_risk.instanceInfos.scope == 2" class="md-tree-global-icon">language</md-icon>{{ _langField(opsheet_risk.instanceInfos,"name") }}</td>
                 </tr>
+                <tr ng-if="OFFICE_MODE == 'FO'">
+                    <td class="bold" translate>Risk source</td>
+                    <td colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" edit-readonly="isAnrReadOnly">
+                        <div layout="row" layout-align="start center">
+                            <md-input-container class="md-block" style="min-width: 320px; margin-bottom: 0;">
+                                <md-select ng-model="opsheet_risk.riskSourceId" ng-change="updateOperationalSheetRiskSourceLabel()">
+                                    <md-option ng-value="null">{{ 'None' | translate }}</md-option>
+                                    <md-option ng-repeat="riskSource in riskSources" ng-value="riskSource.id">{{ riskSource.label }}</md-option>
+                                </md-select>
+                            </md-input-container>
+                            <md-button class="md-icon-button" ng-click="clearOperationalRiskSourceSelection()" ng-disabled="isAnrReadOnly" ng-if="opsheet_risk.riskSourceId">
+                                <md-icon>clear</md-icon>
+                                <md-tooltip translate>Clear</md-tooltip>
+                            </md-button>
+                            <md-button class="md-icon-button md-primary" ng-click="createRiskSourceFromOperationalSheet($event)" ng-disabled="isAnrReadOnly">
+                                <md-icon>add</md-icon>
+                                <md-tooltip translate>Add a risk source</md-tooltip>
+                            </md-button>
+                        </div>
+                    </td>
+                </tr>
                 <tr>
                     <td class="bold" translate>Risk description</td>
                     <td colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}">{{ _langField(opsheet_risk,"label") }}</td>
@@ -163,6 +184,109 @@
                                 <md-option ng-value="4">{{ 'Shared' | translate }}</md-option>
                             </md-select>
                         </md-input-container>
+                    </td>
+                </tr>
+                <tr ng-if="OFFICE_MODE == 'FO'">
+                    <td class="bold" translate>Monitoring and review</td>
+                    <td colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" edit-readonly="isAnrReadOnly">
+                        <div layout="column" layout-gap="8">
+                            <div layout="row" layout-wrap layout-align="start start" layout-gap="16">
+                                <div layout="row" layout-align="start start" style="min-width: 140px;">
+                                    <md-input-container class="md-block" flex style="margin-bottom: 0;">
+                                        <label translate>Last review date</label>
+                                        <md-datepicker
+                                            ng-disabled="isAnrReadOnly"
+                                            md-hide-icons="calendar"
+                                            ng-model="opsheet_risk.lastReviewDateValue"
+                                            md-placeholder="{{ 'Last review date' | translate }}">
+                                        </md-datepicker>
+                                    </md-input-container>
+                                    <md-button
+                                        class="md-icon-button"
+                                        ng-click="clearLastReviewDate(opsheet_risk)"
+                                        ng-if="opsheet_risk.lastReviewDateValue && !isAnrReadOnly">
+                                        <md-icon>clear</md-icon>
+                                        <md-tooltip translate>Clear</md-tooltip>
+                                    </md-button>
+                                </div>
+                                <md-input-container class="md-block" style="min-width: 240px;">
+                                    <label translate>Review frequency</label>
+                                    <md-select ng-model="opsheet_risk.reviewFrequencyOption" ng-disabled="isAnrReadOnly">
+                                        <md-option ng-value="null">{{ 'None' | translate }}</md-option>
+                                        <md-option value="Monthly">{{ 'Monthly' | translate }}</md-option>
+                                        <md-option value="Quarterly">{{ 'Quarterly' | translate }}</md-option>
+                                        <md-option value="Semi-annually">{{ 'Semi-annually' | translate }}</md-option>
+                                        <md-option value="Annually">{{ 'Annually' | translate }}</md-option>
+                                        <md-option value="On trigger">{{ 'On trigger' | translate }}</md-option>
+                                        <md-option value="__other__">{{ 'Other' | translate }}</md-option>
+                                    </md-select>
+                                </md-input-container>
+                            </div>
+                            <md-input-container class="md-block" ng-if="opsheet_risk.reviewFrequencyOption === '__other__'">
+                                <label translate>Custom review frequency</label>
+                                <input ng-model="opsheet_risk.reviewFrequencyCustom" ng-disabled="isAnrReadOnly">
+                            </md-input-container>
+                        </div>
+                    </td>
+                </tr>
+                <tr ng-if="OFFICE_MODE == 'FO'">
+                    <td class="bold" translate>Residual risk acceptance decision</td>
+                    <td colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" edit-readonly="isAnrReadOnly">
+                        <div layout="column" layout-gap="8">
+                            <div class="md-caption" translate>
+                                Record the decision regarding the acceptance of the residual risk after treatment. If no treatment is applied, justify why the risk is accepted as is.
+                            </div>
+                            <div layout="row" layout-wrap layout-align="start start" layout-gap="16">
+                                <md-input-container class="md-block" style="min-width: 220px;">
+                                    <label translate>Decision</label>
+                                    <md-select ng-model="opsheet_risk.residualRiskDecision" ng-disabled="isAnrReadOnly">
+                                        <md-option ng-value="null">{{ 'None' | translate }}</md-option>
+                                        <md-option value="accepted">{{ 'Accepted' | translate }}</md-option>
+                                        <md-option value="rejected">{{ 'Rejected' | translate }}</md-option>
+                                    </md-select>
+                                </md-input-container>
+                                <div ng-if="opsheet_risk.residualRiskDecision" layout="row" layout-align="start center" style="margin-top: 8px; margin-bottom: 8px;">
+                                    <md-icon ng-if="opsheet_risk.residualRiskDecision == 'rejected'"
+                                        style="color: #FF8C00; font-size: 24px; cursor: default;">warning
+                                        <md-tooltip md-direction="top">{{ 'Residual risk acceptance: Rejected' | translate }}</md-tooltip>
+                                    </md-icon>
+                                    <md-icon ng-if="opsheet_risk.residualRiskDecision == 'accepted'"
+                                        style="color: #4CAF50; font-size: 24px; cursor: default;">check_circle
+                                        <md-tooltip md-direction="top">{{ 'Residual risk acceptance: Accepted' | translate }}</md-tooltip>
+                                    </md-icon>
+                                </div>
+                                <md-input-container class="md-block" style="min-width: 260px;">
+                                    <label translate>Approver</label>
+                                    <input ng-model="opsheet_risk.residualRiskApprovedBy" ng-disabled="isAnrReadOnly">
+                                </md-input-container>
+                                <div layout="row" layout-align="start start" style="min-width: 220px; margin-left: 10px;">
+                                    <md-input-container class="md-block" flex style="margin-bottom: 0;">
+                                        <label translate>Date</label>
+                                        <md-datepicker
+                                            ng-disabled="isAnrReadOnly"
+                                            md-hide-icons="calendar"
+                                            ng-model="opsheet_risk.residualRiskApprovedAtValue"
+                                            md-placeholder="{{ 'Date' | translate }}">
+                                        </md-datepicker>
+                                    </md-input-container>
+                                    <md-button
+                                        class="md-icon-button"
+                                        ng-click="clearResidualRiskApprovedAt(opsheet_risk)"
+                                        ng-if="opsheet_risk.residualRiskApprovedAtValue && !isAnrReadOnly">
+                                        <md-icon>clear</md-icon>
+                                        <md-tooltip translate>Clear</md-tooltip>
+                                    </md-button>
+                                </div>
+                            </div>
+                            <md-input-container class="md-block">
+                                <label translate>Justification</label>
+                                <textarea
+                                    ng-model="opsheet_risk.residualRiskJustification"
+                                    ng-disabled="isAnrReadOnly"
+                                    columns="1"
+                                    md-maxlength="4000"></textarea>
+                            </md-input-container>
+                        </div>
                     </td>
                 </tr>
                 <tr>

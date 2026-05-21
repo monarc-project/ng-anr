@@ -12,7 +12,7 @@
                 </div>
 
                 <md-menu>
-                    <md-button ng-click="openAnrToolsMenu($mdMenu.open, $event);" class="min-size-auto">
+                    <md-button ng-click="openAnrToolsMenu($mdMenu.open, $event);" class="min-size-auto anr-menu-button anr-menu-button-asset">
                         <md-tooltip md-direction="bottom">{{ 'Asset actions' | translate }}</md-tooltip>
                         <md-icon class="material-icons md-48 size-auto" md-menu-origin>more_vert</md-icon>
                     </md-button>
@@ -99,7 +99,7 @@
     </md-card>
 
     <md-card>
-        <md-tabs md-dynamic-height md-border-bottom md-selected="ToolsAnrService.currentTab" ng-if="instance.asset.type == 1">
+        <md-tabs class="risk-analysis-tabs" md-dynamic-height md-border-bottom md-selected="ToolsAnrService.currentTab" ng-if="instance.asset.type == 1">
             <md-tab label="{{ 'Information risks' | translate }}">
                 <ng-include src="'views/anr/_table_risks.html'"></ng-include>
             </md-tab>
