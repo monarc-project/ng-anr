@@ -801,17 +801,19 @@
     };
 
     $scope.previousOpRisk = function() {
+      let currentOpRisk = $scope.opsheet_risk;
       let previousOpRisk = $scope.opRisks_instance[$scope.idxOpRisks - 1];
-      $scope.opRisks_instance[$scope.idxOpRisks] = $scope.opsheet_risk;
+      $scope.opRisks_instance[$scope.idxOpRisks] = currentOpRisk;
+      $scope.saveOpRiskSheet(currentOpRisk);
       $scope.openOpRiskSheet(previousOpRisk, $scope.opRisks_instance);
-      $scope.saveRiskSheet($scope.sheet_risk);
     };
 
     $scope.nextOpRisk = function() {
+      let currentOpRisk = $scope.opsheet_risk;
       let nextOpRisk = $scope.opRisks_instance[$scope.idxOpRisks + 1];
-      $scope.opRisks_instance[$scope.idxOpRisks] = $scope.opsheet_risk;
+      $scope.opRisks_instance[$scope.idxOpRisks] = currentOpRisk;
+      $scope.saveOpRiskSheet(currentOpRisk);
       $scope.openOpRiskSheet(nextOpRisk, $scope.opRisks_instance);
-      $scope.saveRiskSheet($scope.sheet_risk);
     };
 
     $scope.saveRiskSheet = function(sheet) {
