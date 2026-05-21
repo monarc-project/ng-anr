@@ -109,10 +109,13 @@
                       <md-input-container class="md-block" layout="row" flex>
                         <input
                             ng-model="opsheet_risk.context"
-                            placeholder="{{ 'Example: An external attacker performs a phishing campaign, leading to credential compromise and unauthorized access to the email system.' | translate }}">
+                            placeholder="{{ 'Example: An external attacker performs a phishing campaign against the email system, leading to credential compromise. Consequence: customer data disclosure.' | translate }}">
                       </md-input-container>
                       <div class="md-caption" translate>
                         Describe the risk context as a scenario, where possible including the risk source, event or cause, affected asset, and consequence.
+                      </div>
+                      <div class="md-caption" translate>
+                        Describe the consequence explicitly (for example: data loss, service disruption, or customer data disclosure).
                       </div>
                     </td>
                 </tr>
