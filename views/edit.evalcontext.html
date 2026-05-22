@@ -10,7 +10,102 @@
             </div>
         </md-toolbar>
         <md-dialog-content class="md-padding trix-margin">
-            <md-card md-theme="light">
+            <md-tabs md-dynamic-height md-border-bottom ng-if="isInterestedPartiesTabVisible" md-selected="display.currentTabIndex">
+                <md-tab label="{{ 'Risk analysis context' | translate }}">
+                    <md-card md-theme="light">
+                        <md-card-content layout="row">
+                            <div flex>
+                                <md-button class="trix-info-toolbar-button" ng-click="toggleGuide()"><md-icon>info</md-icon></md-button>
+                                <trix-editor angular-trix ng-model="context.text" style="min-height: 250px; min-width: 550px; border: 1px solid #AAAAAA;" trix-initialize="trixInitialize(e, editor);" prevent-trix-file-accept = "true" class="md-padding"></trix-editor>
+                            </div>
+                            <md-card style="max-width: 320px;" ng-if="guideVisible">
+                                <div layout="row" layout-align="center center" ng-if="guide === undefined">
+                                    <md-progress-circular></md-progress-circular>
+                                </div>
+                                <md-card-content ng-if="guide !== undefined">
+                                    <p class="md-title" translate>Additional information</p>
+                                    <p class="preserve-newlines">{{ _langField(guide,'description') }}</p>
+                                    <md-divider></md-divider>
+                                    <md-list>
+                                        <md-list-item ng-repeat="item in guide_items" ng-click="insertItem(item)"><p>{{ _langField(item,'description') }}</p></md-list-item>
+                                    </md-list>
+                                </md-card-content>
+                            </md-card>
+                        </md-card-content>
+                    </md-card>
+                </md-tab>
+
+                <md-tab label="{{ 'Interested parties & requirements' | translate }}">
+                    <div layout="column" layout-gap="16">
+                        <div layout="row" layout-wrap layout-gap="16">
+                            <md-input-container flex="35" flex-xs="100">
+                                <label translate>Stakeholder</label>
+                                <input ng-model="interestedPartiesDialog.form.stakeholder" ng-disabled="isAnrReadOnly || interestedPartiesDialog.saving" />
+                            </md-input-container>
+                            <md-input-container flex="55" flex-xs="100">
+                                <label translate>Requirement</label>
+                                <textarea ng-model="interestedPartiesDialog.form.requirement" rows="1" md-select-on-focus ng-disabled="isAnrReadOnly || interestedPartiesDialog.saving"></textarea>
+                            </md-input-container>
+                        </div>
+
+                        <div layout="row" layout-align="end center">
+                            <md-button ng-if="interestedPartiesDialog.editingId" ng-click="resetInterestedPartyForm()" ng-disabled="interestedPartiesDialog.saving">
+                                {{ 'Cancel edition' | translate }}
+                            </md-button>
+                            <md-button class="md-primary" ng-click="saveInterestedParty()" ng-disabled="isAnrReadOnly || interestedPartiesDialog.saving">
+                                <span ng-if="interestedPartiesDialog.editingId" translate>Save</span>
+                                <span ng-if="!interestedPartiesDialog.editingId" translate>Add interested party</span>
+                            </md-button>
+                        </div>
+
+                        <div style="border: 1px solid #e0e0e0; border-radius: 4px;">
+                            <div class="md-padding" layout="row" layout-align="center center" ng-if="interestedPartiesDialog.loading">
+                                <md-progress-circular md-diameter="28" md-indeterminate="true"></md-progress-circular>
+                            </div>
+
+                            <div class="md-padding" ng-if="!interestedPartiesDialog.loading && interestedPartiesDialog.items.length === 0">
+                                <p class="no-margin" translate>No interested parties and requirements have been defined for this analysis.</p>
+                            </div>
+
+                            <table class="md-html-table" ng-if="!interestedPartiesDialog.loading && interestedPartiesDialog.items.length > 0" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th translate>Stakeholder</th>
+                                        <th translate>Requirement</th>
+                                        <th translate>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr ng-repeat="interestedParty in interestedPartiesDialog.items track by interestedParty.id">
+                                        <td>{{ interestedParty.stakeholder || '-' }}</td>
+                                        <td>{{ interestedParty.requirement || '-' }}</td>
+                                        <td>
+                                            <md-button class="md-icon-button" ng-click="moveInterestedParty(interestedParty, -1)" ng-disabled="isAnrReadOnly || $first">
+                                                <md-icon>keyboard_arrow_up</md-icon>
+                                                <md-tooltip md-direction="top">{{ 'Move up' | translate }}</md-tooltip>
+                                            </md-button>
+                                            <md-button class="md-icon-button" ng-click="moveInterestedParty(interestedParty, 1)" ng-disabled="isAnrReadOnly || $last">
+                                                <md-icon>keyboard_arrow_down</md-icon>
+                                                <md-tooltip md-direction="top">{{ 'Move down' | translate }}</md-tooltip>
+                                            </md-button>
+                                            <md-button class="md-icon-button" ng-click="editInterestedParty(interestedParty)">
+                                                <md-icon>edit</md-icon>
+                                                <md-tooltip md-direction="top">{{ 'Edit' | translate }}</md-tooltip>
+                                            </md-button>
+                                            <md-button class="md-icon-button md-warn" ng-click="deleteInterestedParty(interestedParty, $event)" ng-disabled="isAnrReadOnly">
+                                                <md-icon>delete</md-icon>
+                                                <md-tooltip md-direction="top">{{ 'Delete' | translate }}</md-tooltip>
+                                            </md-button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </md-tab>
+            </md-tabs>
+
+            <md-card md-theme="light" ng-if="!isInterestedPartiesTabVisible">
                 <md-card-content layout="row">
                     <div flex>
                         <md-button class="trix-info-toolbar-button" ng-click="toggleGuide()"><md-icon>info</md-icon></md-button>

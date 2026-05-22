@@ -6,7 +6,7 @@
       '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'gettext', 'TableHelperService',
       'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
       '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService', 'ClientRecommendationService',
-      'ReferentialService', 'AmvService', 'RiskService', 'RiskSourceService', 'ReassessmentTriggerService',
+      'ReferentialService', 'AmvService', 'RiskService', 'RiskSourceService', 'InterestedPartyService', 'ReassessmentTriggerService',
       'SoaScaleCommentService', 'UserService', AnrLayoutCtrl
     ]);
 
@@ -16,7 +16,7 @@
   function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, gettext, TableHelperService, ModelService,
     ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
     $transitions, DownloadService, $mdPanel, $injector, ConfigService, ClientRecommendationService,
-    ReferentialService, AmvService, RiskService, RiskSourceService, ReassessmentTriggerService,
+    ReferentialService, AmvService, RiskService, RiskSourceService, InterestedPartyService, ReassessmentTriggerService,
     SoaScaleCommentService, UserService) {
 
 
@@ -1282,13 +1282,17 @@
       var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
       $mdDialog.show({
-        controller: ['$scope', '$mdDialog', 'GuideService', 'anr', 'subStep', MethodEditContextDialog],
+        controller: [
+          '$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'GuideService', 'InterestedPartyService', 'anr', 'subStep',
+          MethodEditContextDialog
+        ],
         templateUrl: 'views/anr/edit.evalcontext.html',
         preserveScope: false,
         scope: $scope.$dialogScope.$new(),
         clickOutsideToClose: false,
         fullscreen: useFullScreen,
         locals: {
+          InterestedPartyService: InterestedPartyService,
           subStep: step,
           anr: $scope.model.anr,
         }
@@ -3057,6 +3061,7 @@
             assessments: exports.assessments,
             methodSteps: exports.methodSteps,
             interviews: exports.interviews,
+            interestedParties: exports.interestedParties,
             reassessmentTriggers: exports.reassessmentTriggers,
             controls: exports.controls,
             recommendations: exports.recommendations,
@@ -3534,6 +3539,7 @@
       assessments: ConfigService.isExportDefaultWithEval() ? 1 : 0,
       methodSteps: true,
       interviews: true,
+      interestedParties: true,
       reassessmentTriggers: true,
       controls: true,
       recommendations: true,
@@ -3739,10 +3745,24 @@
     $scope.refreshReassessmentTriggers();
   }
 
-  function MethodEditContextDialog($scope, $mdDialog, GuideService, anr, subStep) {
+  function MethodEditContextDialog($scope, $mdDialog, toastr, gettextCatalog, GuideService, InterestedPartyService, anr, subStep) {
     $scope.subStep = subStep;
     $scope.guideVisible = false;
     $scope.isAnrReadOnly = !anr.rwd;
+    $scope.display = {
+      currentTabIndex: 0
+    };
+    $scope.isInterestedPartiesTabVisible = subStep.anrField == "contextAnaRisk";
+    $scope.interestedPartiesDialog = {
+      items: [],
+      loading: false,
+      saving: false,
+      editingId: null,
+      form: {
+        stakeholder: '',
+        requirement: ''
+      }
+    };
 
     $scope.toggleGuide = function() {
       $scope.guideVisible = !$scope.guideVisible;
@@ -3782,6 +3802,114 @@
       text: anr[subStep.anrField]
     };
 
+    $scope.refreshInterestedParties = function() {
+      if (!$scope.isInterestedPartiesTabVisible) {
+        return;
+      }
+
+      $scope.interestedPartiesDialog.loading = true;
+      InterestedPartyService.getInterestedParties().then(function(data) {
+        $scope.interestedPartiesDialog.items = data.interestedParties || [];
+        $scope.interestedPartiesDialog.loading = false;
+      }, function() {
+        $scope.interestedPartiesDialog.loading = false;
+      });
+    };
+
+    $scope.resetInterestedPartyForm = function() {
+      $scope.interestedPartiesDialog.editingId = null;
+      $scope.interestedPartiesDialog.form = {
+        stakeholder: '',
+        requirement: ''
+      };
+    };
+
+    $scope.editInterestedParty = function(interestedParty) {
+      $scope.interestedPartiesDialog.editingId = interestedParty.id;
+      $scope.interestedPartiesDialog.form = {
+        stakeholder: interestedParty.stakeholder || '',
+        requirement: interestedParty.requirement || ''
+      };
+      $scope.display.currentTabIndex = 1;
+    };
+
+    $scope.saveInterestedParty = function() {
+      if ($scope.isAnrReadOnly) {
+        return;
+      }
+
+      var params = angular.copy($scope.interestedPartiesDialog.form);
+      params.stakeholder = params.stakeholder ? params.stakeholder.trim() : '';
+      params.requirement = params.requirement ? params.requirement.trim() : '';
+
+      if (!params.stakeholder && !params.requirement) {
+        return;
+      }
+
+      $scope.interestedPartiesDialog.saving = true;
+
+      if ($scope.interestedPartiesDialog.editingId) {
+        params.id = $scope.interestedPartiesDialog.editingId;
+        InterestedPartyService.updateInterestedParty(params, function() {
+          toastr.success(gettextCatalog.getString('The interested party has been updated.'));
+          $scope.interestedPartiesDialog.saving = false;
+          $scope.refreshInterestedParties();
+          $scope.resetInterestedPartyForm();
+        }, function() {
+          $scope.interestedPartiesDialog.saving = false;
+        });
+
+        return;
+      }
+
+      params.position = $scope.interestedPartiesDialog.items.length + 1;
+      InterestedPartyService.createInterestedParty(params, function() {
+        toastr.success(gettextCatalog.getString('The interested party has been created.'));
+        $scope.interestedPartiesDialog.saving = false;
+        $scope.refreshInterestedParties();
+        $scope.resetInterestedPartyForm();
+      }, function() {
+        $scope.interestedPartiesDialog.saving = false;
+      });
+    };
+
+    $scope.moveInterestedParty = function(interestedParty, direction) {
+      if ($scope.isAnrReadOnly) {
+        return;
+      }
+
+      InterestedPartyService.patchInterestedParty({
+        id: interestedParty.id,
+        position: interestedParty.position + direction
+      }, function() {
+        $scope.refreshInterestedParties();
+      });
+    };
+
+    $scope.deleteInterestedParty = function(interestedParty, ev) {
+      if ($scope.isAnrReadOnly) {
+        return;
+      }
+
+      var confirm = $mdDialog.confirm()
+        .title(gettextCatalog.getString('Delete interested party?'))
+        .textContent(gettextCatalog.getString('This interested party will be removed from the analysis.'))
+        .targetEvent(ev)
+        .multiple(true)
+        .ok(gettextCatalog.getString('Delete'))
+        .cancel(gettextCatalog.getString('Cancel'));
+
+      $mdDialog.show(confirm).then(function() {
+        InterestedPartyService.deleteInterestedParty(interestedParty.id, function() {
+          toastr.success(gettextCatalog.getString('The interested party has been deleted.'));
+          $scope.refreshInterestedParties();
+          if ($scope.interestedPartiesDialog.editingId === interestedParty.id) {
+            $scope.resetInterestedPartyForm();
+          }
+        });
+      });
+    };
+
     $scope.trixInitialize = function(e, editor) {
       $scope.trix = editor;
     };
@@ -3797,6 +3925,8 @@
     $scope.save = function() {
       $mdDialog.hide($scope.context);
     };
+
+    $scope.refreshInterestedParties();
   }
 
   function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService,
