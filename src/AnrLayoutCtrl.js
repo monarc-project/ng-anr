@@ -340,15 +340,6 @@
         if (!$scope.risks || $scope.risks.length != data.risks.length) {
           $scope.risks_total = data.count;
           $scope.risks = data.risks; // for the _table_risks.html partial
-          if (($state.$current.name == 'main.project.anr.risk' || $state.$current.name == 'main.project.anr.instance.risk') && $stateParams.riskId) {
-            angular.forEach($scope.risks, function(r) {
-              if (r.id == $stateParams.riskId) {
-                ToolsAnrService.currentTab = 0;
-                $scope.sheet_risk = r;
-                return;
-              }
-            });
-          }
         } else {
           // patch up only if we already have a risks table
           // if this cause a problem, add a flag to updateModel so that we patch only in the risks
@@ -359,6 +350,14 @@
               $scope.risks[i][j] = data.risks[i][j];
             }
           }
+        }
+
+        if (($state.$current.name == 'main.project.anr.risk' || $state.$current.name == 'main.project.anr.instance.risk') && $stateParams.riskId) {
+          angular.forEach($scope.risks, function(r) {
+            if (r.id == $stateParams.riskId) {
+              applyRiskSheetData(r, $scope.risks);
+            }
+          });
         }
 
         if (cb) {
@@ -412,15 +411,6 @@
         if (!$scope.oprisks || $scope.oprisks.length != data.oprisks.length) {
           $scope.oprisks_total = data.count;
           $scope.oprisks = data.oprisks; // for the _table_risks_op.html partial
-          if (($state.$current.name == 'main.project.anr.riskop' || $state.$current.name == 'main.project.anr.instance.riskop') && $stateParams.riskopId) {
-            angular.forEach($scope.oprisks, function(r) {
-              if (r.id == $stateParams.riskopId) {
-                ToolsAnrService.currentTab = 1;
-                $scope.opsheet_risk = r;
-                return;
-              }
-            });
-          }
         } else {
           // patch up only if we already have a risks table
           // if this cause a problem, add a flag to updateModel so that we patch only in the risks
@@ -433,6 +423,14 @@
           }
 
           $scope.opRiskImpactScales = angular.copy($scope.opRiskImpactScales); // force binding operational scales $scope
+        }
+
+        if (($state.$current.name == 'main.project.anr.riskop' || $state.$current.name == 'main.project.anr.instance.riskop') && $stateParams.riskopId) {
+          angular.forEach($scope.oprisks, function(r) {
+            if (r.id == $stateParams.riskopId) {
+              applyOpRiskSheetData(r, $scope.oprisks);
+            }
+          });
         }
 
         if (cb) {
@@ -548,6 +546,68 @@
       $rootScope.anr_selected_object_id = null;
     }
 
+    var applyRiskSheetData = function(risk, risks) {
+      $scope.risks_instance = risks;
+      $scope.ToolsAnrService.currentTab = 0;
+      $scope.opsheet_risk = undefined;
+      $scope.sheet_risk = angular.copy(risk);
+      $scope.sheet_risk.ownerSearchText = $scope.sheet_risk.owner || '';
+      $scope.initializeRiskReviewFields($scope.sheet_risk);
+      $scope.updateSheetRiskSourceLabel();
+      $scope.loadRiskSources();
+
+      AmvService.getAmv($scope.sheet_risk.amv).then(function(data) {
+        if (!angular.equals(data['measures'], {})) {
+          $scope.sheet_risk.measures = data['measures'];
+        } else {
+          $scope.sheet_risk.measures = [];
+        }
+      });
+
+      var reducAmount = [];
+      if ($scope.scales.vulns != undefined) {
+        for (var i = $scope.scales.vulns.min; i <= $scope.scales.vulns.max; i++) {
+          reducAmount.push(i);
+          if ($scope.sheet_risk.vulnerabilityRate != '-1' && i == $scope.sheet_risk.vulnerabilityRate) {
+            break;
+          }
+        }
+      }
+      $scope.reducAmount = reducAmount;
+      $scope._copyRecs = [];
+      if ($scope.OFFICE_MODE == 'FO') {
+        $scope.idxRisks = risks.findIndex(infoRisk => infoRisk.id == $stateParams.riskId);
+      } else {
+        $scope.idxRisks = risks.findIndex(infoRisk => infoRisk.id == risk.id);
+      }
+      $scope.updateSheetRiskTarget();
+    };
+
+    var applyOpRiskSheetData = function(risk, oprisks) {
+      $scope.opRisks_instance = oprisks;
+      $scope.ToolsAnrService.currentTab = 1;
+      $scope.sheet_risk = undefined;
+      $scope.opsheet_risk = angular.copy(risk);
+      $scope.opsheet_risk.ownerSearchText = $scope.opsheet_risk.owner || '';
+      $scope.loadRiskSourcesForOperationalSheet();
+
+      RiskService.getRisk($scope.opsheet_risk.rolfRisk).then(function(data) {
+        if (!angular.equals(data['measures'], {})) {
+          $scope.opsheet_risk.measures = data['measures'];
+        } else {
+          $scope.opsheet_risk.measures = [];
+        }
+      });
+
+      $scope._copyRecs = [];
+      if ($scope.OFFICE_MODE == 'FO') {
+        $scope.initializeRiskReviewFields($scope.opsheet_risk);
+        $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.id == $stateParams.riskopId);
+      } else {
+        $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.rolfRisk == risk.rolfRisk);
+      }
+    };
+
     $scope.openRiskSheet = function(risk, risks) {
       $scope.risks_instance = risks;
       if ($scope.OFFICE_MODE == 'FO') {
@@ -575,37 +635,7 @@
         }
       }
       $timeout(function() {
-        $scope.ToolsAnrService.currentTab = 0;
-        $scope.opsheet_risk = undefined;
-        $scope.sheet_risk = angular.copy(risk);
-        $scope.initializeRiskReviewFields($scope.sheet_risk);
-        $scope.updateSheetRiskSourceLabel();
-        $scope.loadRiskSources();
-        AmvService.getAmv($scope.sheet_risk.amv).then(function(data) {
-          if (!angular.equals(data['measures'], {})) {
-            $scope.sheet_risk.measures = data['measures'];
-          } else {
-            $scope.sheet_risk.measures = [];
-          }
-        });
-
-        var reducAmount = [];
-        if ($scope.scales.vulns != undefined) {
-          for (var i = $scope.scales.vulns.min; i <= $scope.scales.vulns.max; i++) {
-            reducAmount.push(i);
-            if ($scope.sheet_risk.vulnerabilityRate != '-1' && i == $scope.sheet_risk.vulnerabilityRate) {
-              break;
-            }
-          }
-        }
-        $scope.reducAmount = reducAmount;
-        $scope._copyRecs = [];
-        if ($scope.OFFICE_MODE == 'FO') {
-          $scope.idxRisks = risks.findIndex(infoRisk => infoRisk.id == $stateParams.riskId);
-        } else {
-          $scope.idxRisks = risks.findIndex(infoRisk => infoRisk.id == risk.id);
-        }
-        $scope.updateSheetRiskTarget();
+        applyRiskSheetData(risk, risks);
       });
     };
 
@@ -696,24 +726,7 @@
       }
 
       $timeout(function() {
-        $scope.ToolsAnrService.currentTab = 1;
-        $scope.sheet_risk = undefined;
-        $scope.opsheet_risk = angular.copy(risk);
-        $scope.loadRiskSourcesForOperationalSheet();
-        RiskService.getRisk($scope.opsheet_risk.rolfRisk).then(function(data) {
-          if (!angular.equals(data['measures'], {})) {
-            $scope.opsheet_risk.measures = data['measures'];
-          } else {
-            $scope.opsheet_risk.measures = [];
-          }
-        });
-        $scope._copyRecs = [];
-        if ($scope.OFFICE_MODE == 'FO') {
-          $scope.initializeRiskReviewFields($scope.opsheet_risk);
-          $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.id == $stateParams.riskopId);
-        } else {
-          $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.rolfRisk == risk.rolfRisk);
-        }
+        applyOpRiskSheetData(risk, oprisks);
       });
     };
 
@@ -785,6 +798,9 @@
     };
 
     $scope.previousRisk = function() {
+      if (!$scope.risks_instance || $scope.idxRisks <= 0) {
+        return;
+      }
       $scope.reducAmount = [];
       let previousRisk = $scope.risks_instance[$scope.idxRisks - 1];
       $scope.risks_instance[$scope.idxRisks] = $scope.sheet_risk;
@@ -793,6 +809,9 @@
     };
 
     $scope.nextRisk = function() {
+      if (!$scope.risks_instance || $scope.idxRisks >= $scope.risks_instance.length - 1) {
+        return;
+      }
       $scope.reducAmount = [];
       let nextRisk = $scope.risks_instance[$scope.idxRisks + 1];
       $scope.risks_instance[$scope.idxRisks] = $scope.sheet_risk;
@@ -801,6 +820,9 @@
     };
 
     $scope.previousOpRisk = function() {
+      if (!$scope.opRisks_instance || $scope.idxOpRisks <= 0) {
+        return;
+      }
       let currentOpRisk = $scope.opsheet_risk;
       let previousOpRisk = $scope.opRisks_instance[$scope.idxOpRisks - 1];
       $scope.opRisks_instance[$scope.idxOpRisks] = currentOpRisk;
@@ -809,6 +831,9 @@
     };
 
     $scope.nextOpRisk = function() {
+      if (!$scope.opRisks_instance || $scope.idxOpRisks >= $scope.opRisks_instance.length - 1) {
+        return;
+      }
       let currentOpRisk = $scope.opsheet_risk;
       let nextOpRisk = $scope.opRisks_instance[$scope.idxOpRisks + 1];
       $scope.opRisks_instance[$scope.idxOpRisks] = currentOpRisk;
@@ -855,9 +880,12 @@
 
     $scope.buildOpRiskSheetPayload = function(sheet) {
       var payload = angular.copy(sheet);
+      var ownerName = ((sheet.ownerSearchText || sheet.owner || '') + '').trim();
+      payload.owner = ownerName === '' ? null : ownerName;
       payload.lastReviewDate = $scope.formatDateValue(sheet.lastReviewDateValue);
       payload.residualRiskApprovedAt = $scope.formatDateValue(sheet.residualRiskApprovedAtValue);
       payload.reviewFrequency = $scope.buildReviewFrequencyValue(sheet);
+      delete payload.ownerSearchText;
       delete payload.lastReviewDateValue;
       delete payload.residualRiskApprovedAtValue;
       delete payload.reviewFrequencyOption;
@@ -1072,9 +1100,12 @@
 
     $scope.buildRiskSheetPayload = function(sheet) {
       var payload = angular.copy(sheet);
+      var ownerName = ((sheet.ownerSearchText || sheet.owner || '') + '').trim();
+      payload.owner = ownerName === '' ? null : ownerName;
       payload.lastReviewDate = $scope.formatDateValue(sheet.lastReviewDateValue);
       payload.residualRiskApprovedAt = $scope.formatDateValue(sheet.residualRiskApprovedAtValue);
       payload.reviewFrequency = $scope.buildReviewFrequencyValue(sheet);
+      delete payload.ownerSearchText;
       delete payload.lastReviewDateValue;
       delete payload.residualRiskApprovedAtValue;
       delete payload.reviewFrequencyOption;
@@ -1254,17 +1285,27 @@
       });
     };
 
+    var ownerSearchRequestId = 0;
+
     $scope.queryOwnerSearch = function(query, scope) {
       var promise = $q.defer();
+      var currentQuery = (query || '').trim();
+      var requestId = ++ownerSearchRequestId;
+
       AnrService.getAnrRiskOwners($scope.model.anr.id, {
-        filter: query
+        filter: currentQuery
       }).then(function(data) {
         let ownerNames = data.instanceRiskOwners.map(owner => owner.name);
-        if (!ownerNames.includes(query) && query.length > 0) {
-          $scope[scope].owner = query;
+
+        if (requestId !== ownerSearchRequestId || currentQuery !== ((($scope[scope] && $scope[scope].ownerSearchText) || '').trim())) {
+          promise.resolve(ownerNames);
+          return;
+        }
+
+        if (!ownerNames.includes(currentQuery) && currentQuery.length > 0) {
+          $scope[scope].owner = currentQuery;
         }
         promise.resolve(ownerNames);
-
       }, function() {
         promise.reject();
       });
