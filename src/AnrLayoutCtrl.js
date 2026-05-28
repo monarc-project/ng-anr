@@ -105,7 +105,7 @@
           $scope.oprisks = [];
           ToolsAnrService.currentTab = 0;
           $scope.display.anrSelectedTabIndex = 0;
-          e.preventDefault();
+          // Do NOT call e.preventDefault() here — the URL must update to reflect the actual navigation target.
         }
       });
     }
@@ -113,6 +113,15 @@
     $scope.resetFilters = function() {
       $scope.resetRisksFilters();
       $scope.resetRisksOpFilters();
+    }
+
+    $scope.isRiskTabNavigationLocked = function() {
+      return !!(
+        $scope.sheet_risk ||
+        $scope.opsheet_risk ||
+        $stateParams.riskId ||
+        $stateParams.riskopId
+      );
     }
 
     var onBeforeHook = $transitions.onBefore({}, function() {
@@ -166,6 +175,48 @@
     });
 
     $scope.$on("$destroy", onBeforeHook);
+
+    // Handle manual URL navigation to a different risk/oprisk ID in the same state.
+    // When the user edits the riskId in the address bar and presses Enter, UI-Router
+    // fires a transition for the same state with new params. The onBefore hook does
+    // nothing in that case, so we need to react here after the transition succeeds.
+    var onSuccessHook = $transitions.onSuccess({}, function(trans) {
+      if ($scope.OFFICE_MODE !== 'FO') return;
+      var toName = trans.to().name;
+      var newParams = trans.params();
+      var fromParams = trans.params('from');
+
+      if ((toName === 'main.project.anr.risk' || toName === 'main.project.anr.instance.risk') &&
+          newParams.riskId && String(newParams.riskId) !== String(fromParams.riskId)) {
+        var found = $scope.risks && $scope.risks.find(function(r) { return String(r.id) === String(newParams.riskId); });
+        if (found) {
+          applyRiskSheetData(found, $scope.risks);
+        } else if ($scope.model && $scope.model.anr) {
+          AnrService.getAnrRisks($scope.model.anr.id, { limit: 0, order: 'maxRisk', order_direction: 'desc', thresholds: -1 }).then(function(data) {
+            var risk = data.risks && data.risks.find(function(r) { return String(r.id) === String(newParams.riskId); });
+            if (risk) {
+              applyRiskSheetData(risk, data.risks);
+            }
+          });
+        }
+      }
+
+      if ((toName === 'main.project.anr.riskop' || toName === 'main.project.anr.instance.riskop') &&
+          newParams.riskopId && String(newParams.riskopId) !== String(fromParams.riskopId)) {
+        var foundOp = $scope.oprisks && $scope.oprisks.find(function(r) { return String(r.id) === String(newParams.riskopId); });
+        if (foundOp) {
+          applyOpRiskSheetData(foundOp, $scope.oprisks);
+        } else if ($scope.model && $scope.model.anr) {
+          AnrService.getAnrRisksOp($scope.model.anr.id, { limit: 0, order: 'cacheNetRisk', order_direction: 'desc', thresholds: -1 }).then(function(data) {
+            var opRisk = data.oprisks && data.oprisks.find(function(r) { return String(r.id) === String(newParams.riskopId); });
+            if (opRisk) {
+              applyOpRiskSheetData(opRisk, data.oprisks);
+            }
+          });
+        }
+      }
+    });
+    $scope.$on("$destroy", onSuccessHook);
 
     $scope.ceil = Math.ceil;
 
@@ -551,6 +602,8 @@
       $scope.ToolsAnrService.currentTab = 0;
       $scope.opsheet_risk = undefined;
       $scope.sheet_risk = angular.copy(risk);
+      var mainContent = document.querySelector('md-content.md-main-content');
+      if (mainContent) mainContent.scrollTop = 0;
       $scope.sheet_risk.ownerSearchText = $scope.sheet_risk.owner || '';
       $scope.initializeRiskReviewFields($scope.sheet_risk);
       $scope.updateSheetRiskSourceLabel();
@@ -588,6 +641,8 @@
       $scope.ToolsAnrService.currentTab = 1;
       $scope.sheet_risk = undefined;
       $scope.opsheet_risk = angular.copy(risk);
+      var mainContent = document.querySelector('md-content.md-main-content');
+      if (mainContent) mainContent.scrollTop = 0;
       $scope.opsheet_risk.ownerSearchText = $scope.opsheet_risk.owner || '';
       $scope.loadRiskSourcesForOperationalSheet();
 

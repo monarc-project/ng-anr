@@ -52,7 +52,7 @@
         </div>
     </div>
 </md-card>
-<md-tabs class="risk-analysis-tabs" md-dynamic-height md-selected="ToolsAnrService.currentTab">
+<md-tabs class="risk-analysis-tabs" ng-class="{'risk-analysis-tabs-locked': isRiskTabNavigationLocked()}" md-dynamic-height md-selected="ToolsAnrService.currentTab">
     <md-tab label="{{ 'Information risks' | translate }}">
         <ng-include src="'views/anr/_table_risks.html'"></ng-include>
     </md-tab>
