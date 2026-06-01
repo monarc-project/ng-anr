@@ -1046,6 +1046,203 @@ md-progress-linear.yellow .md-container {
     margin-bottom: 0;
 }
 
+.risk-sheet-layout {
+    gap: 16px;
+}
+
+.risk-sheet-card {
+    margin: 0;
+}
+
+.risk-sheet-editable td[edit-readonly],
+.risk-sheet-editable [edit-field] {
+    background: linear-gradient(180deg, #fcfeff 0%, #f2f9ff 100%);
+    box-shadow: inset 0 0 0 1px rgba(33, 150, 243, 0.14);
+}
+
+.risk-sheet-editable td[edit-readonly] .md-input,
+.risk-sheet-editable td[edit-readonly] md-select-value,
+.risk-sheet-editable td[edit-readonly] .md-datepicker-input,
+.risk-sheet-editable td[edit-readonly] input:not(.edit-field),
+.risk-sheet-editable td[edit-readonly] textarea:not(.edit-field) {
+    background-color: rgba(255, 255, 255, 0.72);
+}
+
+.risk-sheet-editable .risk-sheet-emphasis-field,
+.risk-sheet-editable .risk-sheet-emphasis-field md-autocomplete-wrap,
+.risk-sheet-editable .risk-sheet-emphasis-field md-select-value,
+.risk-sheet-editable .risk-sheet-emphasis-field .md-input,
+.risk-sheet-editable .risk-sheet-emphasis-field .md-input-container,
+.risk-sheet-editable .risk-sheet-emphasis-field input,
+.risk-sheet-editable .risk-sheet-emphasis-field textarea {
+    background: linear-gradient(180deg, #fcfeff 0%, #eaf6ff 100%);
+}
+
+.risk-sheet-editable .risk-sheet-emphasis-cell {
+    background: linear-gradient(180deg, #fcfeff 0%, #eaf6ff 100%);
+}
+
+.risk-sheet-editable .risk-sheet-emphasis-cell .md-select-value,
+.risk-sheet-editable .risk-sheet-emphasis-cell .md-text,
+.risk-sheet-editable .risk-sheet-emphasis-cell .md-select-icon,
+.risk-sheet-editable .risk-sheet-emphasis-cell .md-input,
+.risk-sheet-editable .risk-sheet-emphasis-cell input,
+.risk-sheet-editable .risk-sheet-emphasis-cell textarea,
+.risk-sheet-editable .risk-sheet-emphasis-cell md-input-container {
+    background: transparent;
+}
+
+.risk-sheet-editable .risk-sheet-emphasis-field {
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
+.risk-sheet-editable .risk-sheet-emphasis-cell:hover,
+.risk-sheet-editable .risk-sheet-emphasis-field:hover {
+    box-shadow: inset 0 0 0 1px rgba(33, 150, 243, 0.28);
+}
+
+.risk-sheet-editable [edit-field] {
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.risk-sheet-editable td[edit-readonly]:hover,
+.risk-sheet-editable [edit-field]:hover {
+    background: linear-gradient(180deg, #f7fbff 0%, #e8f4ff 100%);
+    box-shadow: inset 0 0 0 1px rgba(33, 150, 243, 0.22);
+}
+
+.risk-sheet-readonly td[edit-readonly],
+.risk-sheet-readonly [edit-field] {
+    background: #fafafa;
+    box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.05);
+}
+
+.risk-sheet-readonly td[edit-readonly] .md-input,
+.risk-sheet-readonly td[edit-readonly] md-select-value,
+.risk-sheet-readonly td[edit-readonly] .md-datepicker-input,
+.risk-sheet-readonly td[edit-readonly] input:not(.edit-field),
+.risk-sheet-readonly td[edit-readonly] textarea:not(.edit-field) {
+    color: rgba(0, 0, 0, 0.72);
+}
+
+.risk-sheet-card-header {
+    border-bottom: 1px solid #E0E0E0;
+    padding: 8px 16px;
+    cursor: pointer;
+}
+
+.risk-sheet-card-toggle {
+    margin: 0;
+}
+
+.risk-sheet-card-content {
+    padding-top: 12px;
+}
+
+.risk-source-selector-row {
+    align-items: center;
+}
+
+.risk-source-selector-input {
+    margin-top: -10px;
+    margin-bottom: -8px;
+}
+
+.risk-sheet-date-field-group {
+    min-width: 240px;
+    margin-left: 18px;
+}
+
+.risk-sheet-date-clear-button {
+    margin-left: -12px;
+    margin-right: 0;
+}
+
+.risk-sheet-table-wrapper {
+    overflow-x: auto;
+}
+
+.risk-sheet-table {
+    width: 100%;
+    table-layout: fixed;
+}
+
+.risk-sheet-table th,
+.risk-sheet-table td {
+    vertical-align: top;
+}
+
+.risk-sheet-label-col {
+    width: 220px;
+}
+
+.risk-sheet-label-cell {
+    width: 220px;
+    min-width: 220px;
+}
+
+.risk-sheet-score-col,
+.risk-sheet-prob-col,
+.risk-sheet-impact-col,
+.risk-sheet-max-col {
+    width: auto;
+}
+
+.risk-sheet-table thead th {
+    text-align: center;
+}
+
+.risk-sheet-table thead th.no-border {
+    text-align: left;
+}
+
+.risk-sheet-table + .risk-sheet-table {
+    margin-top: 12px;
+}
+
+.risk-sheet-recommendation-search {
+    min-width: 36ch;
+    max-width: 100%;
+    margin-bottom: 8px;
+}
+
+.risk-sheet-recommendation-search md-autocomplete {
+    min-width: 36ch;
+    max-width: 100%;
+    transition: width 0.15s ease;
+}
+
+.risk-sheet-recommendation-actions {
+    display: inline-flex;
+    vertical-align: middle;
+    margin-left: 10px;
+    min-width: 0;
+}
+
+.risk-sheet-recommendation-item {
+    padding: 6px 0;
+    border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.risk-sheet-recommendation-item:first-child {
+    border-top: 0;
+}
+
+@media (max-width: 959px) {
+    .risk-sheet-card-header {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+
+    .risk-sheet-recommendation-search {
+        min-width: 0;
+        width: 100%;
+    }
+}
+
 /* Trix buttons */
 trix-toolbar button.trix-button--icon-link,
 trix-toolbar button.trix-button--icon-code,
@@ -1211,21 +1408,85 @@ md-select-menu md-content
     right: 6px;
     margin-top: 0px;
     z-index: 10;
-    height: 50px;
-    width: 50px;
+    height: 44px;
+    width: 44px;
     min-width: 40px;
     line-height: 22px;
-    padding-right: 0px;
-    padding-left: 10px;
-    padding-bottom: 20px;
-    padding-top: 0px;
+    padding: 0;
     vertical-align: top;
-    background-color: #FFFFFF;
-    border-radius: 0 0 0 40px;
-    border-left: 1px solid #BBBBBB;
-    border-bottom: 1px solid #BBBBBB;
-    box-shadow: 0 1px 3px 0 rgba(0,0,0,.2),0 1px 1px 0 rgba(0,0,0,.14),0 2px 1px -1px rgba(0,0,0,.12);
+    background: transparent !important;
+    border: none;
+    border-radius: 50%;
+    box-shadow: none;
 }
+
+.anr-menu-button{
+    border-radius: 50%;
+    min-width: 40px;
+    min-height: 40px;
+    height: 40px;
+    width: 40px;
+    padding: 0;
+    margin-left: 8px;
+    border: none;
+    background: transparent !important;
+    box-shadow: none;
+    overflow: visible;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.anr-menu-button:hover,
+.anr-menu-button:focus{
+    filter: brightness(1.02);
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+}
+
+.anr-menu-button md-icon,
+.anr-menu-button .material-icons{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    font-size: 30px;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.16);
+    transition: box-shadow 0.15s ease, filter 0.15s ease;
+}
+
+.anr-menu-button:hover md-icon,
+.anr-menu-button:hover .material-icons,
+.anr-menu-button:focus md-icon,
+.anr-menu-button:focus .material-icons{
+    box-shadow: 0 6px 16px rgba(0,0,0,0.22);
+}
+
+.anr-menu-button-global{
+    margin-left: 0;
+}
+
+.anr-menu-button-global md-icon,
+.anr-menu-button-global .material-icons{
+    background: linear-gradient(145deg, #fff0c1 0%, #f0b429 85%);
+    border: 1px solid rgba(164, 108, 0, 0.32);
+    color: #5a3a00;
+}
+
+.anr-menu-button-analysis md-icon,
+.anr-menu-button-analysis .material-icons{
+    background: linear-gradient(145deg, #d7f3de 0%, #2e7d32 88%);
+    border: 1px solid rgba(25, 92, 46, 0.28);
+}
+
+.anr-menu-button-asset md-icon,
+.anr-menu-button-asset .material-icons{
+    background: linear-gradient(145deg, #dcecff 0%, #1e88e5 88%);
+    border: 1px solid rgba(18, 97, 166, 0.28);
+}
+
+.anr-tools-button md-icon,
 .anr-tools-button .material-icons{
     font-size:30px;
 }
@@ -1350,12 +1611,199 @@ md-select-menu md-content
     right:50px;
 }
 
+.kb-group-tabs{
+    gap: 8px;
+    padding: 12px 16px 0;
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+}
+
+.kb-group-button{
+    border-radius: 12px 12px 0 0;
+    margin: 0 8px -1px 0;
+    min-height: 42px;
+    padding: 0 22px;
+    font-weight: 600;
+    opacity: 0.68;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease, background 0.15s ease;
+    border: 1px solid rgba(0,0,0,0.12);
+    border-bottom-color: rgba(0,0,0,0.18);
+    box-shadow: none;
+}
+
+.kb-group-button.active{
+    box-shadow: 0 -1px 0 rgba(255,255,255,0.35) inset;
+    opacity: 1;
+    transform: translateY(0);
+    font-weight: 700;
+    border-bottom-color: #fff;
+    position: relative;
+    z-index: 2;
+}
+
+.kb-group-info{
+    background: #ffe082 !important;
+    color: #5d4300 !important;
+}
+
+.kb-group-info.active{
+    background: #ffd54f !important;
+    border-color: #f9a825;
+    color: #4e3600 !important;
+}
+
+.kb-group-operational{
+    background: #bbdefb !important;
+    color: #0d47a1 !important;
+}
+
+.kb-group-operational.active{
+    background: #90caf9 !important;
+    border-color: #1e88e5;
+    color: #0b3d91 !important;
+}
+
+.kb-group-support{
+    background: #c8e6c9 !important;
+    color: #1b5e20 !important;
+}
+
+.kb-group-support.active{
+    background: #a5d6a7 !important;
+    border-color: #43a047;
+}
+
+.kb-group-recommendations{
+    background: #f5f5f5 !important;
+    color: #424242 !important;
+}
+
+.kb-group-recommendations.active{
+    background: #e0e0e0 !important;
+    border-color: #9e9e9e;
+}
+
 .kb-sub-tabs md-tabs-canvas{
     margin-right: 190px;
 }
 
 .kb-sub-tabs md-next-button{
     right:170px ;
+}
+
+.kb-sub-tabs-info md-ink-bar{
+    color: #fbc02d;
+    background: #fbc02d;
+}
+
+.kb-sub-tabs-operational md-ink-bar{
+    color: #1e88e5;
+    background: #1e88e5;
+}
+
+.kb-sub-tabs-support md-ink-bar{
+    color: #43a047;
+    background: #43a047;
+}
+
+.kb-sub-tabs-recommendations md-ink-bar{
+    color: #9e9e9e;
+    background: #9e9e9e;
+}
+
+.kb-sub-tabs-info .md-tab.md-active{
+    color: #8a6d00 !important;
+}
+
+.kb-sub-tabs-operational .md-tab.md-active{
+    color: #1565c0 !important;
+}
+
+.kb-sub-tabs-support .md-tab.md-active{
+    color: #2e7d32 !important;
+}
+
+.kb-sub-tabs-recommendations .md-tab.md-active{
+    color: #616161 !important;
+}
+
+.risk-analysis-tabs md-tabs-wrapper{
+    background: #f7f7f7;
+    border-bottom: 1px solid rgba(0,0,0,0.12);
+}
+
+.risk-analysis-tabs .md-tab{
+    border-radius: 12px 12px 0 0;
+    margin-right: 6px;
+    margin-top: 2px;
+    border: 1px solid transparent;
+    border-bottom: none;
+    opacity: 0.7;
+    background: transparent;
+    transition: background 0.15s ease, opacity 0.15s ease, box-shadow 0.15s ease;
+}
+
+.risk-analysis-tabs .md-tab .md-tab-label{
+    font-size: 15px;
+    line-height: 1.2;
+}
+
+.risk-analysis-tabs .md-tab.md-active{
+    color: #1a1a1a !important;
+    opacity: 1;
+    background: #ffffff;
+    border-color: rgba(0,0,0,0.14);
+    box-shadow: 0 -1px 0 rgba(255,255,255,0.35) inset;
+    font-weight: 700;
+}
+
+.risk-analysis-tabs md-ink-bar{
+    background: #f0b429;
+    color: #f0b429;
+}
+
+.risk-analysis-tabs.risk-analysis-tabs-locked md-tabs-wrapper{
+    pointer-events: none;
+}
+
+.risk-analysis-tabs.risk-analysis-tabs-locked .md-tab{
+    opacity: 0.58;
+    cursor: not-allowed;
+}
+
+.risk-table-panel{
+    margin-top: 8px;
+    border-radius: 12px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    background: #fff;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
+}
+
+.risk-table-panel table.risk-register-table{
+    margin-bottom: 0;
+    min-width: 100%;
+}
+
+.risk-table-panel table.risk-register-table thead th{
+    font-weight: 700;
+    border-color: rgba(0, 0, 0, 0.12);
+}
+
+.risk-table-panel table.risk-register-table tbody td{
+    border-color: rgba(0, 0, 0, 0.09);
+}
+
+.risk-table-panel-info table.risk-register-table thead{
+    background: #fff9e1;
+}
+
+.risk-table-panel-operational table.risk-register-table thead{
+    background: #eef6ff;
+}
+
+.risk-table-panel table.risk-register-table tbody tr:hover{
+    background: rgba(0, 0, 0, 0.03);
 }
 
 .record-tabs md-tabs-canvas{

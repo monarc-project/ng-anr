@@ -14,7 +14,7 @@
             </div>
 
             <md-menu ng-if="OFFICE_MODE == 'FO'">
-                <md-button ng-click="openAnrMenu($mdMenu.open, $event);" ng-disabled="updatingANR">
+                <md-button class="anr-menu-button anr-menu-button-analysis" ng-click="openAnrMenu($mdMenu.open, $event);" ng-disabled="updatingANR">
                     <md-tooltip md-direction="bottom">{{ 'Actions' | translate }}</md-tooltip>
                     <md-icon class="material-icons md-48 size-auto" md-menu-origin>more_vert</md-icon>
                 </md-button>
@@ -33,6 +33,11 @@
                       <span class="black">{{ 'There is an import error (Restore a snapshot or remove analysis)' | translate }}</span>
                     </md-menu-item>
                     <md-menu-item>
+                        <md-button class="md-primary" ng-click="openReassessmentTriggersDialog($event)">
+                            <md-icon class="md-light-theme material-icons">playlist_add_check</md-icon><span class="black">{{ 'Reassessment trigger criteria' | translate }}</span>
+                        </md-button>
+                    </md-menu-item>
+                    <md-menu-item>
                         <md-button class="md-primary" ng-click="exportAnr($event)">
                             <md-icon class="md-light-theme material-icons">call_made</md-icon><span class="black">{{ 'Export the whole risk analysis' | translate }}</span>
                         </md-button>
@@ -47,7 +52,7 @@
         </div>
     </div>
 </md-card>
-<md-tabs md-dynamic-height md-selected="ToolsAnrService.currentTab">
+<md-tabs class="risk-analysis-tabs" ng-class="{'risk-analysis-tabs-locked': isRiskTabNavigationLocked()}" md-dynamic-height md-selected="ToolsAnrService.currentTab">
     <md-tab label="{{ 'Information risks' | translate }}">
         <ng-include src="'views/anr/_table_risks.html'"></ng-include>
     </md-tab>
