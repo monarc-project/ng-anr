@@ -43,12 +43,38 @@
                 }
             });
 
-        self.AnrRiskOwnersResource = $resource('api/' + anr + '/:anrId/risk-owners', { anrId: '@anrId'},
+        self.AnrSupervisorsResource = $resource('api/' + anr + '/:anrId/supervisors/:id', { anrId: '@anrId', id: '@id'},
             {
+                'update': {
+                    method: 'PUT'
+                },
+                'patch': {
+                    method: 'PATCH'
+                },
                 'query': {
                     isArray: false
                 }
             });
+
+        self.InstanceRiskResidualAcceptanceResource = $resource(
+            'api/' + anr + '/:anrId/instances-risks/:riskId/residual-acceptance',
+            {anrId: '@anrId', riskId: '@riskId'},
+            {
+                'query': {
+                    isArray: false
+                }
+            }
+        );
+
+        self.InstanceOpRiskResidualAcceptanceResource = $resource(
+            'api/' + anr + '/:anrId/instances-oprisks/:riskId/residual-acceptance',
+            {anrId: '@anrId', riskId: '@riskId'},
+            {
+                'query': {
+                    isArray: false
+                }
+            }
+        );
 
         self.LibraryResource = $resource('api/' + anr + '/:anrId/library/:objectId', { anrId: '@anrId', objectId: '@objectId' },
             {
@@ -388,10 +414,39 @@
             return self.AnrRisksResource.query(query).$promise;
         };
 
-        var getAnrRiskOwners = function (anr_id, params) {
-            var query = angular.copy(params);
+        var getAnrSupervisors = function (anr_id, params) {
+            var query = angular.copy(params || {});
             query.anrId = anr_id;
-            return self.AnrRiskOwnersResource.query(query).$promise;
+            return self.AnrSupervisorsResource.query(query).$promise;
+        };
+
+        var createAnrSupervisor = function (anr_id, params, success, error) {
+            params.anrId = anr_id;
+            new self.AnrSupervisorsResource(params).$save(success, error);
+        };
+
+        var updateAnrSupervisor = function (anr_id, id, params, success, error) {
+            self.AnrSupervisorsResource.update({anrId: anr_id, id: id}, params, success, error);
+        };
+
+        var patchAnrSupervisor = function (anr_id, id, params, success, error) {
+            self.AnrSupervisorsResource.patch({anrId: anr_id, id: id}, params, success, error);
+        };
+
+        var deleteAnrSupervisor = function (anr_id, id, success, error) {
+            self.AnrSupervisorsResource.delete({anrId: anr_id, id: id}, success, error);
+        };
+
+        var decideInstanceRiskResidualAcceptance = function (anr_id, risk_id, params, success, error) {
+            params.anrId = anr_id;
+            params.riskId = risk_id;
+            new self.InstanceRiskResidualAcceptanceResource(params).$save(success, error);
+        };
+
+        var decideInstanceOpRiskResidualAcceptance = function (anr_id, risk_id, params, success, error) {
+            params.anrId = anr_id;
+            params.riskId = risk_id;
+            new self.InstanceOpRiskResidualAcceptanceResource(params).$save(success, error);
         };
 
         var getInstanceRisksOp = function (anr_id, inst_id, params) {
@@ -461,7 +516,13 @@
 
             getAnrRisks: getAnrRisks,
             getAnrRisksOp: getAnrRisksOp,
-            getAnrRiskOwners: getAnrRiskOwners,
+            getAnrSupervisors: getAnrSupervisors,
+            createAnrSupervisor: createAnrSupervisor,
+            updateAnrSupervisor: updateAnrSupervisor,
+            patchAnrSupervisor: patchAnrSupervisor,
+            deleteAnrSupervisor: deleteAnrSupervisor,
+            decideInstanceRiskResidualAcceptance: decideInstanceRiskResidualAcceptance,
+            decideInstanceOpRiskResidualAcceptance: decideInstanceOpRiskResidualAcceptance,
 
         };
     }

@@ -12,7 +12,7 @@
         var makeResource = function () {
             self.RiskSourceResource = $resource('api/' + anr + 'risk-sources/:riskSourceId', {
                     riskSourceId: '@id',
-                    urlAnrId: $rootScope.getUrlAnrId()
+                    urlAnrId: function () { return $rootScope.getUrlAnrId(); }
                 },
                 {
                     'update': {

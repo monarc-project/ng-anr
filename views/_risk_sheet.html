@@ -184,35 +184,59 @@
                         <tr>
                             <td class="bold risk-sheet-label-cell" translate>Risk owner</td>
                             <td colspan="3" edit-readonly="isAnrReadOnly">
-                                <div layout="row" layout-align="center center">
-                                    <md-autocomplete
+                                <div layout="column" layout-gap="8">
+                                    <div layout="row" layout-align="center center">
+                                        <md-autocomplete
                                             flex
                                             md-input-name="owner"
                                             md-no-cache="true"
                                             md-delay="300"
-                                            md-selected-item="sheet_risk.owner"
+                                            md-selected-item="sheet_risk.ownerSupervisorSelection"
+                                            md-selected-item-change="onRiskOwnerSelected(sheet_risk, item)"
                                             md-search-text="sheet_risk.ownerSearchText"
                                             md-items="item in queryOwnerSearch(sheet_risk.ownerSearchText,'sheet_risk')"
-                                            md-item-text="item"
+                                            md-item-text="item.name"
                                             md-min-length="0"
                                             md-floating-label=" ">
                                         <md-item-template>
-                                            <span md-highlight-text="sheet_risk.ownerSearchText" md-highlight-flags="^i">{{item}}</span>
+                                            <span md-highlight-text="sheet_risk.ownerSearchText" md-highlight-flags="^i">{{item.name}}</span>
+                                            <span ng-if="item.email"> - {{item.email}}</span>
                                         </md-item-template>
-                                    </md-autocomplete>
+                                        </md-autocomplete>
+                                    </div>
+                                    <div class="md-caption" ng-if="sheet_risk.riskOwnerSupervisor && sheet_risk.riskOwnerSupervisor.email">
+                                        {{ sheet_risk.riskOwnerSupervisor.email }}
+                                    </div>
+                                    <div class="md-caption" ng-if="sheet_risk.riskOwnerSupervisor && sheet_risk.riskOwnerSupervisor.rolePosition">
+                                        <span translate>Role / position</span>: {{ sheet_risk.riskOwnerSupervisor.rolePosition }}
+                                    </div>
+                                    <div class="md-caption" ng-if="sheet_risk.riskOwnerSupervisor && sheet_risk.riskOwnerSupervisor.linkedUser">
+                                        <span translate>MONARC user</span>:
+                                        <a
+                                            href=""
+                                            class="md-primary"
+                                            ng-if="canManageSupervisorLinkedUsers()"
+                                            ng-click="$event.preventDefault(); openLinkedUserAccount(sheet_risk.riskOwnerSupervisor.linkedUser.id)">
+                                            {{ getLinkedUserDisplayName(sheet_risk.riskOwnerSupervisor.linkedUser) }}
+                                        </a>
+                                        <span ng-if="!canManageSupervisorLinkedUsers()">
+                                            {{ getLinkedUserDisplayName(sheet_risk.riskOwnerSupervisor.linkedUser) }}
+                                        </span>
+                                        <span ng-if="sheet_risk.riskOwnerSupervisor.linkedUser.email"> - {{ sheet_risk.riskOwnerSupervisor.linkedUser.email }}</span>
+                                    </div>
                                 </div>
                             </td>
                         </tr>
                         <tr>
                             <td class="bold risk-sheet-label-cell" translate>Monitoring and review</td>
-                            <td colspan="3" edit-readonly="isAnrReadOnly">
+                            <td colspan="3" edit-readonly="!canCurrentUserEditMonitoringAndReview(sheet_risk)">
                                 <div layout="column" layout-gap="8">
                                     <div layout="row" layout-wrap layout-align="start start" layout-gap="16">
                                         <div layout="row" layout-align="start end" style="min-width: 140px;">
                                             <md-input-container class="md-block" flex style="margin-bottom: 0;">
                                                 <label translate>Last review date</label>
                                                 <md-datepicker
-                                                    ng-disabled="isAnrReadOnly"
+                                                    ng-disabled="!canCurrentUserEditMonitoringAndReview(sheet_risk)"
                                                     md-hide-icons="calendar"
                                                     ng-model="sheet_risk.lastReviewDateValue"
                                                     md-placeholder="{{ 'Last review date' | translate }}">
@@ -221,14 +245,14 @@
                                             <md-button
                                                 class="md-icon-button"
                                                 ng-click="clearLastReviewDate(sheet_risk)"
-                                                ng-if="sheet_risk.lastReviewDateValue && !isAnrReadOnly">
+                                                ng-if="sheet_risk.lastReviewDateValue && canCurrentUserEditMonitoringAndReview(sheet_risk)">
                                                 <md-icon>clear</md-icon>
                                                 <md-tooltip translate>Clear</md-tooltip>
                                             </md-button>
                                         </div>
                                         <md-input-container class="md-block" style="min-width: 240px;">
                                             <label translate>Review frequency</label>
-                                            <md-select ng-model="sheet_risk.reviewFrequencyOption" ng-disabled="isAnrReadOnly">
+                                            <md-select ng-model="sheet_risk.reviewFrequencyOption" ng-disabled="!canCurrentUserEditMonitoringAndReview(sheet_risk)">
                                                 <md-option ng-value="null">{{ 'None' | translate }}</md-option>
                                                 <md-option value="Monthly">{{ 'Monthly' | translate }}</md-option>
                                                 <md-option value="Quarterly">{{ 'Quarterly' | translate }}</md-option>
@@ -241,7 +265,7 @@
                                     </div>
                                     <md-input-container class="md-block" ng-if="sheet_risk.reviewFrequencyOption === '__other__'">
                                         <label translate>Custom review frequency</label>
-                                        <input ng-model="sheet_risk.reviewFrequencyCustom" ng-disabled="isAnrReadOnly">
+                                        <input ng-model="sheet_risk.reviewFrequencyCustom" ng-disabled="!canCurrentUserEditMonitoringAndReview(sheet_risk)">
                                     </md-input-container>
                                 </div>
                             </td>
@@ -380,55 +404,104 @@
                                     <div class="md-caption" translate>
                                         Record the decision regarding the acceptance of the residual risk after treatment. If no treatment is applied, justify why the risk is accepted as is.
                                     </div>
+                                    <div class="md-caption" ng-if="isResidualAcceptancePanelDisabled(sheet_risk)" translate>
+                                        Residual acceptance is disabled until a Risk Owner is selected.
+                                    </div>
+                                    <md-checkbox
+                                        ng-model="sheet_risk.residualAcceptanceUseRiskOwner"
+                                        ng-change="applyResidualAcceptanceState(sheet_risk, { preserveDecisionFields: true })"
+                                        ng-disabled="isAnrReadOnly || isResidualAcceptancePanelDisabled(sheet_risk) || !canUseRiskOwnerAsResidualApprover(sheet_risk)">
+                                        {{ 'Use risk owner as residual acceptance approver' | translate }}
+                                    </md-checkbox>
+                                    <div layout="column" layout-gap="8">
+                                        <div layout="row" layout-align="start center" ng-if="!sheet_risk.residualAcceptanceUseRiskOwner">
+                                            <md-autocomplete
+                                                flex
+                                                md-no-cache="true"
+                                                md-delay="300"
+                                                md-selected-item="sheet_risk.residualAcceptanceApproverSupervisorSelection"
+                                                md-selected-item-change="onResidualApproverSelected(sheet_risk, item)"
+                                                md-search-text="sheet_risk.residualAcceptanceApproverSearchText"
+                                                md-items="item in queryResidualApproverSearch(sheet_risk.residualAcceptanceApproverSearchText, 'sheet_risk')"
+                                                md-item-text="item.name"
+                                                md-min-length="0"
+                                                md-floating-label="{{ 'Approver' | translate }}"
+                                                ng-disabled="isAnrReadOnly || isResidualAcceptancePanelDisabled(sheet_risk)">
+                                                <md-item-template>
+                                                    <span md-highlight-text="sheet_risk.residualAcceptanceApproverSearchText" md-highlight-flags="^i">{{ item.name }}</span>
+                                                    <span ng-if="item.email"> - {{ item.email }}</span>
+                                                </md-item-template>
+                                            </md-autocomplete>
+                                        </div>
+                                        <div class="md-caption" ng-if="sheet_risk.residualAcceptanceUseRiskOwner && getEffectiveResidualApprover(sheet_risk)">
+                                            <span translate>Approver</span>: {{ getEffectiveResidualApprover(sheet_risk).name }}
+                                            <span ng-if="getEffectiveResidualApprover(sheet_risk).email"> - {{ getEffectiveResidualApprover(sheet_risk).email }}</span>
+                                        </div>
+                                        <div class="md-caption" ng-if="getEffectiveResidualApprover(sheet_risk) && getEffectiveResidualApprover(sheet_risk).rolePosition">
+                                            <span translate>Role / position</span>: {{ getEffectiveResidualApprover(sheet_risk).rolePosition }}
+                                        </div>
+                                        <div class="md-caption" ng-if="isResidualRiskReadOnly(sheet_risk) && getEffectiveResidualApprover(sheet_risk) && getEffectiveResidualApprover(sheet_risk).linkedUser" translate>
+                                            Residual acceptance can only be edited by the linked approver account.
+                                        </div>
+                                    </div>
                                     <div layout="row" layout-wrap layout-align="start center" layout-gap="16">
                                         <div layout="row" layout-align="start center">
                                             <md-input-container class="md-block" style="min-width: 220px;">
                                                 <label translate>Decision</label>
-                                                <md-select ng-model="sheet_risk.residualRiskDecision" ng-disabled="isAnrReadOnly">
+                                                <md-select
+                                                    ng-model="sheet_risk.residualRiskDecision"
+                                                    ng-disabled="isResidualAcceptancePanelDisabled(sheet_risk) || isResidualRiskReadOnly(sheet_risk)">
                                                     <md-option ng-value="null">{{ 'None' | translate }}</md-option>
                                                     <md-option value="accepted">{{ 'Accepted' | translate }}</md-option>
-                                                    <md-option value="rejected">{{ 'Rejected' | translate }}</md-option>
+                                                    <md-option value="not_accepted">{{ 'Not accepted' | translate }}</md-option>
                                                 </md-select>
                                             </md-input-container>
-                                            <div ng-if="sheet_risk.residualRiskDecision" layout="row" layout-align="start center" style="margin-left: 4px;">
-                                                <md-icon ng-if="sheet_risk.residualRiskDecision == 'rejected'"
-                                                    style="color: #FF8C00; font-size: 24px; cursor: default;">warning
-                                                    <md-tooltip md-direction="top">{{ 'Residual risk acceptance: Rejected' | translate }}</md-tooltip>
-                                                </md-icon>
-                                                <md-icon ng-if="sheet_risk.residualRiskDecision == 'accepted'"
-                                                    style="color: #4CAF50; font-size: 24px; cursor: default;">check_circle
-                                                    <md-tooltip md-direction="top">{{ 'Residual risk acceptance: Accepted' | translate }}</md-tooltip>
-                                                </md-icon>
-                                            </div>
                                         </div>
-                                        <md-input-container class="md-block" style="min-width: 260px;">
-                                            <label translate>Approver</label>
-                                            <input ng-model="sheet_risk.residualRiskApprovedBy" ng-disabled="isAnrReadOnly">
-                                        </md-input-container>
+                                        <div ng-if="sheet_risk.residualRiskDecision" layout="row" layout-align="start center" style="margin-left: 4px;">
+                                            <md-icon ng-if="isResidualRiskNotAccepted(sheet_risk.residualRiskDecision)"
+                                                style="color: #FF8C00; font-size: 24px; cursor: default;">warning
+                                                <md-tooltip md-direction="top">{{ 'Residual risk acceptance: Not accepted' | translate }}</md-tooltip>
+                                            </md-icon>
+                                            <md-icon ng-if="sheet_risk.residualRiskDecision == 'accepted'"
+                                                style="color: #4CAF50; font-size: 24px; cursor: default;">check_circle
+                                                <md-tooltip md-direction="top">{{ 'Residual risk acceptance: Accepted' | translate }}</md-tooltip>
+                                            </md-icon>
+                                        </div>
                                         <div class="risk-sheet-date-field-group" layout="row" layout-align="start center">
                                             <md-input-container>
                                                 <label translate>Date</label>
                                                 <md-datepicker
-                                                    ng-disabled="isAnrReadOnly"
+                                                    ng-disabled="isResidualAcceptancePanelDisabled(sheet_risk) || isResidualRiskReadOnly(sheet_risk)"
                                                     md-hide-icons="calendar"
-                                                    ng-model="sheet_risk.residualRiskApprovedAtValue"
+                                                    ng-model="sheet_risk.residualRiskDecidedAtValue"
                                                     md-placeholder="{{ 'Date' | translate }}">
                                                 </md-datepicker>
                                             </md-input-container>
                                             <md-button
                                                 class="md-icon-button risk-sheet-date-clear-button"
-                                                ng-click="clearResidualRiskApprovedAt(sheet_risk)"
-                                                ng-if="sheet_risk.residualRiskApprovedAtValue && !isAnrReadOnly">
+                                                ng-click="clearResidualRiskDecisionDate(sheet_risk)"
+                                                ng-if="sheet_risk.residualRiskDecidedAtValue && !isResidualRiskReadOnly(sheet_risk)">
                                                 <md-icon>clear</md-icon>
                                                 <md-tooltip translate>Clear</md-tooltip>
                                             </md-button>
                                         </div>
                                     </div>
+                                    <div class="md-caption" ng-if="getResidualPerformerSummary(sheet_risk)">
+                                        {{ getResidualPerformerSummary(sheet_risk) }}
+                                    </div>
+                                    <div layout="row" layout-align="start center">
+                                        <md-button
+                                            class="md-primary md-raised"
+                                            ng-click="setCurrentUserAsResidualPerformer(sheet_risk)"
+                                            ng-disabled="!canCurrentUserDecideResidualRisk(sheet_risk)">
+                                            {{ 'Set my account as performer' | translate }}
+                                        </md-button>
+                                    </div>
                                     <md-input-container class="md-block">
                                         <label translate>Justification</label>
                                         <textarea
                                             ng-model="sheet_risk.residualRiskJustification"
-                                            ng-disabled="isAnrReadOnly"
+                                            ng-disabled="isResidualAcceptancePanelDisabled(sheet_risk) || isResidualRiskReadOnly(sheet_risk)"
                                             columns="1"
                                             md-maxlength="4000"></textarea>
                                     </md-input-container>
@@ -441,7 +514,7 @@
         </md-card-content>
     </md-card>
 
-    <div ng-if="OFFICE_MODE == 'FO' && !isAnrReadOnly" style="display: flex; align-items: center; margin-top: 4px; margin-bottom: -4px; padding-left: 16px;">
+    <div ng-if="OFFICE_MODE == 'FO' && canSaveRiskSheetFields(sheet_risk)" style="display: flex; align-items: center; margin-top: 4px; margin-bottom: -4px; padding-left: 16px;">
         <md-icon style="font-size: 14px; height: 14px; width: 14px; min-height: 14px; min-width: 14px; color: #e57373; margin-right: 6px;">info_outline</md-icon>
         <span style="font-size: 12px; color: #e57373;" translate>Click one of the buttons below to save your changes</span>
     </div>

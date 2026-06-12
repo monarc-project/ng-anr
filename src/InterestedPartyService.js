@@ -12,7 +12,7 @@
         var makeResource = function () {
             self.InterestedPartyResource = $resource('api/' + anr + 'interested-parties/:interestedPartyId', {
                     interestedPartyId: '@id',
-                    urlAnrId: $rootScope.getUrlAnrId()
+                    urlAnrId: function () { return $rootScope.getUrlAnrId(); }
                 },
                 {
                     'update': {

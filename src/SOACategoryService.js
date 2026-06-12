@@ -12,7 +12,7 @@
         var makeResource = function () {
             self.ClientCategoryResource = $resource('api/' + anr + 'soacategory/:categoryId', {
                     categoryId: '@id',
-                    urlAnrId: $rootScope.getUrlAnrId()
+                    urlAnrId: function () { return $rootScope.getUrlAnrId(); }
                 },
                 {
                     'update': {

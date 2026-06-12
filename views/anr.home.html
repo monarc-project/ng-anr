@@ -37,6 +37,11 @@
                             <md-icon class="md-light-theme material-icons">playlist_add_check</md-icon><span class="black">{{ 'Reassessment trigger criteria' | translate }}</span>
                         </md-button>
                     </md-menu-item>
+                    <md-menu-item ng-if="OFFICE_MODE == 'FO'">
+                        <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="openSupervisorsDialog($event)">
+                            <md-icon class="md-light-theme material-icons">supervisor_account</md-icon><span class="black">{{ 'Supervisors' | translate }}</span>
+                        </md-button>
+                    </md-menu-item>
                     <md-menu-item>
                         <md-button class="md-primary" ng-click="exportAnr($event)">
                             <md-icon class="md-light-theme material-icons">call_made</md-icon><span class="black">{{ 'Export the whole risk analysis' | translate }}</span>

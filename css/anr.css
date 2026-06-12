@@ -1042,6 +1042,15 @@ md-progress-linear.yellow .md-container {
     margin-bottom: 0;
 }
 
+.supervisor-form-actions-row {
+    margin-top: 0;
+    margin-bottom: 18px;
+}
+
+.supervisor-row-inactive td {
+    color: #b8b8b8;
+}
+
 .no-margin-bottom {
     margin-bottom: 0;
 }

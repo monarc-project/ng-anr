@@ -12,7 +12,7 @@
         var makeResource = function () {
             self.RiskResource = $resource('api/' + anr + 'rolf-risks/:riskId', {
                     riskId: '@id',
-                    urlAnrId: $rootScope.getUrlAnrId()
+                    urlAnrId: function () { return $rootScope.getUrlAnrId(); }
                 },
                 {
                     'update': {

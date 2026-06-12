@@ -1,0 +1,131 @@
+<md-dialog aria-label="{{ 'Supervisors' | translate }}" flex="70" flex-sm="100" flex-xs="100">
+    <form name="supervisorsForm" novalidate>
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2 translate>Supervisors</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon>close</md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div class="md-dialog-content" layout="column" layout-gap="16">
+                <h3>{{ form.id ? ('Edit supervisor' | translate) : ('Add supervisor' | translate) }}</h3>
+
+                <div layout="row" layout-wrap layout-gap="16">
+                    <md-input-container flex="25" flex-sm="40" flex-xs="100">
+                        <label translate>Name</label>
+                        <input name="supervisorName" ng-model="form.name" ng-disabled="isAnrReadOnly || saving || isLinkedUserSelected()" required>
+                    </md-input-container>
+                    <md-input-container flex="25" flex-sm="40" flex-xs="100">
+                        <label translate>Email</label>
+                        <input name="supervisorEmail" ng-model="form.email" ng-disabled="isAnrReadOnly || saving || isLinkedUserSelected()">
+                    </md-input-container>
+                </div>
+
+                <div layout="row" layout-wrap layout-gap="16">
+                    <div flex="25" flex-sm="40" flex-xs="100" ng-if="canManageLinkedUsers">
+                        <md-autocomplete
+                                md-selected-item="form.linkedUser"
+                                md-selected-item-change="onLinkedUserChange(item)"
+                                md-search-text="form.linkedUserSearchText"
+                                md-items="item in queryLinkableUsers(form.linkedUserSearchText)"
+                                md-item-text="item.firstname + ' ' + item.lastname"
+                                md-min-length="0"
+                                md-floating-label="{{ 'Linked user' | translate }}"
+                                ng-disabled="isAnrReadOnly || saving">
+                            <md-item-template>
+                                <span md-highlight-text="form.linkedUserSearchText">{{ item.firstname }} {{ item.lastname }}</span>
+                                <span> - {{ item.email }}</span>
+                            </md-item-template>
+                        </md-autocomplete>
+                    </div>
+                    <md-input-container flex="25" flex-sm="40" flex-xs="100">
+                        <label translate>Role / position</label>
+                        <input name="supervisorRolePosition" ng-model="form.rolePosition" ng-disabled="isAnrReadOnly || saving">
+                    </md-input-container>
+                </div>
+
+                <div layout="row" layout-wrap layout-gap="16">
+                    <md-checkbox ng-repeat="role in roleOptions" ng-model="form.roles[role.value]" ng-disabled="isAnrReadOnly || saving">
+                        {{ role.label }}
+                    </md-checkbox>
+                </div>
+
+                <div layout="row" layout-align="start center" layout-wrap layout-gap="8" class="supervisor-form-actions-row">
+                    <div class="supervisor-form-status" flex="25" flex-sm="40" flex-xs="100">
+                        <md-switch ng-model="form.isActive" ng-disabled="isAnrReadOnly || saving">
+                            {{ 'Status' | translate }}
+                        </md-switch>
+                    </div>
+                    <div layout="row" class="supervisor-form-buttons" flex="25" flex-sm="40" flex-xs="100">
+                        <md-button ng-if="form.id" ng-click="resetForm()" ng-disabled="saving">
+                            {{ 'Cancel edition' | translate }}
+                        </md-button>
+                        <md-button class="md-primary" ng-click="saveSupervisor()" ng-disabled="isAnrReadOnly || saving || !form.name.trim()">
+                            <span ng-if="form.id" translate>Save</span>
+                            <span ng-if="!form.id" translate>Add supervisor</span>
+                        </md-button>
+                    </div>
+                </div>
+
+                <div style="border: 1px solid #e0e0e0; border-radius: 4px;">
+                    <div class="md-padding" layout="row" layout-align="space-between center">
+                        <h3 class="md-title no-margin">{{ 'Analysis supervisors' | translate }}</h3>
+                        <md-progress-circular ng-if="loading" md-diameter="28" md-mode="indeterminate"></md-progress-circular>
+                    </div>
+
+                    <div class="md-padding" ng-if="!loading && supervisors.length === 0">
+                        <p class="no-margin" translate>No supervisors defined yet.</p>
+                    </div>
+
+                    <table class="md-html-table" ng-if="!loading && supervisors.length > 0" style="width: 100%;">
+                        <thead>
+                            <tr>
+                                <th translate>Name</th>
+                                <th translate>Email</th>
+                                <th translate>Role / position</th>
+                                <th translate>Linked user</th>
+                                <th translate>Roles</th>
+                                <th translate>Status</th>
+                                <th translate>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr ng-repeat="supervisor in supervisors track by supervisor.id" ng-class="{'supervisor-row-inactive': !supervisor.isActive}">
+                                <td>{{ supervisor.name }}</td>
+                                <td>{{ supervisor.email || '-' }}</td>
+                                <td>{{ supervisor.rolePosition || '-' }}</td>
+                                <td>{{ getLinkedUserLabel(supervisor) || '-' }}</td>
+                                <td>{{ getSupervisorRolesLabel(supervisor) || ('No roles' | translate) }}</td>
+                                <td>
+                                    <span ng-if="supervisor.isActive" translate>Active</span>
+                                    <span ng-if="!supervisor.isActive" translate>Inactive</span>
+                                </td>
+                                <td>
+                                    <md-button class="md-primary" ng-click="editSupervisor(supervisor)" ng-disabled="!canEditSupervisor(supervisor)">
+                                        {{ 'Edit' | translate }}
+                                    </md-button>
+                                    <md-button class="md-primary" ng-click="sendEmail(supervisor)" ng-disabled="!supervisor.email">
+                                        {{ 'Send email' | translate }}
+                                    </md-button>
+                                    <md-button ng-class="{'md-warn': supervisor.isActive}" ng-click="toggleSupervisor(supervisor)" ng-disabled="!canToggleSupervisor(supervisor)">
+                                        <span ng-if="supervisor.isActive" translate>Deactivate</span>
+                                        <span ng-if="!supervisor.isActive" translate>Activate</span>
+                                    </md-button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </md-dialog-content>
+        <md-dialog-actions layout="row">
+            <span flex></span>
+            <md-button ng-click="cancel()">
+                {{ 'Close' | translate }}
+            </md-button>
+        </md-dialog-actions>
+    </form>
+</md-dialog>

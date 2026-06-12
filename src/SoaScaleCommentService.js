@@ -15,7 +15,7 @@
                 'api/' + anr + '/soa-scale-comment/:soaScaleCommentId',
                 {
                     soaScaleCommentId: '@id',
-                    urlAnrId: $rootScope.getUrlAnrId(),
+                    urlAnrId: function () { return $rootScope.getUrlAnrId(); },
                     anrId: '@anrId'
                 },
                 {

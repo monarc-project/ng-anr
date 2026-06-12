@@ -12,7 +12,7 @@
         var makeResource = function () {
             self.ReassessmentTriggerResource = $resource('api/' + anr + 'reassessment-triggers/:reassessmentTriggerId', {
                     reassessmentTriggerId: '@id',
-                    urlAnrId: $rootScope.getUrlAnrId()
+                    urlAnrId: function () { return $rootScope.getUrlAnrId(); }
                 },
                 {
                     'update': {

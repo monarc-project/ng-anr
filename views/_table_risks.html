@@ -136,9 +136,9 @@
                     <a class="pointer blue" title="{{ 'Open risk sheet' | translate }}" ng-click="openRiskSheet(risk,risks)">
                         {{treatmentStr(risk.kindOfMeasure)|translate}}
                     </a>
-                    <md-icon ng-if="OFFICE_MODE == 'FO' && risk.residualRiskDecision == 'rejected'"
+                    <md-icon ng-if="OFFICE_MODE == 'FO' && (risk.residualRiskDecision == 'rejected' || risk.residualRiskDecision == 'not_accepted')"
                         style="color: #FF8C00; font-size: 18px; vertical-align: middle; margin-left: 4px; cursor: default;">warning
-                        <md-tooltip md-direction="top">{{ 'Residual risk acceptance: Rejected' | translate }}</md-tooltip>
+                        <md-tooltip md-direction="top">{{ 'Residual risk acceptance: Not accepted' | translate }}</md-tooltip>
                     </md-icon>
                     <md-icon ng-if="OFFICE_MODE == 'FO' && risk.residualRiskDecision == 'accepted'"
                         style="color: #4CAF50; font-size: 18px; vertical-align: middle; margin-left: 4px; cursor: default;">check_circle

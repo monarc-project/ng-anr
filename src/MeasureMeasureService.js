@@ -12,7 +12,7 @@
         var makeResource = function () {
             self.MeasureResource = $resource('api/' + anr + 'measuresmeasures/:measuremeasureId', {
                     measuremeasureId: '@id',
-                    urlAnrId: $rootScope.getUrlAnrId()
+                    urlAnrId: function () { return $rootScope.getUrlAnrId(); }
                 },
                 {
                     'update': {
