@@ -211,6 +211,10 @@
       return $scope.isCurrentUserLinkedRiskOwner(sheet);
     };
 
+    $scope.canCurrentUserEditRiskOwner = function(sheet) {
+      return !!sheet && !$scope.isAnrReadOnly;
+    };
+
     $scope.canSaveRiskSheetFields = function(sheet) {
       return !!(sheet
         && (!$scope.isAnrReadOnly
@@ -1269,7 +1273,11 @@
         return;
       }
 
-      AnrService.updateInstanceRisk($scope.model.anr.id, sheet.id, payload, function(response) {
+      var saveRequest = $scope.isAnrReadOnly
+        ? AnrService.patchInstanceRisk
+        : AnrService.updateInstanceRisk;
+
+      saveRequest($scope.model.anr.id, sheet.id, payload, function(response) {
         sheet.owner = response.owner;
         sheet.riskOwnerSupervisor = response.riskOwnerSupervisor || null;
         sheet.riskOwnerSupervisorId = response.riskOwnerSupervisorId;
@@ -1298,7 +1306,11 @@
         return;
       }
 
-      AnrService.updateInstanceOpRisk($scope.model.anr.id, sheet.id, payload, function(response) {
+      var saveRequest = $scope.isAnrReadOnly
+        ? AnrService.patchInstanceOpRisk
+        : AnrService.updateInstanceOpRisk;
+
+      saveRequest($scope.model.anr.id, sheet.id, payload, function(response) {
         sheet.owner = response.owner;
         sheet.riskOwnerSupervisor = response.riskOwnerSupervisor || null;
         sheet.riskOwnerSupervisorId = response.riskOwnerSupervisorId;
@@ -1853,7 +1865,7 @@
     var ownerSearchRequestId = 0;
 
     $scope.applyRiskOwnerSelection = function(sheet, item) {
-      if (!sheet) {
+      if (!sheet || !$scope.canCurrentUserEditRiskOwner(sheet)) {
         return;
       }
 
@@ -1879,7 +1891,7 @@
     };
 
     $scope.onRiskOwnerSelected = function(sheet, item) {
-      if (!sheet) {
+      if (!sheet || !$scope.canCurrentUserEditRiskOwner(sheet)) {
         return;
       }
 

@@ -287,6 +287,10 @@
             self.InstanceRiskResource.update({anrId: anr_id, riskId: id}, params, success, error);
         };
 
+        var patchInstanceRisk = function (anr_id, id, params, success, error) {
+            self.InstanceRiskResource.patch({anrId: anr_id, riskId: id}, params, success, error);
+        };
+
         var deleteInstanceRisk = function (anr_id, risk_id, success, error) {
           self.InstanceRiskResource.delete({anrId: anr_id, riskId: risk_id}, success, error);
         };
@@ -505,6 +509,7 @@
             createInstanceRisk: createInstanceRisk,
             deleteInstanceRisk: deleteInstanceRisk,
             updateInstanceRisk: updateInstanceRisk,
+            patchInstanceRisk: patchInstanceRisk,
 
             createInstanceOpRisk: createInstanceRiskOp,
             deleteInstanceOpRisk: deleteInstanceRiskOp,

@@ -186,11 +186,12 @@
                     <tbody>
                         <tr>
                             <td class="bold risk-sheet-label-cell" translate>Risk owner</td>
-                            <td colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" edit-readonly="isAnrReadOnly">
+                            <td colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" edit-readonly="!canCurrentUserEditRiskOwner(opsheet_risk)">
                                 <div layout="column" layout-gap="8">
                                     <div layout="row" layout-align="center center">
                                         <md-autocomplete
                                             flex
+                                            ng-disabled="!canCurrentUserEditRiskOwner(opsheet_risk)"
                                             md-input-name="owner"
                                             md-no-cache="true"
                                             md-delay="300"
