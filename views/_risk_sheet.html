@@ -515,6 +515,92 @@
         </md-card-content>
     </md-card>
 
+    <md-card class="risk-sheet-card" ng-if="OFFICE_MODE == 'FO'">
+        <div class="risk-sheet-card-header" layout="row" layout-align="space-between center" ng-click="riskSheetSections.history = !riskSheetSections.history">
+            <span class="md-title" translate>History</span>
+            <md-button
+                class="md-icon-button risk-sheet-card-toggle"
+                ng-click="$event.stopPropagation(); riskSheetSections.history = !riskSheetSections.history"
+                ng-attr-aria-label="{{ 'History' | translate }}">
+                <md-icon>{{ riskSheetSections.history ? 'expand_less' : 'expand_more' }}</md-icon>
+            </md-button>
+        </div>
+        <md-card-content class="risk-sheet-card-content" ng-show="riskSheetSections.history">
+            <div layout="row" layout-align="start center" style="padding-bottom: 8px;">
+                <md-input-container style="min-width: 240px; margin: 0;">
+                    <label translate>Change type</label>
+                    <md-select
+                        ng-model="sheet_risk.historyChangeTypeFilter"
+                        ng-change="onHistoryChangeTypeChange(sheet_risk, false)">
+                        <md-option
+                            ng-repeat="option in historyChangeTypeOptions track by option.value"
+                            ng-value="option.value">
+                            {{ option.label | translate }}
+                        </md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+            <div ng-if="sheet_risk.historyLoading" layout="row" layout-align="center center" style="padding: 16px;">
+                <md-progress-circular md-diameter="28" md-mode="indeterminate"></md-progress-circular>
+            </div>
+            <div ng-if="!sheet_risk.historyLoading && (!sheet_risk.history || !sheet_risk.history.length)" class="md-caption" style="padding: 8px 0;" translate>
+                No history available.
+            </div>
+            <table
+                ng-if="!sheet_risk.historyLoading && sheet_risk.history && sheet_risk.history.length"
+                class="md-html-table risk-sheet-table risk-history-table"
+                history-resizable-table>
+                <colgroup>
+                    <col class="risk-history-date-col">
+                    <col class="risk-history-user-col">
+                    <col class="risk-history-change-col">
+                    <col class="risk-history-details-col">
+                </colgroup>
+                <thead>
+                    <tr>
+                        <th class="bold" translate>Date</th>
+                        <th class="bold" translate>User</th>
+                        <th class="bold" translate>Change</th>
+                        <th class="bold" translate>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="entry in sheet_risk.history track by entry.id">
+                        <td style="white-space: nowrap;">{{ entry.createdAt }}</td>
+                        <td style="white-space: nowrap;">{{ getHistoryUserDisplay(entry) }}</td>
+                        <td>{{ getHistoryChangeLabel(entry) }}</td>
+                        <td>
+                            <span ng-if="!isHistoryValueLong(entry.oldValue) && !isHistoryValueLong(entry.newValue)">
+                                {{ getHistoryDetails(entry) }}
+                            </span>
+                            <div ng-if="isHistoryValueLong(entry.oldValue) || isHistoryValueLong(entry.newValue)" layout="column" layout-gap="4">
+                                <div ng-if="entry.changeType !== 20 && entry.changeType !== 21 && entry.changeType !== 1">
+                                    <span class="md-caption bold" translate>Previous value</span>:
+                                    <span ng-if="!entry._showOldValue">{{ getHistoryDetails(entry).split(' → ')[0] }}</span>
+                                    <md-button class="md-caption" ng-click="toggleHistoryValue(entry, '_showOldValue')" style="min-height: 0; line-height: 1.4; padding: 0 4px;">
+                                        {{ entry._showOldValue ? ('Hide' | translate) : ('Show' | translate) }}
+                                    </md-button>
+                                    <div ng-if="entry._showOldValue" class="md-caption" style="white-space: pre-wrap; word-break: break-word;">{{ getHistoryExpandedValue(entry.oldValue) }}</div>
+                                </div>
+                                <div ng-if="entry.changeType !== 20 && entry.changeType !== 21 && entry.changeType !== 1">
+                                    <span class="md-caption bold" translate>New value</span>:
+                                    <span ng-if="!entry._showNewValue">{{ getHistoryDetails(entry).split(' → ')[1] || getHistoryDetails(entry) }}</span>
+                                    <md-button class="md-caption" ng-click="toggleHistoryValue(entry, '_showNewValue')" style="min-height: 0; line-height: 1.4; padding: 0 4px;">
+                                        {{ entry._showNewValue ? ('Hide' | translate) : ('Show' | translate) }}
+                                    </md-button>
+                                    <div ng-if="entry._showNewValue" class="md-caption" style="white-space: pre-wrap; word-break: break-word;">{{ getHistoryExpandedValue(entry.newValue) }}</div>
+                                </div>
+                                <div ng-if="entry.changeType === 20 || entry.changeType === 21 || entry.changeType === 1">
+                                    {{ getHistoryDetails(entry) }}
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </md-card-content>
+    </md-card>
+
     <div ng-if="OFFICE_MODE == 'FO' && canSaveRiskSheetFields(sheet_risk)" style="display: flex; align-items: center; margin-top: 4px; margin-bottom: -4px; padding-left: 16px;">
         <md-icon style="font-size: 14px; height: 14px; width: 14px; min-height: 14px; min-width: 14px; color: #e57373; margin-right: 6px;">info_outline</md-icon>
         <span style="font-size: 12px; color: #e57373;" translate>Click one of the buttons below to save your changes</span>

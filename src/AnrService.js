@@ -216,6 +216,13 @@
                 }
             });
 
+        self.HistoryResource = $resource('api/' + anr + '/:anrId/history', { anrId: '@anrId' },
+            {
+                'query': {
+                    isArray: false
+                }
+            });
+
 
         // ANRs
         var patchAnr = function (anr_id, fields, success, error) {;
@@ -466,6 +473,12 @@
             return self.AnrRisksOpResource.query(query).$promise;
         };
 
+        var getHistory = function(anr_id, params) {
+            var query = angular.copy(params || {});
+            query.anrId = anr_id;
+            return self.HistoryResource.query(query).$promise;
+        };
+
 
         return {
             patchAnr: patchAnr,
@@ -521,6 +534,7 @@
 
             getAnrRisks: getAnrRisks,
             getAnrRisksOp: getAnrRisksOp,
+            getHistory: getHistory,
             getAnrSupervisors: getAnrSupervisors,
             createAnrSupervisor: createAnrSupervisor,
             updateAnrSupervisor: updateAnrSupervisor,

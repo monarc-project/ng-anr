@@ -85,6 +85,38 @@
       'On trigger'
     ];
     var reviewFrequencyOtherValue = '__other__';
+    var historyTargetTypes = {
+      informationRisk: 1,
+      operationalRisk: 2
+    };
+    $scope.historyChangeTypeOptions = [{
+      value: 0,
+      label: 'All changes'
+    }, {
+      value: 1,
+      label: 'Risk created'
+    }, {
+      value: 10,
+      label: 'Field changes'
+    }, {
+      value: 20,
+      label: 'Recommendation linked'
+    }, {
+      value: 21,
+      label: 'Recommendation unlinked'
+    }, {
+      value: 30,
+      label: 'Consequence created'
+    }, {
+      value: 31,
+      label: 'Consequence updated'
+    }, {
+      value: 32,
+      label: 'Consequence deleted'
+    }, {
+      value: 40,
+      label: 'Residual acceptance updated'
+    }];
 
     $scope.ToolsAnrService = ToolsAnrService;
     $scope.GlobalResizeMenuSize = 230;
@@ -949,6 +981,223 @@
       return ((linkedUser.firstname || '') + ' ' + (linkedUser.lastname || '')).trim() || linkedUser.email || '';
     };
 
+    function parseHistoryValue(value) {
+      if (value === null || value === undefined || value === '') {
+        return '—';
+      }
+
+      if (typeof value !== 'string') {
+        return '' + value;
+      }
+
+      var trimmedValue = value.trim();
+      if ((trimmedValue.charAt(0) === '{' || trimmedValue.charAt(0) === '[') && trimmedValue.length > 1) {
+        try {
+          var parsedValue = JSON.parse(trimmedValue);
+          if (parsedValue && angular.isObject(parsedValue)) {
+            if (angular.isDefined(parsedValue.c) || angular.isDefined(parsedValue.i) || angular.isDefined(parsedValue.a)) {
+              var formattedParts = [
+                'C: ' + (angular.isDefined(parsedValue.c) ? parsedValue.c : '—'),
+                'I: ' + (angular.isDefined(parsedValue.i) ? parsedValue.i : '—'),
+                'A: ' + (angular.isDefined(parsedValue.a) ? parsedValue.a : '—')
+              ];
+              if (angular.isDefined(parsedValue.max)) {
+                formattedParts.push('MAX: ' + parsedValue.max);
+              }
+              if (angular.isDefined(parsedValue.hidden)) {
+                formattedParts.push(gettextCatalog.getString(parsedValue.hidden ? 'Hidden' : 'Visible'));
+              }
+              return formattedParts.join(' / ');
+            }
+            return angular.toJson(parsedValue);
+          }
+        } catch (e) {
+          return value;
+        }
+      }
+
+      return value;
+    }
+
+    $scope.getHistoryUserDisplay = function(entry) {
+      var fullName = (((entry && entry.performedByFirstname) || '') + ' ' + ((entry && entry.performedByLastname) || '')).trim();
+      return fullName || (entry && entry.performedByEmail) || '—';
+    };
+
+    $scope.getHistoryFieldLabel = function(fieldCode) {
+      switch (fieldCode) {
+        case 'risk_owner':
+          return gettextCatalog.getString('Risk owner');
+        case 'risk_source':
+          return gettextCatalog.getString('Risk source');
+        case 'risk_context':
+          return gettextCatalog.getString('Risk context');
+        case 'last_review_date':
+          return gettextCatalog.getString('Last review date');
+        case 'review_frequency':
+          return gettextCatalog.getString('Review frequency');
+        case 'threat_probability':
+          return gettextCatalog.getString('Threat probability');
+        case 'vulnerability_qualification':
+          return gettextCatalog.getString('Vulnerability qualification');
+        case 'current_risk':
+          return gettextCatalog.getString('Current risk');
+        case 'residual_risk':
+          return gettextCatalog.getString('Residual risk');
+        case 'treatment_type':
+          return gettextCatalog.getString('Treatment');
+        case 'vulnerability_reduction':
+          return gettextCatalog.getString('Vulnerability reduction');
+        case 'residual_acceptance_approver':
+          return gettextCatalog.getString('Residual risk acceptance approver');
+        case 'residual_acceptance_decision':
+          return gettextCatalog.getString('Residual risk acceptance decision');
+        case 'residual_acceptance_justification':
+          return gettextCatalog.getString('Residual risk acceptance justification');
+        case 'residual_acceptance_date':
+          return gettextCatalog.getString('Residual risk acceptance date');
+        case 'consequence_confidentiality':
+          return gettextCatalog.getString('Confidentiality consequence');
+        case 'consequence_integrity':
+          return gettextCatalog.getString('Integrity consequence');
+        case 'consequence_availability':
+          return gettextCatalog.getString('Availability consequence');
+        case 'consequence_reputation':
+          return gettextCatalog.getString('Reputation consequence');
+        case 'consequence_legal':
+          return gettextCatalog.getString('Legal consequence');
+        case 'consequence_financial':
+          return gettextCatalog.getString('Financial consequence');
+        default:
+          return gettextCatalog.getString('Change');
+      }
+    };
+
+    $scope.getHistoryChangeLabel = function(entry) {
+      if (!entry) {
+        return '';
+      }
+
+      switch (entry.changeType) {
+        case 1:
+          return gettextCatalog.getString('Risk created');
+        case 20:
+          return gettextCatalog.getString('Recommendation linked');
+        case 21:
+          return gettextCatalog.getString('Recommendation unlinked');
+        case 30:
+          return gettextCatalog.getString('{{ field }} created', {
+            field: $scope.getHistoryFieldLabel(entry.fieldCode)
+          });
+        case 31:
+          return gettextCatalog.getString('{{ field }} updated', {
+            field: $scope.getHistoryFieldLabel(entry.fieldCode)
+          });
+        case 32:
+          return gettextCatalog.getString('{{ field }} deleted', {
+            field: $scope.getHistoryFieldLabel(entry.fieldCode)
+          });
+        case 40:
+          return gettextCatalog.getString('{{ field }} changed', {
+            field: $scope.getHistoryFieldLabel(entry.fieldCode)
+          });
+        default:
+          return gettextCatalog.getString('{{ field }} changed', {
+            field: $scope.getHistoryFieldLabel(entry.fieldCode)
+          });
+      }
+    };
+
+    $scope.getHistoryDetails = function(entry) {
+      if (!entry) {
+        return '';
+      }
+
+      if (entry.changeType === 20) {
+        return parseHistoryValue(entry.newValue);
+      }
+      if (entry.changeType === 21) {
+        return parseHistoryValue(entry.oldValue);
+      }
+      if (entry.changeType === 1) {
+        return gettextCatalog.getString('Baseline captured');
+      }
+
+      var oldValue = parseHistoryValue(entry.oldValue);
+      var newValue = parseHistoryValue(entry.newValue);
+      if (oldValue === '—') {
+        return newValue;
+      }
+      if (newValue === '—') {
+        return oldValue;
+      }
+
+      return oldValue + ' → ' + newValue;
+    };
+
+    $scope.isHistoryValueLong = function(value) {
+      return !!value && ('' + parseHistoryValue(value)).length > 120;
+    };
+
+    $scope.toggleHistoryValue = function(entry, key) {
+      if (!entry) {
+        return;
+      }
+
+      entry[key] = !entry[key];
+    };
+
+    $scope.getHistoryExpandedValue = function(value) {
+      return parseHistoryValue(value);
+    };
+
+    function normalizeHistoryChangeTypeFilter(sheet) {
+      var selectedChangeType;
+      if (!sheet) {
+        return 0;
+      }
+
+      selectedChangeType = parseInt(sheet.historyChangeTypeFilter, 10);
+      if (isNaN(selectedChangeType) || selectedChangeType < 0) {
+        selectedChangeType = 0;
+      }
+
+      sheet.historyChangeTypeFilter = selectedChangeType;
+
+      return selectedChangeType;
+    }
+
+    function buildHistoryQueryParams(sheet, isOperational) {
+      var params = {
+        targetType: isOperational ? historyTargetTypes.operationalRisk : historyTargetTypes.informationRisk,
+        targetId: sheet.id
+      };
+
+      var selectedChangeType = normalizeHistoryChangeTypeFilter(sheet);
+      if (selectedChangeType > 0) {
+        params.changeType = selectedChangeType;
+      }
+
+      return params;
+    }
+
+    $scope.loadRiskHistory = function(sheet, isOperational) {
+      if (!sheet || !sheet.id) {
+        return;
+      }
+
+      sheet.historyLoading = true;
+      AnrService.getHistory($scope.model.anr.id, buildHistoryQueryParams(sheet, isOperational)).then(function(data) {
+        sheet.history = data.history || [];
+      }).finally(function() {
+        sheet.historyLoading = false;
+      });
+    };
+
+    $scope.onHistoryChangeTypeChange = function(sheet, isOperational) {
+      $scope.loadRiskHistory(sheet, isOperational);
+    };
+
     $scope.openLinkedUserAccount = function(linkedUserId) {
       if (!linkedUserId || !$scope.canManageSupervisorLinkedUsers()) {
         return;
@@ -970,6 +1219,7 @@
       $scope.initializeRiskReviewFields($scope.sheet_risk);
       $scope.updateSheetRiskSourceLabel();
       $scope.loadRiskSources();
+      $scope.loadRiskHistory($scope.sheet_risk, false);
 
       AmvService.getAmv($scope.sheet_risk.amv).then(function(data) {
         if (!angular.equals(data['measures'], {})) {
@@ -1007,6 +1257,7 @@
       if (mainContent) mainContent.scrollTop = 0;
       $scope.initializeRiskOwnerSelection($scope.opsheet_risk);
       $scope.loadRiskSourcesForOperationalSheet();
+      $scope.loadRiskHistory($scope.opsheet_risk, true);
 
       RiskService.getRisk($scope.opsheet_risk.rolfRisk).then(function(data) {
         if (!angular.equals(data['measures'], {})) {
@@ -1290,6 +1541,7 @@
         $scope.$broadcast('risks-table-edited');
         $scope.updateAnrRisksTable();
         $scope.updateSheetRiskTarget();
+        $scope.loadRiskHistory(sheet, false);
       });
     };
 
@@ -1324,6 +1576,7 @@
         $scope.initializeRiskReviewFields(sheet);
         $scope.$broadcast('risks-table-edited');
         $scope.updateAnrRisksOpTable();
+        $scope.loadRiskHistory(sheet, true);
       });
     };
 
@@ -2046,6 +2299,7 @@
         $scope.applyResidualRiskDecisionResponse(sheet, response);
         $scope.$broadcast('risks-table-edited');
         $scope.updateAnrRisksTable();
+        $scope.loadRiskHistory(sheet, false);
       });
     };
 
@@ -2061,6 +2315,7 @@
         $scope.applyResidualRiskDecisionResponse(sheet, response);
         $scope.$broadcast('risks-table-edited');
         $scope.updateAnrRisksOpTable();
+        $scope.loadRiskHistory(sheet, true);
       });
     };
 
