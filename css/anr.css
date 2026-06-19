@@ -1281,6 +1281,28 @@ md-progress-linear.yellow .md-container {
     transition: width 0.15s ease;
 }
 
+.risk-sheet-compact-search {
+    width: min(54ch, 100%);
+    min-width: 0;
+}
+
+.risk-sheet-compact-search-field {
+    width: 100%;
+    max-width: 100%;
+}
+
+.risk-sheet-compact-search-field md-autocomplete-wrap {
+    width: 100%;
+}
+
+.risk-sheet-decision-field-group {
+    gap: 4px;
+}
+
+.risk-sheet-decision-status {
+    margin-bottom: 22px;
+}
+
 .risk-sheet-recommendation-actions {
     display: inline-flex;
     vertical-align: middle;
@@ -1305,6 +1327,10 @@ md-progress-linear.yellow .md-container {
 
     .risk-sheet-recommendation-search {
         min-width: 0;
+        width: 100%;
+    }
+
+    .risk-sheet-compact-search {
         width: 100%;
     }
 }

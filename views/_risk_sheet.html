@@ -185,15 +185,17 @@
                             <td class="bold risk-sheet-label-cell" translate>Risk owner</td>
                             <td colspan="3" edit-readonly="!canCurrentUserEditRiskOwner(sheet_risk)">
                                 <div layout="column" layout-gap="8">
-                                    <div layout="row" layout-align="center center">
+                                    <div class="risk-sheet-compact-search" layout="row" layout-align="start center">
                                         <md-autocomplete
-                                            flex
+                                            class="risk-sheet-compact-search-field"
                                             ng-disabled="!canCurrentUserEditRiskOwner(sheet_risk)"
                                             md-input-name="owner"
                                             md-no-cache="true"
                                             md-delay="300"
                                             md-selected-item="sheet_risk.ownerSupervisorSelection"
                                             md-selected-item-change="onRiskOwnerSelected(sheet_risk, item)"
+                                            ng-focus="onRiskOwnerFocus(sheet_risk)"
+                                            ng-blur="onRiskOwnerBlur(sheet_risk)"
                                             md-search-text="sheet_risk.ownerSearchText"
                                             md-items="item in queryOwnerSearch(sheet_risk.ownerSearchText,'sheet_risk')"
                                             md-item-text="item.name"
@@ -217,7 +219,7 @@
                                             href=""
                                             class="md-primary"
                                             ng-if="canManageSupervisorLinkedUsers()"
-                                            ng-click="$event.preventDefault(); openLinkedUserAccount(sheet_risk.riskOwnerSupervisor.linkedUser.id)">
+                                            ng-click="$event.preventDefault(); openLinkedUserAccount(sheet_risk.riskOwnerSupervisor.linkedUser.id, $event)">
                                             {{ getLinkedUserDisplayName(sheet_risk.riskOwnerSupervisor.linkedUser) }}
                                         </a>
                                         <span ng-if="!canManageSupervisorLinkedUsers()">
@@ -410,14 +412,14 @@
                                     </div>
                                     <md-checkbox
                                         ng-model="sheet_risk.residualAcceptanceUseRiskOwner"
-                                        ng-change="applyResidualAcceptanceState(sheet_risk, { preserveDecisionFields: true })"
+                                        ng-change="onResidualAcceptanceUseRiskOwnerChanged(sheet_risk)"
                                         ng-disabled="isAnrReadOnly || isResidualAcceptancePanelDisabled(sheet_risk) || !canUseRiskOwnerAsResidualApprover(sheet_risk)">
                                         {{ 'Use risk owner as residual acceptance approver' | translate }}
                                     </md-checkbox>
                                     <div layout="column" layout-gap="8">
-                                        <div layout="row" layout-align="start center" ng-if="!sheet_risk.residualAcceptanceUseRiskOwner">
+                                        <div class="risk-sheet-compact-search" layout="row" layout-align="start center" ng-if="!sheet_risk.residualAcceptanceUseRiskOwner">
                                             <md-autocomplete
-                                                flex
+                                                class="risk-sheet-compact-search-field"
                                                 md-no-cache="true"
                                                 md-delay="300"
                                                 md-selected-item="sheet_risk.residualAcceptanceApproverSupervisorSelection"
@@ -436,7 +438,9 @@
                                         </div>
                                         <div class="md-caption" ng-if="sheet_risk.residualAcceptanceUseRiskOwner && getEffectiveResidualApprover(sheet_risk)">
                                             <span translate>Approver</span>: {{ getEffectiveResidualApprover(sheet_risk).name }}
-                                            <span ng-if="getEffectiveResidualApprover(sheet_risk).email"> - {{ getEffectiveResidualApprover(sheet_risk).email }}</span>
+                                        </div>
+                                        <div class="md-caption" ng-if="getEffectiveResidualApprover(sheet_risk) && !getEffectiveResidualApprover(sheet_risk).linkedUser && getEffectiveResidualApprover(sheet_risk).email">
+                                            {{ getEffectiveResidualApprover(sheet_risk).email }}
                                         </div>
                                         <div class="md-caption" ng-if="getEffectiveResidualApprover(sheet_risk) && getEffectiveResidualApprover(sheet_risk).rolePosition">
                                             <span translate>Role / position</span>: {{ getEffectiveResidualApprover(sheet_risk).rolePosition }}
@@ -446,7 +450,7 @@
                                         </div>
                                     </div>
                                     <div layout="row" layout-wrap layout-align="start center" layout-gap="16">
-                                        <div layout="row" layout-align="start center">
+                                        <div class="risk-sheet-decision-field-group" layout="row" layout-align="start end">
                                             <md-input-container class="md-block" style="min-width: 220px;">
                                                 <label translate>Decision</label>
                                                 <md-select
@@ -457,16 +461,16 @@
                                                     <md-option value="not_accepted">{{ 'Not accepted' | translate }}</md-option>
                                                 </md-select>
                                             </md-input-container>
-                                        </div>
-                                        <div ng-if="sheet_risk.residualRiskDecision" layout="row" layout-align="start center" style="margin-left: 4px;">
-                                            <md-icon ng-if="isResidualRiskNotAccepted(sheet_risk.residualRiskDecision)"
-                                                style="color: #FF8C00; font-size: 24px; cursor: default;">warning
-                                                <md-tooltip md-direction="top">{{ 'Residual risk acceptance: Not accepted' | translate }}</md-tooltip>
-                                            </md-icon>
-                                            <md-icon ng-if="sheet_risk.residualRiskDecision == 'accepted'"
-                                                style="color: #4CAF50; font-size: 24px; cursor: default;">check_circle
-                                                <md-tooltip md-direction="top">{{ 'Residual risk acceptance: Accepted' | translate }}</md-tooltip>
-                                            </md-icon>
+                                            <div class="risk-sheet-decision-status" ng-if="sheet_risk.residualRiskDecision" layout="row" layout-align="start center">
+                                                <md-icon ng-if="isResidualRiskNotAccepted(sheet_risk.residualRiskDecision)"
+                                                    style="color: #FF8C00; font-size: 24px; cursor: default;">warning
+                                                    <md-tooltip md-direction="top">{{ 'Residual risk acceptance: Not accepted' | translate }}</md-tooltip>
+                                                </md-icon>
+                                                <md-icon ng-if="sheet_risk.residualRiskDecision == 'accepted'"
+                                                    style="color: #4CAF50; font-size: 24px; cursor: default;">check_circle
+                                                    <md-tooltip md-direction="top">{{ 'Residual risk acceptance: Accepted' | translate }}</md-tooltip>
+                                                </md-icon>
+                                            </div>
                                         </div>
                                         <div class="risk-sheet-date-field-group" layout="row" layout-align="start center">
                                             <md-input-container>
