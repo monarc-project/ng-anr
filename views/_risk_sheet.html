@@ -610,14 +610,14 @@
         <span style="font-size: 12px; color: #e57373;" translate>Click one of the buttons below to save your changes</span>
     </div>
     <div layout="row" layout-align="space-around center">
-        <md-button ng-click="previousRisk()" class="md-accent md-hue-3" ng-disabled="idxRisks <= 0">
+        <md-button ng-click="previousRisk()" class="md-accent md-hue-3" ng-disabled="!canGoToPreviousRiskSheet()">
             <md-icon>chevron_left</md-icon>
             {{ 'Previous' | translate }}
         </md-button>
 
         <md-button class="md-accent md-hue-3" ng-click="resetSheet()">{{ 'Back to the list' | translate }}</md-button>
 
-        <md-button ng-click="nextRisk()" class="md-accent md-hue-3" ng-disabled="idxRisks >= risks.length - 1">
+        <md-button ng-click="nextRisk()" class="md-accent md-hue-3" ng-disabled="!canGoToNextRiskSheet()">
             {{ 'Next' | translate }}
             <md-icon>chevron_right</md-icon>
         </md-button>

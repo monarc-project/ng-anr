@@ -1,0 +1,151 @@
+<div class="md-padding" layout="column">
+    <div layout="row" layout-align="space-between center" layout-wrap>
+        <div>
+            <h3 class="md-title no-margin">{{ 'Risks management' | translate }}</h3>
+            <p class="no-margin" ng-if="risksManagementAccess.supervisor">{{ getSupervisorDisplayName(risksManagementAccess.supervisor) }}</p>
+        </div>
+        <md-progress-circular md-diameter="24" ng-if="risksManagementState.loading"></md-progress-circular>
+    </div>
+
+    <md-card class="md-padding" ng-if="!risksManagementState.loading">
+        <div class="risks-management-toolbar" layout="row" layout-wrap layout-align="start stretch">
+            <div class="risks-management-filter-panel" layout="column" layout-align="start stretch">
+                <md-input-container class="risks-management-field no-margin">
+                    <label translate>Decision</label>
+                    <md-select ng-model="risksManagementState.decisionFilter" ng-change="onRisksManagementDecisionFilterChange()">
+                        <md-option value="all">{{ 'All' | translate }}</md-option>
+                        <md-option value="pending">{{ 'Pending' | translate }}</md-option>
+                        <md-option value="accepted">{{ 'Accepted' | translate }}</md-option>
+                        <md-option value="not_accepted">{{ 'Not accepted' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
+            </div>
+
+            <div class="risks-management-update-panel" flex layout="row" layout-wrap layout-align="start end">
+                <md-input-container class="risks-management-field" ng-if="hasRisksManagementReviewAccess()">
+                    <label translate>Last review date</label>
+                    <input type="date" ng-model="risksManagementState.batch.lastReviewDate">
+                </md-input-container>
+
+                <md-input-container class="risks-management-field" ng-if="hasRisksManagementReviewAccess()">
+                    <label translate>Review frequency</label>
+                    <md-select ng-model="risksManagementState.batch.reviewFrequency">
+                        <md-option ng-value="null">-</md-option>
+                        <md-option ng-repeat="frequency in reviewFrequencyValues" ng-value="frequency">{{ frequency | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="risks-management-field" ng-if="hasRisksManagementResidualAccess()">
+                    <label translate>Residual risk decision</label>
+                    <md-select ng-model="risksManagementState.batch.residualRiskDecision">
+                        <md-option ng-value="null">-</md-option>
+                        <md-option value="accepted">{{ 'Accepted' | translate }}</md-option>
+                        <md-option value="not_accepted">{{ 'Not accepted' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="risks-management-field" ng-if="hasRisksManagementResidualAccess()">
+                    <label translate>Residual risk acceptance date</label>
+                    <input type="date" ng-model="risksManagementState.batch.residualRiskDecidedAt">
+                </md-input-container>
+
+                <md-input-container class="risks-management-field risks-management-field-wide" ng-if="hasRisksManagementResidualAccess()">
+                    <label translate>Residual risk acceptance justification</label>
+                    <input ng-model="risksManagementState.batch.residualRiskJustification">
+                </md-input-container>
+
+                <div class="risks-management-actions" layout="row" layout-align="start center">
+                    <md-button ng-click="toggleAllRisksManagementSelection()" ng-disabled="risksManagementState.rows.length === 0">{{ (isAllRisksManagementSelected() ? 'Unselect all' : 'Select all') | translate }}</md-button>
+                    <md-button class="md-raised md-primary" ng-click="applyRisksManagementBatchUpdate()" ng-disabled="getSelectedRisksManagementCount() === 0">{{ 'Update' | translate }}</md-button>
+                </div>
+            </div>
+        </div>
+
+        <div layout="row" layout-wrap layout-gap="16" ng-if="risksManagementState.result">
+            <div><strong>{{ risksManagementState.result.updated }}</strong> {{ 'Updated risks' | translate }}</div>
+            <div><strong>{{ risksManagementState.result.skipped }}</strong> {{ 'Skipped risks' | translate }}</div>
+        </div>
+
+        <div class="md-padding-top" ng-if="risksManagementState.result && risksManagementState.result.skipped_items && risksManagementState.result.skipped_items.length > 0">
+            <table class="md-html-table" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th translate>Type</th>
+                        <th>ID</th>
+                        <th translate>Justification</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in risksManagementState.result.skipped_items track by (item.type + ':' + item.id)">
+                        <td>{{ item.type === 'information' ? ('Information risks' | translate) : ('Operational risks' | translate) }}</td>
+                        <td>{{ item.id }}</td>
+                        <td>{{ item.reason }}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </md-card>
+
+    <div class="md-padding" ng-if="!risksManagementState.loading && risksManagementState.rows.length === 0">
+        <em>{{ 'No risks available for your linked supervisor roles.' | translate }}</em>
+    </div>
+
+    <table class="md-html-table md-html-table-grey big-border-all risk-register-table" ng-if="!risksManagementState.loading && risksManagementState.rows.length > 0">
+        <thead class="big-border-bottom">
+            <tr>
+                <th style="width: 40px;">
+                    <md-checkbox aria-label="{{ 'Select all' | translate }}" ng-checked="isAllRisksManagementSelected()" ng-click="toggleAllRisksManagementSelection()"></md-checkbox>
+                </th>
+                <th>ID</th>
+                <th translate>Type</th>
+                <th translate>Asset</th>
+                <th translate>Risk source</th>
+                <th translate>Threat / Operational risk</th>
+                <th translate>Vulnerability / Description</th>
+                <th translate>Current risk</th>
+                <th translate>Residual risk</th>
+                <th translate>Kind of treatment</th>
+                <th translate>Risk owner</th>
+                <th translate>Last review date</th>
+                <th translate>Review frequency</th>
+                <th translate>Residual risk approver</th>
+                <th translate>Residual risk decision</th>
+                <th translate>Residual risk justification</th>
+                <th translate>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="risk in getFilteredRisksManagementRows() track by (risk.type + ':' + risk.id)">
+                <td>
+                    <md-checkbox aria-label="{{ risk.id }}" ng-model="risksManagementState.selected[getRisksManagementSelectionKey(risk)]"></md-checkbox>
+                </td>
+                <td>{{ risk.id }}</td>
+                <td>{{ risk.type === 'information' ? ('Information risks' | translate) : ('Operational risks' | translate) }}</td>
+                <td>{{ risk.assetLabel }}</td>
+                <td>{{ risk.riskSourceLabel || '-' }}</td>
+                <td class="preserve-newlines">{{ risk.primaryLabel || '-' }}</td>
+                <td class="preserve-newlines">{{ risk.secondaryLabel || '-' }}</td>
+                <td class="txtcenter">{{ risk.currentRiskValue | dashnull }}</td>
+                <td class="txtcenter">{{ risk.residualRiskValue | dashnull }}</td>
+                <td>{{ treatmentStr(risk.kindOfMeasure) | translate }}</td>
+                <td>{{ risk.riskOwnerName || '-' }}</td>
+                <td>{{ risk.lastReviewDate || '-' }}</td>
+                <td>{{ risk.reviewFrequency || '-' }}</td>
+                <td>{{ risk.residualApproverName || '-' }}</td>
+                <td>{{ getResidualRiskDecisionLabel(risk.residualRiskDecision) }}</td>
+                <td>
+                    <span ng-if="risk.residualRiskJustification" ng-attr-title="{{ risk.residualRiskJustification }}">
+                        {{ risk.residualRiskJustification.length > 60 ? ((risk.residualRiskJustification | limitTo:60) + '...') : risk.residualRiskJustification }}
+                        <md-tooltip md-direction="top">{{ risk.residualRiskJustification }}</md-tooltip>
+                    </span>
+                    <span ng-if="!risk.residualRiskJustification">-</span>
+                </td>
+                <td>
+                    <md-button class="md-icon-button md-primary" ng-click="openRisksManagementRisk(risk)" aria-label="{{ 'Open risk sheet' | translate }}">
+                        <md-icon>open_in_new</md-icon>
+                    </md-button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

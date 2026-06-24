@@ -56,6 +56,26 @@
                 }
             });
 
+        self.AnrRisksManagementResource = $resource(
+            'api/' + anr + '/:anrId/risks-management',
+            { anrId: '@anrId' },
+            {
+                'query': {
+                    isArray: false
+                }
+            }
+        );
+
+        self.AnrRisksManagementBatchUpdateResource = $resource(
+            'api/' + anr + '/:anrId/risks-management/batch-update',
+            { anrId: '@anrId' },
+            {
+                'query': {
+                    isArray: false
+                }
+            }
+        );
+
         self.InstanceRiskResidualAcceptanceResource = $resource(
             'api/' + anr + '/:anrId/instances-risks/:riskId/residual-acceptance',
             {anrId: '@anrId', riskId: '@riskId'},
@@ -431,6 +451,15 @@
             return self.AnrSupervisorsResource.query(query).$promise;
         };
 
+        var getRisksManagement = function (anr_id) {
+            return self.AnrRisksManagementResource.query({anrId: anr_id}).$promise;
+        };
+
+        var batchUpdateRisksManagement = function (anr_id, params, success, error) {
+            params.anrId = anr_id;
+            new self.AnrRisksManagementBatchUpdateResource(params).$save(success, error);
+        };
+
         var createAnrSupervisor = function (anr_id, params, success, error) {
             params.anrId = anr_id;
             new self.AnrSupervisorsResource(params).$save(success, error);
@@ -536,6 +565,8 @@
             getAnrRisksOp: getAnrRisksOp,
             getHistory: getHistory,
             getAnrSupervisors: getAnrSupervisors,
+            getRisksManagement: getRisksManagement,
+            batchUpdateRisksManagement: batchUpdateRisksManagement,
             createAnrSupervisor: createAnrSupervisor,
             updateAnrSupervisor: updateAnrSupervisor,
             patchAnrSupervisor: patchAnrSupervisor,

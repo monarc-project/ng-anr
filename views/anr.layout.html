@@ -42,6 +42,9 @@
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">
                         <md-button ng-click="openInterviewTools($event)">{{ 'Interviews table' | translate }}</md-button>
                     </md-menu-item>
+                    <md-menu-item ng-if="OFFICE_MODE == 'FO' && risksManagementAccess.visible">
+                        <md-button ui-sref="main.project.anr.risksmanagement({modelId: model.anr.id})">{{ 'Risks management' | translate }}</md-button>
+                    </md-menu-item>
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">
                         <md-button ng-click="openSupervisorsDialog($event)" ng-disabled="isAnrReadOnly">{{ 'Supervisors' | translate }}</md-button>
                     </md-menu-item>
