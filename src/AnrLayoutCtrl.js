@@ -2569,7 +2569,7 @@
           'canManageLinkedUsers',
           SupervisorsDialog
         ],
-        templateUrl: 'views/supervisors.html',
+        templateUrl: 'views/anr/supervisors.html',
         targetEvent: ev,
         preserveScope: false,
         scope: $scope.$dialogScope.$new(),
