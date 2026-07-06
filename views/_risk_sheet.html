@@ -206,6 +206,13 @@
                                             <span ng-if="item.email"> - {{item.email}}</span>
                                         </md-item-template>
                                         </md-autocomplete>
+                                        <md-button
+                                            class="md-icon-button md-primary"
+                                            ng-click="openSupervisorsDialog($event, 'risk_owner')"
+                                            ng-disabled="isAnrReadOnly">
+                                            <md-icon>add</md-icon>
+                                            <md-tooltip translate>Add supervisor</md-tooltip>
+                                        </md-button>
                                     </div>
                                     <div class="md-caption" ng-if="sheet_risk.riskOwnerSupervisor && sheet_risk.riskOwnerSupervisor.email">
                                         {{ sheet_risk.riskOwnerSupervisor.email }}
@@ -435,6 +442,13 @@
                                                     <span ng-if="item.email"> - {{ item.email }}</span>
                                                 </md-item-template>
                                             </md-autocomplete>
+                                            <md-button
+                                                class="md-icon-button md-primary"
+                                                ng-click="openSupervisorsDialog($event, 'residual_risk_approver')"
+                                                ng-disabled="isAnrReadOnly">
+                                                <md-icon>add</md-icon>
+                                                <md-tooltip translate>Add supervisor</md-tooltip>
+                                            </md-button>
                                         </div>
                                         <div class="md-caption" ng-if="sheet_risk.residualAcceptanceUseRiskOwner && getEffectiveResidualApprover(sheet_risk)">
                                             <span translate>Approver</span>: {{ getEffectiveResidualApprover(sheet_risk).name }}
