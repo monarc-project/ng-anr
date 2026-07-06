@@ -2556,7 +2556,7 @@
       });
     };
 
-    $scope.openSupervisorsDialog = function(ev) {
+    $scope.openSupervisorsDialog = function(ev, initialRole) {
       if ($scope.OFFICE_MODE !== 'FO') {
         return;
       }
@@ -2566,7 +2566,7 @@
       $mdDialog.show({
         controller: [
           '$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AnrService', 'anr', 'isAnrReadOnly',
-          'canManageLinkedUsers',
+          'canManageLinkedUsers', 'initialRole',
           SupervisorsDialog
         ],
         templateUrl: 'views/anr/supervisors.html',
@@ -2579,7 +2579,8 @@
           AnrService: AnrService,
           anr: $scope.model.anr,
           isAnrReadOnly: $scope.isAnrReadOnly,
-          canManageLinkedUsers: $scope.canManageSupervisorLinkedUsers()
+          canManageLinkedUsers: $scope.canManageSupervisorLinkedUsers(),
+          initialRole: initialRole || null
         }
       }).then(function() {
       }, function(reject) {
@@ -6388,7 +6389,17 @@
     };
   }
 
-  function SupervisorsDialog($scope, $mdDialog, toastr, gettextCatalog, AnrService, anr, isAnrReadOnly, canManageLinkedUsers) {
+  function SupervisorsDialog(
+    $scope,
+    $mdDialog,
+    toastr,
+    gettextCatalog,
+    AnrService,
+    anr,
+    isAnrReadOnly,
+    canManageLinkedUsers,
+    initialRole
+  ) {
     $scope.anr = anr;
     $scope.isAnrReadOnly = isAnrReadOnly;
     $scope.canManageLinkedUsers = !!canManageLinkedUsers;
@@ -6422,7 +6433,16 @@
       };
     }
 
-    $scope.form = emptyForm();
+    function buildForm(roleToPreselect) {
+      var form = emptyForm();
+      if (roleToPreselect && Object.prototype.hasOwnProperty.call(form.roles, roleToPreselect)) {
+        form.roles[roleToPreselect] = true;
+      }
+
+      return form;
+    }
+
+    $scope.form = buildForm(initialRole);
 
     $scope.resetSupervisorFormValidationState = function() {
       if (!$scope.supervisorsForm) {
@@ -6488,7 +6508,7 @@
     };
 
     $scope.resetForm = function() {
-      $scope.form = emptyForm();
+      $scope.form = buildForm(initialRole);
       $scope.resetSupervisorFormValidationState();
     };
 
