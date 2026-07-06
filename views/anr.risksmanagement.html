@@ -45,7 +45,7 @@
                 </md-input-container>
 
                 <md-input-container class="risks-management-field" ng-if="hasRisksManagementResidualAccess()">
-                    <label translate>Residual risk acceptance date</label>
+                    <label translate>Residual risk decision date</label>
                     <input type="date" ng-model="risksManagementState.batch.residualRiskDecidedAt">
                 </md-input-container>
 
@@ -110,6 +110,7 @@
                 <th translate>Review frequency</th>
                 <th translate>Residual risk approver</th>
                 <th translate>Residual risk decision</th>
+                <th translate>Residual risk decision date</th>
                 <th translate>Residual risk justification</th>
                 <th translate>Actions</th>
             </tr>
@@ -133,6 +134,7 @@
                 <td>{{ risk.reviewFrequency || '-' }}</td>
                 <td>{{ risk.residualApproverName || '-' }}</td>
                 <td>{{ getResidualRiskDecisionLabel(risk.residualRiskDecision) }}</td>
+                <td>{{ risk.residualRiskDecidedAt || '-' }}</td>
                 <td>
                     <span ng-if="risk.residualRiskJustification" ng-attr-title="{{ risk.residualRiskJustification }}">
                         {{ risk.residualRiskJustification.length > 60 ? ((risk.residualRiskJustification | limitTo:60) + '...') : risk.residualRiskJustification }}

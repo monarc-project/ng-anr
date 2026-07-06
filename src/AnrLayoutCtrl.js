@@ -1458,7 +1458,7 @@
         case 'residual_acceptance_justification':
           return gettextCatalog.getString('Residual risk acceptance justification');
         case 'residual_acceptance_date':
-          return gettextCatalog.getString('Residual risk acceptance date');
+          return gettextCatalog.getString('Residual risk decision date');
         case 'consequence_confidentiality':
           return gettextCatalog.getString('Confidentiality consequence');
         case 'consequence_integrity':
