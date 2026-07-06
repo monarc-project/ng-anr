@@ -19,6 +19,23 @@
 
         <md-card class="main-card">
             <div ng-include="'views/anr/_anr.infosnapshot.html'"></div>
+            <div class="anr-assignments-panel" layout="row" layout-align="start center" ng-if="hasCurrentUserAssignmentsPanel()">
+                <span class="anr-assignments-panel-label">
+                    {{ 'My assignments' | translate }}:
+                </span>
+                <span class="anr-assignments-panel-badge" ng-if="getCurrentUserAssignmentsTotal() > 0">
+                    {{ model.anr.ownedRisksCount }} {{ 'owned' | translate }} / {{ model.anr.approvalRisksCount }} {{ 'approvals' | translate }}
+                </span>
+                <span class="anr-assignments-panel-empty" ng-if="getCurrentUserAssignmentsTotal() === 0">
+                    {{ 'No assigned risks' | translate }}
+                </span>
+                <md-button
+                    class="md-primary md-raised anr-assignments-panel-action"
+                    ng-if="getCurrentUserAssignmentsTotal() > 0"
+                    ng-click="openCurrentUserRisksManagement()">
+                    {{ 'Manage my risks' | translate }}
+                </md-button>
+            </div>
             <md-menu md-position-mode="target-right target">
                 <md-button class="anr-tools-button anr-menu-button anr-menu-button-global" title="{{ 'Tools' | translate }}" ng-click="openAnrToolsMenu($mdMenu.open, $event)" ng-disabled="updatingANR">
                     <md-icon md-menu-origin>more_vert</md-icon>

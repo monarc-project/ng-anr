@@ -5,6 +5,49 @@ body{
   min-height: calc(100vh - 112px);
 }
 
+.anr-assignments-panel {
+  margin: 0 16px 16px 16px;
+  padding: 12px 16px;
+  border: 1px solid #D8EBD9;
+  border-radius: 8px;
+  background: #F3FAF4;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.anr-assignments-panel-label {
+  color: #455A64;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.anr-assignments-panel-badge {
+  display: inline-block;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: #E6F4EA;
+  color: #1B5E20;
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.anr-assignments-panel-empty {
+  color: #616161;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.anr-assignments-panel-action {
+  margin: 0;
+  min-height: 26px;
+  line-height: 26px;
+  padding: 0 10px;
+}
+
 .home-card {
   min-height: calc(100vh - 80px);
 }

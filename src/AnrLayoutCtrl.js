@@ -290,6 +290,30 @@
       });
     };
 
+    $scope.hasCurrentUserAssignmentsPanel = function() {
+      var anr = $scope.model && $scope.model.anr;
+      var roles = (anr && anr.linkedSupervisorRoles) || [];
+
+      return !!(anr
+        && anr.linkedSupervisor
+        && anr.linkedSupervisor.isActive !== false
+        && (roles.indexOf('risk_owner') !== -1 || roles.indexOf('residual_risk_approver') !== -1));
+    };
+
+    $scope.getCurrentUserAssignmentsTotal = function() {
+      var anr = $scope.model && $scope.model.anr;
+
+      return Number((anr && anr.ownedRisksCount) || 0) + Number((anr && anr.approvalRisksCount) || 0);
+    };
+
+    $scope.openCurrentUserRisksManagement = function() {
+      if (!$scope.model || !$scope.model.anr || $scope.getCurrentUserAssignmentsTotal() <= 0) {
+        return;
+      }
+
+      $state.go('main.project.anr.risksmanagement', {modelId: $scope.model.anr.id});
+    };
+
     $scope.isResidualRiskReadOnly = function(sheet) {
       var approver = $scope.getEffectiveResidualApprover(sheet);
       return !approver || !$scope.canCurrentUserDecideResidualRisk(sheet);
