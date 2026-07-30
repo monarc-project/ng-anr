@@ -2580,6 +2580,10 @@
       });
     };
 
+    var openReassessmentTriggersMethodStep = function() {
+      $scope.openReassessmentTriggersDialog();
+    };
+
     $scope.openSupervisorsDialog = function(ev, initialRole) {
       if ($scope.OFFICE_MODE !== 'FO') {
         return;
@@ -3278,6 +3282,11 @@
               progressField: 'initRiskContext'
             },
             {
+              label: gettext("Define reassessment strategy"),
+              action: openReassessmentTriggersMethodStep,
+              progressField: 'initReassessmentStrategy'
+            },
+            {
               label: gettext("Definition of the risk evaluation criteria"),
               action: selectScalesTab,
               progressField: 'initDefContext'
@@ -3328,7 +3337,11 @@
             label: gettext("Management of the implementation of the risk treatment plan"),
             action: editRiskTreatPlan,
             progressField: 'manageRisks'
-          }, ]
+          }, {
+            label: gettext("Reassessment trigger criteria"),
+            action: openReassessmentTriggersMethodStep,
+            progressField: 'manageReassessmentTriggers'
+          }]
         }
       ];
 
@@ -3363,11 +3376,15 @@
           responseType: "arraybuffer"
         }).then(function(data) {
           var docname = deliverable.docname;
+          var format = (deliverable.format === 'pdf') ? 'pdf' : 'docx';
+          var contentType = (format === 'pdf')
+            ? 'application/pdf'
+            : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
           if (!docname) {
             docname = 'Untitled-Deliverable';
           }
 
-          DownloadService.downloadBlob(data.data, docname + '.docx');
+          DownloadService.downloadBlob(data.data, docname + '.' + format, contentType);
           toastr.success(gettextCatalog.getString('The deliverable has been generated successfully.'), gettextCatalog.getString('Generation successful'));
         })
       }, function(reject) {
@@ -6129,6 +6146,7 @@
       'summaryEvalRisk': '',
       'typedoc': step.num,
       'risksByControl': false,
+      'format': 'docx',
     };
 
     $http.get('api/client-anr/' + anr.id + '/deliverable/' + step.num).then(function(data) {
@@ -6138,6 +6156,7 @@
         $scope.deliverable.managers = $scope.deliverable.respSmile;
         $scope.deliverable.consultants = $scope.deliverable.respCustomer;
         $scope.deliverable.template = $scope.deliverable.template;
+        $scope.deliverable.format = $scope.deliverable.format || 'docx';
 
       }
       if (step.referential) {

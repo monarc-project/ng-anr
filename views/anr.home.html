@@ -32,11 +32,6 @@
                     <md-menu-item ng-if="model.anr.status == 9">
                       <span class="black">{{ 'There is an import error (Restore a snapshot or remove analysis)' | translate }}</span>
                     </md-menu-item>
-                    <md-menu-item>
-                        <md-button class="md-primary" ng-click="openReassessmentTriggersDialog($event)">
-                            <md-icon class="md-light-theme material-icons">playlist_add_check</md-icon><span class="black">{{ 'Reassessment trigger criteria' | translate }}</span>
-                        </md-button>
-                    </md-menu-item>
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">
                         <md-button class="md-primary" ng-disabled="isAnrReadOnly" ng-click="openSupervisorsDialog($event)">
                             <md-icon class="md-light-theme material-icons">supervisor_account</md-icon><span class="black">{{ 'Supervisors' | translate }}</span>
