@@ -128,6 +128,8 @@
     var isModelLoading = false;
     var __panel = null;
     $scope.riskSources = [];
+    $scope.reassessmentTriggers = [];
+    var reassessmentTriggersLoaded = false;
     $scope.currentUserProfile = null;
     $scope.reviewFrequencyValues = reviewFrequencyValues;
     $scope.risksManagementAccess = {
@@ -144,6 +146,8 @@
       decisionFilter: 'all',
       batch: {
         lastReviewDate: null,
+        nextReassessmentDate: null,
+        reassessmentTriggerIds: [],
         reviewFrequency: null,
         residualRiskDecision: null,
         residualRiskDecidedAt: null,
@@ -761,6 +765,7 @@
       AnrService.getRisksManagement($scope.model.anr.id).then(function(data) {
         $scope.risksManagementState.loading = false;
         $scope.risksManagementState.rows = data.risks || [];
+        $scope.risksManagementState.reassessmentTriggers = data.reassessmentTriggers || [];
         $scope.resetRisksManagementSelection();
         $scope.risksManagementAccess.visible = true;
         $scope.risksManagementAccess.supervisor = data.supervisor || $scope.risksManagementAccess.supervisor;
@@ -796,6 +801,15 @@
       if ($scope.hasRisksManagementReviewAccess()) {
         if ($scope.risksManagementState.batch.lastReviewDate) {
           updates.last_review_date = moment($scope.risksManagementState.batch.lastReviewDate).format('YYYY-MM-DD');
+        }
+        if ($scope.risksManagementState.batch.nextReassessmentDate) {
+          updates.next_reassessment_date = moment(
+            $scope.risksManagementState.batch.nextReassessmentDate
+          ).format('YYYY-MM-DD');
+        }
+        if ($scope.risksManagementState.batch.reassessmentTriggerIds
+          && $scope.risksManagementState.batch.reassessmentTriggerIds.length > 0) {
+          updates.reassessment_trigger_ids = $scope.risksManagementState.batch.reassessmentTriggerIds;
         }
         if ($scope.risksManagementState.batch.reviewFrequency) {
           updates.review_frequency = $scope.risksManagementState.batch.reviewFrequency;
@@ -2372,6 +2386,12 @@
       }
 
       sheet.lastReviewDateValue = $scope.parseDateValue(sheet.lastReviewDate);
+      sheet.nextReassessmentDateValue = $scope.parseDateValue(sheet.nextReassessmentDate);
+      sheet.reassessmentTriggerIds = (sheet.reassessmentTriggers || []).map(function(trigger) {
+        return trigger.id;
+      });
+      $scope.setDefaultNextReassessmentDate(sheet);
+      $scope.loadReassessmentTriggersForRisk();
       sheet.residualRiskDecidedAtValue = $scope.parseDateValue(sheet.residualRiskDecidedAt);
       sheet.residualAcceptanceApproverSupervisorSelection = sheet.residualAcceptanceApproverSupervisor || null;
       sheet.residualAcceptanceApproverSearchText = sheet.residualAcceptanceApproverSupervisor
@@ -2451,6 +2471,8 @@
         payload.riskOwnerSupervisorId = sheet.riskOwnerSupervisorId;
       }
       payload.lastReviewDate = $scope.formatDateValue(sheet.lastReviewDateValue);
+      payload.nextReassessmentDate = $scope.formatDateValue(sheet.nextReassessmentDateValue);
+      payload.reassessmentTriggerIds = sheet.reassessmentTriggerIds || [];
       payload.reviewFrequency = $scope.buildReviewFrequencyValue(sheet);
       angular.extend(payload, $scope.buildResidualAcceptancePayload(sheet));
       delete payload.owner;
@@ -2458,6 +2480,8 @@
       delete payload.ownerSupervisorSelection;
       delete payload.riskOwnerSupervisor;
       delete payload.lastReviewDateValue;
+      delete payload.nextReassessmentDateValue;
+      delete payload.reassessmentTriggers;
       delete payload.residualRiskDecidedAtValue;
       delete payload.residualAcceptanceApproverSupervisor;
       delete payload.residualAcceptanceApproverSupervisorSelection;
@@ -2493,6 +2517,8 @@
 
       if ($scope.canCurrentUserEditMonitoringAndReview(sheet)) {
         payload.lastReviewDate = $scope.formatDateValue(sheet.lastReviewDateValue);
+        payload.nextReassessmentDate = $scope.formatDateValue(sheet.nextReassessmentDateValue);
+        payload.reassessmentTriggerIds = sheet.reassessmentTriggerIds || [];
         payload.reviewFrequency = $scope.buildReviewFrequencyValue(sheet);
       }
 
@@ -2542,6 +2568,62 @@
       }
 
       sheet.lastReviewDateValue = null;
+    };
+
+    $scope.setDefaultNextReassessmentDate = function(sheet) {
+      if (!sheet || !sheet.lastReviewDateValue || sheet.nextReassessmentDateValue) {
+        return;
+      }
+
+      var nextDate = new Date(sheet.lastReviewDateValue);
+      nextDate.setFullYear(nextDate.getFullYear() + 1);
+      sheet.nextReassessmentDateValue = nextDate;
+    };
+
+    $scope.setDefaultBatchNextReassessmentDate = function() {
+      var batch = $scope.risksManagementState.batch;
+      if (!batch.lastReviewDate || batch.nextReassessmentDate) {
+        return;
+      }
+
+      var nextDate = new Date(batch.lastReviewDate);
+      nextDate.setFullYear(nextDate.getFullYear() + 1);
+      batch.nextReassessmentDate = nextDate;
+    };
+
+    $scope.loadReassessmentTriggersForRisk = function() {
+      if (reassessmentTriggersLoaded || !$scope.model || !$scope.model.anr || !$scope.model.anr.id) {
+        return;
+      }
+
+      reassessmentTriggersLoaded = true;
+      ReassessmentTriggerService.getReassessmentTriggers({
+        anr: $scope.model.anr.id,
+        limit: 0
+      }).then(function(data) {
+        $scope.reassessmentTriggers = (data.reassessmentTriggers || []).filter(function(trigger) {
+          return trigger.isActive;
+        });
+      }, function() {
+        reassessmentTriggersLoaded = false;
+      });
+    };
+
+    $scope.getReassessmentTriggerFieldStyle = function(triggerIds) {
+      var selectedLabels = (triggerIds || []).map(function(triggerId) {
+        var trigger = $scope.reassessmentTriggers.find(function(item) {
+          return item.id == triggerId;
+        });
+
+        return trigger ? trigger.triggerType : '';
+      }).filter(Boolean);
+      var characters = Math.max(34, selectedLabels.join(', ').length);
+      var width = Math.min(680, Math.max(300, (characters * 8) + 64));
+
+      return {
+        width: width + 'px',
+        'max-width': '100%'
+      };
     };
 
     $scope.clearResidualRiskDecisionDate = function(sheet) {

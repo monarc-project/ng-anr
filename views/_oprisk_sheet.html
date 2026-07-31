@@ -252,6 +252,7 @@
                                                     ng-disabled="!canCurrentUserEditMonitoringAndReview(opsheet_risk)"
                                                     md-hide-icons="calendar"
                                                     ng-model="opsheet_risk.lastReviewDateValue"
+                                                    ng-change="setDefaultNextReassessmentDate(opsheet_risk)"
                                                     md-placeholder="{{ 'Last review date' | translate }}">
                                                 </md-datepicker>
                                             </md-input-container>
@@ -263,23 +264,44 @@
                                                 <md-tooltip translate>Clear</md-tooltip>
                                             </md-button>
                                         </div>
-                                        <md-input-container class="md-block" style="min-width: 240px;">
-                                            <label translate>Review frequency</label>
-                                            <md-select ng-model="opsheet_risk.reviewFrequencyOption" ng-disabled="!canCurrentUserEditMonitoringAndReview(opsheet_risk)">
-                                                <md-option ng-value="null">{{ 'None' | translate }}</md-option>
-                                                <md-option value="Monthly">{{ 'Monthly' | translate }}</md-option>
-                                                <md-option value="Quarterly">{{ 'Quarterly' | translate }}</md-option>
-                                                <md-option value="Semi-annually">{{ 'Semi-annually' | translate }}</md-option>
-                                                <md-option value="Annually">{{ 'Annually' | translate }}</md-option>
-                                                <md-option value="On trigger">{{ 'On trigger' | translate }}</md-option>
-                                                <md-option value="__other__">{{ 'Other' | translate }}</md-option>
+                                        <div layout="row" layout-align="start end" style="min-width: 160px;">
+                                            <md-input-container class="md-block" flex style="margin-bottom: 0;">
+                                                <label translate>Next reassessment date</label>
+                                                <md-datepicker
+                                                    ng-disabled="!canCurrentUserEditMonitoringAndReview(opsheet_risk)"
+                                                    md-hide-icons="calendar"
+                                                    ng-model="opsheet_risk.nextReassessmentDateValue"
+                                                    md-placeholder="{{ 'Next reassessment date' | translate }}">
+                                                </md-datepicker>
+                                            </md-input-container>
+                                        </div>
+                                        <div layout="row" layout-align="start start" ng-style="{'min-width': opsheet_risk.reviewFrequencyOption === '__other__' ? '496px' : '200px'}">
+                                            <md-input-container class="md-block" style="min-width: 200px;">
+                                                <label translate>Review frequency</label>
+                                                <md-select ng-model="opsheet_risk.reviewFrequencyOption" ng-disabled="!canCurrentUserEditMonitoringAndReview(opsheet_risk)">
+                                                    <md-option ng-value="null">{{ 'None' | translate }}</md-option>
+                                                    <md-option value="Monthly">{{ 'Monthly' | translate }}</md-option>
+                                                    <md-option value="Quarterly">{{ 'Quarterly' | translate }}</md-option>
+                                                    <md-option value="Semi-annually">{{ 'Semi-annually' | translate }}</md-option>
+                                                    <md-option value="Annually">{{ 'Annually' | translate }}</md-option>
+                                                    <md-option value="On trigger">{{ 'On trigger' | translate }}</md-option>
+                                                    <md-option value="__other__">{{ 'Other' | translate }}</md-option>
+                                                </md-select>
+                                            </md-input-container>
+                                            <md-input-container class="md-block" style="min-width: 280px;" ng-if="opsheet_risk.reviewFrequencyOption === '__other__'">
+                                                <label translate>Custom review frequency</label>
+                                                <input ng-model="opsheet_risk.reviewFrequencyCustom" ng-disabled="!canCurrentUserEditMonitoringAndReview(opsheet_risk)">
+                                            </md-input-container>
+                                        </div>
+                                    </div>
+                                    <div layout="row" ng-if="opsheet_risk.nextReassessmentDateValue">
+                                        <md-input-container ng-style="getReassessmentTriggerFieldStyle(opsheet_risk.reassessmentTriggerIds)">
+                                            <label translate>Related reassessment trigger criteria</label>
+                                            <md-select ng-model="opsheet_risk.reassessmentTriggerIds" multiple ng-disabled="!canCurrentUserEditMonitoringAndReview(opsheet_risk)">
+                                                <md-option ng-repeat="trigger in reassessmentTriggers" ng-value="trigger.id">{{ trigger.triggerType }}</md-option>
                                             </md-select>
                                         </md-input-container>
                                     </div>
-                                    <md-input-container class="md-block" ng-if="opsheet_risk.reviewFrequencyOption === '__other__'">
-                                        <label translate>Custom review frequency</label>
-                                        <input ng-model="opsheet_risk.reviewFrequencyCustom" ng-disabled="!canCurrentUserEditMonitoringAndReview(opsheet_risk)">
-                                    </md-input-container>
                                 </div>
                             </td>
                         </tr>

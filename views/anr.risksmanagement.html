@@ -24,7 +24,19 @@
             <div class="risks-management-update-panel" flex layout="row" layout-wrap layout-align="start end">
                 <md-input-container class="risks-management-field" ng-if="hasRisksManagementReviewAccess()">
                     <label translate>Last review date</label>
-                    <input type="date" ng-model="risksManagementState.batch.lastReviewDate">
+                    <input type="date" ng-model="risksManagementState.batch.lastReviewDate" ng-change="setDefaultBatchNextReassessmentDate()">
+                </md-input-container>
+
+                <md-input-container class="risks-management-field" ng-if="hasRisksManagementReviewAccess()">
+                    <label translate>Next reassessment date</label>
+                    <input type="date" ng-model="risksManagementState.batch.nextReassessmentDate">
+                </md-input-container>
+
+                <md-input-container class="risks-management-field" ng-if="hasRisksManagementReviewAccess() && risksManagementState.batch.nextReassessmentDate">
+                    <label translate>Related reassessment trigger criteria</label>
+                    <md-select ng-model="risksManagementState.batch.reassessmentTriggerIds" multiple>
+                        <md-option ng-repeat="trigger in risksManagementState.reassessmentTriggers" ng-value="trigger.id">{{ trigger.triggerType }}</md-option>
+                    </md-select>
                 </md-input-container>
 
                 <md-input-container class="risks-management-field" ng-if="hasRisksManagementReviewAccess()">
@@ -90,8 +102,9 @@
         <em>{{ 'No risks available for your linked supervisor roles.' | translate }}</em>
     </div>
 
-    <table class="md-html-table md-html-table-grey big-border-all risk-register-table" ng-if="!risksManagementState.loading && risksManagementState.rows.length > 0">
-        <thead class="big-border-bottom">
+    <div class="risk-table-panel risks-management-table" ng-if="!risksManagementState.loading && risksManagementState.rows.length > 0">
+        <table class="md-html-table md-html-table-grey big-border-all risk-register-table">
+            <thead class="big-border-bottom">
             <tr>
                 <th style="width: 40px;">
                     <md-checkbox aria-label="{{ 'Select all' | translate }}" ng-checked="isAllRisksManagementSelected()" ng-click="toggleAllRisksManagementSelection()"></md-checkbox>
@@ -107,6 +120,7 @@
                 <th translate>Kind of treatment</th>
                 <th translate>Risk owner</th>
                 <th translate>Last review date</th>
+                <th translate>Next reassessment date</th>
                 <th translate>Review frequency</th>
                 <th translate>Residual risk approver</th>
                 <th translate>Residual risk decision</th>
@@ -114,8 +128,8 @@
                 <th translate>Residual risk justification</th>
                 <th translate>Actions</th>
             </tr>
-        </thead>
-        <tbody>
+            </thead>
+            <tbody>
             <tr ng-repeat="risk in getFilteredRisksManagementRows() track by (risk.type + ':' + risk.id)">
                 <td>
                     <md-checkbox aria-label="{{ risk.id }}" ng-model="risksManagementState.selected[getRisksManagementSelectionKey(risk)]"></md-checkbox>
@@ -131,6 +145,7 @@
                 <td>{{ treatmentStr(risk.kindOfMeasure) | translate }}</td>
                 <td>{{ risk.riskOwnerName || '-' }}</td>
                 <td>{{ risk.lastReviewDate || '-' }}</td>
+                <td>{{ risk.nextReassessmentDate || '-' }}</td>
                 <td>{{ risk.reviewFrequency || '-' }}</td>
                 <td>{{ risk.residualApproverName || '-' }}</td>
                 <td>{{ getResidualRiskDecisionLabel(risk.residualRiskDecision) }}</td>
@@ -148,6 +163,7 @@
                     </md-button>
                 </td>
             </tr>
-        </tbody>
-    </table>
+            </tbody>
+        </table>
+    </div>
 </div>

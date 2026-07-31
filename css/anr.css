@@ -2057,6 +2057,10 @@ md-select-menu md-content
     gap: 8px;
 }
 
+.risks-management-table table.risk-register-table thead {
+    background: #f7fafc;
+}
+
 @media (max-width: 1279px) {
     .risks-management-update-panel {
         padding-left: 20px;
