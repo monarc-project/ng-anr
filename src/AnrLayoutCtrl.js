@@ -862,7 +862,7 @@
         'Last review date',
         'Next reassessment date',
         'Review frequency',
-        'Related reassessment trigger criteria',
+        'Trigger criteria',
         'Residual risk approver',
         'Residual risk decision',
         'Residual risk decision date',
@@ -2687,6 +2687,14 @@
         width: width + 'px',
         'max-width': '100%'
       };
+    };
+
+    $scope.getReassessmentTriggerCriteriaLabel = function(reassessmentTriggers) {
+      var labels = (reassessmentTriggers || []).map(function(trigger) {
+        return trigger.triggerType || '';
+      }).filter(Boolean);
+
+      return labels.length > 0 ? labels.join(', ') : '-';
     };
 
     $scope.clearResidualRiskDecisionDate = function(sheet) {

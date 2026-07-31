@@ -34,7 +34,7 @@
                     <input type="date" ng-model="risksManagementState.batch.nextReassessmentDate">
                 </md-input-container>
 
-                <md-input-container class="risks-management-field" ng-if="hasRisksManagementReviewAccess() && risksManagementState.batch.nextReassessmentDate">
+                <md-input-container class="risks-management-field" ng-if="hasRisksManagementReviewAccess()">
                     <label translate>Related reassessment trigger criteria</label>
                     <md-select ng-model="risksManagementState.batch.reassessmentTriggerIds" multiple>
                         <md-option ng-repeat="trigger in risksManagementState.reassessmentTriggers" ng-value="trigger.id">{{ trigger.triggerType }}</md-option>
@@ -131,6 +131,7 @@
                 <th translate>Risk owner</th>
                 <th translate>Last review date</th>
                 <th translate>Next reassessment date</th>
+                <th translate>Trigger criteria</th>
                 <th translate>Review frequency</th>
                 <th translate>Residual risk approver</th>
                 <th translate>Residual risk decision</th>
@@ -156,6 +157,9 @@
                 <td>{{ risk.riskOwnerName || '-' }}</td>
                 <td>{{ risk.lastReviewDate || '-' }}</td>
                 <td>{{ risk.nextReassessmentDate || '-' }}</td>
+                <td ng-attr-title="{{ getReassessmentTriggerCriteriaLabel(risk.reassessmentTriggers) }}">
+                    {{ getReassessmentTriggerCriteriaLabel(risk.reassessmentTriggers) }}
+                </td>
                 <td>{{ risk.reviewFrequency || '-' }}</td>
                 <td>{{ risk.residualApproverName || '-' }}</td>
                 <td>{{ getResidualRiskDecisionLabel(risk.residualRiskDecision) }}</td>
