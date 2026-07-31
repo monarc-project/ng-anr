@@ -4,7 +4,9 @@
             <h3 class="md-title no-margin">{{ 'Risks management' | translate }}</h3>
             <p class="no-margin" ng-if="risksManagementAccess.supervisor">{{ getSupervisorDisplayName(risksManagementAccess.supervisor) }}</p>
         </div>
-        <md-progress-circular md-diameter="24" ng-if="risksManagementState.loading"></md-progress-circular>
+        <div layout="row" layout-align="end center">
+            <md-progress-circular md-diameter="24" ng-if="risksManagementState.loading"></md-progress-circular>
+        </div>
     </div>
 
     <md-card class="md-padding" ng-if="!risksManagementState.loading">
@@ -69,6 +71,14 @@
                 <div class="risks-management-actions" layout="row" layout-align="start center">
                     <md-button ng-click="toggleAllRisksManagementSelection()" ng-disabled="risksManagementState.rows.length === 0">{{ (isAllRisksManagementSelected() ? 'Unselect all' : 'Select all') | translate }}</md-button>
                     <md-button class="md-raised md-primary" ng-click="applyRisksManagementBatchUpdate()" ng-disabled="getSelectedRisksManagementCount() === 0">{{ 'Update' | translate }}</md-button>
+                    <md-button
+                        class="md-icon-button"
+                        ng-click="exportRisksManagementCsv()"
+                        ng-disabled="risksManagementState.rows.length === 0"
+                        aria-label="{{ 'Export' | translate }}">
+                        <md-icon class="md-warn">file_download</md-icon>
+                        <md-tooltip>{{ 'Export' | translate }} (CSV)</md-tooltip>
+                    </md-button>
                 </div>
             </div>
         </div>

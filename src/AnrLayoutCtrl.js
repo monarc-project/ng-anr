@@ -847,6 +847,69 @@
       });
     };
 
+    $scope.exportRisksManagementCsv = function() {
+      var headers = [
+        'ID',
+        'Type',
+        'Asset',
+        'Risk source',
+        'Threat / Operational risk',
+        'Vulnerability / Description',
+        'Current risk',
+        'Residual risk',
+        'Kind of treatment',
+        'Risk owner',
+        'Last review date',
+        'Next reassessment date',
+        'Review frequency',
+        'Related reassessment trigger criteria',
+        'Residual risk approver',
+        'Residual risk decision',
+        'Residual risk decision date',
+        'Residual risk justification'
+      ].map(function(header) {
+        return gettextCatalog.getString(header);
+      });
+      var escapeValue = function(value) {
+        return '"' + String(value === null || value === undefined ? '' : value)
+          .replace(/"/g, '""') + '"';
+      };
+      var rows = $scope.getFilteredRisksManagementRows().map(function(risk) {
+        var reassessmentTriggers = (risk.reassessmentTriggers || []).map(function(trigger) {
+          return trigger.triggerType + (trigger.description ? ' - ' + trigger.description : '');
+        }).join('\n');
+
+        return [
+          risk.id,
+          risk.type === 'information'
+            ? gettextCatalog.getString('Information risks')
+            : gettextCatalog.getString('Operational risks'),
+          risk.assetLabel,
+          risk.riskSourceLabel,
+          risk.primaryLabel,
+          risk.secondaryLabel,
+          risk.currentRiskValue,
+          risk.residualRiskValue,
+          gettextCatalog.getString($scope.treatmentStr(risk.kindOfMeasure)),
+          risk.riskOwnerName,
+          risk.lastReviewDate,
+          risk.nextReassessmentDate,
+          risk.reviewFrequency,
+          reassessmentTriggers,
+          risk.residualApproverName,
+          $scope.getResidualRiskDecisionLabel(risk.residualRiskDecision),
+          risk.residualRiskDecidedAt,
+          risk.residualRiskJustification
+        ].map(escapeValue).join(';');
+      });
+
+      DownloadService.downloadCSV(
+        [headers.map(escapeValue).join(';')].concat(rows).join('\r\n'),
+        'risks_management.csv',
+        'text/csv; charset=utf-8'
+      );
+    };
+
     if ($scope.OFFICE_MODE == 'FO') {
       $http.get('api/user/profile').then(function(response) {
         $scope.currentUserProfile = response.data || response;
