@@ -168,6 +168,86 @@
       return decision === 'rejected' || decision === 'not_accepted';
     };
 
+    $scope.getAnalysisReviewDueDate = function(anr) {
+      if (!anr || !anr.reassessmentLastReviewDate || !anr.reassessmentReviewFrequency) {
+        return null;
+      }
+
+      var dateParts = String(anr.reassessmentLastReviewDate).slice(0, 10).split('-');
+      if (dateParts.length !== 3) {
+        return null;
+      }
+
+      var lastReviewDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+      if (isNaN(lastReviewDate.getTime())) {
+        return null;
+      }
+
+      var monthsByFrequency = {
+        'Monthly': 1,
+        'Quarterly': 3,
+        'Semi-annually': 6,
+        'Annually': 12
+      };
+      var months = monthsByFrequency[anr.reassessmentReviewFrequency];
+      if (!months) {
+        return null;
+      }
+
+      var dueDate = new Date(lastReviewDate.getFullYear(), lastReviewDate.getMonth() + months, 1);
+      var lastDayOfDueMonth = new Date(dueDate.getFullYear(), dueDate.getMonth() + 1, 0).getDate();
+      dueDate.setDate(Math.min(lastReviewDate.getDate(), lastDayOfDueMonth));
+
+      return dueDate;
+    };
+
+    $scope.isAnalysisReviewOverdue = function(anr) {
+      var dueDate = $scope.getAnalysisReviewDueDate(anr);
+      if (!dueDate) {
+        return false;
+      }
+
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      return today > dueDate;
+    };
+
+    $scope.getAnalysisReviewOverdueTooltip = function(anr) {
+      return gettextCatalog.getString(
+        'This risk analysis requires attention. The last review date was {{date}}.',
+        {date: anr.reassessmentLastReviewDate}
+      );
+    };
+
+    $scope.isRiskReassessmentOverdue = function(risk) {
+      if (!risk || !risk.nextReassessmentDate) {
+        return false;
+      }
+
+      var dateParts = String(risk.nextReassessmentDate).slice(0, 10).split('-');
+      if (dateParts.length !== 3) {
+        return false;
+      }
+
+      var nextReassessmentDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+      if (isNaN(nextReassessmentDate.getTime())) {
+        return false;
+      }
+
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      return today > nextReassessmentDate;
+    };
+
+    $scope.getRiskReassessmentOverdueTooltip = function(risk) {
+      return gettextCatalog.getString(
+        'This risk requires attention. The next reassessment date was {{date}}.',
+        {date: risk.nextReassessmentDate}
+      );
+    };
+
     $scope.getResidualRiskDecisionLabel = function(decision) {
       switch (decision) {
         case 'accepted':
@@ -2714,8 +2794,8 @@
 
       $mdDialog.show({
         controller: [
-          '$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'ReassessmentTriggerService',
-          'isAnrReadOnly', ReassessmentTriggersDialog
+          '$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'ReassessmentTriggerService', 'ClientAnrService',
+          'anr', 'isAnrReadOnly', ReassessmentTriggersDialog
         ],
         templateUrl: 'views/anr/reassessment-triggers.html',
         targetEvent: ev,
@@ -2725,6 +2805,8 @@
         fullscreen: useFullScreen,
         locals: {
           ReassessmentTriggerService: ReassessmentTriggerService,
+          ClientAnrService: $injector.get('ClientAnrService'),
+          anr: $scope.model.anr,
           isAnrReadOnly: $scope.isAnrReadOnly
         }
       }).then(function() {
@@ -5414,9 +5496,38 @@
     toastr,
     gettextCatalog,
     ReassessmentTriggerService,
+    ClientAnrService,
+    anr,
     isAnrReadOnly
   ) {
     var otherTriggerOptionId = '__other__';
+    var parseDateValue = function(dateValue) {
+      if (!dateValue) {
+        return null;
+      }
+
+      var parts = String(dateValue).slice(0, 10).split('-');
+      if (parts.length !== 3) {
+        return null;
+      }
+
+      var date = new Date(parts[0], parts[1] - 1, parts[2]);
+      return isNaN(date.getTime()) ? null : date;
+    };
+    var formatDateValue = function(dateValue) {
+      if (!dateValue) {
+        return null;
+      }
+
+      var date = new Date(dateValue);
+      if (isNaN(date.getTime())) {
+        return null;
+      }
+
+      return date.getFullYear() + '-'
+        + String(date.getMonth() + 1).padStart(2, '0') + '-'
+        + String(date.getDate()).padStart(2, '0');
+    };
     $scope.isAnrReadOnly = isAnrReadOnly;
     $scope.dialog = {
       items: [],
@@ -5424,6 +5535,11 @@
       loading: true,
       saving: false,
       editingId: null,
+      reviewSettingsSaving: false,
+      reviewSettings: {
+        lastReviewDate: parseDateValue(anr.reassessmentLastReviewDate),
+        reviewFrequency: anr.reassessmentReviewFrequency || 'Annually'
+      },
       form: {
         selectedTriggerId: null,
         triggerType: '',
@@ -5477,6 +5593,26 @@
         monitoringApproach: '',
         isActive: true
       };
+    };
+
+    $scope.saveReassessmentReviewSettings = function() {
+      if ($scope.isAnrReadOnly || $scope.dialog.reviewSettingsSaving) {
+        return;
+      }
+
+      $scope.dialog.reviewSettingsSaving = true;
+      var lastReviewDate = formatDateValue($scope.dialog.reviewSettings.lastReviewDate);
+      ClientAnrService.patchAnr(anr.id, {
+        reassessmentLastReviewDate: lastReviewDate,
+        reassessmentReviewFrequency: $scope.dialog.reviewSettings.reviewFrequency
+      }, function() {
+        anr.reassessmentLastReviewDate = lastReviewDate;
+        anr.reassessmentReviewFrequency = $scope.dialog.reviewSettings.reviewFrequency;
+        toastr.success(gettextCatalog.getString('The reassessment review settings have been updated.'));
+        $scope.dialog.reviewSettingsSaving = false;
+      }, function() {
+        $scope.dialog.reviewSettingsSaving = false;
+      });
     };
 
     $scope.editReassessmentTrigger = function(trigger) {
