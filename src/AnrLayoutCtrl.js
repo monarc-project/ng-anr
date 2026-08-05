@@ -2256,6 +2256,7 @@
         sheet.riskSourceId = response.riskSourceId;
         sheet.riskSourceLabel = response.riskSourceLabel;
         sheet.lastReviewDate = response.lastReviewDate;
+        sheet.nextReassessmentDate = response.nextReassessmentDate;
         sheet.reviewFrequency = response.reviewFrequency;
         $scope.applyResidualRiskDecisionResponse(sheet, response);
         $scope.initializeRiskOwnerSelection(sheet);
@@ -2279,6 +2280,7 @@
         payload.riskOwnerSupervisorId = sheet.riskOwnerSupervisorId;
       }
       payload.lastReviewDate = $scope.formatDateValue(sheet.lastReviewDateValue);
+      payload.nextReassessmentDate = $scope.formatDateValue(sheet.nextReassessmentDateValue);
       payload.reviewFrequency = $scope.buildReviewFrequencyValue(sheet);
       angular.extend(payload, $scope.buildResidualAcceptancePayload(sheet));
       delete payload.owner;
@@ -2286,6 +2288,7 @@
       delete payload.ownerSupervisorSelection;
       delete payload.riskOwnerSupervisor;
       delete payload.lastReviewDateValue;
+      delete payload.nextReassessmentDateValue;
       delete payload.residualRiskDecidedAtValue;
       delete payload.residualAcceptanceApproverSupervisor;
       delete payload.residualAcceptanceApproverSupervisorSelection;
