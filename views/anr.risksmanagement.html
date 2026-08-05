@@ -146,10 +146,12 @@
                     <md-checkbox aria-label="{{ risk.id }}" ng-model="risksManagementState.selected[getRisksManagementSelectionKey(risk)]"></md-checkbox>
                 </td>
                 <td>
-                    {{ risk.id }}
-                    <md-icon ng-if="isRiskReassessmentOverdue(risk)" aria-label="{{ getRiskReassessmentOverdueTooltip(risk) }}" style="color: #f57c00; font-size: 18px; vertical-align: middle; margin-left: 4px; cursor: default;">warning
-                        <md-tooltip md-direction="top">{{ getRiskReassessmentOverdueTooltip(risk) }}</md-tooltip>
-                    </md-icon>
+                    <span class="risk-id-with-reassessment-warning">
+                        <md-icon ng-if="isRiskReassessmentOverdue(risk)" aria-label="{{ getRiskReassessmentOverdueTooltip(risk) }}" style="color: #f57c00; font-size: 18px; margin-right: 4px; cursor: default;">warning
+                            <md-tooltip md-direction="top">{{ getRiskReassessmentOverdueTooltip(risk) }}</md-tooltip>
+                        </md-icon>
+                        <span>{{ risk.id }}</span>
+                    </span>
                 </td>
                 <td>{{ risk.type === 'information' ? ('Information risks' | translate) : ('Operational risks' | translate) }}</td>
                 <td>{{ risk.assetLabel }}</td>

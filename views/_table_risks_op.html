@@ -121,10 +121,12 @@
       <tbody>
       <tr ng-repeat="risk in oprisks" edit-model="risk" ng-class="{'specific-blue': risk.specific == 1}">
           <td title="{{risk.id}}">
-              {{risk.id}}
-              <md-icon ng-if="isRiskReassessmentOverdue(risk)" aria-label="{{ getRiskReassessmentOverdueTooltip(risk) }}" style="color: #f57c00; font-size: 18px; vertical-align: middle; margin-left: 4px; cursor: default;">warning
-                  <md-tooltip md-direction="top">{{ getRiskReassessmentOverdueTooltip(risk) }}</md-tooltip>
-              </md-icon>
+              <span class="risk-id-with-reassessment-warning">
+                  <md-icon ng-if="isRiskReassessmentOverdue(risk)" aria-label="{{ getRiskReassessmentOverdueTooltip(risk) }}" style="color: #f57c00; font-size: 18px; margin-right: 4px; cursor: default;">warning
+                      <md-tooltip md-direction="top">{{ getRiskReassessmentOverdueTooltip(risk) }}</md-tooltip>
+                  </md-icon>
+                  <span>{{risk.id}}</span>
+              </span>
           </td>
           <td class="preserve-newlines" title="{{instanceCache[risk.instanceInfos.id].completePath}}">{{ instmode == 'obj' ? _langField(object,'name') : _langField(risk.instanceInfos,'name') }}</td>
           <td>{{ risk.riskSourceLabel || '-' }}</td>

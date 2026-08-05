@@ -2023,6 +2023,37 @@ md-select-menu md-content
     font-size: 10px;
 }
 
+.analysis-review-warning {
+    color: #f57c00 !important;
+    cursor: default;
+    display: inline-block;
+    font-size: 18px;
+    margin-left: 4px;
+    vertical-align: middle;
+}
+
+.analysis-review-warning-button {
+    height: 24px;
+    line-height: 24px;
+    margin: 0 0 0 4px;
+    min-height: 24px;
+    min-width: 24px;
+    overflow: visible;
+    padding: 0;
+    vertical-align: middle;
+    width: 24px;
+}
+
+.analysis-review-warning-button .analysis-review-warning {
+    margin-left: 0;
+}
+
+.risk-id-with-reassessment-warning {
+    align-items: center;
+    display: inline-flex;
+    white-space: nowrap;
+}
+
 .risks-management-toolbar {
     gap: 24px;
 }
