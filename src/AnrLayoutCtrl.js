@@ -1101,7 +1101,7 @@
 
     $scope.updateModel = function(justCore, cb) {
       isModelLoading = true;
-      let defaultLanguageIndex = UserService.getUiLanguage();
+      let defaultLanguageIndex = UserService.getDataLanguage();
       if ($scope.OFFICE_MODE == 'BO') {
         ModelService.getModel($stateParams.modelId).then(function(data) {
           $scope.model = data;
