@@ -1734,7 +1734,8 @@
         [
           'riskOwnerSupervisor',
           'residualAcceptanceApproverSupervisor',
-          'residualAcceptanceApproverSupervisorSelection'
+          'residualAcceptanceApproverSupervisorSelection',
+          'ownerSupervisorSelection'
         ].forEach(function(field) {
           if (sheet[field] && sheet[field].linkedUser && sheet[field].linkedUser.id == linkedUser.id) {
             sheet[field].linkedUser = angular.copy(linkedUser);
@@ -1742,6 +1743,44 @@
         });
       });
     }
+
+    function updateSupervisorReferences(supervisor) {
+      if (!supervisor || !supervisor.id) {
+        return;
+      }
+
+      [$scope.sheet_risk, $scope.opsheet_risk].forEach(function(sheet) {
+        if (!sheet) {
+          return;
+        }
+
+        [
+          'riskOwnerSupervisor',
+          'residualAcceptanceApproverSupervisor',
+          'residualAcceptanceApproverSupervisorSelection',
+          'ownerSupervisorSelection'
+        ].forEach(function(field) {
+          if (sheet[field] && String(sheet[field].id) === String(supervisor.id)) {
+            sheet[field] = angular.copy(supervisor);
+          }
+        });
+
+        if (String(sheet.riskOwnerSupervisorId || '') === String(supervisor.id)) {
+          sheet.riskOwnerSupervisorName = supervisor.name || '';
+          sheet.owner = supervisor.name || '';
+          sheet.ownerSearchText = supervisor.name || '';
+        }
+        if (String(sheet.residualAcceptanceApproverSupervisorId || '') === String(supervisor.id)) {
+          sheet.residualAcceptanceApproverSearchText = supervisor.name || '';
+        }
+      });
+    }
+
+    $rootScope.$on('supervisor-updated', function(event, supervisor) {
+      updateSupervisorReferences(supervisor);
+      $scope.updateAnrRisksTable();
+      $scope.updateAnrRisksOpTable();
+    });
 
     $scope.openLinkedUserAccount = function(linkedUserId, ev) {
       if (!linkedUserId || !$scope.canManageSupervisorLinkedUsers()) {
@@ -2783,7 +2822,7 @@
 
       $mdDialog.show({
         controller: [
-          '$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'AnrService', 'anr', 'isAnrReadOnly',
+          '$scope', '$mdDialog', '$rootScope', 'toastr', 'gettextCatalog', 'AnrService', 'anr', 'isAnrReadOnly',
           'canManageLinkedUsers', 'initialRole',
           SupervisorsDialog
         ],
@@ -6679,6 +6718,7 @@
   function SupervisorsDialog(
     $scope,
     $mdDialog,
+    $rootScope,
     toastr,
     gettextCatalog,
     AnrService,
@@ -6755,7 +6795,8 @@
       }
 
       return AnrService.getAnrSupervisors($scope.anr.id, {
-        userFilter: (query || '').trim()
+        userFilter: (query || '').trim(),
+        excludeSupervisorId: $scope.form.id || null
       }).then(function(data) {
         return data.users || [];
       });
@@ -6864,14 +6905,36 @@
         return;
       }
 
+      var linkedUserChanged = $scope.form.id
+        && String($scope.form.originalLinkedUserId || '') !== String(payload.linkedUserId || '');
+      if (linkedUserChanged && $scope.form.hasAssignedRisks) {
+        var confirm = $mdDialog.confirm()
+          .title(gettextCatalog.getString(
+            'Changing the linked user will update the supervisor assigned to risks. Continue?'
+          ))
+          .multiple(true)
+          .ok(gettextCatalog.getString('Confirm?'))
+          .cancel(gettextCatalog.getString('Cancel'));
+
+        $mdDialog.show(confirm).then(function() {
+          $scope.persistSupervisor(payload);
+        });
+        return;
+      }
+
+      $scope.persistSupervisor(payload);
+    };
+
+    $scope.persistSupervisor = function(payload) {
       $scope.saving = true;
       var action = $scope.form.id ? AnrService.updateAnrSupervisor : AnrService.createAnrSupervisor;
       var args = $scope.form.id
         ? [$scope.anr.id, $scope.form.id, payload]
         : [$scope.anr.id, payload];
 
-      args.push(function() {
+      args.push(function(supervisor) {
         toastr.success(gettextCatalog.getString('Supervisor saved'));
+        $rootScope.$broadcast('supervisor-updated', supervisor);
         $scope.resetForm();
         $scope.loadSupervisors();
         $scope.saving = false;
@@ -6913,6 +6976,8 @@
           residual_risk_approver: (supervisor.roles || []).indexOf('residual_risk_approver') !== -1
         },
         linkedUser: supervisor.linkedUser || null,
+        originalLinkedUserId: supervisor.linkedUserId || null,
+        hasAssignedRisks: !!supervisor.hasAssignedRisks,
         linkedUserSearchText: supervisor.linkedUser
           ? ((supervisor.linkedUser.firstname || '') + ' ' + (supervisor.linkedUser.lastname || '')).trim()
           : ''
