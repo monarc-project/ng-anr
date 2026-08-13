@@ -14,11 +14,11 @@
                 <div style="border-bottom: 1px solid #e0e0e0; padding-bottom: 8px;">
                     <div class="md-subhead" translate>Monitoring and review</div>
                     <div layout="row" layout-wrap layout-gap="16">
-                        <md-input-container flex="40" flex-xs="100">
+                        <md-input-container style="width: 140px; min-width: 140px;" flex-xs="100">
                             <label translate>Last review date</label>
                             <input type="date" ng-model="dialog.reviewSettings.lastReviewDate" ng-disabled="isAnrReadOnly || dialog.reviewSettingsSaving">
                         </md-input-container>
-                        <md-input-container flex="40" flex-xs="100">
+                        <md-input-container style="width: 200px; min-width: 200px;" flex-xs="100">
                             <label translate>Review frequency</label>
                             <md-select ng-model="dialog.reviewSettings.reviewFrequency" ng-disabled="isAnrReadOnly || dialog.reviewSettingsSaving">
                                 <md-option value="Annually" translate>Annually</md-option>
