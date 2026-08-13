@@ -31,7 +31,7 @@
                 </span>
                 <md-button
                     class="md-primary md-raised anr-assignments-panel-action"
-                    ng-if="getCurrentUserAssignmentsTotal() > 0"
+                    ng-if="isRiskAnalysisView() && getCurrentUserAssignmentsTotal() > 0"
                     ng-click="openCurrentUserRisksManagement()">
                     {{ 'Manage my risks' | translate }}
                 </md-button>

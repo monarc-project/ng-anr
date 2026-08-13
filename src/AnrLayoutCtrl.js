@@ -342,6 +342,10 @@
       return Number((anr && anr.ownedRisksCount) || 0) + Number((anr && anr.approvalRisksCount) || 0);
     };
 
+    $scope.isRiskAnalysisView = function() {
+      return $state.current.name === 'main.project.anr';
+    };
+
     $scope.openCurrentUserRisksManagement = function() {
       if (!$scope.model || !$scope.model.anr || $scope.getCurrentUserAssignmentsTotal() <= 0) {
         return;
