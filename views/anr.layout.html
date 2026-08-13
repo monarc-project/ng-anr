@@ -19,7 +19,7 @@
 
         <md-card class="main-card">
             <div ng-include="'views/anr/_anr.infosnapshot.html'"></div>
-            <div class="anr-assignments-panel" layout="row" layout-align="start center" ng-if="hasCurrentUserAssignmentsPanel()">
+            <div class="anr-assignments-panel" layout="row" layout-align="start center" ng-if="isRiskAnalysisView() && hasCurrentUserAssignmentsPanel()">
                 <span class="anr-assignments-panel-label">
                     {{ 'My assignments' | translate }}:
                 </span>

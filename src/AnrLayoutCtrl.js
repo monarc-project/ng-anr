@@ -1780,7 +1780,11 @@
       });
     }
 
-    $rootScope.$on('supervisor-updated', function(event, supervisor) {
+    $rootScope.$on('supervisor-updated', function(event, anrId, supervisor) {
+      if (!$scope.model || !$scope.model.anr || String($scope.model.anr.id) !== String(anrId)) {
+        return;
+      }
+
       updateSupervisorReferences(supervisor);
       $scope.updateAnrRisksTable();
       $scope.updateAnrRisksOpTable();
@@ -6938,7 +6942,7 @@
 
       args.push(function(supervisor) {
         toastr.success(gettextCatalog.getString('Supervisor saved'));
-        $rootScope.$broadcast('supervisor-updated', supervisor);
+        $rootScope.$broadcast('supervisor-updated', $scope.anr.id, supervisor);
         $scope.resetForm();
         $scope.loadSupervisors();
         $scope.saving = false;
