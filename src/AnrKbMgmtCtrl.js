@@ -1065,8 +1065,13 @@
 			}
 
 			$mdDialog.show(prompt.multiple(true)).then(function(label) {
+				var trimmedLabel = (label || '').trim();
+				if (!trimmedLabel) {
+					toastr.error(gettextCatalog.getString('Risk source label is required.'), gettextCatalog.getString('Validation error'));
+					return;
+				}
 				var payload = {
-					label: label.trim()
+					label: trimmedLabel
 				};
 
 				if (riskSource) {

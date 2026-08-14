@@ -63,7 +63,7 @@
                         <md-button ng-if="form.id" ng-click="resetForm()" ng-disabled="saving">
                             {{ 'Cancel edition' | translate }}
                         </md-button>
-                        <md-button class="md-primary" ng-click="saveSupervisor()" ng-disabled="isAnrReadOnly || saving || !form.name.trim()">
+                        <md-button class="md-primary" ng-click="saveSupervisor()" ng-disabled="isAnrReadOnly || saving || !form.name || !form.name.trim()">
                             <span ng-if="form.id" translate>Save</span>
                             <span ng-if="!form.id" translate>Add supervisor</span>
                         </md-button>
