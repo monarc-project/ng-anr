@@ -12,7 +12,7 @@
         var makeResource = function () {
             self.RecordResource = $resource('api/' + anr + 'records/:RecordId', {
                 RecordId: '@id',
-                urlAnrId: $rootScope.getUrlAnrId()
+                urlAnrId: function () { return $rootScope.getUrlAnrId(); }
             },
             {
                 'update': {
@@ -27,7 +27,7 @@
             });
             self.RecordActorResource = $resource('api/' + anr + 'record-actors/:RecordActorId', {
                 RecordActorId: '@id',
-                urlAnrId: $rootScope.getUrlAnrId()
+                urlAnrId: function () { return $rootScope.getUrlAnrId(); }
             },
             {
                 'update': {
@@ -41,7 +41,7 @@
                 }
             });
             self.RecordDataCategoryResource = $resource('api/' + anr + 'record-data-categories', {
-                urlAnrId: $rootScope.getUrlAnrId()
+                urlAnrId: function () { return $rootScope.getUrlAnrId(); }
             },
             {
                 'query': {
@@ -50,7 +50,7 @@
             });
             self.RecordPersonalDataResource = $resource('api/' + anr + 'record-personal-data/:RecordPersonalDataId', {
                 RecordPersonalDataId: '@id',
-                urlAnrId: $rootScope.getUrlAnrId()
+                urlAnrId: function () { return $rootScope.getUrlAnrId(); }
             },
             {
                 'update': {
@@ -65,7 +65,7 @@
             });
             self.RecordProcessorResource = $resource('api/' + anr + 'record-processors/:RecordProcessorId', {
                 RecordProcessorId: '@id',
-                urlAnrId: $rootScope.getUrlAnrId()
+                urlAnrId: function () { return $rootScope.getUrlAnrId(); }
             },
             {
                 'update': {
@@ -80,7 +80,7 @@
             });
             self.RecordRecipientResource = $resource('api/' + anr + 'record-recipients/:RecordRecipientId', {
                 RecordRecipientId: '@id',
-                urlAnrId: $rootScope.getUrlAnrId()
+                urlAnrId: function () { return $rootScope.getUrlAnrId(); }
             },
             {
                 'update': {
@@ -95,7 +95,7 @@
             });
             self.RecordInternationalTransferResource = $resource('api/' + anr + 'record-international-transfers/:RecordInternationalTransferId', {
                 RecordInternationalTransferId: '@id',
-                urlAnrId: $rootScope.getUrlAnrId()
+                urlAnrId: function () { return $rootScope.getUrlAnrId(); }
             },
             {
                 'update': {
@@ -109,7 +109,7 @@
                 }
             });
             self.RecordDuplicateResource = $resource('api/' + anr + 'records/duplicate', {
-                urlAnrId: $rootScope.getUrlAnrId()
+                urlAnrId: function () { return $rootScope.getUrlAnrId(); }
             },
             {
                 'update': {

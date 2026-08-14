@@ -19,13 +19,33 @@
 
         <md-card class="main-card">
             <div ng-include="'views/anr/_anr.infosnapshot.html'"></div>
+            <div class="anr-assignments-panel" layout="row" layout-align="start center" ng-if="isRiskAnalysisView() && hasCurrentUserAssignmentsPanel()">
+                <span class="anr-assignments-panel-label">
+                    {{ 'My assignments' | translate }}:
+                </span>
+                <span class="anr-assignments-panel-badge" ng-if="getCurrentUserAssignmentsTotal() > 0">
+                    {{ model.anr.ownedRisksCount }} {{ 'owned' | translate }} / {{ model.anr.approvalRisksCount }} {{ 'approvals' | translate }}
+                </span>
+                <span class="anr-assignments-panel-empty" ng-if="getCurrentUserAssignmentsTotal() === 0">
+                    {{ 'No assigned risks' | translate }}
+                </span>
+                <md-button
+                    class="md-primary md-raised anr-assignments-panel-action"
+                    ng-if="isRiskAnalysisView() && getCurrentUserAssignmentsTotal() > 0"
+                    ng-click="openCurrentUserRisksManagement()">
+                    {{ 'Manage my risks' | translate }}
+                </md-button>
+            </div>
             <md-menu md-position-mode="target-right target">
-                <md-button class="anr-tools-button" title="{{ 'Tools' | translate }}" ng-click="openAnrToolsMenu($mdMenu.open, $event)" ng-disabled="updatingANR">
+                <md-button class="anr-tools-button anr-menu-button anr-menu-button-global" title="{{ 'Tools' | translate }}" ng-click="openAnrToolsMenu($mdMenu.open, $event)" ng-disabled="updatingANR">
                     <md-icon md-menu-origin>more_vert</md-icon>
                 </md-button>
                 <md-menu-content width="4" class="anr-menu">
                     <md-menu-item>
                         <md-button ng-click="display.anrSelectedTabIndex = 0; updateInstances(); updateObjectsLibrary();" ui-sref="main.project.anr({modelId: model.anr.id})">{{ 'Risk analysis' | translate }}</md-button>
+                    </md-menu-item>
+                    <md-menu-item ng-if="OFFICE_MODE == 'FO' && risksManagementAccess.visible">
+                        <md-button ui-sref="main.project.anr.risksmanagement({modelId: model.anr.id})">{{ 'Risks management' | translate }}</md-button>
                     </md-menu-item>
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">
                         <md-button ng-click="display.anrSelectedTabIndex = 1;">{{ 'Dashboard' | translate }}</md-button>
@@ -38,6 +58,9 @@
                     </md-menu-item>
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">
                         <md-button ng-click="openInterviewTools($event)">{{ 'Interviews table' | translate }}</md-button>
+                    </md-menu-item>
+                    <md-menu-item ng-if="OFFICE_MODE == 'FO'">
+                        <md-button ng-click="openSupervisorsDialog($event)" ng-disabled="isAnrReadOnly">{{ 'Supervisors' | translate }}</md-button>
                     </md-menu-item>
                     <md-menu-item ng-if="OFFICE_MODE == 'FO'">
                         <md-button ng-click="display.anrSelectedTabIndex = 4;">{{ 'Record of processing activities' | translate }}</md-button>

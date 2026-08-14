@@ -6,7 +6,8 @@
       '$scope', 'toastr', '$http', '$q', '$mdMedia', '$mdDialog', '$timeout', 'gettextCatalog', 'gettext', 'TableHelperService',
       'ModelService', 'ObjlibService', 'AnrService', '$stateParams', '$rootScope', '$location', '$state', 'ToolsAnrService',
       '$transitions', 'DownloadService', '$mdPanel', '$injector', 'ConfigService', 'ClientRecommendationService',
-      'ReferentialService', 'AmvService', 'RiskService', 'SoaScaleCommentService', 'UserService', AnrLayoutCtrl
+      'ReferentialService', 'AmvService', 'RiskService', 'RiskSourceService', 'InterestedPartyService', 'ReassessmentTriggerService', 'AnalysisReviewService',
+      'SoaScaleCommentService', 'UserService', AnrLayoutCtrl
     ]);
 
   /**
@@ -15,7 +16,8 @@
   function AnrLayoutCtrl($scope, toastr, $http, $q, $mdMedia, $mdDialog, $timeout, gettextCatalog, gettext, TableHelperService, ModelService,
     ObjlibService, AnrService, $stateParams, $rootScope, $location, $state, ToolsAnrService,
     $transitions, DownloadService, $mdPanel, $injector, ConfigService, ClientRecommendationService,
-    ReferentialService, AmvService, RiskService, SoaScaleCommentService, UserService) {
+    ReferentialService, AmvService, RiskService, RiskSourceService, InterestedPartyService, ReassessmentTriggerService, AnalysisReviewService,
+    SoaScaleCommentService, UserService) {
 
 
     if ($scope.OFFICE_MODE == 'FO') {
@@ -75,6 +77,49 @@
     }
 
     var self = this;
+    var reviewFrequencyValues = [
+      'Monthly',
+      'Quarterly',
+      'Semi-annually',
+      'Annually',
+      'On trigger'
+    ];
+    var reviewFrequencyOtherValue = '__other__';
+    var historyTargetTypes = {
+      informationRisk: 1,
+      operationalRisk: 2
+    };
+    $scope.historyChangeTypeOptions = [{
+      value: 0,
+      label: 'All changes'
+    }, {
+      value: 1,
+      label: 'Risk created'
+    }, {
+      value: 10,
+      label: 'Field changes'
+    }, {
+      value: 20,
+      label: 'Recommendation linked'
+    }, {
+      value: 21,
+      label: 'Recommendation unlinked'
+    }, {
+      value: 30,
+      label: 'Consequence created'
+    }, {
+      value: 31,
+      label: 'Consequence updated'
+    }, {
+      value: 32,
+      label: 'Consequence deleted'
+    }, {
+      value: 33,
+      label: 'Impact scale update'
+    }, {
+      value: 40,
+      label: 'Residual acceptance updated'
+    }];
 
     $scope.ToolsAnrService = ToolsAnrService;
     $scope.GlobalResizeMenuSize = 230;
@@ -82,19 +127,845 @@
     var minWidthMenu = 80;
     var isModelLoading = false;
     var __panel = null;
+    $scope.riskSources = [];
+    $scope.reassessmentTriggers = [];
+    var reassessmentTriggersLoaded = false;
+    $scope.currentUserProfile = null;
+    $scope.reviewFrequencyValues = reviewFrequencyValues;
+    $scope.risksManagementAccess = {
+      visible: false,
+      supervisor: null,
+      hasRiskOwnerRole: false,
+      hasResidualRiskApproverRole: false
+    };
+    $scope.risksManagementState = {
+      loading: false,
+      rows: [],
+      result: null,
+      selected: {},
+      decisionFilter: 'all',
+      batch: {
+        lastReviewDate: null,
+        nextReassessmentDate: null,
+        reassessmentTriggerIds: [],
+        reviewFrequency: null,
+        residualRiskDecision: null,
+        residualRiskDecidedAt: null,
+        residualRiskJustification: ''
+      }
+    };
+    $scope.riskSheetNavigationContext = {
+      source: null,
+      items: [],
+      index: -1
+    };
+
+    $scope.canManageSupervisorLinkedUsers = function() {
+      return $scope.OFFICE_MODE == 'FO' && UserService.isAllowed('superadminfo');
+    };
+
+    $scope.isResidualRiskNotAccepted = function(decision) {
+      return decision === 'rejected' || decision === 'not_accepted';
+    };
+
+    $scope.getAnalysisReviewDueDate = AnalysisReviewService.getDueDate;
+    $scope.isAnalysisReviewOverdue = AnalysisReviewService.isOverdue;
+    $scope.getAnalysisReviewOverdueTooltip = AnalysisReviewService.getOverdueTooltip;
+
+    $scope.isRiskReassessmentOverdue = function(risk) {
+      if (!risk || !risk.nextReassessmentDate) {
+        return false;
+      }
+
+      var dateParts = String(risk.nextReassessmentDate).slice(0, 10).split('-');
+      if (dateParts.length !== 3) {
+        return false;
+      }
+
+      var nextReassessmentDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+      if (isNaN(nextReassessmentDate.getTime())) {
+        return false;
+      }
+
+      var today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      return today > nextReassessmentDate;
+    };
+
+    $scope.getRiskReassessmentOverdueTooltip = function(risk) {
+      return gettextCatalog.getString(
+        'This risk requires attention. The next reassessment date was {{date}}.',
+        {date: risk.nextReassessmentDate}
+      );
+    };
+
+    $scope.getResidualRiskDecisionLabel = function(decision) {
+      switch (decision) {
+        case 'accepted':
+          return gettextCatalog.getString('Accepted');
+        case 'rejected':
+        case 'not_accepted':
+          return gettextCatalog.getString('Not accepted');
+        default:
+          return gettextCatalog.getString('Pending');
+      }
+    };
+
+    $scope.getSupervisorDisplayName = function(supervisor) {
+      if (!supervisor) {
+        return '';
+      }
+
+      return supervisor.name || '';
+    };
+
+    $scope.isResidualRiskApprover = function(supervisor) {
+      return !!(supervisor
+        && supervisor.isActive !== false
+        && (supervisor.roles || []).indexOf('residual_risk_approver') !== -1);
+    };
+
+    $scope.canUseRiskOwnerAsResidualApprover = function(sheet) {
+      return !!(sheet
+        && sheet.riskOwnerSupervisor
+        && $scope.isResidualRiskApprover(sheet.riskOwnerSupervisor));
+    };
+
+    $scope.hasResidualRiskOwnerSelection = function(sheet) {
+      return !!(sheet && sheet.riskOwnerSupervisorId);
+    };
+
+    $scope.isResidualAcceptancePanelDisabled = function(sheet) {
+      return !$scope.hasResidualRiskOwnerSelection(sheet);
+    };
+
+    $scope.getEffectiveResidualApprover = function(sheet) {
+      if (!sheet || $scope.isResidualAcceptancePanelDisabled(sheet)) {
+        return null;
+      }
+
+      if (sheet.residualAcceptanceUseRiskOwner) {
+        return $scope.canUseRiskOwnerAsResidualApprover(sheet) ? sheet.riskOwnerSupervisor : null;
+      }
+
+      return sheet.residualAcceptanceApproverSupervisorSelection
+        || sheet.residualAcceptanceApproverSupervisor
+        || null;
+    };
+
+    $scope.canCurrentUserDecideResidualRisk = function(sheet) {
+      var approver = $scope.getEffectiveResidualApprover(sheet);
+      if (!approver) {
+        return false;
+      }
+
+      if (!$scope.isAnrReadOnly && (!approver.linkedUser || !approver.linkedUser.id)) {
+        return true;
+      }
+
+      return !!(approver.linkedUser && $scope.isCurrentUserLinkedResidualApprover(approver.linkedUser));
+    };
+
+    $scope.isCurrentUserLinkedResidualApprover = function(linkedUser) {
+      if (!linkedUser) {
+        return false;
+      }
+
+      var currentUserId = parseInt(($scope.currentUserProfile && $scope.currentUserProfile.id) || UserService.getUserId(), 10);
+      var linkedUserId = parseInt(linkedUser.id, 10);
+      if (!isNaN(currentUserId) && !isNaN(linkedUserId) && currentUserId === linkedUserId) {
+        return true;
+      }
+
+      var currentUserEmail = (($scope.currentUserProfile && $scope.currentUserProfile.email) || '').trim().toLowerCase();
+      var linkedUserEmail = ((linkedUser.email || '') + '').trim().toLowerCase();
+
+      return !!currentUserEmail && currentUserEmail === linkedUserEmail;
+    };
+
+    $scope.getCurrentRisksManagementSupervisor = function(supervisors) {
+      if (!angular.isArray(supervisors)) {
+        return null;
+      }
+
+      for (var i = 0; i < supervisors.length; ++i) {
+        var supervisor = supervisors[i];
+        if (!supervisor || supervisor.isActive === false || !supervisor.linkedUser) {
+          continue;
+        }
+
+        if (!$scope.isCurrentUserLinkedResidualApprover(supervisor.linkedUser)) {
+          continue;
+        }
+
+        if ((supervisor.roles || []).indexOf('risk_owner') !== -1
+          || (supervisor.roles || []).indexOf('residual_risk_approver') !== -1) {
+          return supervisor;
+        }
+      }
+
+      return null;
+    };
+
+    $scope.updateRisksManagementAccess = function() {
+      if ($scope.OFFICE_MODE != 'FO' || !$scope.model || !$scope.model.anr || !$scope.model.anr.id) {
+        return;
+      }
+
+      AnrService.getAnrSupervisors($scope.model.anr.id, {}).then(function(data) {
+        var supervisor = $scope.getCurrentRisksManagementSupervisor(data.supervisors || []);
+        var roles = (supervisor && supervisor.roles) || [];
+
+        $scope.risksManagementAccess = {
+          visible: !!supervisor,
+          supervisor: supervisor,
+          hasRiskOwnerRole: roles.indexOf('risk_owner') !== -1,
+          hasResidualRiskApproverRole: roles.indexOf('residual_risk_approver') !== -1
+        };
+      });
+    };
+
+    $scope.hasCurrentUserAssignmentsPanel = function() {
+      var anr = $scope.model && $scope.model.anr;
+      var roles = (anr && anr.linkedSupervisorRoles) || [];
+
+      return !!(anr
+        && anr.linkedSupervisor
+        && anr.linkedSupervisor.isActive !== false
+        && (roles.indexOf('risk_owner') !== -1 || roles.indexOf('residual_risk_approver') !== -1));
+    };
+
+    $scope.getCurrentUserAssignmentsTotal = function() {
+      var anr = $scope.model && $scope.model.anr;
+
+      return Number((anr && anr.ownedRisksCount) || 0) + Number((anr && anr.approvalRisksCount) || 0);
+    };
+
+    $scope.isRiskAnalysisView = function() {
+      return $state.current.name === 'main.project.anr';
+    };
+
+    $scope.openCurrentUserRisksManagement = function() {
+      if (!$scope.model || !$scope.model.anr || $scope.getCurrentUserAssignmentsTotal() <= 0) {
+        return;
+      }
+
+      $state.go('main.project.anr.risksmanagement', {modelId: $scope.model.anr.id});
+    };
+
+    $scope.isResidualRiskReadOnly = function(sheet) {
+      var approver = $scope.getEffectiveResidualApprover(sheet);
+      return !approver || !$scope.canCurrentUserDecideResidualRisk(sheet);
+    };
+
+    $scope.isCurrentUserLinkedRiskOwner = function(sheet) {
+      return !!(sheet
+        && sheet.riskOwnerSupervisor
+        && sheet.riskOwnerSupervisor.linkedUser
+        && $scope.isCurrentUserLinkedResidualApprover(sheet.riskOwnerSupervisor.linkedUser));
+    };
+
+    $scope.canCurrentUserEditMonitoringAndReview = function(sheet) {
+      if (!sheet) {
+        return false;
+      }
+
+      if (!$scope.isAnrReadOnly) {
+        return true;
+      }
+
+      return $scope.isCurrentUserLinkedRiskOwner(sheet);
+    };
+
+    $scope.canCurrentUserEditRiskOwner = function(sheet) {
+      return !!sheet && !$scope.isAnrReadOnly;
+    };
+
+    $scope.canSaveRiskSheetFields = function(sheet) {
+      return !!(sheet
+        && (!$scope.isAnrReadOnly
+          || $scope.canCurrentUserEditMonitoringAndReview(sheet)
+          || $scope.canCurrentUserDecideResidualRisk(sheet)));
+    };
+
+    $scope.getResidualPerformerSummary = function(sheet) {
+      if (!sheet || (!sheet.residualAcceptancePerformedByName && !sheet.residualAcceptancePerformedByEmail)) {
+        return '';
+      }
+
+      var performer = sheet.residualAcceptancePerformedByName || '';
+      if (sheet.residualAcceptancePerformedByEmail) {
+        performer += (performer ? ' ' : '') + '<' + sheet.residualAcceptancePerformedByEmail + '>';
+      }
+
+      if (sheet.residualAcceptancePerformedOnBehalf) {
+        var approver = $scope.getEffectiveResidualApprover(sheet);
+        if (approver && approver.name) {
+          return gettextCatalog.getString('Performed by') + ' ' + performer + ' '
+            + gettextCatalog.getString('on behalf of') + ' ' + approver.name;
+        }
+      }
+
+      return gettextCatalog.getString('Performed by') + ': ' + performer;
+    };
+
+    $scope.hasResidualAcceptanceData = function(sheet) {
+      if (!sheet) {
+        return false;
+      }
+
+      return !!(sheet.residualAcceptanceUseRiskOwner
+        || sheet.residualAcceptanceApproverSupervisorId
+        || sheet.residualRiskDecision
+        || sheet.residualRiskDecidedAt
+        || sheet.residualRiskJustification
+        || sheet.residualAcceptancePerformedByName
+        || sheet.residualAcceptancePerformedByEmail);
+    };
+
+    $scope.shouldWarnRiskOwnerRemoval = function(sheet, nextRiskOwnerSupervisorId) {
+      if (!sheet || nextRiskOwnerSupervisorId) {
+        return false;
+      }
+
+      if (!sheet.riskOwnerSupervisorId) {
+        return false;
+      }
+
+      return !!($scope.getEffectiveResidualApprover(sheet) || $scope.hasResidualAcceptanceData(sheet));
+    };
+
+    $scope.hasPendingRiskOwnerRemoval = function(sheet) {
+      return !!(sheet
+        && !$scope.isAnrReadOnly
+        && !$scope.isResidualAcceptancePanelDisabled(sheet)
+        && ((sheet.ownerSearchText || '').trim()) === ''
+        && sheet.riskOwnerSupervisorId);
+    };
+
+    $scope.shouldResetResidualDecisionAfterRiskOwnerChange = function(sheet, nextRiskOwnerSupervisorId) {
+      if (!sheet || !sheet.residualAcceptanceUseRiskOwner) {
+        return false;
+      }
+
+      var effectiveApprover = $scope.getEffectiveResidualApprover(sheet);
+      var currentRiskOwnerSupervisorId = sheet.riskOwnerSupervisorId || null;
+      if (!effectiveApprover || String(effectiveApprover.id || '') !== String(currentRiskOwnerSupervisorId || '')) {
+        return false;
+      }
+
+      var hasResettableResidualAcceptanceData = !!(
+        sheet.residualRiskDecision
+        || sheet.residualRiskDecidedAt
+        || sheet.residualRiskDecidedAtValue
+        || sheet.residualRiskJustification
+        || sheet.residualAcceptancePerformedByName
+        || sheet.residualAcceptancePerformedByEmail
+      );
+      if (!hasResettableResidualAcceptanceData) {
+        return false;
+      }
+
+      var previousRiskOwnerSupervisorId = sheet.riskOwnerSupervisorId || null;
+      var normalizedNextRiskOwnerSupervisorId = nextRiskOwnerSupervisorId || null;
+
+      return String(previousRiskOwnerSupervisorId || '') !== String(normalizedNextRiskOwnerSupervisorId || '');
+    };
+
+    $scope.shouldConfirmRiskOwnerChange = function(sheet, nextRiskOwnerSupervisorId) {
+      return $scope.shouldResetResidualDecisionAfterRiskOwnerChange(sheet, nextRiskOwnerSupervisorId)
+        || $scope.shouldWarnRiskOwnerRemoval(sheet, nextRiskOwnerSupervisorId);
+    };
+
+    $scope.restoreRiskOwnerSelection = function(sheet, previousRiskOwnerSupervisor, previousRiskOwnerName) {
+      if (!sheet) {
+        return;
+      }
+
+      sheet._skipRiskOwnerSelectionChange = true;
+      sheet.owner = previousRiskOwnerName || '';
+      sheet.riskOwnerSupervisor = previousRiskOwnerSupervisor || null;
+      sheet.riskOwnerSupervisorId = previousRiskOwnerSupervisor ? previousRiskOwnerSupervisor.id : null;
+      sheet.riskOwnerSupervisorName = previousRiskOwnerName || '';
+      sheet.ownerSupervisorSelection = previousRiskOwnerSupervisor || null;
+      sheet.ownerSearchText = previousRiskOwnerName || '';
+      $scope.applyResidualAcceptanceState(sheet, {
+        preserveDecisionFields: true
+      });
+
+      $timeout(function() {
+        sheet._skipRiskOwnerSelectionChange = false;
+      });
+    };
+
+    $scope.resetResidualAcceptanceAfterRiskOwnerChange = function(sheet, options) {
+      if (!sheet) {
+        return;
+      }
+
+      if (options && options.preserveApproverContext) {
+        $scope.clearResidualAcceptanceDecisionFields(sheet);
+        $scope.applyResidualAcceptanceState(sheet, {
+          preserveDecisionFields: true
+        });
+        return;
+      }
+
+      $scope.clearResidualAcceptanceData(sheet, {
+        preserveRiskOwnerFlag: !!(sheet.residualAcceptanceUseRiskOwner
+          && $scope.canUseRiskOwnerAsResidualApprover(sheet))
+      });
+      $scope.applyResidualAcceptanceState(sheet);
+    };
+
+    $scope.clearResidualAcceptanceDecisionFields = function(sheet) {
+      if (!sheet) {
+        return;
+      }
+
+      sheet.residualRiskDecision = null;
+      sheet.residualRiskDecidedAt = null;
+      sheet.residualRiskDecidedAtValue = null;
+      sheet.residualRiskJustification = null;
+      sheet.residualAcceptancePerformedByName = null;
+      sheet.residualAcceptancePerformedByEmail = null;
+      sheet.residualAcceptancePerformedOnBehalf = false;
+      sheet.residualRiskDecidedBySupervisor = null;
+      sheet.residualRiskDecidedBySupervisorId = null;
+      sheet.residualRiskDecidedByUserId = null;
+      sheet.residualRiskDecidedByName = null;
+      sheet.residualAcceptancePerformerTouched = false;
+    };
+
+    $scope.clearResidualAcceptanceData = function(sheet, options) {
+      if (!sheet) {
+        return;
+      }
+
+      var preserveRiskOwnerFlag = options && options.preserveRiskOwnerFlag;
+
+      if (!preserveRiskOwnerFlag) {
+        sheet.residualAcceptanceUseRiskOwner = false;
+      }
+      sheet.residualAcceptanceApproverSupervisor = null;
+      sheet.residualAcceptanceApproverSupervisorId = null;
+      sheet.residualAcceptanceApproverSupervisorSelection = null;
+      sheet.residualAcceptanceApproverSearchText = '';
+      $scope.clearResidualAcceptanceDecisionFields(sheet);
+    };
+
+    $scope.captureResidualAcceptanceSnapshot = function(sheet) {
+      if (!sheet) {
+        return;
+      }
+
+      sheet._residualAcceptanceSnapshot = {
+        riskOwnerSupervisorId: sheet.riskOwnerSupervisorId || null,
+        residualAcceptanceUseRiskOwner: !!sheet.residualAcceptanceUseRiskOwner,
+        residualAcceptanceApproverSupervisorId: sheet.residualAcceptanceApproverSupervisorId || null,
+        residualRiskDecision: sheet.residualRiskDecision || null,
+        residualRiskDecidedAt: $scope.formatDateValue(sheet.residualRiskDecidedAtValue) || null,
+        residualRiskJustification: (sheet.residualRiskJustification || '').trim() || null,
+        residualAcceptancePerformedByName: sheet.residualAcceptancePerformedByName || null,
+        residualAcceptancePerformedByEmail: sheet.residualAcceptancePerformedByEmail || null,
+        residualAcceptancePerformedOnBehalf: !!sheet.residualAcceptancePerformedOnBehalf
+      };
+      sheet.residualAcceptancePerformerTouched = false;
+    };
+
+    $scope.applyResidualAcceptanceState = function(sheet, options) {
+      if (!sheet) {
+        return;
+      }
+
+      if ($scope.isResidualAcceptancePanelDisabled(sheet)) {
+        if (sheet.residualAcceptanceUseRiskOwner) {
+          $scope.clearResidualAcceptanceData(sheet);
+        }
+        return;
+      }
+
+      if ($scope.canUseRiskOwnerAsResidualApprover(sheet)) {
+        if (sheet.residualAcceptanceUseRiskOwner) {
+          sheet.residualAcceptanceApproverSupervisor = sheet.riskOwnerSupervisor;
+          sheet.residualAcceptanceApproverSupervisorId = sheet.riskOwnerSupervisorId;
+          sheet.residualAcceptanceApproverSupervisorSelection = sheet.riskOwnerSupervisor;
+          sheet.residualAcceptanceApproverSearchText = sheet.riskOwnerSupervisorName || sheet.owner || '';
+        }
+      } else if (sheet.residualAcceptanceUseRiskOwner) {
+        $scope.clearResidualAcceptanceData(sheet);
+        return;
+      }
+
+      if (!sheet.residualAcceptanceUseRiskOwner) {
+        if (sheet.residualAcceptanceApproverSupervisorSelection) {
+          if (!$scope.isResidualRiskApprover(sheet.residualAcceptanceApproverSupervisorSelection)) {
+            $scope.clearResidualAcceptanceData(sheet, { preserveRiskOwnerFlag: true });
+            return;
+          }
+          sheet.residualAcceptanceApproverSupervisor = sheet.residualAcceptanceApproverSupervisorSelection;
+          sheet.residualAcceptanceApproverSupervisorId = sheet.residualAcceptanceApproverSupervisorSelection.id;
+          sheet.residualAcceptanceApproverSearchText = sheet.residualAcceptanceApproverSupervisorSelection.name || '';
+        } else if (!sheet.residualAcceptanceApproverSupervisorId) {
+          if (!(options && options.preserveDecisionFields)) {
+            sheet.residualRiskDecision = null;
+            sheet.residualRiskDecidedAt = null;
+            sheet.residualRiskDecidedAtValue = null;
+            sheet.residualRiskJustification = null;
+            sheet.residualAcceptancePerformedByName = null;
+            sheet.residualAcceptancePerformedByEmail = null;
+            sheet.residualAcceptancePerformedOnBehalf = false;
+          }
+        }
+      }
+    };
+
+    $scope.onResidualAcceptanceUseRiskOwnerChanged = function(sheet) {
+      if (!sheet) {
+        return;
+      }
+
+      $scope.clearResidualAcceptanceData(sheet, {
+        preserveRiskOwnerFlag: !!sheet.residualAcceptanceUseRiskOwner
+      });
+      $scope.applyResidualAcceptanceState(sheet);
+    };
+
+    $scope.setCurrentUserAsResidualPerformer = function(sheet) {
+      if (!sheet || !$scope.currentUserProfile || !$scope.canCurrentUserDecideResidualRisk(sheet)) {
+        return;
+      }
+
+      var fullName = (($scope.currentUserProfile.firstname || '') + ' ' + ($scope.currentUserProfile.lastname || '')).trim();
+      sheet.residualAcceptancePerformedByName = fullName || $scope.currentUserProfile.email || null;
+      sheet.residualAcceptancePerformedByEmail = $scope.currentUserProfile.email || null;
+      sheet.residualAcceptancePerformedOnBehalf = !!($scope.getEffectiveResidualApprover(sheet)
+        && !$scope.getEffectiveResidualApprover(sheet).linkedUser);
+      sheet.residualAcceptancePerformerTouched = true;
+    };
+
+    $scope.hasRisksManagementReviewAccess = function() {
+      return !!$scope.risksManagementAccess.hasRiskOwnerRole;
+    };
+
+    $scope.hasRisksManagementResidualAccess = function() {
+      return !!$scope.risksManagementAccess.hasResidualRiskApproverRole;
+    };
+
+    $scope.resetRisksManagementSelection = function() {
+      $scope.risksManagementState.selected = {};
+    };
+
+    $scope.getRisksManagementSelectionKey = function(risk) {
+      return risk.type + ':' + risk.id;
+    };
+
+    $scope.getSelectedRisksManagementCount = function() {
+      return Object.keys($scope.risksManagementState.selected || {}).filter(function(key) {
+        return !!$scope.risksManagementState.selected[key];
+      }).length;
+    };
+
+    $scope.isAllRisksManagementSelected = function() {
+      var visibleRows = $scope.getFilteredRisksManagementRows();
+
+      return visibleRows.length > 0
+        && $scope.getSelectedRisksManagementCount() === visibleRows.length;
+    };
+
+    $scope.toggleAllRisksManagementSelection = function() {
+      var shouldSelectAll = !$scope.isAllRisksManagementSelected();
+      var selected = {};
+
+      angular.forEach($scope.getFilteredRisksManagementRows(), function(risk) {
+        selected[$scope.getRisksManagementSelectionKey(risk)] = shouldSelectAll;
+      });
+
+      $scope.risksManagementState.selected = selected;
+    };
+
+    $scope.onRisksManagementDecisionFilterChange = function() {
+      $scope.resetRisksManagementSelection();
+    };
+
+    $scope.getFilteredRisksManagementRows = function() {
+      return ($scope.risksManagementState.rows || []).filter(function(risk) {
+        switch ($scope.risksManagementState.decisionFilter) {
+          case 'accepted':
+            return risk.residualRiskDecision === 'accepted';
+          case 'pending':
+            return !risk.residualRiskDecision;
+          case 'not_accepted':
+            return $scope.isResidualRiskNotAccepted(risk.residualRiskDecision);
+          default:
+            return true;
+        }
+      });
+    };
+
+    $scope.openRisksManagementRisk = function(risk) {
+      if (!risk) {
+        return;
+      }
+
+      $scope.riskSheetNavigationContext = {
+        source: 'risksmanagement',
+        items: $scope.risksManagementState.rows || [],
+        index: ($scope.risksManagementState.rows || []).findIndex(function(item) {
+          return item.type === risk.type && String(item.id) === String(risk.id);
+        })
+      };
+
+      if (risk.type === 'information') {
+        $state.transitionTo('main.project.anr.risk', {
+          modelId: $scope.model.anr.id,
+          riskId: risk.id
+        });
+
+        return;
+      }
+
+      $state.transitionTo('main.project.anr.riskop', {
+        modelId: $scope.model.anr.id,
+        riskopId: risk.id
+      });
+    };
+
+    $scope.clearRiskSheetNavigationContext = function() {
+      $scope.riskSheetNavigationContext = {
+        source: null,
+        items: [],
+        index: -1
+      };
+    };
+
+    $scope.isRisksManagementNavigationActive = function() {
+      return $scope.riskSheetNavigationContext.source === 'risksmanagement'
+        && ($scope.riskSheetNavigationContext.items || []).length > 0
+        && $scope.riskSheetNavigationContext.index >= 0;
+    };
+
+    $scope.isReturningToRisksManagement = function() {
+      return $scope.riskSheetNavigationContext.source === 'risksmanagement';
+    };
+
+    $scope.updateRiskSheetNavigationContextIndex = function(type, id) {
+      if (!$scope.isRisksManagementNavigationActive()) {
+        return;
+      }
+
+      $scope.riskSheetNavigationContext.index = ($scope.riskSheetNavigationContext.items || []).findIndex(function(item) {
+        return item.type === type && String(item.id) === String(id);
+      });
+    };
+
+    $scope.canGoToPreviousRiskSheet = function() {
+      if ($scope.isRisksManagementNavigationActive()) {
+        return $scope.riskSheetNavigationContext.index > 0;
+      }
+
+      if ($scope.sheet_risk) {
+        return !!($scope.risks_instance && $scope.idxRisks > 0);
+      }
+
+      if ($scope.opsheet_risk) {
+        return !!($scope.opRisks_instance && $scope.idxOpRisks > 0);
+      }
+
+      return false;
+    };
+
+    $scope.canGoToNextRiskSheet = function() {
+      if ($scope.isRisksManagementNavigationActive()) {
+        return $scope.riskSheetNavigationContext.index < ($scope.riskSheetNavigationContext.items.length - 1);
+      }
+
+      if ($scope.sheet_risk) {
+        return !!($scope.risks_instance && $scope.idxRisks < ($scope.risks_instance.length - 1));
+      }
+
+      if ($scope.opsheet_risk) {
+        return !!($scope.opRisks_instance && $scope.idxOpRisks < ($scope.opRisks_instance.length - 1));
+      }
+
+      return false;
+    };
+
+    $scope.loadRisksManagementData = function() {
+      if ($scope.OFFICE_MODE != 'FO' || !$scope.model || !$scope.model.anr || !$scope.model.anr.id) {
+        return;
+      }
+
+      $scope.risksManagementState.loading = true;
+      AnrService.getRisksManagement($scope.model.anr.id).then(function(data) {
+        $scope.risksManagementState.loading = false;
+        $scope.risksManagementState.rows = data.risks || [];
+        $scope.risksManagementState.reassessmentTriggers = data.reassessmentTriggers || [];
+        $scope.resetRisksManagementSelection();
+        $scope.risksManagementAccess.visible = true;
+        $scope.risksManagementAccess.supervisor = data.supervisor || $scope.risksManagementAccess.supervisor;
+        $scope.risksManagementAccess.hasRiskOwnerRole = !!(data.roles && data.roles.riskOwner);
+        $scope.risksManagementAccess.hasResidualRiskApproverRole = !!(data.roles && data.roles.residualRiskApprover);
+      }, function(response) {
+        $scope.risksManagementState.loading = false;
+        if (response && response.status === 403) {
+          toastr.error(gettextCatalog.getString('This view is only available for linked supervisors with risk management roles.'));
+          $state.transitionTo('main.project.anr', {modelId: $stateParams.modelId});
+        }
+      });
+    };
+
+    $scope.applyRisksManagementBatchUpdate = function() {
+      var selectedRisks = [];
+      var updates = {};
+
+      angular.forEach($scope.risksManagementState.rows, function(risk) {
+        var selectionKey = $scope.getRisksManagementSelectionKey(risk);
+        if ($scope.risksManagementState.selected[selectionKey]) {
+          selectedRisks.push({
+            type: risk.type,
+            id: risk.id
+          });
+        }
+      });
+
+      if (selectedRisks.length === 0) {
+        return;
+      }
+
+      if ($scope.hasRisksManagementReviewAccess()) {
+        if ($scope.risksManagementState.batch.lastReviewDate) {
+          updates.last_review_date = moment($scope.risksManagementState.batch.lastReviewDate).format('YYYY-MM-DD');
+        }
+        if ($scope.risksManagementState.batch.nextReassessmentDate) {
+          updates.next_reassessment_date = moment(
+            $scope.risksManagementState.batch.nextReassessmentDate
+          ).format('YYYY-MM-DD');
+        }
+        if ($scope.risksManagementState.batch.reassessmentTriggerIds
+          && $scope.risksManagementState.batch.reassessmentTriggerIds.length > 0) {
+          updates.reassessment_trigger_ids = $scope.risksManagementState.batch.reassessmentTriggerIds;
+        }
+        if ($scope.risksManagementState.batch.reviewFrequency) {
+          updates.review_frequency = $scope.risksManagementState.batch.reviewFrequency;
+        }
+      }
+
+      if ($scope.hasRisksManagementResidualAccess()) {
+        if ($scope.risksManagementState.batch.residualRiskDecision) {
+          updates.residual_risk_decision = $scope.risksManagementState.batch.residualRiskDecision;
+        }
+        if ($scope.risksManagementState.batch.residualRiskDecidedAt) {
+          updates.residual_risk_decided_at = moment(
+            $scope.risksManagementState.batch.residualRiskDecidedAt
+          ).format('YYYY-MM-DD');
+        }
+        if (($scope.risksManagementState.batch.residualRiskJustification || '').trim() !== '') {
+          updates.residual_risk_justification = $scope.risksManagementState.batch.residualRiskJustification.trim();
+        }
+      }
+
+      if (Object.keys(updates).length === 0) {
+        return;
+      }
+
+      AnrService.batchUpdateRisksManagement($scope.model.anr.id, {
+        risks: selectedRisks,
+        updates: updates
+      }, function(data) {
+        $scope.risksManagementState.result = data;
+        $scope.loadRisksManagementData();
+      }, function(response) {
+        if (response && response.data && response.data.message) {
+          toastr.error(response.data.message);
+        }
+      });
+    };
+
+    $scope.exportRisksManagementCsv = function() {
+      var headers = [
+        'ID',
+        'Type',
+        'Asset',
+        'Risk source',
+        'Threat / Operational risk',
+        'Vulnerability / Description',
+        'Current risk',
+        'Residual risk',
+        'Kind of treatment',
+        'Risk owner',
+        'Last review date',
+        'Next reassessment date',
+        'Review frequency',
+        'Trigger criteria',
+        'Residual risk approver',
+        'Residual risk decision',
+        'Residual risk decision date',
+        'Residual risk justification'
+      ].map(function(header) {
+        return gettextCatalog.getString(header);
+      });
+      var escapeValue = function(value) {
+        return '"' + String(value === null || value === undefined ? '' : value)
+          .replace(/"/g, '""') + '"';
+      };
+      var rows = $scope.getFilteredRisksManagementRows().map(function(risk) {
+        var reassessmentTriggers = (risk.reassessmentTriggers || []).map(function(trigger) {
+          return trigger.triggerType + (trigger.description ? ' - ' + trigger.description : '');
+        }).join('\n');
+
+        return [
+          risk.id,
+          risk.type === 'information'
+            ? gettextCatalog.getString('Information risks')
+            : gettextCatalog.getString('Operational risks'),
+          risk.assetLabel,
+          risk.riskSourceLabel,
+          risk.primaryLabel,
+          risk.secondaryLabel,
+          risk.currentRiskValue,
+          risk.residualRiskValue,
+          gettextCatalog.getString($scope.treatmentStr(risk.kindOfMeasure)),
+          risk.riskOwnerName,
+          risk.lastReviewDate,
+          risk.nextReassessmentDate,
+          risk.reviewFrequency,
+          reassessmentTriggers,
+          risk.residualApproverName,
+          $scope.getResidualRiskDecisionLabel(risk.residualRiskDecision),
+          risk.residualRiskDecidedAt,
+          risk.residualRiskJustification
+        ].map(escapeValue).join(';');
+      });
+
+      DownloadService.downloadCSV(
+        [headers.map(escapeValue).join(';')].concat(rows).join('\r\n'),
+        'risks_management.csv',
+        'text/csv; charset=utf-8'
+      );
+    };
+
+    if ($scope.OFFICE_MODE == 'FO') {
+      $http.get('api/user/profile').then(function(response) {
+        $scope.currentUserProfile = response.data || response;
+        $scope.updateRisksManagementAccess();
+      });
+    }
 
     if ($scope.OFFICE_MODE == 'FO') {
       $rootScope.$on("$locationChangeStart", function(e, nextUrl, oldUrl) {
         if (nextUrl != oldUrl && nextUrl.substring(nextUrl.length - 4) == '/anr' && ($scope.display.anrSelectedTabIndex != 0 || $scope.opsheet_risk || $scope.sheet_risk)) {
+          var targetRiskTab = $scope.opsheet_risk ? 1 : 0;
           $rootScope.anr_selected_object_id = null;
           $rootScope.anr_selected_instance_id = null;
           $scope.opsheet_risk = null;
           $scope.sheet_risk = null;
           $scope.risks = [];
           $scope.oprisks = [];
-          ToolsAnrService.currentTab = 0;
+          ToolsAnrService.currentTab = targetRiskTab;
           $scope.display.anrSelectedTabIndex = 0;
-          e.preventDefault();
+          // Do NOT call e.preventDefault() here — the URL must update to reflect the actual navigation target.
         }
       });
     }
@@ -102,6 +973,15 @@
     $scope.resetFilters = function() {
       $scope.resetRisksFilters();
       $scope.resetRisksOpFilters();
+    }
+
+    $scope.isRiskTabNavigationLocked = function() {
+      return !!(
+        $scope.sheet_risk ||
+        $scope.opsheet_risk ||
+        $stateParams.riskId ||
+        $stateParams.riskopId
+      );
     }
 
     var onBeforeHook = $transitions.onBefore({}, function() {
@@ -156,6 +1036,52 @@
 
     $scope.$on("$destroy", onBeforeHook);
 
+    // Handle manual URL navigation to a different risk/oprisk ID in the same state.
+    // When the user edits the riskId in the address bar and presses Enter, UI-Router
+    // fires a transition for the same state with new params. The onBefore hook does
+    // nothing in that case, so we need to react here after the transition succeeds.
+    var onSuccessHook = $transitions.onSuccess({}, function(trans) {
+      if ($scope.OFFICE_MODE !== 'FO') return;
+      var toName = trans.to().name;
+      var newParams = trans.params();
+      var fromParams = trans.params('from');
+
+      if ((toName === 'main.project.anr.risk' || toName === 'main.project.anr.instance.risk') &&
+          newParams.riskId && String(newParams.riskId) !== String(fromParams.riskId)) {
+        var found = $scope.risks && $scope.risks.find(function(r) { return String(r.id) === String(newParams.riskId); });
+        if (found) {
+          applyRiskSheetData(found, $scope.risks);
+        } else if ($scope.model && $scope.model.anr) {
+          AnrService.getAnrRisks($scope.model.anr.id, { limit: 0, order: 'maxRisk', order_direction: 'desc', thresholds: -1 }).then(function(data) {
+            var risk = data.risks && data.risks.find(function(r) { return String(r.id) === String(newParams.riskId); });
+            if (risk) {
+              applyRiskSheetData(risk, data.risks);
+            }
+          });
+        }
+      }
+
+      if ((toName === 'main.project.anr.riskop' || toName === 'main.project.anr.instance.riskop') &&
+          newParams.riskopId && String(newParams.riskopId) !== String(fromParams.riskopId)) {
+        var foundOp = $scope.oprisks && $scope.oprisks.find(function(r) { return String(r.id) === String(newParams.riskopId); });
+        if (foundOp) {
+          applyOpRiskSheetData(foundOp, $scope.oprisks);
+        } else if ($scope.model && $scope.model.anr) {
+          AnrService.getAnrRisksOp($scope.model.anr.id, { limit: 0, order: 'cacheNetRisk', order_direction: 'desc', thresholds: -1 }).then(function(data) {
+            var opRisk = data.oprisks && data.oprisks.find(function(r) { return String(r.id) === String(newParams.riskopId); });
+            if (opRisk) {
+              applyOpRiskSheetData(opRisk, data.oprisks);
+            }
+          });
+        }
+      }
+
+      if (toName === 'main.project.anr.risksmanagement') {
+        $scope.loadRisksManagementData();
+      }
+    });
+    $scope.$on("$destroy", onSuccessHook);
+
     $scope.ceil = Math.ceil;
 
     $scope.$on("angular-resizable.resizeEnd", function(event, args) {
@@ -179,7 +1105,7 @@
 
     $scope.updateModel = function(justCore, cb) {
       isModelLoading = true;
-      let defaultLanguageIndex = UserService.getUiLanguage();
+      let defaultLanguageIndex = UserService.getDataLanguage();
       if ($scope.OFFICE_MODE == 'BO') {
         ModelService.getModel($stateParams.modelId).then(function(data) {
           $scope.model = data;
@@ -237,6 +1163,7 @@
         ClientAnrService.getAnr($stateParams.modelId).then(function(data) {
           let language = data.language;
           let languageCode = data.languageCode;
+          $rootScope.anr_id = data.id;
           $scope.model = {
             id: null,
             anr: data,
@@ -265,6 +1192,7 @@
           });
           $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
           $scope.$parent.$parent.clientCurrentAnr = data;
+          $scope.updateRisksManagementAccess();
 
           thresholdsWatchSetup = false;
           $scope.thresholds = {
@@ -288,6 +1216,9 @@
             $scope.updateReferentials();
             $scope.updateRecommendationsSets();
             updateMethodProgress();
+            if ($state.$current.name == 'main.project.anr.risksmanagement') {
+              $scope.loadRisksManagementData();
+            }
 
           }
 
@@ -329,15 +1260,6 @@
         if (!$scope.risks || $scope.risks.length != data.risks.length) {
           $scope.risks_total = data.count;
           $scope.risks = data.risks; // for the _table_risks.html partial
-          if (($state.$current.name == 'main.project.anr.risk' || $state.$current.name == 'main.project.anr.instance.risk') && $stateParams.riskId) {
-            angular.forEach($scope.risks, function(r) {
-              if (r.id == $stateParams.riskId) {
-                ToolsAnrService.currentTab = 0;
-                $scope.sheet_risk = r;
-                return;
-              }
-            });
-          }
         } else {
           // patch up only if we already have a risks table
           // if this cause a problem, add a flag to updateModel so that we patch only in the risks
@@ -348,6 +1270,14 @@
               $scope.risks[i][j] = data.risks[i][j];
             }
           }
+        }
+
+        if (($state.$current.name == 'main.project.anr.risk' || $state.$current.name == 'main.project.anr.instance.risk') && $stateParams.riskId) {
+          angular.forEach($scope.risks, function(r) {
+            if (r.id == $stateParams.riskId) {
+              applyRiskSheetData(r, $scope.risks);
+            }
+          });
         }
 
         if (cb) {
@@ -401,15 +1331,6 @@
         if (!$scope.oprisks || $scope.oprisks.length != data.oprisks.length) {
           $scope.oprisks_total = data.count;
           $scope.oprisks = data.oprisks; // for the _table_risks_op.html partial
-          if (($state.$current.name == 'main.project.anr.riskop' || $state.$current.name == 'main.project.anr.instance.riskop') && $stateParams.riskopId) {
-            angular.forEach($scope.oprisks, function(r) {
-              if (r.id == $stateParams.riskopId) {
-                ToolsAnrService.currentTab = 1;
-                $scope.opsheet_risk = r;
-                return;
-              }
-            });
-          }
         } else {
           // patch up only if we already have a risks table
           // if this cause a problem, add a flag to updateModel so that we patch only in the risks
@@ -422,6 +1343,14 @@
           }
 
           $scope.opRiskImpactScales = angular.copy($scope.opRiskImpactScales); // force binding operational scales $scope
+        }
+
+        if (($state.$current.name == 'main.project.anr.riskop' || $state.$current.name == 'main.project.anr.instance.riskop') && $stateParams.riskopId) {
+          angular.forEach($scope.oprisks, function(r) {
+            if (r.id == $stateParams.riskopId) {
+              applyOpRiskSheetData(r, $scope.oprisks);
+            }
+          });
         }
 
         if (cb) {
@@ -537,7 +1466,452 @@
       $rootScope.anr_selected_object_id = null;
     }
 
+    $scope.initializeRiskOwnerSelection = function(sheet) {
+      if (!sheet) {
+        return;
+      }
+
+      var ownerName = sheet.riskOwnerSupervisorName || sheet.owner || '';
+      sheet.ownerSearchText = ownerName;
+      sheet.ownerSupervisorSelection = sheet.riskOwnerSupervisor || (sheet.riskOwnerSupervisorId ? {
+        id: sheet.riskOwnerSupervisorId,
+        name: ownerName
+      } : null);
+    };
+
+    $scope.getLinkedUserDisplayName = function(linkedUser) {
+      if (!linkedUser) {
+        return '';
+      }
+
+      return ((linkedUser.firstname || '') + ' ' + (linkedUser.lastname || '')).trim() || linkedUser.email || '';
+    };
+
+    function parseHistoryValue(value) {
+      function formatHistoryScaleValue(scaleValue) {
+        return scaleValue === -1 || scaleValue === '-1' ? '-' : scaleValue;
+      }
+
+      if (value === null || value === undefined || value === '') {
+        return '—';
+      }
+
+      if (typeof value !== 'string') {
+        return '' + value;
+      }
+
+      var trimmedValue = value.trim();
+      if (trimmedValue === 'hidden' || trimmedValue === 'Hidden') {
+        return gettextCatalog.getString('Hidden');
+      }
+      if (trimmedValue === 'visible' || trimmedValue === 'Visible') {
+        return gettextCatalog.getString('Visible');
+      }
+      if ((trimmedValue.charAt(0) === '{' || trimmedValue.charAt(0) === '[') && trimmedValue.length > 1) {
+        try {
+          var parsedValue = JSON.parse(trimmedValue);
+            if (parsedValue && angular.isObject(parsedValue)) {
+              if (angular.isDefined(parsedValue.c) || angular.isDefined(parsedValue.i) || angular.isDefined(parsedValue.a)) {
+                var formattedParts = [
+                  'C: ' + (angular.isDefined(parsedValue.c) ? formatHistoryScaleValue(parsedValue.c) : '—'),
+                  'I: ' + (angular.isDefined(parsedValue.i) ? formatHistoryScaleValue(parsedValue.i) : '—'),
+                  'A: ' + (angular.isDefined(parsedValue.a) ? formatHistoryScaleValue(parsedValue.a) : '—')
+                ];
+              if (angular.isDefined(parsedValue.max)) {
+                formattedParts.push('MAX: ' + parsedValue.max);
+              }
+              if (angular.isDefined(parsedValue.hidden)) {
+                formattedParts.push(gettextCatalog.getString(parsedValue.hidden ? 'Hidden' : 'Visible'));
+              }
+              return formattedParts.join(' / ');
+            }
+            return angular.toJson(parsedValue);
+          }
+        } catch (e) {
+          return value;
+        }
+      }
+
+      return value;
+    }
+
+    $scope.getHistoryUserDisplay = function(entry) {
+      var fullName = (((entry && entry.performedByFirstname) || '') + ' ' + ((entry && entry.performedByLastname) || '')).trim();
+      return fullName || (entry && entry.performedByEmail) || '—';
+    };
+
+    $scope.getHistoryFieldLabel = function(fieldCode) {
+      switch (fieldCode) {
+        case 'risk_owner':
+          return gettextCatalog.getString('Risk owner');
+        case 'risk_source':
+          return gettextCatalog.getString('Risk source');
+        case 'risk_context':
+          return gettextCatalog.getString('Risk context');
+        case 'last_review_date':
+          return gettextCatalog.getString('Last review date');
+        case 'review_frequency':
+          return gettextCatalog.getString('Review frequency');
+        case 'threat_probability':
+          return gettextCatalog.getString('Threat probability');
+        case 'vulnerability_qualification':
+          return gettextCatalog.getString('Vulnerability qualification');
+        case 'current_risk':
+          return gettextCatalog.getString('Current risk');
+        case 'residual_risk':
+          return gettextCatalog.getString('Residual risk');
+        case 'treatment_type':
+          return gettextCatalog.getString('Treatment');
+        case 'vulnerability_reduction':
+          return gettextCatalog.getString('Vulnerability reduction');
+        case 'residual_acceptance_approver':
+          return gettextCatalog.getString('Residual risk acceptance approver');
+        case 'residual_acceptance_decision':
+          return gettextCatalog.getString('Residual risk acceptance decision');
+        case 'residual_acceptance_justification':
+          return gettextCatalog.getString('Residual risk acceptance justification');
+        case 'residual_acceptance_date':
+          return gettextCatalog.getString('Residual risk decision date');
+        case 'consequence_confidentiality':
+          return gettextCatalog.getString('Confidentiality consequence');
+        case 'consequence_integrity':
+          return gettextCatalog.getString('Integrity consequence');
+        case 'consequence_availability':
+          return gettextCatalog.getString('Availability consequence');
+        case 'consequence_reputation':
+          return gettextCatalog.getString('Reputation consequence');
+        case 'consequence_legal':
+          return gettextCatalog.getString('Legal consequence');
+        case 'consequence_financial':
+          return gettextCatalog.getString('Financial consequence');
+        case 'impact_scale_update':
+          return gettextCatalog.getString('Impact scale update');
+        default:
+          return gettextCatalog.getString('Change');
+      }
+    };
+
+    $scope.getHistoryChangeLabel = function(entry) {
+      if (!entry) {
+        return '';
+      }
+
+      switch (entry.changeType) {
+        case 1:
+          return gettextCatalog.getString('Risk created');
+        case 20:
+          return gettextCatalog.getString('Recommendation linked');
+        case 21:
+          return gettextCatalog.getString('Recommendation unlinked');
+        case 10:
+          if (entry.fieldCode === 'impact_scale_update') {
+            return gettextCatalog.getString('Impact scale update');
+          }
+          return gettextCatalog.getString('{{ field }} changed', {
+            field: $scope.getHistoryFieldLabel(entry.fieldCode)
+          });
+        case 30:
+          return gettextCatalog.getString('{{ field }} created', {
+            field: $scope.getHistoryFieldLabel(entry.fieldCode)
+          });
+        case 31:
+          return gettextCatalog.getString('{{ field }} updated', {
+            field: $scope.getHistoryFieldLabel(entry.fieldCode)
+          });
+        case 32:
+          return gettextCatalog.getString('{{ field }} deleted', {
+            field: $scope.getHistoryFieldLabel(entry.fieldCode)
+          });
+        case 33:
+          return gettextCatalog.getString('Impact scale update');
+        case 40:
+        default:
+          return gettextCatalog.getString('{{ field }} changed', {
+            field: $scope.getHistoryFieldLabel(entry.fieldCode)
+          });
+      }
+    };
+
+    $scope.getHistoryDetails = function(entry) {
+      if (!entry) {
+        return '';
+      }
+
+      if (entry.changeType === 20) {
+        return parseHistoryValue(entry.newValue);
+      }
+      if (entry.changeType === 21) {
+        return parseHistoryValue(entry.oldValue);
+      }
+      if (entry.changeType === 1) {
+        return gettextCatalog.getString('Baseline captured');
+      }
+
+      var oldValue = parseHistoryValue(entry.oldValue);
+      var newValue = parseHistoryValue(entry.newValue);
+      if (oldValue === '—') {
+        return newValue;
+      }
+      if (newValue === '—') {
+        return oldValue;
+      }
+
+      return oldValue + ' → ' + newValue;
+    };
+
+    $scope.isHistoryValueLong = function(value) {
+      return !!value && ('' + parseHistoryValue(value)).length > 120;
+    };
+
+    $scope.toggleHistoryValue = function(entry, key) {
+      if (!entry) {
+        return;
+      }
+
+      entry[key] = !entry[key];
+    };
+
+    $scope.getHistoryExpandedValue = function(value) {
+      return parseHistoryValue(value);
+    };
+
+    function normalizeHistoryChangeTypeFilter(sheet) {
+      var selectedChangeType;
+      if (!sheet) {
+        return 0;
+      }
+
+      selectedChangeType = parseInt(sheet.historyChangeTypeFilter, 10);
+      if (isNaN(selectedChangeType) || selectedChangeType < 0) {
+        selectedChangeType = 0;
+      }
+
+      sheet.historyChangeTypeFilter = selectedChangeType;
+
+      return selectedChangeType;
+    }
+
+    function buildHistoryQueryParams(sheet, isOperational) {
+      var params = {
+        targetType: isOperational ? historyTargetTypes.operationalRisk : historyTargetTypes.informationRisk,
+        targetId: sheet.id
+      };
+
+      var selectedChangeType = normalizeHistoryChangeTypeFilter(sheet);
+      if (selectedChangeType > 0) {
+        params.changeType = selectedChangeType;
+      }
+
+      return params;
+    }
+
+    $scope.loadRiskHistory = function(sheet, isOperational) {
+      if (!sheet || !sheet.id) {
+        return;
+      }
+
+      sheet.historyLoading = true;
+      AnrService.getHistory($scope.model.anr.id, buildHistoryQueryParams(sheet, isOperational)).then(function(data) {
+        sheet.history = data.history || [];
+      }).finally(function() {
+        sheet.historyLoading = false;
+      });
+    };
+
+    $scope.onHistoryChangeTypeChange = function(sheet, isOperational) {
+      $scope.loadRiskHistory(sheet, isOperational);
+    };
+
+    function updateLinkedUserReferences(linkedUser) {
+      if (!linkedUser || !linkedUser.id) {
+        return;
+      }
+
+      [
+        $scope.sheet_risk,
+        $scope.opsheet_risk
+      ].forEach(function(sheet) {
+        if (!sheet) {
+          return;
+        }
+
+        [
+          'riskOwnerSupervisor',
+          'residualAcceptanceApproverSupervisor',
+          'residualAcceptanceApproverSupervisorSelection',
+          'ownerSupervisorSelection'
+        ].forEach(function(field) {
+          if (sheet[field] && sheet[field].linkedUser && sheet[field].linkedUser.id == linkedUser.id) {
+            sheet[field].linkedUser = angular.copy(linkedUser);
+          }
+        });
+      });
+    }
+
+    function updateSupervisorReferences(supervisor) {
+      if (!supervisor || !supervisor.id) {
+        return;
+      }
+
+      [$scope.sheet_risk, $scope.opsheet_risk].forEach(function(sheet) {
+        if (!sheet) {
+          return;
+        }
+
+        [
+          'riskOwnerSupervisor',
+          'residualAcceptanceApproverSupervisor',
+          'residualAcceptanceApproverSupervisorSelection',
+          'ownerSupervisorSelection'
+        ].forEach(function(field) {
+          if (sheet[field] && String(sheet[field].id) === String(supervisor.id)) {
+            sheet[field] = angular.copy(supervisor);
+          }
+        });
+
+        if (String(sheet.riskOwnerSupervisorId || '') === String(supervisor.id)) {
+          sheet.riskOwnerSupervisorName = supervisor.name || '';
+          sheet.owner = supervisor.name || '';
+          sheet.ownerSearchText = supervisor.name || '';
+        }
+        if (String(sheet.residualAcceptanceApproverSupervisorId || '') === String(supervisor.id)) {
+          sheet.residualAcceptanceApproverSearchText = supervisor.name || '';
+        }
+      });
+    }
+
+    $rootScope.$on('supervisor-updated', function(event, anrId, supervisor) {
+      if (!$scope.model || !$scope.model.anr || String($scope.model.anr.id) !== String(anrId)) {
+        return;
+      }
+
+      updateSupervisorReferences(supervisor);
+      $scope.updateAnrRisksTable();
+      $scope.updateAnrRisksOpTable();
+    });
+
+    $scope.openLinkedUserAccount = function(linkedUserId, ev) {
+      if (!linkedUserId || !$scope.canManageSupervisorLinkedUsers()) {
+        return;
+      }
+
+      var ClientUsersService = $injector.get('ClientUsersService');
+      var ClientAnrService = $injector.get('ClientAnrService');
+
+      ClientUsersService.getUser(linkedUserId).then(function(userData) {
+        var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+        $mdDialog.show({
+          controller: ['$scope', '$mdDialog', 'ClientAnrService', 'user', EditLinkedUserDialogCtrl],
+          templateUrl: 'views/dialogs/create.user.html',
+          targetEvent: ev,
+          scope: $scope.$dialogScope.$new(),
+          clickOutsideToClose: false,
+          fullscreen: useFullScreen,
+          locals: {
+            ClientAnrService: ClientAnrService,
+            user: userData
+          }
+        }).then(function(user) {
+          ClientUsersService.patchUser(user.id, user, function() {
+            updateLinkedUserReferences(user);
+            toastr.success(gettextCatalog.getString('The user has been edited successfully.',
+              {firstname: user.firstname, lastname: user.lastname}), gettextCatalog.getString('Edition successful'));
+
+            if (user.id == UserService.getUserId()) {
+              $rootScope.$broadcast('fo-anr-changed');
+            }
+          });
+        }, function(reject) {
+          $scope.handleRejectionDialog(reject);
+        });
+      }, function(error) {
+        $scope.handleRejectionDialog(error);
+      });
+    };
+
+    var applyRiskSheetData = function(risk, risks) {
+      $scope.risks_instance = risks;
+      $scope.ToolsAnrService.currentTab = 0;
+      $scope.opsheet_risk = undefined;
+      $scope.sheet_risk = angular.copy(risk);
+      var currentSheetRisk = $scope.sheet_risk;
+      var mainContent = document.querySelector('md-content.md-main-content');
+      if (mainContent) mainContent.scrollTop = 0;
+      $scope.initializeRiskOwnerSelection($scope.sheet_risk);
+      $scope.initializeRiskReviewFields($scope.sheet_risk);
+      $scope.updateSheetRiskSourceLabel();
+      $scope.loadRiskSources();
+      $scope.loadRiskHistory($scope.sheet_risk, false);
+
+      AmvService.getAmv(currentSheetRisk.amv).then(function(data) {
+        if ($scope.sheet_risk !== currentSheetRisk) {
+          return;
+        }
+
+        if (!angular.equals(data['measures'], {})) {
+          currentSheetRisk.measures = data['measures'];
+        } else {
+          currentSheetRisk.measures = [];
+        }
+      });
+
+      var reducAmount = [];
+      if ($scope.scales.vulns != undefined) {
+        for (var i = $scope.scales.vulns.min; i <= $scope.scales.vulns.max; i++) {
+          reducAmount.push(i);
+          if ($scope.sheet_risk.vulnerabilityRate != '-1' && i == $scope.sheet_risk.vulnerabilityRate) {
+            break;
+          }
+        }
+      }
+      $scope.reducAmount = reducAmount;
+      $scope._copyRecs = [];
+      if ($scope.OFFICE_MODE == 'FO') {
+        $scope.idxRisks = risks.findIndex(infoRisk => infoRisk.id == $stateParams.riskId);
+        $scope.updateRiskSheetNavigationContextIndex('information', risk.id);
+      } else {
+        $scope.idxRisks = risks.findIndex(infoRisk => infoRisk.id == risk.id);
+      }
+      $scope.updateSheetRiskTarget();
+    };
+
+    var applyOpRiskSheetData = function(risk, oprisks) {
+      $scope.opRisks_instance = oprisks;
+      $scope.ToolsAnrService.currentTab = 1;
+      $scope.sheet_risk = undefined;
+      $scope.opsheet_risk = angular.copy(risk);
+      var currentOpSheetRisk = $scope.opsheet_risk;
+      var mainContent = document.querySelector('md-content.md-main-content');
+      if (mainContent) mainContent.scrollTop = 0;
+      $scope.initializeRiskOwnerSelection($scope.opsheet_risk);
+      $scope.loadRiskSourcesForOperationalSheet();
+      $scope.loadRiskHistory($scope.opsheet_risk, true);
+
+      RiskService.getRisk(currentOpSheetRisk.rolfRisk).then(function(data) {
+        if ($scope.opsheet_risk !== currentOpSheetRisk) {
+          return;
+        }
+
+        if (!angular.equals(data['measures'], {})) {
+          currentOpSheetRisk.measures = data['measures'];
+        } else {
+          currentOpSheetRisk.measures = [];
+        }
+      });
+
+      $scope._copyRecs = [];
+      if ($scope.OFFICE_MODE == 'FO') {
+        $scope.initializeRiskReviewFields($scope.opsheet_risk);
+        $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.id == $stateParams.riskopId);
+        $scope.updateRiskSheetNavigationContextIndex('operational', risk.id);
+      } else {
+        $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.rolfRisk == risk.rolfRisk);
+      }
+    };
+
     $scope.openRiskSheet = function(risk, risks) {
+      $scope.clearRiskSheetNavigationContext();
       $scope.risks_instance = risks;
       if ($scope.OFFICE_MODE == 'FO') {
         if ($stateParams.instId) {
@@ -564,34 +1938,7 @@
         }
       }
       $timeout(function() {
-        $scope.ToolsAnrService.currentTab = 0;
-        $scope.opsheet_risk = undefined;
-        $scope.sheet_risk = angular.copy(risk);
-        AmvService.getAmv($scope.sheet_risk.amv).then(function(data) {
-          if (!angular.equals(data['measures'], {})) {
-            $scope.sheet_risk.measures = data['measures'];
-          } else {
-            $scope.sheet_risk.measures = [];
-          }
-        });
-
-        var reducAmount = [];
-        if ($scope.scales.vulns != undefined) {
-          for (var i = $scope.scales.vulns.min; i <= $scope.scales.vulns.max; i++) {
-            reducAmount.push(i);
-            if ($scope.sheet_risk.vulnerabilityRate != '-1' && i == $scope.sheet_risk.vulnerabilityRate) {
-              break;
-            }
-          }
-        }
-        $scope.reducAmount = reducAmount;
-        $scope._copyRecs = [];
-        if ($scope.OFFICE_MODE == 'FO') {
-          $scope.idxRisks = risks.findIndex(infoRisk => infoRisk.id == $stateParams.riskId);
-        } else {
-          $scope.idxRisks = risks.findIndex(infoRisk => infoRisk.id == risk.id);
-        }
-        $scope.updateSheetRiskTarget();
+        applyRiskSheetData(risk, risks);
       });
     };
 
@@ -620,7 +1967,16 @@
         if ($scope.OFFICE_MODE == 'FO') {
           if (!redir) {
             $scope.saveRiskSheet($scope.sheet_risk);
-            if ($stateParams.instId) {
+            if ($scope.isReturningToRisksManagement()) {
+              $state.transitionTo('main.project.anr.risksmanagement', {
+                modelId: $stateParams.modelId
+              }, {
+                inherit: true,
+                notify: true,
+                reload: false,
+                location: 'replace'
+              });
+            } else if ($stateParams.instId) {
               $state.transitionTo('main.project.anr.instance', {
                 modelId: $stateParams.modelId,
                 instId: $stateParams.instId
@@ -652,6 +2008,7 @@
     };
 
     $scope.openOpRiskSheet = function(risk, oprisks) {
+      $scope.clearRiskSheetNavigationContext();
       $scope.opRisks_instance = oprisks;
       if ($scope.OFFICE_MODE == 'FO') {
         if ($stateParams.instId) {
@@ -682,22 +2039,7 @@
       }
 
       $timeout(function() {
-        $scope.ToolsAnrService.currentTab = 1;
-        $scope.sheet_risk = undefined;
-        $scope.opsheet_risk = angular.copy(risk);
-        RiskService.getRisk($scope.opsheet_risk.rolfRisk).then(function(data) {
-          if (!angular.equals(data['measures'], {})) {
-            $scope.opsheet_risk.measures = data['measures'];
-          } else {
-            $scope.opsheet_risk.measures = [];
-          }
-        });
-        $scope._copyRecs = [];
-        if ($scope.OFFICE_MODE == 'FO') {
-          $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.id == $stateParams.riskopId);
-        } else {
-          $scope.idxOpRisks = oprisks.findIndex(oprisk => oprisk.rolfRisk == risk.rolfRisk);
-        }
+        applyOpRiskSheetData(risk, oprisks);
       });
     };
 
@@ -706,7 +2048,16 @@
         if ($scope.OFFICE_MODE == 'FO') {
           $scope.saveOpRiskSheet($scope.opsheet_risk);
           if (!redir) {
-            if ($stateParams.instId) {
+            if ($scope.isReturningToRisksManagement()) {
+              $state.transitionTo('main.project.anr.risksmanagement', {
+                modelId: $stateParams.modelId
+              }, {
+                inherit: true,
+                notify: true,
+                reload: false,
+                location: 'replace'
+              });
+            } else if ($stateParams.instId) {
               $state.transitionTo('main.project.anr.instance', {
                 modelId: $stateParams.modelId,
                 instId: $stateParams.instId
@@ -717,11 +2068,11 @@
                 location: 'replace'
               });
             } else {
-              $state.transitionTo('main.project.anr.riskop', {
+              $state.transitionTo('main.project.anr', {
                 modelId: $stateParams.modelId
               }, {
                 inherit: true,
-                notify: false,
+                notify: true,
                 reload: false,
                 location: 'replace'
               });
@@ -769,69 +2120,1068 @@
     };
 
     $scope.previousRisk = function() {
+      if ($scope.isRisksManagementNavigationActive()) {
+        if (!$scope.canGoToPreviousRiskSheet()) {
+          return;
+        }
+
+        var previousManagedRisk = $scope.riskSheetNavigationContext.items[$scope.riskSheetNavigationContext.index - 1];
+        if (!previousManagedRisk) {
+          return;
+        }
+
+        $scope.reducAmount = [];
+        $scope.saveRiskSheet($scope.sheet_risk);
+        $scope.openRisksManagementRisk(previousManagedRisk);
+        return;
+      }
+
+      if (!$scope.risks_instance || $scope.idxRisks <= 0) {
+        return;
+      }
       $scope.reducAmount = [];
+      let currentRisk = $scope.sheet_risk;
       let previousRisk = $scope.risks_instance[$scope.idxRisks - 1];
-      $scope.risks_instance[$scope.idxRisks] = $scope.sheet_risk;
+      $scope.risks_instance[$scope.idxRisks] = currentRisk;
+      $scope.saveRiskSheet(currentRisk);
       $scope.openRiskSheet(previousRisk, $scope.risks_instance);
-      $scope.saveRiskSheet($scope.sheet_risk);
     };
 
     $scope.nextRisk = function() {
+      if ($scope.isRisksManagementNavigationActive()) {
+        if (!$scope.canGoToNextRiskSheet()) {
+          return;
+        }
+
+        var nextManagedRisk = $scope.riskSheetNavigationContext.items[$scope.riskSheetNavigationContext.index + 1];
+        if (!nextManagedRisk) {
+          return;
+        }
+
+        $scope.reducAmount = [];
+        $scope.saveRiskSheet($scope.sheet_risk);
+        $scope.openRisksManagementRisk(nextManagedRisk);
+        return;
+      }
+
+      if (!$scope.risks_instance || $scope.idxRisks >= $scope.risks_instance.length - 1) {
+        return;
+      }
       $scope.reducAmount = [];
+      let currentRisk = $scope.sheet_risk;
       let nextRisk = $scope.risks_instance[$scope.idxRisks + 1];
-      $scope.risks_instance[$scope.idxRisks] = $scope.sheet_risk;
+      $scope.risks_instance[$scope.idxRisks] = currentRisk;
+      $scope.saveRiskSheet(currentRisk);
       $scope.openRiskSheet(nextRisk, $scope.risks_instance);
-      $scope.saveRiskSheet($scope.sheet_risk);
     };
 
     $scope.previousOpRisk = function() {
+      if ($scope.isRisksManagementNavigationActive()) {
+        if (!$scope.canGoToPreviousRiskSheet()) {
+          return;
+        }
+
+        var previousManagedRisk = $scope.riskSheetNavigationContext.items[$scope.riskSheetNavigationContext.index - 1];
+        if (!previousManagedRisk) {
+          return;
+        }
+
+        $scope.saveOpRiskSheet($scope.opsheet_risk);
+        $scope.openRisksManagementRisk(previousManagedRisk);
+        return;
+      }
+
+      if (!$scope.opRisks_instance || $scope.idxOpRisks <= 0) {
+        return;
+      }
+      let currentOpRisk = $scope.opsheet_risk;
       let previousOpRisk = $scope.opRisks_instance[$scope.idxOpRisks - 1];
-      $scope.opRisks_instance[$scope.idxOpRisks] = $scope.opsheet_risk;
+      $scope.opRisks_instance[$scope.idxOpRisks] = currentOpRisk;
+      $scope.saveOpRiskSheet(currentOpRisk);
       $scope.openOpRiskSheet(previousOpRisk, $scope.opRisks_instance);
-      $scope.saveRiskSheet($scope.sheet_risk);
     };
 
     $scope.nextOpRisk = function() {
+      if ($scope.isRisksManagementNavigationActive()) {
+        if (!$scope.canGoToNextRiskSheet()) {
+          return;
+        }
+
+        var nextManagedRisk = $scope.riskSheetNavigationContext.items[$scope.riskSheetNavigationContext.index + 1];
+        if (!nextManagedRisk) {
+          return;
+        }
+
+        $scope.saveOpRiskSheet($scope.opsheet_risk);
+        $scope.openRisksManagementRisk(nextManagedRisk);
+        return;
+      }
+
+      if (!$scope.opRisks_instance || $scope.idxOpRisks >= $scope.opRisks_instance.length - 1) {
+        return;
+      }
+      let currentOpRisk = $scope.opsheet_risk;
       let nextOpRisk = $scope.opRisks_instance[$scope.idxOpRisks + 1];
-      $scope.opRisks_instance[$scope.idxOpRisks] = $scope.opsheet_risk;
+      $scope.opRisks_instance[$scope.idxOpRisks] = currentOpRisk;
+      $scope.saveOpRiskSheet(currentOpRisk);
       $scope.openOpRiskSheet(nextOpRisk, $scope.opRisks_instance);
-      $scope.saveRiskSheet($scope.sheet_risk);
     };
 
     $scope.saveRiskSheet = function(sheet) {
-      if (!$scope.isAnrReadOnly) {
-        AnrService.updateInstanceRisk($scope.model.anr.id, sheet.id, sheet, function() {
-          $scope.$broadcast('risks-table-edited');
-          $scope.updateAnrRisksTable();
-          $scope.updateSheetRiskTarget();
-        })
+      if (!$scope.canSaveRiskSheetFields(sheet)) {
+        return;
       }
+
+      if ($scope.hasPendingRiskOwnerRemoval(sheet)) {
+        $scope.onRiskOwnerSelected(sheet, null, {
+          force: true
+        });
+        return;
+      }
+
+      $scope.applyResidualAcceptanceState(sheet);
+      var payload = $scope.isAnrReadOnly
+        ? $scope.buildDelegatedRiskSheetPayload(sheet)
+        : $scope.buildRiskSheetPayload(sheet);
+      if (!Object.keys(payload).length) {
+        return;
+      }
+
+      var saveRequest = $scope.isAnrReadOnly
+        ? AnrService.patchInstanceRisk
+        : AnrService.updateInstanceRisk;
+
+      saveRequest($scope.model.anr.id, sheet.id, payload, function(response) {
+        sheet.owner = response.owner;
+        sheet.riskOwnerSupervisor = response.riskOwnerSupervisor || null;
+        sheet.riskOwnerSupervisorId = response.riskOwnerSupervisorId;
+        sheet.riskOwnerSupervisorName = response.riskOwnerSupervisorName;
+        sheet.lastReviewDate = response.lastReviewDate;
+        sheet.reviewFrequency = response.reviewFrequency;
+        $scope.applyResidualRiskDecisionResponse(sheet, response);
+        $scope.initializeRiskOwnerSelection(sheet);
+        $scope.initializeRiskReviewFields(sheet);
+        $scope.$broadcast('risks-table-edited');
+        $scope.updateAnrRisksTable();
+        $scope.updateSheetRiskTarget();
+        $scope.loadRiskHistory(sheet, false);
+        if ($state.$current.name === 'main.project.anr.risksmanagement') {
+          $scope.loadRisksManagementData();
+        }
+      });
     };
 
     $scope.saveOpRiskSheet = function(sheet) {
-      if (!$scope.isAnrReadOnly) {
-        AnrService.updateInstanceOpRisk($scope.model.anr.id, sheet.id, sheet, function() {
-          $scope.$broadcast('risks-table-edited');
-          $scope.updateAnrRisksOpTable();
-        })
+      if (!$scope.canSaveRiskSheetFields(sheet)) {
+        return;
       }
+
+      if ($scope.hasPendingRiskOwnerRemoval(sheet)) {
+        $scope.onRiskOwnerSelected(sheet, null, {
+          force: true
+        });
+        return;
+      }
+
+      $scope.applyResidualAcceptanceState(sheet);
+      var payload = $scope.isAnrReadOnly
+        ? $scope.buildDelegatedRiskSheetPayload(sheet)
+        : $scope.buildOpRiskSheetPayload(sheet);
+      if (!Object.keys(payload).length) {
+        return;
+      }
+
+      var saveRequest = $scope.isAnrReadOnly
+        ? AnrService.patchInstanceOpRisk
+        : AnrService.updateInstanceOpRisk;
+
+      saveRequest($scope.model.anr.id, sheet.id, payload, function(response) {
+        sheet.owner = response.owner;
+        sheet.riskOwnerSupervisor = response.riskOwnerSupervisor || null;
+        sheet.riskOwnerSupervisorId = response.riskOwnerSupervisorId;
+        sheet.riskOwnerSupervisorName = response.riskOwnerSupervisorName;
+        sheet.riskSourceId = response.riskSourceId;
+        sheet.riskSourceLabel = response.riskSourceLabel;
+        sheet.lastReviewDate = response.lastReviewDate;
+        sheet.nextReassessmentDate = response.nextReassessmentDate;
+        sheet.reviewFrequency = response.reviewFrequency;
+        $scope.applyResidualRiskDecisionResponse(sheet, response);
+        $scope.initializeRiskOwnerSelection(sheet);
+        $scope.initializeRiskReviewFields(sheet);
+        $scope.$broadcast('risks-table-edited');
+        $scope.updateAnrRisksOpTable();
+        $scope.loadRiskHistory(sheet, true);
+        if ($state.$current.name === 'main.project.anr.risksmanagement') {
+          $scope.loadRisksManagementData();
+        }
+      });
+    };
+
+    $scope.buildOpRiskSheetPayload = function(sheet) {
+      var payload = angular.copy(sheet);
+      var ownerName = ((sheet.ownerSearchText || '') + '').trim();
+      payload.riskOwnerSupervisorId = null;
+      if (sheet.ownerSupervisorSelection && sheet.ownerSupervisorSelection.id) {
+        payload.riskOwnerSupervisorId = sheet.ownerSupervisorSelection.id;
+      } else if (sheet.riskOwnerSupervisorId && ownerName === (sheet.riskOwnerSupervisorName || '').trim()) {
+        payload.riskOwnerSupervisorId = sheet.riskOwnerSupervisorId;
+      }
+      payload.lastReviewDate = $scope.formatDateValue(sheet.lastReviewDateValue);
+      payload.nextReassessmentDate = $scope.formatDateValue(sheet.nextReassessmentDateValue);
+      payload.reviewFrequency = $scope.buildReviewFrequencyValue(sheet);
+      angular.extend(payload, $scope.buildResidualAcceptancePayload(sheet));
+      delete payload.owner;
+      delete payload.ownerSearchText;
+      delete payload.ownerSupervisorSelection;
+      delete payload.riskOwnerSupervisor;
+      delete payload.lastReviewDateValue;
+      delete payload.nextReassessmentDateValue;
+      delete payload.residualRiskDecidedAtValue;
+      delete payload.residualAcceptanceApproverSupervisor;
+      delete payload.residualAcceptanceApproverSupervisorSelection;
+      delete payload.residualAcceptanceApproverSearchText;
+      delete payload.residualAcceptancePerformerTouched;
+      delete payload.residualRiskDecidedBySupervisor;
+      delete payload.residualRiskDecidedBySupervisorId;
+      delete payload.residualRiskDecidedByUserId;
+      delete payload.residualRiskDecidedByName;
+      delete payload.reviewFrequencyOption;
+      delete payload.reviewFrequencyCustom;
+      delete payload._residualAcceptanceSnapshot;
+      delete payload._skipRiskOwnerSelectionChange;
+
+      return payload;
+    };
+
+    $scope.loadRiskSources = function(cb) {
+      RiskSourceService.getRiskSources({
+        status: true
+      }).then(function(data) {
+        $scope.riskSources = (data.riskSources || []).sort(function(a, b) {
+          return a.label.localeCompare(b.label);
+        });
+        $scope.ensureSelectedRiskSourceAvailable(cb);
+      }, function() {
+        if (cb) {
+          cb();
+        }
+      });
+    };
+
+    $scope.ensureSelectedRiskSourceAvailable = function(cb) {
+      if (!$scope.sheet_risk) {
+        if (cb) {
+          cb();
+        }
+        return;
+      }
+
+      var selectedRiskSourceId = $scope.sheet_risk.riskSourceId;
+
+      var hasSelectedRiskSource = $scope.riskSources.some(function(riskSource) {
+        return riskSource.id == selectedRiskSourceId;
+      });
+
+      if (!selectedRiskSourceId || hasSelectedRiskSource) {
+        $scope.updateSheetRiskSourceLabel();
+        if (cb) {
+          cb();
+        }
+        return;
+      }
+
+      RiskSourceService.getRiskSource(selectedRiskSourceId).then(function(riskSource) {
+        if (riskSource && !$scope.riskSources.some(function(source) {
+          return source.id == riskSource.id;
+        })) {
+          $scope.riskSources.push(riskSource);
+          $scope.riskSources.sort(function(a, b) {
+            return a.label.localeCompare(b.label);
+          });
+        }
+
+        $scope.updateSheetRiskSourceLabel();
+        if (cb) {
+          cb();
+        }
+      }, function() {
+        $scope.updateSheetRiskSourceLabel();
+        if (cb) {
+          cb();
+        }
+      });
+    };
+
+    $scope.updateSheetRiskSourceLabel = function() {
+      if (!$scope.sheet_risk) {
+        return;
+      }
+
+      var selectedRiskSourceId = $scope.sheet_risk.riskSourceId;
+
+      var selectedRiskSource = $scope.riskSources.find(function(riskSource) {
+        return riskSource.id == selectedRiskSourceId;
+      });
+
+      if (selectedRiskSource) {
+        $scope.sheet_risk.riskSourceId = selectedRiskSource.id;
+        $scope.sheet_risk.riskSourceLabel = selectedRiskSource.label;
+      } else if (selectedRiskSourceId === null || selectedRiskSourceId === '' || selectedRiskSourceId === undefined) {
+        $scope.clearRiskSourceSelection();
+      }
+    };
+
+    $scope.clearRiskSourceSelection = function() {
+      if (!$scope.sheet_risk) {
+        return;
+      }
+
+      $scope.sheet_risk.riskSourceId = null;
+      $scope.sheet_risk.riskSourceLabel = '';
+    };
+
+    $scope.loadRiskSourcesForOperationalSheet = function(cb) {
+      RiskSourceService.getRiskSources({
+        status: true
+      }).then(function(data) {
+        $scope.riskSources = (data.riskSources || []).sort(function(a, b) {
+          return a.label.localeCompare(b.label);
+        });
+        $scope.ensureSelectedOperationalRiskSourceAvailable(cb);
+      }, function() {
+        if (cb) {
+          cb();
+        }
+      });
+    };
+
+    $scope.ensureSelectedOperationalRiskSourceAvailable = function(cb) {
+      if (!$scope.opsheet_risk) {
+        if (cb) {
+          cb();
+        }
+        return;
+      }
+
+      var selectedRiskSourceId = $scope.opsheet_risk.riskSourceId;
+      var hasSelectedRiskSource = $scope.riskSources.some(function(riskSource) {
+        return riskSource.id == selectedRiskSourceId;
+      });
+
+      if (!selectedRiskSourceId || hasSelectedRiskSource) {
+        $scope.updateOperationalSheetRiskSourceLabel();
+        if (cb) {
+          cb();
+        }
+        return;
+      }
+
+      RiskSourceService.getRiskSource(selectedRiskSourceId).then(function(riskSource) {
+        if (riskSource && !$scope.riskSources.some(function(source) {
+          return source.id == riskSource.id;
+        })) {
+          $scope.riskSources.push(riskSource);
+          $scope.riskSources.sort(function(a, b) {
+            return a.label.localeCompare(b.label);
+          });
+        }
+
+        $scope.updateOperationalSheetRiskSourceLabel();
+        if (cb) {
+          cb();
+        }
+      }, function() {
+        $scope.updateOperationalSheetRiskSourceLabel();
+        if (cb) {
+          cb();
+        }
+      });
+    };
+
+    $scope.updateOperationalSheetRiskSourceLabel = function() {
+      if (!$scope.opsheet_risk) {
+        return;
+      }
+
+      var selectedRiskSourceId = $scope.opsheet_risk.riskSourceId;
+      var selectedRiskSource = $scope.riskSources.find(function(riskSource) {
+        return riskSource.id == selectedRiskSourceId;
+      });
+
+      if (selectedRiskSource) {
+        $scope.opsheet_risk.riskSourceId = selectedRiskSource.id;
+        $scope.opsheet_risk.riskSourceLabel = selectedRiskSource.label;
+      } else if (selectedRiskSourceId === null || selectedRiskSourceId === '' || selectedRiskSourceId === undefined) {
+        $scope.clearOperationalRiskSourceSelection();
+      }
+    };
+
+    $scope.clearOperationalRiskSourceSelection = function() {
+      if (!$scope.opsheet_risk) {
+        return;
+      }
+
+      $scope.opsheet_risk.riskSourceId = null;
+      $scope.opsheet_risk.riskSourceLabel = '';
+    };
+
+    $scope.initializeRiskReviewFields = function(sheet) {
+      if (!sheet) {
+        return;
+      }
+
+      sheet.lastReviewDateValue = $scope.parseDateValue(sheet.lastReviewDate);
+      sheet.nextReassessmentDateValue = $scope.parseDateValue(sheet.nextReassessmentDate);
+      sheet.reassessmentTriggerIds = (sheet.reassessmentTriggers || []).map(function(trigger) {
+        return trigger.id;
+      });
+      $scope.setDefaultNextReassessmentDate(sheet);
+      $scope.loadReassessmentTriggersForRisk();
+      sheet.residualRiskDecidedAtValue = $scope.parseDateValue(sheet.residualRiskDecidedAt);
+      sheet.residualAcceptanceApproverSupervisorSelection = sheet.residualAcceptanceApproverSupervisor || null;
+      sheet.residualAcceptanceApproverSearchText = sheet.residualAcceptanceApproverSupervisor
+        ? (sheet.residualAcceptanceApproverSupervisor.name || '')
+        : '';
+      $scope.applyResidualAcceptanceState(sheet, {
+        preserveDecisionFields: true
+      });
+      $scope.syncReviewFrequencyState(sheet);
+      $scope.captureResidualAcceptanceSnapshot(sheet);
+    };
+
+    $scope.syncReviewFrequencyState = function(sheet) {
+      if (!sheet) {
+        return;
+      }
+
+      var reviewFrequency = sheet.reviewFrequency || '';
+      if (!reviewFrequency) {
+        sheet.reviewFrequencyOption = null;
+        sheet.reviewFrequencyCustom = '';
+        return;
+      }
+
+      if (reviewFrequencyValues.indexOf(reviewFrequency) !== -1) {
+        sheet.reviewFrequencyOption = reviewFrequency;
+        sheet.reviewFrequencyCustom = '';
+        return;
+      }
+
+      sheet.reviewFrequencyOption = reviewFrequencyOtherValue;
+      sheet.reviewFrequencyCustom = reviewFrequency;
+    };
+
+    $scope.buildResidualAcceptancePayload = function(sheet) {
+      var payload = {
+        residualAcceptanceUseRiskOwner: !!sheet.residualAcceptanceUseRiskOwner,
+        residualAcceptanceApproverSupervisorId: null
+      };
+      var effectiveApprover = $scope.getEffectiveResidualApprover(sheet);
+      if (!sheet.residualAcceptanceUseRiskOwner && effectiveApprover && effectiveApprover.id) {
+        payload.residualAcceptanceApproverSupervisorId = effectiveApprover.id;
+      }
+
+      var currentState = {
+        residualRiskDecision: sheet.residualRiskDecision || null,
+        residualRiskDecidedAt: $scope.formatDateValue(sheet.residualRiskDecidedAtValue),
+        residualRiskJustification: (sheet.residualRiskJustification || '').trim() || null,
+        residualAcceptancePerformedByName: sheet.residualAcceptancePerformedByName || null,
+        residualAcceptancePerformedByEmail: sheet.residualAcceptancePerformedByEmail || null,
+        residualAcceptancePerformedOnBehalf: !!sheet.residualAcceptancePerformedOnBehalf
+      };
+      var snapshot = sheet._residualAcceptanceSnapshot || {};
+
+      Object.keys(currentState).forEach(function(field) {
+        if (currentState[field] !== (snapshot[field] === undefined ? null : snapshot[field])) {
+          payload[field] = currentState[field];
+        }
+      });
+
+      if (sheet.residualAcceptancePerformerTouched) {
+        payload.residualAcceptancePerformedByName = currentState.residualAcceptancePerformedByName;
+        payload.residualAcceptancePerformedByEmail = currentState.residualAcceptancePerformedByEmail;
+        payload.residualAcceptancePerformedOnBehalf = currentState.residualAcceptancePerformedOnBehalf;
+      }
+
+      return payload;
+    };
+
+    $scope.buildRiskSheetPayload = function(sheet) {
+      var payload = angular.copy(sheet);
+      var ownerName = ((sheet.ownerSearchText || '') + '').trim();
+      payload.riskOwnerSupervisorId = null;
+      if (sheet.ownerSupervisorSelection && sheet.ownerSupervisorSelection.id) {
+        payload.riskOwnerSupervisorId = sheet.ownerSupervisorSelection.id;
+      } else if (sheet.riskOwnerSupervisorId && ownerName === (sheet.riskOwnerSupervisorName || '').trim()) {
+        payload.riskOwnerSupervisorId = sheet.riskOwnerSupervisorId;
+      }
+      payload.lastReviewDate = $scope.formatDateValue(sheet.lastReviewDateValue);
+      payload.nextReassessmentDate = $scope.formatDateValue(sheet.nextReassessmentDateValue);
+      payload.reassessmentTriggerIds = sheet.reassessmentTriggerIds || [];
+      payload.reviewFrequency = $scope.buildReviewFrequencyValue(sheet);
+      angular.extend(payload, $scope.buildResidualAcceptancePayload(sheet));
+      delete payload.owner;
+      delete payload.ownerSearchText;
+      delete payload.ownerSupervisorSelection;
+      delete payload.riskOwnerSupervisor;
+      delete payload.lastReviewDateValue;
+      delete payload.nextReassessmentDateValue;
+      delete payload.reassessmentTriggers;
+      delete payload.residualRiskDecidedAtValue;
+      delete payload.residualAcceptanceApproverSupervisor;
+      delete payload.residualAcceptanceApproverSupervisorSelection;
+      delete payload.residualAcceptanceApproverSearchText;
+      delete payload.residualAcceptancePerformerTouched;
+      delete payload.residualRiskDecidedBySupervisor;
+      delete payload.residualRiskDecidedBySupervisorId;
+      delete payload.residualRiskDecidedByUserId;
+      delete payload.residualRiskDecidedByName;
+      delete payload.reviewFrequencyOption;
+      delete payload.reviewFrequencyCustom;
+      delete payload._residualAcceptanceSnapshot;
+      delete payload._skipRiskOwnerSelectionChange;
+
+      return payload;
+    };
+
+    $scope.buildReviewFrequencyValue = function(sheet) {
+      if (!sheet || !sheet.reviewFrequencyOption) {
+        return null;
+      }
+
+      if (sheet.reviewFrequencyOption === reviewFrequencyOtherValue) {
+        var customReviewFrequency = (sheet.reviewFrequencyCustom || '').trim();
+        return customReviewFrequency === '' ? null : customReviewFrequency;
+      }
+
+      return sheet.reviewFrequencyOption;
+    };
+
+    $scope.buildDelegatedRiskSheetPayload = function(sheet) {
+      var payload = {};
+
+      if ($scope.canCurrentUserEditMonitoringAndReview(sheet)) {
+        payload.lastReviewDate = $scope.formatDateValue(sheet.lastReviewDateValue);
+        payload.nextReassessmentDate = $scope.formatDateValue(sheet.nextReassessmentDateValue);
+        payload.reassessmentTriggerIds = sheet.reassessmentTriggerIds || [];
+        payload.reviewFrequency = $scope.buildReviewFrequencyValue(sheet);
+      }
+
+      if ($scope.canCurrentUserDecideResidualRisk(sheet)) {
+        var residualPayload = $scope.buildResidualAcceptancePayload(sheet);
+        delete residualPayload.residualAcceptanceUseRiskOwner;
+        delete residualPayload.residualAcceptanceApproverSupervisorId;
+        angular.extend(payload, residualPayload);
+      }
+
+      return payload;
+    };
+
+    $scope.parseDateValue = function(dateValue) {
+      if (!dateValue) {
+        return null;
+      }
+
+      var parts = dateValue.split('-');
+      if (parts.length !== 3) {
+        return null;
+      }
+
+      return new Date(parts[0], parts[1] - 1, parts[2]);
+    };
+
+    $scope.formatDateValue = function(dateValue) {
+      if (!dateValue) {
+        return null;
+      }
+
+      var reviewDate = new Date(dateValue);
+      if (isNaN(reviewDate.getTime())) {
+        return null;
+      }
+
+      var year = reviewDate.getFullYear();
+      var month = String(reviewDate.getMonth() + 1).padStart(2, '0');
+      var day = String(reviewDate.getDate()).padStart(2, '0');
+
+      return year + '-' + month + '-' + day;
+    };
+
+    $scope.clearLastReviewDate = function(sheet) {
+      if (!sheet) {
+        return;
+      }
+
+      sheet.lastReviewDateValue = null;
+    };
+
+    $scope.setDefaultNextReassessmentDate = function(sheet) {
+      if (!sheet || !sheet.lastReviewDateValue || sheet.nextReassessmentDateValue) {
+        return;
+      }
+
+      var nextDate = new Date(sheet.lastReviewDateValue);
+      nextDate.setFullYear(nextDate.getFullYear() + 1);
+      sheet.nextReassessmentDateValue = nextDate;
+    };
+
+    $scope.setDefaultBatchNextReassessmentDate = function() {
+      var batch = $scope.risksManagementState.batch;
+      if (!batch.lastReviewDate || batch.nextReassessmentDate) {
+        return;
+      }
+
+      var nextDate = new Date(batch.lastReviewDate);
+      nextDate.setFullYear(nextDate.getFullYear() + 1);
+      batch.nextReassessmentDate = nextDate;
+    };
+
+    $scope.loadReassessmentTriggersForRisk = function() {
+      if (reassessmentTriggersLoaded || !$scope.model || !$scope.model.anr || !$scope.model.anr.id) {
+        return;
+      }
+
+      reassessmentTriggersLoaded = true;
+      ReassessmentTriggerService.getReassessmentTriggers({
+        anr: $scope.model.anr.id,
+        limit: 0
+      }).then(function(data) {
+        $scope.reassessmentTriggers = (data.reassessmentTriggers || []).filter(function(trigger) {
+          return trigger.isActive;
+        });
+      }, function() {
+        reassessmentTriggersLoaded = false;
+      });
+    };
+
+    $scope.getReassessmentTriggerFieldStyle = function(triggerIds) {
+      var selectedLabels = (triggerIds || []).map(function(triggerId) {
+        var trigger = $scope.reassessmentTriggers.find(function(item) {
+          return item.id == triggerId;
+        });
+
+        return trigger ? trigger.triggerType : '';
+      }).filter(Boolean);
+      var characters = Math.max(34, selectedLabels.join(', ').length);
+      var width = Math.min(680, Math.max(300, (characters * 8) + 64));
+
+      return {
+        width: width + 'px',
+        'max-width': '100%'
+      };
+    };
+
+    $scope.getReassessmentTriggerCriteriaLabel = function(reassessmentTriggers) {
+      var labels = (reassessmentTriggers || []).map(function(trigger) {
+        return trigger.triggerType || '';
+      }).filter(Boolean);
+
+      return labels.length > 0 ? labels.join(', ') : '-';
+    };
+
+    $scope.clearResidualRiskDecisionDate = function(sheet) {
+      if (!sheet) {
+        return;
+      }
+
+      sheet.residualRiskDecidedAtValue = null;
+    };
+
+    $scope.openReassessmentTriggersDialog = function(ev) {
+      if ($scope.OFFICE_MODE !== 'FO') {
+        return;
+      }
+
+      var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+      $mdDialog.show({
+        controller: [
+          '$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'ReassessmentTriggerService', 'ClientAnrService',
+          'anr', 'isAnrReadOnly', ReassessmentTriggersDialog
+        ],
+        templateUrl: 'views/anr/reassessment-triggers.html',
+        targetEvent: ev,
+        preserveScope: false,
+        scope: $scope.$dialogScope.$new(),
+        clickOutsideToClose: false,
+        fullscreen: useFullScreen,
+        locals: {
+          ReassessmentTriggerService: ReassessmentTriggerService,
+          ClientAnrService: $injector.get('ClientAnrService'),
+          anr: $scope.model.anr,
+          isAnrReadOnly: $scope.isAnrReadOnly
+        }
+      }).then(function() {
+      }, function(reject) {
+        $scope.handleRejectionDialog(reject);
+      });
+    };
+
+    var openReassessmentTriggersMethodStep = function() {
+      $scope.openReassessmentTriggersDialog();
+    };
+
+    $scope.openSupervisorsDialog = function(ev, initialRole) {
+      if ($scope.OFFICE_MODE !== 'FO') {
+        return;
+      }
+
+      var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
+
+      $mdDialog.show({
+        controller: [
+          '$scope', '$mdDialog', '$rootScope', 'toastr', 'gettextCatalog', 'AnrService', 'anr', 'isAnrReadOnly',
+          'canManageLinkedUsers', 'initialRole',
+          SupervisorsDialog
+        ],
+        templateUrl: 'views/anr/supervisors.html',
+        targetEvent: ev,
+        preserveScope: false,
+        scope: $scope.$dialogScope.$new(),
+        clickOutsideToClose: false,
+        fullscreen: useFullScreen,
+        locals: {
+          AnrService: AnrService,
+          anr: $scope.model.anr,
+          isAnrReadOnly: $scope.isAnrReadOnly,
+          canManageLinkedUsers: $scope.canManageSupervisorLinkedUsers(),
+          initialRole: initialRole || null
+        }
+      }).then(function() {
+      }, function(reject) {
+        $scope.handleRejectionDialog(reject);
+      });
+    };
+
+    $scope.createRiskSourceFromSheet = function(ev) {
+      if ($scope.isAnrReadOnly || !$scope.sheet_risk) {
+        return;
+      }
+
+      var prompt = $mdDialog.prompt()
+        .title(gettextCatalog.getString('Add a risk source'))
+        .placeholder(gettextCatalog.getString('Risk source label'))
+        .ariaLabel(gettextCatalog.getString('Risk source label'))
+        .theme('light')
+        .targetEvent(ev)
+        .required(true)
+        .ok(gettextCatalog.getString('Create'))
+        .cancel(gettextCatalog.getString('Cancel'));
+
+      $mdDialog.show(prompt.multiple(true)).then(function(label) {
+        var trimmedLabel = label.trim();
+        var existingRiskSource = $scope.riskSources.find(function(riskSource) {
+          return riskSource.label.toLowerCase() === trimmedLabel.toLowerCase();
+        });
+
+        if (existingRiskSource) {
+          $scope.sheet_risk.riskSourceId = existingRiskSource.id;
+          $scope.updateSheetRiskSourceLabel();
+          return;
+        }
+
+        RiskSourceService.createRiskSource({
+          label: trimmedLabel
+        }, function(riskSource) {
+          $scope.riskSources.push(riskSource);
+          $scope.riskSources.sort(function(a, b) {
+            return a.label.localeCompare(b.label);
+          });
+          $scope.sheet_risk.riskSourceId = riskSource.id;
+          $scope.updateSheetRiskSourceLabel();
+        });
+      }, function(reject) {
+        $scope.handleRejectionDialog(reject);
+      });
+    };
+
+    $scope.createRiskSourceFromOperationalSheet = function(ev) {
+      if ($scope.isAnrReadOnly || !$scope.opsheet_risk) {
+        return;
+      }
+
+      var prompt = $mdDialog.prompt()
+        .title(gettextCatalog.getString('Add a risk source'))
+        .placeholder(gettextCatalog.getString('Risk source label'))
+        .ariaLabel(gettextCatalog.getString('Risk source label'))
+        .theme('light')
+        .targetEvent(ev)
+        .required(true)
+        .ok(gettextCatalog.getString('Create'))
+        .cancel(gettextCatalog.getString('Cancel'));
+
+      $mdDialog.show(prompt.multiple(true)).then(function(label) {
+        var trimmedLabel = label.trim();
+        var existingRiskSource = $scope.riskSources.find(function(riskSource) {
+          return riskSource.label.toLowerCase() === trimmedLabel.toLowerCase();
+        });
+
+        if (existingRiskSource) {
+          $scope.opsheet_risk.riskSourceId = existingRiskSource.id;
+          $scope.updateOperationalSheetRiskSourceLabel();
+          return;
+        }
+
+        RiskSourceService.createRiskSource({
+          label: trimmedLabel
+        }, function(riskSource) {
+          $scope.riskSources.push(riskSource);
+          $scope.riskSources.sort(function(a, b) {
+            return a.label.localeCompare(b.label);
+          });
+          $scope.opsheet_risk.riskSourceId = riskSource.id;
+          $scope.updateOperationalSheetRiskSourceLabel();
+        });
+      }, function(reject) {
+        $scope.handleRejectionDialog(reject);
+      });
+    };
+
+    var ownerSearchRequestId = 0;
+
+    $scope.applyRiskOwnerSelection = function(sheet, item) {
+      if (!sheet || !$scope.canCurrentUserEditRiskOwner(sheet)) {
+        return;
+      }
+
+      if (!item) {
+        if (!((sheet.ownerSearchText || '').trim())) {
+          sheet.owner = '';
+          sheet.riskOwnerSupervisor = null;
+          sheet.riskOwnerSupervisorId = null;
+          sheet.riskOwnerSupervisorName = '';
+          sheet.ownerSupervisorSelection = null;
+          $scope.applyResidualAcceptanceState(sheet);
+        }
+        return;
+      }
+
+      sheet.owner = item.name;
+      sheet.riskOwnerSupervisor = item;
+      sheet.riskOwnerSupervisorId = item.id;
+      sheet.riskOwnerSupervisorName = item.name;
+      sheet.ownerSearchText = item.name;
+      $scope.applyResidualAcceptanceState(sheet, {
+        preserveDecisionFields: true
+      });
+    };
+
+    $scope.onRiskOwnerFocus = function(sheet) {
+      if (!sheet) {
+        return;
+      }
+
+      sheet._riskOwnerInputFocused = true;
+    };
+
+    $scope.onRiskOwnerBlur = function(sheet) {
+      if (!sheet || !$scope.canCurrentUserEditRiskOwner(sheet) || sheet._riskOwnerChangeDialogOpen) {
+        return;
+      }
+
+      sheet._riskOwnerInputFocused = false;
+
+      if (((sheet.ownerSearchText || '').trim()) !== '' || !sheet.riskOwnerSupervisorId) {
+        return;
+      }
+
+      $scope.onRiskOwnerSelected(sheet, null, {
+        force: true
+      });
+    };
+
+    $scope.onRiskOwnerSelected = function(sheet, item, options) {
+      if (!sheet || !$scope.canCurrentUserEditRiskOwner(sheet)) {
+        return;
+      }
+
+      if (sheet._skipRiskOwnerSelectionChange) {
+        sheet._skipRiskOwnerSelectionChange = false;
+        return;
+      }
+
+      if (!item && sheet._riskOwnerInputFocused && !(options && options.force)) {
+        return;
+      }
+
+      var previousRiskOwnerSupervisor = sheet.riskOwnerSupervisor || null;
+      var previousRiskOwnerName = sheet.riskOwnerSupervisorName || sheet.owner || '';
+      var nextRiskOwnerSupervisorId = item && item.id ? item.id : null;
+      var shouldResetResidualDecision = $scope.shouldResetResidualDecisionAfterRiskOwnerChange(
+        sheet,
+        nextRiskOwnerSupervisorId
+      );
+      var shouldWarnRiskOwnerRemoval = $scope.shouldWarnRiskOwnerRemoval(sheet, nextRiskOwnerSupervisorId);
+      if (!$scope.shouldConfirmRiskOwnerChange(sheet, nextRiskOwnerSupervisorId)) {
+        $scope.applyRiskOwnerSelection(sheet, item);
+        if (!item && previousRiskOwnerSupervisor) {
+          $scope.resetResidualAcceptanceAfterRiskOwnerChange(sheet);
+        }
+        return;
+      }
+
+      var confirm = $mdDialog.confirm()
+        .title(gettextCatalog.getString(shouldWarnRiskOwnerRemoval
+          ? 'The removal of Risk Owner will lead to the residual risk acceptance decision approver removal.'
+          : 'Changing the Risk Owner will reset the residual risk acceptance information. Continue?'
+        ))
+        .multiple(true)
+        .ok(gettextCatalog.getString('Confirm?'))
+        .cancel(gettextCatalog.getString('Cancel'));
+
+      sheet._riskOwnerChangeDialogOpen = true;
+      $mdDialog.show(confirm).then(function() {
+        $scope.applyRiskOwnerSelection(sheet, item);
+        if (item) {
+          $scope.resetResidualAcceptanceAfterRiskOwnerChange(sheet, {
+            preserveApproverContext: shouldResetResidualDecision
+          });
+        } else {
+          $scope.resetResidualAcceptanceAfterRiskOwnerChange(sheet);
+        }
+      }, function() {
+        $scope.restoreRiskOwnerSelection(sheet, previousRiskOwnerSupervisor, previousRiskOwnerName);
+      }).finally(function() {
+        sheet._riskOwnerChangeDialogOpen = false;
+      });
     };
 
     $scope.queryOwnerSearch = function(query, scope) {
       var promise = $q.defer();
-      AnrService.getAnrRiskOwners($scope.model.anr.id, {
-        filter: query
-      }).then(function(data) {
-        let ownerNames = data.instanceRiskOwners.map(owner => owner.name);
-        if (!ownerNames.includes(query) && query.length > 0) {
-          $scope[scope].owner = query;
-        }
-        promise.resolve(ownerNames);
+      var currentQuery = (query || '').trim();
+      var requestId = ++ownerSearchRequestId;
 
+      AnrService.getAnrSupervisors($scope.model.anr.id, {
+        filter: currentQuery,
+        role: 'risk_owner',
+        status: true
+      }).then(function(data) {
+        let supervisors = data.supervisors || [];
+
+        if (requestId !== ownerSearchRequestId || currentQuery !== ((($scope[scope] && $scope[scope].ownerSearchText) || '').trim())) {
+          promise.resolve(supervisors);
+          return;
+        }
+
+        promise.resolve(supervisors);
       }, function() {
         promise.reject();
       });
       return promise.promise;
+    };
+
+    var residualApproverSearchRequestId = 0;
+
+    $scope.onResidualApproverSelected = function(sheet, item) {
+      if (!sheet) {
+        return;
+      }
+
+      if (!item) {
+        if (!((sheet.residualAcceptanceApproverSearchText || '').trim())) {
+          sheet.residualAcceptanceApproverSupervisor = null;
+          sheet.residualAcceptanceApproverSupervisorId = null;
+          sheet.residualAcceptanceApproverSupervisorSelection = null;
+          $scope.applyResidualAcceptanceState(sheet);
+        }
+        return;
+      }
+
+      sheet.residualAcceptanceApproverSupervisor = item;
+      sheet.residualAcceptanceApproverSupervisorId = item.id;
+      sheet.residualAcceptanceApproverSupervisorSelection = item;
+      sheet.residualAcceptanceApproverSearchText = item.name || '';
+      $scope.applyResidualAcceptanceState(sheet, {
+        preserveDecisionFields: true
+      });
+    };
+
+    $scope.queryResidualApproverSearch = function(query, scope) {
+      var promise = $q.defer();
+      var currentQuery = (query || '').trim();
+      var requestId = ++residualApproverSearchRequestId;
+
+      AnrService.getAnrSupervisors($scope.model.anr.id, {
+        filter: currentQuery,
+        role: 'residual_risk_approver',
+        status: true
+      }).then(function(data) {
+        var supervisors = data.supervisors || [];
+
+        if (requestId !== residualApproverSearchRequestId
+          || currentQuery !== ((($scope[scope] && $scope[scope].residualAcceptanceApproverSearchText) || '').trim())
+        ) {
+          promise.resolve(supervisors);
+          return;
+        }
+
+        promise.resolve(supervisors);
+      }, function() {
+        promise.reject();
+      });
+
+      return promise.promise;
+    };
+
+    $scope.applyResidualRiskDecisionResponse = function(sheet, response) {
+      if (!sheet || !response) {
+        return;
+      }
+
+      sheet.residualRiskDecision = response.residualRiskDecision;
+      sheet.residualAcceptanceUseRiskOwner = !!response.residualAcceptanceUseRiskOwner;
+      sheet.residualAcceptanceApproverSupervisor = response.residualAcceptanceApproverSupervisor || null;
+      sheet.residualAcceptanceApproverSupervisorId = response.residualAcceptanceApproverSupervisorId || null;
+      sheet.residualAcceptanceApproverSupervisorSelection = response.residualAcceptanceApproverSupervisor || null;
+      sheet.residualAcceptanceApproverSearchText = response.residualAcceptanceApproverSupervisor
+        ? (response.residualAcceptanceApproverSupervisor.name || '')
+        : '';
+      sheet.residualAcceptancePerformedByName = response.residualAcceptancePerformedByName || null;
+      sheet.residualAcceptancePerformedByEmail = response.residualAcceptancePerformedByEmail || null;
+      sheet.residualAcceptancePerformedOnBehalf = !!response.residualAcceptancePerformedOnBehalf;
+      sheet.residualRiskDecidedBySupervisor = response.residualRiskDecidedBySupervisor || null;
+      sheet.residualRiskDecidedBySupervisorId = response.residualRiskDecidedBySupervisorId;
+      sheet.residualRiskDecidedByUserId = response.residualRiskDecidedByUserId;
+      sheet.residualRiskDecidedByName = response.residualRiskDecidedByName;
+      sheet.residualRiskDecidedAt = response.residualRiskDecidedAt;
+      sheet.residualRiskJustification = response.residualRiskJustification;
+      sheet.residualRiskDecidedAtValue = $scope.parseDateValue(response.residualRiskDecidedAt);
+      $scope.applyResidualAcceptanceState(sheet, {
+        preserveDecisionFields: true
+      });
+      $scope.captureResidualAcceptanceSnapshot(sheet);
+    };
+
+    $scope.submitResidualRiskDecision = function(sheet, decision) {
+      if (!sheet || !$scope.canCurrentUserDecideResidualRisk(sheet)) {
+        return;
+      }
+
+      AnrService.decideInstanceRiskResidualAcceptance($scope.model.anr.id, sheet.id, {
+        decision: decision,
+        justification: sheet.residualRiskJustification
+      }, function(response) {
+        $scope.applyResidualRiskDecisionResponse(sheet, response);
+        $scope.$broadcast('risks-table-edited');
+        $scope.updateAnrRisksTable();
+        $scope.loadRiskHistory(sheet, false);
+      });
+    };
+
+    $scope.submitOperationalResidualRiskDecision = function(sheet, decision) {
+      if (!sheet || !$scope.canCurrentUserDecideResidualRisk(sheet)) {
+        return;
+      }
+
+      AnrService.decideInstanceOpRiskResidualAcceptance($scope.model.anr.id, sheet.id, {
+        decision: decision,
+        justification: sheet.residualRiskJustification
+      }, function(response) {
+        $scope.applyResidualRiskDecisionResponse(sheet, response);
+        $scope.$broadcast('risks-table-edited');
+        $scope.updateAnrRisksOpTable();
+        $scope.loadRiskHistory(sheet, true);
+      });
     };
 
     $scope.$on('recommendations-loaded', function(ev, recs) {
@@ -845,13 +3195,17 @@
       var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
 
       $mdDialog.show({
-        controller: ['$scope', '$mdDialog', 'GuideService', 'anr', 'subStep', MethodEditContextDialog],
+        controller: [
+          '$scope', '$mdDialog', 'toastr', 'gettextCatalog', 'GuideService', 'InterestedPartyService', 'anr', 'subStep',
+          MethodEditContextDialog
+        ],
         templateUrl: 'views/anr/edit.evalcontext.html',
         preserveScope: false,
         scope: $scope.$dialogScope.$new(),
         clickOutsideToClose: false,
         fullscreen: useFullScreen,
         locals: {
+          InterestedPartyService: InterestedPartyService,
           subStep: step,
           anr: $scope.model.anr,
         }
@@ -978,7 +3332,8 @@
               ($state.$current.name == 'main.project.anr.instance' && $stateParams.instId) ||
               ($state.$current.name == 'main.project.anr.instance.risk' && $stateParams.instId && $stateParams.riskId) ||
               ($state.$current.name == 'main.project.anr.instance.riskop' && $stateParams.instId && $stateParams.riskopId) ||
-              $state.$current.name == 'main.project.anr.risksplan') {
+              $state.$current.name == 'main.project.anr.risksplan' ||
+              $state.$current.name == 'main.project.anr.risksmanagement') {
               if ($stateParams.instId) {
                 $rootScope.anr_selected_instance_id = $stateParams.instId;
                 $rootScope.anr_selected_object_id = null;
@@ -1078,6 +3433,13 @@
       });
       $scope.$watch('ToolsAnrService.currentTab', function(newValue, oldValue) {
         if (newValue != oldValue) {
+          if (($state.$current.name == 'main.project.anr.risk' && $stateParams.riskId) ||
+            ($state.$current.name == 'main.project.anr.riskop' && $stateParams.riskopId) ||
+            ($state.$current.name == 'main.project.anr.instance.risk' && $stateParams.instId && $stateParams.riskId) ||
+            ($state.$current.name == 'main.project.anr.instance.riskop' && $stateParams.instId && $stateParams.riskopId)) {
+            return;
+          }
+
           if ($stateParams.instId) {
             $state.transitionTo('main.project.anr.instance', {
               modelId: $stateParams.modelId,
@@ -1157,6 +3519,11 @@
               progressField: 'initRiskContext'
             },
             {
+              label: gettext("Define reassessment strategy"),
+              action: openReassessmentTriggersMethodStep,
+              progressField: 'initReassessmentStrategy'
+            },
+            {
               label: gettext("Definition of the risk evaluation criteria"),
               action: selectScalesTab,
               progressField: 'initDefContext'
@@ -1207,7 +3574,11 @@
             label: gettext("Management of the implementation of the risk treatment plan"),
             action: editRiskTreatPlan,
             progressField: 'manageRisks'
-          }, ]
+          }, {
+            label: gettext("Reassessment trigger criteria"),
+            action: openReassessmentTriggersMethodStep,
+            progressField: 'manageReassessmentTriggers'
+          }]
         }
       ];
 
@@ -1242,11 +3613,15 @@
           responseType: "arraybuffer"
         }).then(function(data) {
           var docname = deliverable.docname;
+          var format = (deliverable.format === 'pdf') ? 'pdf' : 'docx';
+          var contentType = (format === 'pdf')
+            ? 'application/pdf'
+            : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
           if (!docname) {
             docname = 'Untitled-Deliverable';
           }
 
-          DownloadService.downloadBlob(data.data, docname + '.docx');
+          DownloadService.downloadBlob(data.data, docname + '.' + format, contentType);
           toastr.success(gettextCatalog.getString('The deliverable has been generated successfully.'), gettextCatalog.getString('Generation successful'));
         })
       }, function(reject) {
@@ -2620,6 +4995,8 @@
             assessments: exports.assessments,
             methodSteps: exports.methodSteps,
             interviews: exports.interviews,
+            interestedParties: exports.interestedParties,
+            reassessmentTriggers: exports.reassessmentTriggers,
             controls: exports.controls,
             recommendations: exports.recommendations,
             soas: exports.soas,
@@ -3096,6 +5473,8 @@
       assessments: ConfigService.isExportDefaultWithEval() ? 1 : 0,
       methodSteps: true,
       interviews: true,
+      interestedParties: true,
+      reassessmentTriggers: true,
       controls: true,
       recommendations: true,
       soas: true,
@@ -3113,10 +5492,265 @@
     };
   }
 
-  function MethodEditContextDialog($scope, $mdDialog, GuideService, anr, subStep) {
+  function ReassessmentTriggersDialog(
+    $scope,
+    $mdDialog,
+    toastr,
+    gettextCatalog,
+    ReassessmentTriggerService,
+    ClientAnrService,
+    anr,
+    isAnrReadOnly
+  ) {
+    var otherTriggerOptionId = '__other__';
+    var parseDateValue = function(dateValue) {
+      if (!dateValue) {
+        return null;
+      }
+
+      var parts = String(dateValue).slice(0, 10).split('-');
+      if (parts.length !== 3) {
+        return null;
+      }
+
+      var date = new Date(parts[0], parts[1] - 1, parts[2]);
+      return isNaN(date.getTime()) ? null : date;
+    };
+    var formatDateValue = function(dateValue) {
+      if (!dateValue) {
+        return null;
+      }
+
+      var date = new Date(dateValue);
+      if (isNaN(date.getTime())) {
+        return null;
+      }
+
+      return date.getFullYear() + '-'
+        + String(date.getMonth() + 1).padStart(2, '0') + '-'
+        + String(date.getDate()).padStart(2, '0');
+    };
+    $scope.isAnrReadOnly = isAnrReadOnly;
+    $scope.dialog = {
+      items: [],
+      availableTriggers: [],
+      loading: true,
+      saving: false,
+      editingId: null,
+      reviewSettingsSaving: false,
+      reviewSettings: {
+        lastReviewDate: parseDateValue(anr.reassessmentLastReviewDate),
+        reviewFrequency: anr.reassessmentReviewFrequency || 'Annually'
+      },
+      form: {
+        selectedTriggerId: null,
+        triggerType: '',
+        description: '',
+        monitoringApproach: '',
+        isActive: true
+      }
+    };
+
+    $scope.onSelectedReassessmentTriggerChange = function() {
+      var selectedTrigger = $scope.dialog.availableTriggers.find(function(trigger) {
+        return trigger.id === $scope.dialog.form.selectedTriggerId;
+      });
+
+      if (!selectedTrigger) {
+        $scope.dialog.form.triggerType = '';
+        $scope.dialog.form.description = '';
+        $scope.dialog.form.monitoringApproach = '';
+        return;
+      }
+
+      $scope.dialog.form.triggerType = selectedTrigger.triggerType;
+      $scope.dialog.form.description = selectedTrigger.description || '';
+      $scope.dialog.form.monitoringApproach = selectedTrigger.monitoringApproach || '';
+    };
+
+    $scope.refreshReassessmentTriggers = function() {
+      $scope.dialog.loading = true;
+      ReassessmentTriggerService.getReassessmentTriggers({
+        status: 'all'
+      }).then(function(data) {
+        $scope.dialog.items = data.reassessmentTriggers || [];
+        $scope.dialog.availableTriggers = (data.availableReassessmentTriggers || []).concat([{
+          id: otherTriggerOptionId,
+          triggerType: gettextCatalog.getString('Other'),
+          description: '',
+          monitoringApproach: ''
+        }]);
+        $scope.dialog.loading = false;
+      }, function() {
+        $scope.dialog.loading = false;
+      });
+    };
+
+    $scope.resetReassessmentTriggerForm = function() {
+      $scope.dialog.editingId = null;
+      $scope.dialog.form = {
+        selectedTriggerId: null,
+        triggerType: '',
+        description: '',
+        monitoringApproach: '',
+        isActive: true
+      };
+    };
+
+    $scope.saveReassessmentReviewSettings = function() {
+      if ($scope.isAnrReadOnly || $scope.dialog.reviewSettingsSaving) {
+        return;
+      }
+
+      $scope.dialog.reviewSettingsSaving = true;
+      var lastReviewDate = formatDateValue($scope.dialog.reviewSettings.lastReviewDate);
+      ClientAnrService.patchAnr(anr.id, {
+        reassessmentLastReviewDate: lastReviewDate,
+        reassessmentReviewFrequency: $scope.dialog.reviewSettings.reviewFrequency
+      }, function() {
+        anr.reassessmentLastReviewDate = lastReviewDate;
+        anr.reassessmentReviewFrequency = $scope.dialog.reviewSettings.reviewFrequency;
+        toastr.success(gettextCatalog.getString('The reassessment review settings have been updated.'));
+        $scope.dialog.reviewSettingsSaving = false;
+      }, function() {
+        $scope.dialog.reviewSettingsSaving = false;
+      });
+    };
+
+    $scope.editReassessmentTrigger = function(trigger) {
+      var selectedTrigger = $scope.dialog.availableTriggers.find(function(availableTrigger) {
+        return availableTrigger.triggerType === trigger.triggerType;
+      });
+      $scope.dialog.editingId = trigger.id;
+      $scope.dialog.form = {
+        selectedTriggerId: selectedTrigger ? selectedTrigger.id : null,
+        triggerType: trigger.triggerType || '',
+        description: trigger.description,
+        monitoringApproach: trigger.monitoringApproach || '',
+        isActive: trigger.isActive
+      };
+    };
+
+    $scope.saveReassessmentTrigger = function() {
+      if (
+        $scope.isAnrReadOnly
+        || !$scope.dialog.form.triggerType
+        || !$scope.dialog.form.description
+        || !$scope.dialog.form.description.trim()
+      ) {
+        return;
+      }
+
+      var params = angular.copy($scope.dialog.form);
+      params.description = params.description.trim();
+      params.monitoringApproach = params.monitoringApproach ? params.monitoringApproach.trim() : '';
+
+      $scope.dialog.saving = true;
+
+      if ($scope.dialog.editingId) {
+        params.id = $scope.dialog.editingId;
+        ReassessmentTriggerService.updateReassessmentTrigger(params, function() {
+          toastr.success(gettextCatalog.getString('The reassessment trigger criterion has been updated.'));
+          $scope.dialog.saving = false;
+          $scope.refreshReassessmentTriggers();
+          $scope.resetReassessmentTriggerForm();
+        }, function() {
+          $scope.dialog.saving = false;
+        });
+
+        return;
+      }
+
+      params.position = $scope.dialog.items.length + 1;
+      ReassessmentTriggerService.createReassessmentTrigger(params, function() {
+        toastr.success(gettextCatalog.getString('The reassessment trigger criterion has been created.'));
+        $scope.dialog.saving = false;
+        $scope.refreshReassessmentTriggers();
+        $scope.resetReassessmentTriggerForm();
+      }, function() {
+        $scope.dialog.saving = false;
+      });
+    };
+
+    $scope.moveReassessmentTrigger = function(trigger, direction) {
+      if ($scope.isAnrReadOnly) {
+        return;
+      }
+
+      ReassessmentTriggerService.patchReassessmentTrigger({
+        id: trigger.id,
+        position: trigger.position + direction
+      }, function() {
+        $scope.refreshReassessmentTriggers();
+      });
+    };
+
+    $scope.toggleReassessmentTrigger = function(trigger) {
+      if ($scope.isAnrReadOnly) {
+        return;
+      }
+
+      ReassessmentTriggerService.patchReassessmentTrigger({
+        id: trigger.id,
+        isActive: !trigger.isActive
+      }, function() {
+        $scope.refreshReassessmentTriggers();
+      });
+    };
+
+    $scope.deleteReassessmentTrigger = function(trigger, ev) {
+      if ($scope.isAnrReadOnly) {
+        return;
+      }
+
+      var confirm = $mdDialog.confirm()
+        .title(gettextCatalog.getString('Delete reassessment trigger criterion?'))
+        .textContent(gettextCatalog.getString('This criterion will be removed from the analysis.'))
+        .targetEvent(ev)
+        .multiple(true)
+        .ok(gettextCatalog.getString('Delete'))
+        .cancel(gettextCatalog.getString('Cancel'));
+
+      $mdDialog.show(confirm).then(function() {
+        ReassessmentTriggerService.deleteReassessmentTrigger(trigger.id, function() {
+          toastr.success(gettextCatalog.getString('The reassessment trigger criterion has been deleted.'));
+          $scope.refreshReassessmentTriggers();
+          if ($scope.dialog.editingId === trigger.id) {
+            $scope.resetReassessmentTriggerForm();
+          }
+        });
+      });
+    };
+
+    $scope.close = function(updated) {
+      $mdDialog.hide(updated);
+    };
+
+    $scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+
+    $scope.refreshReassessmentTriggers();
+  }
+
+  function MethodEditContextDialog($scope, $mdDialog, toastr, gettextCatalog, GuideService, InterestedPartyService, anr, subStep) {
     $scope.subStep = subStep;
     $scope.guideVisible = false;
     $scope.isAnrReadOnly = !anr.rwd;
+    $scope.display = {
+      currentTabIndex: 0
+    };
+    $scope.isInterestedPartiesTabVisible = subStep.anrField == "contextAnaRisk";
+    $scope.interestedPartiesDialog = {
+      items: [],
+      loading: false,
+      saving: false,
+      editingId: null,
+      form: {
+        stakeholder: '',
+        requirement: ''
+      }
+    };
 
     $scope.toggleGuide = function() {
       $scope.guideVisible = !$scope.guideVisible;
@@ -3156,6 +5790,114 @@
       text: anr[subStep.anrField]
     };
 
+    $scope.refreshInterestedParties = function() {
+      if (!$scope.isInterestedPartiesTabVisible) {
+        return;
+      }
+
+      $scope.interestedPartiesDialog.loading = true;
+      InterestedPartyService.getInterestedParties().then(function(data) {
+        $scope.interestedPartiesDialog.items = data.interestedParties || [];
+        $scope.interestedPartiesDialog.loading = false;
+      }, function() {
+        $scope.interestedPartiesDialog.loading = false;
+      });
+    };
+
+    $scope.resetInterestedPartyForm = function() {
+      $scope.interestedPartiesDialog.editingId = null;
+      $scope.interestedPartiesDialog.form = {
+        stakeholder: '',
+        requirement: ''
+      };
+    };
+
+    $scope.editInterestedParty = function(interestedParty) {
+      $scope.interestedPartiesDialog.editingId = interestedParty.id;
+      $scope.interestedPartiesDialog.form = {
+        stakeholder: interestedParty.stakeholder || '',
+        requirement: interestedParty.requirement || ''
+      };
+      $scope.display.currentTabIndex = 1;
+    };
+
+    $scope.saveInterestedParty = function() {
+      if ($scope.isAnrReadOnly) {
+        return;
+      }
+
+      var params = angular.copy($scope.interestedPartiesDialog.form);
+      params.stakeholder = params.stakeholder ? params.stakeholder.trim() : '';
+      params.requirement = params.requirement ? params.requirement.trim() : '';
+
+      if (!params.stakeholder && !params.requirement) {
+        return;
+      }
+
+      $scope.interestedPartiesDialog.saving = true;
+
+      if ($scope.interestedPartiesDialog.editingId) {
+        params.id = $scope.interestedPartiesDialog.editingId;
+        InterestedPartyService.updateInterestedParty(params, function() {
+          toastr.success(gettextCatalog.getString('The interested party has been updated.'));
+          $scope.interestedPartiesDialog.saving = false;
+          $scope.refreshInterestedParties();
+          $scope.resetInterestedPartyForm();
+        }, function() {
+          $scope.interestedPartiesDialog.saving = false;
+        });
+
+        return;
+      }
+
+      params.position = $scope.interestedPartiesDialog.items.length + 1;
+      InterestedPartyService.createInterestedParty(params, function() {
+        toastr.success(gettextCatalog.getString('The interested party has been created.'));
+        $scope.interestedPartiesDialog.saving = false;
+        $scope.refreshInterestedParties();
+        $scope.resetInterestedPartyForm();
+      }, function() {
+        $scope.interestedPartiesDialog.saving = false;
+      });
+    };
+
+    $scope.moveInterestedParty = function(interestedParty, direction) {
+      if ($scope.isAnrReadOnly) {
+        return;
+      }
+
+      InterestedPartyService.patchInterestedParty({
+        id: interestedParty.id,
+        position: interestedParty.position + direction
+      }, function() {
+        $scope.refreshInterestedParties();
+      });
+    };
+
+    $scope.deleteInterestedParty = function(interestedParty, ev) {
+      if ($scope.isAnrReadOnly) {
+        return;
+      }
+
+      var confirm = $mdDialog.confirm()
+        .title(gettextCatalog.getString('Delete interested party?'))
+        .textContent(gettextCatalog.getString('This interested party will be removed from the analysis.'))
+        .targetEvent(ev)
+        .multiple(true)
+        .ok(gettextCatalog.getString('Delete'))
+        .cancel(gettextCatalog.getString('Cancel'));
+
+      $mdDialog.show(confirm).then(function() {
+        InterestedPartyService.deleteInterestedParty(interestedParty.id, function() {
+          toastr.success(gettextCatalog.getString('The interested party has been deleted.'));
+          $scope.refreshInterestedParties();
+          if ($scope.interestedPartiesDialog.editingId === interestedParty.id) {
+            $scope.resetInterestedPartyForm();
+          }
+        });
+      });
+    };
+
     $scope.trixInitialize = function(e, editor) {
       $scope.trix = editor;
     };
@@ -3171,6 +5913,8 @@
     $scope.save = function() {
       $mdDialog.hide($scope.context);
     };
+
+    $scope.refreshInterestedParties();
   }
 
   function MethodEditRisksDialog($scope, $mdDialog, $state, TreatmentPlanService,
@@ -3693,6 +6437,7 @@
       'summaryEvalRisk': '',
       'typedoc': step.num,
       'risksByControl': false,
+      'format': 'docx',
     };
 
     $http.get('api/client-anr/' + anr.id + '/deliverable/' + step.num).then(function(data) {
@@ -3702,6 +6447,7 @@
         $scope.deliverable.managers = $scope.deliverable.respSmile;
         $scope.deliverable.consultants = $scope.deliverable.respCustomer;
         $scope.deliverable.template = $scope.deliverable.template;
+        $scope.deliverable.format = $scope.deliverable.format || 'docx';
 
       }
       if (step.referential) {
@@ -3974,6 +6720,339 @@
       object['categories'] = libraryCategory;
 
       $mdDialog.hide(object);
+    };
+  }
+
+  function SupervisorsDialog(
+    $scope,
+    $mdDialog,
+    $rootScope,
+    toastr,
+    gettextCatalog,
+    AnrService,
+    anr,
+    isAnrReadOnly,
+    canManageLinkedUsers,
+    initialRole
+  ) {
+    $scope.anr = anr;
+    $scope.isAnrReadOnly = isAnrReadOnly;
+    $scope.canManageLinkedUsers = !!canManageLinkedUsers;
+    $scope.supervisors = [];
+    $scope.loading = false;
+    $scope.saving = false;
+    $scope.roleOptions = [
+      {
+        value: 'risk_owner',
+        label: gettextCatalog.getString('Risk owner')
+      },
+      {
+        value: 'residual_risk_approver',
+        label: gettextCatalog.getString('Residual risk approver')
+      }
+    ];
+
+    function emptyForm() {
+      return {
+        id: null,
+        name: '',
+        email: '',
+        rolePosition: '',
+        isActive: true,
+        roles: {
+          risk_owner: false,
+          residual_risk_approver: false
+        },
+        linkedUser: null,
+        linkedUserSearchText: ''
+      };
+    }
+
+    function buildForm(roleToPreselect) {
+      var form = emptyForm();
+      if (roleToPreselect && Object.prototype.hasOwnProperty.call(form.roles, roleToPreselect)) {
+        form.roles[roleToPreselect] = true;
+      }
+
+      return form;
+    }
+
+    $scope.form = buildForm(initialRole);
+
+    $scope.resetSupervisorFormValidationState = function() {
+      if (!$scope.supervisorsForm) {
+        return;
+      }
+
+      $scope.supervisorsForm.$setPristine();
+      $scope.supervisorsForm.$setUntouched();
+    };
+
+    $scope.loadSupervisors = function() {
+      $scope.loading = true;
+      AnrService.getAnrSupervisors($scope.anr.id, {}).then(function(data) {
+        $scope.supervisors = data.supervisors || [];
+      }).finally(function() {
+        $scope.loading = false;
+      });
+    };
+
+    $scope.queryLinkableUsers = function(query) {
+      if (!$scope.canManageLinkedUsers) {
+        return [];
+      }
+
+      return AnrService.getAnrSupervisors($scope.anr.id, {
+        userFilter: (query || '').trim(),
+        excludeSupervisorId: $scope.form.id || null
+      }).then(function(data) {
+        return data.users || [];
+      });
+    };
+
+    $scope.getLinkedUserFullName = function(linkedUser) {
+      if (!linkedUser) {
+        return '';
+      }
+
+      var fullName = ((linkedUser.firstname || '') + ' ' + (linkedUser.lastname || '')).trim();
+
+      if (fullName) {
+        return fullName;
+      }
+
+      return linkedUser.email || '';
+    };
+
+    $scope.isLinkedUserSelected = function() {
+      return !!($scope.form && $scope.form.linkedUser && $scope.form.linkedUser.id);
+    };
+
+    $scope.syncFormIdentityFromLinkedUser = function() {
+      if (!$scope.isLinkedUserSelected()) {
+        return;
+      }
+
+      $scope.form.name = $scope.getLinkedUserFullName($scope.form.linkedUser);
+      $scope.form.email = $scope.form.linkedUser.email || '';
+      $scope.form.linkedUserSearchText = $scope.getLinkedUserFullName($scope.form.linkedUser);
+      $scope.resetSupervisorFormValidationState();
+    };
+
+    $scope.onLinkedUserChange = function() {
+      $scope.syncFormIdentityFromLinkedUser();
+    };
+
+    $scope.resetForm = function() {
+      $scope.form = buildForm(initialRole);
+      $scope.resetSupervisorFormValidationState();
+    };
+
+    $scope.getSelectedRoles = function() {
+      return Object.keys($scope.form.roles).filter(function(role) {
+        return !!$scope.form.roles[role];
+      });
+    };
+
+    $scope.getSupervisorRolesLabel = function(supervisor) {
+      var roles = (supervisor && supervisor.roles) || [];
+
+      return roles.map(function(role) {
+        var option = $scope.roleOptions.find(function(item) {
+          return item.value === role;
+        });
+
+        return option ? option.label : role;
+      }).join(', ');
+    };
+
+    $scope.getLinkedUserLabel = function(supervisor) {
+      if (!supervisor || !supervisor.linkedUser) {
+        return '';
+      }
+
+      var linkedUser = supervisor.linkedUser;
+      var fullName = ((linkedUser.firstname || '') + ' ' + (linkedUser.lastname || '')).trim();
+
+      if (!fullName) {
+        return linkedUser.email || '';
+      }
+
+      return linkedUser.email ? fullName + ' - ' + linkedUser.email : fullName;
+    };
+
+    $scope.canManageSupervisor = function(supervisor) {
+      return $scope.canManageLinkedUsers || !(supervisor && supervisor.linkedUser);
+    };
+
+    $scope.canEditSupervisor = function(supervisor) {
+      return !$scope.isAnrReadOnly && $scope.canManageSupervisor(supervisor);
+    };
+
+    $scope.canToggleSupervisor = function(supervisor) {
+      return !$scope.isAnrReadOnly && $scope.canManageSupervisor(supervisor);
+    };
+
+    $scope.saveSupervisor = function() {
+      $scope.syncFormIdentityFromLinkedUser();
+
+      var payload = {
+        name: ($scope.form.name || '').trim(),
+        email: ($scope.form.email || '').trim() || null,
+        rolePosition: ($scope.form.rolePosition || '').trim() || null,
+        linkedUserId: $scope.form.linkedUser ? $scope.form.linkedUser.id : null,
+        isActive: !!$scope.form.isActive,
+        roles: $scope.getSelectedRoles()
+      };
+
+      if (!payload.name) {
+        return;
+      }
+
+      if (payload.linkedUserId && !$scope.canManageLinkedUsers) {
+        return;
+      }
+
+      var linkedUserChanged = $scope.form.id
+        && String($scope.form.originalLinkedUserId || '') !== String(payload.linkedUserId || '');
+      if (linkedUserChanged && $scope.form.hasAssignedRisks) {
+        var confirm = $mdDialog.confirm()
+          .title(gettextCatalog.getString(
+            'Changing the linked user will update the supervisor assigned to risks. Continue?'
+          ))
+          .multiple(true)
+          .ok(gettextCatalog.getString('Confirm?'))
+          .cancel(gettextCatalog.getString('Cancel'));
+
+        $mdDialog.show(confirm).then(function() {
+          $scope.persistSupervisor(payload);
+        });
+        return;
+      }
+
+      $scope.persistSupervisor(payload);
+    };
+
+    $scope.persistSupervisor = function(payload) {
+      $scope.saving = true;
+      var action = $scope.form.id ? AnrService.updateAnrSupervisor : AnrService.createAnrSupervisor;
+      var args = $scope.form.id
+        ? [$scope.anr.id, $scope.form.id, payload]
+        : [$scope.anr.id, payload];
+
+      args.push(function(supervisor) {
+        toastr.success(gettextCatalog.getString('Supervisor saved'));
+        $rootScope.$broadcast('supervisor-updated', $scope.anr.id, supervisor);
+        $scope.resetForm();
+        $scope.loadSupervisors();
+        $scope.saving = false;
+      }, function() {
+        $scope.saving = false;
+      });
+
+      action.apply(null, args);
+    };
+
+    $scope.toggleSupervisor = function(supervisor) {
+      if (!supervisor || !$scope.canManageSupervisor(supervisor)) {
+        return;
+      }
+
+      AnrService.patchAnrSupervisor($scope.anr.id, supervisor.id, {
+        isActive: supervisor.isActive === false
+      }, function() {
+        toastr.success(gettextCatalog.getString(
+          supervisor.isActive === false ? 'Supervisor activated' : 'Supervisor deactivated'
+        ));
+        $scope.loadSupervisors();
+      });
+    };
+
+    $scope.editSupervisor = function(supervisor) {
+      if (!$scope.canManageSupervisor(supervisor)) {
+        return;
+      }
+
+      $scope.form = {
+        id: supervisor.id,
+        name: supervisor.name || '',
+        email: supervisor.email || '',
+        rolePosition: supervisor.rolePosition || '',
+        isActive: supervisor.isActive !== false,
+        roles: {
+          risk_owner: (supervisor.roles || []).indexOf('risk_owner') !== -1,
+          residual_risk_approver: (supervisor.roles || []).indexOf('residual_risk_approver') !== -1
+        },
+        linkedUser: supervisor.linkedUser || null,
+        originalLinkedUserId: supervisor.linkedUserId || null,
+        hasAssignedRisks: !!supervisor.hasAssignedRisks,
+        linkedUserSearchText: supervisor.linkedUser
+          ? ((supervisor.linkedUser.firstname || '') + ' ' + (supervisor.linkedUser.lastname || '')).trim()
+          : ''
+      };
+      $scope.syncFormIdentityFromLinkedUser();
+      $scope.resetSupervisorFormValidationState();
+    };
+
+    $scope.sendEmail = function(supervisor) {
+      if (!supervisor || !supervisor.email) {
+        return;
+      }
+
+      window.location.href = 'mailto:' + supervisor.email;
+    };
+
+    $scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+
+    $scope.loadSupervisors();
+  }
+
+  function EditLinkedUserDialogCtrl($scope, $mdDialog, ClientAnrService, user) {
+    ClientAnrService.getAnrs().then(function(data) {
+      $scope.anrs = data.anrs;
+      $scope.anrs.sort(function(a, b) {
+        var str1 = a['label' + a.language];
+        var str2 = b['label' + b.language];
+        return ((str1 == str2) ? 0 : ((str1 > str2) ? 1 : -1));
+      });
+
+      for (var i = 0; i < $scope.anrs.length; ++i) {
+        if (!$scope.anrById[$scope.anrs[i].id]) {
+          $scope.anrById[$scope.anrs[i].id] = $scope.anrs[i];
+          $scope.anrs[i].rwd = -1;
+        }
+      }
+    });
+
+    $scope.anrById = {};
+    $scope.user = angular.copy(user || {});
+    $scope.user.password = undefined;
+    $scope.user.currentAnr = undefined;
+
+    if ($scope.user.anrs) {
+      for (var i = 0; i < $scope.user.anrs.length; ++i) {
+        $scope.anrById[$scope.user.anrs[i].id] = $scope.user.anrs[i];
+      }
+    }
+
+    $scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+
+    $scope.create = function() {
+      var cleanedAnrs = [];
+      for (var i in $scope.anrById) {
+        var anr = $scope.anrById[i];
+
+        if (anr.rwd >= 0) {
+          cleanedAnrs.push({id: i, rwd: anr.rwd});
+        }
+      }
+
+      $scope.user.anrs = cleanedAnrs;
+      $mdDialog.hide($scope.user);
     };
   }
 

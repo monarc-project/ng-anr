@@ -14,7 +14,7 @@
         'api/' + anr + '/anr-instances-metadata-fields/:metadataFieldId',
         {
           metadataFieldId: '@id',
-          urlAnrId: $rootScope.getUrlAnrId(),
+          urlAnrId: function () { return $rootScope.getUrlAnrId(); },
           anrId: '@anrId'
         },
         {
@@ -31,7 +31,7 @@
         'api/' + anr + '/instances/:instId/metadata/:id',
         {
           id: '@id',
-          urlAnrId: $rootScope.getUrlAnrId(),
+          urlAnrId: function () { return $rootScope.getUrlAnrId(); },
           anrId: '@anrId',
           instId: '@instId',
         },

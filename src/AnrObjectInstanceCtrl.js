@@ -26,10 +26,31 @@
 
         var isInstanceLoading = true;
         var tmpCurrentTab = $scope.ToolsAnrService.currentTab;
+        var shouldAutoSelectInstanceRiskTab = true;
+        var hasLoadedInstanceInfoRisks = false;
+        var hasLoadedInstanceOperationalRisks = false;
 
         $scope.risks = undefined;
         $scope.oprisks = undefined;
+        $scope.risks_total = 0;
         $scope.oprisks_total = 0;
+
+        var syncInstanceRiskTabSelection = function () {
+            if (isInstanceLoading || !$scope.instance || !$scope.instance.asset || $scope.instance.asset.type != 1) {
+                return;
+            }
+
+            if (!shouldAutoSelectInstanceRiskTab || !hasLoadedInstanceInfoRisks || !hasLoadedInstanceOperationalRisks) {
+                return;
+            }
+
+            if ($state.$current.name !== 'main.project.anr.instance' || $stateParams.riskId || $stateParams.riskopId) {
+                return;
+            }
+
+            $scope.ToolsAnrService.currentTab = ($scope.risks_total === 0 && $scope.oprisks_total > 0) ? 1 : 0;
+            shouldAutoSelectInstanceRiskTab = false;
+        };
 
         $scope.updateInstance = function (cb) {
             AnrService.getInstance($scope.model.anr.id, $stateParams.instId).then(function (data) {
@@ -47,6 +68,9 @@
                 if(data.asset.type == 1 && tmpCurrentTab == 2){
                     $scope.ToolsAnrService.currentTab = tmpCurrentTab;
                 }
+                shouldAutoSelectInstanceRiskTab = true;
+                hasLoadedInstanceInfoRisks = false;
+                hasLoadedInstanceOperationalRisks = data.asset.type != 1;
                 isInstanceLoading = false;
 
                 $scope.updateInstanceRisks();
@@ -84,7 +108,9 @@
                     }
                 }
 
+                hasLoadedInstanceInfoRisks = true;
                 $scope.anr_risks_table_loading = false;
+                syncInstanceRiskTabSelection();
             });
 
         };
@@ -108,7 +134,9 @@
                     }
                 }
 
+                hasLoadedInstanceOperationalRisks = true;
                 $scope.anr_risks_op_table_loading = false;
+                syncInstanceRiskTabSelection();
             });
 
         };

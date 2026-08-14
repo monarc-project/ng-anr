@@ -32,6 +32,14 @@
                 </div>
 
                 <md-input-container class="md-block">
+                    <label translate>Report format</label>
+                    <md-select ng-model="deliverable.format">
+                        <md-option value="docx">{{ 'Word (.docx)' | translate }}</md-option>
+                        <md-option value="pdf">{{ 'PDF (.pdf)' | translate }}</md-option>
+                    </md-select>
+                </md-input-container>
+
+                <md-input-container class="md-block">
                     <label translate>Version</label>
                     <input ng-model="deliverable.version">
                 </md-input-container>

@@ -81,12 +81,13 @@
     <em ng-if="instmode == 'obj' ">{{ 'There are no operational risks for this asset.' | translate }}</em>
 </div>
 
-<div class="op-riks-table">
-  <table class="md-html-table inputs-as-number big-border-all" ng-if="!opsheet_risk && oprisks.length > 0" editable callback="changeRiskOp">
+<div class="op-riks-table risk-table-panel risk-table-panel-operational" ng-if="!opsheet_risk && oprisks.length > 0">
+  <table class="md-html-table inputs-as-number big-border-all risk-register-table" ng-if="!opsheet_risk && oprisks.length > 0" editable callback="changeRiskOp">
       <thead class="big-border-bottom">
       <tr>
           <th rowspan="3">ID</th>
           <th rowspan="3" translate>Asset</th>
+          <th rowspan="3" translate>Risk source</th>
           <th rowspan="3" translate>Risk description</th>
           <th colspan="{{2 + (opRiskImpactScales | filter:{isHidden:false}).length}}" ng-if="model.showRolfBrut && instmode != 'obj'" class="big-border-left"  translate>Inherent risk</th>
           <th colspan="{{3 + (opRiskImpactScales | filter:{isHidden:false}).length}}" ng-if="instmode != 'obj'" class="big-border-left" translate>Net risk</th>
@@ -119,8 +120,16 @@
 
       <tbody>
       <tr ng-repeat="risk in oprisks" edit-model="risk" ng-class="{'specific-blue': risk.specific == 1}">
-          <td title="{{risk.id}}">{{risk.id}}</td>
+          <td title="{{risk.id}}">
+              <span class="risk-id-with-reassessment-warning">
+                  <md-icon ng-if="isRiskReassessmentOverdue(risk)" aria-label="{{ getRiskReassessmentOverdueTooltip(risk) }}" style="color: #f57c00; font-size: 18px; margin-right: 4px; cursor: default;">warning
+                      <md-tooltip md-direction="top">{{ getRiskReassessmentOverdueTooltip(risk) }}</md-tooltip>
+                  </md-icon>
+                  <span>{{risk.id}}</span>
+              </span>
+          </td>
           <td class="preserve-newlines" title="{{instanceCache[risk.instanceInfos.id].completePath}}">{{ instmode == 'obj' ? _langField(object,'name') : _langField(risk.instanceInfos,'name') }}</td>
+          <td>{{ risk.riskSourceLabel || '-' }}</td>
   	      <td class="preserve-newlines" title="{{ _langField(risk,'description') }}">{{ _langField(risk,'label') }}</td>
           <td
             class="big-border-left txtcenter"
@@ -197,6 +206,14 @@
               <a class="pointer blue" title="{{ ('Open risk sheet' | translate) }}" ng-click="openOpRiskSheet(risk, oprisks)">
                   {{ treatmentStr(risk.kindOfMeasure) | translate }}
               </a>
+              <md-icon ng-if="OFFICE_MODE == 'FO' && (risk.residualRiskDecision == 'rejected' || risk.residualRiskDecision == 'not_accepted')"
+                  style="color: #FF8C00; font-size: 18px; vertical-align: middle; margin-left: 4px; cursor: default;">warning
+                  <md-tooltip md-direction="top">{{ 'Residual risk acceptance: Not accepted' | translate }}</md-tooltip>
+              </md-icon>
+              <md-icon ng-if="OFFICE_MODE == 'FO' && risk.residualRiskDecision == 'accepted'"
+                  style="color: #4CAF50; font-size: 18px; vertical-align: middle; margin-left: 4px; cursor: default;">check_circle
+                  <md-tooltip md-direction="top">{{ 'Residual risk acceptance: Accepted' | translate }}</md-tooltip>
+              </md-icon>
           </td>
           <td
             class="tbl-risk-calc txtcenter"

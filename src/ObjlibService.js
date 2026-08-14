@@ -12,7 +12,7 @@
         var makeResource = function () {
             self.ObjlibResource = $resource('api/' + anr + 'objects/:objlibId', {
                     objlibId: '@uuid',
-                    urlAnrId: $rootScope.getUrlAnrId()
+                    urlAnrId: function () { return $rootScope.getUrlAnrId(); }
                 },
                 {
                     'update': {
@@ -24,7 +24,7 @@
                 });
 
 
-            self.ObjlibCatResource = $resource('api/' + anr + 'objects-categories/:objlibId', { objlibId: '@id', urlAnrId: $rootScope.getUrlAnrId() },
+            self.ObjlibCatResource = $resource('api/' + anr + 'objects-categories/:objlibId', { objlibId: '@id', urlAnrId: function () { return $rootScope.getUrlAnrId(); } },
                 {
                     'update': {
                         method: 'PUT'
@@ -34,9 +34,9 @@
                     }
                 });
 
-            self.AnrObjectsService = $resource($rootScope.OFFICE_MODE == 'FO' ? 'api/client-anr/:urlAnrId/objects' : 'api/anr/:anrId/objects', {urlAnrId: $rootScope.getUrlAnrId()}, {'query': {isArray: false}});//on utilisera que query
+            self.AnrObjectsService = $resource($rootScope.OFFICE_MODE == 'FO' ? 'api/client-anr/:urlAnrId/objects' : 'api/anr/:anrId/objects', {urlAnrId: function () { return $rootScope.getUrlAnrId(); }}, {'query': {isArray: false}});//on utilisera que query
 
-            self.CommonObjectResource = $resource('api/' + anr + 'objects/import/:objectId', { objectId: '@uuid', urlAnrId: $rootScope.getUrlAnrId() },
+            self.CommonObjectResource = $resource('api/' + anr + 'objects/import/:objectId', { objectId: '@uuid', urlAnrId: function () { return $rootScope.getUrlAnrId(); } },
                 {
                     'update': {
                         method: 'PUT'
@@ -50,7 +50,7 @@
                 });
 
 
-            self.ObjlibNodeResource = $resource($rootScope.OFFICE_MODE == 'BO' ? 'api/objects-objects/:objlibId' : 'api/client-anr/:urlAnrId/objects-objects/:objlibId', { objlibId: '@uuid', urlAnrId: $rootScope.getUrlAnrId() },
+            self.ObjlibNodeResource = $resource($rootScope.OFFICE_MODE == 'BO' ? 'api/objects-objects/:objlibId' : 'api/client-anr/:urlAnrId/objects-objects/:objlibId', { objlibId: '@uuid', urlAnrId: function () { return $rootScope.getUrlAnrId(); } },
                 {
                     'update': {
                         method: 'PUT'

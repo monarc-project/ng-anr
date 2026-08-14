@@ -12,7 +12,7 @@
         var makeResource = function () {
             self.ThreatResource = $resource('api/' + anr + 'threats/:threatId', {
                     threatId: '@uuid',
-                    urlAnrId: $rootScope.getUrlAnrId()
+                    urlAnrId: function () { return $rootScope.getUrlAnrId(); }
                 },
                 {
                     'update': {
@@ -27,7 +27,7 @@
                 });
             self.ThreatThemeResource = $resource('api/' + anr + 'themes/:themeId', {
                     themeId: '@id',
-                    urlAnrId: $rootScope.getUrlAnrId()
+                    urlAnrId: function () { return $rootScope.getUrlAnrId(); }
                 },
                 {
                     'update': {

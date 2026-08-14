@@ -12,7 +12,7 @@
         var makeResource = function () {
             self.QuestionResource = $resource('api/' + anr + 'questions/:questionId', {
                     questionId: '@id',
-                    urlAnrId: $rootScope.getUrlAnrId()
+                    urlAnrId: function () { return $rootScope.getUrlAnrId(); }
                 },
                 {
                     'update': {
