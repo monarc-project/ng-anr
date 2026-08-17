@@ -36,7 +36,7 @@
         $scope.oprisks_total = 0;
 
         var syncInstanceRiskTabSelection = function () {
-            if (isInstanceLoading || !$scope.instance || !$scope.instance.asset || $scope.instance.asset.type != 1) {
+            if (isInstanceLoading || !$scope.instance || !$scope.instance.asset) {
                 return;
             }
 
@@ -70,13 +70,11 @@
                 }
                 shouldAutoSelectInstanceRiskTab = true;
                 hasLoadedInstanceInfoRisks = false;
-                hasLoadedInstanceOperationalRisks = data.asset.type != 1;
+                hasLoadedInstanceOperationalRisks = false;
                 isInstanceLoading = false;
 
                 $scope.updateInstanceRisks();
-                if ($scope.instance.asset.type == 1) {
-                    $scope.updateInstanceRisksOp();
-                }
+                $scope.updateInstanceRisksOp();
 
                 if (cb) {
                     cb();

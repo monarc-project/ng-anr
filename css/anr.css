@@ -1896,11 +1896,11 @@ md-select-menu md-content
     color: #f0b429;
 }
 
-.risk-analysis-tabs.risk-analysis-tabs-locked md-tabs-wrapper{
+.risk-analysis-tabs.risk-analysis-tabs-locked > md-tabs-wrapper{
     pointer-events: none;
 }
 
-.risk-analysis-tabs.risk-analysis-tabs-locked .md-tab{
+.risk-analysis-tabs.risk-analysis-tabs-locked > md-tabs-wrapper .md-tab{
     opacity: 0.58;
     cursor: not-allowed;
 }
