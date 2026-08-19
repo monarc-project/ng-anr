@@ -1786,8 +1786,6 @@
       }
 
       updateSupervisorReferences(supervisor);
-      $scope.updateAnrRisksTable();
-      $scope.updateAnrRisksOpTable();
     });
 
     $scope.openLinkedUserAccount = function(linkedUserId, ev) {
