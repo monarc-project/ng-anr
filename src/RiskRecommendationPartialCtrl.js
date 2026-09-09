@@ -3,17 +3,17 @@
     angular
         .module('AnrModule')
         .controller('RiskRecommendationPartialCtrl', [
-            '$scope', '$rootScope', 'toastr', '$mdMedia', '$mdDialog', '$stateParams', 'gettextCatalog', '$state', '$q', '$attrs',
-            '$timeout', 'ClientRecommendationService',
+            '$scope', 'toastr', '$mdMedia', '$mdDialog', '$stateParams', 'gettextCatalog', '$state', '$q', '$attrs',
+            'ClientRecommendationService',
             RiskRecommendationPartialCtrl
         ]);
 
-    function RiskRecommendationPartialCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog,
-                                            $state, $q, $attrs, $timeout, ClientRecommendationService) {
+    function RiskRecommendationPartialCtrl($scope, toastr, $mdMedia, $mdDialog, $stateParams, gettextCatalog,
+                                            $state, $q, $attrs, ClientRecommendationService) {
         var riskMode = $attrs.monarcMode; // information / operational
         var isOpRiskMode = (riskMode == 'operational');
         var riskId = (isOpRiskMode ? $stateParams.riskopId : $stateParams.riskId);
-        var updateDebounce = false;
+        var updateInProgress = false;
 
         $scope.createRecommendation = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
@@ -145,26 +145,20 @@
         }
 
         $scope.updateRecommendations = function () {
-            // We need to debounce the update here as the view uses twice the controller. The data is shared
-            // through the broadcast event, but we have no way to know which controller will take care of the actual
-            // API request. The first one will "lock" updateDebounce in the scope, and the other one will skip
-            // the request.
-            if (!$rootScope.updateDebounce && riskId) {
-                $rootScope.updateDebounce = true;
-
-                ClientRecommendationService.getRiskRecommendations(riskId, isOpRiskMode).then(function (data) {
-                    $scope.recommendations = data['recommendations-risks'];
-                    $rootScope.$broadcast('recommendations-loaded', $scope.recommendations);
-                    $timeout(function () {
-                        $rootScope.updateDebounce = false;
-                    })
-                })
+            if (!riskId || updateInProgress) {
+                return;
             }
-        };
 
-        $rootScope.$on('recommendations-loaded', function (ev, recs) {
-            $scope.recommendations = recs;
-        })
+            updateInProgress = true;
+            ClientRecommendationService.getRiskRecommendations(riskId, isOpRiskMode).then(
+                function (data) {
+                    $scope.recommendations = data['recommendations-risks'];
+                },
+                angular.noop
+            ).finally(function () {
+                updateInProgress = false;
+            });
+        };
     }
 
     function CreateRecommendationDialog($scope, $mdDialog, ClientRecommendationService, gettextCatalog, toastr, $q,

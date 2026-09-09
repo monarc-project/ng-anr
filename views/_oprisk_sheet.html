@@ -364,7 +364,7 @@
                                 </div>
 
                                 <ul class="no-list-style no-padding no-margin risk-sheet-recommendation-list">
-                                    <li ng-repeat="recommendation in _copyRecs | orderBy : 'importance'" class="risk-sheet-recommendation-item">
+                                    <li ng-repeat="recommendation in recommendations | orderBy : 'importance'" class="risk-sheet-recommendation-item">
                                         <a class="md-primary" href="#" ng-click="editRecommendation($event, recommendation)">{{ recommendation.recommendation.code }}</a>
                                         <span class="anr-importance" ng-repeat="i in range(1, recommendation.recommendation.importance)">&bull;</span>
                                         <span>&gt; {{ recommendation.recommendation.description }}</span>
