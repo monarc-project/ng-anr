@@ -123,6 +123,14 @@ md-option {
     cursor: pointer;
 }
 
+.md-tree-link .highlight {
+    font-weight: bold;
+}
+
+.md-tree-link.md-tree-category {
+    font-weight: bold;
+}
+
 a.blue {
     color: #2196F3;
 }

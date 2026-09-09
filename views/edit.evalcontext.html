@@ -10,8 +10,8 @@
             </div>
         </md-toolbar>
         <md-dialog-content class="md-padding trix-margin">
-            <md-tabs md-dynamic-height md-border-bottom ng-if="isInterestedPartiesTabVisible" md-selected="display.currentTabIndex">
-                <md-tab label="{{ 'Risk analysis context' | translate }}">
+            <md-tabs md-dynamic-height md-border-bottom md-selected="display.currentTabIndex">
+                <md-tab label="{{ subStep.label | translate }}">
                     <md-card md-theme="light">
                         <md-card-content layout="row">
                             <div flex>
@@ -35,7 +35,7 @@
                     </md-card>
                 </md-tab>
 
-                <md-tab label="{{ 'Interested parties & requirements' | translate }}">
+                <md-tab ng-if="isInterestedPartiesTabVisible" label="{{ 'Interested parties & requirements' | translate }}">
                     <div layout="column" layout-gap="16">
                         <div layout="row" layout-wrap layout-gap="16">
                             <md-input-container flex="35" flex-xs="100">
@@ -104,28 +104,6 @@
                     </div>
                 </md-tab>
             </md-tabs>
-
-            <md-card md-theme="light" ng-if="!isInterestedPartiesTabVisible">
-                <md-card-content layout="row">
-                    <div flex>
-                        <md-button class="trix-info-toolbar-button" ng-click="toggleGuide()"><md-icon>info</md-icon></md-button>
-                        <trix-editor angular-trix ng-model="context.text" style="min-height: 250px; min-width: 550px; border: 1px solid #AAAAAA;" trix-initialize="trixInitialize(e, editor);" prevent-trix-file-accept = "true" class="md-padding"></trix-editor>
-                    </div>
-                    <md-card style="max-width: 320px;" ng-if="guideVisible">
-                        <div layout="row" layout-align="center center" ng-if="guide === undefined">
-                            <md-progress-circular></md-progress-circular>
-                        </div>
-                        <md-card-content ng-if="guide !== undefined">
-                            <p class="md-title" translate>Additional information</p>
-                            <p class="preserve-newlines">{{ _langField(guide,'description') }}</p>
-                            <md-divider></md-divider>
-                            <md-list>
-                                <md-list-item ng-repeat="item in guide_items" ng-click="insertItem(item)"><p>{{ _langField(item,'description') }}</p></md-list-item>
-                            </md-list>
-                        </md-card-content>
-                    </md-card>
-                </md-card-content>
-            </md-card>
         </md-dialog-content>
         <md-dialog-actions layout="row">
             <span flex></span>
