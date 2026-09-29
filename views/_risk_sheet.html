@@ -225,11 +225,11 @@
                                         <a
                                             href=""
                                             class="md-primary"
-                                            ng-if="canManageSupervisorLinkedUsers()"
+                                            ng-if="canOpenLinkedUserAccount()"
                                             ng-click="$event.preventDefault(); openLinkedUserAccount(sheet_risk.riskOwnerSupervisor.linkedUser.id, $event)">
                                             {{ getLinkedUserDisplayName(sheet_risk.riskOwnerSupervisor.linkedUser) }}
                                         </a>
-                                        <span ng-if="!canManageSupervisorLinkedUsers()">
+                                        <span ng-if="!canOpenLinkedUserAccount()">
                                             {{ getLinkedUserDisplayName(sheet_risk.riskOwnerSupervisor.linkedUser) }}
                                         </span>
                                         <span ng-if="sheet_risk.riskOwnerSupervisor.linkedUser.email"> - {{ sheet_risk.riskOwnerSupervisor.linkedUser.email }}</span>

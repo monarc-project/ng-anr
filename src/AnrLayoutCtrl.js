@@ -161,6 +161,10 @@
     };
 
     $scope.canManageSupervisorLinkedUsers = function() {
+      return $scope.OFFICE_MODE == 'FO' && !$scope.isAnrReadOnly;
+    };
+
+    $scope.canOpenLinkedUserAccount = function() {
       return $scope.OFFICE_MODE == 'FO' && UserService.isAllowed('superadminfo');
     };
 
@@ -1789,7 +1793,7 @@
     });
 
     $scope.openLinkedUserAccount = function(linkedUserId, ev) {
-      if (!linkedUserId || !$scope.canManageSupervisorLinkedUsers()) {
+      if (!linkedUserId || !$scope.canOpenLinkedUserAccount()) {
         return;
       }
 
