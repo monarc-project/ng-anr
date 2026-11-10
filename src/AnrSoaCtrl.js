@@ -15,8 +15,10 @@
         MeasureService, SOACategoryService, ClientSoaService, $q, ReferentialService, TableHelperService,
         MeasureMeasureService, DownloadService) {
 
+        $scope.referentials = {items: {referentials: []}};
+
         $scope.updateSoaReferentials = function() {
-            $scope.soa_measures = [];
+            $scope.soa_measures = {};
             $scope.updatingReferentials = false;
             ReferentialService.getReferentials({
                 order: 'createdAt'
@@ -27,10 +29,18 @@
                     $scope.soa_measures[uuid] = TableHelperService.build('m.code', 20, 1, '');
                     $scope.soa_measures[uuid].selectedCategory = 0;
                 });
-                if (!$scope.referential_uuid && $scope.referentials.items.referentials.length > 0) {
-                    $scope.referential_uuid = $scope.referentials.items.referentials[0].uuid;
+                var selected = data.referentials.find(function(ref) {
+                    return ref.uuid === $scope.referential_uuid;
+                }) || data.referentials[0];
+                if (selected) {
+                    $scope.selectReferential(selected.uuid);
+                } else {
+                    $scope.referential_uuid = null;
+                    if ($scope.listener) {
+                        $scope.listener();
+                        $scope.listener = null;
+                    }
                 }
-                $scope.selectReferential($scope.referential_uuid);
                 $scope.updatingReferentials = true;
                 if (document.querySelector('#tabRef')) {
                     document.querySelector('#tabRef').click(); //Force ng-click over first referential
@@ -40,17 +50,23 @@
 
         $scope.updateSoaReferentials();
 
-        $rootScope.$on('referentialsUpdated', function() {
+        var removeReferentialsListener = $rootScope.$on('referentialsUpdated', function() {
             $scope.referential_uuid = null;
             $scope.referentialsUpdated = true;
         });
 
-        $rootScope.$on('controlsUpdated', function() {
+        var removeControlsListener = $rootScope.$on('controlsUpdated', function() {
             $scope.updateSoaMeasures();
         });
 
-        $rootScope.$on('soaScaleUpdated', function() {
+        var removeScaleListener = $rootScope.$on('soaScaleUpdated', function() {
             $scope.updateSoaMeasures();
+        });
+
+        $scope.$on('$destroy', function() {
+            removeReferentialsListener();
+            removeControlsListener();
+            removeScaleListener();
         });
 
         $scope.listener = null;
@@ -88,21 +104,27 @@
         });
 
         $scope.updateSoaMeasures = function() {
+            var table = $scope.soa_measures[$scope.referential_uuid];
+            if (!table) {
+                return;
+            }
             $scope.updatingMeasures = false;
-            var query = angular.copy($scope.soa_measures[$scope.referential_uuid].query);
-            query.category = $scope.soa_measures[$scope.referential_uuid].selectedCategory;
+            var query = angular.copy(table.query);
+            query.category = table.selectedCategory;
             query.referential = $scope.referential_uuid;
 
-            if ($scope.soa_measures[$scope.referential_uuid].previousQueryOrder != $scope.soa_measures[$scope.referential_uuid].query.order) {
-                $scope.soa_measures[$scope.referential_uuid].query.page = query.page = 1;
-                $scope.soa_measures[$scope.referential_uuid].previousQueryOrder = $scope.soa_measures[$scope.referential_uuid].query.order;
+            if (table.previousQueryOrder != table.query.order) {
+                table.query.page = query.page = 1;
+                table.previousQueryOrder = table.query.order;
             }
 
-            $scope.soa_measures[$scope.referential_uuid].promise = ClientSoaService.getSoas(query);
-            $scope.soa_measures[$scope.referential_uuid].promise.then(
+            table.promise = ClientSoaService.getSoas(query);
+            table.promise.then(
                 function(data) {
-                    $scope.soa_measures[$scope.referential_uuid].items = data;
-                    $scope.updatingMeasures = true;
+                    table.items = data;
+                    if ($scope.soa_measures[$scope.referential_uuid] === table) {
+                        $scope.updatingMeasures = true;
+                    }
                 }
             )
         };

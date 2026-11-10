@@ -138,6 +138,10 @@
             self.RecordResource.update(params, success, error);
         };
 
+        var patchRecord = function (id, params) {
+            return self.RecordResource.patch({RecordId: id}, params).$promise;
+        };
+
         var deleteRecord = function (id, success, error) {
             self.RecordResource.delete({RecordId: id}, success, error);
         };
@@ -224,6 +228,7 @@
             createRecord: createRecord,
             deleteRecord: deleteRecord,
             updateRecord: updateRecord,
+            patchRecord: patchRecord,
 
             getRecordActors: getRecordActors,
             createRecordActor: createRecordActor,

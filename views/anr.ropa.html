@@ -1,55 +1,64 @@
-<div class="md-padding-left md-padding-right" layout="column" ng-controller="AnrRopaCtrl" ng-if="tabRopaDisplayed">
-    <div layout="row" layout-align="space-between center" style="padding-top:10px; padding-bottom: 10px;">
-        <span class="md-title md-padding-double" translate>Record of processing activities</span>
-        <span style="margin-right:38px">
-            <md-menu ng-if="records.items.count>0">
-                <md-button class="md-icon-button" ng-click="$mdMenu.open()">
-                    <md-tooltip md-direction="left">
-                        {{ 'Export all processings in one file' | translate }}
-                    </md-tooltip>
-                    <md-icon class="md-warn">file_download</md-icon>
+<div class="ropa-workspace" ng-class="{'ropa-readonly': isAnrReadOnly}" ng-controller="AnrRopaCtrl" ng-if="tabRopaDisplayed">
+    <header class="ropa-toolbar">
+        <div>
+            <h1 translate>Record of processing activities</h1>
+            <p class="ropa-intro" translate>Manage your processing activities and related information.</p>
+        </div>
+        <div class="ropa-toolbar-actions">
+            <md-menu ng-if="records.total > 0">
+                <md-button aria-label="{{ 'Export all processings in one file' | translate }}" ng-click="$mdMenu.open()">
+                    <md-icon>file_download</md-icon> {{ 'Export all' | translate }}
                 </md-button>
                 <md-menu-content>
-                    <md-menu-item>
-                      <md-button ng-click="openMethodDeliverable({ 'num' : 7}, $event)">.docx</md-button>
-                    </md-menu-item>
-                    <md-menu-item>
-                        <md-button ng-click="jsonExportAll()">.json</md-button>
-                    </md-menu-item>
-                    <md-menu-item>
-                        <md-button ng-click="export($event, true)">.csv</md-button>
-                    </md-menu-item>
+                    <md-menu-item><md-button ng-click="openMethodDeliverable({'num': 7}, $event)">.docx</md-button></md-menu-item>
+                    <md-menu-item><md-button ng-click="jsonExportAll($event)">.json</md-button></md-menu-item>
+                    <md-menu-item><md-button ng-click="export($event, true)">.csv</md-button></md-menu-item>
                 </md-menu-content>
             </md-menu>
-            <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-disabled="updatingRecords" ng-click="createNewRecord($event)">
-                <md-tooltip md-direction="left">
-                    {{ 'Add a processing' | translate }}
-                </md-tooltip>
-                <md-icon>add_to_photos</md-icon>
+            <md-button class="md-raised md-primary" ng-if="!isAnrReadOnly" ng-click="createNewRecord($event)">
+                <md-icon>add</md-icon> {{ 'Add a processing' | translate }}
             </md-button>
-        </span>
-    </div>
-    <md-tabs class="record-tabs" md-dynamic-height="true" md-selected="records.recordTabSelected" ng-if="!(updatingRecords) && (records.items.count>0 || records.query.filter)" style="padding-bottom: 100px;">
-        <div layout="row" layout-align="end center">
-            <form flex name="records.filter.form">
-                <md-input-container class="md-block md-padding-left md-padding-right">
-                    <label><md-icon>search</md-icon> {{ 'Search...' | translate }}</label>
-                    <input ng-model="records.query.filter">
-                </md-input-container>
-            </form>
         </div>
-        <md-tab ng-repeat="(recordIndex,record) in records.items.records" label="{{ record.label }}"
-            md-on-select="selectRecord(record.id)">
-            <div layout="row" layout-align="space-between center">
-                <h3 class="md-padding-left" translate>Description</h3>
-                <div layout="row" layout-align="end center">
+    </header>
+    <div class="ropa-layout">
+        <aside class="ropa-sidebar" aria-label="{{ 'Processings' | translate }}">
+            <div class="ropa-sidebar-heading">
+                <strong translate>Processings</strong><span class="ropa-count">{{ records.items.count || 0 }}</span>
+            </div>
+            <md-input-container class="md-block ropa-search">
+                <label translate>Search...</label>
+                <md-icon>search</md-icon>
+                <input ng-model="records.query.filter" ng-model-options="{debounce: 300}" ng-change="updateRecords()" aria-label="{{ 'Search...' | translate }}">
+            </md-input-container>
+            <md-progress-linear md-mode="indeterminate" ng-if="updatingRecords" aria-label="{{ 'Loading' | translate }}"></md-progress-linear>
+            <div class="ropa-record-list">
+                <button type="button" class="ropa-record-item" ng-repeat="item in records.items.records track by item.id"
+                    ng-class="{'is-selected': records.selected === item.id}" ng-click="selectRecord(item.id)"
+                    aria-pressed="{{ records.selected === item.id }}">
+                    <span class="ropa-record-name">{{ item.label || ('Processing' | translate) }}</span>
+                    <span class="ropa-record-date">{{ item.createdAt.date.substring(0, 10) }}</span>
+                </button>
+            </div>
+            <p class="ropa-list-empty" ng-if="!updatingRecords && !records.items.count" translate>No records found.</p>
+        </aside>
+        <main class="ropa-editor" aria-busy="{{ updatingRecords }}">
+            <article ng-repeat="(recordIndex, record) in records.items.records track by record.id" ng-if="records.selected === record.id">
+                <header class="ropa-editor-heading">
+                    <div>
+                        <h2>{{ record.label || ('Processing' | translate) }}</h2>
+                        <p class="ropa-dates">
+                            <span ng-if="record.createdAt.date">{{ 'Creation date' | translate }}: {{ record.createdAt.date.substring(0, 10) }}</span>
+                            <span ng-if="record.updatedAt.date">{{ 'Update date' | translate }}: {{ record.updatedAt.date.substring(0, 10) }}</span>
+                        </p>
+                    </div>
+                    <div class="ropa-record-actions">
                     <md-menu>
-                        <md-button class="md-icon-button" ng-click="$mdMenu.open()">
+                        <md-button class="md-icon-button" aria-label="{{ 'Export' | translate }}" ng-click="$mdMenu.open()">
                             <md-icon class="md-warn">file_download</md-icon><md-tooltip>{{ 'Export' | translate }}</md-tooltip>
                         </md-button>
                         <md-menu-content>
                             <md-menu-item>
-                              <md-button ng-click="openMethodDeliverable(step, $event)">.docx</md-button>
+                              <md-button ng-click="openMethodDeliverable({num: 6, record: record.id}, $event)">.docx</md-button>
                             </md-menu-item>
                             <md-menu-item>
                                 <md-button ng-click="jsonExport($event, record)">.json</md-button>
@@ -59,30 +68,34 @@
                             </md-menu-item>
                         </md-menu-content>
                     </md-menu>
-                    <md-button class="md-icon-button md-warn" ng-if="!isAnrReadOnly && records.items.records.length > 0" ng-click="deleteRecord($event, record.id)">
+                    <md-button class="md-icon-button md-warn" aria-label="{{ 'Delete processing' | translate }}" ng-if="!isAnrReadOnly && records.items.records.length > 0" ng-click="deleteRecord($event, record.id)">
                         <md-tooltip md-direction="left">
                             {{ 'Delete processing' | translate }}
                         </md-tooltip>
                         <md-icon>delete</md-icon>
                     </md-button>
-                    <md-button class="md-icon-button" ng-click="uiState.hideDescription = !uiState.hideDescription"><md-icon>{{ uiState.hideDescription ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
-                </div>
-            </div>
-            <div ng-hide="uiState.hideDescription">
+
+                    </div>
+                </header>
+                <nav class="ropa-section-nav" aria-label="{{ 'Processing information' | translate }}">
+                    <button type="button" ng-repeat="section in ropaSections" ng-class="{'is-selected': records.section === section.id}"
+                        ng-click="records.section = section.id" aria-pressed="{{ records.section === section.id }}">
+                        {{ section.label | translate }}
+                        <span class="ropa-count" ng-if="section.collection">{{ record[section.collection].length }}</span>
+                    </button>
+                </nav>
+                <p class="ropa-edit-hint" ng-if="!isAnrReadOnly" translate>Click a field to edit. Changes are saved automatically.</p>
+                <p class="ropa-save-status" role="status" ng-if="records.saving" translate>Saving...</p>
+            <section class="ropa-section ropa-description" ng-if="records.section === 'description'" aria-label="{{ 'Description' | translate }}">
+
+            <div class="ropa-section-heading"><h3 translate>Description</h3></div>
+            <div>
                 <md-table-container flex>
-                    <table editable callback="onRecordTableEdited" class="md-html-table md-html-table-grey big-border-all">
+                    <table editable callback="onRecordTableEdited" class="md-html-table md-html-table-grey ropa-data-table">
                         <tbody edit-model="record">
                             <tr>
                                 <td><b translate>Name</b></td>
                                 <td edit-readonly="isAnrReadOnly" edit-field="label" edit-type="textarea"></td>
-                            </tr>
-                            <tr>
-                                <td><b translate>Creation date</b></td>
-                                <td>{{record.createdAt.date.substring(0,10)}}</td>
-                            </tr>
-                            <tr>
-                                <td><b translate>Update date</b></td>
-                                <td>{{record.updatedAt.date.substring(0,10)}}</td>
                             </tr>
                             <tr>
                                 <td><b translate>Purpose(s)</b></td>
@@ -91,18 +104,20 @@
                             <tr>
                                 <td style="width:1%; white-space:nowrap"><b translate>Security measures</b></td>
                                 <td edit-readonly="isAnrReadOnly" edit-field="secMeasures" edit-type="textarea" edit-class="preserve-newlines"></td>
+                            </tr>
                         </tbody>
                     </table>
                 </md-table-container>
             </div>
-            <br/>
-            <div layout="row" layout-align="space-between center">
+            </section>
+            <section class="ropa-section" ng-if="records.section === 'actors'" aria-label="{{ 'Actors' | translate }}">
+
+            <div class="ropa-section-heading" layout="row" layout-align="space-between center">
                 <h3 class="md-padding-left" translate>Actors</h3>
-                <md-button class="md-icon-button" ng-click="uiState.hideActors = !uiState.hideActors"><md-icon>{{ uiState.hideActors ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
-            <div ng-hide="uiState.hideActors">
+            <div>
                 <md-table-container flex>
-                    <table editable callback="onActorTableEdited" class="md-html-table md-html-table-grey big-border-all">
+                    <table editable callback="onActorTableEdited" class="md-html-table md-html-table-grey ropa-data-table">
                         <tbody>
                             <tr>
                                 <th translate>Actor</th>
@@ -226,9 +241,10 @@
                                         md-selected-item-change="actorItemSelected(record, selectedJointController, 'jointControllers', 0)"
                                         ng-blur="updateActorLabel(record, recordIndex, record.jointControllers[0], 'jointControllers', 0)">
                                         <md-item-template>
-                                            <span md-highlight-text="record.jointCrontollers[0].label" md-highlight-flags="^i">{{item['label']}}</span>
+                                            <span md-highlight-text="record.jointControllers[0].label" md-highlight-flags="^i">{{item['label']}}</span>
                                         </md-item-template>
                                     </md-autocomplete>
+                                    <span ng-if="isAnrReadOnly">{{ record.jointControllers[0].label }}</span>
                                 </td>
                                 <td edit-readonly="isAnrReadOnly" edit-field="contact" edit-type="textarea" edit-class="preserve-newlines" ng-if="record.jointControllers[0].id" edit-placeholder="{{ 'Address, mail, telephone, ...' | translate }}"></td>
                                 <td ng-if="!record.jointControllers[0].id"></td>
@@ -246,7 +262,7 @@
                             <tr ng-repeat="jc in record.jointControllers.slice(1)" edit-model="jc">
                                 <td></td>
                                 <td>
-                                    <md-autocomplete
+                                    <md-autocomplete ng-if="!isAnrReadOnly"
                                         class="autocomplete-record-gdpr"
                                         md-selected-item="selectedJointController"
                                         md-search-text="jc.label"
@@ -260,6 +276,7 @@
                                             <span md-highlight-text="jc.label" md-highlight-flags="^i">{{item['label']}}</span>
                                         </md-item-template>
                                     </md-autocomplete>
+                                    <span ng-if="isAnrReadOnly">{{ jc.label }}</span>
                                 </td>
                                 <td edit-readonly="isAnrReadOnly" edit-field="contact" edit-type="textarea" edit-class="preserve-newlines" ng-if="jc.id" edit-placeholder="{{ 'Address, mail, telephone, ...' | translate }}"></td>
                                 <td ng-if="!jc.id"></td>
@@ -278,22 +295,23 @@
                     </table>
                 </md-table-container>
             </div>
-            <br/>
-            <div layout="row" layout-align="space-between center">
+            </section>
+            <section class="ropa-section" ng-if="records.section === 'personalData'" aria-label="{{ 'Categories of data subjects and personal data' | translate }}">
+
+            <div class="ropa-section-heading" layout="row" layout-align="space-between center">
                 <div layout="row" layout-align="start center">
                     <h3 class="md-padding-left" translate>Categories of data subjects and personal data</h3>
-                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-primary" ng-click="addPersonalData(record)" ng-hide="uiState.hidePersonalData">
+                    <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-primary" ng-click="addPersonalData(record)">
                         <md-tooltip md-direction="left">
                             {{ 'Add a category of data subjects and personal data' | translate }}
                         </md-tooltip>
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
                 </div>
-                <md-button class="md-icon-button" ng-click="uiState.hidePersonalData = !uiState.hidePersonalData"><md-icon>{{ uiState.hidePersonalData ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
-            <div ng-hide="uiState.hidePersonalData">
+            <div>
                 <md-table-container flex>
-                    <table editable callback="onPersonalDataTableEdited" class="md-html-table md-html-table-grey big-border-all">
+                    <table editable callback="onPersonalDataTableEdited" class="md-html-table md-html-table-grey ropa-data-table">
                         <tbody>
                             <tr>
                                 <th translate style="width:20%">Categories of data subject</th>
@@ -368,22 +386,23 @@
                     </table>
                 </md-table-container>
             </div>
-            <br/>
-            <div layout="row" layout-align="space-between center">
+            </section>
+            <section class="ropa-section" ng-if="records.section === 'recipients'" aria-label="{{ 'Recipients' | translate }}">
+
+            <div class="ropa-section-heading" layout="row" layout-align="space-between center">
                 <div layout="row" layout-align="start center">
                   <h3 class="md-padding-left" translate>Recipients</h3>
-                  <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-primary" ng-click="addRecipient(record)" ng-hide="uiState.hideRecipients">
+                  <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-primary" ng-click="addRecipient(record)">
                       <md-tooltip md-direction="left">
                           {{ 'Add a recipient' | translate }}
                       </md-tooltip>
                       <md-icon>add_to_photos</md-icon>
                   </md-button>
                 </div>
-                <md-button class="md-icon-button" ng-click="uiState.hideRecipients = !uiState.hideRecipients"><md-icon>{{ uiState.hideRecipients ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
-            <div ng-hide="uiState.hideRecipients">
+            <div>
                 <md-table-container flex>
-                    <table editable callback="onRecipientTableEdited" class="md-html-table md-html-table-grey big-border-all" >
+                    <table editable callback="onRecipientTableEdited" class="md-html-table md-html-table-grey ropa-data-table" >
                         <tbody>
                             <tr>
                                 <th translate style="width:30%;">Recipient</th>
@@ -431,21 +450,23 @@
                     </table>
                 </md-table-container>
             </div>
-            <div layout="row" layout-align="space-between center">
+            </section>
+            <section class="ropa-section" ng-if="records.section === 'transfers'" aria-label="{{ 'International transfers' | translate }}">
+
+            <div class="ropa-section-heading" layout="row" layout-align="space-between center">
               <div layout="row" layout-align="start center">
                 <h3  class="md-padding-left" translate>International transfers</h3>
-                <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-primary" ng-click="addInternationalTransfer(record)" ng-hide="uiState.hideTranfers">
+                <md-button ng-if="!isAnrReadOnly" class="md-icon-button md-primary" ng-click="addInternationalTransfer(record)">
                     <md-tooltip md-direction="left">
                         {{ 'Add an international transfer' | translate }}
                     </md-tooltip>
                     <md-icon>add_to_photos</md-icon>
                 </md-button>
               </div>
-              <md-button class="md-icon-button" ng-click="uiState.hideTranfers = !uiState.hideTranfers"><md-icon>{{ uiState.hideTranfers ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
-            <div ng-hide="uiState.hideTranfers">
+            <div>
                 <md-table-container flex>
-                    <table editable callback="onTransferTableEdited" class="md-html-table md-html-table-grey big-border-all" >
+                    <table editable callback="onTransferTableEdited" class="md-html-table md-html-table-grey ropa-data-table" >
                         <tbody>
                             <tr>
                                 <th translate>Organisation</th>
@@ -472,20 +493,21 @@
                     </table>
                 </md-table-container>
             </div>
-            <br/>
-            <div layout="row" layout-align="space-between center">
+            </section>
+            <section class="ropa-section" ng-if="records.section === 'processors'" aria-label="{{ 'Processors' | translate }}">
+
+            <div class="ropa-section-heading" layout="row" layout-align="space-between center">
                 <div layout="row" layout-align="start center">
                     <h3 class="md-padding-left" translate>Processors</h3>
-                    <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="createNewProcessor($event, record)" ng-hide="uiState.hideProcessors">
+                    <md-button class="md-icon-button md-primary" ng-if="!isAnrReadOnly" ng-click="createNewProcessor($event, record)">
                         <md-tooltip md-direction="left">
                             {{ 'Add a processor' | translate }}
                         </md-tooltip>
                         <md-icon>add_to_photos</md-icon>
                     </md-button>
                 </div>
-                <md-button class="md-icon-button" ng-click="uiState.hideProcessors = !uiState.hideProcessors"><md-icon>{{ uiState.hideProcessors ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
             </div>
-            <div ng-hide="uiState.hideProcessors">
+            <div>
                 <md-tabs class="processor-tabs" md-dynamic-height="true" md-selected="processorTabSelected" ng-if="record.processors.length>0">
                     <div layout="row" layout-align="end center" class="md-padding-double" style="height:40px" ng-if="!isAnrReadOnly">
                         <md-button class="md-icon-button md-warn" ng-if="!isAnrReadOnly" ng-click="detachProcessor($event, record, processorTabSelected)">
@@ -496,10 +518,10 @@
                         </md-button>
                     </div>
                     <md-tab ng-repeat="processor in record.processors" label="{{processor.label}}"
-                            md-on-select="selectProcessor(processor.id)">
+                            >
                         <div>
                             <md-table-container flex>
-                                <table editable callback="onProcessorTableEdited" class="md-html-table md-html-table-grey big-border-all">
+                                <table editable callback="onProcessorTableEdited" class="md-html-table md-html-table-grey ropa-data-table">
                                     <tbody edit-model="processor">
                                         <tr>
                                             <td><b translate>Name</b></td>
@@ -524,11 +546,10 @@
                         <br/>
                         <div layout="row" layout-align="space-between center">
                             <h3 class="md-padding-left" translate>Actors</h3>
-                            <md-button class="md-icon-button" ng-click="uiState.hideProcessorActors = !uiState.hideProcessorActors"><md-icon>{{ uiState.hideProcessorActors ? 'expand_more' : 'expand_less' }}</md-icon></md-button>
                         </div>
-                        <div ng-hide="uiState.hideProcessorActors">
+                        <div>
                             <md-table-container flex>
-                                <table editable callback="onActorTableEdited" class="md-html-table md-html-table-grey big-border-all">
+                                <table editable callback="onActorTableEdited" class="md-html-table md-html-table-grey ropa-data-table">
                                     <tbody>
                                         <tr>
                                             <th translate>Actor</th>
@@ -606,6 +627,16 @@
                     </md-tab>
                 </md-tabs>
             </div>
-        </md-tab>
-    </md-tabs>
+            </section>
+            </article>
+            <div class="ropa-empty-state" ng-if="!updatingRecords && !records.items.count">
+                <md-icon>assignment</md-icon>
+                <h2 translate>No records found.</h2>
+                <p ng-if="records.query.filter" translate>Try another search.</p>
+                <md-button class="md-primary" ng-if="!isAnrReadOnly && !records.query.filter" ng-click="createNewRecord($event)">
+                    {{ 'Add a processing' | translate }}
+                </md-button>
+            </div>
+        </main>
+    </div>
 </div>

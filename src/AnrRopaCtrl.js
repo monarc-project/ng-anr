@@ -61,7 +61,7 @@
           }])
         .controller('AnrRopaCtrl', [
             '$scope','$rootScope', 'toastr', '$mdMedia', '$mdDialog',  'gettextCatalog',
-            'DownloadService', '$http', '$q', 'RecordService',
+            'DownloadService', '$http', '$q', 'RecordService', '$location',
             AnrRopaCtrl
         ]);
 
@@ -69,16 +69,26 @@
     * ANR > RECORD OF PROCESSING ACTIVITIES
     */
     function AnrRopaCtrl($scope, $rootScope, toastr, $mdMedia, $mdDialog, gettextCatalog,
-        DownloadService, $http, $q, RecordService) {
+        DownloadService, $http, $q, RecordService, $location) {
         $scope.language = $scope.getAnrLanguage();
         $scope.updatingPersonalData = false;
         $scope.updatingActor = false;
         $scope.records = {
-            'items' : [],
-            'selected' : -1,
+            'items' : {count: 0, records: []},
+            'section': 'description',
+            'selected' : Number($location.search().record) || -1,
+            'total': 0,
             'recordTabSelected' : 0
         };
         $scope.records.query = { 'filter' : "" };
+        $scope.ropaSections = [
+            {id: 'description', label: 'Description'},
+            {id: 'actors', label: 'Actors'},
+            {id: 'personalData', label: 'Personal data', collection: 'personalData'},
+            {id: 'recipients', label: 'Recipients', collection: 'recipients'},
+            {id: 'transfers', label: 'International transfers', collection: 'internationalTransfers'},
+            {id: 'processors', label: 'Processors', collection: 'processors'}
+        ];
 
         $scope.createNewRecord = function (ev) {
             var useFullScreen = ($mdMedia('sm') || $mdMedia('xs'));
@@ -96,11 +106,13 @@
                 delete $scope.newRecord;
                 if(record.duplicateRecord) {
                     record.recordToDuplicate['label'] = record['label'];
-                    RecordService.duplicateRecord(record.recordToDuplicate, function (data) {
+                    RecordService.duplicateRecord(record.recordToDuplicate, function (status) {
+                        $scope.records.query.filter = '';
+                        $scope.records.section = 'description';
                         $scope.updatingRecords = true;
                         $scope.updateRecords().then(function() {
                             $scope.updatingRecords = false;
-                            $scope.selectRecord(status.id, $scope.records.items.count);
+                            $scope.selectRecord(status.id);
                             toastr.success(gettextCatalog.getString('The processing has been duplicated successfully.',
                                   {recordLabel: record.label}), gettextCatalog.getString('Creation successful'));
                             if (cont) {
@@ -111,10 +123,12 @@
                 }
                 else {
                     RecordService.createRecord(record, function (status) {
+                        $scope.records.query.filter = '';
+                        $scope.records.section = 'description';
                         $scope.updatingRecords = true;
                         $scope.updateRecords().then(function() {
                             $scope.updatingRecords = false;
-                            $scope.selectRecord(status.id, $scope.records.items.count);
+                            $scope.selectRecord(status.id);
                             toastr.success(gettextCatalog.getString('The processing has been created successfully.',
                                   {recordLabel: record.label}), gettextCatalog.getString('Creation successful'));
                             if (cont) {
@@ -129,18 +143,15 @@
         };
 
         $scope.onRecordTableEdited = function (model, name) {
-            var promise = $q.defer();
-            // This record changed, update it
-            RecordService.updateRecord(model, function (data) {
-                RecordService.getRecord(model.id).then(function (data) {
-                    model["updatedAt"] = data["updatedAt"];
-                });
-                promise.resolve(true);
-            }, function () {
-                promise.reject(false);
+            var changes = {};
+            changes[name] = model[name];
+            $scope.records.saving = true;
+            return RecordService.patchRecord(model.id, changes).then(function (data) {
+                model.updatedAt = data.updatedAt;
+                return true;
+            }).finally(function () {
+                $scope.records.saving = false;
             });
-
-            return promise.promise;
         };
 
         $scope.onActorTableEdited = function (model, name) {
@@ -252,19 +263,34 @@
             });
         };
 
-        $scope.selectRecord = function(recordId, index = -1) {
-            var promise = $q.defer();
-            $scope.records.selected = recordId;
-            if(index !== -1) {
-                $scope.records.recordTabSelected = index;
+        $scope.selectRecord = function(recordId) {
+            if (angular.isArray(recordId)) {
+                recordId = recordId[0];
             }
-            $scope.step = { // Deliverable data
-              num:6,
-              record : recordId
-            };
-            promise.resolve(true);
-            return promise.promise;
+            var index = $scope.records.items.records.findIndex(function (record) {
+                return record.id === recordId;
+            });
+            if (index < 0) {
+                return;
+            }
+            if ($scope.records.selected !== recordId) {
+                $scope.processorTabSelected = 0;
+            }
+            $scope.records.selected = recordId;
+            $scope.records.recordTabSelected = index;
+            if ($location.path().endsWith('/ropa') && String($location.search().record) !== String(recordId)) {
+                $location.search('record', recordId).replace();
+            }
         };
+
+        $scope.$watch(function () { return $location.url(); }, function () {
+            if ($location.path().endsWith('/ropa') && $scope.records.items.records.length) {
+                var record = $scope.records.items.records.find(function (item) {
+                    return item.id === Number($location.search().record);
+                }) || $scope.records.items.records[0];
+                $scope.selectRecord(record.id);
+            }
+        });
 
         $scope.updateActor = function (actorId) {
             var promise = $q.defer();
@@ -304,67 +330,34 @@
             return promise.promise;
         }
 
+        var recordsRequest = 0;
         $scope.updateRecords = function() {
-            var query = angular.copy($scope.records.query);
-            var promise = $q.defer();
-            RecordService.getRecords({order: 'createdAt', filter: query.filter}).then(function (data) {
-                for (var i = 0; i < data.records.length; ++i) {
-                    if (!Array.isArray(data.records[i]['jointControllers'])) {
-                        data.records[i]['jointControllers'] = [{ "label": "", "contact": "" }];
-                    }
-                    if (!Array.isArray(data.records[i]['personalData'])) {
-                        data.records[i]['personalData'] = [];
-                    } else {
-                        for(var j = 0; j < data.records[i]['personalData'].length; ++j) {
-                            data.records[i]['personalData'][j]["record"] = data.records[i]["id"];
-                            if(!Array.isArray(data.records[i]['personalData'][j]['dataCategories'])) {
-                                data.records[i]['personalData'][j]['dataCategories'] = [];
-                            }
-                        }
-                    }
-                    if (!Array.isArray(data.records[i]['recipients'])) {
-                        data.records[i]['recipients'] = [];
-                    }
-                    if (!Array.isArray(data.records[i]['internationalTransfers'])) {
-                        data.records[i]['internationalTransfers'] = [];
-                    } else {
-                        for(var j = 0; j < data.records[i]['internationalTransfers'].length; ++j) {
-                            data.records[i]['internationalTransfers'][j]["record"] = data.records[i]["id"];
-                        }
-                    }
-                    if (!Array.isArray(data.records[i]['processors'])) {
-                        data.records[i]['processors'] = [];
-                    }
+            var request = ++recordsRequest;
+            $scope.updatingRecords = true;
+            return RecordService.getRecords({order: 'createdAt', filter: $scope.records.query.filter}).then(function (data) {
+                if (request !== recordsRequest) {
+                    return;
                 }
                 $scope.records.items = data;
-                promise.resolve(true);
+                if (!$scope.records.query.filter) {
+                    $scope.records.total = data.count;
+                }
+                var selected = data.records.find(function (record) {
+                    return record.id === $scope.records.selected;
+                });
+                if (selected || data.records.length) {
+                    $scope.selectRecord((selected || data.records[0]).id);
+                } else {
+                    $scope.records.selected = -1;
+                }
+            }).finally(function () {
+                if (request === recordsRequest) {
+                    $scope.updatingRecords = false;
+                }
             });
-            return promise.promise;
         };
 
-        $scope.updatingRecords = true;
-        $scope.updateRecords().then( function() {
-            if ($scope.records.items.count>0) {
-                $scope.selectRecord($scope.records.items.records[0].id, 0);
-            }
-            $scope.updatingRecords = false;
-        });
-
-        $scope.debounce = function(cb, interval) {
-            var timeout = null;
-            return function(data) {
-              if (timeout) {
-                clearTimeout(timeout);
-              }
-              timeout = setTimeout(function() {
-                cb(data);
-              }, interval);
-            };
-        };
-
-        $scope.$watch('records.query.filter', $scope.debounce(function() {
-            $scope.updateRecords();
-        },500));
+        $scope.updateRecords();
 
         $scope.getRecordProcessor = function (id, recordId) {
             var promise = $q.defer();
@@ -922,11 +915,10 @@
         }
 
         $scope.generateRecordContentCsv = function(recordId) {
-            var promise = $q.defer();
             var finalArray = [];
             var result = "";
             var recLine = 0;
-            RecordService.getRecord(recordId).then(function (data) {
+            return RecordService.getRecord(recordId).then(function (data) {
                 var nbJointControllerLine = Array.isArray(data.jointControllers)? data.jointControllers.length : 0;
                 var nbDataLine = Array.isArray(data.personalData)? data.personalData.length : 0;
                 var nbRecipientLine = Array.isArray(data.recipients)? data.recipients.length : 0;
@@ -1013,13 +1005,9 @@
                     }
 
                     if(recLine < nbDataLine) {
-                        var dataCategoriesString = '';
-                        if(Array.isArray(data.personalData[recLine].dataCategories)) {
-                            dataCategoriesString += data.personalData[recLine].dataCategories[0].label;
-                            for(var k = 1; k <data.personalData[recLine].dataCategories.length; ++k) {
-                                dataCategoriesString += ", " + data.personalData[recLine].dataCategories[k].label;
-                            }
-                        }
+                        var dataCategoriesString = data.personalData[recLine].dataCategories.map(function (category) {
+                            return category.label;
+                        }).join(', ');
                         if(data.personalData[recLine].dataSubject) {
                             finalArray[recLine] +=','+"\""+data.personalData[recLine].dataSubject+"\"";
                         } else {
@@ -1152,28 +1140,18 @@
                     let row = finalArray[j].toString().replace(/\n|\r/g,' ') + "," + "\r\n";
                     result += row ;
                 }
-                promise.resolve(result);
+                return result;
             });
-            return promise.promise;
         }
 
         $scope.generateAllRecordsContentCsv = function () {
-            var promise = $q.defer();
-            var promises = [];
-            var result = "";
-            var numRecords = 0;
-            let promiseQueue = $scope.records.items.records.reduce(function(accumulatorPromise, nextRecord) {
-                return accumulatorPromise.then(function() {
-                    return $scope.generateRecordContentCsv(nextRecord.id).then(function(data) {
-                        result += data;
-                    });
-                });
-            }, Promise.resolve());
-
-            promiseQueue.then(function() {
-                promise.resolve(result);
+            return RecordService.getRecords({order: 'createdAt'}).then(function (data) {
+                return $q.all(data.records.map(function (record) {
+                    return $scope.generateRecordContentCsv(record.id);
+                }));
+            }).then(function (rows) {
+                return rows.join('');
             });
-            return promise.promise;
         }
 
         $scope.export = function (ev, all, record) {

@@ -5,6 +5,31 @@ body{
   min-height: calc(100vh - 112px);
 }
 
+.anr-workspace > .main-card {
+  margin-bottom: 0;
+  min-height: calc(100vh - 72px - var(--anr-method-height, 0px));
+}
+
+.anr-workspace > .anr-method-progress {
+  margin: 8px 8px 0;
+}
+
+.anr-workspace > .anr-method-progress + .main-card {
+  --anr-method-height: 40px;
+}
+
+@media (max-width: 959px) and (orientation: portrait) {
+  .anr-workspace > .main-card {
+    min-height: calc(100vh - 64px - var(--anr-method-height, 0px));
+  }
+}
+
+@media (max-width: 959px) and (orientation: landscape) {
+  .anr-workspace > .main-card {
+    min-height: calc(100vh - 56px - var(--anr-method-height, 0px));
+  }
+}
+
 .anr-assignments-panel {
   margin: 0 16px 16px 16px;
   padding: 12px 16px;
@@ -2142,4 +2167,74 @@ md-select-menu md-content
         margin-left: 0;
         justify-content: flex-start;
     }
+}
+
+/* Record of processing activities: one processing and one section at a time. */
+.ropa-workspace { padding: 20px 24px 40px; color: #263f50; }
+.ropa-toolbar, .ropa-editor-heading, .ropa-sidebar-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.ropa-toolbar { margin-bottom: 20px; }
+.ropa-toolbar h1 { margin: 0; font-size: 22px; font-weight: 500; }
+.ropa-intro, .ropa-dates, .ropa-edit-hint { color: #637683; font-size: 13px; }
+.ropa-intro { margin: 7px 0 0; }
+.ropa-toolbar-actions, .ropa-record-actions { display: flex; align-items: center; flex-shrink: 0; }
+.ropa-toolbar-actions { flex-wrap: wrap; max-width: 100%; }
+.ropa-layout { display: grid; grid-template-columns: 240px minmax(0, 1fr); gap: 20px; align-items: start; }
+.ropa-sidebar, .ropa-editor { background: #fff; border: 1px solid #dce5eb; border-radius: 8px; min-width: 0; }
+.ropa-sidebar { overflow: hidden; }
+.ropa-editor { min-height: 380px; }
+.ropa-sidebar-heading { padding: 20px 16px 0; font-size: 14px; }
+.ropa-count { display: inline-block; min-width: 18px; padding: 2px 7px; border-radius: 12px; background: #edf2f5; color: #526b7a; font-size: 11px; text-align: center; }
+.ropa-search { margin: 24px 16px 0; }
+.ropa-record-list { max-height: 65vh; overflow-y: auto; padding: 0 8px 10px; }
+.ropa-record-item { display: block; width: 100%; padding: 13px 12px; margin: 3px 0; border: 0; border-left: 3px solid transparent; border-radius: 4px; background: transparent; color: inherit; text-align: left; cursor: pointer; }
+.ropa-record-item:hover { background: #f3f7f9; }
+.ropa-record-item.is-selected { background: #eaf3f5; border-left-color: #177d8c; }
+.ropa-record-name { display: block; font: 500 14px/1.5 Roboto, sans-serif; overflow-wrap: anywhere; }
+.ropa-record-date { display: block; margin-top: 4px; font-size: 11px; color: #71838e; }
+.ropa-list-empty { padding: 0 16px 12px; color: #71838e; font-size: 13px; }
+.ropa-editor-heading { padding: 22px 24px 14px; }
+.ropa-editor-heading h2 { margin: 0; font-size: 20px; font-weight: 500; overflow-wrap: anywhere; }
+.ropa-dates { display: flex; flex-wrap: wrap; gap: 6px 20px; margin: 9px 0 0; font-size: 11px; }
+.ropa-section-nav { display: flex; gap: 2px; overflow-x: auto; padding: 0 16px; border-bottom: 1px solid #dce5eb; }
+.ropa-section-nav button { flex: 0 0 auto; padding: 14px 10px 12px; border: 0; border-bottom: 3px solid transparent; background: transparent; color: #5b7280; font: 500 13px Roboto, sans-serif; cursor: pointer; }
+.ropa-section-nav button.is-selected { color: #126b7d; border-bottom-color: #177d8c; }
+.ropa-section-nav button:hover { background: #f4f8fa; }
+.ropa-record-item:focus-visible, .ropa-section-nav button:focus-visible { outline: 2px solid #177d8c; outline-offset: -2px; }
+.ropa-edit-hint { padding: 0 24px; margin: 16px 0 0; font-size: 12px; }
+.ropa-save-status { padding: 0 24px; color: #126b7d; font-size: 12px; }
+.ropa-section { padding: 0 24px 24px; }
+.ropa-section-heading h3 { padding-left: 0 !important; margin: 22px 0 16px; font-size: 16px; font-weight: 500; }
+.ropa-section-heading > div { min-width: 0; }
+.ropa-section md-table-container { display: block; overflow-x: auto; width: 100%; box-sizing: border-box; max-width: 100%; border: 1px solid #e3eaef; border-radius: 5px; }
+.ropa-section table { margin: 0; width: 100%; border-collapse: collapse; }
+.ropa-section table th { background: #f4f7f9; padding: 12px; color: #4c6574; font-size: 12px; font-weight: 500; text-align: left; }
+.ropa-section table td { padding: 13px 12px; border-bottom: 1px solid #e9eef2; vertical-align: top; }
+.ropa-section table tr:last-child td { border-bottom: 0; }
+.ropa-section td:first-child { color: #536b79; }
+.ropa-section td b { font-weight: 500; }
+.ropa-workspace:not(.ropa-readonly) [edit-field]:hover { background: #f0f8fa; cursor: text; }
+.ropa-section .edit-field { width: 100%; min-height: 60px; box-sizing: border-box; }
+.ropa-section .autocomplete-record-gdpr { min-width: 150px; }
+.ropa-section .md-icon-button { margin-top: 0; }
+.ropa-section table .preserve-newlines { overflow-wrap: anywhere; }
+.ropa-empty-state { padding: 70px 24px; text-align: center; color: #71838e; }
+.ropa-empty-state > md-icon { width: 44px; height: 44px; font-size: 44px; color: #99adb9; }
+.ropa-empty-state h2 { margin-top: 18px; font-size: 18px; font-weight: 400; }
+@media (max-width: 1100px) {
+    .ropa-layout { grid-template-columns: 200px minmax(0, 1fr); gap: 12px; }
+    .ropa-workspace { padding: 16px; }
+    .ropa-toolbar { align-items: flex-start; }
+    .ropa-toolbar-actions .md-button { min-width: 0; }
+}
+@media (max-width: 760px) {
+    .ropa-layout { grid-template-columns: minmax(0, 1fr); }
+    .ropa-toolbar { flex-direction: column; gap: 12px; }
+    .ropa-toolbar h1 { font-size: 20px; }
+    .ropa-record-list { max-height: 180px; }
+    .ropa-editor-heading { padding: 18px 16px 12px; align-items: flex-start; }
+    .ropa-editor-heading h2 { font-size: 18px; }
+    .ropa-section { padding: 0 16px 20px; }
+    .ropa-edit-hint { padding: 0 16px; }
+    .ropa-section table { min-width: 460px; }
+    .ropa-description table { min-width: 0; }
 }

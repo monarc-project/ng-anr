@@ -77,6 +77,7 @@
     }
 
     var self = this;
+    $scope.referentials = {items: {referentials: []}};
     var reviewFrequencyValues = [
       'Monthly',
       'Quarterly',
@@ -988,7 +989,11 @@
       );
     }
 
-    var onBeforeHook = $transitions.onBefore({}, function() {
+    var onBeforeHook = $transitions.onBefore({}, function(trans) {
+      if (trans.to().name === 'main.project.anr.ropa' && trans.from().name === 'main.project.anr.ropa' &&
+        trans.params('to').modelId === trans.params('from').modelId) {
+        return;
+      }
       if ($scope.OFFICE_MODE == 'FO') {
         if (($state.$current.name == 'main.project.anr.risk' && $stateParams.riskId) ||
           ($state.$current.name == 'main.project.anr.riskop' && $stateParams.riskopId) ||
@@ -1119,7 +1124,7 @@
           $scope.opRisksScales = {
             language: defaultLanguageIndex
           };
-          $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
+          $scope.opRisksLanguageSelected = ConfigService.getLanguage($scope.opRisksScales.language).code;
           $scope.scales.language = defaultLanguageIndex;
           SoaScaleCommentService.getSoaScaleComments({
             anrId: $rootScope.anr_id,
@@ -1194,7 +1199,7 @@
               comments: data.data
             };
           });
-          $scope.opRisksLanguageSelected = $scope.languages[$scope.opRisksScales.language].code;
+          $scope.opRisksLanguageSelected = ConfigService.getLanguage($scope.opRisksScales.language).code;
           $scope.$parent.$parent.clientCurrentAnr = data;
           $scope.updateRisksManagementAccess();
 
@@ -1241,7 +1246,7 @@
     };
 
     $scope.updateReferentials = function() {
-      $scope.referentials = [];
+      $scope.updatingReferentials = false;
       ReferentialService.getReferentials({
         order: 'createdAt'
       }).then(function(data) {
@@ -1442,7 +1447,12 @@
     }
 
     $scope.resetFilters();
-    $scope.updateModel();
+    var stopConfigWatch = $scope.$watch(ConfigService.isLoaded, function(loaded) {
+      if (loaded) {
+        stopConfigWatch();
+        $scope.updateModel();
+      }
+    });
     $scope.instmode = 'anr';
 
     $scope.$watchGroup(['risks_filters.order', 'risks_filters.order_direction'], function(newValue, oldValue) {
