@@ -24,6 +24,7 @@
                 <md-input-container class="md-block" style="margin-right: 10px;" flex>
                     <label translate>Search a processing to create one from an existing</label>
                     <md-select flex ng-model="selectedRecord" md-on-open="queryRecordSearch()" md-on-close="recordItemSelected(selectedRecord)">
+                        <md-option ng-value="null">{{ 'None' | translate }}</md-option>
                         <md-option ng-repeat="item in options" ng-value="item">{{ item.label }}</md-option>
                     </md-select>
                 </md-input-container>
@@ -31,8 +32,8 @@
                 <md-input-container class="md-block" flex>
                     <label translate>Label</label>
                     <md-icon>label</md-icon>
-                    <input ng-model="newRecord['label']" name="label" required>
-                    <div ng-messages="newRecord.label.$error">
+                    <input ng-model="newRecord['label']" name="label" aria-label="{{ 'Label' | translate }}" required>
+                    <div ng-messages="recordForm.label.$error">
                         <div ng-message="required">{{ 'The label may not be empty' | translate }}</div>
                     </div>
                 </md-input-container>

@@ -28,6 +28,7 @@
                             <md-input-container class="md-block" style="margin-top: 0">
                                 <textarea ng-if="question.type == 1" ng-model="question.response" rows="3" ng-disabled="!anr.rwd"></textarea>
                                 <md-select ng-if="question.type == 2 && question.multichoice == 0" ng-disabled="!anr.rwd" ng-model="question.response">
+                                    <md-option ng-value="null"></md-option>
                                     <md-option ng-repeat="choice in question.choices" ng-value="choice.id">{{ _langField(choice,'label') }}</md-option>
                                 </md-select>
                                 <md-select ng-if="question.type == 2 && question.multichoice == 1" ng-disabled="!anr.rwd" ng-model="question.response" multiple="true">
