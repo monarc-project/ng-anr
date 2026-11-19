@@ -34,12 +34,15 @@ async function render(t, {readonly = false, mobile = false, empty = false, failP
     t.after(() => page.close());
     const requests = [];
     const records = empty ? [] : [record(1, 'Customer support'), record(2, 'Staff onboarding')];
+    const processors = [{id: 40, label: 'Hosting provider', contact: ''},
+        {id: 41, label: 'Payroll provider', contact: ''}];
     await page.route('http://ropa.test/**', async route => {
         const request = route.request();
         const url = new URL(request.url());
         if (url.pathname === '/') return route.fulfill({contentType: 'text/html', body: '<!doctype html><html><head></head><body></body></html>'});
         if (url.pathname === '/img/monarc.png') return route.fulfill({contentType: 'image/png', body: readFileSync(path.join(root, '../ng-client/img/monarc.png'))});
         if (url.pathname === '/views/anr/create.records.html') return route.fulfill({contentType: 'text/html', body: readFileSync(path.join(root, 'views/create.records.html'), 'utf8')});
+        if (url.pathname === '/views/anr/create.processors.html') return route.fulfill({contentType: 'text/html', body: readFileSync(path.join(root, 'views/create.processors.html'), 'utf8')});
         if (url.pathname === '/views/anr/export.record.html') return route.fulfill({contentType: 'text/html', body: readFileSync(path.join(root, 'views/export.record.html'), 'utf8')});
         if (url.pathname === '/views/anr/anr.ropa.html') return route.fulfill({contentType: 'text/html', body: readFileSync(path.join(root, 'views/anr.ropa.html'), 'utf8')});
         if (url.pathname.startsWith('/views/')) return route.fulfill({contentType: 'text/html', body: ''});
@@ -47,6 +50,7 @@ async function render(t, {readonly = false, mobile = false, empty = false, failP
         requests.push({method, path: url.pathname, query: url.search, data: request.postDataJSON()});
         let body;
         const recordId = url.pathname.match(/\/records\/(\d+)$/)?.[1];
+        const processorId = url.pathname.match(/\/record-processors\/(\d+)$/)?.[1];
         const exportId = url.pathname.match(/\/records\/(\d+)\/export$/)?.[1];
         if (url.pathname.endsWith('/export') && method === 'POST') {
             const exported = exportId ? records.filter(r => r.id === Number(exportId)) : records;
@@ -62,6 +66,17 @@ async function render(t, {readonly = false, mobile = false, empty = false, failP
             if (failPatch) return route.fulfill({status: 412, contentType: 'application/json', body: '{"message":"Rejected edit"}'});
             Object.assign(records.find(r => r.id === Number(recordId)), request.postDataJSON());
             body = {status: 'ok', updatedAt: {date: '2026-11-09 12:00:00'}};
+        } else if (recordId && method === 'PUT') {
+            Object.assign(records.find(r => r.id === Number(recordId)), request.postDataJSON());
+            body = {status: 'ok'};
+        } else if (url.pathname.endsWith('/record-processors') && method === 'GET') {
+            body = {count: processors.length, 'record-processors': processors};
+        } else if (processorId && method === 'GET') {
+            body = processors.find(p => p.id === Number(processorId));
+        } else if (url.pathname.endsWith('/record-processors') && method === 'POST') {
+            const processor = {...request.postDataJSON(), id: 40 + processors.length};
+            processors.push(processor);
+            body = {status: 'ok', id: processor.id};
         } else if (url.pathname.endsWith('/records/duplicate') && method === 'POST') {
             const data = request.postDataJSON();
             const copy = JSON.parse(JSON.stringify(records.find(r => r.id === data.record)));
@@ -209,6 +224,78 @@ test('mobile layout stays within the viewport and section navigation works', asy
     assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
     await page.screenshot({path: '/private/tmp/php84-05-ropa-mobile.png', fullPage: true});
 });
+
+test('retention controls fit their column at desktop, tablet and mobile widths', async t => {
+    const {page, requests} = await render(t);
+    await page.locator('.ropa-section-nav button').filter({hasText: 'Personal data'}).click();
+    for (const width of [1440, 1024, 768, 390]) {
+        await page.setViewportSize({width, height: 900});
+        const controls = await page.locator('input[ng-model="personalData.retentionPeriod"]').evaluate(input => {
+            const cell = input.closest('td');
+            const select = cell.querySelector('md-select');
+            const bounds = cell.getBoundingClientRect();
+            return {cell: {left: bounds.left, right: bounds.right},
+                controls: [input, select, select.querySelector('.md-select-value')].map(element => {
+                    const rect = element.getBoundingClientRect();
+                    return {left: rect.left, right: rect.right, width: rect.width};
+                })};
+        });
+        for (const control of controls.controls) {
+            assert.ok(control.width > 0 && control.left >= controls.cell.left &&
+                control.right <= controls.cell.right, `Retention control overflows at ${width}px: ${JSON.stringify(controls)}`);
+        }
+        if (width === 1024) {
+            await page.screenshot({path: '/private/tmp/php84-ropa-retention-tablet.png', fullPage: true});
+        }
+    }
+    await page.setViewportSize({width: 1440, height: 900});
+    await page.locator('md-select[ng-model="personalData.retentionPeriodMode"]').click();
+    await page.getByRole('option', {name: 'year(s)', exact: true}).click();
+    await expect(page.locator('md-select[ng-model="personalData.retentionPeriodMode"]')).toContainText('year(s)');
+    await page.locator('input[ng-model="personalData.retentionPeriod"]').fill('24');
+    await expect.poll(() => requests.filter(r => r.method === 'PUT' &&
+        r.path.endsWith('/record-personal-data/20')).at(-1)?.data.retentionPeriod).toBe(24);
+    const saved = requests.filter(r => r.method === 'PUT' && r.path.endsWith('/record-personal-data/20')).at(-1).data;
+    assert.equal(saved.retentionPeriodMode, 2);
+    assert.deepEqual(await page.evaluate(() => uiErrors), []);
+});
+
+for (const createNew of [false, true]) {
+    test(`processor selection works${createNew ? ' after creating a new processor' : ''} and continues in the same record`, async t => {
+        const {page, requests} = await render(t);
+        await page.locator('.ropa-section-nav button').filter({hasText: 'Processors'}).click();
+        await page.locator('.ropa-section-heading button').click();
+        const dialog = page.getByRole('dialog');
+        if (createNew) {
+            await dialog.locator('input[name="label"]').fill('New provider');
+            await dialog.getByRole('button', {name: 'Create and continue', exact: true}).click();
+            await expect.poll(() => requests.filter(r => r.method === 'POST' &&
+                r.path.endsWith('/record-processors')).length).toBe(1);
+            await expect(dialog.locator('input[name="label"]')).toHaveValue('');
+        }
+        await dialog.locator('md-select').click();
+        await page.getByRole('option', {name: 'Hosting provider', exact: true}).click();
+        await expect(dialog.locator('input[name="label"]')).toHaveValue('Hosting provider');
+        await expect(dialog.locator('input[name="label"]')).toBeDisabled();
+        await dialog.getByRole('button', {name: 'Create and continue', exact: true}).click();
+        await expect(dialog.locator('input[name="label"]')).toHaveValue('');
+        await dialog.locator('md-select').click();
+        await expect(page.getByRole('option', {name: 'Payroll provider', exact: true})).toBeVisible();
+        await expect(page.getByRole('option', {name: 'Hosting provider', exact: true})).toHaveCount(0);
+        await expect(page.getByRole('option', {name: 'New provider', exact: true})).toHaveCount(0);
+        await page.getByRole('option', {name: 'Payroll provider', exact: true}).click();
+        await dialog.getByRole('button', {name: 'Create', exact: true}).click();
+        await expect(dialog).toHaveCount(0);
+        await expect(page.locator('.processor-tabs')).toContainText('Hosting provider');
+        await expect(page.locator('.processor-tabs')).toContainText('Payroll provider');
+        const writes = requests.filter(r => r.method === 'PUT' && r.path.endsWith('/records/1'));
+        assert.equal(writes.length, createNew ? 3 : 2);
+        assert.deepEqual(writes.at(-1).data.processors.map(p => p.id), createNew ? [42, 40, 41] : [40, 41]);
+        assert.equal(requests.filter(r => r.method === 'POST' &&
+            r.path.endsWith('/record-processors')).length, createNew ? 1 : 0);
+        assert.deepEqual(await page.evaluate(() => uiErrors), []);
+    });
+}
 
 test('duplicate dialog selects the returned record and keeps it visible after a search', async t => {
     const {page, requests} = await render(t);

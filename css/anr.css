@@ -1988,10 +1988,23 @@ md-select-menu md-content
 .processor-tabs md-next-button{
     right:40px;
 }
-.select-retention-period-mode{
-    padding-left: 6px;
-    width: 60%;
-    display: inline-block;
+.ropa-retention-period {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+}
+
+.ropa-retention-period input {
+    box-sizing: border-box;
+    flex: 1 1 4em;
+    min-width: 4em;
+    width: 4em;
+}
+
+.ropa-retention-period md-select {
+    flex: 1 0 90px;
+    margin: 0;
 }
 
 .autocomplete-record-gdpr{

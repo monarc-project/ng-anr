@@ -357,17 +357,17 @@
                                 </td>
                                 <td edit-readonly="isAnrReadOnly || !personalData.id" edit-field="description" edit-type="textarea" ng-disabled="!personalData.id" edit-class="preserve-newlines"  style="word-wrap:break-word;"></td>
                                 <td>
-                                    <span ng-if="!isAnrReadOnly">
-                                        <input type="number" ng-model="personalData.retentionPeriod" min="0" style="width:20%" ng-change="onPersonalDataTableEdited(personalData)" ng-disabled="!personalData.id">
-                                    </span>
-                                    <span ng-if="isAnrReadOnly">{{personalData.retentionPeriod}}</span>
-                                    <span ng-if="!isAnrReadOnly" class="select-retention-period-mode">
+                                    <div ng-if="!isAnrReadOnly" class="ropa-retention-period">
+                                        <input type="number" ng-model="personalData.retentionPeriod" min="0"
+                                               ng-change="onPersonalDataTableEdited(personalData)"
+                                               ng-disabled="!personalData.id">
                                         <md-select ng-model="personalData.retentionPeriodMode" ng-change="onPersonalDataTableEdited(personalData)" ng-disabled="!personalData.id">
                                             <md-option ng-value="0">{{ 'day(s)' | translate }}</md-option>
                                             <md-option ng-value="1">{{ 'month(s)' | translate }}</md-option>
                                             <md-option ng-value="2">{{ 'year(s)' | translate }}</md-option>
                                         </md-select>
-                                    </span>
+                                    </div>
+                                    <span ng-if="isAnrReadOnly">{{personalData.retentionPeriod}}</span>
                                     <span ng-if="isAnrReadOnly && personalData.retentionPeriodMode==0">{{ 'day(s)' | translate }}</span>
                                     <span ng-if="isAnrReadOnly && personalData.retentionPeriodMode==1">{{ 'month(s)' | translate }}</span>
                                     <span ng-if="isAnrReadOnly && personalData.retentionPeriodMode==2">{{ 'year(s)' | translate }}</span>

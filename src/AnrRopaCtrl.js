@@ -825,7 +825,7 @@
                                     record["updatedAt"] = data["updatedAt"];
                                 });
                                 if (cont) {
-                                    $scope.createNewProcessor(ev);
+                                    $scope.createNewProcessor(ev, record);
                                 }
                             });
                         });
@@ -839,7 +839,7 @@
                                 record["updatedAt"] = data["updatedAt"];
                             });
                             if (cont) {
-                                $scope.createNewProcessor(ev);
+                                $scope.createNewProcessor(ev, record);
                             }
                         });
                     });
