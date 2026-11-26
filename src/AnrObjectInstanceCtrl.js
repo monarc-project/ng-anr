@@ -555,12 +555,13 @@
         $scope.scaleCommCache = scaleCommCache;
         $scope.tooltipScale = [];
 
-        for (var i = 1; i <= Object.keys(scaleCommCache).length; i++) {
-            $scope.tooltipScale[i] = '';
+        Object.keys(scaleCommCache).forEach(function (type) {
+            $scope.tooltipScale[type] = '';
             for (var j = $scope.scales.impacts.min; j <= $scope.scales.impacts.max; j++) {
-              $scope.tooltipScale[i] += j + ' : ' + scaleCommCache[i][j] + "\n";
+                var comment = scaleCommCache[type] ? scaleCommCache[type][j] : undefined;
+                $scope.tooltipScale[type] += j + ' : ' + (comment ? comment : '') + "\n";
             }
-        }
+        });
 
         $scope.cancel = function () {
             $mdDialog.cancel();
